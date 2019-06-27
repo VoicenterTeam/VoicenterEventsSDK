@@ -1,4 +1,4 @@
-# realt-time-dashboard
+# Real time dashboard
 
 ## Project setup
 ```
