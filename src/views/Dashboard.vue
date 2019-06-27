@@ -1,23 +1,28 @@
 <template>
-    <div class="mt-10">
-        <div class="flex justify-end mb-4 relative">
+    <div class="pt-24">
+        <div class="flex justify-end relative mr-4">
             <AddButton @click="showWidgetMenu = !showWidgetMenu"></AddButton>
             <fade-transition>
                 <WidgetMenu v-if="showWidgetMenu" class="absolute max-w-5xl bg-gray-300 mt-16" :widgets="allWidgets"></WidgetMenu>
             </fade-transition>
         </div>
-        <DraggableWidgets v-for="widgetGroup in activeDashboard.WidgetGroupList"
-                          :value="widgetGroup.WidgetList"
-                          @input="val => onListChange(val, widgetGroup)"
-                          :key="widgetGroup.ID">
-            <div v-for="widget in widgetGroup.WidgetList"
-                 :key="widget.ID"
-                 :class="widget.WidgetLayout.Classes || {}"
-                 class="w-full lg:w-1/3 px-2"
-            >
-                <WidgetCard v-bind="widget.WidgetConfig"></WidgetCard>
+        <fade-transition mode="out-in">
+            <div :key="activeDashboard.ID">
+                <div v-for="widgetGroup in activeDashboard.WidgetGroupList" :key="widgetGroup.ID">
+                    <h3 class="font-semibold text-2xl text-gray-800">{{$t(widgetGroup.Title)}}</h3>
+                    <DraggableWidgets :value="widgetGroup.WidgetList"
+                                      @input="val => onListChange(val, widgetGroup)">
+                        <div v-for="widget in widgetGroup.WidgetList"
+                             :key="widget.ID"
+                             :class="widget.WidgetLayout.Classes || {}"
+                             class="w-full lg:w-1/3 px-2"
+                        >
+                            <WidgetCard v-bind="widget.WidgetConfig"></WidgetCard>
+                        </div>
+                    </DraggableWidgets>
+                </div>
             </div>
-        </DraggableWidgets>
+        </fade-transition>
     </div>
 </template>
 

@@ -58,6 +58,10 @@ const actions = {
       commit(types.SET_DEFAULT_DASHBOARD)
     }
   },
+  async selectDashboard({ commit, state }, dashboard) {
+    // TODO add api call to update selected dashboard ?
+    commit(types.SET_ACTIVE_DASHBOARD, dashboard)
+  },
   async updateWidgets({ commit, state }, { widgets, widgetGroup }) {
     // TODO add api call to update widgets
     commit(types.UPDATE_WIDGET_GROUP_WIDGETS, { widgetGroup, widgets })

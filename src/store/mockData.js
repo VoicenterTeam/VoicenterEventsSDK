@@ -132,12 +132,12 @@ export const dashboards = {
     ]
   },
   "dashboard2": {
-    "ID": 1,
+    "ID": 2,
     "Title": "dashboards.queue",
     "WidgetGroupList": [
       {
         "ID": 23,
-        "Title": "widgetGroups.general.title",
+        "Title": "widgetGroups.queue.title",
         "WidgetList": [...widgets]
       }
     ]

@@ -1,4 +1,7 @@
 {
+  "common.dashboards": "Dashboards",
+  "dashboards.main": "Main Dashboard",
+  "dashboards.queue": "Queue Dashboard",
   "widgets.phoneNumbers.description": "Telephone Numbers",
   "widgets.users.description": "Users",
   "widgets.extensions.description": "Extensions",
