@@ -1,0 +1,8 @@
+{
+  "widgets.phoneNumbers.description": "Telephone Numbers",
+  "widgets.users.description": "Users",
+  "widgets.extensions.description": "Extensions",
+  "widgets.stats.description": "Phone calls made",
+  "widgetGroups.general.title": "General statistics",
+  "widgetGroups.queue.title": "Queue statistics"
+}
