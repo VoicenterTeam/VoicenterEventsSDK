@@ -1,22 +1,22 @@
 <template>
     <div class="mt-10">
         <div class="flex -mx-2">
-            <div class="w-full lg:w-1/3 px-2">
-                <WidgetCard icon="/img/svg/phone.svg"
+            <div class="w-full flex-wrap lg:w-1/3 px-2">
+                <WidgetCard icon="IconPhone"
                             title="16"
                             description="Telephone Numbers">
                 </WidgetCard>
             </div>
             <div class="w-full lg:w-1/3 px-2">
-                <WidgetCard icon="/img/svg/phone.svg"
+                <WidgetCard icon="IconUsers"
                             title="25"
-                            description="Telephone Numbers">
+                            description="Users">
                 </WidgetCard>
             </div>
             <div class="w-full lg:w-1/3 px-2">
-                <WidgetCard icon="/img/svg/phone.svg"
-                            title="115"
-                            description="Telephone Numbers">
+                <WidgetCard icon="IconExtensions"
+                            title="38"
+                            description="Extensions">
                 </WidgetCard>
             </div>
         </div>

@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-white px-6 py-4 flex items-center rounded-lg shadow">
+    <div class="bg-white px-6 py-4 mb-4 flex items-center rounded-lg shadow">
         <slot name="icon">
-            <img class="w-16 mr-4" :src="icon" :alt="icon">
+            <component class="w-16 mr-4" :is="icon"></component>
         </slot>
         <slot name="title">
             <h5 class="text-3xl font-bold mr-4" v-if="title">
