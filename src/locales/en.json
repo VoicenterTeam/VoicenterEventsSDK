@@ -1,7 +1,12 @@
 {
   "common.dashboards": "Dashboards",
+  "common.newDashboard": "New Dashboard",
+  "common.cancel": "Cancel",
+  "common.save": "Save",
   "dashboards.main": "Main Dashboard",
   "dashboards.queue": "Queue Dashboard",
+  "dashboards.new.title": "Create new Dashboard",
+  "dashboards.new.form.title": "Dashboard title",
   "widgets.phoneNumbers.description": "Telephone Numbers",
   "widgets.users.description": "Users",
   "widgets.extensions.description": "Extensions",

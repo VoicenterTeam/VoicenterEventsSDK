@@ -6,6 +6,10 @@ module.exports = {
         gray: {
           ...defaultTheme.colors.gray,
           500: '#899398'
+        },
+        blue: {
+          ...defaultTheme.colors.blue,
+          default: '#2575FF'
         }
       },
       fontFamily: {

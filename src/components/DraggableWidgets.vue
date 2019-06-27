@@ -3,7 +3,7 @@
             tag="div"
             v-bind="attributes"
             v-on="$listeners">
-        <transition-group type="transition" name="flip-list"
+        <transition-group type="transition" :name="enableTransition ? 'flip-list': ''"
                           class="flex justify-center flex-wrap w-full -mx-2 cursor-move">
             <slot></slot>
         </transition-group>
@@ -13,6 +13,12 @@
   import draggable from "vuedraggable";
   export default {
     inheritAttrs: false,
+    props: {
+      enableTransition: {
+        type: Boolean,
+        default: true
+      }
+    },
     components: {
       draggable
     },

@@ -1,6 +1,8 @@
 <template>
-    <div class="bg-white p-4 shadow rounded-lg absolute">
-        <DraggableWidgets v-model="widgets">
+    <div class="p-4 shadow rounded-lg absolute absolute max-w-5xl bg-gray-300 mt-16 z-10">
+        <DraggableWidgets v-model="widgets"
+                          :enable-transition="false"
+                          :group="{ name: 'widgets', pull: 'clone', put: false }">
             <div v-for="widget in widgets"
                  :key="widget.ID"
                  :class="widget.WidgetLayout.Classes || {}"

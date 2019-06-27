@@ -1,23 +1,32 @@
 <template>
     <div class="pt-24">
         <div class="flex justify-end relative mr-4">
-            <AddButton @click="showWidgetMenu = !showWidgetMenu"></AddButton>
+            <AddButton @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
             <fade-transition>
-                <WidgetMenu v-if="showWidgetMenu" class="absolute max-w-5xl bg-gray-300 mt-16" :widgets="allWidgets"></WidgetMenu>
+                <WidgetMenu v-if="showWidgetMenu"
+                            v-click-outside="onWidgetMenuClickOutside"
+                            :widgets="allWidgets">
+                </WidgetMenu>
             </fade-transition>
         </div>
-        <fade-transition mode="out-in">
+        <fade-transition mode="out-in" :duration="250">
             <div :key="activeDashboard.ID">
                 <div v-for="widgetGroup in activeDashboard.WidgetGroupList" :key="widgetGroup.ID">
                     <h3 class="font-semibold text-2xl text-gray-800">{{$t(widgetGroup.Title)}}</h3>
-                    <DraggableWidgets :value="widgetGroup.WidgetList"
+                    <DraggableWidgets group="widgets"
+                                      :value="widgetGroup.WidgetList"
                                       @input="val => onListChange(val, widgetGroup)">
                         <div v-for="widget in widgetGroup.WidgetList"
                              :key="widget.ID"
                              :class="widget.WidgetLayout.Classes || {}"
-                             class="w-full lg:w-1/3 px-2"
-                        >
+                             class="w-full lg:w-1/3 px-2">
                             <WidgetCard v-bind="widget.WidgetConfig"></WidgetCard>
+                        </div>
+                        <div v-if="widgetGroup.WidgetList.length === 0"
+                             class="w-full flex flex-col items-center mt-20"
+                             key="no-data">
+                            <IconNoData class="h-56 w-56"></IconNoData>
+                            <p class="text-gray-600 max-w-lg text-center">This dashboard contains no data. Click on the plus icon to drag and drop new widgets</p>
                         </div>
                     </DraggableWidgets>
                 </div>
@@ -31,15 +40,13 @@
   import WidgetCard from '@/components/WidgetCard'
   import DraggableWidgets from '@/components/DraggableWidgets'
   import WidgetMenu from '@/components/WidgetMenu'
-  import { FadeTransition } from 'vue2-transitions'
 
   export default {
     components: {
       AddButton,
       WidgetCard,
       DraggableWidgets,
-      WidgetMenu,
-      FadeTransition
+      WidgetMenu
     },
     data() {
       return {
@@ -57,6 +64,8 @@
     methods: {
       onListChange(widgets, widgetGroup) {
         this.$store.dispatch('dashboards/updateWidgets', { widgets, widgetGroup })
+      },
+      onWidgetMenuClickOutside() {
         this.showWidgetMenu = false
       }
     }
