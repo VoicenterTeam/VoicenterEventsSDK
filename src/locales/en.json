@@ -7,6 +7,7 @@
   "dashboards.queue": "Queue Dashboard",
   "dashboards.new.title": "Create new Dashboard",
   "dashboards.new.form.title": "Dashboard title",
+  "dashboards.widgets.noData": "This dashboard contains no data. Click on the plus icon to drag and drop new widgets",
   "widgets.phoneNumbers.description": "Telephone Numbers",
   "widgets.users.description": "Users",
   "widgets.extensions.description": "Extensions",

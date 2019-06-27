@@ -26,7 +26,7 @@
                              class="w-full flex flex-col items-center mt-20"
                              key="no-data">
                             <IconNoData class="h-56 w-56"></IconNoData>
-                            <p class="text-gray-600 max-w-lg text-center">This dashboard contains no data. Click on the plus icon to drag and drop new widgets</p>
+                            <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
                         </div>
                     </DraggableWidgets>
                 </div>
