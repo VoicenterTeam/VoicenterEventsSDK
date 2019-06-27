@@ -1,5 +1,8 @@
 <template>
     <div class="mt-10">
+        <div class="flex justify-end mb-4">
+            <AddButton></AddButton>
+        </div>
         <div class="flex -mx-2">
             <div class="w-full flex-wrap lg:w-1/3 px-2">
                 <WidgetCard icon="IconPhone"
@@ -24,11 +27,13 @@
 </template>
 
 <script>
+  import AddButton from '@/components/AddButton'
   import WidgetCard from '@/components/WidgetCard'
 
   export default {
     name: 'home',
     components: {
+      AddButton,
       WidgetCard
     }
   }
