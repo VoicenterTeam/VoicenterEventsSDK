@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white px-6 py-4 mb-4 flex items-center rounded-lg shadow">
+    <div class="bg-white px-6 py-4 my-4 flex items-center rounded-lg shadow">
         <slot name="icon">
             <component class="w-16 mr-4" :is="icon"></component>
         </slot>
@@ -9,7 +9,7 @@
             </h5>
         </slot>
         <slot name="description">
-            <p class="text-gray-500 text-lg" v-if="description">{{description}}</p>
+            <p class="text-gray-500 text-lg" v-if="description">{{$t(description)}}</p>
         </slot>
     </div>
 </template>
@@ -17,8 +17,14 @@
   export default {
     props: {
       icon: String,
-      title: String,
-      description: String,
+      title: {
+        type: [String, Number],
+        default: '- -'
+      },
+      description: {
+        type: [String],
+        default: '- -'
+      },
     }
   }
 </script>

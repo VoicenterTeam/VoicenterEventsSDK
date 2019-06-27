@@ -6,7 +6,7 @@
 <script>
   export default {
     created() {
-      this.$store.dispatch('dashboard/getDashboards')
+      this.$store.dispatch('dashboards/getDashboards')
       this.$store.dispatch('widgets/getAllWidgets')
     }
   }
