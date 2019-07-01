@@ -1,4 +1,4 @@
-# Project Title
+# Voicenter Events SDK
 
 Voicenter Events SDK aims to manage api and socket communication with Voicenter APIs and backends.
 You can use the SDK to send and receive real time data from and to voicenter servers.
