@@ -1,24 +1,41 @@
 {
-  "name": "voicenter-sdk",
+  "name": "voicenter-events-sdk",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "serve": "vue-cli-service serve ./demo/main.js",
+    "build": "vue-cli-service build --target lib --name voicenter-events-sdk src/index.js",
+    "build:demo": "vue-cli-service build ./demo/main.js",
+    "lint": "vue-cli-service lint",
+    "docs": "npm run docs:serve",
+    "docs:build": "vue-cli-service docs --mode build",
+    "docs:serve": "vue-cli-service docs --mode serve",
+    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && vue-cli-service build",
+    "start": "vue-cli-service serve"
   },
   "dependencies": {
-    "core-js": "^2.6.5",
-    "vue": "^2.6.10"
+    "core-js": "^2.6.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
     "@vue/cli-service": "^3.8.0",
-    "@vue/eslint-config-airbnb": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
-  }
+    "vue-cli-plugin-p11n": "^0.3.0",
+    "vue-template-compiler": "^2.6.10",
+    "vue": "^2.6.10"
+  },
+  "files": [
+    "dist/voicenter-events-sdk.common.js",
+    "dist/voicenter-events-sdk.umd.min.js",
+    "dist/voicenter-events-sdk.umd.js",
+    "dist/voicenter-events-sdk.esm.js",
+    "src"
+  ],
+  "jsdelivr": "dist/voicenter-events-sdk.umd.min.js",
+  "main": "dist/voicenter-events-sdk.common.js",
+  "module": "dist/voicenter-events-sdk.esm.js",
+  "sideeffects": false,
+  "unpkg": "dist/voicenter-events-sdk.umd.min.js"
 }
