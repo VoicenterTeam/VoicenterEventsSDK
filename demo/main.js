@@ -1,11 +1,8 @@
 import Vue from 'vue'
-import App from '~entry'
-import plugin from '../src/index'
-
-Vue.use(plugin)
-
+import App from './App'
+import TreeView from "vue-json-tree-view"
 Vue.config.productionTip = false
-
+Vue.use(TreeView)
 new Vue({
   // NOTE: if you need to inject as option, you can set here!
   // plugin,

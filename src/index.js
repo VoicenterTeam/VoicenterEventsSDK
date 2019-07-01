@@ -1,7 +1,5 @@
 const version = '__VERSION__'
-const sdk = {
-  msg: 'hello'
-}
+import sdk from './sdk'
 
 export default sdk
 
