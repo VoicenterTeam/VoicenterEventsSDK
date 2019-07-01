@@ -10,7 +10,7 @@ module.exports = {
     }
   },
   themeConfig: {
-    repo: '/voicenter-events-sdk',
+    repo: '/voicenter/VoicecenterEventsSDK',
     docsDir: 'docs',
     locales: {
       '/': {
@@ -19,7 +19,7 @@ module.exports = {
         editLinkText: 'Edit this page on GitHub',
         nav: [{
           text: 'Release Notes',
-          link: 'https://github.com//voicenter-events-sdk/releases'
+          link: 'https://github.com//voicenter/VoicecenterEventsSDK/releases'
         }],
         sidebar: [
           '/installation.md',
