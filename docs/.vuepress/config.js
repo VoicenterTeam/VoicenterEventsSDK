@@ -9,6 +9,9 @@ module.exports = {
       description: 'VoicenterEventsSdk for Vue.js'
     }
   },
+  head: [
+    ['link', { rel: 'stylesheet', href: 'https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css'}]
+  ],
   themeConfig: {
     repo: '/voicenter/VoicecenterEventsSDK',
     docsDir: 'docs',
@@ -24,6 +27,7 @@ module.exports = {
         sidebar: [
           '/installation.md',
           '/started.md',
+          '/demo.md'
         ]
       }
     }

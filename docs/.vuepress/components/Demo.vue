@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="bg-gray-100 min-h-screen px-20 py-8">
+  <div id="app" class="min-h-screen py-8">
     <div class="flex mb-3 w-full items-end">
       <div class="flex-1">
         <label>Monitor Code</label>
@@ -32,53 +32,61 @@
 </template>
 
 <script>
-import EventsSdk from '../src/index'
-export default {
-  name: 'app',
-  data() {
-    return {
-      events: [],
-      monitorCode: 'FWsqFkPDsJuuh54YU0VLCvTu5EIrplkrUFVQ7yMiXh7U52hfiNOYanNINtekWBb6X06C3LQR7jfgCCWGAbKKCdBJAeQFIWO3DCCl',
-      error: ''
-    }
-  },
-  methods: {
-    async login() {
-      this.events = []
-      this.error = ''
-      try {
-        let sdk = new EventsSdk({
-          token: this.monitorCode
-        })
-        await sdk.login()
-        sdk.on('*', data => {
-          this.events.unshift({
-            timestamp: new Date(),
-            ...data
-          })
-        })
-      } catch (e) {
-        this.error = e
+  import Vue from 'vue';
+  import EventsSdk from '../../../src';
+  import TreeView from 'vue-json-tree-view';
+
+  Vue.use(TreeView);
+  export default {
+    name: 'app',
+    data() {
+      return {
+        events: [],
+        monitorCode: 'FWsqFkPDsJuuh54YU0VLCvTu5EIrplkrUFVQ7yMiXh7U52hfiNOYanNINtekWBb6X06C3LQR7jfgCCWGAbKKCdBJAeQFIWO3DCCl',
+        error: ''
+      };
+    },
+    methods: {
+      async login() {
+        this.events = [];
+        this.error = '';
+        try {
+          let sdk = new EventsSdk({
+            token: this.monitorCode
+          });
+          await sdk.login();
+          sdk.on('*', data => {
+            this.events.unshift({
+              timestamp: new Date(),
+              ...data
+            });
+          });
+        } catch (e) {
+          this.error = e;
+        }
       }
+    },
+    async mounted() {
+      this.login();
     }
-  },
-  async mounted() {
-    this.login()
-  }
-};
+  };
 </script>
 
 <style>
   .list-enter-active, .list-leave-active {
     transition: all .4s;
   }
+
   .list-leave-active {
     position: absolute;
   }
-  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+
+  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */
+  {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   .list-move {
     transition: transform .3s;
   }

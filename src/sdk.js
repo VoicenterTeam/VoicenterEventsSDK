@@ -1,4 +1,4 @@
-import io from 'socket.io-client'
+import io from 'socket.io-client/socket.io'
 import eventTypes from './eventTypes'
 const defaultOptions = {
   url: 'https://monitor5.voicenter.co.il/',
