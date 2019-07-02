@@ -35,14 +35,14 @@
   import Vue from 'vue';
   import EventsSdk from '../../../src';
   import TreeView from 'vue-json-tree-view';
-
   Vue.use(TreeView);
+  let token = process.env.NODE_ENV === 'development' ? 'FWsqFkPDsJuuh54YU0VLCvTu5EIrplkrUFVQ7yMiXh7U52hfiNOYanNINtekWBb6X06C3LQR7jfgCCWGAbKKCdBJAeQFIWO3DCCl': ''
   export default {
     name: 'app',
     data() {
       return {
         events: [],
-        monitorCode: 'FWsqFkPDsJuuh54YU0VLCvTu5EIrplkrUFVQ7yMiXh7U52hfiNOYanNINtekWBb6X06C3LQR7jfgCCWGAbKKCdBJAeQFIWO3DCCl',
+        monitorCode: token,
         error: ''
       };
     },
