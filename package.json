@@ -36,6 +36,9 @@
     "dist/voicenter-events-sdk.esm.js",
     "src"
   ],
+  "engines" : {
+    "node" : ">=8.9 <9"
+  },
   "jsdelivr": "dist/voicenter-events-sdk.umd.min.js",
   "main": "dist/voicenter-events-sdk.common.js",
   "module": "dist/voicenter-events-sdk.esm.js",
