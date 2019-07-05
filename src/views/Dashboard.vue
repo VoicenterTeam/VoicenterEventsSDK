@@ -12,13 +12,15 @@
         </div>
         <fade-transition mode="out-in" :duration="250">
             <div :key="activeDashboard.ID">
-                <div v-for="widgetGroup in activeDashboard.WidgetGroupList" :key="widgetGroup.ID" class="my-10" :class="{'editable-widgets':editMode}">
+                <div v-for="(widgetGroup, index) in activeDashboard.WidgetGroupList" :key="widgetGroup.ID" class="my-10" :class="{'editable-widgets':editMode}">
                     <div v-if="editMode" class="flex items-center justify-between mb-8">
                         <div class="flex items-center border-b border-b-2 border-blue-500 py-2">
                             <input class="appearance-none bg-transparent border-none w-full text-blue font-bold mr-3 py-1 px-2 leading-tight focus:outline-none"
                                    type="text" :placeholder="$t(widgetGroup.Title)" aria-label="Full name">
                         </div>
-                        <Trash2Icon  class="flex align-center w-6 h-6 text-red"></Trash2Icon>
+                        <Trash2Icon class="flex align-center w-6 h-6 text-red"
+                                    @click="removeWidgetGroup(widgetGroup, index)"
+                        ></Trash2Icon>
                     </div>
                     <h3 v-else class="font-semibold text-2xl text-gray-800">{{$t(widgetGroup.Title)}}</h3>
                     <DraggableWidgets group="widgets"
@@ -84,6 +86,12 @@
       },
       removeWidget(widgetGroup, index){
         widgetGroup.WidgetList.splice(index,1)
+      },
+      removeWidgetGroup(widgetGroup, index){
+          widgetGroup.WidgetList.forEach((group,index) => {
+              // To DO: remover widgets
+          })
+          this.$store.state.dashboards.activeDashboard.WidgetGroupList.splice(index,1)
       }
     }
   }
