@@ -128,6 +128,11 @@ export const dashboards = {
         "ID": 23,
         "Title": "widgetGroups.general.title",
         "WidgetList": [widgets[0], widgets[1], widgets[2], widgets[3]]
+      },
+      {
+        "ID": 24,
+        "Title": "widgetGroups.general.title2",
+        "WidgetList": [widgets[1], widgets[2], widgets[0]]
       }
     ]
   },
