@@ -1,15 +1,13 @@
 import { getDashboards } from '@/services/dashboardService'
 import { widgets } from "@/store/mockData";
+import Vue from 'vue'
 
 const types = {
   SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
   SET_ACTIVE_DASHBOARD: 'SET_ACTIVE_DASHBOARD',
   SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
   ADD_DASHBOARD: 'ADD_DASHBOARD',
-  UPDATE_WIDGET_GROUP_WIDGETS: 'UPDATE_WIDGET_GROUP_WIDGETS',
-  DELETE_WIDGET_GROUP_WIDGETS: 'DELETE_WIDGET_GROUP_WIDGETS',
-  DELETE_WIDGET_GROUP: 'DELETE_WIDGET_GROUP',
-  ADD_WIDGET_GROUP: 'ADD_WIDGET_GROUP'
+  UPDATE_DASHBOARD: 'UPDATE_DASHBOARD'
 };
 const state = {
   allDashboards: {},
@@ -39,37 +37,16 @@ const mutations = {
       [key]: value
     }
   },
+  [types.UPDATE_DASHBOARD]: (state, { dashboard }) => {
+    let keys = Object.keys(state.allDashboards)
+    keys.forEach(dashboardKey => {
+      if(state.allDashboards[dashboardKey].ID === dashboard.ID){
+        Vue.set(state.allDashboards, dashboardKey, dashboard)
+      }
+    })
+  },
   [types.SET_ACTIVE_DASHBOARD]: (state, value) => {
     state.activeDashboard = value
-  },
-  [types.UPDATE_WIDGET_GROUP_WIDGETS]: (state, { widgetGroup, widgets }) => {
-    let newWidgetGroup = {
-      ...widgetGroup,
-      WidgetList: widgets
-    }
-    let index = state.activeDashboard.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
-    if (index !== -1) {
-      state.activeDashboard.WidgetGroupList.splice(index, 1, newWidgetGroup)
-    }
-  },
-  [types.DELETE_WIDGET_GROUP_WIDGETS]: (state, { widgetGroup, widget }) => {
-    let index = state.activeDashboard.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
-    if (index !== -1) {
-      let widgetIndex = state.activeDashboard.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.ID === widget.ID)
-      if (index !== -1) {
-        state.activeDashboard.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1 )
-      }
-    }
-  },
-  [types.DELETE_WIDGET_GROUP]: (state, { widgetGroup }) => {
-    let index = state.activeDashboard.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
-    if (index !== -1) {
-      state.activeDashboard.WidgetGroupList.splice(index, 1)
-    }
-  },
-  [types.ADD_WIDGET_GROUP]: (state, { widget }) => {
-    state.activeDashboard.WidgetGroupList.splice(0, 0, widget)
-
   },
   [types.SET_DEFAULT_DASHBOARD]: (state) => {
     let keys = Object.keys(state.allDashboards)
@@ -92,22 +69,6 @@ const actions = {
     // TODO add api call to update selected dashboard ?
     commit(types.SET_ACTIVE_DASHBOARD, dashboard)
   },
-  async updateWidgets({ commit, state }, { widgets, widgetGroup }) {
-    // TODO add api call to update widgets
-    commit(types.UPDATE_WIDGET_GROUP_WIDGETS, { widgetGroup, widgets })
-  },
-  async deleteWidgetGroupWidget({ commit, state }, { widgetGroup, widget }) {
-    // TODO add api call to delete widget group
-    commit(types.DELETE_WIDGET_GROUP_WIDGETS, { widgetGroup, widget })
-  },
-  async addWidgetGroup({ commit, state }, { widget }) {
-    // TODO add api call to delete widget group
-    commit(types.ADD_WIDGET_GROUP, { widget })
-  },
-  async deleteWidgetGroup({ commit, state }, {  widgetGroup }) {
-    // TODO add api call to delete widget group
-    commit(types.DELETE_WIDGET_GROUP, { widgetGroup, widgets })
-  },
   async createDashboard({ commit }, newDashboard) {
     // TODO call api to add dashboard
     const dashboard = {
@@ -116,7 +77,7 @@ const actions = {
       "WidgetGroupList": [
         {
           "ID": Math.random() * 100,
-          "Title": "widgetGroups.general.title",
+          "Title": "General Group Title",
           "WidgetList": []
         }
       ]
@@ -127,6 +88,9 @@ const actions = {
       value: dashboard
     })
     commit(types.SET_ACTIVE_DASHBOARD, dashboard)
+  },
+  async updateDashboard({commit}, dashboard){
+    commit(types.UPDATE_DASHBOARD, dashboard)
   }
 };
 const getters = {};
