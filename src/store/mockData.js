@@ -126,23 +126,23 @@ export const dashboards = {
     "WidgetGroupList": [
       {
         "ID": 23,
-        "Title": "widgetGroups.general.title",
+        "Title": "General statistics",
         "WidgetList": [widgets[0], widgets[1], widgets[2], widgets[3]]
       },
       {
         "ID": 24,
-        "Title": "widgetGroups.general.title2",
+        "Title": "General statistics 2",
         "WidgetList": [widgets[1], widgets[2], widgets[0]]
       }
     ]
   },
   "dashboard2": {
     "ID": 2,
-    "Title": "dashboards.queue",
+    "Title": "Queue Dashboard",
     "WidgetGroupList": [
       {
         "ID": 23,
-        "Title": "widgetGroups.queue.title",
+        "Title": "Queue Dashboard",
         "WidgetList": [...widgets]
       }
     ]

@@ -1,8 +1,8 @@
 <template>
     <div class="pt-24">
         <div class="flex justify-end relative my-4">
-            <EditButton  class="mx-3" @click.stop="editMode = !editMode"></EditButton>
             <AddButton @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
+            <EditButton  class="ml-3" @click.stop="editMode = !editMode" :edit-mode="editMode"></EditButton>
             <fade-transition>
                 <WidgetMenu v-if="showWidgetMenu"
                             v-click-outside="onWidgetMenuClickOutside"
@@ -10,19 +10,28 @@
                 </WidgetMenu>
             </fade-transition>
         </div>
+        <div class="flex justify-end" v-if="editMode">
+            <button class="btn flex items-center p-4 text-blue shadow rounded bg-white cursor-pointer" @click="addNewGroup">
+                <IconPlus class="w-3 mr-1 mb-1 fill-current"></IconPlus>
+                <span class="text-xs">{{$t('common.newDashboard')}}</span>
+            </button>
+        </div>
         <fade-transition mode="out-in" :duration="250">
             <div :key="activeDashboard.ID">
                 <div v-for="widgetGroup in activeDashboard.WidgetGroupList" :key="widgetGroup.ID" class="my-10" :class="{'editable-widgets':editMode}">
                     <div v-if="editMode" class="flex items-center justify-between mb-8">
                         <div class="flex items-center border-b border-b-2 border-blue-500 py-2">
                             <input class="appearance-none bg-transparent border-none w-full text-blue font-bold mr-3 py-1 px-2 leading-tight focus:outline-none"
-                                   type="text" :placeholder="$t(widgetGroup.Title)" aria-label="Full name">
+                                   v-model="widgetGroup.Title"
+                                   :placeholder="$t('common.setGroupTitle')"
+                                   type="text"
+                                   aria-label="Full name">
                         </div>
-                        <Trash2Icon class="flex align-center w-6 h-6 text-red"
+                        <Trash2Icon class="flex align-center w-6 h-6 text-red cursor-pointer"
                                     @click="removeWidgetGroup(widgetGroup)"
                         ></Trash2Icon>
                     </div>
-                    <h3 v-else class="font-semibold text-2xl text-gray-800">{{$t(widgetGroup.Title)}}</h3>
+                    <h3 v-else class="font-semibold text-2xl text-gray-800">{{widgetGroup.Title}}</h3>
                     <DraggableWidgets group="widgets"
                                       :value="widgetGroup.WidgetList"
                                       @input="val => onListChange(val, widgetGroup)">
@@ -89,6 +98,14 @@
       },
       removeWidgetGroup(widgetGroup){
           this.$store.dispatch('dashboards/deleteWidgetGroup', { widgetGroup })
+      },
+      addNewGroup(){
+          let widget = {
+              "ID": Math.random() * 100,
+              "Title": "",
+              "WidgetList": []
+          }
+          this.$store.dispatch('dashboards/addWidgetGroup', { widget })
       }
     }
   }

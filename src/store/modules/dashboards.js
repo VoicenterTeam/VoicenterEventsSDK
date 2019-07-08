@@ -8,7 +8,8 @@ const types = {
   ADD_DASHBOARD: 'ADD_DASHBOARD',
   UPDATE_WIDGET_GROUP_WIDGETS: 'UPDATE_WIDGET_GROUP_WIDGETS',
   DELETE_WIDGET_GROUP_WIDGETS: 'DELETE_WIDGET_GROUP_WIDGETS',
-  DELETE_WIDGET_GROUP: 'DELETE_WIDGET_GROUP'
+  DELETE_WIDGET_GROUP: 'DELETE_WIDGET_GROUP',
+  ADD_WIDGET_GROUP: 'ADD_WIDGET_GROUP'
 };
 const state = {
   allDashboards: {},
@@ -66,6 +67,10 @@ const mutations = {
       state.activeDashboard.WidgetGroupList.splice(index, 1)
     }
   },
+  [types.ADD_WIDGET_GROUP]: (state, { widget }) => {
+    state.activeDashboard.WidgetGroupList.splice(0, 0, widget)
+
+  },
   [types.SET_DEFAULT_DASHBOARD]: (state) => {
     let keys = Object.keys(state.allDashboards)
     if (keys.length) {
@@ -94,6 +99,10 @@ const actions = {
   async deleteWidgetGroupWidget({ commit, state }, { widgetGroup, widget }) {
     // TODO add api call to delete widget group
     commit(types.DELETE_WIDGET_GROUP_WIDGETS, { widgetGroup, widget })
+  },
+  async addWidgetGroup({ commit, state }, { widget }) {
+    // TODO add api call to delete widget group
+    commit(types.ADD_WIDGET_GROUP, { widget })
   },
   async deleteWidgetGroup({ commit, state }, {  widgetGroup }) {
     // TODO add api call to delete widget group
