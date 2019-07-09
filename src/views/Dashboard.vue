@@ -90,7 +90,7 @@
       return {
         showWidgetMenu: false,
         showWidgetMenu2: false,
-        editMode: false,
+          editMode: false,
         activeDashboardData: cloneDeep(this.$store.state.dashboards.activeDashboard)
       }
     },
@@ -110,17 +110,29 @@
       orderWidgetGroup(widgetGroup, direction) {
           let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
           let newIndex = index;
-          if(direction === 'up' && index - 1 > -1 ){
+          if(direction === 'up' ){
               newIndex = index - 1;
-          } else if ( index+1 < this.activeDashboardData.WidgetGroupList.length) {
+          } else {
               newIndex= index + 1;
           }
           let originWidget = this.activeDashboardData.WidgetGroupList[index];
           let destinationWidget = this.activeDashboardData.WidgetGroupList[newIndex];
 
-debugger
-          this.activeDashboardData.WidgetGroupList.splice(newIndex, 1, originWidget )
-          this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationWidget)
+          if(newIndex < 0 ){
+              let selectedGroup = this.activeDashboardData.WidgetGroupList[0];
+              this.activeDashboardData.WidgetGroupList.splice(0, 1)
+              this.activeDashboardData.WidgetGroupList.push(selectedGroup)
+
+          } else if(newIndex >= this.activeDashboardData.WidgetGroupList.length) {
+              let newPosition = this.activeDashboardData.WidgetGroupList.length-1;
+              let selectedGroup = this.activeDashboardData.WidgetGroupList[newPosition];
+              this.activeDashboardData.WidgetGroupList.splice(newPosition, 1)
+              this.activeDashboardData.WidgetGroupList.splice(0, 0, selectedGroup)
+
+          } else {
+              this.activeDashboardData.WidgetGroupList.splice(newIndex, 1, originWidget)
+              this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationWidget)
+          }
 
       },
       onListChange(widgets, widgetGroup) {

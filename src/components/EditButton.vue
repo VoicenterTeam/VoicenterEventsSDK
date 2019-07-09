@@ -16,18 +16,18 @@
                 @click="$emit('reset-dashboard')"
                 v-bind="$attrs"
                 v-on="$listeners">
-            <TrashIcon class="w-5 h-5 text-red"></TrashIcon>
+            <XIcon class="w-5 h-5 text-red"></XIcon>
         </button>
     </div>
 </template>
 <script>
-    import { EditIcon, CheckIcon, TrashIcon } from 'vue-feather-icons'
+    import { EditIcon, CheckIcon, XIcon } from 'vue-feather-icons'
     export default {
         inheritAttrs: false,
         components:{
+            XIcon,
             EditIcon,
-            CheckIcon,
-            TrashIcon
+            CheckIcon
         },
         props:{
             editMode:{
