@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white p-10 rounded-lg">
+    <div class="bg-white p-10 rounded-lg shadow">
         <div class="flex justify-end">
             <div class="my-4">
                 <el-select
@@ -8,6 +8,7 @@
                         multiple
                         filterable
                         default-first-option
+                        size="large"
                         placeholder="Choose tags for your article">
                     <el-option
                             v-for="item in optionColumns"
@@ -19,6 +20,7 @@
             </div>
         </div>
         <el-table ref="table"
+                  stripe
                   :data="tableData"
                   v-bind="$attrs"
                   v-on="listeners">

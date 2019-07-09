@@ -33,6 +33,7 @@
             </div>
         </fade-transition>
         <data-table :data="tableData"
+                    sorbable
                     :columns="columns"
         ></data-table>
     </div>
@@ -127,7 +128,8 @@
             },
             {
                 prop: 'since',
-                label: 'Since'
+                label: 'Since',
+                sortable:true
             },
             {
                 prop: 'salary',
@@ -155,4 +157,8 @@
   }
 </script>
 <style>
+    .el-table__row .cell{
+        @apply text-gray-500;
+    }
+
 </style>
