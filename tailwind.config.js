@@ -10,6 +10,14 @@ module.exports = {
         blue: {
           ...defaultTheme.colors.blue,
           default: '#2575FF'
+        },
+        red: {
+          ...defaultTheme.colors.red,
+          default: '#ff6060'
+        },
+        green: {
+          ...defaultTheme.colors.green,
+          default: '#7ed321'
         }
       },
       fontFamily: {
