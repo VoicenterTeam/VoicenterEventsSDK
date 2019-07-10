@@ -26,9 +26,6 @@
     "vue-json-tree-view": "^2.1.4",
     "vue-template-compiler": "^2.6.10"
   },
-  "peerDependencies": {
-    "socket.io-client": "1.3.6"
-  },
   "files": [
     "dist/voicenter-events-sdk.common.js",
     "dist/voicenter-events-sdk.umd.min.js",
@@ -36,8 +33,8 @@
     "dist/voicenter-events-sdk.esm.js",
     "src"
   ],
-  "engines" : {
-    "node" : ">=8.9 <9"
+  "engines": {
+    "node": ">=8.9 <9"
   },
   "jsdelivr": "dist/voicenter-events-sdk.umd.min.js",
   "main": "dist/voicenter-events-sdk.common.js",

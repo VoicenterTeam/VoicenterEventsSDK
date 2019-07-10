@@ -16,7 +16,7 @@
            class="bg-white shadow-lg rounded-lg p-8 flex flex-col mb-5">
         <div class="flex w-full justify-between">
           <div class="text-xl text-green-500 mb-3">{{event.name}}</div>
-          <span class="text-gray-500">{{event.timestamp}}</span>
+          <span class="text-gray-500">{{event.timestamp.toUTCString()}}</span>
         </div>
         <span class="text-xl text-blue-500">Event Data</span>
         <tree-view :data="event.data" :options="{ maxDepth: 0, rootObjectKey: 'data'}"></tree-view>
@@ -36,7 +36,7 @@
   import EventsSdk from '../../../src';
   import TreeView from 'vue-json-tree-view';
   Vue.use(TreeView);
-  let token = process.env.NODE_ENV === 'development' ? 'FWsqFkPDsJuuh54YU0VLCvTu5EIrplkrUFVQ7yMiXh7U52hfiNOYanNINtekWBb6X06C3LQR7jfgCCWGAbKKCdBJAeQFIWO3DCCl': ''
+  let token = process.env.NODE_ENV === 'development' ? 'gnmm6TZnsvOHAi8KMvsDDm0UeBGX8i8nCfgSc7y8FqbQWPkzeaHzHE7XKucN1D7k7lGMfopuIRL6oJXSKvxkWS2Qpb6HrkIh4nUh': ''
   export default {
     name: 'app',
     data() {
@@ -51,11 +51,8 @@
         this.events = [];
         this.error = '';
         try {
-          let sdk = new EventsSdk({
-            token: this.monitorCode
-          });
-          await sdk.login();
-          sdk.on('*', data => {
+          await this.sdk.login()
+          this.sdk.on('*', data => {
             this.events.unshift({
               timestamp: new Date(),
               ...data
@@ -67,6 +64,12 @@
       }
     },
     async mounted() {
+      let sdk = new EventsSdk({
+        token: this.monitorCode,
+        debug: true
+      });
+      await sdk.init();
+      this.sdk = sdk
       this.login();
     }
   };
