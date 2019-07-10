@@ -4,6 +4,7 @@
   "common.cancel": "Cancel",
   "common.save": "Save",
   "common.newGroup": "New Group",
+  "common.selectColumn": "Select Column",
   "common.setGroupTitle": "Set Group Title",
   "dashboards.main": "Main Dashboard",
   "dashboards.queue": "Queue Dashboard",
