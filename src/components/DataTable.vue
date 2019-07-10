@@ -32,15 +32,15 @@
                         v-for="column in columnData"
                         :key="column.prop"
                         v-bind="column"
+                        :column-key="column.prop"
                         :min-width="column.minWidth || '150px'"
                         :fixed="column.fixed || false"
                         :type="column.type">
                     <template slot="header">
-                        <span class="flex items-center" @mouseenter="hoverOverHeader(column)"
-                        @mouseleave="hoverOverHeader(column)">
+                        <span class="flex items-center" @mouseover="hoverOverHeader(column)" @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
-                        <span class="flex justify-end w-3/6" v-if="column.edit">
+                        <span class="justify-end w-3/6 header-handle">
                             <more-vertical-icon class="flex align-center w-4 h-4 -mx-1"></more-vertical-icon>
                             <more-vertical-icon class="flex align-center w-4 h-4 -mx-2"></more-vertical-icon>
                         </span>
@@ -136,10 +136,16 @@
     }
 </script>
 
-<style >
-    .el-table th:hover{
+<style lang="scss">
+    .el-table th .header-handle {
+        display: none;
+    }
+    .el-table th:hover {
         @apply bg-gray-100;
         @apply cursor-pointer
+    }
+    .el-table th:hover .header-handle {
+        display: flex;
     }
     .el-table th>.cell{
         @apply flex;
