@@ -1,4 +1,18 @@
 export default {
   LOGIN: 'loginStatus',
-  EXTENSION: 'AllExtensionsStatus'
+  LOGIN_RESPONSE: 'loginResponse',
+  QUEUE_EVENT: 'QueueEvent',
+  EXTENSION_EVENT: 'ExtensionEvent',
+  ALL_EXTENSION_STATUS: 'AllExtensionsStatus',
+  EXTENSION_UPDATED: 'ExtensionsUpdated',
+  QUEUES_UPDATED: 'QueuesUpdated',
+  CONNECT_ERROR: 'connect_error',
+  CONNECT_TIMEOUT: 'connect_timeout',
+  RECONNECT: 'reconnect',
+  RECONNECT_ATTEMPT: 'reconnect_attempt',
+  RECONNECTING: 'reconnecting',
+  RECONNECT_ERROR: 'reconnect_error',
+  RECONNECT_FAILED: 'reconnect_failed',
+  KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
+  ERROR: 'error',
 }

@@ -1,5 +1,6 @@
 import io from 'socket.io-client/socket.io'
 import eventTypes from './eventTypes'
+import Logger from './Logger'
 const defaultOptions = {
   url: 'https://monitor5.voicenter.co.il/',
   timeout: 10000,
@@ -18,6 +19,7 @@ class EventsSDK {
       throw new Error('A token property should be provided')
     }
     this.socket = io(this.options.url)
+    this.Logger = new Logger(this.options)
   }
 
   _onConnect(data) {
@@ -46,6 +48,7 @@ class EventsSDK {
        return
      }
      let evt = this._parsePacket(packet)
+     this.Logger.log(`New event -> ${evt.name}`, evt)
      if (eventName === '*') {
        callback(evt)
      } else if (evt.name === eventName) {
