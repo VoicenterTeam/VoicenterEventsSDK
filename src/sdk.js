@@ -143,6 +143,11 @@ class EventsSDK {
     }
   }
 
+  /**
+   * Listens for new events
+   * @param {string} eventName (name of the event, * for all events)
+   * @param {function} callback (callback function when even with the specified name is received)
+   */
   on(eventName, callback) {
     this._checkInit()
     this.socket.onevent = (packet) => {
@@ -159,6 +164,12 @@ class EventsSDK {
     };
   }
 
+  /**
+   * Emits an event to the server
+   * @param {string} eventName (name of the event)
+   * @param {object} data (data for the event)
+   */
+
   emit(eventName, data) {
     this._checkInit()
     this.Logger.log(`EMIT -> ${eventName}`, data)
@@ -166,7 +177,7 @@ class EventsSDK {
   }
 
   /**
-   * Login
+   * Login (logs in based on the token/credentials provided)
    */
   login() {
     this._checkInit()
