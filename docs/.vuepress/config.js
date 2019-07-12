@@ -25,9 +25,21 @@ module.exports = {
           link: 'https://github.com//voicenter/VoicecenterEventsSDK/releases'
         }],
         sidebar: [
-          '/installation.md',
-          '/started.md',
-          '/demo.md'
+          {
+            title: 'Installation',
+            path: '/installation.md',
+            sidebarDepth: 2
+          },
+          {
+            title: 'Getting started',
+            path: '/started.md',
+            sidebarDepth: 3
+          },
+          {
+            title: 'Demo',
+            path: '/demo.md',
+            sidebarDepth: 2
+          }
         ]
       }
     }

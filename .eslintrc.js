@@ -1,3 +1,4 @@
+const isProd = process.env.NODE_ENV === 'production'
 module.exports = {
   root: true,
   env: {
@@ -7,8 +8,8 @@ module.exports = {
     'plugin:vue/essential'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': isProd ? 'error' : 'off',
+    'no-debugger': isProd ? 'error' : 'off',
   },
   parserOptions: {
     parser: 'babel-eslint',

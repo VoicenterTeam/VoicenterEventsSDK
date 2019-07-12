@@ -7,7 +7,7 @@ const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
   token: null,
   forceNew: true,
-  reconnectionDelayMax: 10000,
+  reconnectionDelay: 10000,
   timeout: 10000,
   protocol: 'https'
 };
@@ -18,9 +18,6 @@ class EventsSDK {
       ...defaultOptions,
       ...options,
     };
-    if (!this.options.url) {
-      throw new Error('Server url is required in order to create a connection');
-    }
     if (!this.options.token) {
       throw new Error('A token property should be provided');
     }
@@ -31,8 +28,8 @@ class EventsSDK {
     this.connectionEstablished = false;
     this.reconnectOptions = {
       retryCount: 1,
-      reconnectionDelay: 10000, // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
-      minReconnectionDelay: 10000, // 10 seconds
+      reconnectionDelay: this.options.reconnectionDelay, // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
+      minReconnectionDelay: this.options.reconnectionDelay, // 10 seconds
       maxReconnectionDelay: 60000 * 5 // 5 minutes
     };
   }
@@ -82,12 +79,19 @@ class EventsSDK {
 
   async init() {
     if (this.connectionEstablished) {
-      return;
+      return true;
     }
     await this._getServers();
     this._findCurrentServer();
     this._initSocketConnection();
     this._initSocketEvents();
+    return true
+  }
+
+  _checkInit() {
+     if (!this.connectionEstablished) {
+       throw new Error('Make sure you call "sdk.init()" before doing other operations.')
+     }
   }
 
   _initSocketConnection() {
@@ -140,6 +144,7 @@ class EventsSDK {
   }
 
   on(eventName, callback) {
+    this._checkInit()
     this.socket.onevent = (packet) => {
       if (!packet.data) {
         return;
@@ -155,19 +160,20 @@ class EventsSDK {
   }
 
   emit(eventName, data) {
+    this._checkInit()
+    this.Logger.log(`EMIT -> ${eventName}`, data)
     this.socket.emit(eventName, data);
   }
 
   /**
    * Login
-   * @param data
    */
   login() {
+    this._checkInit()
     return new Promise((resolve, reject) => {
       this.on(eventTypes.LOGIN, data => {
         resolve(data)
       })
-      this.Logger.log(`EMIT -> login`, this.reconnectOptions)
       this.emit('login', { token: this.options.token });
       this.socket.on(eventTypes.ERROR, err => {
         if(!resolved) {
