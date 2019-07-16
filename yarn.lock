@@ -4596,6 +4596,11 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jwt-decode@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-2.2.0.tgz#7d86bd56679f58ce6a84704a657dd392bba81a79"
+  integrity sha1-fYa9VmefWM5qhHBKZX3TkruoGnk=
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -7085,6 +7090,11 @@ sort-keys@^2.0.0:
   integrity sha1-ZYU1WEhh7JfXMNbPQYIuH1ZoQSg=
   dependencies:
     is-plain-obj "^1.0.0"
+
+sortablejs@^1.10.0-rc3:
+  version "1.10.0-rc3"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.10.0-rc3.tgz#2fe63463a38b5cd12ec914fc3e03583048496f42"
+  integrity sha512-uw8vZqwI3nkIeAqdrP6N/GDxFW3dY7yz3/rK0GLLoe8aJ2RZALmo6mAwOi+uA7RYuqfz2lm7AACr4ms6gXcb6w==
 
 sortablejs@^1.9.0:
   version "1.9.0"
