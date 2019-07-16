@@ -17,6 +17,8 @@
   "widgets.stats.description": "Phone calls made",
   "widgetGroups.general.title": "General statistics",
   "widgetGroups.queue.title": "Queue statistics",
+  "navbar.logout": "Logout",
+  "navbar.default.username": "Account",
   "chart.viewFullscreen": "View in full screen",
   "chart.printChart": "Print chart",
   "chart.downloadJPEG": "Download JPEG image",
@@ -25,6 +27,5 @@
   "chart.downloadSVG": "Download SVG vector image",
   "chart.loading": "Loading..",
   "chart.update": "Update chart",
-  "chart.update.title": "Update chart title",
-  "widgetGroups.general.title2": "General statistics 2"
+  "chart.update.title": "Update chart title"
 }
