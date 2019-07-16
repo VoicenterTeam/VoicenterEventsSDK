@@ -14,11 +14,6 @@ const state = {
 const mutations = {
     [types.SET_USERS]: (state, value) => {
         state.allUsers = value
-        if (value && value.length && Object.keys(state.currentUser).length === 0) {
-            state.currentUser = value[0]
-            value[0].primary = true
-            state.allUsers = value
-        }
     },
     [types.SET_CURRENT_USER]: (state, value) => {
         state.currentUser = value
@@ -27,6 +22,8 @@ const mutations = {
         let userIndex = state.allUsers.findIndex(u => u.id === value.id)
         if (userIndex !== -1) {
             state.allUsers.splice(userIndex, 1)
+            state.tokenString = state.tokenString.replace(','+value.token,'')
+            window.history.replaceState({}, "", '?token='+state.tokenString)
         }
     },
     [types.SET_TOKENS]: (state, value) => {
@@ -43,7 +40,7 @@ const actions = {
         commit(types.SET_CURRENT_USER, {})
         commit(types.SET_TOKENS, null)
         commit(types.SET_TOKEN_STRING, null)
-        window.location.href = process.env.VUE_APP_REDIRECT_URL
+        window.location.href = process.env.VUE_APP_FALLBACK_URL
     },
     selectCurrentUser({commit}, users) {
         commit(types.SET_CURRENT_USER, users)

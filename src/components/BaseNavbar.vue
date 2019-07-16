@@ -5,13 +5,13 @@
             <div class="relative">
                 <div class="flex">
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
-                            @click.stop="showDashboardsMenu = !showDashboardsMenu, showUsersMenu = false">
+                            @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
                         <span class="mr-1 text-lg text-gray-700">{{$t(activeDashboard.Title) || activeDashboard.Title}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
-                            @click.stop="showUsersMenu = !showUsersMenu, showDashboardsMenu = false">
-                        <span class="mr-1 text-lg text-gray-700">{{currentUser.name || 'Account'}}</span>
+                            @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
+                        <span class="mr-1 text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                 </div>
@@ -21,7 +21,8 @@
                          class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col">
                     <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
                           @click="chooseDashboard(dashboard)"
-                          v-for="dashboard in allDashboards">
+                          v-for="dashboard in allDashboards"
+                          :class="{ 'text-blue-600': activeDashboard.ID === dashboard.ID}">
                           {{$t(dashboard.Title) || dashboard.Title}}
                     </span>
                         <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer text-gray-600 hover:text-blue-600 flex items-center"
@@ -37,8 +38,9 @@
                          class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col users-menu">
                         <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
                               @click="chooseUser(user)"
-                              v-for="user in allUsers">
-                            {{user.name || 'Account'}}
+                              v-for="user in allUsers"
+                              :class="{ 'text-blue-600': currentUser.id === user.id}">
+                            {{user.name || $t('navbar.default.username') }}
                             <IconMinus v-if="user.id !== currentUser.id"
                                        class="hover:text-red-600 w-4 mr-1 mb-1 fill-current float-right"
                                        v-on:click.stop.prevent="removeUser(user)">
@@ -131,6 +133,10 @@
             logout() {
                 localStorage.clear()
                 this.$store.dispatch('users/logout')
+            },
+            triggerMenus(clicked, second) {
+                this[clicked] = !this[clicked];
+                this[second] = false;
             }
         }
     }
