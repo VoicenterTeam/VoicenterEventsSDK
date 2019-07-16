@@ -5,10 +5,11 @@
     </div>
 </template>
 <script>
-  export default {
-    created() {
-      this.$store.dispatch('dashboards/getDashboards')
-      this.$store.dispatch('widgets/getAllWidgets')
+    export default {
+        created() {
+            this.$store.dispatch('dashboards/getDashboards')
+            this.$store.dispatch('widgets/getAllWidgets')
+            this.$store.dispatch('charts/getAllCharts')
+        }
     }
-  }
 </script>

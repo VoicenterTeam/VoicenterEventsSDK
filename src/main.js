@@ -5,6 +5,7 @@ import store from './store/store'
 import dashboardPlugin from './plugins/dashboardPlugin'
 import './registerServiceWorker'
 import i18n from './i18n'
+
 Vue.config.productionTip = false
 
 Vue.use(dashboardPlugin)

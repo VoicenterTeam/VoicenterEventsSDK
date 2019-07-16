@@ -58,6 +58,9 @@
                 </transition-group>
             </div>
         </fade-transition>
+        <div class="my-4">
+        <demo-charts :charts="allCharts"></demo-charts>
+        </div>
         <demo-table></demo-table>
     </div>
 </template>
@@ -75,6 +78,8 @@
   import BaseInput from "@/components/BaseInput";
   import WidgetEmptyCard from "@/components/WidgetEmptyCard";
   import DemoTable from './DemoTable'
+  import DemoCharts from './DemoCharts'
+
   export default {
     components: {
       DemoTable,
@@ -87,7 +92,8 @@
       AddButton,
       WidgetCard,
       DraggableWidgets,
-      WidgetMenu
+      WidgetMenu,
+      DemoCharts
     },
     data() {
       return {
@@ -103,7 +109,10 @@
       },
       allWidgets() {
         return this.$store.state.widgets.allWidgets
-      }
+      },
+    allCharts() {
+        return this.$store.state.charts.allCharts
+    }
     },
     methods: {
       addWidgetToGroup(widget, widgetGroup){
