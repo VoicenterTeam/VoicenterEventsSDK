@@ -53,7 +53,7 @@ export default function authMiddleware(router, store) {
 
             if (validTokens.length === 0) {
                 store.dispatch('users/logout')
-                // return redirectToLogin(next)
+                return redirectToLogin(next)
             }
 
             store.commit(`users/${types.SET_USERS}`, validTokens)
@@ -62,7 +62,7 @@ export default function authMiddleware(router, store) {
             return next()
         } catch (err) {
             console.log(err)
-            // redirectToLogin(next)
+            redirectToLogin(next)
         }
     })
 }
