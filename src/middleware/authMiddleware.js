@@ -30,10 +30,12 @@ function decodeTokens(tokens) {
 }
 
 function filterExpiredTokens(tokens) {
-    //TODO: check token str
+    // TODO: check token str
     // {
+    //     "id": 123,
     //     "sub": "1234567890",
-    //     "name": "John Doe 11111",
+    //     "name": "John Doe",
+    //     "iat": 1516239022,
     //     "exp": 1563341875
     // }
     return tokens.filter(t => !isTokenExpired(t.exp))

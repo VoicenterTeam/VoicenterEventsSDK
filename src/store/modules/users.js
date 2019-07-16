@@ -3,6 +3,7 @@ export const types = {
     SET_CURRENT_USER: 'SET_CURRENT_USER',
     SET_TOKENS: 'SET_TOKENS',
     SET_TOKEN_STRING: 'SET_TOKEN_STRING',
+    REMOVE_USER: 'REMOVE_USER'
 }
 const state = {
     allUsers: [],
@@ -22,6 +23,12 @@ const mutations = {
     [types.SET_CURRENT_USER]: (state, value) => {
         state.currentUser = value
     },
+    [types.REMOVE_USER]: (state, value) => {
+        let userIndex = state.allUsers.findIndex(u => u.id === value.id)
+        if (userIndex !== -1) {
+            state.allUsers.splice(userIndex, 1)
+        }
+    },
     [types.SET_TOKENS]: (state, value) => {
         state.tokens = value
     },
@@ -36,10 +43,14 @@ const actions = {
         commit(types.SET_CURRENT_USER, {})
         commit(types.SET_TOKENS, null)
         commit(types.SET_TOKEN_STRING, null)
+        window.location.href = process.env.VUE_APP_REDIRECT_URL
     },
     selectCurrentUser({commit}, users) {
         commit(types.SET_CURRENT_USER, users)
     },
+    removeUser({commit}, users) {
+        commit(types.REMOVE_USER, users)
+    }
 }
 
 const getters = {}

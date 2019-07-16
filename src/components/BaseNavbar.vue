@@ -11,7 +11,7 @@
                     </button>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
                             @click.stop="showUsersMenu = !showUsersMenu, showDashboardsMenu = false">
-                        <span class="mr-1 text-lg text-gray-700">{{currentUser.name}}</span>
+                        <span class="mr-1 text-lg text-gray-700">{{currentUser.name || 'Account'}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                 </div>
@@ -35,11 +35,18 @@
                     <div v-if="showUsersMenu"
                          v-click-outside="onMenuClickOutside"
                          class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col users-menu">
-                    <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
-                          @click="chooseUser(user)"
-                          v-for="user in allUsers">
-                          {{user.name}}
-                    </span>
+                        <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
+                              @click="chooseUser(user)"
+                              v-for="user in allUsers">
+                            {{user.name || 'Account'}}
+                            <IconMinus v-if="user.id !== currentUser.id"
+                                       class="hover:text-red-600 w-4 mr-1 mb-1 fill-current float-right"
+                                       v-on:click.stop.prevent="removeUser(user)">
+                            </IconMinus>
+                        </span>
+                        <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
+                              @click="logout">{{$t('navbar.logout')}}
+                        </span>
                     </div>
                 </fade-transition>
             </div>
@@ -118,6 +125,13 @@
                 this.$store.dispatch('users/selectCurrentUser', user)
                 this.showUsersMenu = false
             },
+            removeUser(user) {
+                this.$store.dispatch('users/removeUser', user)
+            },
+            logout() {
+                localStorage.clear()
+                this.$store.dispatch('users/logout')
+            }
         }
     }
 </script>
