@@ -4,16 +4,18 @@ import createPersistedState from 'vuex-persistedstate';
 import dashboards from './modules/dashboards'
 import widgets from './modules/widgets'
 import users from './modules/users'
+import charts from './modules/charts'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     plugins: [createPersistedState({
-        paths: ['dashboards', 'widgets', 'users'] // add here modules or paths you want to sync in local storage
+        paths: ['dashboards', 'widgets', 'charts', 'users'] // add here modules or paths you want to sync in local storage
     })],
     modules: {
         dashboards,
         widgets,
+        charts,
         users
     }
 })
