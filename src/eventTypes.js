@@ -12,6 +12,7 @@ export default {
   RECONNECTING: 'reconnecting',
   RECONNECT_ERROR: 'reconnect_error',
   RECONNECT_FAILED: 'reconnect_failed',
+  KEEP_ALIVE: 'keepalive',
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
   ERROR: 'error',
 }

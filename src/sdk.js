@@ -9,6 +9,7 @@ const defaultOptions = {
   forceNew: true,
   reconnectionDelay: 10000,
   timeout: 10000,
+  keepAliveTimeout: 60000,
   protocol: 'https'
 };
 
@@ -65,6 +66,14 @@ class EventsSDK {
     this.Logger.log(eventTypes.DISCONNECT, this.reconnectOptions)
   }
 
+  _onKeepAlive(data) {
+    console.log('KEEP ALIVE')
+    if(data === false) {
+      this._initSocketConnection()
+    }
+    this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE, this.reconnectOptions)
+  }
+
   _parsePacket(packet) {
     if (!packet.data) {
       return {};
@@ -85,6 +94,7 @@ class EventsSDK {
     this._findCurrentServer();
     this._initSocketConnection();
     this._initSocketEvents();
+    this._initKeepAlive();
     return true
   }
 
@@ -109,6 +119,19 @@ class EventsSDK {
     this.socket.on(eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt.bind(this));
     this.socket.on(eventTypes.CONNECT, this._onConnect.bind(this));
     this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
+    this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
+  }
+
+  _initKeepAlive() {
+    setTimeout(()=>{
+      if(this.socket) {
+        this.emit(eventTypes.KEEP_ALIVE, this.options.token);
+      }
+      else {
+        this._initSocketConnection()
+      }
+      this._initKeepAlive();
+    }, this.options.keepAliveTimeout);
   }
 
   _findCurrentServer() {

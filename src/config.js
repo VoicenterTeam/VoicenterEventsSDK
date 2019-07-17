@@ -3,7 +3,7 @@ export const defaultServers = [
     "URLID": 3,
     "Priority": 3,
     "Version": 2,
-    "Domain": "monitor3.voicenter.co.il"
+    "Domain": "monitor5.voicenter.co.il"
   },
   {
     "URLID": 199,
@@ -15,6 +15,6 @@ export const defaultServers = [
     "URLID": 5,
     "Priority": 0,
     "Version": 2,
-    "Domain": "monitor5.voicenter.co.il"
+    "Domain": "monitor3.voicenter.co.il"
   }
 ]
