@@ -15,20 +15,21 @@
     </div>
 </template>
 <script>
-  import DraggableWidgets from '@/components/DraggableWidgets'
-  import WidgetCard from '@/components/WidgetCard'
-  export default {
-    components: {
-      WidgetCard,
-      DraggableWidgets
-    },
-    props: {
-      widgets: {
-        type: Array,
-        default: () => []
-      }
+    import DraggableWidgets from '@/components/DraggableWidgets'
+    import WidgetCard from '@/components/WidgetCard'
+
+    export default {
+        components: {
+            WidgetCard,
+            DraggableWidgets
+        },
+        props: {
+            widgets: {
+                type: Array,
+                default: () => []
+            }
+        }
     }
-  }
 </script>
 <style>
 </style>

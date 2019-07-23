@@ -1,18 +1,17 @@
 <template>
     <div>
-        <el-tabs>
-            <el-tab-pane v-for="(chart, index) in charts" :label="chart.Type || 'line'">
-                <TimeLineChart v-if="!chart.Type" :chartData="chart" :chartIndex="index"></TimeLineChart>
-                <GanttChart v-if="chart.Type === 'gantt'" :chartData="chart" :chartIndex="index"></GanttChart>
-            </el-tab-pane>
-        </el-tabs>
+        <tabs :circular-timeout="circularTimeout" :tabs="tabs">
+            <template v-slot="{tab, index}">
+                <component :is="tab.component" :chartData="tab.data" :chartIndex="index"></component>
+            </template>
+        </tabs>
     </div>
 </template>
 <script>
 
-    import {Tabs, TabPane} from 'element-ui'
     import TimeLineChart from '@/components/charts/TimeLineChart'
     import GanttChart from '@/components/charts/GanttChart'
+    import Tabs from '@/components/Tabs'
 
     export default {
         props: {
@@ -24,15 +23,63 @@
         components: {
             TimeLineChart,
             GanttChart,
-            [Tabs.name]: Tabs,
-            [TabPane.name]: TabPane,
+            Tabs
         },
         data() {
             return {
+                activeTab: 'first',
+                timeoutId: null,
             };
         },
+        computed: {
+            reportSettings() {
+                return this.$store.state.settings.report
+            },
+            circularTimeout() {
+                if (this.$store.state.settings.report.switching) {
+                    return this.reportSettings.interval
+                } else {
+                    return null
+                }
+            },
+            tabs() {
+                //TODO: api object structure is needed to view
+                return [{
+                    name: 'first',
+                    label: 'First',
+                    data: this.charts[0],
+                    component: 'TimeLineChart'
+                }, {
+                    name: 'second',
+                    label: 'Second',
+                    data: this.charts[1],
+                    component: 'GanttChart'
+                }]
+            }
+        },
+        methods: {
+            syncChartData(settings) {
+                clearInterval(this.timeoutId)
+                if (settings.refresh) {
+                    //TODO: CHECK API - get one chart data
+                    this.timeoutId = setInterval(() => {
+                        this.$store.dispatch('charts/getAllCharts')
+                    }, settings.interval * 1000)
+                }
+            },
+        },
+        watch: {
+            reportSettings: {
+                immediate: true,
+                handler: function (settings) {
+                    this.syncChartData(settings)
+                }
+            }
+        },
+        beforeDestroy() {
+            clearInterval(this.timeoutId)
+        }
     }
 </script>
 <style>
-
 </style>

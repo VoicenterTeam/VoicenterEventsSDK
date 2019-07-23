@@ -105,11 +105,11 @@ export default {
             width: '80px',
             padding: 4,
             style: {
-                color: config.colors.info,
+                color: config.colors.primary,
             },
             states: {
                 select: {
-                    fill: config.colors.info,
+                    fill: config.colors.primary,
                     style: {
                         color: 'white',
                     }
@@ -117,7 +117,7 @@ export default {
             }
         },
         inputStyle: {
-            color: config.colors.info
+            color: config.colors.primary
         },
         labelStyle: {
             display: 'block',

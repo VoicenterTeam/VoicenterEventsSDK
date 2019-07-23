@@ -204,7 +204,6 @@ export const charts = [
     },
 
     //TODO: wait for API response to check another obj.str
-
     {
         "ID": 2,
         "Title": "Simple Gantt Chart",
@@ -242,3 +241,15 @@ export const charts = [
         }],
     },
 ]
+
+export const settings = {
+    report: {
+        interval: 3,
+        switching: true,
+        refresh: false
+    },
+    colors: {
+        primary: '#2575FF',
+        secondary: '#876cff'
+    }
+}

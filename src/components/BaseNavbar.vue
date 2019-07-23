@@ -14,6 +14,9 @@
                         <span class="mr-1 text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
+                    <div class="flex p-3 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
+                        <IconSettings class="text-primary"></IconSettings>
+                    </div>
                 </div>
                 <fade-transition :duration="250">
                     <div v-if="showDashboardsMenu"
@@ -22,12 +25,12 @@
                     <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
                           @click="chooseDashboard(dashboard)"
                           v-for="dashboard in allDashboards"
-                          :class="{ 'text-blue-600': activeDashboard.ID === dashboard.ID}">
+                          :class="{ 'text-primary': activeDashboard.ID === dashboard.ID}">
                           {{$t(dashboard.Title) || dashboard.Title}}
                     </span>
                         <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer text-gray-600 hover:text-blue-600 flex items-center"
                               @click="createNewDashboard()">
-                        <IconPlus class="w-4 mr-1 mb-1 fill-current"></IconPlus>
+                        <IconPlus class="w-4 mr-1 mb-1 text-primary"></IconPlus>
                         <span>{{$t('common.newDashboard')}}</span>
                     </span>
                     </div>
@@ -39,7 +42,7 @@
                         <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
                               @click="chooseUser(user)"
                               v-for="user in allUsers"
-                              :class="{ 'text-blue-600': currentUser.id === user.id}">
+                              :class="{ 'text-primary': currentUser.id === user.id}">
                             {{user.name || $t('navbar.default.username') }}
                             <IconMinus v-if="user.id !== currentUser.id"
                                        class="hover:text-red-600 w-4 mr-1 mb-1 fill-current float-right"
@@ -65,11 +68,15 @@
                     <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
                 </template>
             </el-dialog>
+            <settings
+                    :visible.sync="showEditSettingsDialog">
+            </settings>
         </div>
     </nav>
 </template>
 <script>
     import {Dialog} from 'element-ui'
+    import Settings from './Settings'
 
     function newDashboardData() {
         return {
@@ -79,14 +86,16 @@
 
     export default {
         components: {
-            [Dialog.name]: Dialog
+            [Dialog.name]: Dialog,
+            Settings
         },
         data() {
             return {
                 showDashboardsMenu: false,
                 showUsersMenu: false,
                 showCreateDashboardDialog: false,
-                newDashboard: newDashboardData()
+                newDashboard: newDashboardData(),
+                showEditSettingsDialog: false,
             }
         },
         computed: {
@@ -101,7 +110,7 @@
             },
             allUsers() {
                 return this.$store.state.users.allUsers
-            }
+            },
         },
         methods: {
             chooseDashboard(dashboard) {
@@ -137,8 +146,8 @@
             triggerMenus(clicked, second) {
                 this[clicked] = !this[clicked];
                 this[second] = false;
-            }
-        }
+            },
+        },
     }
 </script>
 <style scoped>
@@ -149,6 +158,6 @@
     }
 
     .users-menu {
-        right: 0;
+        right: 2.9rem;
     }
 </style>

@@ -1,8 +1,8 @@
 <template>
    <div class="bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow">
-       <div class=" flex items-center">
+       <div class="flex items-center">
            <slot name="icon">
-               <component class="w-16 mr-4" :is="icon"></component>
+               <component class="w-16 mr-4 text-primary" :is="icon"></component>
            </slot>
            <slot name="title">
                <h5 class="text-3xl font-bold mr-4" v-if="title">
@@ -17,8 +17,8 @@
        <div class="flex editable-content" v-if="editable">
            <trash-icon class="flex align-center w-8 h-8 p-2 text-red close-icon  bg-red-100"
            @click="$emit('remove-item')"></trash-icon>
-           <more-vertical-icon class="flex align-center w-5 h-8 text-blue -mx-1"></more-vertical-icon>
-           <more-vertical-icon class="flex align-center w-5 h-8 text-blue -mx-2"></more-vertical-icon>
+           <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
+           <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
        </div>
    </div>
 </template>

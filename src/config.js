@@ -1,7 +1,8 @@
 export default {
     colors: {
         default: '#344675',
-        primary: '#7050ec',
+        primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)',
         info: '#2675ff',
         danger: '#d93346',
         orange: '#ff8a76',

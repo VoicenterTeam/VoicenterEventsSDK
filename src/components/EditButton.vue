@@ -3,7 +3,7 @@
             :class="{'active-btn': editMode}"
             v-bind="$attrs"
             v-on="$listeners">
-        <EditIcon class="w-5 h-5 text-blue"></EditIcon>
+        <EditIcon class="w-5 h-5 text-primary"></EditIcon>
     </button>
     <div v-else>
         <button class="btn p-4 shadow rounded bg-white hover:bg-green-100 active:shadow-inner mr-3"

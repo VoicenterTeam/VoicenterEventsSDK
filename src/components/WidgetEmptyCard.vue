@@ -2,7 +2,7 @@
     <div class="w-full lg:w-1/3 p-4 my-4 bg-gray-300 flex items-center justify-center rounded-lg shadow cursor-pointer">
         <div class="flex items-center justify-center"
              @click.stop="updateEditWidget">
-            <IconPlusCircle class="w-12 mr-4 text-blue"></IconPlusCircle>
+            <IconPlusCircle class="w-12 mr-4 text-primary"></IconPlusCircle>
             <fade-transition>
                 <WidgetMenu v-if="widgetGroup && widgetGroup.edit"
                             v-click-outside="onWidgetMenuClickOutside"

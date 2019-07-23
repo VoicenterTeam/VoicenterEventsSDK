@@ -1,6 +1,6 @@
 <template>
-    <div class="flex items-center border-b border-b-2 border-blue-500 py-2">
-        <input class="appearance-none bg-transparent border-none w-full text-blue font-bold mr-3 py-1 px-2 leading-tight focus:outline-none"
+    <div class="flex items-center border-b border-b-2 border-primary py-2">
+        <input class="appearance-none bg-transparent border-none w-full text-primary font-bold mr-3 py-1 px-2 leading-tight focus:outline-none"
                :placeholder="$t('common.setGroupTitle')"
                :value="value"
                v-bind="$attrs"

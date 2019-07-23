@@ -27,5 +27,19 @@
   "chart.downloadSVG": "Download SVG vector image",
   "chart.loading": "Loading..",
   "chart.update": "Update chart",
-  "chart.update.title": "Update chart title"
+  "chart.update.title": "Update chart title",
+  "settings.update.title": "General Settings",
+  "settings.report.title": "Reports",
+  "settings.switch.title": "Switch category every",
+  "settings.switch.interval": "Seconds",
+  "settings.category.switching": "Automatic category switching ",
+  "settings.category.refresh": "Automatic category refresh",
+  "settings.settings": "Settings",
+  "settings.reports": "Reports",
+  "settings.colors": "Colors",
+  "settings.color.primary": "Primary",
+  "settings.color.secondary": "Secondary"
 }
+
+
+
