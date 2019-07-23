@@ -17,7 +17,19 @@ class Logger {
   }
 
   /**
-   * Logs messages in case debug mode is one
+   * Logs to console a colored message
+   * @param message
+   * @param data
+   * @private
+   */
+  _error(message, data) {
+    let toLog = data ? `${message}, Data -> ${JSON.stringify(data)}` : `${message}`
+    let now = new Date().toUTCString()
+    console.error(`${now}: ${toLog}`)
+  }
+
+  /**
+   * Logs messages in case debug mode is set
    * @param message
    * @param data
    */
@@ -27,6 +39,20 @@ class Logger {
         this._log(message)
       } else {
         this._log(message, data)
+      }
+    }
+  }
+  /**
+   * Logs error messages in case debug mode is set
+   * @param message
+   * @param data
+   */
+  error(message, data) {
+    if (this.debug) {
+      if (message && !data) {
+        this._error(message)
+      } else {
+        this._error(message, data)
       }
     }
   }

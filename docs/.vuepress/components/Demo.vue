@@ -68,6 +68,7 @@
         token: this.monitorCode,
         debug: true
       });
+      window.sdk = sdk
       await sdk.init();
       this.sdk = sdk
       this.login();
