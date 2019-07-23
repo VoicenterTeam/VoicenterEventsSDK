@@ -48,19 +48,22 @@
     },
     methods: {
       async login() {
-        this.events = [];
         this.error = '';
         try {
           await this.sdk.login()
-          this.sdk.on('*', data => {
-            this.events.unshift({
-              timestamp: new Date(),
-              ...data
-            });
-          });
+          this.listenToEvents()
         } catch (e) {
           this.error = e;
         }
+      },
+      listenToEvents() {
+        this.events = [];
+        this.sdk.on('*', data => {
+          this.events.unshift({
+            timestamp: new Date(),
+            ...data
+          });
+        });
       }
     },
     async mounted() {
@@ -71,7 +74,7 @@
       window.sdk = sdk
       await sdk.init();
       this.sdk = sdk
-      this.login();
+      this.listenToEvents(sdk)
     }
   };
 </script>

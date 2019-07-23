@@ -13,7 +13,7 @@ export const defaultServers = [
   },
   {
     "URLID": 5,
-    "Priority": 0,
+    "Priority": 1,
     "Version": 2,
     "Domain": "monitor3.voicenter.co.il"
   }

@@ -40,15 +40,7 @@ sdk.init().then(() => {}) //sdk is initialized after promise is fulfilled
 This step is important as we have an algorithm that retrieves multiple servers and has a failover mechanism behind it.
 Skipping this step, will throw error(s) in the subsequent steps   
 
-3. Use the public methods to login, send and receive events
-
-## Login
-
-```javascript
-sdk.login().then(() => { // No parameters in case a token is passed to the constructor
-  // login successful
-})
-```
+3. Use the public methods to send and receive events
 
 ## Subscribe to all events
 
@@ -83,3 +75,6 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **reconnectionDelay**  | Number  | 10000 |  First reconnection delay in milliseconds. Defaults to 10 seconds and increases with each retry (retryCount * reconnectionDelay)  |
 | **timeout**  | Number  | 10000 |  Login timeout. Will throw an error if no event is sent back based on the emitted login event  |
 | **protocol**  | String  | https |  Protocol to use when connecting via sockets with the server  |
+| **keepAliveTimeout**  | Number  | 60000 |  Timeout after which a keep alive event is sent  |
+| **transports**  | Array  | ['websocket'] |  Available transports. It's desired to leave this setting as it is. |
+| **upgrade**  | Boolean  | false |  Available transports. It's desired to leave this setting as it is. |

@@ -3,17 +3,19 @@ import eventTypes from './eventTypes';
 import { defaultServers } from './config';
 import Logger from './Logger';
 import debounce from 'lodash/debounce'
+import { getServerWithHighestPriority } from './utils';
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
   token: null,
-  forceNew: true,
+  forceNew: false,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
   timeout: 10000,
   keepAliveTimeout: 60000,
   protocol: 'https',
-  transports: ['websocket']
+  transports: ['websocket'],
+  upgrade: false
 };
 
 class EventsSDK {
@@ -31,6 +33,7 @@ class EventsSDK {
     this.socket = null;
     this.connected = false
     this.connectionEstablished = false;
+    this.shouldReconnect = true
     this._initReconnectOptions();
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
   }
@@ -89,7 +92,9 @@ class EventsSDK {
   }
 
   _onDisconnect() {
-    this._connect('next')
+    if (this.shouldReconnect) {
+      this._connect('next')
+    }
     this.connected = false
     this.Logger.log(eventTypes.DISCONNECT, this.reconnectOptions)
   }
@@ -114,16 +119,20 @@ class EventsSDK {
   }
 
   _connect(server = 'default') {
+    this.shouldReconnect = true
     if (server === 'default') {
       this._findCurrentServer();
     } else if (server === 'next') {
       this._findNextAvailableServer()
+    } else if (server === 'prev') {
+      this._findMaxPriorityServer()
     } else {
       throw new Error(`Incorrect 'server' parameter passed to connect function ${server}. Should be 'default' or 'next'`)
     }
     this._initSocketConnection();
     this._initSocketEvents();
     this._initKeepAlive();
+    this.login()
   }
 
   _checkInit() {
@@ -138,7 +147,7 @@ class EventsSDK {
     let url = `${protocol}://${domain}`;
     this.Logger.log('Connecting to..', url)
     if (this.socket) {
-      this.socket.disconnect()
+      this.socket.close()
     }
     this.socket = io(url, {
       ...this.options,
@@ -161,6 +170,7 @@ class EventsSDK {
     setTimeout(()=>{
       if(this.socket) {
         this.emit(eventTypes.KEEP_ALIVE, this.options.token);
+        this._connect('prev')
       }
       else {
         this._initSocketConnection()
@@ -187,14 +197,24 @@ class EventsSDK {
       let nextServerPriority = currentServerPriority - 1;
       let nextServer = this.servers.find(server => server.Priority === nextServerPriority);
       if (!nextServer) {
-        let prevPriority = currentServerPriority + 1
-        nextServer = this.servers.find(server => server.Priority === prevPriority);
+        nextServer = this._findMaxPriorityServer()
         if (!nextServer) {
           return
         }
       }
-      this.server = nextServer;
+      if (this.server.Domain !== nextServer.Domain) {
+        this.server = nextServer;
+      }
       this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server)
+    }
+  }
+
+  _findMaxPriorityServer() {
+    this.Logger.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer')
+    let maxPriorityServer = getServerWithHighestPriority(this.servers)
+    if(this.server && maxPriorityServer.Domain !== this.server.Domain) {
+      this.server = maxPriorityServer;
+      this.Logger.log(`Fallback -> Trying to find previous server`, this.server)
     }
   }
 
@@ -219,6 +239,14 @@ class EventsSDK {
     this._connect()
     this._initReconnectDelays()
     return true
+  }
+
+  /**
+   * Disconnects definitively from the servers
+   */
+  disconnect() {
+    this.shouldReconnect = false
+    this.socket.close()
   }
 
 
