@@ -227,6 +227,21 @@ class EventsSDK {
     }
   }
 
+  _onEvent(eventName, callback) {
+    this.socket.onevent = (packet) => {
+      if (!packet.data) {
+        return;
+      }
+      let evt = this._parsePacket(packet);
+      this.Logger.log(`New event -> ${evt.name}`, evt);
+      if (eventName === '*') {
+        callback(evt);
+      } else if (evt.name === eventName) {
+        callback(evt);
+      }
+    }
+  }
+
   /**
    * Initializes socket connection. Should be called before any other action
    * @return {Promise<boolean>}
@@ -249,7 +264,6 @@ class EventsSDK {
     this.socket.close()
   }
 
-
   /**
    * Listens for new events
    * @param {string} eventName (name of the event, * for all events)
@@ -257,18 +271,7 @@ class EventsSDK {
    */
   on(eventName, callback) {
     this._checkInit()
-    this.socket.onevent = (packet) => {
-      if (!packet.data) {
-        return;
-      }
-      let evt = this._parsePacket(packet);
-      this.Logger.log(`New event -> ${evt.name}`, evt);
-      if (eventName === '*') {
-        callback(evt);
-      } else if (evt.name === eventName) {
-        callback(evt);
-      }
-    };
+    this._onEvent(eventName, callback)
   }
 
   /**
