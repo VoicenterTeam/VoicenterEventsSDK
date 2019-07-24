@@ -24,7 +24,7 @@
                     document.documentElement.style.setProperty('--' + color + '-color', this.colors[color]);
                 }
             },
-            initializeLayout (lang) {
+            initializeLayout(lang) {
                 if (lang === 'he') {
                     this.$rtl.enableRTL()
                 } else {
@@ -32,12 +32,15 @@
                 }
             },
         },
-        mounted () {
+        mounted() {
             this.initializeLayout(this.$store.state.lang.language)
         },
         watch: {
-            colors() {
-                this.initMainStyleVars()
+            colors: {
+                immediate: true,
+                handler: function () {
+                    this.initMainStyleVars()
+                }
             }
         }
     }

@@ -75,4 +75,12 @@
         display: flex;
         flex-direction: row-reverse;
     }
+
+    .el-tabs__item.is-active {
+        color: var(--primary-color);
+    }
+
+    .el-tabs__active-bar {
+        background-color: var(--primary-color);
+    }
 </style>

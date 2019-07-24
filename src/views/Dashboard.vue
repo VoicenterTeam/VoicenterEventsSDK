@@ -229,4 +229,9 @@
         margin-left: 10px;
     }
 
+    .el-button--primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
 </style>
