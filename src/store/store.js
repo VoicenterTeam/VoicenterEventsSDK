@@ -6,6 +6,7 @@ import widgets from './modules/widgets'
 import users from './modules/users'
 import charts from './modules/charts'
 import settings from './modules/settings'
+import lang from './modules/lang'
 
 Vue.use(Vuex)
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
         widgets,
         charts,
         users,
-        settings
+        settings,
+        lang
     }
 })

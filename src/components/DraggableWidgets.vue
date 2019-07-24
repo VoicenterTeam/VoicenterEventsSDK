@@ -1,10 +1,10 @@
 <template>
-    <draggable class="flex"
+    <draggable class="flex -mx-2"
                tag="div"
                v-bind="attributes"
                v-on="$listeners">
         <transition-group type="transition" :name="enableTransition ? 'flip-list': ''"
-                          class="flex justify-center flex-wrap w-full -mx-2 cursor-move">
+                          class="flex justify-center flex-wrap w-full  cursor-move">
             <slot></slot>
         </transition-group>
     </draggable>

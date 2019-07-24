@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <button class="btn flex items-center p-4 text-blue shadow rounded bg-white hover:bg-blue-100 cursor-pointer text-primary">
-            <IconPlus class="w-3 mr-1 mb-1"></IconPlus>
+            <IconPlus class="w-3 fill-current mx-1"></IconPlus>
             <span class="text-xs">{{$t('common.newGroup')}}</span>
         </button>
     </div>
