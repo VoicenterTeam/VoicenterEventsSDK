@@ -102,7 +102,7 @@
             right: auto;
         }
         .el-tag {
-            margin: 2px 6px;
+            margin: 2px 6px 2px 0px;
         }
     }
     .rtl .el-table td {
