@@ -22,7 +22,18 @@
                 for (let color in this.colors) {
                     document.documentElement.style.setProperty('--' + color + '-color', this.colors[color]);
                 }
-            }
+            },
+            initializeLayout (lang) {
+                if (lang === 'he') {
+                    this.$rtl.enableRTL()
+                } else {
+                    this.$rtl.disableRTL()
+                }
+            },
+        },
+        mounted () {
+            let initialLang = localStorage.getItem('lang')
+            this.initializeLayout(initialLang)
         },
         watch: {
             colors() {

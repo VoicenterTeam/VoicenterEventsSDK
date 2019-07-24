@@ -1,18 +1,18 @@
 <template>
-    <button v-if="!editMode" class="btn p-4 shadow rounded bg-white hover:bg-blue-100 active:shadow-inner"
+    <button v-if="!editMode" class="btn p-4 shadow rounded bg-white hover:bg-blue-100 active:shadow-inner mx-1"
             :class="{'active-btn': editMode}"
             v-bind="$attrs"
             v-on="$listeners">
         <EditIcon class="w-5 h-5 text-primary"></EditIcon>
     </button>
     <div v-else>
-        <button class="btn p-4 shadow rounded bg-white hover:bg-green-100 active:shadow-inner mr-3"
+        <button class="btn p-4 shadow rounded bg-white hover:bg-green-100 active:shadow-inner mx-1"
                 @click="$emit('save-dashboard')"
                 v-bind="$attrs"
                 v-on="$listeners">
             <CheckIcon class="w-5 h-5 text-green"></CheckIcon>
         </button>
-        <button class="btn p-4 shadow rounded bg-white hover:bg-red-100 active:shadow-inner"
+        <button class="btn p-4 shadow rounded bg-white hover:bg-red-100 active:shadow-inner mx-1"
                 @click="$emit('reset-dashboard')"
                 v-bind="$attrs"
                 v-on="$listeners">

@@ -4,14 +4,17 @@
         <div>
             <div class="relative">
                 <div class="flex">
+                    <language-select :value="$i18n.locale" @change="onLocaleChange">
+
+                    </language-select>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                        <span class="mr-1 text-lg text-gray-700">{{$t(activeDashboard.Title) || activeDashboard.Title}}</span>
+                        <span class="mx-1 text-lg text-gray-700">{{$t(activeDashboard.Title) || activeDashboard.Title}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
-                        <span class="mr-1 text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
+                        <span class="mx-1 text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <div class="flex p-3 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
@@ -77,6 +80,7 @@
 <script>
     import {Dialog} from 'element-ui'
     import Settings from './Settings'
+    import LanguageSelect from './LanguageSwitcher'
 
     function newDashboardData() {
         return {
@@ -87,7 +91,8 @@
     export default {
         components: {
             [Dialog.name]: Dialog,
-            Settings
+            Settings,
+            LanguageSelect
         },
         data() {
             return {
@@ -146,6 +151,15 @@
             triggerMenus(clicked, second) {
                 this[clicked] = !this[clicked];
                 this[second] = false;
+            },
+            onLocaleChange (val) {
+                localStorage.setItem('lang', val)
+                this.$i18n.locale = val
+                if (val === 'he') {
+                    this.$rtl.enableRTL()
+                } else {
+                    this.$rtl.disableRTL()
+                }
             },
         },
     }
