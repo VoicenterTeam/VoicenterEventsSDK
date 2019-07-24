@@ -95,5 +95,17 @@
     },
   }
 </script>
-<style>
+<style lang="scss">
+    .rtl .el-select {
+        .el-tag__close.el-icon-close {
+            left: -5px;
+            right: auto;
+        }
+        .el-tag {
+            margin: 2px 6px;
+        }
+    }
+    .rtl .el-table td {
+        text-align: right;
+    }
 </style>
