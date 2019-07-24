@@ -15,7 +15,7 @@
 
         </div>
         <div class="flex editable-content" v-if="editable">
-            <trash-icon class="flex align-center w-8 h-8 p-2 text-red close-icon  bg-red-100"
+            <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon bg-red-100"
                         @click="$emit('remove-item')"></trash-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
@@ -47,13 +47,19 @@
         }
     }
 </script>
-<style lang="scss">
-    .close-icon {
+<style lang="scss" scoped>
+
+    .trash-icon {
         position: relative;
         top: -45px;
         right: -50px;
         border-radius: 50%;
         cursor: pointer;
+    }
+
+    .rtl .trash-icon {
+        left: -50px;
+        right: auto;
     }
 
     .editable-content {

@@ -66,9 +66,21 @@
         },
     }
 </script>
-<style lang="scss" scoped>
+<style>
     .w-24 {
-        width: 6rem;
+        width: 6rem !important;
         padding: 0 10px;
+    }
+
+    .rtl .el-checkbox__inner {
+        margin-left: 10px;
+    }
+
+    .el-input.el-input--mini {
+        top: 8px;
+    }
+
+    .rtl .el-color-svpanel {
+        float: right;
     }
 </style>

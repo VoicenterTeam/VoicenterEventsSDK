@@ -64,5 +64,15 @@
         }
     }
 </script>
-<style>
+
+<style lang="scss">
+    .rtl .el-tabs__nav-wrap {
+        display: flex;
+    }
+
+    .rtl .el-tabs__nav.is-top {
+        width: 100%;
+        display: flex;
+        flex-direction: row-reverse;
+    }
 </style>

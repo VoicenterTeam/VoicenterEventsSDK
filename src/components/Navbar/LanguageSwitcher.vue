@@ -24,7 +24,8 @@
 
 <script>
     import languages from './languages'
-    import { Select, Option } from 'element-ui'
+    import {Select, Option} from 'element-ui'
+
     export default {
         name: 'language-switcher',
         components: {
@@ -46,19 +47,19 @@
                 default: true
             }
         },
-        data () {
+        data() {
             return {
                 languages,
                 activeLanguage: {}
             }
         },
         methods: {
-            focusSelect () {
+            focusSelect() {
                 this.$refs.select.focus()
             }
         },
         watch: {
-            activeLanguage (newVal) {
+            activeLanguage(newVal) {
                 this.$emit('change', newVal.locale)
             },
             value: {
@@ -78,28 +79,32 @@
     .language-select .el-input__inner,
     .language-select .el-input.is-focus .el-input__inner {
         width: 25px;
-        height: 32px !important;
     }
+
     .language-select {
         display: flex;
         align-items: center;
         padding: 0 15px;
+
         .el-input__prefix {
             display: flex;
             align-items: center;
         }
     }
+
     .language-option {
         display: flex;
         margin-top: 5px;
         margin-bottom: 5px;
         align-items: center;
     }
+
     .language-option__icon {
         width: 25px;
         height: 20px;
         margin-right: 10px;
     }
+
     .rtl {
         .el-select-dropdown .language-option__icon {
             margin-right: 0;

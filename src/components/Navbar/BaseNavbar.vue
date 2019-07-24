@@ -4,9 +4,7 @@
         <div>
             <div class="relative">
                 <div class="flex">
-                    <language-select :value="$i18n.locale" @change="onLocaleChange">
-
-                    </language-select>
+                    <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
                         <span class="mx-1 text-lg text-gray-700">{{$t(activeDashboard.Title) || activeDashboard.Title}}</span>
@@ -24,7 +22,7 @@
                 <fade-transition :duration="250">
                     <div v-if="showDashboardsMenu"
                          v-click-outside="onMenuClickOutside"
-                         class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col">
+                         class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col dashboard-menu">
                     <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
                           @click="chooseDashboard(dashboard)"
                           v-for="dashboard in allDashboards"
@@ -48,7 +46,8 @@
                               :class="{ 'text-primary': currentUser.id === user.id}">
                             {{user.name || $t('navbar.default.username') }}
                             <IconMinus v-if="user.id !== currentUser.id"
-                                       class="hover:text-red-600 w-4 mr-1 mb-1 fill-current float-right"
+                                       class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
+                                       :class="$rtl.isRTL ? 'float-left' : 'float-right'"
                                        v-on:click.stop.prevent="removeUser(user)">
                             </IconMinus>
                         </span>
@@ -75,6 +74,7 @@
                     :visible.sync="showEditSettingsDialog">
             </settings>
         </div>
+
     </nav>
 </template>
 <script>
@@ -152,8 +152,8 @@
                 this[clicked] = !this[clicked];
                 this[second] = false;
             },
-            onLocaleChange (val) {
-                localStorage.setItem('lang', val)
+            onLocaleChange(val) {
+                this.$store.dispatch('lang/setLanguage', val)
                 this.$i18n.locale = val
                 if (val === 'he') {
                     this.$rtl.enableRTL()
@@ -164,7 +164,9 @@
         },
     }
 </script>
+
 <style scoped>
+
     .navbar {
         position: absolute;
         left: 0;
@@ -172,6 +174,21 @@
     }
 
     .users-menu {
-        right: 2.9rem;
+        right: 3rem;
     }
+
+    .dashboard-menu {
+        right: 11rem;
+    }
+
+    .rtl .users-menu {
+        left: 3rem;
+        right: auto;
+    }
+
+    .rtl .dashboard-menu {
+        left: 11rem;
+        right: auto;
+    }
+
 </style>

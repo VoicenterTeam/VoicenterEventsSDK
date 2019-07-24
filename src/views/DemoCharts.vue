@@ -44,7 +44,7 @@
             },
             tabs() {
                 //TODO: api object structure is needed to view
-                return [{
+                let data = [{
                     name: 'first',
                     label: 'First',
                     data: this.charts[0],
@@ -55,6 +55,7 @@
                     data: this.charts[1],
                     component: 'GanttChart'
                 }]
+                return this.$rtl.isRTL ? data.reverse() : data
             }
         },
         methods: {

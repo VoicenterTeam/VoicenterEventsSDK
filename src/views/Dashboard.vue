@@ -220,4 +220,13 @@
         @apply text-gray-500;
     }
 
+    .rtl .el-dialog__headerbtn {
+        left: 20px;
+        right: auto;
+    }
+
+    .rtl .el-button--default {
+        margin-left: 10px;
+    }
+
 </style>

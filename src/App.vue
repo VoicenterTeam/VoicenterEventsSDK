@@ -11,6 +11,7 @@
             this.$store.dispatch('widgets/getAllWidgets')
             this.$store.dispatch('charts/getAllCharts')
             this.$store.dispatch('settings/setSettings')
+            this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
         },
         computed: {
             colors() {
@@ -32,8 +33,7 @@
             },
         },
         mounted () {
-            let initialLang = localStorage.getItem('lang')
-            this.initializeLayout(initialLang)
+            this.initializeLayout(this.$store.state.lang.language)
         },
         watch: {
             colors() {
