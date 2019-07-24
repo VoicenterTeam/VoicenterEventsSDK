@@ -76,6 +76,7 @@
 </script>
 
 <style lang="scss">
+    //TODO: update this css with new design
     .language-select .el-input__inner,
     .language-select .el-input.is-focus .el-input__inner {
         width: 25px;
@@ -119,5 +120,9 @@
     .el-select-dropdown__item.language-option__item {
         display: flex;
         align-items: center;
+    }
+
+    .el-select-dropdown__item.selected {
+        color: var(--primary-color) !important;
     }
 </style>
