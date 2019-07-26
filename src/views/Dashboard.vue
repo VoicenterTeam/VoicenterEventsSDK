@@ -6,7 +6,8 @@
                     @click.stop="editMode = !editMode"
                     @reset-dashboard="resetDashboard"
                     @save-dashboard="saveDashboard"
-                    :edit-mode="editMode"></EditButton>
+                    :edit-mode="editMode">
+            </EditButton>
             <fade-transition>
                 <WidgetMenu v-if="showWidgetMenu"
                             v-click-outside="onWidgetMenuClickOutside"
@@ -33,75 +34,46 @@
                             </edit-group-buttons>
                         </div>
                         <h3 v-else class="font-semibold text-2xl text-gray-800">{{widgetGroup.Title}}</h3>
-                        <DraggableWidgets group="widgets"
-                                          :value="widgetGroup.WidgetList"
-                                          @input="val => onListChange(val, widgetGroup)">
-                            <div v-for="widget in widgetGroup.WidgetList"
-                                 :key="widget.ID"
-                                 :class="widget.WidgetLayout.Classes || {}"
-                                 class="w-full lg:w-1/3 px-2">
-                                <WidgetCard v-bind="widget.WidgetConfig"
-                                            :editable="editMode"
-                                            @remove-item="removeWidget(widgetGroup, widget)"></WidgetCard>
-                            </div>
-                            <widget-empty-card v-if="editMode" key="0"
-                                               :widgets="allWidgets"
-                                               :widget-group="widgetGroup"
-                                               @add-widget="(value) => addWidgetToGroup(value, widgetGroup)"
-                            ></widget-empty-card>
-
-                            <div v-if="widgetGroup.WidgetList.length === 0"
-                                 class="w-full flex flex-col items-center mt-20"
-                                 key="no-data">
-                                <IconNoData v-if="!editMode" class="h-56 w-56"></IconNoData>
-                                <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
-                            </div>
-                        </DraggableWidgets>
+                        <widget-list
+                                :widgets="widgetGroup.WidgetList"
+                                :editable="editMode"
+                                :widget-group="widgetGroup"
+                                @onListChange="(data) => onListChange(data.list, data.group)"
+                                @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
+                                @removeWidget="(data) => removeWidget(data.widget, data.group)">
+                        </widget-list>
                     </div>
                 </transition-group>
             </div>
         </fade-transition>
-        <div class="my-4">
-            <demo-charts :charts="allCharts"></demo-charts>
-        </div>
-        <demo-table></demo-table>
     </div>
 </template>
 
 <script>
     import AddButton from '@/components/AddButton'
-    import WidgetCard from '@/components/WidgetCard'
-    import DraggableWidgets from '@/components/DraggableWidgets'
-    import WidgetMenu from '@/components/WidgetMenu'
     import EditButton from "@/components/EditButton";
     import EditGroupButtons from '@/components/EditGroupButtons'
     import {Trash2Icon} from 'vue-feather-icons'
     import cloneDeep from 'lodash/cloneDeep'
-    import NewGroupButton from "@/components/NewGroupButton";
-    import BaseInput from "@/components/BaseInput";
-    import WidgetEmptyCard from "@/components/WidgetEmptyCard";
-    import DemoTable from './DemoTable'
-    import DemoCharts from './DemoCharts'
+    import NewGroupButton from "@/components/NewGroupButton"
+    import BaseInput from "@/components/BaseInput"
+    import WidgetMenu from '@/components/Widgets/WidgetMenu'
+    import WidgetList from '@/components/Widgets/WidgetList'
 
     export default {
         components: {
-            DemoTable,
-            WidgetEmptyCard,
             BaseInput,
             NewGroupButton,
             EditGroupButtons,
             Trash2Icon,
             EditButton,
             AddButton,
-            WidgetCard,
-            DraggableWidgets,
             WidgetMenu,
-            DemoCharts
+            WidgetList
         },
         data() {
             return {
                 showWidgetMenu: false,
-                showWidgetMenu2: false,
                 editMode: false,
                 activeDashboardData: cloneDeep(this.$store.state.dashboards.activeDashboard),
             }
@@ -113,9 +85,6 @@
             allWidgets() {
                 return this.$store.state.widgets.allWidgets
             },
-            allCharts() {
-                return this.$store.state.charts.allCharts
-            }
         },
         methods: {
             addWidgetToGroup(widget, widgetGroup) {
@@ -163,7 +132,7 @@
             onWidgetMenuClickOutside() {
                 this.showWidgetMenu = false
             },
-            removeWidget(widgetGroup, widget) {
+            removeWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
                 if (index !== -1) {
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.ID === widget.ID)

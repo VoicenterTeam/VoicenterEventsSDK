@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white py-10 rounded-lg shadow">
+    <div class="bg-white p-5 rounded-lg py-4 my-4">
         <div class="flex justify-end mx-4">
             <div class="my-4">
                 <el-select
@@ -37,7 +37,8 @@
                         :fixed="column.fixed || false"
                         :type="column.type">
                     <template slot="header">
-                        <span class="flex items-center" @mouseover="hoverOverHeader(column)" @mouseleave="hoverOverHeader(column)">
+                        <span class="flex items-center" @mouseover="hoverOverHeader(column)"
+                              @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
                         <span class="justify-end w-3/6 header-handle">
@@ -63,17 +64,18 @@
     import cloneDeep from 'lodash/cloneDeep'
     import Sortable from 'sortablejs';
     import {MoreVerticalIcon} from 'vue-feather-icons'
+
     export default {
         name: "data-table",
-        data(){
-            return{
-                columnList: cloneDeep(this.columns),
-                optionColumns: cloneDeep(this.columns),
+        data() {
+            return {
+                columnList: cloneDeep(this.data.columns),
+                optionColumns: cloneDeep(this.data.columns),
                 tableKey: 'table-key',
                 active: false
             }
         },
-        components:{
+        components: {
             MoreVerticalIcon,
             [Select.name]: Select,
             [Option.name]: Option,
@@ -82,40 +84,37 @@
         },
         props: {
             data: {
-                type: Array,
-                default: () => []
-            },
-            columns: {
-                type: Array,
-                default: () => []
+                type: Object,
+                default: () => {
+                }
             },
             loading: {
                 type: Boolean,
                 default: false
             }
         },
-        computed:{
+        computed: {
             listeners() {
                 return {
                     ...this.$listeners
                 }
             },
-            columnData (){
+            columnData() {
                 return this.columnList
             },
-            tableData(){
-                return this.columnList.length > 0 ? this.data : []
+            tableData() {
+                return this.columnList.length > 0 ? this.data.tableData : []
             }
         },
         methods: {
-            hoverOverHeader(column){
+            hoverOverHeader(column) {
                 this.$set(column, 'edit', !column.edit)
             },
-            tryInitSortable () {
+            tryInitSortable() {
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
                 const self = this
                 Sortable.create(table, {
-                    onEnd ({ newIndex, oldIndex }) {
+                    onEnd({newIndex, oldIndex}) {
                         const targetRow = self.columnList.splice(oldIndex, 1)[0]
                         self.columnList.splice(newIndex, 0, targetRow)
                         self.tableKey = self.columnList.map(c => c.prop).join('_')
@@ -124,8 +123,8 @@
                 })
             }
         },
-        watch:{
-            columns(value){
+        watch: {
+            columns(value) {
                 this.columnList = cloneDeep(value);
                 this.optionColumns = cloneDeep(value)
             }
@@ -140,16 +139,35 @@
     .el-table th .header-handle {
         display: none;
     }
+
     .el-table th:hover {
         @apply bg-gray-100;
-        @apply cursor-pointer
+        @apply cursor-pointer;
     }
+
+
     .el-table th:hover .header-handle {
         display: flex;
     }
-    .el-table th>.cell{
+
+    .el-table th > .cell {
         @apply flex;
         @apply items-center;
+    }
+
+    .rtl .el-select {
+        .el-tag__close.el-icon-close {
+            left: -5px;
+            right: auto;
+        }
+
+        .el-tag {
+            margin: 2px 6px 2px 0px;
+        }
+    }
+
+    .rtl .el-table td {
+        text-align: right;
     }
 
 </style>

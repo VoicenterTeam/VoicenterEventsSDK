@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-white p-5 rounded-lg">
+    <div class="bg-white p-5 rounded-lg py-4 my-4">
         <highcharts :options="chartOptions"></highcharts>
         <chart-update-dialog
-                :chartTitle="chartData.title.text"
+                :chartTitle="data.title.text"
                 @on-update="onUpdate"
                 :visible.sync="showUpdateDialog">
         </chart-update-dialog>
@@ -21,7 +21,7 @@
             highcharts: Chart,
         },
         props: {
-            chartData: {
+            data: {
                 type: Object,
                 default: () => ({})
             },
@@ -35,7 +35,7 @@
         computed: {
             chartOptions() {
                 return {
-                    ...this.chartData,
+                    ...this.data,
                     exporting: {
                         buttons: {
                             editButton: {
@@ -53,8 +53,8 @@
         },
         methods: {
             onUpdate(title) {
-                let chartData = {...this.chartData, ...{title: {text: title}, index: this.chartIndex}}
-                this.$store.dispatch('charts/updateChart', chartData);
+                let data = {...this.data, ...{title: {text: title}, index: this.chartIndex}}
+                this.$store.dispatch('charts/updateChart', data);
             }
         },
     }

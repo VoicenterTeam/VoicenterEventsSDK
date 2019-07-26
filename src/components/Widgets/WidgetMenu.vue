@@ -7,7 +7,8 @@
                  :key="widget.ID"
                  :class="widget.WidgetLayout.Classes || {}"
                  class="w-full lg:w-1/2 px-2">
-                <WidgetCard v-bind="widget.WidgetConfig"
+                <!-- TODO: update with other types, only card type now  -->
+                <WidgetCard v-if="widget.WidgetType.ID === '1'" v-bind="widget.WidgetConfig"
                             @click.native="$emit('add-widget', widget)"
                 ></WidgetCard>
             </div>
@@ -15,8 +16,8 @@
     </div>
 </template>
 <script>
-    import DraggableWidgets from '@/components/DraggableWidgets'
-    import WidgetCard from '@/components/WidgetCard'
+    import DraggableWidgets from './DraggableWidgets'
+    import WidgetCard from './WidgetCard'
 
     export default {
         components: {

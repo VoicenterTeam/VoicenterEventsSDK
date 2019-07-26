@@ -34,8 +34,7 @@
             onWidgetMenuClickOutside(){
                 this.widgetGroup.edit = false
             }
-        }
-
+        },
     }
 </script>
 
