@@ -78,7 +78,7 @@
     </nav>
 </template>
 <script>
-    import {Dialog} from 'element-ui'
+    import { Dialog } from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
 
