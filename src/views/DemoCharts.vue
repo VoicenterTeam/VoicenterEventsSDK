@@ -9,8 +9,8 @@
 </template>
 <script>
 
-    import TimeLineChart from '@/components/charts/TimeLineChart'
-    import GanttChart from '@/components/charts/GanttChart'
+    import TimeLineChart from '@/components/Charts/TimeLineChart'
+    import GanttChart from '@/components/Charts/GanttChart'
     import Tabs from '@/components/Tabs'
 
     export default {

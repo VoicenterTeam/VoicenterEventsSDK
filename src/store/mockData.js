@@ -126,60 +126,33 @@ export const charts = [
             "Order": 7,
         },
         "WidgetConfig": {
-            "chart": {
-                "zoomType": "xy"
-            },
             "title": {
-                "text": "Number of calls vs. minutes"
+                "text": "Minutes comparison between users"
             },
-            "xAxis": [
-                {
-                    "categories": [
-                        "test1 fstouch"
-                    ]
-                }
-            ],
-            "yAxis": [
-                {
-                    "title": {
-                        "text": "Calls",
-                        "style": {
-                            "color": "#49ca6d"
-                        }
-                    },
-                    "opposite": "true"
-                },
-                {
-                    "title": {
-                        "text": "Minutes",
-                        "style": {
-                            "color": "#61b5ff"
-                        }
-                    },
-                    "opposite": null
-                }
-            ],
+            "xAxis": {
+                "type": "datetime"
+            },
             "series": [
                 {
-                    "name": "Minutes",
-                    "color": "#61b5ff",
-                    "type": "column",
-                    "yAxis": 1,
+                    "name": "test1 1",
                     "data": [
-                        5
-                    ]
-                },
-                {
-                    "name": "Calls",
-                    "color": "#49ca6d",
-                    "type": "spline",
-                    "yAxis": 0,
-                    "data": [
-                        10
+                        {
+                            "x": 1563441556000,
+                            "y": 1
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 0
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 0
+                        }
                     ]
                 }
             ],
-            "date": "08/07/2019 - 15/07/2019"
+            "YxisName": "Minutes",
+            "date": "06/29/2019 - 07/29/2019"
         }
     },
 

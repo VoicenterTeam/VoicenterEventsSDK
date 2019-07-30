@@ -7,7 +7,8 @@
              class="w-full px-2" :class="componentWidth[widget.WidgetType.ID]">
             <Widget :widget="widget"
                     :editable="editable"
-                    @remove-item="removeWidget(widget)">
+                    @remove-item="removeWidget(widget)"
+                    @update-item="updateWidget(widget)">
             </Widget>
         </div>
         <widget-empty-card v-if="editable" key="0"
@@ -70,6 +71,9 @@
             },
             removeWidget(val) {
                 this.$emit('removeWidget', {'widget': val, 'group': this.widgetGroup})
+            },
+            updateWidget(val) {
+                this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
         },
     }

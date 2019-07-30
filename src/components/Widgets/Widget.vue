@@ -4,6 +4,7 @@
                    :data="widget.WidgetConfig"
                    v-bind="widget.WidgetConfig"
                    :editable="editable"
+                   @update-item="updateWidget(widget)"
                    @remove-item="removeWidget(widget)">
         </component>
     </div>
@@ -39,14 +40,16 @@
             },
             widget: {
                 type: Object,
-                default: () => {
-                }
+                default: () => ({})
             },
         },
         methods: {
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
+            updateWidget(widget) {
+                this.$emit('update-item', widget)
+            }
         }
     }
 </script>

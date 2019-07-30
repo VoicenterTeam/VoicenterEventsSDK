@@ -1,7 +1,6 @@
 import Highcharts from 'highcharts'
 import noDataModule from 'highcharts/modules/no-data-to-display'
 import Exporting from 'highcharts/modules/exporting'
-import config from '@/config'
 import i18n from '@/i18n'
 
 Exporting(Highcharts)
@@ -61,68 +60,9 @@ Highcharts.setOptions({
         verticalAlign: 'top',
         floating: true,
         y: -7,
-    },
-    navigator: {
-        enabled: false,
-    },
+    }
 })
 
 export default {
     Highcharts,
-    zoom: {
-        enabled: true,
-        inputEnabled: true,
-        buttonPosition: {
-            align: 'left',
-        },
-        buttons: [
-            {
-                type: 'day',
-                count: 1,
-                text: 'Today'
-            },
-            {
-                type: 'day',
-                count: 7,
-                text: 'Last Week'
-            },
-            {
-                type: 'day',
-                count: 30,
-                text: 'Last Month'
-            },
-            {
-                type: 'day',
-                count: 364,
-                text: 'Last Year'
-            },
-            {
-                type: 'all',
-                text: 'All'
-            },
-        ],
-        buttonTheme: {
-            width: '80px',
-            padding: 4,
-            style: {
-                color: config.colors.primary,
-            },
-            states: {
-                select: {
-                    fill: config.colors.primary,
-                    style: {
-                        color: 'white',
-                    }
-                }
-            }
-        },
-        inputStyle: {
-            color: config.colors.primary
-        },
-        labelStyle: {
-            display: 'block',
-            color: config.colors.gray,
-        },
-        selected: 4
-    },
 }

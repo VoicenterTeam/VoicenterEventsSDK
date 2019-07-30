@@ -40,7 +40,8 @@
                                 :widget-group="widgetGroup"
                                 @onListChange="(data) => onListChange(data.list, data.group)"
                                 @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
-                                @removeWidget="(data) => removeWidget(data.widget, data.group)">
+                                @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                                @updateWidget="(data) => updateWidget(data.widget, data.group)">
                         </widget-list>
                     </div>
                 </transition-group>
@@ -136,7 +137,7 @@
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
                 if (index !== -1) {
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.ID === widget.ID)
-                    if (index !== -1) {
+                    if (widgetIndex !== -1) {
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1)
                     }
                 }
@@ -154,6 +155,16 @@
                     "WidgetList": []
                 }
                 this.activeDashboardData.WidgetGroupList.splice(0, 0, widget)
+            },
+            updateWidget(widget, widgetGroup) {
+                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
+                if (index !== -1) {
+                    let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.ID === widget.ID)
+                    if (widgetIndex !== -1) {
+                        this.activeDashboardData.WidgetGroupList[index] = widget
+                        this.saveDashboard()
+                    }
+                }
             },
             saveDashboard() {
                 let dashboard = this.activeDashboardData

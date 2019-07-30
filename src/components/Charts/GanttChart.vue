@@ -46,7 +46,7 @@
                     exporting: {
                         buttons: {
                             customButton: {
-                                text: 'Edit',
+                                text: this.$t('common.edit'),
                                 y: -7,
                                 onclick: () => {
                                     this.showUpdateDialog = !this.showUpdateDialog
@@ -54,7 +54,6 @@
                             },
                         }
                     },
-                    rangeSelector: chartConfig.zoom
                 }
             },
         },
