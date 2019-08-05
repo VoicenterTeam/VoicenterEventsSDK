@@ -51,7 +51,7 @@
     import get from 'lodash/get';
     import Sortable from 'sortablejs';
     import cloneDeep from 'lodash/cloneDeep'
-    import bus from '../../event-bus/EventBus'
+    import bus from '@/event-bus/EventBus'
     import {Table, TableColumn} from 'element-ui';
     import HeaderActions from "./Header/HeaderActions";
 

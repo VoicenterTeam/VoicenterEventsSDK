@@ -1,4 +1,4 @@
-import {getWidgets} from '@/services/widgetService'
+import {getAll} from '@/services/widgetService'
 
 const types = {
     SET_ALL_WIDGETS: 'SET_ALL_WIDGETS'
@@ -15,7 +15,7 @@ const mutations = {
 
 const actions = {
     async getAllWidgets({commit}) {
-        const widgets = await getWidgets()
+        const widgets = await getAll()
         commit(types.SET_ALL_WIDGETS, widgets)
     }
 };

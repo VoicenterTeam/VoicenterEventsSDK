@@ -11,7 +11,7 @@
 </template>
 <script>
     import draggable from "vuedraggable";
-    import bus from '../../event-bus/EventBus'
+    import bus from '@/event-bus/EventBus'
 
     export default {
         inheritAttrs: false,

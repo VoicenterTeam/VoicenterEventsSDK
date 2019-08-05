@@ -1,6 +1,21 @@
-import axios from 'axios'
+import $axios from './apiService'
 import { widgets } from '@/store/mockData'
-export function getWidgets() {
-  //TODO: integrate api call to get widgets from api
-  return widgets
+
+
+export function getAll() {
+    // return $axios.get(`/Widgets/GetAllWidgets/`)
+    return widgets
 }
+
+export function find(id) {
+    // return $axios.get(`/Widgets/GetAllWidgets/{$id}`)
+}
+
+export function update(data) {
+    // return $axios.post(`/Widgets/Update/`)
+}
+
+export function store(data) {
+    // return $axios.get(`/Widgets/Add/`)
+}
+
