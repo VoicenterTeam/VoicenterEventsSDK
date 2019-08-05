@@ -89,7 +89,7 @@
         },
         methods: {
             addWidgetToGroup(widget, widgetGroup) {
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID);
+                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
                 this.activeDashboardData.WidgetGroupList[index].WidgetList.push(widget);
             },
             orderWidgetGroup(widgetGroup, direction) {

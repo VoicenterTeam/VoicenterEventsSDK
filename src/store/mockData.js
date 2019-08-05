@@ -269,24 +269,29 @@ export const tables = [
                 [
                     {
                         prop: 'name',
-                        label: 'Name'
+                        fixed: false,
+                        label: 'Name',
                     },
                     {
                         prop: 'job',
-                        label: 'Job'
+                        fixed: false,
+                        label: 'Job',
                     },
                     {
                         prop: 'progress',
-                        label: 'Progress'
+                        fixed: false,
+                        label: 'Progress',
                     },
                     {
                         prop: 'since',
+                        fixed: false,
                         label: 'Since',
                         sortable: true
                     },
                     {
                         prop: 'salary',
-                        label: 'Salary'
+                        fixed: false,
+                        label: 'Salary',
                     }
                 ]
         }

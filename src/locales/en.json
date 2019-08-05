@@ -46,7 +46,12 @@
   "range.filter.today": "Today",
   "range.filter.last_week": "Last week",
   "range.filter.last_month": "Last month",
-  "range.filter.last_year": "Last year"
+  "range.filter.last_year": "Last year",
+  "datatable.filter": "Filter...",
+  "datatable.props.pin_column": "Pin column",
+  "datatable.props.autosize_column": "Autosize This Column",
+  "datatable.props.autosize_columns": "Autosize All Columns",
+  "datatable.props.reset_columns": "Reset Columns"
 }
 
 

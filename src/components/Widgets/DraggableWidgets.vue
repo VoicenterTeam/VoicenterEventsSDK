@@ -11,6 +11,7 @@
 </template>
 <script>
     import draggable from "vuedraggable";
+    import bus from '../../event-bus/EventBus'
 
     export default {
         inheritAttrs: false,
@@ -23,12 +24,19 @@
         components: {
             draggable
         },
+        data() {
+            return {
+                dragDisabled: false
+            }
+        },
         computed: {
             dragOptions() {
                 return {
                     animation: 0,
+                    fallbackTolerance: 10,
+                    direction: 'horizontal',
                     group: "description",
-                    disabled: false,
+                    disabled: this.dragDisabled,
                     ghostClass: "ghost"
                 };
             },
@@ -38,6 +46,14 @@
                     ...this.$attrs,
                 }
             }
+        },
+        mounted() {
+            bus.$on('sortable.childDragStart', () => {
+                this.dragDisabled = true
+            })
+            bus.$on('sortable.childDragStop', () => {
+                this.dragDisabled = false
+            })
         }
     }
 </script>
@@ -48,7 +64,6 @@
 
     .ghost {
         opacity: 0.3;
-        @apply bg-blue-200
-        rounded-lg;
+        @apply bg-blue-200 rounded-lg;
     }
 </style>

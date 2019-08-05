@@ -4,6 +4,7 @@
                    :data="widget.WidgetConfig"
                    v-bind="widget.WidgetConfig"
                    :editable="editable"
+                   class="widget"
                    @update-item="updateWidget(widget)"
                    @remove-item="removeWidget(widget)">
         </component>
@@ -13,7 +14,7 @@
 
     import WidgetCard from "./WidgetCard"
     import TimeLineChart from '@/components/Charts/TimeLineChart'
-    import DataTable from '@/components/DataTable'
+    import DataTable from '@/components/Table/DataTable'
 
     import widgetTypes from '@/enum/widgetTypes'
 

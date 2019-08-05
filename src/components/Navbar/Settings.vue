@@ -76,10 +76,6 @@
         margin-left: 10px;
     }
 
-    .el-input.el-input--mini {
-        top: 8px;
-    }
-
     .rtl .el-color-svpanel {
         float: right;
     }
