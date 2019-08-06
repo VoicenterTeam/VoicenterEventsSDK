@@ -4,11 +4,11 @@
                           :enable-transition="false"
                           :group="{ name: 'widgets', pull: 'clone', put: false }">
             <div v-for="widget in widgets"
-                 :key="widget.ID"
+                 :key="widget.WidgetID"
                  :class="widget.WidgetLayout.Classes || {}"
                  class="w-full lg:w-1/2 px-2">
                 <!-- TODO: update with other types, only card type now  -->
-                <WidgetCard v-if="widget.WidgetType.ID === '1'" v-bind="widget.WidgetConfig"
+                <WidgetCard v-if="widget.TemplateID === '1'" v-bind="widget.WidgetLayout"
                             @click.native="$emit('add-widget', widget)"
                 ></WidgetCard>
             </div>
@@ -29,7 +29,7 @@
                 type: Array,
                 default: () => []
             }
-        }
+        },
     }
 </script>
 <style>

@@ -1,122 +1,149 @@
 export const widgets = [
     {
-        "ID": "2",
-        "WidgetType": {
-            "ID": "1", //card
-        },
-        "WidgetEntity": {},
+        "Title": "1",
+        "WidgetID": "1",
+        "TemplateID": "1",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 1,
-        },
-        "WidgetTime": {
-            "TimeType": "1",
-            "RelativeTimeData": {}
-        },
-        "WidgetConfig": {
             "icon": "IconPhone",
             "title": "26",
             "description": "widgets.phoneNumbers.description"
         }
     },
     {
-        "ID": "3",
-        "WidgetType": {
-            "ID": "1",
-        },
-        "WidgetEntity": {},
+        "Title": "1",
+        "WidgetID": "2",
+        "TemplateID": "1",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 2,
-        },
-        "WidgetTime": {
-            "TimeType": "1",
-            "RelativeTimeData": {}
-        },
-        "WidgetConfig": {
             "icon": "IconUsers",
             "title": "15",
             "description": "widgets.users.description"
         }
     },
     {
-        "ID": "4",
-        "WidgetType": {
-            "ID": "1",
-        },
-        "WidgetEntity": {},
+        "Title": "1",
+        "WidgetID": "3",
+        "TemplateID": "1",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 3,
-        },
-        "WidgetTime": {
-            "TimeType": "1",
-            "RelativeTimeData": {}
-        },
-        "WidgetConfig": {
             "icon": "IconExtensions",
             "title": "38",
             "description": "widgets.extensions.description"
         }
     },
     {
-        "ID": "5",
-        "WidgetType": {
-            "ID": "1",
-        },
-        "WidgetEntity": {},
+        "Title": "1",
+        "WidgetID": "4",
+        "TemplateID": "1",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 4,
-        },
-        "WidgetTime": {
-            "TimeType": "1",
-            "RelativeTimeData": {}
-        },
-        "WidgetConfig": {
             "icon": "IconStats",
             "title": "514",
             "description": "widgets.stats.description"
-        },
+        }
     },
     {
-        "ID": "6",
-        "WidgetType": {
-            "ID": "1",
-        },
-        "WidgetEntity": {},
+        "Title": "1",
+        "WidgetID": "5",
+        "TemplateID": "1",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 5,
-        },
-        "WidgetTime": {
-            "TimeType": "1",
-            "RelativeTimeData": {}
-        },
-        "WidgetConfig": {
             "icon": "IconUsers",
             "title": "87",
             "description": "widgets.users.description"
         }
     },
     {
-        "ID": "7",
-        "WidgetType": {
-            "ID": "1",
-        },
-        "WidgetEntity": {},
+        "Title": "1",
+        "WidgetID": "6",
+        "TemplateID": "1",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 6,
-        },
-        "WidgetTime": {
-            "TimeType": "1",
-            "RelativeTimeData": {}
-        },
-        "WidgetConfig": {
             "icon": "IconExtensions",
-            "title": "15",
-            "description": "widgets.users.description"
+            "title": "38",
+            "description": "widgets.extensions.description"
         }
     }
 ]
 
 export const charts = [
     {
+        "chart": {
+            "type": "column"
+        },
         "ID": "8",
         "WidgetType": {
             "ID": "2",
@@ -134,7 +161,7 @@ export const charts = [
             },
             "series": [
                 {
-                    "name": "test1 1",
+                    "pointWidth": 20,
                     "data": [
                         {
                             "x": 1563441556000,
@@ -151,7 +178,21 @@ export const charts = [
                     ]
                 }
             ],
-            "YxisName": "Minutes",
+            "yAxis": [
+                {
+                    "gridLineDashStyle": 'longdash',
+                    "lineWidth": 1,
+                    "title": false
+                }, {
+                    "lineWidth": 1,
+                    "title": false,
+                    "linkedTo": 0,
+                    "opposite": true
+                }
+            ],
+            "legend": {
+                "enabled": false
+            },
             "date": "06/29/2019 - 07/29/2019"
         }
     },

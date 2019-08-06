@@ -1,8 +1,8 @@
 <template>
     <div>
-        <component :is="componentTypes[widget.WidgetType.ID]"
-                   :data="widget.WidgetConfig"
-                   v-bind="widget.WidgetConfig"
+        <component :is="componentTypes[widget.TemplateID]"
+                   :data="widget.WidgetLayout"
+                   v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
                    @update-item="updateWidget(widget)"
