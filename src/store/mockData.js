@@ -126,32 +126,35 @@ export const charts = [
             "Order": 7,
         },
         "WidgetConfig": {
+            "chart": {
+                "type": "column"
+            },
             "title": {
-                "text": "Minutes comparison between users"
+                "text": "Calls Per Hour"
             },
             "xAxis": {
-                "type": "datetime"
+                "type": "datetime",
             },
             "series": [
                 {
+                    "pointWidth": 20,
                     "name": "test1 1",
                     "data": [
                         {
-                            "x": 1563441556000,
-                            "y": 1
+                            "x": 1564999200000,
+                            "y": 4
                         },
                         {
-                            "x": 1564168362000,
-                            "y": 0
+                            "x": 1565002800000,
+                            "y": 2.2
                         },
                         {
-                            "x": 1564308352000,
-                            "y": 0
+                            "x": 1565006400000,
+                            "y": 8
                         }
                     ]
                 }
             ],
-            "YxisName": "Minutes",
             "date": "06/29/2019 - 07/29/2019"
         }
     },

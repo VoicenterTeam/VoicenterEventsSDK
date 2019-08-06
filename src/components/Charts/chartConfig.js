@@ -2,10 +2,22 @@ import Highcharts from 'highcharts'
 import noDataModule from 'highcharts/modules/no-data-to-display'
 import Exporting from 'highcharts/modules/exporting'
 import i18n from '@/i18n'
+import config from "../../config";
 
 Exporting(Highcharts)
 
 noDataModule(Highcharts)
+
+const yLineConfig = {
+    gridLineDashStyle: 'longdash',
+    lineWidth: 2,
+    title: false,
+    labels: {
+        style: {
+            color: config.colors.warm_grey
+        }
+    },
+}
 
 Highcharts.setOptions({
     lang: {
@@ -54,13 +66,25 @@ Highcharts.setOptions({
     title: {
         align: 'left',
     },
+    yAxis: [{
+        ...yLineConfig
+    }, {
+        linkedTo: 0,
+        opposite: true,
+        ...yLineConfig
+    }],
+    xAxis: {
+        lineWidth: 1,
+        lineColor: config.colors.primary,
+        labels: {
+            style: {
+                color: config.colors.warm_grey,
+            }
+        },
+    },
     legend: {
-        enabled: true,
-        align: 'center',
-        verticalAlign: 'top',
-        floating: true,
-        y: -7,
-    }
+        enabled: false
+    },
 })
 
 export default {
