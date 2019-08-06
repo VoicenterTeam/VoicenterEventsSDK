@@ -165,8 +165,6 @@ export const charts = [
         ],
         "WidgetLayout": {
             "Order": 6,
-            "icon": "IconStats",
-            "description": "widgets.stats.description",
             "chart": {
                 "type": "column"
             },

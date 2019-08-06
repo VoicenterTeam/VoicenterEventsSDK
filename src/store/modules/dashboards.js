@@ -1,4 +1,5 @@
 import {DashboardApi} from "@/api/dashboardApi";
+import Vue from 'vue'
 
 const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
