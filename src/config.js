@@ -10,6 +10,7 @@ export default {
         success: '#00f2c3',
         gray: '#899398',
         light_gray: '#bfc5d0',
+        warm_grey: '#9b9b9b'
     },
     fields: {
         jitter: {

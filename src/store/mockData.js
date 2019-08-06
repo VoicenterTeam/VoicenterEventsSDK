@@ -171,10 +171,10 @@ export const charts = [
                 "type": "column"
             },
             "title": {
-                "text": "Calls Per Minute"
+                "text": "Calls Per Hour"
             },
             "xAxis": {
-                "type": "datetime"
+                "type": "datetime",
             },
             "series": [
                 {
@@ -187,18 +187,17 @@ export const charts = [
                         {
                             "x": 1564168362000,
                             "y": 2,
-                            "color" : "#d6dae1"
+                            "color": "#d6dae1"
                         },
                         {
                             "x": 1564308352000,
                             "y": 1.6,
-                            "color" : "green"
+                            "color": "green"
                         }
                     ]
                 }
             ],
-
-            "date": "06/29/2019 - 08/06/2019"
+            "date": "06/29/2019 - 07/29/2019"
         }
     },
 
