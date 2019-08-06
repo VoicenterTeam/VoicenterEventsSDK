@@ -54,13 +54,23 @@ Highcharts.setOptions({
     title: {
         align: 'left',
     },
+    yAxis: [
+        {
+            lineWidth: 1,
+            title: false,
+            gridLineDashStyle: 'longdash',
+        }, {
+
+            lineWidth: 1,
+            title: false,
+            linkedTo: 0,
+            opposite: true,
+            gridLineDashStyle: 'longdash',
+        }
+    ],
     legend: {
-        enabled: true,
-        align: 'center',
-        verticalAlign: 'top',
-        floating: true,
-        y: -7,
-    }
+        enabled: false
+    },
 })
 
 export default {

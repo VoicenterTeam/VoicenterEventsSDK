@@ -17,6 +17,7 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
+            "Order": 1,
             "icon": "IconPhone",
             "title": "26",
             "description": "widgets.phoneNumbers.description"
@@ -40,6 +41,7 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
+            "Order": 2,
             "icon": "IconUsers",
             "title": "15",
             "description": "widgets.users.description"
@@ -63,6 +65,7 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
+            "Order": 3,
             "icon": "IconExtensions",
             "title": "38",
             "description": "widgets.extensions.description"
@@ -109,6 +112,7 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
+            "Order": 4,
             "icon": "IconUsers",
             "title": "87",
             "description": "widgets.users.description"
@@ -132,6 +136,7 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
+            "Order": 5,
             "icon": "IconExtensions",
             "title": "38",
             "description": "widgets.extensions.description"
@@ -141,20 +146,32 @@ export const widgets = [
 
 export const charts = [
     {
-        "chart": {
-            "type": "column"
-        },
-        "ID": "8",
-        "WidgetType": {
-            "ID": "2",
-        },
-        "WidgetEntity": {},
+
+        "Title": "1",
+        "WidgetID": "7",
+        "TemplateID": "2",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 7,
-        },
-        "WidgetConfig": {
+            "Order": 6,
+            "icon": "IconStats",
+            "description": "widgets.stats.description",
+            "chart": {
+                "type": "column"
+            },
             "title": {
-                "text": "Minutes comparison between users"
+                "text": "Calls Per Minute"
             },
             "xAxis": {
                 "type": "datetime"
@@ -165,35 +182,23 @@ export const charts = [
                     "data": [
                         {
                             "x": 1563441556000,
-                            "y": 1
+                            "y": 3
                         },
                         {
                             "x": 1564168362000,
-                            "y": 0
+                            "y": 2,
+                            "color" : "#d6dae1"
                         },
                         {
                             "x": 1564308352000,
-                            "y": 0
+                            "y": 1.6,
+                            "color" : "green"
                         }
                     ]
                 }
             ],
-            "yAxis": [
-                {
-                    "gridLineDashStyle": 'longdash',
-                    "lineWidth": 1,
-                    "title": false
-                }, {
-                    "lineWidth": 1,
-                    "title": false,
-                    "linkedTo": 0,
-                    "opposite": true
-                }
-            ],
-            "legend": {
-                "enabled": false
-            },
-            "date": "06/29/2019 - 07/29/2019"
+
+            "date": "06/29/2019 - 08/06/2019"
         }
     },
 
@@ -241,15 +246,24 @@ export const charts = [
 
 export const tables = [
     {
-        "ID": "9",
-        "WidgetType": {
-            "ID": "3",
-        },
-        "WidgetEntity": {},
+        "Title": "1",
+        "WidgetID": "8",
+        "TemplateID": "3",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
         "WidgetLayout": {
-            "Order": 8,
-        },
-        "WidgetConfig": {
+            "Order": 7,
             "tableData": [
                 {
                     id: 1,

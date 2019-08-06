@@ -1,11 +1,15 @@
 import $axios from './apiConnection'
 
-import {widgets} from '@/store/mockData'
-
 export const WidgetApi = {
-    getAll() {
-        // return $axios.get(`/Widgets/GetAllWidgets`)
-        return widgets
+    async getAll() {
+
+        try {
+            let widgets = await $axios.get('/Widgets/GetAllWidgets/')
+            return widgets.WidgetList
+        } catch (e) {
+            return []
+        }
+
     },
 
     find(id) {

@@ -1,25 +1,21 @@
 import axios from 'axios'
-import { dashboards} from '@/store/mockData'
-export function getDashboards() {
-  //TODO: integrate api call to get dashboards from api
-  return dashboards
-}
+import {dashboards} from '@/store/mockData'
 
+export const DashboardApi = {
+    getAll() {
+        // return $axios.get(`/DashBoards/GetAllDashBoards/`)
+        return dashboards
+    },
 
+    find(id) {
+        // return $axios.get(`/DashBoards/Get/{$id}`)
+    },
 
-export function getAll() {
-    // return $axios.get(`/DashBoards/GetAllWidgets/`)
-    return widgets
-}
+    update(data) {
+        // return $axios.post(`/DashBoards/Update/`)
+    },
 
-export function find(id) {
-    // return $axios.get(`/DashBoards/GetAllWidgets/{$id}`)
-}
-
-export function update(data) {
-    // return $axios.post(`/DashBoards/Update/`)
-}
-
-export function store(data) {
-    // return $axios.get(`/DashBoards/Add/`)
+    store(data) {
+        // return $axios.get(`/DashBoards/Add/`)
+    }
 }
