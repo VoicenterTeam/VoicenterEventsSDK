@@ -155,21 +155,6 @@ export const charts = [
                     ]
                 }
             ],
-            "yAxis": [
-                {
-                    "gridLineDashStyle": 'longdash',
-                    "lineWidth": 1,
-                    "title": false
-                }, {
-                    "lineWidth": 1,
-                    "title": false,
-                    "linkedTo": 0,
-                    "opposite": true
-                }
-            ],
-            "legend": {
-                "enabled": false
-            },
             "date": "06/29/2019 - 07/29/2019"
         }
     },
