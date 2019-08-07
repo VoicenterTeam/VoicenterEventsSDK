@@ -141,7 +141,9 @@ class EventsSDK {
     this._initSocketConnection();
     this._initSocketEvents();
     this._initKeepAlive();
-    this.login()
+    if (server !== 'default'){
+      this.login()
+    }
   }
 
   _checkInit() {
@@ -303,7 +305,6 @@ class EventsSDK {
    * @param {function} callback (callback function when even with the specified name is received)
    */
   on(eventName, callback) {
-    console.log('ONNNNNN', eventName)
     this._listenersMap.set(eventName, callback)
     this._checkInit()
   }
