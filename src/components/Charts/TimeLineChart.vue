@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white p-5 rounded-lg py-4 my-4">
+    <div class="bg-white p-4 rounded-lg py-4 my-4">
         <range-filter
                 :date="data.date.split(' - ')"
                 @on-change="onChangeDate">
@@ -19,6 +19,7 @@
     import chartConfig from './chartConfig'
     import ChartUpdateDialog from './ChartUpdateDialog'
     import RangeFilter from "./RangeFilter";
+    import config from "../../config";
 
     export default {
         name: 'TimeLineChart',
@@ -50,7 +51,7 @@
                                 y: -7,
                                 onclick: () => {
                                     this.showUpdateDialog = !this.showUpdateDialog
-                                }
+                                },
                             },
                         },
                     },

@@ -1,7 +1,6 @@
 <template>
-    <div class="bg-white p-5 rounded-lg py-4 my-4 data-table w-full">
+    <div class="bg-white rounded-lg py-2 my-4 data-table w-full">
         <el-table ref="table"
-                  stripe
                   row-key="id"
                   v-if="drawTable"
                   :fit="fitWidth"
@@ -64,7 +63,7 @@
                 availableColumns: cloneDeep(this.data.columns),
                 tableKey: 'table-key',
                 active: false,
-                fitWidth: false,
+                fitWidth: true,
                 drawTable: true
             }
         },
@@ -96,7 +95,7 @@
                 return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop));
             },
             rowsData() {
-               return this.data.tableData
+                return this.data.tableData
             }
         },
         methods: {
@@ -153,10 +152,27 @@
 </script>
 
 <style lang="scss">
+
+    /*.el-table th .header-handle {*/
+    /*    display: none;*/
+    /*}*/
+
+    /*.el-table th .caret-wrapper {*/
+    /*    display: none;*/
+    /*}*/
+
     .el-table th:hover {
         @apply bg-gray-100;
         @apply cursor-pointer;
     }
+
+    /*.el-table th:hover .header-handle {*/
+    /*    display: flex;*/
+    /*}*/
+
+    /*.el-table th:hover .caret-wrapper {*/
+    /*    display: flex;*/
+    /*}*/
 
     .el-table th > .cell {
         @apply flex;
@@ -177,7 +193,6 @@
     .rtl .el-table td {
         text-align: right;
     }
-
 </style>
 
 <style>

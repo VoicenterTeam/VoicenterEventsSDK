@@ -1,3 +1,6 @@
+import fa from "element-ui/src/locale/lang/fa";
+import config from "../config";
+
 export const widgets = [
     {
         "Title": "1",
@@ -195,12 +198,118 @@ export const charts = [
                     ]
                 }
             ],
+            "tooltip": {
+                "formatter": function () {
+                    return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
+                },
+                "backgroundColor": "#ffffff",
+                "borderColor": "#ffffff",
+                "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+                "borderRadius": 10,
+            },
             "date": "06/29/2019 - 07/29/2019"
         }
-    },
+    }, {
 
-    //TODO: wait for API response to check another obj.str
-    {
+        "Title": "2",
+        "WidgetID": "9",
+        "TemplateID": "2",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
+        "WidgetLayout": {
+            "Order": 8,
+            "title": {
+                "text": "Calls Per Hour"
+            },
+            "xAxis": {
+                "type": "datetime",
+                "lineColor": ""
+            },
+            "series": [
+                {
+                    "name": "Outgoing",
+                    "color": "#2675ff",
+                    "type": "spline",
+                    "data": [
+                        {
+                            "x": 1563441556000,
+                            "y": 1
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 2,
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 3,
+                        }
+                    ]
+                }, {
+                    "name": "Incoming",
+                    "color": "#876cff",
+                    "type": "spline",
+                    "dashStyle": 'shortdot',
+                    "data": [
+                        {
+                            "x": 1563441556000,
+                            "y": 2.25
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 1.5,
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 4,
+                        }
+                    ]
+                }
+            ],
+            "legend": {
+                "enabled": true,
+                "align": 'center',
+                "verticalAlign": 'top',
+                "floating": true,
+                "y": -7,
+                "itemStyle": {
+                    "color": '#899398',
+                    "fontFamily": 'Montserrat',
+                    "fontSize": "16px"
+                },
+            },
+            "yAxis": [{
+                "opposite": false,
+                "title": false,
+                "labels": {
+                    "style": {
+                        "color": "#bfc5d0",
+                        "fontSize": "16px"
+                    }
+                },
+            }],
+            "tooltip": {
+                "formatter": function () {
+                    return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
+                },
+                "backgroundColor": "#ffffff",
+                "borderColor": "#ffffff",
+                "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+                "borderRadius": 10,
+            },
+            "date": "06/29/2019 - 07/29/2019"
+        }
+    }, {
         "WidgetType": {
             "ID": "2", //chart
         },
@@ -357,6 +466,18 @@ export const dashboards = {
         "WidgetGroupList": [
             {
                 "ID": 23,
+                "Title": "Queue Dashboard",
+                "WidgetList": [...widgets, charts[0], tables[0], charts[1]]
+            }
+        ]
+    },
+    "dashboard2": {
+        "ID": 2,
+        "Title": "Queue Dashboard",
+
+        "WidgetGroupList": [
+            {
+                "ID": 23,
                 "Title": "General statistics",
                 "WidgetList": [widgets[0], widgets[1], widgets[2], widgets[3]]
             },
@@ -364,17 +485,6 @@ export const dashboards = {
                 "ID": 24,
                 "Title": "General statistics 2",
                 "WidgetList": [widgets[1], widgets[2], widgets[0]]
-            }
-        ]
-    },
-    "dashboard2": {
-        "ID": 2,
-        "Title": "Queue Dashboard",
-        "WidgetGroupList": [
-            {
-                "ID": 23,
-                "Title": "Queue Dashboard",
-                "WidgetList": [...widgets, charts[0], tables[0]]
             }
         ]
     }

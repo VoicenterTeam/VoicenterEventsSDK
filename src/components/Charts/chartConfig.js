@@ -14,7 +14,8 @@ const yLineConfig = {
     title: false,
     labels: {
         style: {
-            color: config.colors.warm_grey
+            color: config.colors.warm_grey,
+            fontSize: "16px"
         }
     },
 }
@@ -65,6 +66,10 @@ Highcharts.setOptions({
     },
     title: {
         align: 'left',
+        style: {
+            color: config.colors.charcoal_grey,
+            fontSize: '18px'
+        }
     },
 
     yAxis: [{
@@ -76,15 +81,24 @@ Highcharts.setOptions({
     }],
     xAxis: {
         lineWidth: 1,
+        tickWidth: 0,
         lineColor: config.colors.primary,
         labels: {
             style: {
                 color: config.colors.warm_grey,
+                fontSize: "16px",
             }
         },
     },
     legend: {
         enabled: false
+    },
+    plotOptions: {
+        spline: {
+            marker: {
+                enabled: false
+            }
+        }
     },
 })
 

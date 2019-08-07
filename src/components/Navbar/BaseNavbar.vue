@@ -7,7 +7,7 @@
                     <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                        <span class="mx-1 text-lg text-gray-700">{{$t(activeDashboard.Title) || activeDashboard.Title}}</span>
+                            <span class="mx-1 text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.Title) || activeDashboard.Title}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"

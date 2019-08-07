@@ -16,9 +16,6 @@
                     </columns-action>
                 </el-tab-pane>
                 <el-tab-pane>
-                    <span slot="label"><IconEqualizerFill></IconEqualizerFill></span>TBD
-                </el-tab-pane>
-                <el-tab-pane>
                     <span slot="label"><IconGridLine></IconGridLine></span>
                     <columns-visibility
                             :availableColumns="availableColumns"
