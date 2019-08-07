@@ -18,6 +18,8 @@ const defaultOptions = {
   upgrade: false
 };
 
+let allConnections = []
+let listenersMap = new Map()
 class EventsSDK {
   constructor(options = {}) {
     this.options = {
@@ -32,10 +34,11 @@ class EventsSDK {
     this.server = null;
     this.socket = null;
     this.connected = false
+    this.connections = allConnections
     this.connectionEstablished = false;
     this.shouldReconnect = true
     this._initReconnectOptions();
-    this._listenersMap = new Map();
+    this._listenersMap = listenersMap
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
   }
 
@@ -152,13 +155,12 @@ class EventsSDK {
     let protocol = this.options.protocol;
     let url = `${protocol}://${domain}`;
     this.Logger.log('Connecting to..', url)
-    if (this.socket) {
-      this.socket.close()
-    }
+    this.closeAllConnections()
     this.socket = io(url, {
       ...this.options,
       debug: false
     });
+    allConnections.push(this.socket)
     this.connectionEstablished = true;
   }
 
@@ -170,6 +172,7 @@ class EventsSDK {
     this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
     this.socket.on(eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout.bind(this));
     this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
+    this.socket.onevent = this._onEvent.bind(this)
   }
 
   _initKeepAlive() {
@@ -237,21 +240,19 @@ class EventsSDK {
     }
   }
 
-  _onEvent() {
-    this.socket.onevent = (packet) => {
-      if (!packet.data) {
-        return;
-      }
-      let evt = this._parsePacket(packet);
-      this.Logger.log(`New event -> ${evt.name}`, evt);
-      this._listenersMap.forEach((callback, eventName) => {
-        if (eventName === '*') {
-          callback(evt);
-        } else if (evt.name === eventName) {
-          callback(evt);
-        }
-      })
+  _onEvent(packet) {
+    if (!packet.data) {
+      return;
     }
+    let evt = this._parsePacket(packet);
+    this.Logger.log(`New event -> ${evt.name}`, evt);
+    this._listenersMap.forEach((callback, eventName) => {
+      if (eventName === '*') {
+        callback(evt);
+      } else if (evt.name === eventName) {
+        callback(evt);
+      }
+    })
   }
 
   /**
@@ -262,6 +263,9 @@ class EventsSDK {
     if (this.connectionEstablished) {
       return true;
     }
+    if (this.socket) {
+      this.emit(eventTypes.CLOSE)
+    }
     await this._getServers();
     this._connect()
     this._initReconnectDelays()
@@ -269,11 +273,28 @@ class EventsSDK {
   }
 
   /**
-   * Disconnects definitively from the servers
+   * Sets the monitor code token
+   * @param token
+   */
+  setToken(token) {
+    this.options.token = token
+  }
+  /**
+   * Closes all existing connections
+   */
+  closeAllConnections() {
+    allConnections.forEach(connection => {
+      connection.close()
+    })
+    allConnections = []
+  }
+  /**
+   * Disconnects the socket instance from the servers
    */
   disconnect() {
     this.shouldReconnect = false
-    this.socket.close()
+    this._listenersMap = new Map()
+    this.closeAllConnections()
   }
 
   /**
@@ -282,9 +303,9 @@ class EventsSDK {
    * @param {function} callback (callback function when even with the specified name is received)
    */
   on(eventName, callback) {
+    console.log('ONNNNNN', eventName)
     this._listenersMap.set(eventName, callback)
     this._checkInit()
-    this._onEvent()
   }
 
   /**
@@ -293,7 +314,7 @@ class EventsSDK {
    * @param {object} data (data for the event)
    */
 
-  emit(eventName, data) {
+  emit(eventName, data = {}) {
     this._checkInit()
     this.Logger.log(`EMIT -> ${eventName}`, data)
     this.socket.emit(eventName, data);

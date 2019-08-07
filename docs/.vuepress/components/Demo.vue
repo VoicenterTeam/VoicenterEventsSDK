@@ -50,7 +50,7 @@
       async login() {
         this.error = '';
         try {
-          await this.sdk.login()
+          await this.initSdk()
           this.listenToEvents()
         } catch (e) {
           this.error = e;
@@ -64,17 +64,27 @@
             ...data
           });
         });
+      },
+      async initSdk() {
+        let sdk = new EventsSdk({
+          token: this.monitorCode,
+          debug: true
+        });
+        window.sdk = sdk
+        this.sdk = sdk
+        await sdk.init();
+        if (this.monitorCode) {
+          await this.sdk.login()
+        }
       }
     },
     async mounted() {
-      let sdk = new EventsSdk({
-        token: this.monitorCode,
-        debug: true
-      });
-      window.sdk = sdk
-      await sdk.init();
-      this.sdk = sdk
-      this.listenToEvents(sdk)
+      try {
+        await this.initSdk()
+        this.listenToEvents()
+      } catch(e) {
+        this.error = e
+      }
     }
   };
 </script>
