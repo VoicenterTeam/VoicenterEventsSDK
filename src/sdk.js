@@ -61,7 +61,7 @@ class EventsSDK {
     this.socket.io.reconnectionDelayMax(minReconnectDelay);
   }
 
-  _onConnectError(data) {5780
+  _onConnectError(data) {
     this._retryConnection('next')
     this.connected = false
     this.Logger.log(eventTypes.CONNECT_ERROR, data)
