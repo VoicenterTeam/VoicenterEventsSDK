@@ -35,6 +35,7 @@ class EventsSDK {
     this.connectionEstablished = false;
     this.shouldReconnect = true
     this._initReconnectOptions();
+    this._listenersMap = new Map();
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
   }
 
@@ -60,7 +61,7 @@ class EventsSDK {
     this.socket.io.reconnectionDelayMax(minReconnectDelay);
   }
 
-  _onConnectError(data) {
+  _onConnectError(data) {5780
     this._retryConnection('next')
     this.connected = false
     this.Logger.log(eventTypes.CONNECT_ERROR, data)
@@ -120,14 +121,19 @@ class EventsSDK {
 
   _connect(server = 'default') {
     this.shouldReconnect = true
+    let serverToConnect = null
     if (server === 'default') {
-      this._findCurrentServer();
+      serverToConnect = this._findCurrentServer();
     } else if (server === 'next') {
-      this._findNextAvailableServer()
+      serverToConnect = this._findNextAvailableServer()
     } else if (server === 'prev') {
-      this._findMaxPriorityServer()
+      serverToConnect = this._findMaxPriorityServer()
     } else {
       throw new Error(`Incorrect 'server' parameter passed to connect function ${server}. Should be 'default' or 'next'`)
+    }
+    if (!serverToConnect) {
+      // skip the connect because we didn't find a new server to connect to.
+      return
     }
     this._initSocketConnection();
     this._initSocketEvents();
@@ -175,7 +181,6 @@ class EventsSDK {
       else {
         this._initSocketConnection()
       }
-      this._initKeepAlive();
     }, this.options.keepAliveTimeout);
   }
 
@@ -188,6 +193,7 @@ class EventsSDK {
     if (!this.server) {
       throw new Error('Could not find any server to establish connection with');
     }
+    return this.server
   }
 
   _findNextAvailableServer() {
@@ -204,9 +210,11 @@ class EventsSDK {
       }
       if (this.server.Domain !== nextServer.Domain) {
         this.server = nextServer;
+        return this.server
       }
       this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server)
     }
+    return null
   }
 
   _findMaxPriorityServer() {
@@ -215,7 +223,9 @@ class EventsSDK {
     if(this.server && maxPriorityServer.Domain !== this.server.Domain) {
       this.server = maxPriorityServer;
       this.Logger.log(`Fallback -> Trying to find previous server`, this.server)
+      return this.server
     }
+    return null
   }
 
   async _getServers() {
@@ -227,18 +237,20 @@ class EventsSDK {
     }
   }
 
-  _onEvent(eventName, callback) {
+  _onEvent() {
     this.socket.onevent = (packet) => {
       if (!packet.data) {
         return;
       }
       let evt = this._parsePacket(packet);
       this.Logger.log(`New event -> ${evt.name}`, evt);
-      if (eventName === '*') {
-        callback(evt);
-      } else if (evt.name === eventName) {
-        callback(evt);
-      }
+      this._listenersMap.forEach((callback, eventName) => {
+        if (eventName === '*') {
+          callback(evt);
+        } else if (evt.name === eventName) {
+          callback(evt);
+        }
+      })
     }
   }
 
@@ -270,8 +282,9 @@ class EventsSDK {
    * @param {function} callback (callback function when even with the specified name is received)
    */
   on(eventName, callback) {
+    this._listenersMap.set(eventName, callback)
     this._checkInit()
-    this._onEvent(eventName, callback)
+    this._onEvent()
   }
 
   /**
