@@ -7,7 +7,7 @@ module.exports = {
       return `voicenter-events-sdk.${format}.js`
     }
   },
-  externals: ['socket.io-client'],
+  externals: ['socket.io-client', 'socket.io-client/socket.io'],
   globals: {
     'socket.io-client': 'io'
   }

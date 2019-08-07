@@ -7,7 +7,7 @@
     "lint": "vue-cli-service lint",
     "docs": "vue-cli-service docs --mode serve",
     "build:docs": "vue-cli-service docs --mode build",
-    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && vue-cli-service build",
+    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && npm run build",
     "start": "npm run docs"
   },
   "dependencies": {
