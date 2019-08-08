@@ -1,17 +1,17 @@
 <template>
-    <div class="flex flex flex-col columns-props">
-        <div class="border-b-2 flex cursor-pointer" @click="pinColumn">
-            <p class="mx-8 mb-2 -mt-1 text-sm text-gray">
+    <div class="flex flex-col column_actions--container">
+        <div class="with-border__b" @click="pinColumn">
+            <p>
                 {{$t('datatable.props.pin_column')}}
             </p>
         </div>
-        <div class="border-b-2 flex cursor-pointer" @click="autoSizeColumns">
-            <p class="mx-8 my-2 text-sm text-gray">
+        <div class="with-border__b" @click="autoSizeColumns">
+            <p>
                 {{$t('datatable.props.autosize_columns')}}
             </p>
         </div>
-        <div class="flex cursor-pointer" @click="resetChanges">
-            <p class="mx-8 mt-2 text-sm text-gray">
+        <div @click="resetChanges">
+            <p>
                 {{$t('datatable.props.reset_columns')}}
             </p>
         </div>
@@ -53,7 +53,26 @@
 </script>
 
 <style lang="scss" scoped>
-    .text-gray {
-        color: #4a4a4a;
+    .column_actions--container {
+        color: var(--greyish-brown);
+        @apply text-sm;
+        > div {
+            &.with-border__b {
+                border-bottom: solid 1px var(--silver-color);
+            }
+            @apply flex;
+            @apply cursor-pointer;
+            > p {
+                @apply ml-8;
+                @apply mr-5;
+                @apply my-3;
+            }
+        }
     }
+
+    .column_actions--container > div:hover {
+        @apply text-blue-600;
+        @apply bg-blue-100;
+    }
+
 </style>

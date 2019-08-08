@@ -98,7 +98,7 @@ Highcharts.setOptions({
             marker: {
                 enabled: false
             }
-        }
+        },
     },
 })
 

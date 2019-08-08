@@ -254,7 +254,12 @@ export const charts = [
                             "x": 1564308352000,
                             "y": 3,
                         }
-                    ]
+                    ],
+                    "shadow": {
+                        "offsetY": 15,
+                        "opacity": 0.005,
+                        "width": 20
+                    }
                 }, {
                     "name": "Incoming",
                     "color": "#876cff",

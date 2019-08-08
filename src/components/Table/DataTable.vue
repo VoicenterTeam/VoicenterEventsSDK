@@ -153,9 +153,9 @@
 
 <style lang="scss">
 
-    /*.el-table th .header-handle {*/
-    /*    display: none;*/
-    /*}*/
+    .el-table th .header-handle {
+        display: none;
+    }
 
     /*.el-table th .caret-wrapper {*/
     /*    display: none;*/
@@ -166,9 +166,9 @@
         @apply cursor-pointer;
     }
 
-    /*.el-table th:hover .header-handle {*/
-    /*    display: flex;*/
-    /*}*/
+    .el-table th:hover .header-handle {
+        display: flex;
+    }
 
     /*.el-table th:hover .caret-wrapper {*/
     /*    display: flex;*/
@@ -177,6 +177,15 @@
     .el-table th > .cell {
         @apply flex;
         @apply items-center;
+        color: var(--greyish-brown);
+    }
+
+    .el-table::before {
+        background-color: white;
+    }
+
+    .el-table td > .cell {
+        color: var(--greyish-brown);
     }
 
     .rtl .el-select {
@@ -193,6 +202,7 @@
     .rtl .el-table td {
         text-align: right;
     }
+
 </style>
 
 <style>

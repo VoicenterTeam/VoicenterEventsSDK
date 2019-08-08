@@ -1,13 +1,14 @@
 <template>
-    <el-dropdown class="flex ml-auto header-handle" trigger="click">
+<!--    trigger="click"-->
+    <el-dropdown class="flex ml-auto header-handle">
         <span class="el-dropdown-link" v-on:click.stop>
             <align-justify-icon
                     class="flex w-5 h-5 -mx-1">
             </align-justify-icon>
         </span>
-        <el-dropdown-menu slot="dropdown">
-            <el-tabs class="mx-0">
-                <el-tab-pane>
+        <el-dropdown-menu slot="dropdown" class="header-actions__container">
+            <el-tabs class="mx-0" v-model="activeTab" @tab-click="handleClick">
+                <el-tab-pane name="first">
                     <span slot="label"><IconGroup></IconGroup></span>
                     <columns-action
                             :currentColumn="currentColumn"
@@ -15,8 +16,8 @@
                             v-on="$listeners">
                     </columns-action>
                 </el-tab-pane>
-                <el-tab-pane>
-                    <span slot="label"><IconGridLine></IconGridLine></span>
+                <el-tab-pane name="second">
+                    <span slot="label" ><IconGridLine></IconGridLine></span>
                     <columns-visibility
                             :availableColumns="availableColumns"
                             :visibleColumns="visibleColumns"
@@ -28,6 +29,7 @@
         </el-dropdown-menu>
     </el-dropdown>
 </template>
+<!--F5F7FA-->
 
 <script>
 
@@ -48,6 +50,11 @@
             [Tabs.name]: Tabs,
             [TabPane.name]: TabPane,
         },
+        data() {
+            return {
+                activeTab: 'first'
+            };
+        },
         props: {
             availableColumns: {
                 type: Array,
@@ -60,6 +67,11 @@
             currentColumn: {
                 type: Object,
                 default: () => ({})
+            },
+        },
+        methods: {
+            handleClick() {
+                console.log(this.activeTab)
             },
         },
     }
@@ -77,8 +89,13 @@
         color: var(--primary-color);
     }
 
+    .el-tabs__header {
+        margin: 0;
+    }
+
     .el-tabs__nav-scroll {
-        margin: 0 2rem;
+        justify-content: center;
+        display: flex;
     }
 
     .rtl .el-tabs__nav.is-top {
@@ -94,4 +111,18 @@
     .rtl .el-checkbox__inner {
         margin-left: 10px;
     }
+
+    .header-actions__container {
+        border-radius: 4px;
+        box-shadow: 0 2px 8px 0 rgba(42, 44, 54, 0.44);
+        background-color: white;
+    }
+
+    .el-popper[x-placement^=bottom] {
+        margin-top: -20px;
+        .popper__arrow {
+            display: none;
+        }
+    }
+
 </style>
