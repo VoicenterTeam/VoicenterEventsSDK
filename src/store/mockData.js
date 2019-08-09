@@ -1,6 +1,6 @@
 export const widgets = [
     {
-        "Title": "2",
+        "Title": "Calls Per Minute",
         "WidgetID": "9",
         "TemplateID": "2",
         "WidgetTime": {},
@@ -18,9 +18,10 @@ export const widgets = [
         ],
         "WidgetLayout": {
             "icon": "IconPhone",
-            "Order": 8,
+            "caption": 'Report 1',
+            "Order": 1,
             "title": {
-                "text": "Type line"
+                "text": ""
             },
             "xAxis": {
                 "type": "datetime",
@@ -106,7 +107,7 @@ export const widgets = [
         }
     },
     {
-        "Title": "1",
+        "Title": "Table",
         "WidgetID": "8",
         "TemplateID": "3",
         "WidgetTime": {},
@@ -123,7 +124,9 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
-            "Order": 7,
+            "Order": 2,
+            "icon": "IconUsers",
+            "caption": "Data about..",
             "tableData": [
                 {
                     id: 1,
@@ -212,9 +215,9 @@ export const widgets = [
         }
     },
     {
-        "Title": "1",
-        "WidgetID": "3",
-        "TemplateID": "1",
+        "Title": "Calls Per Hour",
+        "WidgetID": "7",
+        "TemplateID": "2",
         "WidgetTime": {},
         "WidgetConfig": [
             {
@@ -230,83 +233,13 @@ export const widgets = [
         ],
         "WidgetLayout": {
             "Order": 3,
+            "caption": "Report 2",
             "icon": "IconExtensions",
-            "title": "38",
-            "description": "widgets.extensions.description"
-        }
-    },
-    {
-        "Title": "1",
-        "WidgetID": "4",
-        "TemplateID": "1",
-        "WidgetTime": {},
-        "WidgetConfig": [
-            {
-                "Key": "Foo",
-                "ParameterID": 1
-            }
-        ],
-        "WidgetEntity": [
-            {
-                "EntityID": 8,
-                "EntityType": 1
-            }
-        ],
-        "WidgetLayout": {
-            "icon": "IconStats",
-            "title": "514",
-            "description": "widgets.stats.description"
-        }
-    },
-    {
-        "Title": "1",
-        "WidgetID": "5",
-        "TemplateID": "1",
-        "WidgetTime": {},
-        "WidgetConfig": [
-            {
-                "Key": "Foo",
-                "ParameterID": 1
-            }
-        ],
-        "WidgetEntity": [
-            {
-                "EntityID": 8,
-                "EntityType": 1
-            }
-        ],
-        "WidgetLayout": {
-            "Order": 4,
-            "icon": "IconUsers",
-            "title": "87",
-            "description": "widgets.users.description"
-        }
-    },
-    {
-
-        "Title": "1",
-        "WidgetID": "7",
-        "TemplateID": "2",
-        "WidgetTime": {},
-        "WidgetConfig": [
-            {
-                "Key": "Foo",
-                "ParameterID": 1
-            }
-        ],
-        "WidgetEntity": [
-            {
-                "EntityID": 8,
-                "EntityType": 1
-            }
-        ],
-        "WidgetLayout": {
-            "Order": 6,
             "chart": {
                 "type": "column"
             },
             "title": {
-                "text": "Type bar"
+                "text": ""
             },
             "xAxis": {
                 "type": "datetime",
@@ -335,36 +268,12 @@ export const widgets = [
             "date": "06/29/2019 - 07/29/2019"
         }
     },
-    {
-        "Title": "1",
-        "WidgetID": "6",
-        "TemplateID": "1",
-        "WidgetTime": {},
-        "WidgetConfig": [
-            {
-                "Key": "Foo",
-                "ParameterID": 1
-            }
-        ],
-        "WidgetEntity": [
-            {
-                "EntityID": 8,
-                "EntityType": 1
-            }
-        ],
-        "WidgetLayout": {
-            "Order": 5,
-            "icon": "IconExtensions",
-            "title": "38",
-            "description": "widgets.extensions.description"
-        }
-    }
 ]
 
 export const charts = [
     {
 
-        "Title": "1",
+        "Title": "Calls Per Hours",
         "WidgetID": "7",
         "TemplateID": "2",
         "WidgetTime": {},
@@ -383,10 +292,11 @@ export const charts = [
         "WidgetLayout": {
             "Order": 6,
             "chart": {
-                "type": "column"
+                "type": "column",
+                "marginTop": 45
             },
             "title": {
-                "text": "Calls Per Hour"
+                "text": ""
             },
             "xAxis": {
                 "type": "datetime",
@@ -412,12 +322,124 @@ export const charts = [
                     ]
                 }
             ],
+            "tooltip": {
+                "formatter": function () {
+                    return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
+                },
+                "backgroundColor": "#ffffff",
+                "borderColor": "#ffffff",
+                "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+                "borderRadius": 10,
+            },
+            "date": "05/29/2019 - 07/20/2019"
+        }
+    }, {
+
+        "Title": "Calls Per Minute",
+        "WidgetID": "9",
+        "TemplateID": "2",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
+        "WidgetLayout": {
+            "Order": 8,
+            "title": {
+                "text": ""
+            },
+            "xAxis": {
+                "type": "datetime",
+                "lineColor": ""
+            },
+            "series": [
+                {
+                    "name": "Outgoing",
+                    "color": "#2675ff",
+                    "type": "spline",
+                    "data": [
+                        {
+                            "x": 1563441556000,
+                            "y": 1
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 2,
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 3,
+                        }
+                    ],
+                    "shadow": {
+                        "offsetY": 15,
+                        "opacity": 0.004,
+                        "width": 20
+                    }
+                }, {
+                    "name": "Incoming",
+                    "color": "#876cff",
+                    "type": "spline",
+                    "dashStyle": 'shortdot',
+                    "data": [
+                        {
+                            "x": 1563441556000,
+                            "y": 2.25
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 1.5,
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 4,
+                        }
+                    ]
+                }
+            ],
+            "legend": {
+                "enabled": true,
+                "align": 'center',
+                "verticalAlign": 'top',
+                "floating": true,
+                "y": -15,
+                "itemStyle": {
+                    "color": '#899398',
+                    "fontFamily": 'Montserrat',
+                    "fontWeight": 500,
+                    "fontSize": "15px"
+                },
+            },
+            "yAxis": [{
+                "opposite": false,
+                "title": false,
+                "labels": {
+                    "style": {
+                        "color": "#bfc5d0",
+                        "fontSize": "16px"
+                    }
+                },
+            }],
+            "tooltip": {
+                "formatter": function () {
+                    return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
+                },
+                "backgroundColor": "#ffffff",
+                "borderColor": "#ffffff",
+                "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+                "borderRadius": 10,
+            },
             "date": "06/29/2019 - 07/29/2019"
         }
-    },
-
-    //TODO: wait for API response to check another obj.str
-    {
+    }, {
         "WidgetType": {
             "ID": "2", //chart
         },
@@ -477,6 +499,7 @@ export const tables = [
             }
         ],
         "WidgetLayout": {
+            "Caption": 'Users Table',
             "Order": 7,
             "tableData": [
                 {
@@ -540,27 +563,31 @@ export const tables = [
                         prop: 'name',
                         fixed: false,
                         label: 'Name',
+                        align: 'left'
                     },
                     {
                         prop: 'job',
                         fixed: false,
                         label: 'Job',
+                        align: 'left'
                     },
                     {
                         prop: 'progress',
                         fixed: false,
                         label: 'Progress',
+                        align: 'center'
                     },
                     {
                         prop: 'since',
                         fixed: false,
                         label: 'Since',
-                        sortable: true
+                        align: 'center'
                     },
                     {
                         prop: 'salary',
                         fixed: false,
                         label: 'Salary',
+                        align: 'center'
                     }
                 ]
         }
@@ -574,13 +601,8 @@ export const dashboards = {
         "WidgetGroupList": [
             {
                 "ID": 23,
-                "Title": "General statistics",
-                "WidgetList": [widgets[0], widgets[1], widgets[2], widgets[3]]
-            },
-            {
-                "ID": 24,
-                "Title": "General statistics 2",
-                "WidgetList": [widgets[1], widgets[2], widgets[0]]
+                "Title": "Queue Dashboard",
+                "WidgetList": [tables[0]]
             }
         ]
     },
@@ -590,8 +612,8 @@ export const dashboards = {
         "WidgetGroupList": [
             {
                 "ID": 23,
-                "Title": "Queue Dashboard",
-                "WidgetList": [widgets[0]]
+                "Title": "General statistics",
+                "WidgetList": [charts[0]]
             }
         ]
     }

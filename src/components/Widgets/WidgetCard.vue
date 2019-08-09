@@ -5,8 +5,8 @@
                 <component class="w-16 mx-1 text-primary" :is="icon"></component>
             </slot>
             <slot name="title">
-                <h5 class="text-3xl font-bold mx-3" v-if="title">
-                    {{title}}
+                <h5 class="text-3xl font-bold mx-3" v-if="caption">
+                    {{caption}}
                 </h5>
             </slot>
             <slot name="description">
@@ -24,17 +24,17 @@
 </template>
 <script>
     import {TrashIcon, MoreVerticalIcon} from 'vue-feather-icons'
-
+    //TODO: define card object structure(fields)
     export default {
         props: {
             icon: String,
-            title: {
+            caption: {
                 type: [String, Number],
                 default: '- -'
             },
             description: {
                 type: [String],
-                default: '- -'
+                default: ''
             },
             editable: {
                 type: Boolean,

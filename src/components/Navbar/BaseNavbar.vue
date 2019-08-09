@@ -31,7 +31,7 @@
                     </span>
                         <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer text-gray-600 hover:text-blue-600 flex items-center"
                               @click="createNewDashboard()">
-                        <IconPlus class="w-4 mr-1 mb-1 text-primary"></IconPlus>
+                        <IconPlus class="w-3 mr-1 mb-1 text-primary"></IconPlus>
                         <span>{{$t('common.newDashboard')}}</span>
                     </span>
                     </div>
@@ -78,7 +78,7 @@
     </nav>
 </template>
 <script>
-    import { Dialog } from 'element-ui'
+    import {Dialog} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
 

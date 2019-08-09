@@ -26,11 +26,11 @@
 </template>
 <script>
 
+    import Widget from "./Widget";
+    import widgetTypes from '@/enum/widgetTypes'
     import WidgetEmptyCard from "./WidgetEmptyCard"
     import DraggableWidgets from './DraggableWidgets'
-    import Widget from "./Widget";
 
-    import widgetTypes from '@/enum/widgetTypes'
 
     export default {
         name: "widget-list",

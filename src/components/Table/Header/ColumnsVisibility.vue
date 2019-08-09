@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="border-b-2 flex pb-3">
-            <div class="mx-4 flex">
+        <div class="with-border__b flex pb-3">
+            <div class="ml-4 mr-3 flex pt-3">
                 <el-checkbox class="flex" :indeterminate="isIndeterminate" v-model="checkAll"
                              @change="handleCheckAllChange">
                 </el-checkbox>
-                <div class="flex border-b">
-                    <input class="text-sm appearance-none w-32 bg-transparent border-none focus:outline-none"
+                <div class="flex with-border__b mx-3">
+                    <input class="text-sm font-medium appearance-none w-34 bg-transparent border-none focus:outline-none"
                            type="text"
                            :placeholder="$t('datatable.filter')"
                            v-model="columnSearchQuery">
@@ -88,10 +88,6 @@
 <style lang="scss">
 
     .el-checkbox__input.is-checked {
-        + .el-checkbox__label {
-            color: var(--primary-color) !important;
-        }
-
         .el-checkbox__input.is-indeterminate .el-checkbox__inner {
             background-color: var(--primary-color) !important;
             border-color: var(--primary-color) !important;
@@ -102,8 +98,26 @@
         background-color: var(--primary-color) !important;
         border-color: var(--primary-color) !important;
     }
-    .rtl .el-checkbox:last-child {
-        margin-right: 30px;
+
+    .rtl {
+        .el-checkbox:last-child {
+            margin-right: 14px;
+        }
+        .border-b-2 > div.mx-4 {
+            margin-right: 0;
+            margin-left: 31px;
+        }
     }
 
+    .el-checkbox {
+        margin-right: 13px;
+    }
+
+    .w-34 {
+        width: 9.3rem;
+    }
+
+    .with-border__b {
+        border-bottom: solid 1px var(--silver-color);
+    }
 </style>
