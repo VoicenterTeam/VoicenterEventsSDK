@@ -6,7 +6,7 @@
             </align-justify-icon>
         </span>
         <el-dropdown-menu slot="dropdown" class="header-actions__container">
-            <el-tabs class="mx-0" v-model="activeTab" @tab-click="handleClick">
+            <el-tabs class="mx-0" v-model="activeTab" :stretch="true">
                 <el-tab-pane name="first">
                     <span slot="label"><IconGroup></IconGroup></span>
                     <columns-action
@@ -16,7 +16,7 @@
                     </columns-action>
                 </el-tab-pane>
                 <el-tab-pane name="second">
-                    <span slot="label" ><IconGridLine></IconGridLine></span>
+                    <span slot="label"><IconGridLine></IconGridLine></span>
                     <columns-visibility
                             :availableColumns="availableColumns"
                             :visibleColumns="visibleColumns"
@@ -67,17 +67,10 @@
                 default: () => ({})
             },
         },
-        methods: {
-            handleClick() {
-                console.log(this.activeTab)
-            },
-        },
-        mounted() {
-            console.log(this.activeTab)
-        }
     }
 
 </script>
+
 
 <style lang="scss">
     .rtl .header-handle {
@@ -88,6 +81,9 @@
     .el-tabs__item {
         height: 20px;
         color: var(--primary-color);
+        padding: 0;
+        display: flex;
+        justify-content: center;
     }
 
     .el-tabs__header {
@@ -97,6 +93,13 @@
     .el-tabs__nav-scroll {
         justify-content: center;
         display: flex;
+        background: #f0f2f4;
+
+        .el-tabs__nav {
+            display: flex;
+            padding: 15px 20px 12px 20px;
+            justify-content: space-around;
+        }
     }
 
     .rtl .el-tabs__nav.is-top {
@@ -107,6 +110,7 @@
 
     .el-tabs__active-bar {
         background-color: var(--primary-color);
+        width: 100px !important;
     }
 
     .rtl .el-checkbox__inner {
@@ -117,17 +121,16 @@
         border-radius: 4px;
         box-shadow: 0 2px 8px 0 rgba(42, 44, 54, 0.44);
         background-color: white;
+        padding: 0;
+        width: 201px;
     }
 
     .el-popper[x-placement^=bottom] {
         margin-top: -20px;
+
         .popper__arrow {
             display: none;
         }
-    }
-
-    .el-tabs__active-bar {
-        min-width: 20px !important;
     }
 
 </style>

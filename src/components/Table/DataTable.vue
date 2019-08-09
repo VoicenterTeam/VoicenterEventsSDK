@@ -1,49 +1,59 @@
 <template>
-    <div class="bg-white rounded-lg px-2 py-2 my-4 data-table w-full">
-        <el-table ref="table"
-                  row-key="id"
-                  v-if="drawTable"
-                  :fit="fitWidth"
-                  :key="tableKey"
-                  :data="rowsData"
-                  v-bind="$attrs"
-                  v-on="listeners">
-            <slot name="">
-                <el-table-column
-                        v-for="(column, index) in renderedColumns"
-                        :key="column.prop"
-                        v-bind="column"
-                        :column-key="column.prop"
-                        :min-width="column.minWidth || '150px'"
-                        :fixed="column.fixed || false"
-                        :align="column.align"
-                        :type="column.type">
-                    <template slot="header">
-                        <!--                        <span class="" @mouseover="hoverOverHeader(column)"-->
-                        <span class="" @mouseover="hoverOverHeader(column)"
+    <div>
+        <div class="flex items-center my-4 w-full">
+            <div class="flex w-64">
+                <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
+            </div>
+            <div class="flex ml-auto">
+                <p class="text-sm">{{rowsData.length}} / {{data.tableData.length}} row(s)</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg my-4 data-table w-full">
+            <el-table ref="table"
+                      row-key="id"
+                      class="rounded-lg"
+                      v-if="drawTable"
+                      :fit="fitWidth"
+                      :key="tableKey"
+                      :data="rowsData"
+                      v-bind="$attrs"
+                      v-on="listeners">
+                <slot name="">
+                    <el-table-column
+                            v-for="(column, index) in renderedColumns"
+                            :key="column.prop"
+                            v-bind="column"
+                            :column-key="column.prop"
+                            :min-width="column.minWidth || '150px'"
+                            :fixed="column.fixed || false"
+                            :align="column.align"
+                            :type="column.type">
+                        <template slot="header">
+                        <span class="font-medium uppercase" @mouseover="hoverOverHeader(column)"
                               @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
-                        <header-actions
-                                :availableColumns="availableColumns"
-                                :visibleColumns="visibleColumns"
-                                :currentColumn="column"
-                                @on-change-visibility="updateColumnsVisibility"
-                                @on-change-columns-size="updateColumnsSize"
-                                @on-pin-column="(value) => pinColumn(value, index)"
-                                @on-reset-props="resetColumnsProps">
-                        </header-actions>
-                    </template>
-                    <template slot-scope="{row, $index}">
-                        <slot :name="column.prop || column.type || column.label"
-                              :row="row"
-                              :index="$index">
-                            {{row[column.prop]}}
-                        </slot>
-                    </template>
-                </el-table-column>
-            </slot>
-        </el-table>
+                            <header-actions
+                                    :availableColumns="availableColumns"
+                                    :visibleColumns="visibleColumns"
+                                    :currentColumn="column"
+                                    @on-change-visibility="updateColumnsVisibility"
+                                    @on-change-columns-size="updateColumnsSize"
+                                    @on-pin-column="(value) => pinColumn(value, index)"
+                                    @on-reset-props="resetColumnsProps">
+                            </header-actions>
+                        </template>
+                        <template slot-scope="{row, $index}">
+                            <slot :name="column.prop || column.type || column.label"
+                                  :row="row"
+                                  :index="$index">
+                                {{row[column.prop]}}
+                            </slot>
+                        </template>
+                    </el-table-column>
+                </slot>
+            </el-table>
+        </div>
     </div>
 </template>
 
@@ -51,8 +61,8 @@
 
     import get from 'lodash/get';
     import Sortable from 'sortablejs';
-    import cloneDeep from 'lodash/cloneDeep'
     import bus from '@/event-bus/EventBus'
+    import cloneDeep from 'lodash/cloneDeep'
     import {Table, TableColumn} from 'element-ui';
     import HeaderActions from "./Header/HeaderActions";
 
@@ -66,7 +76,8 @@
                 tableKey: 'table-key',
                 active: false,
                 fitWidth: true,
-                drawTable: true
+                drawTable: true,
+                filter: ''
             }
         },
         components: {
@@ -85,6 +96,10 @@
             loading: {
                 type: Boolean,
                 default: false
+            },
+            searchableFields: {
+                type: Array,
+                default: () => ['name', 'job', 'progress']
             }
         },
         computed: {
@@ -97,7 +112,14 @@
                 return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop));
             },
             rowsData() {
-                return this.data.tableData
+                return this.data.tableData.filter(c => {
+                    return this.searchableFields.some(field => {
+                        if (c.hasOwnProperty(field)) {
+                            return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
+                        }
+                        return false;
+                    })
+                })
             }
         },
         methods: {
@@ -156,8 +178,6 @@
 <style lang="scss">
 
     .el-table th {
-        /*height: 50px;*/
-        /*padding: 8px 0;*/
         .header-handle {
             display: none;
         }
@@ -165,6 +185,7 @@
 
     .el-table th:hover .header-handle {
         display: flex;
+        color: var(--primary-color);
     }
 
     .el-table th:hover {
@@ -174,13 +195,15 @@
 
     .el-table th {
         color: var(--greyish-brown);
+
         &.is-left > .cell {
             @apply flex;
             @apply items-center;
-            >.header-handle {
+            > .header-handle {
                 @apply ml-auto;
             }
         }
+
         &.is-center > .cell {
             @apply flex;
             @apply items-center;
@@ -207,8 +230,27 @@
         }
     }
 
-    .rtl .el-table td {
-        text-align: right;
+    .rtl .el-table {
+        td {
+            &.is-left {
+                text-align: right;
+            }
+        }
+
+        th {
+            &.is-center > .cell {
+                > .header-handle {
+                    margin-right: 0;
+                }
+            }
+
+            &.is-left > .cell {
+                > .header-handle {
+                    margin-left: 0;
+                }
+            }
+        }
+
     }
 
 </style>

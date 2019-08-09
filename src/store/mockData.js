@@ -150,7 +150,7 @@ export const widgets = [
 export const charts = [
     {
 
-        "Title": "1",
+        "Title": "Calls Per Hours",
         "WidgetID": "7",
         "TemplateID": "2",
         "WidgetTime": {},
@@ -169,10 +169,11 @@ export const charts = [
         "WidgetLayout": {
             "Order": 6,
             "chart": {
-                "type": "column"
+                "type": "column",
+                "marginTop": 45
             },
             "title": {
-                "text": "Calls Per Hour"
+                "text": ""
             },
             "xAxis": {
                 "type": "datetime",
@@ -207,11 +208,11 @@ export const charts = [
                 "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
                 "borderRadius": 10,
             },
-            "date": "06/29/2019 - 07/29/2019"
+            "date": "05/29/2019 - 07/20/2019"
         }
     }, {
 
-        "Title": "2",
+        "Title": "Calls Per Minute",
         "WidgetID": "9",
         "TemplateID": "2",
         "WidgetTime": {},
@@ -230,7 +231,7 @@ export const charts = [
         "WidgetLayout": {
             "Order": 8,
             "title": {
-                "text": "Calls Per Hour"
+                "text": ""
             },
             "xAxis": {
                 "type": "datetime",
@@ -257,7 +258,7 @@ export const charts = [
                     ],
                     "shadow": {
                         "offsetY": 15,
-                        "opacity": 0.005,
+                        "opacity": 0.004,
                         "width": 20
                     }
                 }, {
@@ -286,11 +287,12 @@ export const charts = [
                 "align": 'center',
                 "verticalAlign": 'top',
                 "floating": true,
-                "y": -7,
+                "y": -15,
                 "itemStyle": {
                     "color": '#899398',
                     "fontFamily": 'Montserrat',
-                    "fontSize": "16px"
+                    "fontWeight": 500,
+                    "fontSize": "15px"
                 },
             },
             "yAxis": [{

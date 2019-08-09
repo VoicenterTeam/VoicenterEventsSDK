@@ -1,11 +1,11 @@
 <template>
-    <div class="p-2 text-right range-filter">
+    <div class="range-filter">
         <el-date-picker
                 v-model="value"
                 v-on:change="updateDateRange"
                 v-bind="$attrs"
                 v-on="$listeners"
-                type="datetimerange"
+                type="daterange"
                 :picker-options="pickerOptions"
                 :range-separator="rangeSeparator"
                 :start-placeholder="startPlaceholder"

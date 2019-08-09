@@ -1,17 +1,17 @@
 <template>
     <div class="flex flex-col column_actions--container">
         <div class="with-border__b" @click="pinColumn">
-            <p>
+            <p class="column_actions--name">
                 {{$t('datatable.props.pin_column')}}
             </p>
         </div>
         <div class="with-border__b" @click="autoSizeColumns">
-            <p>
+            <p class="column_actions--name">
                 {{$t('datatable.props.autosize_columns')}}
             </p>
         </div>
         <div @click="resetChanges">
-            <p>
+            <p class="column_actions--name">
                 {{$t('datatable.props.reset_columns')}}
             </p>
         </div>
@@ -62,12 +62,13 @@
             }
             @apply flex;
             @apply cursor-pointer;
-            > p {
-                @apply ml-8;
-                @apply mr-5;
-                @apply my-3;
-            }
         }
+    }
+
+    .column_actions--name {
+        @apply ml-8;
+        @apply mr-2;
+        @apply my-3;
     }
 
     .column_actions--container > div:hover {
@@ -75,4 +76,8 @@
         @apply bg-blue-100;
     }
 
+    .rtl .column_actions--name {
+        @apply mr-8;
+        @apply ml-2;
+    }
 </style>

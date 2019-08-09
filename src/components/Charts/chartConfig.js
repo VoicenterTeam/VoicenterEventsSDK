@@ -21,6 +21,9 @@ const yLineConfig = {
 }
 
 Highcharts.setOptions({
+    chart: {
+        marginTop: 45
+    },
     lang: {
         viewFullscreen: i18n.t('chart.viewFullscreen'),
         printChart: i18n.t('chart.printChart'),
@@ -39,7 +42,7 @@ Highcharts.setOptions({
             exportButton: {
                 text: '...',
                 align: 'right',
-                y: -10,
+                y: -12,
                 menuItems: [
                     "printChart",
                     "separator",
@@ -48,7 +51,19 @@ Highcharts.setOptions({
                     "downloadPDF",
                     "downloadSVG"
                 ],
-                theme: {}
+                theme: {
+                    states: {
+                        'stroke-width': 1,
+                        stroke: 'silver',
+                        r: 0,
+                        hover: {
+                            fill: 'white'
+                        },
+                        select: {
+                            fill: 'white'
+                        }
+                    }
+                }
             },
             viewFullscreen: {
                 symbol: 'url(/img/IconFullScreen.svg)',
@@ -64,14 +79,6 @@ Highcharts.setOptions({
     credits: {
         enabled: false
     },
-    title: {
-        align: 'left',
-        style: {
-            color: config.colors.charcoal_grey,
-            fontSize: '18px'
-        }
-    },
-
     yAxis: [{
         ...yLineConfig
     }, {
