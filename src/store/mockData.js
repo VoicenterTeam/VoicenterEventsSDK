@@ -1,8 +1,8 @@
 export const widgets = [
     {
-        "Title": "1",
-        "WidgetID": "1",
-        "TemplateID": "1",
+        "Title": "2",
+        "WidgetID": "9",
+        "TemplateID": "2",
         "WidgetTime": {},
         "WidgetConfig": [
             {
@@ -17,10 +17,92 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
-            "Order": 1,
             "icon": "IconPhone",
-            "title": "26",
-            "description": "widgets.phoneNumbers.description"
+            "Order": 8,
+            "title": {
+                "text": "Type line"
+            },
+            "xAxis": {
+                "type": "datetime",
+                "lineColor": ""
+            },
+            "series": [
+                {
+                    "name": "Outgoing",
+                    "color": "#2675ff",
+                    "type": "spline",
+                    "data": [
+                        {
+                            "x": 1563441556000,
+                            "y": 1
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 2,
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 3,
+                        }
+                    ],
+                    "shadow": {
+                        "offsetY": 15,
+                        "opacity": 0.005,
+                        "width": 20
+                    }
+                }, {
+                    "name": "Incoming",
+                    "color": "#876cff",
+                    "type": "spline",
+                    "dashStyle": 'shortdot',
+                    "data": [
+                        {
+                            "x": 1563441556000,
+                            "y": 2.25
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 1.5,
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 4,
+                        }
+                    ]
+                }
+            ],
+            "legend": {
+                "enabled": true,
+                "align": 'center',
+                "verticalAlign": 'top',
+                "floating": true,
+                "y": -7,
+                "itemStyle": {
+                    "color": '#899398',
+                    "fontFamily": 'Montserrat',
+                    "fontSize": "16px"
+                },
+            },
+            "yAxis": [{
+                "opposite": false,
+                "title": false,
+                "labels": {
+                    "style": {
+                        "color": "#bfc5d0",
+                        "fontSize": "16px"
+                    }
+                },
+            }],
+            "tooltip": {
+                "formatter": function () {
+                    return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
+                },
+                "backgroundColor": "#ffffff",
+                "borderColor": "#ffffff",
+                "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+                "borderRadius": 10,
+            },
+            "date": "06/29/2019 - 07/29/2019"
         }
     },
     {
@@ -131,30 +213,6 @@ export const widgets = [
     },
     {
         "Title": "1",
-        "WidgetID": "2",
-        "TemplateID": "1",
-        "WidgetTime": {},
-        "WidgetConfig": [
-            {
-                "Key": "Foo",
-                "ParameterID": 1
-            }
-        ],
-        "WidgetEntity": [
-            {
-                "EntityID": 8,
-                "EntityType": 1
-            }
-        ],
-        "WidgetLayout": {
-            "Order": 2,
-            "icon": "IconUsers",
-            "title": "15",
-            "description": "widgets.users.description"
-        }
-    },
-    {
-        "Title": "1",
         "WidgetID": "3",
         "TemplateID": "1",
         "WidgetTime": {},
@@ -248,7 +306,7 @@ export const widgets = [
                 "type": "column"
             },
             "title": {
-                "text": "Calls Per Hour"
+                "text": "Type bar"
             },
             "xAxis": {
                 "type": "datetime",
