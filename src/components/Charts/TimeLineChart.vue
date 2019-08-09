@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white p-5 rounded-lg py-4 my-4">
         <range-filter
-                :date="data.date.split(' - ')"
+                :date="data.date? data.date.split(' - '): ''"
                 @on-change="onChangeDate">
         </range-filter>
         <highcharts :options="chartOptions"></highcharts>
