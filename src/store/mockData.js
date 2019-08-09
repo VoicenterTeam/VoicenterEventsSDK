@@ -204,7 +204,6 @@ export const widgets = [
                         prop: 'since',
                         fixed: false,
                         label: 'Since',
-                        sortable: true
                     },
                     {
                         prop: 'salary',
