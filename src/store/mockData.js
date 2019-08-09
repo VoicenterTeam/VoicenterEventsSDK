@@ -25,6 +25,112 @@ export const widgets = [
     },
     {
         "Title": "1",
+        "WidgetID": "8",
+        "TemplateID": "3",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
+        "WidgetLayout": {
+            "Order": 7,
+            "tableData": [
+                {
+                    id: 1,
+                    img: 'img/tania.jpg',
+                    name: 'Tania Mike',
+                    job: 'Develop',
+                    progress: 25,
+                    since: 2013,
+                    salary: '€ 99,225'
+                },
+                {
+                    id: 2,
+                    img: 'img/robi.jpg',
+                    name: 'John Doe',
+                    job: 'CEO',
+                    progress: 77,
+                    since: 2012,
+                    salary: '€ 89,241'
+                },
+                {
+                    id: 3,
+                    img: 'img/lora.jpg',
+                    name: 'Alexa Mike',
+                    job: 'Design',
+                    progress: 41,
+                    since: 2010,
+                    salary: '€ 92,144'
+                },
+                {
+                    id: 4,
+                    img: 'img/jana.jpg',
+                    name: 'Jana Monday',
+                    job: 'Marketing',
+                    progress: 50,
+                    since: 2013,
+                    salary: '€ 49,990'
+                },
+                {
+                    id: 5,
+                    img: 'img/mike.jpg',
+                    name: 'Paul Dickens',
+                    job: 'Develop',
+                    progress: 100,
+                    since: 2015,
+                    salary: '€ 69,201'
+                },
+                {
+                    id: 6,
+                    img: 'img/emilyz.jpg',
+                    name: 'Manuela Rico',
+                    job: 'Manager',
+                    progress: 15,
+                    since: 2012,
+                    salary: '€ 99,201'
+                }
+            ],
+            "columns":
+                [
+                    {
+                        prop: 'name',
+                        fixed: false,
+                        label: 'Name',
+                    },
+                    {
+                        prop: 'job',
+                        fixed: false,
+                        label: 'Job',
+                    },
+                    {
+                        prop: 'progress',
+                        fixed: false,
+                        label: 'Progress',
+                    },
+                    {
+                        prop: 'since',
+                        fixed: false,
+                        label: 'Since',
+                        sortable: true
+                    },
+                    {
+                        prop: 'salary',
+                        fixed: false,
+                        label: 'Salary',
+                    }
+                ]
+        }
+    },
+    {
+        "Title": "1",
         "WidgetID": "2",
         "TemplateID": "1",
         "WidgetTime": {},
@@ -116,6 +222,59 @@ export const widgets = [
             "icon": "IconUsers",
             "title": "87",
             "description": "widgets.users.description"
+        }
+    },
+    {
+
+        "Title": "1",
+        "WidgetID": "7",
+        "TemplateID": "2",
+        "WidgetTime": {},
+        "WidgetConfig": [
+            {
+                "Key": "Foo",
+                "ParameterID": 1
+            }
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 8,
+                "EntityType": 1
+            }
+        ],
+        "WidgetLayout": {
+            "Order": 6,
+            "chart": {
+                "type": "column"
+            },
+            "title": {
+                "text": "Calls Per Hour"
+            },
+            "xAxis": {
+                "type": "datetime",
+            },
+            "series": [
+                {
+                    "pointWidth": 20,
+                    "data": [
+                        {
+                            "x": 1563441556000,
+                            "y": 3
+                        },
+                        {
+                            "x": 1564168362000,
+                            "y": 2,
+                            "color": "#d6dae1"
+                        },
+                        {
+                            "x": 1564308352000,
+                            "y": 1.6,
+                            "color": "green"
+                        }
+                    ]
+                }
+            ],
+            "date": "06/29/2019 - 07/29/2019"
         }
     },
     {

@@ -1,5 +1,7 @@
 import $axios from './apiConnection'
 
+import {widgets} from '@/store/mockData'
+
 export const WidgetApi = {
     async getAll() {
 
@@ -7,7 +9,10 @@ export const WidgetApi = {
             let widgets = await $axios.get('/Widgets/GetAllWidgets/')
             return widgets.WidgetList
         } catch (e) {
-            return []
+            if(process.env.VUE_APP_ENV === 'local') {
+                return widgets
+            }
+            return  []
         }
 
     },

@@ -64,7 +64,7 @@
                 availableColumns: cloneDeep(this.data.columns),
                 tableKey: 'table-key',
                 active: false,
-                fitWidth: false,
+                fitWidth: true,
                 drawTable: true
             }
         },
