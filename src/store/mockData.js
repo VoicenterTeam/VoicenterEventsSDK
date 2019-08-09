@@ -437,27 +437,31 @@ export const tables = [
                         prop: 'name',
                         fixed: false,
                         label: 'Name',
+                        align: 'left'
                     },
                     {
                         prop: 'job',
                         fixed: false,
                         label: 'Job',
+                        align: 'left'
                     },
                     {
                         prop: 'progress',
                         fixed: false,
                         label: 'Progress',
+                        align: 'center'
                     },
                     {
                         prop: 'since',
                         fixed: false,
                         label: 'Since',
-                        sortable: true
+                        align: 'center'
                     },
                     {
                         prop: 'salary',
                         fixed: false,
                         label: 'Salary',
+                        align: 'center'
                     }
                 ]
         }
@@ -478,8 +482,7 @@ export const dashboards = {
     },
     "dashboard2": {
         "ID": 2,
-        "Title": "Queue Dashboard",
-
+        "Title": "dashboards.queue",
         "WidgetGroupList": [
             {
                 "ID": 23,

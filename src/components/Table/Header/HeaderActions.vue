@@ -1,6 +1,5 @@
 <template>
-<!--    trigger="click"-->
-    <el-dropdown class="flex ml-auto header-handle">
+    <el-dropdown class="flex header-handle" trigger="click">
         <span class="el-dropdown-link" v-on:click.stop>
             <align-justify-icon
                     class="flex w-5 h-5 -mx-1">
@@ -29,7 +28,6 @@
         </el-dropdown-menu>
     </el-dropdown>
 </template>
-<!--F5F7FA-->
 
 <script>
 
@@ -74,6 +72,9 @@
                 console.log(this.activeTab)
             },
         },
+        mounted() {
+            console.log(this.activeTab)
+        }
     }
 
 </script>
@@ -123,6 +124,10 @@
         .popper__arrow {
             display: none;
         }
+    }
+
+    .el-tabs__active-bar {
+        min-width: 20px !important;
     }
 
 </style>

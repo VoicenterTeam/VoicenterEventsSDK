@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-lg py-2 my-4 data-table w-full">
+    <div class="bg-white rounded-lg px-2 py-2 my-4 data-table w-full">
         <el-table ref="table"
                   row-key="id"
                   v-if="drawTable"
@@ -16,9 +16,11 @@
                         :column-key="column.prop"
                         :min-width="column.minWidth || '150px'"
                         :fixed="column.fixed || false"
+                        :align="column.align"
                         :type="column.type">
                     <template slot="header">
-                        <span class="flex items-center" @mouseover="hoverOverHeader(column)"
+                        <!--                        <span class="" @mouseover="hoverOverHeader(column)"-->
+                        <span class="" @mouseover="hoverOverHeader(column)"
                               @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
@@ -153,31 +155,37 @@
 
 <style lang="scss">
 
-    .el-table th .header-handle {
-        display: none;
-    }
-
-    /*.el-table th .caret-wrapper {*/
-    /*    display: none;*/
-    /*}*/
-
-    .el-table th:hover {
-        @apply bg-gray-100;
-        @apply cursor-pointer;
+    .el-table th {
+        /*height: 50px;*/
+        /*padding: 8px 0;*/
+        .header-handle {
+            display: none;
+        }
     }
 
     .el-table th:hover .header-handle {
         display: flex;
     }
 
-    /*.el-table th:hover .caret-wrapper {*/
-    /*    display: flex;*/
-    /*}*/
+    .el-table th:hover {
+        @apply bg-gray-100;
+        @apply cursor-pointer;
+    }
 
-    .el-table th > .cell {
-        @apply flex;
-        @apply items-center;
+    .el-table th {
         color: var(--greyish-brown);
+        &.is-left > .cell {
+            @apply flex;
+            @apply items-center;
+            >.header-handle {
+                @apply ml-auto;
+            }
+        }
+        &.is-center > .cell {
+            @apply flex;
+            @apply items-center;
+            justify-content: center;
+        }
     }
 
     .el-table::before {
