@@ -14,12 +14,16 @@ const yLineConfig = {
     title: false,
     labels: {
         style: {
-            color: config.colors.warm_grey
+            color: config.colors.warm_grey,
+            fontSize: "16px"
         }
     },
 }
 
 Highcharts.setOptions({
+    chart: {
+        marginTop: 45
+    },
     lang: {
         viewFullscreen: i18n.t('chart.viewFullscreen'),
         printChart: i18n.t('chart.printChart'),
@@ -38,7 +42,7 @@ Highcharts.setOptions({
             exportButton: {
                 text: '...',
                 align: 'right',
-                y: -10,
+                y: -12,
                 menuItems: [
                     "printChart",
                     "separator",
@@ -47,7 +51,19 @@ Highcharts.setOptions({
                     "downloadPDF",
                     "downloadSVG"
                 ],
-                theme: {}
+                theme: {
+                    states: {
+                        'stroke-width': 1,
+                        stroke: 'silver',
+                        r: 0,
+                        hover: {
+                            fill: 'white'
+                        },
+                        select: {
+                            fill: 'white'
+                        }
+                    }
+                }
             },
             viewFullscreen: {
                 symbol: 'url(/img/IconFullScreen.svg)',
@@ -63,9 +79,6 @@ Highcharts.setOptions({
     credits: {
         enabled: false
     },
-    title: {
-        align: 'left',
-    },
     yAxis: [{
         ...yLineConfig
     }, {
@@ -75,15 +88,24 @@ Highcharts.setOptions({
     }],
     xAxis: {
         lineWidth: 1,
+        tickWidth: 0,
         lineColor: config.colors.primary,
         labels: {
             style: {
                 color: config.colors.warm_grey,
+                fontSize: "16px",
             }
         },
     },
     legend: {
         enabled: false
+    },
+    plotOptions: {
+        spline: {
+            marker: {
+                enabled: false
+            }
+        },
     },
 })
 

@@ -1,11 +1,11 @@
 <template>
     <div>
-        <component :is="componentTypes[widget.WidgetType.ID]"
-                   :data="widget.WidgetConfig"
-                   v-bind="widget.WidgetConfig"
+        <component :is="componentTypes[widget.TemplateID]"
+                   :data="setComponentData(widget.TemplateID)"
+                   v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
-                   @update-item="updateWidget(widget)"
+                   @update-item="(layout) => updateWidget(layout, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
     </div>
@@ -15,7 +15,6 @@
     import WidgetCard from "./WidgetCard"
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import DataTable from '@/components/Table/DataTable'
-
     import widgetTypes from '@/enum/widgetTypes'
 
     export default {
@@ -50,6 +49,12 @@
             },
             updateWidget(widget) {
                 this.$emit('update-item', widget)
+            },
+            setComponentData(TemplateID) {
+                if (TemplateID === '2') {
+                    return this.widget;
+                }
+                return this.widget.WidgetLayout
             }
         }
     }

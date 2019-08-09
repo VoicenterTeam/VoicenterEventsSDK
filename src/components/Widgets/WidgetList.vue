@@ -3,8 +3,8 @@
                       :value="widgets"
                       @input="(val) => onListChange(val)">
         <div v-for="widget in widgets"
-             :key="widget.ID"
-             class="w-full px-2" :class="componentWidth[widget.WidgetType.ID]">
+             :key="widget.WidgetID"
+             class="w-full px-2" :class="componentWidth[widget.TemplateID]">
             <Widget :widget="widget"
                     :editable="editable"
                     @remove-item="removeWidget(widget)"
@@ -26,11 +26,11 @@
 </template>
 <script>
 
+    import Widget from "./Widget";
+    import widgetTypes from '@/enum/widgetTypes'
     import WidgetEmptyCard from "./WidgetEmptyCard"
     import DraggableWidgets from './DraggableWidgets'
-    import Widget from "./Widget";
 
-    import widgetTypes from '@/enum/widgetTypes'
 
     export default {
         name: "widget-list",

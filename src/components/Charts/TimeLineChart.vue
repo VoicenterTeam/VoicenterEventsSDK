@@ -1,31 +1,49 @@
 <template>
-    <div class="bg-white p-5 rounded-lg py-4 my-4">
-        <range-filter
-                :date="data.date.split(' - ')"
-                @on-change="onChangeDate">
-        </range-filter>
-        <highcharts :options="chartOptions"></highcharts>
-        <chart-update-dialog
-                :chartTitle="data.title.text"
-                @on-change="onChangeTitle"
-                :visible.sync="showUpdateDialog">
-        </chart-update-dialog>
-
+    <div>
+        <div class="flex items-center my-4 w-full">
+            <div class="flex">
+                <p class="text-2xl font-semibold">{{data.Title}}</p>
+            </div>
+            <div class="flex w-64 mx-5">
+                <range-filter
+                        :date="widgetLayout.date.split(' - ')"
+                        @on-change="onChangeDate">
+                </range-filter>
+            </div>
+            <div class="flex ml-auto">
+                <button @click="showUpdateDialog = true"
+                        class=" btn p-2 shadow rounded bg-white hover:bg-blue-100 active:shadow-inner">
+                    <EditIcon class="w-5 h-5 text-primary"></EditIcon>
+                </button>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg py-4 my-4">
+            <highcharts :options="chartOptions"></highcharts>
+            <chart-update-dialog
+                    width="30%"
+                    :chartTitle="data.Title"
+                    @on-change="onChangeTitle"
+                    :visible.sync="showUpdateDialog">
+            </chart-update-dialog>
+        </div>
     </div>
+
 </template>
 <script>
 
     import {Chart} from 'highcharts-vue'
     import chartConfig from './chartConfig'
-    import ChartUpdateDialog from './ChartUpdateDialog'
     import RangeFilter from "./RangeFilter";
+    import {EditIcon} from 'vue-feather-icons'
+    import ChartUpdateDialog from './ChartUpdateDialog'
 
     export default {
         name: 'TimeLineChart',
         components: {
-            highcharts: Chart,
+            EditIcon,
+            RangeFilter,
             ChartUpdateDialog,
-            RangeFilter
+            highcharts: Chart,
         },
         props: {
             data: {
@@ -42,36 +60,30 @@
         computed: {
             chartOptions() {
                 return {
-                    ...this.data,
-                    exporting: {
-                        buttons: {
-                            button: {
-                                text: this.$t('common.edit'),
-                                y: -7,
-                                onclick: () => {
-                                    this.showUpdateDialog = !this.showUpdateDialog
-                                }
-                            },
-                        },
-                    },
+                    ...this.data.WidgetLayout
                 }
             },
+            widgetLayout() {
+                return this.data.WidgetLayout
+            }
         },
         methods: {
             onChangeTitle(title) {
-                this.data.title = {text: title}
-                this.updateChart()
+                this.data.Title = title
+                this.updateChart(this.data)
             },
             onChangeDate(date) {
-                this.data.date = date
-                this.updateChart()
+                this.data.WidgetLayout.date = date
+                this.updateChart(this.data)
             },
-            updateChart() {
-                this.$emit('update-item', this.data)
+            updateChart(data) {
+                this.$emit('update-item', data)
             }
         },
     }
 </script>
-<style lang="scss">
-
+<style scoped>
+    .text-2xl {
+        color: #2a2c36;
+    }
 </style>

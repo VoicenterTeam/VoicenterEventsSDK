@@ -1,5 +1,4 @@
-import {getDashboards} from '@/services/dashboardService'
-import {widgets} from "@/store/mockData";
+import {DashboardApi} from "@/api/dashboardApi";
 import Vue from 'vue'
 
 const types = {
@@ -59,7 +58,7 @@ const mutations = {
 
 const actions = {
     async getDashboards({commit, state}) {
-        let dashboards = await getDashboards()
+        let dashboards = await DashboardApi.getAll()
         commit(types.SET_ALL_DASHBOARDS, dashboards)
         if (!state.activeDashboard) {
             commit(types.SET_DEFAULT_DASHBOARD)

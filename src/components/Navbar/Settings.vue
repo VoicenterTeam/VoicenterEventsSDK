@@ -82,9 +82,8 @@
 
     .el-checkbox__input.is-checked {
         + .el-checkbox__label {
-            color: var(--primary-color) !important;
+            color: var(--greyish-brown) !important;
         }
-
         .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
             background-color: var(--primary-color) !important;
             border-color: var(--primary-color) !important;
