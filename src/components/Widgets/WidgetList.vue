@@ -13,6 +13,7 @@
         </div>
         <widget-empty-card v-if="editable" key="0"
                            :widgets="widgets"
+                           :all-widgets="allWidgets"
                            :widget-group="widgetGroup"
                            @add-widget="(value) => addWidgetToGroup(value)">
         </widget-empty-card>
@@ -61,6 +62,10 @@
                 type: Array,
                 default: () => []
             },
+            allWidgets: {
+                type: Array,
+                default: () => []
+            }
         },
         methods: {
             onListChange(val) {
