@@ -1,6 +1,7 @@
 <template>
     <DraggableWidgets group="widgets"
                       :value="widgets"
+                      :disabled="!editable"
                       @input="(val) => onListChange(val)">
         <div v-for="widget in widgets"
              :key="widget.WidgetID"
