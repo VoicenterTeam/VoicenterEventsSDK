@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-white px-6 p-4 rounded-lg shadow w-64 h-48">
+    <div class="bg-white px-6 p-4 rounded-lg shadow w-64 extension-card" :style="cardStyles">
         <div class="flex items-center">
             <fade-transition mode="out-in">
-                <component :is="statusMappings[extension.representativeStatus]"
+                <component :is="statusMappings[extension.representativeStatus].icon"
                            :key="extension.representativeStatus"
                            class="w-12">
                 </component>
@@ -10,12 +10,19 @@
             <span class="text-xl font-medium ml-2">{{extension.userName}}</span>
         </div>
         <div class="flex flex-col">
-            <span class="text-center text-2xl font-medium ml-2 tracking-wide">{{displayTime}}</span>
+            <span class="text-center text-2xl font-medium ml-2 tracking-wide">{{timer.displayTime}}</span>
+            <call-info v-for="(call, index) in extension.calls" :key="index" :call="call"/>
         </div>
     </div>
 </template>
 <script>
+  import CallInfo from './CallInfo'
+  import Timer from './Timer'
+
   export default {
+    components: {
+      CallInfo
+    },
     props: {
       extension: {
         type: Object,
@@ -24,52 +31,66 @@
     },
     data() {
       return {
+        timer: new Timer(),
         statusMappings: {
-          1: "IconLogin",
-          2: "IconLogout",
-          3: "IconLunch",
-          5: "IconAdministrative",
-          7: "IconPrivate",
-          9: "IconOther",
-          11: "IconTraining",
-          12: "IconTeamMeeting",
-          13: "IconBrief",
+          1: {
+            icon: "IconLogin",
+            color: '#5EB300'
+          },
+          2: {
+            icon: "IconLogout",
+            color: '#888F9D'
+          },
+          3: {
+            icon: "IconLunch"
+          },
+          5: {
+            icon: "IconAdministrative"
+          },
+          7: {
+            icon: "IconPrivate",
+            color: '#FF4D4D'
+          },
+          9: {
+            icon: "IconOther"
+          },
+          11: {
+            icon: "IconTraining"
+          },
+          12: {
+            icon: "IconTeamMeeting"
+          },
+          13: {
+            icon: "IconBrief"
+          },
         },
-        widgetTimeInSeconds: 0
       }
     },
     computed: {
-      displayTime() {
-        let minutes = Math.round(this.widgetTimeInSeconds / 60)
-        let seconds = Math.round(this.widgetTimeInSeconds % 60)
-        if (minutes < 10) {
-          minutes = `0${minutes}`
+      cardStyles() {
+        let data = this.statusMappings[this.extension.representativeStatus]
+        let color = data.color || 'white'
+        return {
+          border: `2px solid ${color}`
         }
-        if (seconds < 10) {
-          seconds = `0${seconds}`
-        }
-        return `${minutes}:${seconds}`
-      }
-    },
-    methods: {
-      resetWidgetTime() {
-        this.widgetTimeInSeconds = 0
       }
     },
     watch: {
       'extension.representativeStatus'(newVal, oldVal) {
-         this.resetWidgetTime()
+        this.timer.reset()
       }
     },
     mounted() {
-      this.interval = setInterval(() => {
-        this.widgetTimeInSeconds++
-      }, 1000)
+      this.timer.start()
     },
     beforeDestroy() {
-      clearInterval(this.interval)
+      this.timer.destroy()
     }
   }
 </script>
-<style>
+<style scoped>
+    .extension-card {
+        min-height: 200px;
+        transition: all .2s;
+    }
 </style>
