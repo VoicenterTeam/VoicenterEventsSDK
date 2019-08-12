@@ -43,6 +43,7 @@ const mutations = {
                 Vue.set(state.allDashboards, dashboardKey, dashboard)
             }
         })
+        state.activeDashboard = dashboard
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, value) => {
         state.activeDashboard = value

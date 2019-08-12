@@ -1,7 +1,7 @@
 <template>
     <div class="pt-24">
         <div class="flex justify-end relative my-4 -mx-1">
-            <AddButton class="mx-1" @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
+            <AddButton v-if="editMode" class="mx-1" @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
             <EditButton
                     @click.stop="editMode = !editMode"
                     @reset-dashboard="resetDashboard"

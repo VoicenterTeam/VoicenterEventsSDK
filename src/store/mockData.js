@@ -17,8 +17,8 @@ export const widgets = [
             }
         ],
         "WidgetLayout": {
-            "icon": "IconPhone",
-            "caption": 'Report 1',
+            "icon": "IconStats",
+            "caption": "Calls per minute chart",
             "Order": 1,
             "title": {
                 "text": ""
@@ -39,11 +39,11 @@ export const widgets = [
                         },
                         {
                             "x": 1564168362000,
-                            "y": 2,
+                            "y": 2
                         },
                         {
                             "x": 1564308352000,
-                            "y": 3,
+                            "y": 3
                         }
                     ],
                     "shadow": {
@@ -55,7 +55,7 @@ export const widgets = [
                     "name": "Incoming",
                     "color": "#876cff",
                     "type": "spline",
-                    "dashStyle": 'shortdot',
+                    "dashStyle": "shortdot",
                     "data": [
                         {
                             "x": 1563441556000,
@@ -63,26 +63,26 @@ export const widgets = [
                         },
                         {
                             "x": 1564168362000,
-                            "y": 1.5,
+                            "y": 1.5
                         },
                         {
                             "x": 1564308352000,
-                            "y": 4,
+                            "y": 4
                         }
                     ]
                 }
             ],
             "legend": {
                 "enabled": true,
-                "align": 'center',
-                "verticalAlign": 'top',
+                "align": "center",
+                "verticalAlign": "top",
                 "floating": true,
                 "y": -7,
                 "itemStyle": {
-                    "color": '#899398',
-                    "fontFamily": 'Montserrat',
+                    "color": "#899398",
+                    "fontFamily": "Montserrat",
                     "fontSize": "16px"
-                },
+                }
             },
             "yAxis": [{
                 "opposite": false,
@@ -92,7 +92,7 @@ export const widgets = [
                         "color": "#bfc5d0",
                         "fontSize": "16px"
                     }
-                },
+                }
             }],
             "tooltip": {
                 "formatter": function () {
@@ -101,10 +101,30 @@ export const widgets = [
                 "backgroundColor": "#ffffff",
                 "borderColor": "#ffffff",
                 "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
-                "borderRadius": 10,
+                "borderRadius": 10
             },
             "date": "06/29/2019 - 07/29/2019"
         }
+    },
+    {
+        "Title": "Realtime call cards",
+        "WidgetID": "10",
+        "TemplateID": "4",
+        "WidgetTime": {},
+        "WidgetLayout": {
+            "Order": 2,
+            "icon": "IconIncomingCall",
+            "caption": "Realtime call cards",
+        },
+        "WidgetConfig": [
+
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 9,
+                "EntityType": 2
+            }
+        ]
     },
     {
         "Title": "Table",
@@ -126,89 +146,88 @@ export const widgets = [
         "WidgetLayout": {
             "Order": 2,
             "icon": "IconUsers",
-            "caption": "Data about..",
+            "caption": "Realtime table",
             "tableData": [
                 {
                     id: 1,
-                    img: 'img/tania.jpg',
-                    name: 'Tania Mike',
-                    job: 'Develop',
+                    img: "img/tania.jpg",
+                    name: "Tania Mike",
+                    job: "Develop",
                     progress: 25,
                     since: 2013,
-                    salary: '€ 99,225'
+                    salary: "€ 99,225"
                 },
                 {
                     id: 2,
-                    img: 'img/robi.jpg',
-                    name: 'John Doe',
-                    job: 'CEO',
+                    img: "img/robi.jpg",
+                    name: "John Doe",
+                    job: "CEO",
                     progress: 77,
                     since: 2012,
-                    salary: '€ 89,241'
+                    salary: "€ 89,241"
                 },
                 {
                     id: 3,
-                    img: 'img/lora.jpg',
-                    name: 'Alexa Mike',
-                    job: 'Design',
+                    img: "img/lora.jpg",
+                    name: "Alexa Mike",
+                    job: "Design",
                     progress: 41,
                     since: 2010,
-                    salary: '€ 92,144'
+                    salary: "€ 92,144"
                 },
                 {
                     id: 4,
-                    img: 'img/jana.jpg',
-                    name: 'Jana Monday',
-                    job: 'Marketing',
+                    img: "img/jana.jpg",
+                    name: "Jana Monday",
+                    job: "Marketing",
                     progress: 50,
                     since: 2013,
-                    salary: '€ 49,990'
+                    salary: "€ 49,990"
                 },
                 {
                     id: 5,
-                    img: 'img/mike.jpg',
-                    name: 'Paul Dickens',
-                    job: 'Develop',
+                    img: "img/mike.jpg",
+                    name: "Paul Dickens",
+                    job: "Develop",
                     progress: 100,
                     since: 2015,
-                    salary: '€ 69,201'
+                    salary: "€ 69,201"
                 },
                 {
                     id: 6,
-                    img: 'img/emilyz.jpg',
-                    name: 'Manuela Rico',
-                    job: 'Manager',
+                    img: "img/emilyz.jpg",
+                    name: "Manuela Rico",
+                    job: "Manager",
                     progress: 15,
                     since: 2012,
-                    salary: '€ 99,201'
+                    salary: "€ 99,201"
                 }
             ],
-            "columns":
-                [
+            "columns": [
                     {
-                        prop: 'name',
-                        fixed: false,
-                        label: 'Name',
+                        "prop": "name",
+                        "fixed": false,
+                        "label": "Name"
                     },
                     {
-                        prop: 'job',
-                        fixed: false,
-                        label: 'Job',
+                        "prop": "job",
+                        "fixed": false,
+                        "label": "Job"
                     },
                     {
-                        prop: 'progress',
-                        fixed: false,
-                        label: 'Progress',
+                        "prop": "progress",
+                        "fixed": false,
+                        "label": "Progress"
                     },
                     {
-                        prop: 'since',
-                        fixed: false,
-                        label: 'Since',
+                        "prop": "since",
+                        "fixed": false,
+                        "label": "Since"
                     },
                     {
-                        prop: 'salary',
-                        fixed: false,
-                        label: 'Salary',
+                        "prop": "salary",
+                        "fixed": false,
+                        "label": "Salary"
                     }
                 ]
         }
@@ -232,8 +251,8 @@ export const widgets = [
         ],
         "WidgetLayout": {
             "Order": 3,
-            "caption": "Report 2",
-            "icon": "IconExtensions",
+            "caption": "Calls per hour chart",
+            "icon": "IconStats",
             "chart": {
                 "type": "column"
             },
@@ -387,7 +406,7 @@ export const charts = [
                     "name": "Incoming",
                     "color": "#876cff",
                     "type": "spline",
-                    "dashStyle": 'shortdot',
+                    "dashStyle": "shortdot",
                     "data": [
                         {
                             "x": 1563441556000,
@@ -406,13 +425,13 @@ export const charts = [
             ],
             "legend": {
                 "enabled": true,
-                "align": 'center',
-                "verticalAlign": 'top',
+                "align": "center",
+                "verticalAlign": "top",
                 "floating": true,
                 "y": -15,
                 "itemStyle": {
-                    "color": '#899398',
-                    "fontFamily": 'Montserrat',
+                    "color": "#899398",
+                    "fontFamily": "Montserrat",
                     "fontWeight": 500,
                     "fontSize": "15px"
                 },
@@ -444,36 +463,36 @@ export const charts = [
         },
         "ID": 2,
         "Title": "Simple Gantt Chart",
-        "Type": 'gantt',
+        "Type": "gantt",
         "Series": [{
             "data": [{
-                "id": 's',
-                "name": 'Start prototype',
+                "id": "s",
+                "name": "Start prototype",
                 "start": Date.UTC(2019, 5, 18),
                 "end": Date.UTC(2019, 5, 20),
                 "dependency": [],
-                "color": 'red',
+                "color": "red",
             }, {
-                "id": 'b',
-                "name": 'Develop',
+                "id": "b",
+                "name": "Develop",
                 "start": Date.UTC(2019, 5, 20),
                 "end": Date.UTC(2019, 5, 25),
-                "dependency": ['s'],
-                "color": 'green',
+                "dependency": ["s"],
+                "color": "green",
             }, {
-                "id": 'a',
-                "name": 'Run acceptance tests',
+                "id": "a",
+                "name": "Run acceptance tests",
                 "start": Date.UTC(2019, 5, 23),
                 "end": Date.UTC(2019, 5, 26),
                 "dependency": [],
-                "color": 'blue',
+                "color": "blue",
             }, {
-                "id": 'c',
-                "name": 'Test prototype',
+                "id": "c",
+                "name": "Test prototype",
                 "start": Date.UTC(2019, 5, 27),
                 "end": Date.UTC(2019, 6, 29),
-                "dependency": ['a', 'b'],
-                "color": 'yellow',
+                "dependency": ["a", "b"],
+                "color": "yellow",
             }]
         }],
     },
@@ -498,95 +517,95 @@ export const tables = [
             }
         ],
         "WidgetLayout": {
-            "Caption": 'Users Table',
+            "Caption": "Users Table",
             "Order": 7,
             "tableData": [
                 {
                     id: 1,
-                    img: 'img/tania.jpg',
-                    name: 'Tania Mike',
-                    job: 'Develop',
+                    img: "img/tania.jpg",
+                    name: "Tania Mike",
+                    job: "Develop",
                     progress: 25,
                     since: 2013,
-                    salary: '€ 99,225'
+                    salary: "€ 99,225"
                 },
                 {
                     id: 2,
-                    img: 'img/robi.jpg',
-                    name: 'John Doe',
-                    job: 'CEO',
+                    img: "img/robi.jpg",
+                    name: "John Doe",
+                    job: "CEO",
                     progress: 77,
                     since: 2012,
-                    salary: '€ 89,241'
+                    salary: "€ 89,241"
                 },
                 {
                     id: 3,
-                    img: 'img/lora.jpg',
-                    name: 'Alexa Mike',
-                    job: 'Design',
+                    img: "img/lora.jpg",
+                    name: "Alexa Mike",
+                    job: "Design",
                     progress: 41,
                     since: 2010,
-                    salary: '€ 92,144'
+                    salary: "€ 92,144"
                 },
                 {
                     id: 4,
-                    img: 'img/jana.jpg',
-                    name: 'Jana Monday',
-                    job: 'Marketing',
+                    img: "img/jana.jpg",
+                    name: "Jana Monday",
+                    job: "Marketing",
                     progress: 50,
                     since: 2013,
-                    salary: '€ 49,990'
+                    salary: "€ 49,990"
                 },
                 {
                     id: 5,
-                    img: 'img/mike.jpg',
-                    name: 'Paul Dickens',
-                    job: 'Develop',
+                    img: "img/mike.jpg",
+                    name: "Paul Dickens",
+                    job: "Develop",
                     progress: 100,
                     since: 2015,
-                    salary: '€ 69,201'
+                    salary: "€ 69,201"
                 },
                 {
                     id: 6,
-                    img: 'img/emilyz.jpg',
-                    name: 'Manuela Rico',
-                    job: 'Manager',
+                    img: "img/emilyz.jpg",
+                    name: "Manuela Rico",
+                    job: "Manager",
                     progress: 15,
                     since: 2012,
-                    salary: '€ 99,201'
+                    salary: "€ 99,201"
                 }
             ],
             "columns":
                 [
                     {
-                        prop: 'name',
+                        prop: "name",
                         fixed: false,
-                        label: 'Name',
-                        align: 'left'
+                        label: "Name",
+                        align: "left"
                     },
                     {
-                        prop: 'job',
+                        prop: "job",
                         fixed: false,
-                        label: 'Job',
-                        align: 'left'
+                        label: "Job",
+                        align: "left"
                     },
                     {
-                        prop: 'progress',
+                        prop: "progress",
                         fixed: false,
-                        label: 'Progress',
-                        align: 'center'
+                        label: "Progress",
+                        align: "center"
                     },
                     {
-                        prop: 'since',
+                        prop: "since",
                         fixed: false,
-                        label: 'Since',
-                        align: 'center'
+                        label: "Since",
+                        align: "center"
                     },
                     {
-                        prop: 'salary',
+                        prop: "salary",
                         fixed: false,
-                        label: 'Salary',
-                        align: 'center'
+                        label: "Salary",
+                        align: "center"
                     }
                 ]
         }
@@ -625,7 +644,7 @@ export const settings = {
         refresh: false
     },
     colors: {
-        primary: '#2575FF',
-        secondary: '#876cff'
+        primary: "#2575FF",
+        secondary: "#876cff"
     }
 }

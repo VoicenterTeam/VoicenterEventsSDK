@@ -18,6 +18,7 @@
   import WidgetCard from "./WidgetCard"
   import TimeLineChart from '@/components/Charts/TimeLineChart'
   import DataTable from '@/components/Table/DataTable'
+  import ExtensionCards from '@/components/Cards/ExtensionCards'
   import widgetTypes from '@/enum/widgetTypes'
   import DeleteButton from "@/components/Widgets/DeleteButton";
 
@@ -26,6 +27,7 @@
         components: {
             WidgetCard,
             TimeLineChart,
+            ExtensionCards,
             DataTable,
             DeleteButton
         },
@@ -45,6 +47,7 @@
                     [widgetTypes.WIDGET_TYPE_ID]: 'WidgetCard',
                     [widgetTypes.CHART_TYPE_ID]: 'TimeLineChart',
                     [widgetTypes.TABLE_TYPE_ID]: 'DataTable',
+                    [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                 },
             }
         },
