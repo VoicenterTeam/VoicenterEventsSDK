@@ -2,45 +2,8 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var _regeneratorRuntime = _interopDefault(require('../node_modules/@babel/runtime/regenerator'));
 var io = _interopDefault(require('socket.io-client/socket.io'));
 var debounce = _interopDefault(require('lodash/debounce'));
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
-
-  if (info.done) {
-    resolve(value);
-  } else {
-    Promise.resolve(value).then(_next, _throw);
-  }
-}
-
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new Promise(function (resolve, reject) {
-      var gen = fn.apply(self, args);
-
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-      }
-
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
-    });
-  };
-}
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -64,40 +27,6 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
-
-    if (typeof Object.getOwnPropertySymbols === 'function') {
-      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-      }));
-    }
-
-    ownKeys.forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    });
-  }
-
-  return target;
-}
-
 var eventTypes = {
   LOGIN: 'loginStatus',
   LOGIN_RESPONSE: 'loginResponse',
@@ -114,6 +43,7 @@ var eventTypes = {
   RECONNECT_FAILED: 'reconnect_failed',
   KEEP_ALIVE: 'keepalive',
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
+  CLOSE: 'closeme',
   ERROR: 'error'
 };
 
@@ -246,6 +176,8 @@ var defaultOptions = {
   transports: ['websocket'],
   upgrade: false
 };
+var allConnections = [];
+var listenersMap = new Map();
 
 var EventsSDK =
 /*#__PURE__*/
@@ -255,7 +187,7 @@ function () {
 
     _classCallCheck(this, EventsSDK);
 
-    this.options = _objectSpread({}, defaultOptions, options);
+    this.options = Object.assign({}, defaultOptions, {}, options);
 
     if (!this.options.token) {
       throw new Error('A token property should be provided');
@@ -266,12 +198,13 @@ function () {
     this.server = null;
     this.socket = null;
     this.connected = false;
+    this.connections = allConnections;
     this.connectionEstablished = false;
     this.shouldReconnect = true;
 
     this._initReconnectOptions();
 
-    this._listenersMap = new Map();
+    this._listenersMap = listenersMap;
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, {
       leading: true,
       trailing: false
@@ -410,7 +343,9 @@ function () {
 
       this._initKeepAlive();
 
-      this.login();
+      if (server !== 'default') {
+        this.login();
+      }
     }
   }, {
     key: "_checkInit",
@@ -426,14 +361,11 @@ function () {
       var protocol = this.options.protocol;
       var url = "".concat(protocol, "://").concat(domain);
       this.Logger.log('Connecting to..', url);
-
-      if (this.socket) {
-        this.socket.close();
-      }
-
-      this.socket = io(url, _objectSpread({}, this.options, {
+      this.closeAllConnections();
+      this.socket = io(url, Object.assign({}, this.options, {
         debug: false
       }));
+      allConnections.push(this.socket);
       this.connectionEstablished = true;
     }
   }, {
@@ -446,6 +378,7 @@ function () {
       this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
       this.socket.on(eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout.bind(this));
       this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
+      this.socket.onevent = this._onEvent.bind(this);
     }
   }, {
     key: "_initKeepAlive",
@@ -525,70 +458,32 @@ function () {
     }
   }, {
     key: "_getServers",
-    value: function () {
-      var _getServers2 = _asyncToGenerator(
-      /*#__PURE__*/
-      _regeneratorRuntime.mark(function _callee() {
-        var res;
-        return _regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return fetch("".concat(this.options.url, "/").concat(this.options.token));
-
-              case 3:
-                res = _context.sent;
-                _context.next = 6;
-                return res.json();
-
-              case 6:
-                this.servers = _context.sent;
-                _context.next = 12;
-                break;
-
-              case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](0);
-                this.servers = defaultServers;
-
-              case 12:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[0, 9]]);
-      }));
-
-      function _getServers() {
-        return _getServers2.apply(this, arguments);
+    value: async function _getServers() {
+      try {
+        var res = await fetch("".concat(this.options.url, "/").concat(this.options.token));
+        this.servers = await res.json();
+      } catch (e) {
+        this.servers = defaultServers;
       }
-
-      return _getServers;
-    }()
+    }
   }, {
     key: "_onEvent",
-    value: function _onEvent() {
-      var _this2 = this;
+    value: function _onEvent(packet) {
+      if (!packet.data) {
+        return;
+      }
 
-      this.socket.onevent = function (packet) {
-        if (!packet.data) {
-          return;
+      var evt = this._parsePacket(packet);
+
+      this.Logger.log("New event -> ".concat(evt.name), evt);
+
+      this._listenersMap.forEach(function (callback, eventName) {
+        if (eventName === '*') {
+          callback(evt);
+        } else if (evt.name === eventName) {
+          callback(evt);
         }
-
-        var evt = _this2._parsePacket(packet);
-
-        _this2.Logger.log("New event -> ".concat(evt.name), evt);
-
-        _this2._listenersMap.forEach(function (callback, eventName) {
-          if (eventName === '*') {
-            callback(evt);
-          } else if (evt.name === eventName) {
-            callback(evt);
-          }
-        });
-      };
+      });
     }
     /**
      * Initializes socket connection. Should be called before any other action
@@ -597,55 +492,55 @@ function () {
 
   }, {
     key: "init",
-    value: function () {
-      var _init = _asyncToGenerator(
-      /*#__PURE__*/
-      _regeneratorRuntime.mark(function _callee2() {
-        return _regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!this.connectionEstablished) {
-                  _context2.next = 2;
-                  break;
-                }
-
-                return _context2.abrupt("return", true);
-
-              case 2:
-                _context2.next = 4;
-                return this._getServers();
-
-              case 4:
-                this._connect();
-
-                this._initReconnectDelays();
-
-                return _context2.abrupt("return", true);
-
-              case 7:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function init() {
-        return _init.apply(this, arguments);
+    value: async function init() {
+      if (this.connectionEstablished) {
+        return true;
       }
 
-      return init;
-    }()
+      if (this.socket) {
+        this.emit(eventTypes.CLOSE);
+      }
+
+      await this._getServers();
+
+      this._connect();
+
+      this._initReconnectDelays();
+
+      return true;
+    }
     /**
-     * Disconnects definitively from the servers
+     * Sets the monitor code token
+     * @param token
+     */
+
+  }, {
+    key: "setToken",
+    value: function setToken(token) {
+      this.options.token = token;
+    }
+    /**
+     * Closes all existing connections
+     */
+
+  }, {
+    key: "closeAllConnections",
+    value: function closeAllConnections() {
+      allConnections.forEach(function (connection) {
+        connection.close();
+      });
+      allConnections = [];
+    }
+    /**
+     * Disconnects the socket instance from the servers
      */
 
   }, {
     key: "disconnect",
     value: function disconnect() {
       this.shouldReconnect = false;
-      this.socket.close();
+      this._listenersMap = new Map();
+      this.closeAllConnections();
     }
     /**
      * Listens for new events
@@ -659,8 +554,6 @@ function () {
       this._listenersMap.set(eventName, callback);
 
       this._checkInit();
-
-      this._onEvent();
     }
     /**
      * Emits an event to the server
@@ -670,7 +563,9 @@ function () {
 
   }, {
     key: "emit",
-    value: function emit(eventName, data) {
+    value: function emit(eventName) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       this._checkInit();
 
       this.Logger.log("EMIT -> ".concat(eventName), data);
@@ -683,22 +578,22 @@ function () {
   }, {
     key: "login",
     value: function login() {
-      var _this3 = this;
+      var _this2 = this;
 
       this._checkInit();
 
       var resolved = false;
       return new Promise(function (resolve, reject) {
-        _this3.on(eventTypes.LOGIN, function (data) {
+        _this2.on(eventTypes.LOGIN, function (data) {
           resolved = true;
           resolve(data);
         });
 
-        _this3.emit('login', {
-          token: _this3.options.token
+        _this2.emit('login', {
+          token: _this2.options.token
         });
 
-        _this3.socket.on(eventTypes.ERROR, function (err) {
+        _this2.socket.on(eventTypes.ERROR, function (err) {
           if (!resolved) {
             reject(err);
           }

@@ -1,42 +1,5 @@
-import _regeneratorRuntime from '../node_modules/@babel/runtime/regenerator';
 import io from 'socket.io-client/socket.io';
 import debounce from 'lodash/debounce';
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
-
-  if (info.done) {
-    resolve(value);
-  } else {
-    Promise.resolve(value).then(_next, _throw);
-  }
-}
-
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new Promise(function (resolve, reject) {
-      var gen = fn.apply(self, args);
-
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-      }
-
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
-    });
-  };
-}
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -58,40 +21,6 @@ function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
   return Constructor;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
-
-    if (typeof Object.getOwnPropertySymbols === 'function') {
-      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-      }));
-    }
-
-    ownKeys.forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    });
-  }
-
-  return target;
 }
 
 var eventTypes = {
@@ -254,7 +183,7 @@ function () {
 
     _classCallCheck(this, EventsSDK);
 
-    this.options = _objectSpread({}, defaultOptions, options);
+    this.options = Object.assign({}, defaultOptions, {}, options);
 
     if (!this.options.token) {
       throw new Error('A token property should be provided');
@@ -429,7 +358,7 @@ function () {
       var url = "".concat(protocol, "://").concat(domain);
       this.Logger.log('Connecting to..', url);
       this.closeAllConnections();
-      this.socket = io(url, _objectSpread({}, this.options, {
+      this.socket = io(url, Object.assign({}, this.options, {
         debug: false
       }));
       allConnections.push(this.socket);
@@ -525,48 +454,14 @@ function () {
     }
   }, {
     key: "_getServers",
-    value: function () {
-      var _getServers2 = _asyncToGenerator(
-      /*#__PURE__*/
-      _regeneratorRuntime.mark(function _callee() {
-        var res;
-        return _regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return fetch("".concat(this.options.url, "/").concat(this.options.token));
-
-              case 3:
-                res = _context.sent;
-                _context.next = 6;
-                return res.json();
-
-              case 6:
-                this.servers = _context.sent;
-                _context.next = 12;
-                break;
-
-              case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](0);
-                this.servers = defaultServers;
-
-              case 12:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[0, 9]]);
-      }));
-
-      function _getServers() {
-        return _getServers2.apply(this, arguments);
+    value: async function _getServers() {
+      try {
+        var res = await fetch("".concat(this.options.url, "/").concat(this.options.token));
+        this.servers = await res.json();
+      } catch (e) {
+        this.servers = defaultServers;
       }
-
-      return _getServers;
-    }()
+    }
   }, {
     key: "_onEvent",
     value: function _onEvent(packet) {
@@ -593,50 +488,23 @@ function () {
 
   }, {
     key: "init",
-    value: function () {
-      var _init = _asyncToGenerator(
-      /*#__PURE__*/
-      _regeneratorRuntime.mark(function _callee2() {
-        return _regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!this.connectionEstablished) {
-                  _context2.next = 2;
-                  break;
-                }
-
-                return _context2.abrupt("return", true);
-
-              case 2:
-                if (this.socket) {
-                  this.emit(eventTypes.CLOSE);
-                }
-
-                _context2.next = 5;
-                return this._getServers();
-
-              case 5:
-                this._connect();
-
-                this._initReconnectDelays();
-
-                return _context2.abrupt("return", true);
-
-              case 8:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function init() {
-        return _init.apply(this, arguments);
+    value: async function init() {
+      if (this.connectionEstablished) {
+        return true;
       }
 
-      return init;
-    }()
+      if (this.socket) {
+        this.emit(eventTypes.CLOSE);
+      }
+
+      await this._getServers();
+
+      this._connect();
+
+      this._initReconnectDelays();
+
+      return true;
+    }
     /**
      * Sets the monitor code token
      * @param token

@@ -1,5 +1,6 @@
 module.exports = {
   input: 'src/index.js',
+  presets: ['bili/babel'],
   output: {
     format: ['esm', 'cjs', 'umd-min'],
     moduleName: 'VoicenterEventsSDK',
