@@ -2,7 +2,7 @@
     <div class="bg-white px-6 p-4 rounded-lg shadow w-64 extension-card" :style="cardStyles">
         <div class="flex items-center">
             <fade-transition mode="out-in">
-                <component :is="statusMappings[extension.representativeStatus].icon"
+                <component :is="statusIcon"
                            :key="extension.representativeStatus"
                            class="w-12">
                 </component>
@@ -68,11 +68,14 @@
     },
     computed: {
       cardStyles() {
-        let data = this.statusMappings[this.extension.representativeStatus]
-        let color = data.color || 'white'
+        let data = this.statusMappings[this.extension.representativeStatus] || { color: 'white' }
         return {
-          border: `2px solid ${color}`
+          border: `2px solid ${data.color}`
         }
+      },
+      statusIcon() {
+        let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }
+        return data.icon
       }
     },
     watch: {
