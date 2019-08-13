@@ -1,7 +1,7 @@
 <template>
     <div class="pt-24">
         <div class="flex justify-end relative my-4 -mx-1">
-            <AddButton class="mx-1" @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
+            <AddButton v-if="editMode" class="mx-1" @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
             <EditButton
                     @click.stop="editMode = !editMode"
                     @reset-dashboard="resetDashboard"
@@ -36,6 +36,7 @@
                         <h3 v-else class="font-semibold text-2xl text-gray-800">{{widgetGroup.Title}}</h3>
                         <widget-list
                                 :widgets="widgetGroup.WidgetList"
+                                :all-widgets="allWidgets"
                                 :editable="editMode"
                                 :widget-group="widgetGroup"
                                 @onListChange="(data) => onListChange(data.list, data.group)"

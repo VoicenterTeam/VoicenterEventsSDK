@@ -4,7 +4,8 @@
                v-bind="attributes"
                v-on="$listeners">
         <transition-group type="transition" :name="enableTransition ? 'flip-list': ''"
-                          class="flex justify-center flex-wrap w-full  cursor-move">
+                          class="flex justify-center flex-wrap w-full"
+                          :class="{'cursor-move': !dragOptions.disabled }">
             <slot></slot>
         </transition-group>
     </draggable>
@@ -19,7 +20,8 @@
             enableTransition: {
                 type: Boolean,
                 default: true
-            }
+            },
+            disabled: Boolean
         },
         components: {
             draggable
@@ -36,7 +38,7 @@
                     fallbackTolerance: 10,
                     direction: 'horizontal',
                     group: "description",
-                    disabled: this.dragDisabled,
+                    disabled: this.disabled || this.dragDisabled,
                     ghostClass: "ghost"
                 };
             },

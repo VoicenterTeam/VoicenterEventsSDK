@@ -1,6 +1,7 @@
 <template>
     <DraggableWidgets group="widgets"
                       :value="widgets"
+                      :disabled="!editable"
                       @input="(val) => onListChange(val)">
         <div v-for="widget in widgets"
              :key="widget.WidgetID"
@@ -13,6 +14,7 @@
         </div>
         <widget-empty-card v-if="editable" key="0"
                            :widgets="widgets"
+                           :all-widgets="allWidgets"
                            :widget-group="widgetGroup"
                            @add-widget="(value) => addWidgetToGroup(value)">
         </widget-empty-card>
@@ -45,6 +47,7 @@
                     [widgetTypes.WIDGET_TYPE_ID]: 'lg:w-1/3',
                     [widgetTypes.CHART_TYPE_ID]: 'lg:w-3/3',
                     [widgetTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
+                    [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'lg:w-3/3',
                 }
             }
         },
@@ -61,6 +64,10 @@
                 type: Array,
                 default: () => []
             },
+            allWidgets: {
+                type: Array,
+                default: () => []
+            }
         },
         methods: {
             onListChange(val) {

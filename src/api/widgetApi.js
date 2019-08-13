@@ -3,21 +3,18 @@ import $axios from './apiConnection'
 import {widgets} from '@/store/mockData'
 
 export const WidgetApi = {
-    //TODO: add some widgets on back and use it
-    getAll() {
-        return widgets
+    async getAll() {
+
+        try {
+            let res = await $axios.get('/Widgets/GetAllWidgets/')
+            return res.WidgetList
+        } catch (e) {
+            if (process.env.VUE_APP_ENV === 'local') {
+                return widgets
+            }
+            return []
+        }
     },
-    // async getAll() {
-    //
-    //     try {
-    //         let widgets = await $axios.get('/Widgets/GetAllWidgets/')
-    //         return widgets.WidgetList
-    //     } catch (e) {
-    //         if(process.env.VUE_APP_ENV === 'local') {
-    //             return widgets
-    //         }
-    //         return  []
-    //     }
 
     find(id) {
         // return $axios.get(`/Widgets/Get/{$id}`)

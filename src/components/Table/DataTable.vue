@@ -138,9 +138,9 @@
                     },
                     onEnd({newIndex, oldIndex}) {
                         bus.$emit('sortable.childDragStop')
-                        const targetRow = get(self.visibleColumns.splice(oldIndex, 1), '[0]')
-                        self.visibleColumns.splice(newIndex, 0, targetRow)
-                        self.tableKey = self.visibleColumns.map(c => c.prop).join('_')
+                        const targetRow = get(self.availableColumns.splice(oldIndex, 1), '[0]')
+                        self.availableColumns.splice(newIndex, 0, targetRow)
+                        self.tableKey = self.availableColumns.map(c => c.prop).join('_')
                         self.$nextTick(self.tryInitSortable)
                     }
                 })

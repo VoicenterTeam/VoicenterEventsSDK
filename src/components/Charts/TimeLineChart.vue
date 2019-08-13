@@ -11,10 +11,8 @@
                 </range-filter>
             </div>
             <div class="flex ml-auto">
-                <button @click="showUpdateDialog = true"
-                        class=" btn p-2 shadow rounded bg-white hover:bg-blue-100 active:shadow-inner">
-                    <EditIcon class="w-5 h-5 text-primary"></EditIcon>
-                </button>
+                <edit-button @click="showUpdateDialog = true"
+                             :class="{'border border-primary hover:bg-blue-200': editable}"/>
             </div>
         </div>
         <div class="bg-white p-4 rounded-lg py-4 my-4">
@@ -34,13 +32,13 @@
     import {Chart} from 'highcharts-vue'
     import chartConfig from './chartConfig'
     import RangeFilter from "./RangeFilter";
-    import {EditIcon} from 'vue-feather-icons'
+    import EditButton from '@/components/EditButton'
     import ChartUpdateDialog from './ChartUpdateDialog'
 
     export default {
         name: 'TimeLineChart',
         components: {
-            EditIcon,
+          EditButton,
             RangeFilter,
             ChartUpdateDialog,
             highcharts: Chart,
@@ -50,7 +48,11 @@
                 type: Object,
                 default: () => ({})
             },
-            chartIndex: Number
+            chartIndex: Number,
+              editable: {
+                type: Boolean,
+                default: false
+              }
         },
         data() {
             return {
