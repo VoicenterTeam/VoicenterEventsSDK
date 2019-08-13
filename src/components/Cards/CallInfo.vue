@@ -5,7 +5,7 @@
             <span v-if="call.callerphone !== call.callername" class="text-xs font-medium">{{call.callername}}</span>
         </div>
         <component :is="directionMappings[call.direction]" class="w-6"></component>
-        <span class="font-medium tracking-wide call-time">{{timer.displayTime}}</span>
+        <span class="font-medium tracking-wide call-time font-mono">{{timer.displayTime}}</span>
     </div>
 </template>
 <script>

@@ -4,13 +4,14 @@
             <fade-transition mode="out-in">
                 <component :is="statusIcon"
                            :key="extension.representativeStatus"
-                           class="w-12">
+                           :class="{'is-calling': isCalling, 'is-talking': isTalking}"
+                           class="extension-card-icon">
                 </component>
             </fade-transition>
             <span class="text-xl font-medium ml-2">{{extension.userName}}</span>
         </div>
         <div class="flex flex-col">
-            <span class="text-center text-2xl font-medium ml-2 tracking-wide">{{timer.displayTime}}</span>
+            <span class="text-center text-2xl font-bold ml-2 font-mono">{{timer.displayTime}}</span>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call"/>
         </div>
     </div>
@@ -30,8 +31,13 @@
       }
     },
     data() {
+      let israelTimezoneOffset = -180*60*1000
+      let initialTime = new Date().getTime() - (this.extension.representativeUpdated + israelTimezoneOffset)
+      let initialTimeInSeconds = Math.floor(initialTime/1000)
       return {
-        timer: new Timer(),
+        timer: new Timer({
+          initialTimeInSeconds
+        }),
         statusMappings: {
           1: {
             icon: "IconLogin",
@@ -75,7 +81,22 @@
       },
       statusIcon() {
         let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }
+        if (this.extension.calls.length > 0) {
+          return 'IconIncomingCall'
+        }
         return data.icon
+      },
+      isCalling() {
+        if (this.extension.calls.length === 0) {
+          return false
+        }
+        return this.extension.calls.every(c => c.callAnswered === 0)
+      },
+      isTalking() {
+        if (this.extension.calls.length === 0) {
+          return false
+        }
+        return this.extension.calls.every(c => c.callAnswered !== 0)
       }
     },
     watch: {
@@ -95,5 +116,26 @@
     .extension-card {
         min-height: 200px;
         transition: all .2s;
+    }
+    .extension-card-icon {
+        max-width: 48px;
+        width: 48px;
+    }
+</style>
+<style lang="scss">
+    @keyframes fade {
+        0%   {opacity: 0;}
+        100% {opacity: 1;}
+    }
+    .extension-card-icon.is-calling {
+        path:first-child {
+            animation: fade 1s;
+        }
+        path:last-child {
+            opacity: 0;
+            animation: fade 1s infinite;
+            animation-direction: alternate;
+            animation-delay: 1s;
+        }
     }
 </style>
