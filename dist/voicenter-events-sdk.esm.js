@@ -110,6 +110,7 @@ var eventTypes = {
   RECONNECT_FAILED: 'reconnect_failed',
   KEEP_ALIVE: 'keepalive',
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
+  CLOSE: 'closeme',
   ERROR: 'error'
 };
 
@@ -242,6 +243,8 @@ var defaultOptions = {
   transports: ['websocket'],
   upgrade: false
 };
+var allConnections = [];
+var listenersMap = new Map();
 
 var EventsSDK =
 /*#__PURE__*/
@@ -262,12 +265,13 @@ function () {
     this.server = null;
     this.socket = null;
     this.connected = false;
+    this.connections = allConnections;
     this.connectionEstablished = false;
     this.shouldReconnect = true;
 
     this._initReconnectOptions();
 
-    this._listenersMap = new Map();
+    this._listenersMap = listenersMap;
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, {
       leading: true,
       trailing: false
@@ -406,7 +410,9 @@ function () {
 
       this._initKeepAlive();
 
-      this.login();
+      if (server !== 'default') {
+        this.login();
+      }
     }
   }, {
     key: "_checkInit",
@@ -422,14 +428,11 @@ function () {
       var protocol = this.options.protocol;
       var url = "".concat(protocol, "://").concat(domain);
       this.Logger.log('Connecting to..', url);
-
-      if (this.socket) {
-        this.socket.close();
-      }
-
+      this.closeAllConnections();
       this.socket = io(url, _objectSpread({}, this.options, {
         debug: false
       }));
+      allConnections.push(this.socket);
       this.connectionEstablished = true;
     }
   }, {
@@ -442,6 +445,7 @@ function () {
       this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
       this.socket.on(eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout.bind(this));
       this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
+      this.socket.onevent = this._onEvent.bind(this);
     }
   }, {
     key: "_initKeepAlive",
@@ -565,26 +569,22 @@ function () {
     }()
   }, {
     key: "_onEvent",
-    value: function _onEvent() {
-      var _this2 = this;
+    value: function _onEvent(packet) {
+      if (!packet.data) {
+        return;
+      }
 
-      this.socket.onevent = function (packet) {
-        if (!packet.data) {
-          return;
+      var evt = this._parsePacket(packet);
+
+      this.Logger.log("New event -> ".concat(evt.name), evt);
+
+      this._listenersMap.forEach(function (callback, eventName) {
+        if (eventName === '*') {
+          callback(evt);
+        } else if (evt.name === eventName) {
+          callback(evt);
         }
-
-        var evt = _this2._parsePacket(packet);
-
-        _this2.Logger.log("New event -> ".concat(evt.name), evt);
-
-        _this2._listenersMap.forEach(function (callback, eventName) {
-          if (eventName === '*') {
-            callback(evt);
-          } else if (evt.name === eventName) {
-            callback(evt);
-          }
-        });
-      };
+      });
     }
     /**
      * Initializes socket connection. Should be called before any other action
@@ -609,17 +609,21 @@ function () {
                 return _context2.abrupt("return", true);
 
               case 2:
-                _context2.next = 4;
+                if (this.socket) {
+                  this.emit(eventTypes.CLOSE);
+                }
+
+                _context2.next = 5;
                 return this._getServers();
 
-              case 4:
+              case 5:
                 this._connect();
 
                 this._initReconnectDelays();
 
                 return _context2.abrupt("return", true);
 
-              case 7:
+              case 8:
               case "end":
                 return _context2.stop();
             }
@@ -634,14 +638,37 @@ function () {
       return init;
     }()
     /**
-     * Disconnects definitively from the servers
+     * Sets the monitor code token
+     * @param token
+     */
+
+  }, {
+    key: "setToken",
+    value: function setToken(token) {
+      this.options.token = token;
+    }
+    /**
+     * Closes all existing connections
+     */
+
+  }, {
+    key: "closeAllConnections",
+    value: function closeAllConnections() {
+      allConnections.forEach(function (connection) {
+        connection.close();
+      });
+      allConnections = [];
+    }
+    /**
+     * Disconnects the socket instance from the servers
      */
 
   }, {
     key: "disconnect",
     value: function disconnect() {
       this.shouldReconnect = false;
-      this.socket.close();
+      this._listenersMap = new Map();
+      this.closeAllConnections();
     }
     /**
      * Listens for new events
@@ -655,8 +682,6 @@ function () {
       this._listenersMap.set(eventName, callback);
 
       this._checkInit();
-
-      this._onEvent();
     }
     /**
      * Emits an event to the server
@@ -666,7 +691,9 @@ function () {
 
   }, {
     key: "emit",
-    value: function emit(eventName, data) {
+    value: function emit(eventName) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       this._checkInit();
 
       this.Logger.log("EMIT -> ".concat(eventName), data);
@@ -679,22 +706,22 @@ function () {
   }, {
     key: "login",
     value: function login() {
-      var _this3 = this;
+      var _this2 = this;
 
       this._checkInit();
 
       var resolved = false;
       return new Promise(function (resolve, reject) {
-        _this3.on(eventTypes.LOGIN, function (data) {
+        _this2.on(eventTypes.LOGIN, function (data) {
           resolved = true;
           resolve(data);
         });
 
-        _this3.emit('login', {
-          token: _this3.options.token
+        _this2.emit('login', {
+          token: _this2.options.token
         });
 
-        _this3.socket.on(eventTypes.ERROR, function (err) {
+        _this2.socket.on(eventTypes.ERROR, function (err) {
           if (!resolved) {
             reject(err);
           }
