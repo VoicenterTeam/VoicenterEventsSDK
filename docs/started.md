@@ -26,12 +26,20 @@ You can initialize it and use it to send and receive events to and from our serv
 
 ```javascript
 import EventsSDK from 'voicenter-events-sdk'
-let sdk = new EventsSdk({
+let sdk = new EventsSDK({
     token: this.monitorCode,
     // other options here
 });
 ```
 
+Alternatively when loaded directly via CDN
+
+```javascript
+let sdk = new window.VoicenterEventsSDK({
+    token: this.monitorCode,
+    // other options here
+});
+```
 2. Call the `init` method to initialize the server connections
 
 ```javascript
