@@ -66,7 +66,7 @@
                 }
             },
             widgetLayout() {
-                return this.data.WidgetLayout
+                return this.data.WidgetLayout || {date: ''}
             }
         },
         methods: {

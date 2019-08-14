@@ -137,7 +137,7 @@
             removeWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
                 if (index !== -1) {
-                    let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.ID === widget.ID)
+                    let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
                     if (widgetIndex !== -1) {
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1)
                     }

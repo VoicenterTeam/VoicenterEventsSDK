@@ -41,15 +41,13 @@ export default function authMiddleware(router, store) {
             return redirectToLogin(next)
         }
         try {
-            let validTokens = filterExpiredTokens(decodeTokens(tokens))
-
-            if (validTokens.length === 0) {
+            if (tokens.length === 0) {
                 store.dispatch('users/logout')
                 return redirectToLogin(next)
             }
 
-            store.commit(`users/${types.SET_USERS}`, validTokens)
-            store.commit(`users/${types.SET_CURRENT_USER}`, validTokens[0])
+            store.commit(`users/${types.SET_USERS}`, tokens)
+            store.commit(`users/${types.SET_CURRENT_USER}`, tokens[0])
             store.commit(`users/${types.SET_TOKENS}`, tokens)
             store.commit(`users/${types.SET_TOKEN_STRING}`, tokensString)
             return next()

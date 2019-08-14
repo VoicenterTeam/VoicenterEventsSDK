@@ -35,6 +35,11 @@
         extensions: []
       }
     },
+    computed: {
+      token() {
+        return this.$store.state.users.tokenString
+      }
+    },
     methods: {
       onNewEvent(eventData) {
         let { name, data} = eventData
@@ -51,10 +56,8 @@
       }
     },
     async created() {
-      let token = 'sNiO6yTnVN7sPVRRN4W5IPJPrWDc4cs8odjqNQiWB5VReam4YX7CsnZvTTWizyu0tKKVGkUZHyigo1rs0cn7WSX7e5hbvOrF4o4Y'
       this.sdk = new EventsSDK({
-        token: token,
-        debug: true
+        token: this.token
       })
       await this.sdk.init()
       await this.sdk.login()

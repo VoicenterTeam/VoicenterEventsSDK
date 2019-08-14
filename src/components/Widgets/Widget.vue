@@ -59,7 +59,7 @@
                 this.$emit('update-item', widget)
             },
             setComponentData(TemplateID) {
-                if (TemplateID === '2') {
+                if (TemplateID === 2) {
                     return this.widget;
                 }
                 return this.widget.WidgetLayout

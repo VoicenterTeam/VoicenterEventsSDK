@@ -9,9 +9,7 @@ import i18n from './i18n'
 
 Vue.config.productionTip = false
 
-if (process.env.VUE_APP_ENV !== 'local') {
-    authMiddleware(router, store)
-}
+authMiddleware(router, store)
 
 Vue.use(dashboardPlugin)
 new Vue({
