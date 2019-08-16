@@ -60,7 +60,9 @@
   "status.other": "Other",
   "status.training":  "In training",
   "status.teamMeeting": "In team meeting",
-  "status.brief":  "Brief"
+  "status.brief":  "Brief",
+  "status.calling":  "Calling...",
+  "status.talking": "Is Talking"
 }
 
 

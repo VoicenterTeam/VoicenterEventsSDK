@@ -104,7 +104,14 @@
       },
       statusText() {
         let data = this.statusMappings[this.extension.representativeStatus] || { text: 'Other' }
-        return this.$t(data.text)
+        let text = data.text
+        if (this.isTalking) {
+          text = 'status.talking'
+        }
+        if (this.isCalling) {
+          text = 'status.calling'
+        }
+        return this.$t(text)
       },
       statusIcon() {
         let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }

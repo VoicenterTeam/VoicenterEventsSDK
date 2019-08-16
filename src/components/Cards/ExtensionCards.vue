@@ -1,7 +1,7 @@
 <template>
     <div class="flex py-6 extension-cards">
         <fade-transition mode="out-in" group class="flex flex-wrap">
-            <div v-for="(extension, index) in extensions"
+            <div v-for="(extension, index) in onlineExtensions"
                  :key="index"
                  class="pr-4">
                 <extension-card :extension="extension">
@@ -38,6 +38,10 @@
     computed: {
       token() {
         return this.$store.state.users.tokenString
+      },
+      onlineExtensions() {
+        let logoutStatus = 2
+        return this.extensions.filter(e => e.representativeStatus !== logoutStatus)
       }
     },
     methods: {
