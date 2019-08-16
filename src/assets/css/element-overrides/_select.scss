@@ -1,0 +1,11 @@
+.el-select {
+  .el-input:active input.el-input__inner,
+  .el-input.is-focus input.el-input__inner {
+    border-color: var(--primary-color);
+  }
+}
+.el-select-dropdown {
+  .el-select-dropdown__item.selected {
+    color: var(--primary-color);
+  }
+}

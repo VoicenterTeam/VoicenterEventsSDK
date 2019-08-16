@@ -121,8 +121,4 @@
         display: flex;
         align-items: center;
     }
-
-    .el-select-dropdown__item.selected {
-        color: var(--primary-color) !important;
-    }
 </style>
