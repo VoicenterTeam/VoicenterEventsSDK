@@ -51,7 +51,16 @@
   "datatable.props.pin_column": "Pin column",
   "datatable.props.autosize_column": "Autosize This Column",
   "datatable.props.autosize_columns": "Autosize All Columns",
-  "datatable.props.reset_columns": "Reset Columns"
+  "datatable.props.reset_columns": "Reset Columns",
+  "status.login": "Logged in",
+  "status.logout": "Logged out",
+  "status.lunch":  "At lunch",
+  "status.administrative": "Administrative tasks",
+  "status.private":  "Private",
+  "status.other": "Other",
+  "status.training":  "In training",
+  "status.teamMeeting": "In team meeting",
+  "status.brief":  "Brief"
 }
 
 

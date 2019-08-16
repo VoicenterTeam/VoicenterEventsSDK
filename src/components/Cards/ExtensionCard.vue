@@ -2,11 +2,13 @@
     <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 extension-card" :style="cardStyles">
         <div class="flex items-center">
             <fade-transition mode="out-in">
-                <component :is="statusIcon"
-                           :key="extension.representativeStatus"
-                           :class="{'is-calling': isCalling, 'is-talking': isTalking}"
-                           class="extension-card-icon">
-                </component>
+                <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top" :open-delay="300">
+                    <component :is="statusIcon"
+                               :key="extension.representativeStatus"
+                               :class="{'is-calling': isCalling, 'is-talking': isTalking}"
+                               class="extension-card-icon">
+                    </component>
+                </el-tooltip>
             </fade-transition>
             <span class="text-xl font-medium ml-2">{{extension.userName}}</span>
         </div>
@@ -19,10 +21,12 @@
 <script>
   import CallInfo from './CallInfo'
   import Timer from './Timer'
+  import { Tooltip } from 'element-ui'
 
   export default {
     components: {
-      CallInfo
+      CallInfo,
+      [Tooltip.name]: Tooltip
     },
     props: {
       extension: {
@@ -41,39 +45,48 @@
         statusMappings: {
           1: {
             icon: "IconLogin",
-            color: '#48BB78'
+            color: '#48BB78',
+            text: 'status.login'
           },
           2: {
             icon: "IconLogout",
-            color: '#A0AEC0'
+            color: '#A0AEC0',
+            text: 'status.logout'
           },
           3: {
             icon: "IconLunch",
-            color: '#61B5FF'
+            color: '#61B5FF',
+            text: 'status.lunch'
           },
           5: {
             icon: "IconAdministrative",
-            color: '#003B4D'
+            color: '#003B4D',
+            text: 'status.administrative'
           },
           7: {
             icon: "IconPrivate",
-            color: '#FF4D4D'
+            color: '#FF4D4D',
+            text: 'status.private'
           },
           9: {
             icon: "IconOther",
-            color: '#ED64A6'
+            color: '#ED64A6',
+            text: 'status.other'
           },
           11: {
             icon: "IconTraining",
-            color: '#667EEA'
+            color: '#667EEA',
+            text: 'status.training'
           },
           12: {
             icon: "IconTeamMeeting",
-            color: '#9F7AEA'
+            color: '#9F7AEA',
+            text: 'status.teamMeeting'
           },
           13: {
             icon: "IconBrief",
-            color: '#1CBBB4'
+            color: '#1CBBB4',
+            text: 'status.brief'
           },
         },
       }
@@ -81,9 +94,17 @@
     computed: {
       cardStyles() {
         let data = this.statusMappings[this.extension.representativeStatus] || { color: 'white' }
-        return {
-          border: `2px solid ${data.color}`
+        let color = data.color
+        if (this.isCalling || this.isTalking) {
+          color = '#5EB300'
         }
+        return {
+          border: `2px solid ${color}`
+        }
+      },
+      statusText() {
+        let data = this.statusMappings[this.extension.representativeStatus] || { text: 'Other' }
+        return this.$t(data.text)
       },
       statusIcon() {
         let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }

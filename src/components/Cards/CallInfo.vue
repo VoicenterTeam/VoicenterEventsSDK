@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-start justify-between mt-2">
+    <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col">
             <span class="text-gray-500 text-xs mr-2">+{{call.callerphone}}</span>
             <span v-if="call.callerphone !== call.callername" class="text-xs font-medium">{{call.callername}}</span>
@@ -18,8 +18,13 @@
       }
     },
     data() {
+      let israelTimezoneOffset = -180*60*1000
+      let initialTime = new Date().getTime() - ((this.call.callStarted * 1000) + israelTimezoneOffset)
+      let initialTimeInSeconds = Math.floor(initialTime/1000)
       return {
-        timer: new Timer(),
+        timer: new Timer({
+          initialTimeInSeconds
+        }),
         directionMappings: {
           "Outgoing": "IconDirectionOutgoing",
           "Incoming": "IconDirectionIncoming",
