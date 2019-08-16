@@ -67,6 +67,6 @@
 </script>
 <style scoped>
     .extension-cards {
-        min-height: 250px;
+        min-height: 280px;
     }
 </style>
