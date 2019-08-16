@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white px-6 p-4 rounded-lg shadow w-64 extension-card" :style="cardStyles">
+    <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 extension-card" :style="cardStyles">
         <div class="flex items-center">
             <fade-transition mode="out-in">
                 <component :is="statusIcon"
@@ -41,33 +41,39 @@
         statusMappings: {
           1: {
             icon: "IconLogin",
-            color: '#5EB300'
+            color: '#48BB78'
           },
           2: {
             icon: "IconLogout",
-            color: '#888F9D'
+            color: '#A0AEC0'
           },
           3: {
-            icon: "IconLunch"
+            icon: "IconLunch",
+            color: '#61B5FF'
           },
           5: {
-            icon: "IconAdministrative"
+            icon: "IconAdministrative",
+            color: '#003B4D'
           },
           7: {
             icon: "IconPrivate",
             color: '#FF4D4D'
           },
           9: {
-            icon: "IconOther"
+            icon: "IconOther",
+            color: '#ED64A6'
           },
           11: {
-            icon: "IconTraining"
+            icon: "IconTraining",
+            color: '#667EEA'
           },
           12: {
-            icon: "IconTeamMeeting"
+            icon: "IconTeamMeeting",
+            color: '#9F7AEA'
           },
           13: {
-            icon: "IconBrief"
+            icon: "IconBrief",
+            color: '#1CBBB4'
           },
         },
       }
@@ -119,7 +125,7 @@
     }
     .extension-card-icon {
         max-width: 48px;
-        width: 48px;
+        min-width: 48px;
     }
 </style>
 <style lang="scss">

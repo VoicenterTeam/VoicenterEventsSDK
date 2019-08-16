@@ -14,6 +14,9 @@
                 ></WidgetCard>
             </div>
         </DraggableWidgets>
+        <h3 v-if="widgets.length === 0" class="text-2xl text-center mt-5">
+            There are no widgets added yet
+        </h3>
     </div>
 </template>
 <script>
@@ -37,5 +40,6 @@
     .widget-menu {
         height: 500px;
         overflow: auto;
+        min-width: 500px;
     }
 </style>

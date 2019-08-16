@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>team-meeting</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="team-meeting">
+            <circle id="Oval-2" fill="#9F7AEA" cx="22" cy="22" r="22"></circle>
+            <g transform="translate(11.000000, 13.000000)" stroke="#FFFFFF" stroke-width="2">
+                <path d="M16,18 L16,16 C16,13.790861 14.209139,12 12,12 L4,12 C1.790861,12 2.22044605e-16,13.790861 0,16 L0,18" id="Shape"></path>
+                <circle id="Oval" cx="8" cy="4" r="4"></circle>
+                <path d="M22,18 L22,16 C21.9986403,14.1771177 20.7649988,12.5857202 19,12.13" id="Shape"></path>
+                <path d="M15,0.13 C16.7699148,0.583169788 18.0078433,2.17799115 18.0078433,4.005 C18.0078433,5.83200885 16.7699148,7.42683021 15,7.88" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
