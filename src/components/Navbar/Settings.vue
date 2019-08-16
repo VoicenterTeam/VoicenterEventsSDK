@@ -1,13 +1,13 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" :append-to-body="true">
-        <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('settings.update.title')}}</h3>
+        <h3 slot="title" class="text-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
         <el-collapse v-model="activeCollapses">
             <el-collapse-item :title="$t('settings.reports')" name="report">
                 <el-form @submit.native.prevent="updateSettings">
-                    <div class="md:flex md:items-center mt-4">
+                    <div class="md:flex md:items-center">
                         {{$t('settings.switch.title')}}
-                        <el-input class="w-24" type="number" min="0"
-                                  v-model.number="settings.report.interval"></el-input>
+                        <el-input-number class="mx-2 w-36" size="small" :min="5"
+                                  v-model.number="settings.report.interval"></el-input-number>
                         {{$t('settings.switch.interval')}}
                     </div>
                     <div class="md:flex md:items-center mt-4">
@@ -32,18 +32,19 @@
         </el-collapse>
         <template slot="footer">
             <el-button plain @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
-            <el-button type="primary" @click="updateSettings">{{$t('common.save')}}</el-button>
+            <el-button plain type="primary" @click="updateSettings">{{$t('common.save')}}</el-button>
         </template>
     </el-dialog>
 </template>
 <script>
-    import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker} from 'element-ui'
+    import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber} from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
 
     export default {
         inheritAttrs: false,
         components: {
             [Dialog.name]: Dialog,
+            [InputNumber.name]: InputNumber,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
