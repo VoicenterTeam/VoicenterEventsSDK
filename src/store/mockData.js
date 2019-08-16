@@ -19,7 +19,7 @@ export const widgets = [
         "WidgetLayout": {
             "icon": "IconStats",
             "caption": "Calls per minute chart",
-            "Order": 1,
+            "Order": 2,
             "title": {
                 "text": ""
             },
@@ -112,7 +112,7 @@ export const widgets = [
         "TemplateID": "4",
         "WidgetTime": {},
         "WidgetLayout": {
-            "Order": 2,
+            "Order": 1,
             "icon": "IconIncomingCall",
             "caption": "Realtime call cards",
         },
@@ -620,7 +620,7 @@ export const dashboards = {
             {
                 "ID": 23,
                 "Title": "Queue Dashboard",
-                "WidgetList": [tables[0]]
+                "WidgetList": [widgets[1], widgets[0], tables[0]]
             }
         ]
     },

@@ -258,6 +258,6 @@
 <style>
     .data-table /deep/ .sortable-ghost {
         opacity: 0.3;
-        @apply bg-gray-500 rounded text-white;
+        @apply bg-gray-300 rounded text-primary;
     }
 </style>
