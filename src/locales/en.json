@@ -62,7 +62,11 @@
   "status.teamMeeting": "In team meeting",
   "status.brief":  "Brief",
   "status.calling":  "Calling...",
-  "status.talking": "Is Talking"
+  "status.talking": "Is Talking",
+  "extensions.sort.default": "Default",
+  "extensions.sort.userName": "User name",
+  "extensions.sort.activeTime": "Active time",
+  "extensions.noData": "This account has no extensions..."
 }
 
 

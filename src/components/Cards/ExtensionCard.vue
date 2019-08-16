@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 extension-card" :style="cardStyles">
-        <div class="flex items-center">
+        <div class="flex items-center mb-2">
             <fade-transition mode="out-in">
                 <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top" :open-delay="300">
                     <component :is="statusIcon"
@@ -10,10 +10,10 @@
                     </component>
                 </el-tooltip>
             </fade-transition>
-            <span class="text-xl font-medium ml-2">{{extension.userName}}</span>
+            <span class="text-xl font-medium leading-tight ml-2">{{extension.userName}}</span>
         </div>
         <div class="flex flex-col">
-            <span class="text-center text-2xl font-bold ml-2 font-mono">{{timer.displayTime}}</span>
+            <span class="text-center text-2xl ml-2 font-mono">{{timer.displayTime}}</span>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call"/>
         </div>
     </div>
@@ -148,6 +148,7 @@
 </script>
 <style scoped>
     .extension-card {
+        min-width: 270px;
         min-height: 200px;
         transition: all .2s;
     }
