@@ -15,7 +15,8 @@ const defaultOptions = {
   keepAliveTimeout: 60000,
   protocol: 'https',
   transports: ['websocket'],
-  upgrade: false
+  upgrade: false,
+  serverType: null, // can be 1 or 2. 2 is used for chrome extension
 };
 
 let allConnections = []
@@ -235,7 +236,11 @@ class EventsSDK {
 
   async _getServers() {
     try {
-      let res = await fetch(`${this.options.url}/${this.options.token}`);
+      let params = {}
+      if (this.options.serverType) {
+        params.type = this.options.serverType
+      }
+      let res = await fetch(`${this.options.url}/${this.options.token}`, params);
       this.servers = await res.json();
     } catch (e) {
       this.servers = defaultServers;

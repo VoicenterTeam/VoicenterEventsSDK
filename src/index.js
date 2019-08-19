@@ -6,3 +6,6 @@ if (typeof window !== 'undefined') {
 }
 
 export default sdk
+
+export eventTypes from './eventTypes';
+export serverTypes from './serverTypes';
