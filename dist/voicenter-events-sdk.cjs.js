@@ -174,7 +174,9 @@ var defaultOptions = {
   keepAliveTimeout: 60000,
   protocol: 'https',
   transports: ['websocket'],
-  upgrade: false
+  upgrade: false,
+  serverType: null // can be 1 or 2. 2 is used for chrome extension
+
 };
 var allConnections = [];
 var listenersMap = new Map();
@@ -460,7 +462,13 @@ function () {
     key: "_getServers",
     value: async function _getServers() {
       try {
-        var res = await fetch("".concat(this.options.url, "/").concat(this.options.token));
+        var params = {};
+
+        if (this.options.serverType) {
+          params.type = this.options.serverType;
+        }
+
+        var res = await fetch("".concat(this.options.url, "/").concat(this.options.token), params);
         this.servers = await res.json();
       } catch (e) {
         this.servers = defaultServers;
