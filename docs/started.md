@@ -86,3 +86,4 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **keepAliveTimeout**  | Number  | 60000 |  Timeout after which a keep alive event is sent  |
 | **transports**  | Array  | ['websocket'] |  Available transports. It's desired to leave this setting as it is. |
 | **upgrade**  | Boolean  | false |  Available transports. It's desired to leave this setting as it is. |
+| **serverType**  | Number  | null |  Optional parameter to be passed to api call that retrieves available servers. Can be 1 or 2. 2 should be used for chrome extension |
