@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 shadow rounded-lg absolute max-w-xl bg-gray-300 mt-16 z-10">
+    <div class="p-4 shadow rounded-lg absolute max-w-xl bg-gray-300 mt-16 z-10 widget-menu">
         <DraggableWidgets v-model="widgets"
                           :enable-transition="false"
                           :group="{ name: 'widgets', pull: 'clone', put: false }">
@@ -14,6 +14,9 @@
                 ></WidgetCard>
             </div>
         </DraggableWidgets>
+        <h3 v-if="widgets.length === 0" class="text-2xl text-center mt-5">
+            There are no widgets added yet
+        </h3>
     </div>
 </template>
 <script>
@@ -33,5 +36,10 @@
         },
     }
 </script>
-<style>
+<style scoped>
+    .widget-menu {
+        height: 500px;
+        overflow: auto;
+        min-width: 500px;
+    }
 </style>

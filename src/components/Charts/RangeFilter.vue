@@ -103,13 +103,3 @@
     }
 
 </style>
-
-<style lang="scss">
-    .el-date-table td.end-date span, .el-date-table td.start-date span {
-        background-color: var(--primary-color);
-    }
-
-    .el-date-table td.today span {
-        color: var(--primary-color);
-    }
-</style>

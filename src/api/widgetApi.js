@@ -4,8 +4,8 @@ import {widgets} from '@/store/mockData'
 
 export const WidgetApi = {
     async getAll() {
-
-        try {
+        return widgets
+        /*try {
             let res = await $axios.get('/Widgets/GetAllWidgets/')
             return res.WidgetList
         } catch (e) {
@@ -13,7 +13,7 @@ export const WidgetApi = {
                 return widgets
             }
             return []
-        }
+        }*/
     },
 
     find(id) {

@@ -1,9 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44">
-    <g fill="none" fill-rule="evenodd">
-        <circle cx="22" cy="22" r="22" fill="#5EB300"/>
-        <g stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-            <path d="M25 12h4.667c1.288 0 2.333.995 2.333 2.222v15.556C32 31.005 30.955 32 29.667 32H25"/>
-            <path d="M20 27l6-5.5-6-5.5M25 22H12"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>login</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="login">
+            <circle id="Oval-2" fill="#48BB78" cx="22" cy="22" r="22"></circle>
+            <g id="log-in" transform="translate(13.000000, 13.000000)" stroke="#FFFFFF" stroke-width="2">
+                <path d="M12,0 L16,0 C17.1045695,0 18,0.8954305 18,2 L18,16 C18,17.1045695 17.1045695,18 16,18 L12,18" id="Shape"></path>
+                <polyline id="Shape" points="7 14 12 9 7 4"></polyline>
+                <path d="M12,9 L0,9" id="Shape"></path>
+            </g>
         </g>
     </g>
 </svg>

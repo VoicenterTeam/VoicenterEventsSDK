@@ -59,7 +59,8 @@
                 this.$emit('update-item', widget)
             },
             setComponentData(TemplateID) {
-                if (TemplateID === '2') {
+                // TODO We need a better way to check this when integrating with the api
+                if (TemplateID === 2 || TemplateID === '2') {
                     return this.widget;
                 }
                 return this.widget.WidgetLayout

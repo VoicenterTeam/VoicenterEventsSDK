@@ -8,6 +8,12 @@
 @import "tailwind";
 @import "animations";
 
+@import "element-overrides/button";
+@import "element-overrides/collapse";
+@import "element-overrides/dialog";
+@import "element-overrides/date-picker";
+@import "element-overrides/select";
+
 body {
   @apply bg-gray-200 px-24 font-montserrat;
 }
