@@ -7,7 +7,7 @@
                     <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                        <span class="mx-1 text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.Title) || activeDashboard.Title}}</span>
+                        <span class="mx-1 text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.DashBoardsTitle) || activeDashboard.DashBoardsTitle}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
@@ -26,8 +26,8 @@
                     <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
                           @click="chooseDashboard(dashboard)"
                           v-for="dashboard in allDashboards"
-                          :class="{ 'text-primary': activeDashboard.ID === dashboard.ID}">
-                          {{$t(dashboard.Title) || dashboard.Title}}
+                          :class="{ 'text-primary': activeDashboard.DashBoardsID === dashboard.DashBoardsID}">
+                          {{$t(dashboard.DashBoardsTitle) || dashboard.DashBoardsTitle}}
                     </span>
                         <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer text-gray-600 hover:text-blue-600 flex items-center"
                               @click="createNewDashboard()">
@@ -179,6 +179,8 @@
 
     .dashboard-menu {
         right: 11rem;
+        max-height: 500px;
+        overflow: auto;
     }
 
     .rtl .users-menu {

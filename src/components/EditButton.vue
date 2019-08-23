@@ -21,16 +21,17 @@
     </div>
 </template>
 <script>
-    import { EditIcon, CheckIcon, XIcon } from 'vue-feather-icons'
+    import {EditIcon, CheckIcon, XIcon} from 'vue-feather-icons'
+
     export default {
         inheritAttrs: false,
-        components:{
+        components: {
             XIcon,
             EditIcon,
             CheckIcon
         },
-        props:{
-            editMode:{
+        props: {
+            editMode: {
                 type: Boolean,
                 default: false
             }
@@ -41,12 +42,14 @@
     .btn {
         transition: all .2s;
     }
+
     .btn:focus {
         outline: none;
         @apply shadow-outline;
         @apply bg-blue-200;
     }
-    .btn.active-btn{
+
+    .btn.active-btn {
         @apply bg-blue-200;
     }
 </style>

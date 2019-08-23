@@ -1,9 +1,12 @@
 <template>
-    <el-tabs v-model="activeTab" v-bind="$attrs" v-on="$listeners">
-        <el-tab-pane v-for="(tab, index) in tabs" :label="tab.label" :name="tab.name" :key="index">
-            <slot :tab="tab" :activeTab="activeTab" :index="index"></slot>
-        </el-tab-pane>
-    </el-tabs>
+    <div class="tabs-container">
+        <el-tabs v-model="activeTab" v-bind="$attrs" v-on="$listeners">
+            <el-tab-pane v-for="(tab, index) in tabs" :label="tab.WidgetGroupTitle" :name="tab.WidgetGroupID.toString()"
+                         :key="index">
+                <slot :tab="tab" :activeTab="activeTab" :index="index"></slot>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
 </template>
 <script>
 
@@ -26,22 +29,22 @@
         data() {
             return {
                 timeout: null,
-                activeTab: get(this.tabs, '[0].name')
+                activeTab: get(this.tabs, '[0].WidgetGroupID').toString()
             };
         },
         computed: {},
         methods: {
             changeActiveTab() {
-                const index = this.tabs.findIndex(e => e.name === this.activeTab);
+                const index = this.tabs.findIndex(e => e.WidgetGroupID.toString() === this.activeTab);
 
                 if (index === -1) {
                     return;
                 }
 
                 if (index < this.tabs.length - 1) {
-                    this.activeTab = this.tabs[index + 1].name;
+                    this.activeTab = (this.tabs[index + 1].WidgetGroupID).toString();
                 } else {
-                    this.activeTab = get(this.tabs, '[0].name')
+                    this.activeTab = get(this.tabs, '[0].WidgetGroupID').toString()
                 }
             },
             triggerCircularTimeout() {
@@ -66,21 +69,38 @@
 </script>
 
 <style lang="scss">
-    .rtl .el-tabs__nav-wrap {
+    .rtl .tabs-container .el-tabs__nav-wrap {
         display: flex;
     }
 
-    .rtl .el-tabs__nav.is-top {
-        width: 100%;
-        display: flex;
-        flex-direction: row-reverse;
-    }
+    .tabs-container {
+        .el-tabs__header {
+            box-shadow: 0 0 1px 0 var(--silver-two), 0 1px 4px 0 var(--silver-two);
+            background-color: white;
+            border-radius: 2px;
+        }
 
-    .el-tabs__item.is-active {
-        color: var(--primary-color);
-    }
+        .el-tabs__nav-scroll {
+            padding: 0 56px;
+        }
 
-    .el-tabs__active-bar {
-        background-color: var(--primary-color);
+        .el-tabs__nav-wrap::after {
+            background-color: transparent;
+        }
+
+        .el-tabs__active-bar {
+            height: 4px;
+            border-radius: 4.5px;
+        }
+
+        .el-tabs__item {
+            height: 58px;
+            padding: 10px 20px;
+            color: var(--steel);
+            cursor: pointer;
+            font-size: 18px;
+            @apply font-medium;
+        }
+
     }
 </style>

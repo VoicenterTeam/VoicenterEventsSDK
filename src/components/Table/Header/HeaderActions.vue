@@ -2,7 +2,7 @@
     <el-dropdown class="flex header-handle" trigger="click">
         <span class="el-dropdown-link" v-on:click.stop>
             <align-justify-icon
-                    class="flex w-5 h-5 -mx-1">
+                class="flex w-5 h-5 -mx-1">
             </align-justify-icon>
         </span>
         <el-dropdown-menu slot="dropdown" class="header-actions__container">
@@ -10,18 +10,18 @@
                 <el-tab-pane name="first">
                     <span slot="label"><IconGroup></IconGroup></span>
                     <columns-action
-                            :currentColumn="currentColumn"
-                            v-bind="$attrs"
-                            v-on="$listeners">
+                        :currentColumn="currentColumn"
+                        v-bind="$attrs"
+                        v-on="$listeners">
                     </columns-action>
                 </el-tab-pane>
                 <el-tab-pane name="second">
                     <span slot="label"><IconGridLine></IconGridLine></span>
                     <columns-visibility
-                            :availableColumns="availableColumns"
-                            :visibleColumns="visibleColumns"
-                            v-bind="$attrs"
-                            v-on="$listeners">
+                        :availableColumns="availableColumns"
+                        :visibleColumns="visibleColumns"
+                        v-bind="$attrs"
+                        v-on="$listeners">
                     </columns-visibility>
                 </el-tab-pane>
             </el-tabs>
@@ -71,50 +71,10 @@
 
 </script>
 
-
 <style lang="scss">
     .rtl .header-handle {
         margin-right: auto;
         margin-left: 0;
-    }
-
-    .el-tabs__item {
-        height: 20px;
-        color: var(--primary-color);
-        padding: 0;
-        display: flex;
-        justify-content: center;
-    }
-
-    .el-tabs__header {
-        margin: 0;
-    }
-
-    .el-tabs__nav-scroll {
-        justify-content: center;
-        display: flex;
-        background: #f0f2f4;
-
-        .el-tabs__nav {
-            display: flex;
-            padding: 15px 20px 12px 20px;
-            justify-content: space-around;
-        }
-    }
-
-    .rtl .el-tabs__nav.is-top {
-        display: flex;
-        padding-bottom: 5px;
-        flex-direction: row-reverse;
-    }
-
-    .el-tabs__active-bar {
-        background-color: var(--primary-color);
-        width: 100px !important;
-    }
-
-    .rtl .el-checkbox__inner {
-        margin-left: 10px;
     }
 
     .header-actions__container {
@@ -123,14 +83,45 @@
         background-color: white;
         padding: 0;
         width: 201px;
-    }
 
-    .el-popper[x-placement^=bottom] {
-        margin-top: -20px;
+        .el-tabs__item {
+            height: 20px;
+            color: var(--primary-color);
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
 
-        .popper__arrow {
-            display: none;
+        .el-tabs__nav-scroll {
+            justify-content: center;
+            display: flex;
+            background: #f0f2f4;
+
+            .el-tabs__nav {
+                display: flex;
+                padding: 15px 20px 12px 20px;
+                justify-content: space-around;
+            }
+        }
+
+        .el-tabs__header {
+            margin: 0;
+        }
+
+        .el-tabs__active-bar {
+            width: 100px !important;
+        }
+
+        .rtl .el-checkbox__inner {
+            margin-left: 10px;
+        }
+
+        .el-popper[x-placement^=bottom] {
+            margin-top: -20px;
+
+            .popper__arrow {
+                display: none;
+            }
         }
     }
-
 </style>

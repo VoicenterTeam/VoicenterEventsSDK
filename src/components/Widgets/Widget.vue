@@ -1,7 +1,12 @@
 <template>
     <div class="relative">
-        <div class="absolute top-0 right-0 mr-12" v-if="editable && showDeleteButton">
-            <delete-button @click="removeWidget(widget)" class="delete-button"/>
+        <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
+            <delete-button @click="removeWidget(widget)"/>
+        </div>
+        <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
+            <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
+                         :class="{'border border-primary hover:bg-blue-200': editable}">
+            </edit-button>
         </div>
         <component :is="componentTypes[widget.TemplateID]"
                    :data="setComponentData(widget.TemplateID)"
@@ -12,20 +17,29 @@
                    @change-extension-status="(status)=> changeExtensionStatus(status, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
+        <!--TODO: set dynamic edit dialog for all widget types-->
+        <update-dialog
+            width="30%"
+            :chartTitle="widget.Title"
+            @on-change="onChangeTitle"
+            :visible.sync="showUpdateDialog">
+        </update-dialog>
     </div>
 </template>
 <script>
 
-  import WidgetCard from "./WidgetCard"
-  import TimeLineChart from '@/components/Charts/TimeLineChart'
-  import DataTable from '@/components/Table/DataTable'
-  import ExtensionCards from '@/components/Cards/ExtensionCards'
-  import StatusCards from '@/components/Cards/StatusCards'
-  import StatisticsCards from '@/components/Cards/StatisticsCards'
-  import widgetTypes from '@/enum/widgetTypes'
-  import DeleteButton from "@/components/Widgets/DeleteButton";
+    import WidgetCard from "./WidgetCard"
+    import UpdateDialog from './UpdateDialog'
+    import widgetTypes from '@/enum/widgetTypes'
+    import EditButton from '@/components/EditButton'
+    import DataTable from '@/components/Table/DataTable'
+    import DeleteButton from "@/components/Widgets/DeleteButton";
+    import TimeLineChart from '@/components/Charts/TimeLineChart'
+    import ExtensionCards from '@/components/Cards/ExtensionCards'
+    import StatusCards from '@/components/Cards/StatusCards'
+    import StatisticsCards from '@/components/Cards/StatisticsCards'
 
-  export default {
+    export default {
         name: "widget",
         components: {
             WidgetCard,
@@ -34,17 +48,19 @@
             StatusCards,
             StatisticsCards,
             DataTable,
-            DeleteButton
+            DeleteButton,
+            EditButton,
+            UpdateDialog
         },
         props: {
-          editable: {
-            type: Boolean,
-            default: false
-          },
-          widget: {
-            type: Object,
-            default: () => ({})
-          },
+            editable: {
+                type: Boolean,
+                default: false
+            },
+            widget: {
+                type: Object,
+                default: () => ({})
+            }
         },
         data() {
             return {
@@ -56,6 +72,7 @@
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
                     [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
                 },
+                showUpdateDialog: false
             }
         },
         computed:{
@@ -67,8 +84,17 @@
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            updateWidget(widget) {
-                this.$emit('update-item', widget)
+            onShowUpdateDialog(TemplateID) {
+                if (TemplateID != 2) {
+                    alert('coming soon...')
+                    return
+                }
+                this.showUpdateDialog = true
+            },
+            onChangeTitle(title) {
+                this.widget.WidgetLayout.Title = title
+                this.widget = {...this.widget, ...this.widget.WidgetLayout}
+                this.$emit('update-item', this.widget)
             },
             setComponentData(TemplateID) {
                 // TODO We need a better way to check this when integrating with the api
@@ -84,5 +110,22 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+    .rtl {
+        .widget-edit__button {
+            right: auto;
+            @apply left-0;
+        }
+
+        .widget-delete__button {
+            right: auto;
+            @apply left-0;
+            + .widget-edit__button {
+                right: auto;
+                @apply ml-10;
+                @apply left-0;
+            }
+        }
+
+    }
 </style>

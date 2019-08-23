@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div class="data-table__container">
         <div class="flex items-center my-4 w-full">
             <div class="flex w-64">
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
             </div>
-            <div class="flex ml-auto">
+            <div class="flex ml-auto mr-12 table-row__count">
                 <p class="text-sm">{{rowsData.length}} / {{data.tableData.length}} row(s)</p>
             </div>
         </div>
@@ -20,27 +20,27 @@
                       v-on="listeners">
                 <slot name="">
                     <el-table-column
-                            v-for="(column, index) in renderedColumns"
-                            :key="column.prop"
-                            v-bind="column"
-                            :column-key="column.prop"
-                            :min-width="column.minWidth || '150px'"
-                            :fixed="column.fixed || false"
-                            :align="column.align"
-                            :type="column.type">
+                        v-for="(column, index) in renderedColumns"
+                        :key="column.prop"
+                        v-bind="column"
+                        :column-key="column.prop"
+                        :min-width="column.minWidth || '150px'"
+                        :fixed="column.fixed || false"
+                        :align="column.align"
+                        :type="column.type">
                         <template slot="header">
                         <span class="font-medium uppercase" @mouseover="hoverOverHeader(column)"
                               @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
                             <header-actions
-                                    :availableColumns="availableColumns"
-                                    :visibleColumns="visibleColumns"
-                                    :currentColumn="column"
-                                    @on-change-visibility="updateColumnsVisibility"
-                                    @on-change-columns-size="updateColumnsSize"
-                                    @on-pin-column="(value) => pinColumn(value, index)"
-                                    @on-reset-props="resetColumnsProps">
+                                :availableColumns="availableColumns"
+                                :visibleColumns="visibleColumns"
+                                :currentColumn="column"
+                                @on-change-visibility="updateColumnsVisibility"
+                                @on-change-columns-size="updateColumnsSize"
+                                @on-pin-column="(value) => pinColumn(value, index)"
+                                @on-reset-props="resetColumnsProps">
                             </header-actions>
                         </template>
                         <template slot-scope="{row, $index}">
@@ -250,7 +250,33 @@
                 }
             }
         }
+    }
 
+    .widget-delete__button {
+        + .widget-edit__button {
+            + .data-table__container {
+                .table-row__count {
+                    @apply mr-24;
+                }
+            }
+        }
+    }
+
+    .rtl .table-row__count {
+        margin-left: 2.7rem;
+        left: 0;
+        position: absolute;
+    }
+
+    .rtl .widget-delete__button {
+        + .widget-edit__button {
+            + .data-table__container {
+                .table-row__count {
+                    position: absolute;
+                    @apply ml-24;
+                }
+            }
+        }
     }
 
 </style>

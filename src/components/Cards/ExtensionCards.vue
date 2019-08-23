@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="flex w-full justify-end pr-8">
+        <div class="flex w-full justify-end pr-12"
+             :class="responsiveClass">
             <el-select placeholder="Sort by" v-model="sortBy">
                 <template v-slot:prefix>
                     <span class="h-full flex items-center">
@@ -10,21 +11,23 @@
                 <el-option v-for="option in sortByOptions" v-bind="option" :key="option.label"></el-option>
             </el-select>
         </div>
-        <div class="flex py-6 extension-cards">
-            <fade-transition class="flex flex-wrap w-full" group>
-                <div v-for="(extension, index) in sortedExtensions"
-                     :key="extension.userID"
-                     class="pr-4">
-                    <extension-card :extension="extension">
-                    </extension-card>
-                </div>
-                <div key="no-data"
-                     class="flex flex-col w-full items-center"
-                     v-if="sortedExtensions.length === 0">
-                    <h3 class="text-xl">{{$t('extensions.noData')}}</h3>
-                    <icon-no-data class="w-64"></icon-no-data>
-                </div>
-            </fade-transition>
+        <div>
+            <div class="flex py-6 extension-cards">
+                <fade-transition class="flex flex-wrap w-full" group>
+                    <div v-for="(extension, index) in sortedExtensions"
+                         :key="extension.userID"
+                         class="pr-4">
+                        <extension-card :extension="extension">
+                        </extension-card>
+                    </div>
+                    <div key="no-data"
+                         class="flex flex-col w-full items-center"
+                         v-if="sortedExtensions.length === 0">
+                        <h3 class="text-xl">{{$t('extensions.noData')}}</h3>
+                        <icon-no-data class="w-64"></icon-no-data>
+                    </div>
+                </fade-transition>
+            </div>
         </div>
     </div>
 </template>
@@ -81,6 +84,7 @@
       onlineExtensions() {
         let logoutStatus = 2
         return this.extensions.filter(e => e.representativeStatus !== logoutStatus)
+          // return this.extensions.filter(e => e.representativeStatus !== authStatuses.LOGGED_OUT)
       },
       sortedExtensions() {
         if (!this.sortBy) {
@@ -99,7 +103,18 @@
           }
           return 0
         })
-      }
+      },
+      responsiveClass() {
+            if (this.editable && this.$rtl.isRTL) {
+                return 'pl-24 mx-2'
+            }
+            if (this.$rtl.isRTL) {
+                return 'pl-12'
+            }
+            if (this.editable) {
+                return 'pr-24'
+            }
+        }
     }
   }
 </script>
@@ -112,6 +127,7 @@
     .flip-list-move {
         transition: transform 5s;
     }
+
     .el-loading-mask .el-loading-spinner {
         display: flex;
         justify-content: center;

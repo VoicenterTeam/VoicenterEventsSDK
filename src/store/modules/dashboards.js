@@ -4,7 +4,6 @@ import Vue from 'vue'
 const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
     SET_ACTIVE_DASHBOARD: 'SET_ACTIVE_DASHBOARD',
-    SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
     ADD_DASHBOARD: 'ADD_DASHBOARD',
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD'
 };
@@ -30,66 +29,51 @@ const mutations = {
     [types.SET_ALL_DASHBOARDS]: (state, value) => {
         state.allDashboards = value;
     },
-    [types.ADD_DASHBOARD]: (state, {key, value}) => {
+    [types.ADD_DASHBOARD]: (state, value) => {
         state.allDashboards = {
             ...state.allDashboards,
-            [key]: value
+            ...value
         }
     },
-    [types.UPDATE_DASHBOARD]: (state, {dashboard}) => {
-        let keys = Object.keys(state.allDashboards)
-        keys.forEach(dashboardKey => {
-            if (state.allDashboards[dashboardKey].ID === dashboard.ID) {
-                Vue.set(state.allDashboards, dashboardKey, dashboard)
+    [types.UPDATE_DASHBOARD]: (state, dashboard) => {
+        state.allDashboards.forEach((el, index) => {
+            if (el.DashBoardsID === dashboard.DashBoardsID) {
+                Vue.set(state.allDashboards, index, dashboard)
             }
         })
         state.activeDashboard = dashboard
     },
-    [types.SET_ACTIVE_DASHBOARD]: (state, value) => {
-        state.activeDashboard = value
+    [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
+        state.activeDashboard = dashboard
     },
-    [types.SET_DEFAULT_DASHBOARD]: (state) => {
-        let keys = Object.keys(state.allDashboards)
-        if (keys.length) {
-            let dashboard = state.allDashboards[keys[0]]
-            state.activeDashboard = sortDashboardWidgetsByorder(dashboard)
-        }
-    }
 };
 
 const actions = {
     async getDashboards({commit, state}) {
         let dashboards = await DashboardApi.getAll()
         commit(types.SET_ALL_DASHBOARDS, dashboards)
-        if (!state.activeDashboard) {
-            commit(types.SET_DEFAULT_DASHBOARD)
+        if (!state.activeDashboard && dashboards.length) {
+            commit(types.SET_ACTIVE_DASHBOARD, dashboards[0])
         }
     },
     async selectDashboard({commit, state}, dashboard) {
-        // TODO: add api call to update selected dashboard ?
+        // TODO: maybe we will add api call to update the selected dashboard
         commit(types.SET_ACTIVE_DASHBOARD, dashboard)
     },
     async createDashboard({commit}, newDashboard) {
-        // TODO: call api to add dashboard
         const dashboard = {
-            "ID": Math.random() * 100,
-            "Title": newDashboard.title,
-            "WidgetGroupList": [
-                {
-                    "ID": Math.random() * 100,
-                    "Title": "General Group Title",
-                    "WidgetList": []
-                }
-            ]
+            "AccountID": "1",
+            "DashboardsTitle": newDashboard.title,
+            "WidgetGroupList": []
         }
-        let dashboardKey = `dashboard-${dashboard.ID}`
-        commit(types.ADD_DASHBOARD, {
-            key: dashboardKey,
-            value: dashboard
-        })
-        commit(types.SET_ACTIVE_DASHBOARD, dashboard)
+
+        newDashboard = await DashboardApi.store(dashboard)
+
+        commit(types.ADD_DASHBOARD, newDashboard)
+        commit(types.SET_ACTIVE_DASHBOARD, newDashboard)
     },
     async updateDashboard({commit}, dashboard) {
+        await DashboardApi.update(dashboard)
         commit(types.UPDATE_DASHBOARD, dashboard)
     }
 };

@@ -16,7 +16,6 @@
     import {Dialog} from 'element-ui'
 
     export default {
-        name: 'chart-update-dialog',
         inheritAttrs: false,
         components: {
             [Dialog.name]: Dialog
