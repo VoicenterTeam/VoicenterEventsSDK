@@ -1,9 +1,8 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
         <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('statusCard.update')}}</h3>
-
-        <div>
-            <el-select placeholder="Sort by" v-model="selectedStatus">
+        <div class="w-full">
+            <el-select :placeholder="$t('common.selectStatus')" v-model="selectedStatus" class="w-full">
                 <el-option v-for="option in options" v-bind="option" :key="option.label">
                     <div class="flex">
                         <component class="w-5 mx-1 text-primary" :is="option.icon"></component>
@@ -44,47 +43,47 @@
                 selectedStatus:'',
                 options:[
                     {
-                        label: this.$t('extension.status.login'),
+                        label: this.$t('status.login'),
                         value: 1,
                         icon: "IconLogin"
                     },
                     {
-                        label: this.$t('extension.status.logout'),
+                        label: this.$t('status.logout'),
                         value: 2,
                         icon: "IconLogout"
                     },
                     {
-                        label: this.$t('extension.status.lunch'),
+                        label: this.$t('status.lunch'),
                         value: 3,
                         icon: "IconLunch"
                     },
                     {
-                        label: this.$t('extension.status.administrative'),
+                        label: this.$t('status.administrative'),
                         value: 5,
                         icon: "IconAdministrative"
                     },
                     {
-                        label: this.$t('extension.status.private'),
+                        label: this.$t('status.private'),
                         value: 7,
                         icon: "IconPrivate"
                     },
                     {
-                        label: this.$t('extension.status.other'),
+                        label: this.$t('status.other'),
                         value: 9,
                         icon: "IconOther"
                     },
                     {
-                        label: this.$t('extension.status.training'),
+                        label: this.$t('status.training'),
                         value: 11,
                         icon: "IconTraining"
                     },
                     {
-                        label: this.$t('extension.status.teamMeeting'),
+                        label: this.$t('status.teamMeeting'),
                         value: 12,
                         icon: "IconTeamMeeting"
                     },
                     {
-                        label: this.$t('extension.status.brief'),
+                        label: this.$t('status.brief'),
                         value: 13,
                         icon: "IconBrief"
                     },
