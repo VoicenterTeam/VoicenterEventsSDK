@@ -8,8 +8,8 @@ const $axios = axios.create({
 
 $axios.interceptors.response.use((res) => {
     return res.data
-}, err => {
-    return Promise.reject(err)
+}, (e) => {
+    return Promise.reject(e)
 })
 
 Vue.prototype.$axios = $axios

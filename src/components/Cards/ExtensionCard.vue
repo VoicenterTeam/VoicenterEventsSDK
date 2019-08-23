@@ -10,7 +10,7 @@
                     </component>
                 </el-tooltip>
             </fade-transition>
-            <span class="text-xl font-medium leading-tight ml-2">{{extension.userName}}</span>
+            <span class="text-xl font-medium leading-tight mx-2">{{extension.userName}}</span>
         </div>
         <div class="flex flex-col">
             <span class="text-center text-2xl ml-2 font-mono">{{timer.displayTime}}</span>

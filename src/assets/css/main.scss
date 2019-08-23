@@ -2,7 +2,9 @@
   --primary-color: #2575FF;
   --secondary-color: #876cff;
   --greyish-brown: #4a4a4a;
-  --silver-color: #d6dae1
+  --silver-color: #d6dae1;
+  --silver-two: #bfc5d0;
+  --steel: #888f9d;
 }
 
 @import "tailwind";
@@ -13,6 +15,7 @@
 @import "element-overrides/dialog";
 @import "element-overrides/date-picker";
 @import "element-overrides/select";
+@import "element-overrides/tabs";
 
 body {
   @apply bg-gray-200 px-24 font-montserrat;

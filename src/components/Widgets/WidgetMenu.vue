@@ -7,9 +7,7 @@
                  :key="widget.WidgetID"
                  :class="widget.WidgetLayout.Classes || {}"
                  class="w-full px-2">
-                <!-- TODO: update with other types, only card type now  -->
-<!--                v-if="widget.TemplateID === 1"-->
-                <WidgetCard  v-bind="widget.WidgetLayout"
+                <WidgetCard v-bind="widget.WidgetLayout"
                             @click.native="$emit('add-widget', widget)"
                 ></WidgetCard>
             </div>

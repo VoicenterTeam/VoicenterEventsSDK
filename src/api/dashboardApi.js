@@ -1,21 +1,30 @@
-import axios from 'axios'
+import $axios from './apiConnection'
 import {dashboards} from '@/store/mockData'
+import parseCatch from '../helpers/handleErrors'
 
 export const DashboardApi = {
-    getAll() {
-        // return $axios.get(`/DashBoards/GetAllDashBoards/`)
-        return dashboards
+    async getAll() {
+        try {
+            let res = await $axios.get('/DashBoards/GetAll/')
+            return res.DashBoards
+        } catch (e) {
+            if (process.env.VUE_APP_ENV === 'local') {
+                return dashboards
+            }
+            parseCatch(e, true)
+        }
     },
 
-    find(id) {
-        // return $axios.get(`/DashBoards/Get/{$id}`)
+    async find(id) {
+        return await $axios.get(`/DashBoards/Get/{$id}`)
     },
 
-    update(data) {
-        // return $axios.post(`/DashBoards/Update/`)
+    async update(data) {
+        return await $axios.post(`/DashBoards/Update/`, data)
     },
 
-    store(data) {
-        // return $axios.get(`/DashBoards/Add/`)
+    async store(data) {
+        let res = await $axios.post(`/DashBoards/Add/`, data)
+        return res.Dashboard
     }
 }

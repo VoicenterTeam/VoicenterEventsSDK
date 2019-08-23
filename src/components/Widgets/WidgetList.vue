@@ -9,7 +9,7 @@
             <Widget :widget="widget"
                     :editable="editable"
                     @remove-item="removeWidget(widget)"
-                    @update-item="updateWidget(widget)">
+                    @update-item="(data) => updateWidget(data)">
             </Widget>
         </div>
         <widget-empty-card v-if="editable" key="0"

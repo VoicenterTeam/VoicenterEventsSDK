@@ -16,32 +16,32 @@
 </template>
 
 <script>
-  import WidgetMenu from './WidgetMenu'
+    import WidgetMenu from './WidgetMenu'
 
-  export default {
-    name: "widget-empty-card",
-    components: {
-      WidgetMenu
-    },
-    props: {
-      widgetGroup: {
-        type: Object,
-        default: null
-      },
-      allWidgets: {
-        type: Array,
-        default: () => []
-      }
-    },
-    methods: {
-      updateEditWidget() {
-        this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
-      },
-      onWidgetMenuClickOutside() {
-        this.widgetGroup.edit = false
-      }
-    },
-  }
+    export default {
+        name: "widget-empty-card",
+        components: {
+            WidgetMenu
+        },
+        props: {
+            widgetGroup: {
+                type: Object,
+                default: null
+            },
+            allWidgets: {
+                type: Array,
+                default: () => []
+            }
+        },
+        methods: {
+            updateEditWidget() {
+                this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
+            },
+            onWidgetMenuClickOutside() {
+                this.widgetGroup.edit = false
+            }
+        },
+    }
 </script>
 
 <style scoped>
