@@ -48,6 +48,8 @@
                     [widgetTypes.CHART_TYPE_ID]: 'lg:w-3/3',
                     [widgetTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'lg:w-3/3',
+                    [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'lg:w-1/3',
+                    [widgetTypes.STATUS_CARDS_TYPE_ID]: 'lg:w-1/3',
                 }
             }
         },

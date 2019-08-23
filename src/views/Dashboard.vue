@@ -23,8 +23,8 @@
         </div>
         <fade-transition mode="out-in" :duration="250">
             <div :key="activeDashboardData.ID">
-                <transition-group name="flip-list">
-                    <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.ID" class="my-10"
+                <transition-group name="flip-list" >
+                    <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.ID " class="my-10"
                          :class="{'editable-widgets':editMode}">
                         <div v-if="editMode" class="flex items-center justify-between mb-8">
                             <base-input v-model="widgetGroup.Title"></base-input>
@@ -62,6 +62,8 @@
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
     import WidgetList from '@/components/Widgets/WidgetList'
 
+    import EventsSDK from 'voicenter-events-sdk'
+
     export default {
         components: {
             BaseInput,
@@ -71,7 +73,8 @@
             EditButton,
             AddButton,
             WidgetMenu,
-            WidgetList
+            WidgetList,
+            EventsSDK
         },
         data() {
             return {
@@ -86,6 +89,12 @@
             },
             allWidgets() {
                 return this.$store.state.widgets.allWidgets
+            },
+            token() {
+                return this.$store.state.users.tokenString
+            },
+            extensions() {
+                return this.$store.state.extensions.extensions
             },
         },
         methods: {
@@ -158,6 +167,7 @@
                 this.activeDashboardData.WidgetGroupList.splice(0, 0, widget)
             },
             updateWidget(widget, widgetGroup) {
+                debugger
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.ID === widgetGroup.ID)
                 if (index !== -1) {
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.ID === widget.ID)
@@ -175,11 +185,36 @@
                 let dashboard = this.$store.state.dashboards.activeDashboard
                 this.$store.dispatch('dashboards/updateDashboard', {dashboard})
                 this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
+            },
+            onNewEvent(eventData) {
+                let { name, data} = eventData
+                if (name === 'AllExtensionsStatus') {
+                    this.$store.dispatch('extensions/setExtensions', data.extensions)
+                }
+                if (name === 'ExtensionEvent') {
+                    let extension = data.data
+                    let index = this.extensions.findIndex(e => e.userID === extension.userID)
+                    if (index !== -1) {
+                        this.$store.dispatch('extensions/updateExtension', {index, extension})
+                    }
+                }
             }
         },
         watch: {
             dashboard() {
                 this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
+            }
+        },
+        async created() {
+            try {
+                this.sdk = new EventsSDK({
+                    token: this.token
+                })
+                await this.sdk.init()
+                await this.sdk.login()
+                this.sdk.on('*', this.onNewEvent)
+            } catch (e) {
+
             }
         }
     }

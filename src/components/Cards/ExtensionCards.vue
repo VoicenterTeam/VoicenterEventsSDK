@@ -1,5 +1,5 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
+    <div>
         <div class="flex w-full justify-end pr-8">
             <el-select placeholder="Sort by" v-model="sortBy">
                 <template v-slot:prefix>
@@ -20,7 +20,7 @@
                 </div>
                 <div key="no-data"
                      class="flex flex-col w-full items-center"
-                     v-if="extensionsLoaded && sortedExtensions.length === 0">
+                     v-if="sortedExtensions.length === 0">
                     <h3 class="text-xl">{{$t('extensions.noData')}}</h3>
                     <icon-no-data class="w-64"></icon-no-data>
                 </div>
@@ -30,7 +30,6 @@
 </template>
 <script>
   import ExtensionCard from "@/components/Cards/ExtensionCard";
-  import EventsSDK from 'voicenter-events-sdk'
   import { Select, Option } from 'element-ui'
   import { FadeTransition } from 'vue2-transitions'
   export default {
@@ -55,10 +54,7 @@
           13: "IconBrief",
         },
         timer: 0,
-        extensions: [],
-        extensionsLoaded: false,
         sortBy: 'userID',
-        loading: true,
         sortByOptions: [
           {
             label: this.$t('extensions.sort.default'),
@@ -78,6 +74,9 @@
     computed: {
       token() {
         return this.$store.state.users.tokenString
+      },
+      extensions(){
+        return this.$store.state.extensions.extensions
       },
       onlineExtensions() {
         let logoutStatus = 2
@@ -100,37 +99,6 @@
           }
           return 0
         })
-      }
-    },
-    methods: {
-      onNewEvent(eventData) {
-        let { name, data} = eventData
-        if (name === 'AllExtensionsStatus') {
-          this.extensions = data.extensions
-          this.extensionsLoaded = true
-        }
-        if (name === 'ExtensionEvent') {
-           let extension = data.data
-           let index = this.extensions.findIndex(e => e.userID === extension.userID)
-           if (index !== -1) {
-             this.extensions.splice(index, 1, extension)
-           }
-        }
-      }
-    },
-    async created() {
-      try {
-        this.loading = true
-        this.sdk = new EventsSDK({
-          token: this.token
-        })
-        await this.sdk.init()
-        await this.sdk.login()
-        this.sdk.on('*', this.onNewEvent)
-      } catch (e) {
-
-      } finally {
-        this.loading = false
       }
     }
   }

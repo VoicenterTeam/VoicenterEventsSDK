@@ -127,6 +127,48 @@ export const widgets = [
         ]
     },
     {
+        "Title": "Statistics cards",
+        "WidgetID": "111",
+        "TemplateID": "5",
+        "WidgetTime": {},
+        "WidgetLayout": {
+            "Order": 1,
+            "icon": "IconIncomingCall",
+            "caption": "Statistics cards",
+            "status": 1
+        },
+        "WidgetConfig": [
+
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 9,
+                "EntityType": 2
+            }
+        ]
+    },
+    {
+        "Title": "Status cards",
+        "WidgetID": 112,
+        "TemplateID": "6",
+        "WidgetTime": {},
+        "WidgetLayout": {
+            "Order": 1,
+            "icon": "IconLogin",
+            "caption": "Status cards",
+            "status": 1
+        },
+        "WidgetConfig": [
+
+        ],
+        "WidgetEntity": [
+            {
+                "EntityID": 9,
+                "EntityType": 2
+            }
+        ]
+    },
+    {
         "Title": "Table",
         "WidgetID": "8",
         "TemplateID": "3",
@@ -351,7 +393,8 @@ export const charts = [
             },
             "date": "05/29/2019 - 07/20/2019"
         }
-    }, {
+    },
+    {
 
         "Title": "Calls Per Minute",
         "WidgetID": "9",
@@ -457,7 +500,8 @@ export const charts = [
             },
             "date": "06/29/2019 - 07/29/2019"
         }
-    }, {
+    },
+    {
         "WidgetType": {
             "ID": "2", //chart
         },

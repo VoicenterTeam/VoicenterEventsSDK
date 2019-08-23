@@ -66,7 +66,17 @@
   "extensions.sort.default": "Default",
   "extensions.sort.userName": "User name",
   "extensions.sort.activeTime": "Active time",
-  "extensions.noData": "This account has no extensions..."
+  "extensions.noData": "This account has no extensions...",
+  "statusCard.update": "Update Status Card",
+  "extension.status.login": "Login",
+  "extension.status.logout": "Logout",
+  "extension.status.lunch": "Lunch",
+  "extension.status.administrative": "Administrative",
+  "extension.status.private": "Private",
+  "extension.status.other": "Other",
+  "extension.status.training": "Training",
+  "extension.status.teamMeeting": "Team Meeting",
+  "extension.status.brief": "Brief"
 }
 
 

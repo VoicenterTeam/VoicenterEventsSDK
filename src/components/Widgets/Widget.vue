@@ -1,6 +1,6 @@
 <template>
     <div class="relative">
-        <div class="absolute top-0 right-0 mr-12" v-if="editable">
+        <div class="absolute top-0 right-0 mr-12" v-if="editable && showDeleteButton">
             <delete-button @click="removeWidget(widget)" class="delete-button"/>
         </div>
         <component :is="componentTypes[widget.TemplateID]"
@@ -9,6 +9,7 @@
                    :editable="editable"
                    class="widget"
                    @update-item="(layout) => updateWidget(layout, widget)"
+                   @change-extension-status="(status)=> changeExtensionStatus(status, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
     </div>
@@ -19,6 +20,8 @@
   import TimeLineChart from '@/components/Charts/TimeLineChart'
   import DataTable from '@/components/Table/DataTable'
   import ExtensionCards from '@/components/Cards/ExtensionCards'
+  import StatusCards from '@/components/Cards/StatusCards'
+  import StatisticsCards from '@/components/Cards/StatisticsCards'
   import widgetTypes from '@/enum/widgetTypes'
   import DeleteButton from "@/components/Widgets/DeleteButton";
 
@@ -28,6 +31,8 @@
             WidgetCard,
             TimeLineChart,
             ExtensionCards,
+            StatusCards,
+            StatisticsCards,
             DataTable,
             DeleteButton
         },
@@ -48,7 +53,14 @@
                     [widgetTypes.CHART_TYPE_ID]: 'TimeLineChart',
                     [widgetTypes.TABLE_TYPE_ID]: 'DataTable',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
+                    [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
+                    [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
                 },
+            }
+        },
+        computed:{
+            showDeleteButton(){
+                return ![widgetTypes.STATUS_CARDS_TYPE_ID, widgetTypes.STATISTICS_CARDS_TYPE_ID].includes(Number(this.widget.TemplateID))
             }
         },
         methods: {
@@ -64,6 +76,10 @@
                     return this.widget;
                 }
                 return this.widget.WidgetLayout
+            },
+            changeExtensionStatus(status, widget){
+                widget.WidgetLayout.status = status
+                this.updateWidget(widget)
             }
         }
     }
