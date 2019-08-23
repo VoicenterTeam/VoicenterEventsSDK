@@ -13,17 +13,20 @@
             </slot>
         </div>
         <div class="flex editable-content" v-if="editable">
-            <edit-3-icon class="flex align-center w-8 h-8 p-2 text-blue edit-icon bg-blue-100"
-                         @click="$emit('remove-item')"></edit-3-icon>
-            <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon bg-red-100"
-                        @click="$emit('remove-item')"></trash-icon>
+            <trash-icon  class="flex align-center w-8 h-8 p-2 text-red trash-icon"
+                         @click="$emit('remove-item')"></trash-icon>
+            <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-blue"></edit-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
+        </div>
+        <div v-else>
+            <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-blue"
+                       @click="()=>{this.showModal = true}"></edit-icon>
         </div>
     </div>
 </template>
 <script>
-    import {TrashIcon, Edit3Icon, MoreVerticalIcon} from 'vue-feather-icons'
+    import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
     export default {
         name: 'statistics-cards',
         props: {
@@ -42,24 +45,34 @@
         },
         components: {
             TrashIcon,
-            Edit3Icon,
+            EditIcon,
             MoreVerticalIcon
         }
     }
 </script>
 <style lang="scss" scoped>
 
+
     .trash-icon, .edit-icon {
         position: relative;
-        top: -75px;
-        right: -50px;
-        border-radius: 50%;
+        top: -50px;
+        right: -30px;
         cursor: pointer;
     }
-
+    .edit-card-icon {
+        position: relative;
+        top: -50px;
+        right: -20px;
+        cursor: pointer;
+    }
     .rtl .trash-icon,
     .rtl .edit-icon {
-        left: -50px;
+        left: -30px;
+        right: auto;
+    }
+
+    .rtl .edit-card-icon {
+        left: -20px;
         right: auto;
     }
 
