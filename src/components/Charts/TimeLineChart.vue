@@ -34,7 +34,6 @@
                 type: Object,
                 default: () => ({})
             },
-            chartIndex: Number,
             editable: {
                 type: Boolean,
                 default: false

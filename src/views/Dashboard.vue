@@ -1,51 +1,61 @@
 <template>
-    <div class="pt-24" v-if="activeDashboardData">
-        <div class="flex justify-end">
-            <layout-switcher
-                :activeType="layoutType"
-                :editMode="editMode"
-                @switch-layout="(type) => switchDashboardLayout(type)">
-            </layout-switcher>
-        </div>
-        <div class="flex justify-end relative my-4 -mx-1">
-            <AddButton v-if="editMode" class="mx-1" @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
-            <EditButton
-                @click.stop="editMode = !editMode"
-                @reset-dashboard="resetDashboard"
-                @save-dashboard="saveDashboard"
-                :edit-mode="editMode">
-            </EditButton>
-            <fade-transition>
-                <WidgetMenu v-if="showWidgetMenu"
-                            v-click-outside="onWidgetMenuClickOutside"
-                            :widgets="allWidgets">
-                </WidgetMenu>
+    <div v-if="activeDashboardData">
+        <sidebar v-if="showSidebar"
+                 :activeTab="activeTab"
+                 :widgetGroupList="activeDashboardData.WidgetGroupList"
+                 @switch-tab="(tab) => switchTab(tab)"></sidebar>
+        <div class="pt-24" :class="getClass">
+            <div class="flex justify-end -mx-1">
+                <div class="my-4 flex">
+                    <AddButton v-if="editMode" class="mx-1" @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
+                    <EditButton
+                        @click.stop="editMode = !editMode"
+                        @reset-dashboard="resetDashboard"
+                        @save-dashboard="saveDashboard"
+                        :edit-mode="editMode">
+                    </EditButton>
+                </div>
+                <fade-transition>
+                    <WidgetMenu v-if="showWidgetMenu"
+                                v-click-outside="onWidgetMenuClickOutside"
+                                :widgets="allWidgets">
+                    </WidgetMenu>
+                </fade-transition>
+                <layout-switcher
+                    v-if="!editMode"
+                    :activeType="layoutType"
+                    @switch-layout="(type) => switchDashboardLayout(type)">
+                </layout-switcher>
+            </div>
+            <div class="flex justify-end">
+                <new-group-button
+                    @click.native="addNewGroup"
+                    v-if="editMode">
+                </new-group-button>
+            </div>
+            <fade-transition mode="out-in" :duration="250">
+                <component
+                    :is="layoutTypes[layoutType]"
+                    :activeDashboardData="activeDashboardData"
+                    :editMode="editMode"
+                    :activeTab="activeTab"
+                    :allWidgets="allWidgets"
+                    @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                    @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                    @onListChange="(data) => onListChange(data.list, data.group)"
+                    @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
+                    @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                    @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                    @switch-tab="(tab) => switchTab(tab)">
+                </component>
             </fade-transition>
         </div>
-        <div class="flex justify-end">
-            <new-group-button
-                @click.native="addNewGroup"
-                v-if="editMode">
-            </new-group-button>
-        </div>
-        <fade-transition mode="out-in" :duration="250">
-            <component
-                :is="layoutTypes[layoutType]"
-                :activeDashboardData="activeDashboardData"
-                :editMode="editMode"
-                :allWidgets="allWidgets"
-                @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                @onListChange="(data) => onListChange(data.list, data.group)"
-                @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
-                @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                @updateWidget="(data) => updateWidget(data.widget, data.group)">
-            </component>
-        </fade-transition>
     </div>
 </template>
 
 <script>
+
+    import get from 'lodash/get';
     import cloneDeep from 'lodash/cloneDeep'
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
@@ -55,6 +65,7 @@
     import Switcher from '@/components/LayoutRendering/Switcher'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
+    import Sidebar from "../components/LayoutRendering/Sidebar";
 
     export default {
         components: {
@@ -64,7 +75,8 @@
             WidgetMenu,
             [Switcher.name]: Switcher,
             NormalView,
-            TabbedView
+            TabbedView,
+            Sidebar
         },
         data() {
             return {
@@ -76,7 +88,8 @@
                     [layoutTypes.TABBED]: 'TabbedView',
                 },
                 layoutType: 'normal',
-                previousLayoutType: ''
+                previousLayoutType: '',
+                activeTab: get(this.$store.state.dashboards.activeDashboard.WidgetGroupList, '[0].WidgetGroupID').toString(),
             }
         },
         computed: {
@@ -85,6 +98,16 @@
             },
             allWidgets() {
                 return this.$store.state.widgets.allWidgets
+            },
+            getClass() {
+                if (this.layoutType === layoutTypes.TABBED) {
+                    return 'pt-40'
+                }
+            },
+            showSidebar() {
+                if (this.layoutType === layoutTypes.TABBED) {
+                    return true
+                }
             }
         },
         methods: {
@@ -178,6 +201,9 @@
             switchDashboardLayout(type) {
                 // TODO: update dashboard generalSettings
                 this.layoutType = type
+            },
+            switchTab(tab) {
+                this.activeTab = tab
             }
         },
         watch: {
