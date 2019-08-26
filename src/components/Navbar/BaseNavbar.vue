@@ -64,7 +64,7 @@
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
-                        <el-input v-model="newDashboard.title"></el-input>
+                        <el-input v-model="newDashboard.DashboardsTitle"></el-input>
                     </el-form-item>
                 </el-form>
                 <template slot="footer">
@@ -83,12 +83,7 @@
     import {Dialog} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
-
-    function newDashboardData() {
-        return {
-            title: ''
-        }
-    }
+    import {dashboardModel} from "../../models/instances";
 
     export default {
         components: {
@@ -101,7 +96,7 @@
                 showDashboardsMenu: false,
                 showUsersMenu: false,
                 showCreateDashboardDialog: false,
-                newDashboard: newDashboardData(),
+                newDashboard: dashboardModel,
                 showEditSettingsDialog: false,
             }
         },
@@ -132,7 +127,7 @@
                 this.$store.dispatch('dashboards/createDashboard', {
                     ...this.newDashboard
                 })
-                this.newDashboard = newDashboardData()
+                this.newDashboard = dashboardModel
                 this.showCreateDashboardDialog = false
             },
             onMenuClickOutside() {

@@ -7,12 +7,13 @@ import users from './modules/users'
 import charts from './modules/charts'
 import settings from './modules/settings'
 import lang from './modules/lang'
+import extensions from './modules/extensions'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     plugins: [createPersistedState({
-        paths: ['dashboards', 'widgets', 'charts', 'users', 'settings'] // add here modules or paths you want to sync in local storage
+        paths: ['dashboards', 'widgets', 'charts', 'users', 'settings', 'extensions'] // add here modules or paths you want to sync in local storage
     })],
     modules: {
         dashboards,
@@ -20,6 +21,7 @@ export default new Vuex.Store({
         charts,
         users,
         settings,
-        lang
+        lang,
+        extensions
     }
 })

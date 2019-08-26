@@ -60,6 +60,7 @@
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
     import EditButton from '@/components/EditButton'
+    import {widgetGroupModel} from "../models/instances";
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
     import Switcher from '@/components/LayoutRendering/Switcher'
@@ -67,12 +68,15 @@
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import Sidebar from "../components/LayoutRendering/Sidebar";
 
+    import EventsSDK from 'voicenter-events-sdk'
+
     export default {
         components: {
             NewGroupButton,
             EditButton,
             AddButton,
             WidgetMenu,
+            EventsSDK,
             [Switcher.name]: Switcher,
             NormalView,
             TabbedView,
@@ -108,7 +112,13 @@
                 if (this.layoutType === layoutTypes.TABBED) {
                     return true
                 }
-            }
+            },
+            token() {
+                return this.$store.state.users.tokenString
+            },
+            extensions() {
+                return this.$store.state.extensions.extensions
+            },
         },
         methods: {
             addWidgetToGroup(widget, widgetGroup) {
@@ -172,12 +182,7 @@
                 }
             },
             addNewGroup() {
-                let widget = {
-                    "WidgetGroupID": Math.random() * 100,
-                    "WidgetGroupTitle": "",
-                    "WidgetList": []
-                }
-                this.activeDashboardData.WidgetGroupList.splice(0, 0, widget)
+                this.activeDashboardData.WidgetGroupList.splice(0, 0, widgetGroupModel)
             },
             updateWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -204,6 +209,19 @@
             },
             switchTab(tab) {
                 this.activeTab = tab
+            },
+            onNewEvent(eventData) {
+                let {name, data} = eventData
+                if (name === 'AllExtensionsStatus') {
+                    this.$store.dispatch('extensions/setExtensions', data.extensions)
+                }
+                if (name === 'ExtensionEvent') {
+                    let extension = data.data
+                    let index = this.extensions.findIndex(e => e.userID === extension.userID)
+                    if (index !== -1) {
+                        this.$store.dispatch('extensions/updateExtension', {index, extension})
+                    }
+                }
             }
         },
         watch: {
@@ -219,6 +237,18 @@
                 }
             }
         },
+        async created() {
+            try {
+                this.sdk = new EventsSDK({
+                    token: this.token
+                })
+                await this.sdk.init()
+                await this.sdk.login()
+                this.sdk.on('*', this.onNewEvent)
+            } catch (e) {
+
+            }
+        }
     }
 </script>
 <style>
