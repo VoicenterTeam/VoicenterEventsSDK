@@ -61,17 +61,11 @@ const actions = {
             commit(types.SET_ACTIVE_DASHBOARD, dashboard)
         }
     },
-    async createDashboard({commit}, newDashboard) {
-        const dashboard = {
-            "AccountID": "1",
-            "DashboardsTitle": newDashboard.title,
-            "WidgetGroupList": []
-        }
+    async createDashboard({commit}, dashboard) {
+        await DashboardApi.store(dashboard)
 
-        newDashboard = await DashboardApi.store(dashboard)
-
-        commit(types.ADD_DASHBOARD, newDashboard)
-        commit(types.SET_ACTIVE_DASHBOARD, newDashboard)
+        commit(types.ADD_DASHBOARD, dashboard)
+        commit(types.SET_ACTIVE_DASHBOARD, dashboard)
     },
     async updateDashboard({commit}, dashboard) {
         await DashboardApi.update(dashboard)
