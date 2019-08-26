@@ -1,9 +1,20 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
-        <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('statusCard.update')}}</h3>
-        <div class="w-full">
-            <el-select :placeholder="$t('common.selectStatus')" v-model="selectedStatus" class="w-full">
-                <el-option v-for="option in options" v-bind="option" :key="option.label">
+        <h5 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('statusCard.update')}}</h5>
+        <div class="flex items-center my-4">
+            <component class="w-8 mx-1" :is="selectedIcon"></component>
+            <p slot="title" class="text-lg font-semibold text-gray-700">{{this.selectedOption.label}}</p>
+       </div>
+
+        <div class="w-full flex">
+            <el-select :placeholder="$t('common.selectStatus')"
+                       label="select"
+                       v-model="selectedStatus"
+                       @change="onStatusChange"
+                       class="w-full">
+                <el-option v-for="option in options"
+                           v-bind="option"
+                           :key="option.label">
                     <div class="flex">
                         <component class="w-5 mx-1 text-primary" :is="option.icon"></component>
                         <span class="w-16 mx-1">{{option.label}}</span>
@@ -41,6 +52,8 @@
         data() {
             return {
                 selectedStatus:'',
+                selectedIcon:'',
+                selectedOption:{},
                 options:[
                     {
                         label: this.$t('status.login'),
@@ -91,15 +104,23 @@
             }
         },
         mounted() {
-            this.selectedStatus = this.status
+            this.selectedStatus = this.status;
+            this.selectedIcon = this.options.find(elem => elem.value === this.status).icon;
+            this.selectedOption = this.options.find(elem => elem.value === this.status);
         },
         methods: {
+            onStatusChange(value){
+                let option = this.options.find(elem => elem.value === value);
+                this.selectedOption = option;
+                this.selectedStatus = option.value;
+                this.selectedIcon =  option.icon;
+            },
             onChange() {
                 this.$emit('on-change', this.selectedStatus);
                 this.toggleVisibility(false);
             },
             toggleVisibility(value) {
-                this.$emit('update:visible', value)
+                this.$emit('update:visible', value);
             }
         },
     }

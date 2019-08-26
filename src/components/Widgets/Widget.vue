@@ -105,7 +105,7 @@
             },
             changeExtensionStatus(status, widget){
                 widget.WidgetLayout.status = status
-                this.updateWidget(widget)
+                this.$emit('update-item', this.widget)
             }
         }
     }
