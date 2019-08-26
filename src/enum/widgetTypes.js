@@ -3,4 +3,6 @@ export default  {
     CHART_TYPE_ID: 2,
     TABLE_TYPE_ID: 3,
     EXTENSION_CARDS_TYPE_ID: 4,
+    STATISTICS_CARDS_TYPE_ID: 5,
+    STATUS_CARDS_TYPE_ID: 6,
 }

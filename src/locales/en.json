@@ -7,6 +7,7 @@
   "common.newGroup": "New Group",
   "common.selectColumn": "Select Column",
   "common.setGroupTitle": "Set Group Title",
+  "common.selectStatus": "Select Status",
   "dashboards.main": "Main Dashboard",
   "dashboards.queue": "Queue Dashboard",
   "dashboards.new.title": "Create new Dashboard",
@@ -66,7 +67,8 @@
   "extensions.sort.default": "Default",
   "extensions.sort.userName": "User name",
   "extensions.sort.activeTime": "Active time",
-  "extensions.noData": "This account has no extensions..."
+  "extensions.noData": "This account has no extensions...",
+  "statusCard.update": "Update Status Card"
 }
 
 

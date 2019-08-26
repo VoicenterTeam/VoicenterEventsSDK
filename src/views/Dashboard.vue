@@ -56,12 +56,15 @@
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
 
+    import EventsSDK from 'voicenter-events-sdk'
+
     export default {
         components: {
             NewGroupButton,
             EditButton,
             AddButton,
             WidgetMenu,
+            EventsSDK,
             [Switcher.name]: Switcher,
             NormalView,
             TabbedView
@@ -85,7 +88,13 @@
             },
             allWidgets() {
                 return this.$store.state.widgets.allWidgets
-            }
+            },
+            token() {
+                return this.$store.state.users.tokenString
+            },
+            extensions() {
+                return this.$store.state.extensions.extensions
+            },
         },
         methods: {
             addWidgetToGroup(widget, widgetGroup) {
@@ -178,6 +187,19 @@
             switchDashboardLayout(type) {
                 // TODO: update dashboard generalSettings
                 this.layoutType = type
+            },
+            onNewEvent(eventData) {
+                let { name, data} = eventData
+                if (name === 'AllExtensionsStatus') {
+                    this.$store.dispatch('extensions/setExtensions', data.extensions)
+                }
+                if (name === 'ExtensionEvent') {
+                    let extension = data.data
+                    let index = this.extensions.findIndex(e => e.userID === extension.userID)
+                    if (index !== -1) {
+                        this.$store.dispatch('extensions/updateExtension', {index, extension})
+                    }
+                }
             }
         },
         watch: {
@@ -193,6 +215,18 @@
                 }
             }
         },
+        async created() {
+            try {
+                this.sdk = new EventsSDK({
+                    token: this.token
+                })
+                await this.sdk.init()
+                await this.sdk.login()
+                this.sdk.on('*', this.onNewEvent)
+            } catch (e) {
+
+            }
+        }
     }
 </script>
 <style>
