@@ -1,22 +1,20 @@
 <template>
     <div>
-        <tabs :circular-timeout="circularTimeout" :tabs="tabs">
-            <template v-slot="{tab, index}">
+        <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
+            <template v-slot="{tab, activeTab}">
                 <widget-list
-                        :widgets="tab.WidgetList"
-                        :all-widgets="allWidgets"
-                        :editable="editMode"
-                        :widget-group="tab"
-                        :chartIndex="index"
-                        v-on="$listeners">
+                    :widgets="tab.WidgetList"
+                    :all-widgets="allWidgets"
+                    :editable="editMode"
+                    :widget-group="tab"
+                    v-on="$listeners">
                 </widget-list>
             </template>
         </tabs>
     </div>
 </template>
-
 <script>
-    import get from 'lodash/get';
+
     import Tabs from '@/components/Tabs'
     import WidgetList from '@/components/Widgets/WidgetList'
 
@@ -37,11 +35,11 @@
             allWidgets: {
                 type: Array,
                 default: () => ([])
-            }
+            },
+            activeTab: String
         },
         data() {
             return {
-                activeTab: get(this.activeDashboardData.WidgetGroupList, '[0].WidgetGroupID').toString(),
                 timeoutId: null
             };
         },
