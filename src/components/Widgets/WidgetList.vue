@@ -76,7 +76,6 @@
                 this.$emit('onListChange', {'list': val, 'group': this.widgetGroup})
             },
             addWidgetToGroup(val) {
-                val.WidgetID = val + Math.random() * 100
                 this.$emit('addWidgetToGroup', {'widget': val, 'group': this.widgetGroup})
             },
             removeWidget(val) {

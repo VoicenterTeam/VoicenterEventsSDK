@@ -11,22 +11,22 @@
             </slot>
         </div>
         <div class="flex editable-content" v-if="editable">
-            <trash-icon  class="flex align-center w-8 h-8 p-2 text-red trash-icon"
+            <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
                         @click="$emit('remove-item')"></trash-icon>
             <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-blue"
-                         @click="()=>{this.showModal = true}"></edit-icon>
+                       @click="()=>{this.showModal = true}"></edit-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
         </div>
         <div v-else>
             <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-blue"
-                         @click="()=>{this.showModal = true}"></edit-icon>
+                       @click="()=>{this.showModal = true}"></edit-icon>
         </div>
         <extension-update-dialog
                 width="30%"
                 :status="status"
                 :visible.sync="showModal"
-                @on-change="changeStatus" >
+                @on-change="changeStatus">
         </extension-update-dialog>
     </div>
 </template>
@@ -34,11 +34,12 @@
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
     import ExtensionUpdateDialog from './ExtensionUpdateDialog'
     import statusTypes from '@/enum/statusTypes'
+
     export default {
         name: 'status-card',
         props: {
             status: {
-                type:  Number,
+                type: Number,
                 default: 3
             },
             editable: {
@@ -52,31 +53,31 @@
             MoreVerticalIcon,
             ExtensionUpdateDialog
         },
-        data(){
+        data() {
             return {
                 showModal: false,
                 statusMappings: statusTypes,
             }
         },
-        computed:{
-            extensions(){
+        computed: {
+            extensions() {
                 return this.$store.state.extensions.extensions
             },
-            cardValue(){
-                return this.extensions.filter(el =>  el.representativeStatus === this.status).length || '0'
+            cardValue() {
+                return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
             },
             cardIcon() {
                 return this.statusMappings[this.status].icon
             },
             textColor() {
-                let color =  this.statusMappings[this.status].color
+                let color = this.statusMappings[this.status].color
                 return {
                     color: `${color}`
                 }
             }
         },
-        methods:{
-            changeStatus(newStatus){
+        methods: {
+            changeStatus(newStatus) {
                 this.$emit('change-extension-status', newStatus);
             }
         }
@@ -90,12 +91,14 @@
         right: -30px;
         cursor: pointer;
     }
+
     .edit-card-icon {
         position: relative;
         top: -40px;
         right: -20px;
         cursor: pointer;
     }
+
     .rtl .trash-icon,
     .rtl .edit-icon {
         left: -30px;

@@ -13,8 +13,8 @@
             </slot>
         </div>
         <div class="flex editable-content" v-if="editable">
-            <trash-icon  class="flex align-center w-8 h-8 p-2 text-red trash-icon"
-                         @click="$emit('remove-item')"></trash-icon>
+            <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
+                        @click="$emit('remove-item')"></trash-icon>
             <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-blue"></edit-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
@@ -27,6 +27,7 @@
 </template>
 <script>
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
+
     export default {
         name: 'statistics-cards',
         props: {
@@ -59,12 +60,14 @@
         right: -30px;
         cursor: pointer;
     }
+
     .edit-card-icon {
         position: relative;
         top: -50px;
         right: -20px;
         cursor: pointer;
     }
+
     .rtl .trash-icon,
     .rtl .edit-icon {
         left: -30px;
