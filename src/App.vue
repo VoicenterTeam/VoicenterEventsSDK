@@ -6,12 +6,13 @@
 </template>
 <script>
     export default {
-        created() {
-            this.$store.dispatch('dashboards/getDashboards')
-            this.$store.dispatch('widgets/getAllWidgets')
-            this.$store.dispatch('charts/getAllCharts')
-            this.$store.dispatch('settings/setSettings')
-            this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
+        async created() {
+            await this.$store.dispatch('dashboards/getDashboards')
+            await this.$store.dispatch('dashboards/selectDashboard')
+            await this.$store.dispatch('widgets/getAllWidgets')
+            await this.$store.dispatch('charts/getAllCharts')
+            await this.$store.dispatch('settings/setSettings')
+            await this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
         },
         computed: {
             colors() {

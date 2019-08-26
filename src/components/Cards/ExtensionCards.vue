@@ -15,7 +15,7 @@
             <div class="flex py-6 extension-cards">
                 <fade-transition class="flex flex-wrap w-full" group>
                     <div v-for="(extension, index) in sortedExtensions"
-                         :key="extension.userID"
+                         :key="index"
                          class="pr-4">
                         <extension-card :extension="extension">
                         </extension-card>
