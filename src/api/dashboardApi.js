@@ -16,7 +16,12 @@ export const DashboardApi = {
     },
 
     async find(id) {
-        return await $axios.get(`/DashBoards/Get/{$id}`)
+        try {
+            let res =  await $axios.get(`/DashBoards/Get/${id}`)
+            return res.Dashboard
+        } catch (e) {
+            parseCatch(e, true)
+        }
     },
 
     async update(data) {

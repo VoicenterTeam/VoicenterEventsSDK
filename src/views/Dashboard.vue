@@ -50,6 +50,7 @@
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
     import EditButton from '@/components/EditButton'
+    import {widgetGroupModel} from "../models/instances";
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
     import Switcher from '@/components/LayoutRendering/Switcher'
@@ -158,12 +159,7 @@
                 }
             },
             addNewGroup() {
-                let widget = {
-                    "WidgetGroupID": Math.random() * 100,
-                    "WidgetGroupTitle": "",
-                    "WidgetList": []
-                }
-                this.activeDashboardData.WidgetGroupList.splice(0, 0, widget)
+                this.activeDashboardData.WidgetGroupList.splice(0, 0, widgetGroupModel)
             },
             updateWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
