@@ -12,7 +12,8 @@
                     </button>
                     <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
-                        <span class="mx-1 text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
+                        <span
+                            class="mx-1 text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <div class="flex p-3 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
@@ -29,8 +30,9 @@
                           :class="{ 'text-primary': activeDashboard.DashBoardsID === dashboard.DashBoardsID}">
                           {{$t(dashboard.DashBoardsTitle) || dashboard.DashBoardsTitle}}
                     </span>
-                        <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer text-gray-600 hover:text-blue-600 flex items-center"
-                              @click="createNewDashboard()">
+                        <span
+                            class="hover:bg-blue-100 py-3 px-4 cursor-pointer text-gray-600 hover:text-blue-600 flex items-center"
+                            @click="createNewDashboard()">
                         <IconPlus class="w-3 mr-1 mb-1 text-primary"></IconPlus>
                         <span>{{$t('common.newDashboard')}}</span>
                     </span>
@@ -62,7 +64,7 @@
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
-                        <el-input v-model="newDashboard.title"></el-input>
+                        <el-input v-model="newDashboard.DashboardsTitle"></el-input>
                     </el-form-item>
                 </el-form>
                 <template slot="footer">
@@ -71,7 +73,7 @@
                 </template>
             </el-dialog>
             <settings
-                    :visible.sync="showEditSettingsDialog">
+                :visible.sync="showEditSettingsDialog">
             </settings>
         </div>
 
@@ -81,12 +83,7 @@
     import {Dialog} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
-
-    function newDashboardData() {
-        return {
-            title: ''
-        }
-    }
+    import {dashboardModel} from "../../models/instances";
 
     export default {
         components: {
@@ -99,7 +96,7 @@
                 showDashboardsMenu: false,
                 showUsersMenu: false,
                 showCreateDashboardDialog: false,
-                newDashboard: newDashboardData(),
+                newDashboard: dashboardModel,
                 showEditSettingsDialog: false,
             }
         },
@@ -130,7 +127,7 @@
                 this.$store.dispatch('dashboards/createDashboard', {
                     ...this.newDashboard
                 })
-                this.newDashboard = newDashboardData()
+                this.newDashboard = dashboardModel
                 this.showCreateDashboardDialog = false
             },
             onMenuClickOutside() {
@@ -166,11 +163,11 @@
 </script>
 
 <style scoped>
-
     .navbar {
         position: absolute;
         left: 0;
         top: 0;
+        box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
     }
 
     .users-menu {

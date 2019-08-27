@@ -5,7 +5,7 @@
             v-on="$listeners">
         <EditIcon class="w-5 h-5 text-primary"></EditIcon>
     </button>
-    <div v-else>
+    <div v-else class="flex">
         <button class="btn p-2 shadow rounded bg-white hover:bg-green-100 active:shadow-inner mx-1"
                 @click="$emit('save-dashboard')"
                 v-bind="$attrs"

@@ -8,7 +8,7 @@ const types = {
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD'
 };
 const state = {
-    allDashboards: {},
+    allDashboards: [],
     activeDashboard: null
 };
 
@@ -49,28 +49,23 @@ const mutations = {
 };
 
 const actions = {
-    async getDashboards({commit, state}) {
+    async getDashboards({commit}) {
         let dashboards = await DashboardApi.getAll()
         commit(types.SET_ALL_DASHBOARDS, dashboards)
-        if (!state.activeDashboard && dashboards.length) {
-            commit(types.SET_ACTIVE_DASHBOARD, dashboards[0])
-        }
+
     },
     async selectDashboard({commit, state}, dashboard) {
-        // TODO: maybe we will add api call to update the selected dashboard
-        commit(types.SET_ACTIVE_DASHBOARD, dashboard)
-    },
-    async createDashboard({commit}, newDashboard) {
-        const dashboard = {
-            "AccountID": "1",
-            "DashboardsTitle": newDashboard.title,
-            "WidgetGroupList": []
+        dashboard = dashboard || state.allDashboards[0]
+        if (dashboard) {
+            dashboard = await DashboardApi.find(dashboard.DashBoardsID)
+            commit(types.SET_ACTIVE_DASHBOARD, dashboard)
         }
+    },
+    async createDashboard({commit}, dashboard) {
+        await DashboardApi.store(dashboard)
 
-        newDashboard = await DashboardApi.store(dashboard)
-
-        commit(types.ADD_DASHBOARD, newDashboard)
-        commit(types.SET_ACTIVE_DASHBOARD, newDashboard)
+        commit(types.ADD_DASHBOARD, dashboard)
+        commit(types.SET_ACTIVE_DASHBOARD, dashboard)
     },
     async updateDashboard({commit}, dashboard) {
         await DashboardApi.update(dashboard)

@@ -33,7 +33,6 @@
     import WidgetEmptyCard from "./WidgetEmptyCard"
     import DraggableWidgets from './DraggableWidgets'
 
-
     export default {
         name: "widget-list",
         components: {

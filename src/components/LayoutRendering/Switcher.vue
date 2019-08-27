@@ -1,13 +1,13 @@
 <template>
-    <div class="flex items-center layout-types__switcher -mx-1">
+    <div class="flex items-center layout-types__switcher"
+         :class="this.$rtl ? 'm-margin__left-15' : 'm-margin__right-15'">
         <div class="flex mr-4">
-            <p class="text-sm font-normal">View type</p>
+            <p class="text-sm font-normal">{{$t('switcher.title')}}</p>
         </div>
         <div>
             <button class="btn shadow rounded bg-white mx-1 text-gray-300"
                     @click="switching('tabbed')"
-                    :disabled="editMode"
-                    :class="{'text-primary': activeType === 'tabbed', 'cursor-not-allowed': editMode}">
+                    :class="{'text-primary': activeType === 'tabbed'}">
                 <IconTabbedView></IconTabbedView>
             </button>
             <button class="btn shadow rounded bg-white mx-1 text-gray-300"
@@ -24,10 +24,6 @@
         inheritAttrs: false,
         components: {},
         props: {
-            editMode: {
-                type: Boolean,
-                default: false
-            },
             activeType: {
                 type: String,
                 default: 'normal'
@@ -49,6 +45,14 @@
     .rtl .layout-types__switcher div:first-child {
         margin-right: 0;
         @apply ml-4;
+    }
+
+    .m-margin__right-15 {
+        margin-right: 0.875rem;
+    }
+
+    .m-margin__left-15 {
+        margin-left: 0.875rem;
     }
 
 </style>
