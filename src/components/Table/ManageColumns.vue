@@ -81,21 +81,22 @@
         },
         methods: {
             addColumns() {
-                this.activeColumns = this.activeColumns.filter(c => this.valueToAdd.includes(c.prop));
-                this.unselectedColumns = this.availableColumns.filter(c => !this.valueToAdd.includes(c.prop));
+                let itemToRemove = this.unselectedColumns.filter(c => this.valueToAdd.includes(c.prop));
+                let remainingItems = this.unselectedColumns.filter(c => !this.valueToAdd.includes(c.prop));
+                this.activeColumns = this.activeColumns.concat([...itemToRemove]);
+                this.unselectedColumns = remainingItems;
+
+                this.valueToRemove = this.activeColumns.map(c => c.prop);
+                this.valueToAdd = [];
 
                 let newColumns = this.activeColumns.map(c => c.prop);
                 this.$emit('on-change-visibility', newColumns)
             },
             removeColumns() {
-                this.unselectedColumns = this.availableColumns.filter(c => this.valueToRemove.includes(c.prop));
-                this.activeColumns =  xor(this.availableColumns, this.unselectedColumns);
-
-                // if (this.activeColumns.length !== 0) {
-                //
-                // } else{
-                //     this.unselectedColumns = this.availableColumns
-                // }
+                let itemToRemove = this.activeColumns.filter(c => this.valueToRemove.includes(c.prop));
+                let remainingItems = this.activeColumns.filter(c => !this.valueToRemove.includes(c.prop));
+                this.unselectedColumns = this.unselectedColumns.concat([...itemToRemove]);
+                this.activeColumns = remainingItems;
 
                 this.valueToRemove = this.activeColumns.map(c => c.prop);
 
