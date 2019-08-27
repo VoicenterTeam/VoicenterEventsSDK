@@ -14,7 +14,10 @@
             <span class="text-xl font-medium leading-tight mx-2">{{extension.userName}}</span>
         </div>
         <div class="flex flex-col">
-            <span class="text-center text-2xl ml-2 font-mono">{{timer.displayTime}}</span>
+            <div class="flex items-center justify-center">
+                <span class="text-center text-2xl ml-2 font-mono">{{timer.displayTime}}</span>
+                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"></component>
+            </div>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call"/>
         </div>
     </div>
@@ -48,6 +51,23 @@
             }
         },
         computed: {
+            threshold() {
+                let show = true;
+                let icon = 'IconYellowBulb';
+                if (this.extension.calls.length > 0 || !this.$store.state.settings.threshold.generalThreshold) {
+                    show = false;
+                }
+                let seconds = this.timer.state.seconds;
+                let minThreshold = this.$store.state.settings.threshold.generalThresholdLowValue
+                let maxThreshold = this.$store.state.settings.threshold.generalThresholdHeightValue
+
+                if(minThreshold > seconds){
+                    show = false
+                } else if(seconds > maxThreshold && minThreshold < maxThreshold) {
+                    icon = 'IconRedBulb'
+                }
+                return {show, icon}
+            },
             cardStyles() {
                 let data = this.statusMappings[this.extension.representativeStatus] || {color: 'white'}
                 let color = data.color

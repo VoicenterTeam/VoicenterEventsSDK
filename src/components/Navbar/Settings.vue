@@ -29,6 +29,44 @@
                     <span class="p-2">{{$t('settings.color.secondary')}}</span>
                 </div>
             </el-collapse-item>
+            <el-collapse-item :title="$t('settings.threshold')" name="threshold">
+                <div class="flex flex-col">
+                    <div class="md:flex md:flex-col md:justify-center mt-4">
+                        <el-checkbox v-model="settings.threshold.generalThreshold">
+                            {{$t('settings.set.threshold')}}
+                        </el-checkbox>
+                        <div class="my-2">
+                            {{$t('settings.set.threshold.low')}}
+                            <el-input-number class="mx-2 w-36" size="small" :min="0"
+                                             :disabled="!settings.threshold.generalThreshold"
+                                             v-model.number="settings.threshold.generalThresholdLowValue"></el-input-number>
+                        </div>
+                        <div class="my-2">
+                            {{$t('settings.set.threshold.height')}}
+                            <el-input-number class="mx-2 w-36" size="small" :min="0"
+                                             :disabled="!settings.threshold.generalThreshold"
+                                             v-model.number="settings.threshold.generalThresholdHeightValue"></el-input-number>
+                        </div>
+                    </div>
+                    <div class="md:flex md:flex-col md:justify-center mt-4">
+                        <el-checkbox v-model="settings.threshold.callThreshold">
+                            {{$t('settings.set.threshold.call')}}
+                        </el-checkbox>
+                        <div class="my-2">
+                            {{$t('settings.set.threshold.call.low')}}
+                            <el-input-number class="mx-2 w-36" size="small" :min="0"
+                                             :disabled="!settings.threshold.callThreshold"
+                                             v-model.number="settings.threshold.callThresholdLowValue"></el-input-number>
+                        </div>
+                        <div class="my-2">
+                            {{$t('settings.set.threshold.call.height')}}
+                            <el-input-number class="mx-2 w-36" size="small" :min="0"
+                                             :disabled="!settings.threshold.callThreshold"
+                                             v-model.number="settings.threshold.callThresholdHeightValue"></el-input-number>
+                        </div>
+                    </div>
+                </div>
+            </el-collapse-item>
         </el-collapse>
         <template slot="footer">
             <el-button plain @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -53,7 +91,7 @@
         data() {
             return {
                 settings: cloneDeep(this.$store.state.settings),
-                activeCollapses: ['report', 'color'],
+                activeCollapses: ['report', 'color', 'threshold'],
             }
         },
         methods: {

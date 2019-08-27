@@ -6,17 +6,20 @@ const types = {
 };
 const state = {
     report: {},
-    colors: {}
+    colors: {},
+    threshold: {}
 };
 
 const mutations = {
     [types.SET_SETTING]: (stat, settings) => {
         state.report = {...settings.report};
         state.colors = {...settings.colors};
+        state.threshold = {...settings.threshold};
     },
     [types.UPDATE_SETTING]: (state, settings) => {
         state.report = {...settings.report};
         state.colors = {...settings.colors};
+        state.threshold = {...settings.threshold};
     },
 };
 

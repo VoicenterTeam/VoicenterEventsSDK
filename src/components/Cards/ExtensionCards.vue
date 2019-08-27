@@ -88,6 +88,13 @@
                 // return this.extensions.filter(e => e.representativeStatus !== authStatuses.LOGGED_OUT)
             },
             sortedExtensions() {
+
+                return [
+                    {"calls":[{"callStarted":1566919119 + 3 * 3600,"calldurationinterval":1566922358,"callAnswered":1566919119,"answered":1,"callername":"40748524075","callerphone":"40748524075","callstatus":"Talking","customdata":{},"direction":"Outgoing","ivrid":"2019082716123701364452702b3fefd6","recording":{"Filename":"","Options":"","ApproximateURL":""},"did":"","channel":"SIP/WPGrStO1-00003f45","channel2":"SIP/ProviderProxy05-00003f46"}],"userID":106576,"userName":"Cristi Jora","number":71793,"extenUser":"WPGrStO1","summery":{"isOpenser":false,"representative":"Cristi Jora","shiftentertime":null,"ttlabnormal":"N/A","ttlbreaks":"N/A","ttlcalls":0,"ttlincoming":0,"ttloutgoing":0,"ttltimeofbreaks":"N/A"},"representative":106576,"representativeStatus":1,"lastCallEventEpoch":1566922367,"lastAnsweredCallEventEpoch":1566922367,"representativeUpdated":1566921691000,"peerStatus":"OK"},
+                {"calls":[],"userID":88128,"userName":"Dorel Mizrahi 59","number":55791,"extenUser":"xds5nsQF","summery":{"isOpenser":false,"representative":"dorel mizrahi","shiftentertime":null,"ttlabnormal":"N/A","ttlbreaks":"N/A","ttlcalls":0,"ttlincoming":0,"ttloutgoing":0,"ttltimeofbreaks":"N/A"},"representative":88128,"representativeStatus":5,"lastCallEventEpoch":1566917014,"lastAnsweredCallEventEpoch":1566917014,"representativeUpdated":1566896855000,"peerStatus":"OK"},
+                {"calls":[],"userID":88128,"userName":"Dorel Cell Mizrahi - 0534308463","number":56482,"extenUser":"gJn2n646","summery":{"isOpenser":false,"representative":"Dorel Cell Mizrahi - 0534308463","shiftentertime":null,"ttlabnormal":"N/A","ttlbreaks":"N/A","ttlcalls":0,"ttlincoming":0,"ttloutgoing":0,"ttltimeofbreaks":"N/A"},"representative":0,"representativeStatus":2,"lastCallEventEpoch":1566821989,"lastAnsweredCallEventEpoch":1566821989,"representativeUpdated":1566896855000,"peerStatus":"OK"},
+                {"calls":[],"userID":87112,"userName":"Maor Laptop","number":54856,"extenUser":"a5Bcv7bo","summery":{"isOpenser":false,"representative":"Maor Laptop","shiftentertime":null,"ttlabnormal":"N/A","ttlbreaks":"N/A","ttlcalls":0,"ttlincoming":0,"ttloutgoing":0,"ttltimeofbreaks":"N/A"},"representative":87112,"representativeStatus":1,"lastCallEventEpoch":1566921163,"lastAnsweredCallEventEpoch":1566824550,"representativeUpdated":1566908821000,"peerStatus":"OK"}]
+
                 if (!this.sortBy) {
                     return this.onlineExtensions.sort((a, b) => {
 
