@@ -295,6 +295,13 @@
             }
         }
     }
+    .el-dropdown-menu--mini {
+        padding: 0;
+        .popper__arrow{
+            display: none !important;
+        }
+    }
+
 
 </style>
 

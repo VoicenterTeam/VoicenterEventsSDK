@@ -58,6 +58,7 @@
   "datatable.manage.columns.add": "Add all",
   "datatable.manage.columns.remove": "Remove all",
   "datatable.manage.columns.items": "{item} items selected",
+  "datatable.manage.columns.search": "Search column name",
   "status.login": "Logged in",
   "status.logout": "Logged out",
   "status.lunch":  "At lunch",
