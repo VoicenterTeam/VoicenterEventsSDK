@@ -4,8 +4,9 @@
         <div class="flex">
             <div class="management-section">
                 <div class="flex justify-between items-center column-management-section">
-                    <p class="items-selected"> {{$t('datatable.manage.columns.items', {item:
-                        numberOfSelectedColumns})}} </p>
+                    <p class="items-selected">
+                        {{$t('datatable.manage.columns.items',{item: numberOfSelectedColumns})}}
+                    </p>
                     <el-button type="danger" size="small" @click="removeColumns">
                         {{$t('datatable.manage.columns.remove')}}
                     </el-button>
@@ -21,7 +22,8 @@
             <div class="management-section">
                 <div class="flex justify-between items-center column-management-section">
                     <div class="w-4/6">
-                        <el-input :placeholder="$t('datatable.manage.columns.search')" v-model="filter"
+                        <el-input :placeholder="$t('datatable.manage.columns.search')"
+                                  v-model="filter"
                                   suffix-icon="el-icon-search" class="search-columns"></el-input>
                     </div>
 
@@ -31,7 +33,7 @@
                 </div>
                 <div>
                     <el-checkbox-group class="flex flex-col column-checkbox" v-model="valueToAdd">
-                        <el-checkbox class="py-2" v-for="column in unselectedColumns" :label="column.prop"
+                        <el-checkbox class="py-2" v-for="column in showAvailableColumns" :label="column.prop"
                                      :key="column.label">{{column.label}}
                         </el-checkbox>
                     </el-checkbox-group>
@@ -72,11 +74,15 @@
                 valueToAdd: [],
                 activeColumns: [],
                 unselectedColumns: [],
+                filteredColumns: []
             }
         },
         computed: {
             numberOfSelectedColumns() {
                 return this.valueToRemove.length
+            },
+            showAvailableColumns() {
+                return this.filter ? this.filteredColumns : this.unselectedColumns
             }
         },
         methods: {
@@ -106,13 +112,23 @@
             initData() {
                 this.activeColumns = this.availableColumns.filter(c => this.visibleColumns.includes(c.prop));
                 this.unselectedColumns = xor(this.availableColumns, this.activeColumns)
-
                 this.allColumnsValue = this.activeColumns.map(c => c.prop);
                 this.valueToRemove = this.allColumnsValue;
             }
         },
-        mounted() {
-            this.initData();
+        watch: {
+            filter(value) {
+                let filteredData = [];
+                this.unselectedColumns.forEach(el => {
+                    if (el.label.toLowerCase().includes(value.toLowerCase())) {
+                        filteredData.push(el);
+                    }
+                });
+                this.filteredColumns = filteredData
+            },
+            visibleColumns() {
+                this.initData();
+            }
         }
     }
 </script>
@@ -190,5 +206,14 @@
 
     .column-checkbox .el-checkbox.is-checked {
         background-color: #f0f2f4;
+    }
+    .rtl {
+        .column-checkbox .el-checkbox:last-child {
+            margin: 0;
+        }
+        .management-section + .management-section {
+            border-left: none;
+            border-right: solid 1px var(--silver-color);
+        }
     }
 </style>
