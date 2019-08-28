@@ -671,7 +671,7 @@ export const tables = [
 export const dashboards = [
     {
         "AccountID": 1,
-        "DashBoardsID": 95,
+        "DashBoardsID": 97,
         "DashBoardsTitle": "dashboards.main",
         "DashboardLayout": {
             "additionalProp1": {}

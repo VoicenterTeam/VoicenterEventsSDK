@@ -11,7 +11,7 @@
 </template>
 <script>
     import Timer from './Timer'
-
+    const ISRAEL_TIMEZONE_OFFSET = - 180 * 60 * 1000;
     export default {
         props: {
             call: {
@@ -20,8 +20,7 @@
             }
         },
         data() {
-            let israelTimezoneOffset = -180 * 60 * 1000
-            let initialTime = new Date().getTime() - ((this.call.callStarted * 1000) + israelTimezoneOffset)
+            let initialTime = new Date().getTime() - ((this.call.callStarted * 1000) + ISRAEL_TIMEZONE_OFFSET)
             let initialTimeInSeconds = Math.floor(initialTime / 1000)
             return {
                 timer: new Timer({
