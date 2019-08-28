@@ -5,7 +5,7 @@
             <div class="management-section">
                 <div class="flex justify-between items-center column-management-section">
                     <p class="items-selected">
-                        {{$t('datatable.manage.columns.items',{item: numberOfSelectedColumns})}}
+                        {{$tc('datatable.manage.columns.items', numberOfSelectedColumns, { item: numberOfSelectedColumns })}}
                     </p>
                     <el-button type="danger" size="small" @click="removeColumns">
                         {{$t('datatable.manage.columns.remove')}}
