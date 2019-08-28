@@ -40,14 +40,14 @@
                             <el-input-number class="mx-2 w-36" size="small" :min="0"
                                              :disabled="!settings.threshold.generalThreshold"
                                              v-model.number="settings.threshold.generalThresholdLowValue"></el-input-number>
-                            <span class="p-2">{{$t('settings.color.secondary')}}</span>
+                            <span class="p-2">{{$t('settings.switch.interval')}}</span>
                         </div>
                         <div class="my-2">
                             {{$t('settings.set.threshold.height')}}
                             <el-input-number class="mx-2 w-36" size="small" :min="0"
                                              :disabled="!settings.threshold.generalThreshold"
                                              v-model.number="settings.threshold.generalThresholdHeightValue"></el-input-number>
-                            <span class="p-2">{{$t('settings.color.secondary')}}</span>
+                            <span class="p-2">{{$t('settings.switch.interval')}}</span>
                         </div>
                     </div>
                     <div class="md:flex md:flex-col md:justify-center mt-4">
