@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex items-center header">{{$t('datatable.manage.columns.header')}}</div>
+        <div class="flex items-center column-management-header">{{$t('datatable.manage.columns.header')}}</div>
         <div class="flex">
             <div class="management-section">
                 <div class="flex justify-between items-center column-management-section">
@@ -134,11 +134,11 @@
 </script>
 
 <style lang="scss">
-    .header {
+    .column-management-header {
         height: 40px;
         padding: 10px 20px;
         box-shadow: 0 1px 0 0 var(--silver);
-        background-color: #f0f2f4;
+        background-color: var(--bg-grey-modal);
         font-size: 14px;
         font-weight: normal;
         color: var(--greyish-brown);
@@ -205,7 +205,7 @@
     }
 
     .column-checkbox .el-checkbox.is-checked {
-        background-color: #f0f2f4;
+        background-color: var(--bg-grey-modal);
     }
     .rtl {
         .column-checkbox .el-checkbox:last-child {
