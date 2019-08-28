@@ -133,7 +133,7 @@
     }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
     .column-management-header {
         height: 40px;
         padding: 10px 20px;
@@ -170,7 +170,7 @@
         border-left: solid 1px var(--silver-color);
     }
 
-    .search-columns input {
+    .search-columns /deep/ input {
         height: 32px;
         border-radius: 4px;
         border: solid 1px var(--silver-color);
@@ -179,11 +179,11 @@
         color: #4b4d56;
     }
 
-    .search-columns .el-input__suffix .el-input__icon {
+    .search-columns /deep/ .el-input__suffix .el-input__icon {
         line-height: 32px;
     }
 
-    .column-checkbox .el-checkbox {
+    .column-checkbox /deep/ .el-checkbox {
         margin-right: 0;
         padding: 10px 20px;
 
@@ -204,13 +204,15 @@
         }
     }
 
-    .column-checkbox .el-checkbox.is-checked {
+    .column-checkbox /deep/ .el-checkbox.is-checked {
         background-color: var(--bg-grey-modal);
     }
+
     .rtl {
         .column-checkbox .el-checkbox:last-child {
             margin: 0;
         }
+
         .management-section + .management-section {
             border-left: none;
             border-right: solid 1px var(--silver-color);
