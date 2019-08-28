@@ -95,7 +95,7 @@
         .el-tabs__nav-scroll {
             justify-content: center;
             display: flex;
-            background: #f0f2f4;
+            background:var(--bg-grey-modal);
 
             .el-tabs__nav {
                 display: flex;

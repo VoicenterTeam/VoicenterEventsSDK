@@ -669,23 +669,7 @@ export const tables = [
 ]
 
 export const dashboards = [
-    {
-        "AccountID": 1,
-        "DashBoardsID": 97,
-        "DashBoardsTitle": "dashboards.main",
-        "DashboardLayout": {
-            "additionalProp1": {}
-        },
-        "WidgetGroupList": [],
-        "DashBoardsPermission": [
-            {
-                "EntityID": 8,
-                "EntityType": 1
-            }
-        ],
-        "GroupTransitionTimer": 1,
-        "DashBoardsUserPermission": "foo"
-    },
+
     {
         "AccountID": 1,
         "DashBoardsID": 107,

@@ -4,7 +4,19 @@
             <div class="flex w-64">
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
             </div>
-            <div class="flex ml-auto mr-12 table-row__count">
+            <div class="flex items-center ml-auto mr-12 table-row__count">
+                <el-dropdown size="mini" class="mx-4" trigger="click">
+                    <el-button type="primary">
+                        {{$t('datatable.manage.columns')}}
+                        <i class="el-icon-arrow-down el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown" >
+                        <manage-columns :available-columns="availableColumns"
+                                        :visible-columns="visibleColumns"
+                                        @on-change-visibility="updateColumnsVisibility">
+                        </manage-columns>
+                    </el-dropdown-menu>
+                </el-dropdown>
                 <p class="text-sm">{{rowsData.length}} / {{data.tableData.length}} row(s)</p>
             </div>
         </div>
@@ -65,6 +77,8 @@
     import cloneDeep from 'lodash/cloneDeep'
     import {Table, TableColumn} from 'element-ui';
     import HeaderActions from "./Header/HeaderActions";
+    import { Dropdown, DropdownMenu} from 'element-ui'
+    import ManageColumns from "./ManageColumns";
 
     export default {
         name: "data-table",
@@ -81,8 +95,11 @@
             }
         },
         components: {
+            ManageColumns,
             HeaderActions,
             [Table.name]: Table,
+            [Dropdown.name]: Dropdown,
+            [DropdownMenu.name]: DropdownMenu,
             [TableColumn.name]: TableColumn,
         },
         props: {
@@ -278,6 +295,13 @@
             }
         }
     }
+    .el-dropdown-menu--mini {
+        padding: 0;
+        .popper__arrow{
+            display: none !important;
+        }
+    }
+
 
 </style>
 
