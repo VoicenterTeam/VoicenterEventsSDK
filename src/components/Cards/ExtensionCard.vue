@@ -28,6 +28,7 @@
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
 
+    const ISRAEL_TIMEZONE_OFFSET = - 180 * 60 * 1000;
     export default {
         components: {
             CallInfo,
@@ -40,8 +41,7 @@
             }
         },
         data() {
-            let israelTimezoneOffset = -180 * 60 * 1000
-            let initialTime = new Date().getTime() - (this.extension.representativeUpdated + israelTimezoneOffset)
+            let initialTime = new Date().getTime() - (this.extension.representativeUpdated + ISRAEL_TIMEZONE_OFFSET)
             let initialTimeInSeconds = Math.floor(initialTime / 1000)
             return {
                 timer: new Timer({
@@ -54,7 +54,9 @@
             threshold() {
                 let show = true;
                 let icon = 'IconYellowBulb';
-                if (this.extension.calls.length > 0 || !this.$store.state.settings.threshold.generalThreshold) {
+                if ( (Array.isArray(this.extension.calls) &&
+                    this.extension.calls.length > 0 ) ||
+                    !this.$store.state.settings.threshold.generalThreshold) {
                     show = false;
                 }
                 let seconds = this.timer.state.seconds;
