@@ -5,12 +5,12 @@
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
             </div>
             <div class="flex items-center ml-auto mr-12 table-row__count">
-                <el-dropdown size="mini" class="mx-4">
+                <el-dropdown size="mini" class="mx-4" trigger="click">
                     <el-button type="primary">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
-                    <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-menu slot="dropdown" >
                         <manage-columns :available-columns="availableColumns"
                                         :visible-columns="visibleColumns"
                                         @on-change-visibility="updateColumnsVisibility">
