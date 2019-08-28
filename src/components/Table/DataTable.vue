@@ -10,7 +10,7 @@
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
-                    <el-dropdown-menu slot="dropdown" >
+                    <el-dropdown-menu slot="dropdown">
                         <manage-columns :available-columns="availableColumns"
                                         :visible-columns="visibleColumns"
                                         @on-change-visibility="updateColumnsVisibility">
@@ -32,27 +32,27 @@
                       v-on="listeners">
                 <slot name="">
                     <el-table-column
-                        v-for="(column, index) in renderedColumns"
-                        :key="column.prop"
-                        v-bind="column"
-                        :column-key="column.prop"
-                        :min-width="column.minWidth || '150px'"
-                        :fixed="column.fixed || false"
-                        :align="column.align"
-                        :type="column.type">
+                            v-for="(column, index) in renderedColumns"
+                            :key="column.prop"
+                            v-bind="column"
+                            :column-key="column.prop"
+                            :min-width="column.minWidth || '150px'"
+                            :fixed="column.fixed || false"
+                            :align="column.align"
+                            :type="column.type">
                         <template slot="header">
                         <span class="font-medium uppercase" @mouseover="hoverOverHeader(column)"
                               @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
                             <header-actions
-                                :availableColumns="availableColumns"
-                                :visibleColumns="visibleColumns"
-                                :currentColumn="column"
-                                @on-change-visibility="updateColumnsVisibility"
-                                @on-change-columns-size="updateColumnsSize"
-                                @on-pin-column="(value) => pinColumn(value, index)"
-                                @on-reset-props="resetColumnsProps">
+                                    :availableColumns="availableColumns"
+                                    :visibleColumns="visibleColumns"
+                                    :currentColumn="column"
+                                    @on-change-visibility="updateColumnsVisibility"
+                                    @on-change-columns-size="updateColumnsSize"
+                                    @on-pin-column="(value) => pinColumn(value, index)"
+                                    @on-reset-props="resetColumnsProps">
                             </header-actions>
                         </template>
                         <template slot-scope="{row, $index}">
@@ -66,6 +66,25 @@
                 </slot>
             </el-table>
         </div>
+        <div class="flex items-center">
+            <download-data class="mx-2"
+                    :data="data.tableData"
+                    :fields="jsonFields">
+                <div class="flex items-center">
+                    <p class="text-md">{{$t('general.export.excel')}}</p>
+                    <DownloadIcon class="text-blue w-5 mx-1 mb-1"></DownloadIcon>
+                </div>
+            </download-data>
+            <download-data class="mx-2"
+                    :data="data.tableData"
+                    :fields="jsonFields"
+                    type="csv">
+                <div class="flex items-center">
+                    <p class="text-md">{{$t('general.export.csv')}}</p>
+                    <DownloadIcon class="text-blue w-5 mx-1 mb-1"></DownloadIcon>
+                </div>
+            </download-data>
+        </div>
     </div>
 </template>
 
@@ -77,8 +96,10 @@
     import cloneDeep from 'lodash/cloneDeep'
     import {Table, TableColumn} from 'element-ui';
     import HeaderActions from "./Header/HeaderActions";
-    import { Dropdown, DropdownMenu} from 'element-ui'
+    import {Dropdown, DropdownMenu} from 'element-ui'
     import ManageColumns from "./ManageColumns";
+    import JsonExcel from 'vue-json-excel'
+    import DownloadIcon from "vue-feather-icons/icons/DownloadIcon";
 
     export default {
         name: "data-table",
@@ -95,8 +116,10 @@
             }
         },
         components: {
+            DownloadIcon,
             ManageColumns,
             HeaderActions,
+            DownloadData: JsonExcel,
             [Table.name]: Table,
             [Dropdown.name]: Dropdown,
             [DropdownMenu.name]: DropdownMenu,
@@ -137,6 +160,12 @@
                         return false;
                     })
                 })
+            },
+            jsonFields() {
+                return this.availableColumns.reduce((obj, item) => {
+                    obj[item.label] = item.prop
+                    return obj
+                }, {});
             }
         },
         methods: {
@@ -295,9 +324,11 @@
             }
         }
     }
+
     .el-dropdown-menu--mini {
         padding: 0;
-        .popper__arrow{
+
+        .popper__arrow {
             display: none !important;
         }
     }
@@ -308,6 +339,7 @@
 <style>
     .data-table /deep/ .sortable-ghost {
         opacity: 0.3;
-        @apply bg-gray-300 rounded text-primary;
+        @apply bg-gray-300
+        rounded text-primary;
     }
 </style>
