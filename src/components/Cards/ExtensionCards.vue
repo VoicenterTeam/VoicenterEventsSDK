@@ -83,8 +83,11 @@
                 return this.$store.state.extensions.extensions
             },
             onlineExtensions() {
-                let logoutStatus = 2
-                return this.extensions.filter(e => e.representativeStatus !== logoutStatus)
+                if (!this.$store.state.settings.showLoggedOutUsers) {
+                    let logoutStatus = 2
+                    return this.extensions.filter(e => e.representativeStatus !== logoutStatus)
+                }
+                return this.extensions
             },
             sortedExtensions() {
                 if (!this.sortBy) {

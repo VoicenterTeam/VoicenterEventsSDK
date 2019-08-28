@@ -7,7 +7,8 @@ const types = {
 const state = {
     report: {},
     colors: {},
-    threshold: {}
+    threshold: {},
+    showLoggedOutUsers: true
 };
 
 const mutations = {
@@ -15,11 +16,13 @@ const mutations = {
         state.report = {...settings.report};
         state.colors = {...settings.colors};
         state.threshold = {...settings.threshold};
+        state.showLoggedOutUsers = settings.showLoggedOutUsers;
     },
     [types.UPDATE_SETTING]: (state, settings) => {
         state.report = {...settings.report};
         state.colors = {...settings.colors};
         state.threshold = {...settings.threshold};
+        state.showLoggedOutUsers = settings.showLoggedOutUsers;
     },
 };
 

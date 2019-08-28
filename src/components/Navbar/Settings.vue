@@ -29,8 +29,13 @@
                     <span class="p-2">{{$t('settings.color.secondary')}}</span>
                 </div>
             </el-collapse-item>
-            <el-collapse-item :title="$t('settings.threshold')" name="threshold">
+            <el-collapse-item :title="$t('settings.extension')" name="threshold">
                 <div class="flex flex-col">
+                    <div class="md:flex md:flex-col md:justify-center my-4">
+                        <el-checkbox v-model="settings.showLoggedOutUsers">
+                            {{$t('settings.extension.logout')}}
+                        </el-checkbox>
+                    </div>
                     <div class="md:flex md:flex-col md:justify-center mt-4">
                         <el-checkbox v-model="settings.threshold.generalThreshold">
                             {{$t('settings.set.threshold')}}
