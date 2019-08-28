@@ -8,6 +8,8 @@
   "common.selectColumn": "Select Column",
   "common.setGroupTitle": "Set Group Title",
   "common.selectStatus": "Select Status",
+  "general.export.csv": "CSV",
+  "general.export.excel": "Excel",
   "dashboards.main": "Main Dashboard",
   "dashboards.queue": "Queue Dashboard",
   "dashboards.new.title": "Create new Dashboard",
