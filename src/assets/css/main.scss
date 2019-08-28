@@ -19,5 +19,12 @@
 @import "element-overrides/tabs";
 
 body {
-  @apply bg-gray-200 px-24 font-montserrat;
+  @apply bg-gray-200 px-6 font-montserrat;
+}
+
+@media (min-width: 640px) {
+  body {
+    @apply px-24 ;
+  }
+
 }

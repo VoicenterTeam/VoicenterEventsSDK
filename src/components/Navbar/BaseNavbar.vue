@@ -1,24 +1,24 @@
 <template>
-    <nav class="px-24 navbar w-full bg-white shadow py-3 flex justify-between z-10">
-        <img src="/img/navbar/logo.png" alt="Logo" class="w-32">
+    <nav class="navbar w-full bg-white shadow py-3 flex items-center justify-between z-10">
+        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mx-10 md:flex">
         <div>
             <div class="relative">
-                <div class="flex">
-                    <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
-                    <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
-                            @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                        <span class="mx-1 text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.DashBoardsTitle) || activeDashboard.DashBoardsTitle}}</span>
-                        <IconArrowDown></IconArrowDown>
-                    </button>
-                    <button class="flex items-center p-3 rounded-lg cursor-pointer outline-none"
-                            @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
-                        <span
-                            class="mx-1 text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
-                        <IconArrowDown></IconArrowDown>
-                    </button>
-                    <div class="flex p-3 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
+                <div class="flex items-center py-3 mx-6">
+                    <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
                         <IconSettings class="text-primary"></IconSettings>
                     </div>
+                    <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
+                    <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
+                            @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
+                        <span class="mx-1 text-sm md:text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.DashBoardsTitle) || activeDashboard.DashBoardsTitle}}</span>
+                        <IconArrowDown></IconArrowDown>
+                    </button>
+                    <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
+                            @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
+                        <span
+                            class="mx-1 text-sm md:text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
+                        <IconArrowDown></IconArrowDown>
+                    </button>
                 </div>
                 <fade-transition :duration="250">
                     <div v-if="showDashboardsMenu"
