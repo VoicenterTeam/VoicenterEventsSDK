@@ -85,7 +85,6 @@
             onlineExtensions() {
                 let logoutStatus = 2
                 return this.extensions.filter(e => e.representativeStatus !== logoutStatus)
-                // return this.extensions.filter(e => e.representativeStatus !== authStatuses.LOGGED_OUT)
             },
             sortedExtensions() {
                 if (!this.sortBy) {
