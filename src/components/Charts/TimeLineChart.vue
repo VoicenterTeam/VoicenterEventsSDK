@@ -1,8 +1,7 @@
 <template>
     <div>
         <div class="flex items-center my-4">
-            <div class="flex flex-col md:flex-row md:items-center"
-                 :class="$rtl.isRTL ? 'ml-12' : 'mr-12'">
+            <div class="flex flex-col md:flex-row md:items-center">
                 <p class="text-2xl font-semibold"
                    :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
                     {{data.Title}}

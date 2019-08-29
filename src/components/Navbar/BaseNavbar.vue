@@ -3,7 +3,7 @@
         <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mx-10 md:flex">
         <div>
             <div class="relative">
-                <div class="flex items-center py-3 mx-6">
+                <div class="flex items-center py-3 mx-1 sm:mx-6">
                     <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
                         <IconSettings class="text-primary"></IconSettings>
                     </div>
@@ -164,7 +164,7 @@
 
 <style scoped>
     .navbar {
-        min-width: 430px;
+        min-width: 320px;
         position: absolute;
         left: 0;
         top: 0;
