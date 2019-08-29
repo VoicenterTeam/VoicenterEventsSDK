@@ -1,11 +1,14 @@
 <template>
     <div>
-        <div class="flex items-center my-4 w-full">
-            <div class="flex">
-                <p class="text-2xl font-semibold">{{data.Title}}</p>
-            </div>
-            <div class="flex w-64" :class="{'mx-5': data.Title}">
-                <range-filter
+        <div class="flex items-center my-4">
+            <div class="flex flex-col md:flex-row md:items-center"
+                 :class="$rtl.isRTL ? 'ml-12' : 'mr-12'">
+                <p class="text-2xl font-semibold"
+                   :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
+                    {{data.Title}}
+                </p>
+
+                <range-filter class="mt-2 md:mt-0"
                     :date="widgetLayout.date.split(' - ')"
                     @on-change="onChangeDate">
                 </range-filter>

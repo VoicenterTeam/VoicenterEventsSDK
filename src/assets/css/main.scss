@@ -21,6 +21,7 @@
 
 body {
   @apply bg-gray-200 px-6 font-montserrat;
+  min-width: 430px;
 }
 
 @media (min-width: 768px) {

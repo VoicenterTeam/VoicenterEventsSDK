@@ -164,6 +164,7 @@
 
 <style scoped>
     .navbar {
+        min-width: 430px;
         position: absolute;
         left: 0;
         top: 0;
