@@ -17,12 +17,13 @@
 @import "element-overrides/date-picker";
 @import "element-overrides/select";
 @import "element-overrides/tabs";
+@import "element-overrides/table";
 
 body {
   @apply bg-gray-200 px-6 font-montserrat;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   body {
     @apply px-24 ;
   }
