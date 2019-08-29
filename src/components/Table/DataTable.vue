@@ -1,11 +1,11 @@
 <template>
     <div class="data-table__container">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between my-4 w-full">
-            <div class="flex w-56 sm:w-64">
+            <div class="flex w-48 sm:w-64">
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
             </div>
             <div class="flex items-center table-row__count mt-4 sm:mt-0"
-                 :class="$rtl.isRTL ? 'ml-12' : 'mr-12'">
+                 :class="margins">
                 <el-dropdown size="mini" trigger="click"
                              :class="$rtl.isRTL ? 'ml-4' : 'mr-4'">
                     <el-button type="primary">
@@ -70,17 +70,17 @@
         </div>
         <div class="flex items-center">
             <download-data class="mx-2"
-                    :data="data.tableData"
-                    :fields="jsonFields">
+                           :data="data.tableData"
+                           :fields="jsonFields">
                 <div class="flex items-center">
                     <p class="text-md">{{$t('general.export.excel')}}</p>
                     <DownloadIcon class="text-blue w-5 mx-1 mb-1"></DownloadIcon>
                 </div>
             </download-data>
             <download-data class="mx-2"
-                    :data="data.tableData"
-                    :fields="jsonFields"
-                    type="csv">
+                           :data="data.tableData"
+                           :fields="jsonFields"
+                           type="csv">
                 <div class="flex items-center">
                     <p class="text-md">{{$t('general.export.csv')}}</p>
                     <DownloadIcon class="text-blue w-5 mx-1 mb-1"></DownloadIcon>
@@ -142,6 +142,10 @@
             searchableFields: {
                 type: Array,
                 default: () => ['name', 'job', 'progress']
+            },
+            editable: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
@@ -168,6 +172,14 @@
                     obj[item.label] = item.prop
                     return obj
                 }, {});
+            },
+            margins() {
+                if (this.$rtl.isRTL) {
+                    return this.editable ? 'ml-24' : 'ml-12'
+
+                } else {
+                    return this.editable ? 'mr-24' : 'mr-12'
+                }
             }
         },
         methods: {
@@ -223,7 +235,7 @@
     }
 </script>
 
-<style  lang="scss">
+<style lang="scss">
 
     .el-dropdown-menu--mini {
         padding: 0;
