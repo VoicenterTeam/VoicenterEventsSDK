@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar w-full bg-white shadow py-3 flex items-center justify-between z-10">
+    <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
         <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mx-10 md:flex">
         <div>
             <div class="relative">
@@ -164,11 +164,12 @@
 
 <style scoped>
     .navbar {
+        height: 90px;
         min-width: 320px;
         position: absolute;
         left: 0;
         top: 0;
-        box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
+        border-bottom: 1px solid var(--silver-color);
     }
 
     .users-menu {
