@@ -76,8 +76,8 @@
             </el-collapse-item>
         </el-collapse>
         <template slot="footer">
-            <el-button plain @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
-            <el-button plain type="primary" @click="updateSettings">{{$t('common.save')}}</el-button>
+            <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
+            <el-button type="primary" @click="updateSettings">{{$t('common.save')}}</el-button>
         </template>
     </el-dialog>
 </template>
@@ -125,15 +125,4 @@
     .rtl .el-color-svpanel {
         float: right;
     }
-
-    .el-checkbox__input.is-checked {
-        + .el-checkbox__label {
-            color: var(--greyish-brown) !important;
-        }
-        .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-            background-color: var(--primary-color) !important;
-            border-color: var(--primary-color) !important;
-        }
-    }
-
 </style>

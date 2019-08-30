@@ -7,7 +7,7 @@
             </el-form-item>
         </el-form>
         <template slot="footer">
-            <el-button plain @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
+            <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
             <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
         </template>
     </el-dialog>

@@ -24,14 +24,14 @@
                     <div v-if="showDashboardsMenu"
                          v-click-outside="onMenuClickOutside"
                          class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col dashboard-menu">
-                    <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
+                    <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
                           @click="chooseDashboard(dashboard)"
                           v-for="dashboard in allDashboards"
                           :class="{ 'text-primary': activeDashboard.DashBoardsID === dashboard.DashBoardsID}">
                           {{$t(dashboard.DashBoardsTitle) || dashboard.DashBoardsTitle}}
                     </span>
                         <span
-                            class="hover:bg-blue-100 py-3 px-4 cursor-pointer text-gray-600 hover:text-blue-600 flex items-center"
+                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center"
                             @click="createNewDashboard()">
                         <IconPlus class="w-3 mr-1 mb-1 text-primary"></IconPlus>
                         <span>{{$t('common.newDashboard')}}</span>
@@ -42,7 +42,7 @@
                     <div v-if="showUsersMenu"
                          v-click-outside="onMenuClickOutside"
                          class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col users-menu">
-                        <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
+                        <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
                               @click="chooseUser(user)"
                               v-for="user in allUsers"
                               :class="{ 'text-primary': currentUser.id === user.id}">
@@ -53,14 +53,14 @@
                                        v-on:click.stop.prevent="removeUser(user)">
                             </IconMinus>
                         </span>
-                        <span class="hover:bg-blue-100 py-3 px-4 cursor-pointer hover:text-blue-600"
+                        <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
                               @click="logout">{{$t('navbar.logout')}}
                         </span>
                     </div>
                 </fade-transition>
             </div>
             <el-dialog :visible.sync="showCreateDashboardDialog"
-                       :append-to-body="true">
+                       :append-to-body="true" width="30%">
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
@@ -68,7 +68,7 @@
                     </el-form-item>
                 </el-form>
                 <template slot="footer">
-                    <el-button plain @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
+                    <el-button @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
                     <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
                 </template>
             </el-dialog>

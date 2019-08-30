@@ -6,10 +6,11 @@
                              @change="handleCheckAllChange">
                 </el-checkbox>
                 <div class="flex with-border__b mx-3">
-                    <input class="text-sm font-medium appearance-none w-34 bg-transparent border-none focus:outline-none"
-                           type="text"
-                           :placeholder="$t('datatable.filter')"
-                           v-model="columnSearchQuery">
+                    <input
+                        class="text-sm font-medium appearance-none w-34 bg-transparent border-none focus:outline-none"
+                        type="text"
+                        :placeholder="$t('datatable.filter')"
+                        v-model="columnSearchQuery">
                 </div>
             </div>
         </div>
@@ -86,23 +87,11 @@
 </script>
 
 <style lang="scss">
-
-    .el-checkbox__input.is-checked {
-        .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-            background-color: var(--primary-color) !important;
-            border-color: var(--primary-color) !important;
-        }
-    }
-
-    .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-        background-color: var(--primary-color) !important;
-        border-color: var(--primary-color) !important;
-    }
-
     .rtl {
         .el-checkbox:last-child {
             margin-right: 14px;
         }
+
         .border-b-2 > div.mx-4 {
             margin-right: 0;
             margin-left: 31px;

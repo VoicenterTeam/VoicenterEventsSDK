@@ -4,8 +4,7 @@
         <div class="flex items-center my-4">
             <component class="w-8 mx-1" :is="selectedIcon"></component>
             <p slot="title" class="text-lg font-semibold text-gray-700">{{this.selectedOption.label}}</p>
-       </div>
-
+        </div>
         <div class="w-full flex">
             <el-select :placeholder="$t('common.selectStatus')"
                        label="select"
@@ -22,9 +21,8 @@
                 </el-option>
             </el-select>
         </div>
-
         <template slot="footer">
-            <el-button plain @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
+            <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
             <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
         </template>
     </el-dialog>
@@ -43,7 +41,7 @@
         props: {
             extension: {
                 type: Object,
-                default: ()=> ({})
+                default: () => ({})
             },
             status: {
                 type: Number
@@ -51,10 +49,10 @@
         },
         data() {
             return {
-                selectedStatus:'',
-                selectedIcon:'',
-                selectedOption:{},
-                options:[
+                selectedStatus: '',
+                selectedIcon: '',
+                selectedOption: {},
+                options: [
                     {
                         label: this.$t('status.login'),
                         value: 1,
@@ -109,11 +107,11 @@
             this.selectedOption = this.options.find(elem => elem.value === this.status);
         },
         methods: {
-            onStatusChange(value){
+            onStatusChange(value) {
                 let option = this.options.find(elem => elem.value === value);
                 this.selectedOption = option;
                 this.selectedStatus = option.value;
-                this.selectedIcon =  option.icon;
+                this.selectedIcon = option.icon;
             },
             onChange() {
                 this.$emit('on-change', this.selectedStatus);

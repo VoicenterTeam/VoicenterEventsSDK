@@ -4,7 +4,8 @@ module.exports = {
         extend: {
             colors: {
                 primary: {
-                    default: 'var(--primary-color)'
+                    default: 'var(--primary-color)',
+                    100: 'var(--primary-color-opacity)'
                 },
                 secondary: {
                     default: 'var(--secondary-color)'

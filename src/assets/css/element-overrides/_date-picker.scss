@@ -14,3 +14,9 @@
     @apply bg-gray-200;
   }
 }
+
+.range-filter {
+  .el-range-editor.is-active, .el-range-editor.is-active:hover {
+    border-color: var(--primary-color);
+  }
+}

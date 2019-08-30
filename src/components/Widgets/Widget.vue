@@ -5,7 +5,7 @@
         </div>
         <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
             <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
-                         :class="{'border border-primary hover:bg-blue-200': editable}">
+                         :class="{'border border-primary': editable}">
             </edit-button>
         </div>
         <component :is="componentTypes[widget.TemplateID]"
