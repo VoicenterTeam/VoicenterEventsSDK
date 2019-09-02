@@ -1,6 +1,6 @@
 .el-select {
   .el-input:active input.el-input__inner,
-  .el-input.is-focus input.el-input__inner {
+  .el-input.is-focus input.el-input__inner, input.el-input__inner:focus{
     border-color: var(--primary-color);
   }
 }
