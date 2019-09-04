@@ -3,16 +3,18 @@ import {dashboards} from '@/store/mockData'
 import parseCatch from '../helpers/handleErrors'
 
 export const DashboardApi = {
+    //TODO: update this..
     async getAll() {
-        try {
-            let res = await $axios.get('/DashBoards/GetAll/')
-            return res.DashBoards
-        } catch (e) {
-            if (process.env.VUE_APP_ENV === 'local') {
-                return dashboards
-            }
-            parseCatch(e, true)
-        }
+    //     try {
+    //         let res = await $axios.get('/DashBoards/GetAll/')
+    //         return res.DashBoards
+    //     } catch (e) {
+    //         if (process.env.VUE_APP_ENV === 'local') {
+//                  return dashboards
+        //     }
+        //     parseCatch(e, true)
+        // }
+        return dashboards
     },
 
     async find(id) {

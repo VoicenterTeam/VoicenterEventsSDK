@@ -1,15 +1,20 @@
 :root {
   --primary-color: #2575FF;
+  --primary_rgba-color: 37, 117, 255;
   --secondary-color: #876cff;
   --greyish-brown: #4a4a4a;
   --silver-color: #d6dae1;
   --silver-two: #bfc5d0;
   --steel: #888f9d;
   --bg-grey-modal: #f0f2f4;
+  --color: 240, 240, 240;
+  --primary-color-opacity: rgba(var(--primary_rgba-color), 0.15)
 }
+
 
 @import "tailwind";
 @import "animations";
+@import "common";
 
 @import "element-overrides/button";
 @import "element-overrides/collapse";
@@ -18,6 +23,9 @@
 @import "element-overrides/date-picker";
 @import "element-overrides/select";
 @import "element-overrides/tabs";
+@import "element-overrides/checkbox";
+@import "element-overrides/color-picker";
+@import "element-overrides/input";
 @import "element-overrides/table";
 
 body {

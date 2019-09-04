@@ -15,12 +15,12 @@
         <div class="flex editable-content" v-if="editable">
             <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
                         @click="$emit('remove-item')"></trash-icon>
-            <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-blue"></edit-icon>
+            <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-primary"></edit-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
             <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
         </div>
         <div v-else>
-            <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-blue"
+            <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
                        @click="()=>{this.showModal = true}"></edit-icon>
         </div>
     </div>
@@ -52,8 +52,6 @@
     }
 </script>
 <style lang="scss" scoped>
-
-
     .trash-icon, .edit-icon {
         position: relative;
         top: -50px;

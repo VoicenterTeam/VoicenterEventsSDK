@@ -1,4 +1,6 @@
-import {getSettings} from '../../services/settingsService'
+import {getSettings} from '@/services/settingsService'
+import convertHex from "@/helpers/convertHex";
+
 
 const types = {
     SET_SETTING: 'SET_SETTING',
@@ -10,6 +12,11 @@ const state = {
     threshold: {},
     showLoggedOutUsers: true
 };
+
+function fetchSettingsData(settings) {
+    settings.colors.primary_rgba = convertHex(settings.colors.primary)
+    return settings
+}
 
 const mutations = {
     [types.SET_SETTING]: (stat, settings) => {
@@ -32,6 +39,9 @@ const actions = {
         commit(types.SET_SETTING, settings)
     },
     async update({commit}, settings) {
+
+        settings = fetchSettingsData(settings)
+
         commit(types.UPDATE_SETTING, settings)
     }
 };

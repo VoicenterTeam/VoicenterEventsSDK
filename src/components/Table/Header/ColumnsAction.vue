@@ -1,16 +1,16 @@
 <template>
     <div class="flex flex-col column_actions--container">
-        <div class="with-border__b" @click="pinColumn">
+        <div class="with-border__b hover:bg-primary-100 hover:text-primary" @click="pinColumn">
             <p class="column_actions--name">
                 {{$t('datatable.props.pin_column')}}
             </p>
         </div>
-        <div class="with-border__b" @click="autoSizeColumns">
+        <div class="with-border__b hover:bg-primary-100 hover:text-primary" @click="autoSizeColumns">
             <p class="column_actions--name">
                 {{$t('datatable.props.autosize_columns')}}
             </p>
         </div>
-        <div @click="resetChanges">
+        <div @click="resetChanges" class="hover:bg-primary-100 hover:text-primary">
             <p class="column_actions--name">
                 {{$t('datatable.props.reset_columns')}}
             </p>
@@ -60,6 +60,7 @@
             &.with-border__b {
                 border-bottom: solid 1px var(--silver-color);
             }
+
             @apply flex;
             @apply cursor-pointer;
         }
@@ -69,11 +70,6 @@
         @apply ml-8;
         @apply mr-2;
         @apply my-3;
-    }
-
-    .column_actions--container > div:hover {
-        @apply text-blue-600;
-        @apply bg-blue-100;
     }
 
     .rtl .column_actions--name {

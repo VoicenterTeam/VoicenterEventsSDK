@@ -3,3 +3,7 @@
     padding-top: 0;
   }
 }
+
+.el-dialog__headerbtn i.el-dialog__close:hover {
+  color: var(--primary-color);
+}

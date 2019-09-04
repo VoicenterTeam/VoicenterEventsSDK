@@ -69,21 +69,21 @@
             </el-table>
         </div>
         <div class="flex items-center">
-            <download-data class="mx-2"
+            <download-data class="mx-2  cursor-pointer export-button"
                            :data="data.tableData"
                            :fields="jsonFields">
                 <div class="flex items-center">
                     <p class="text-md">{{$t('general.export.excel')}}</p>
-                    <DownloadIcon class="text-blue w-5 mx-1 mb-1"></DownloadIcon>
+                    <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
                 </div>
             </download-data>
-            <download-data class="mx-2"
+            <download-data class="mx-2 cursor-pointer export-button"
                            :data="data.tableData"
                            :fields="jsonFields"
                            type="csv">
                 <div class="flex items-center">
                     <p class="text-md">{{$t('general.export.csv')}}</p>
-                    <DownloadIcon class="text-blue w-5 mx-1 mb-1"></DownloadIcon>
+                    <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
                 </div>
             </download-data>
         </div>
@@ -245,10 +245,13 @@
         }
     }
 
+    .export-button :hover {
+        color: var(--primary-color);
+    }
+
     .data-table /deep/ .sortable-ghost {
         opacity: 0.3;
-        @apply bg-gray-300
-        rounded text-primary;
+        @apply bg-gray-300 rounded text-primary;
     }
 
 </style>

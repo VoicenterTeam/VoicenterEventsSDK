@@ -5,12 +5,12 @@
             <p class="text-sm font-normal">{{$t('switcher.title')}}</p>
         </div>
         <div>
-            <button class="btn shadow rounded bg-white mx-1 text-gray-300"
+            <button class="btn shadow rounded bg-white mx-1 text-gray-300 hover:bg-primary-100 hover:text-primary"
                     @click="switching('tabbed')"
                     :class="{'text-primary': activeType === 'tabbed'}">
                 <IconTabbedView></IconTabbedView>
             </button>
-            <button class="btn shadow rounded bg-white mx-1 text-gray-300"
+            <button class="btn shadow rounded bg-white mx-1 text-gray-300 hover:bg-primary-100 hover:text-primary"
                     @click="switching('normal')"
                     :class="{'text-primary': activeType === 'normal'}">
                 <IconNormalView></IconNormalView>

@@ -135,9 +135,7 @@ export const widgets = [
             "caption": "Statistics cards",
             "status": 1
         },
-        "WidgetConfig": [
-
-        ],
+        "WidgetConfig": [],
         "WidgetEntity": [
             {
                 "EntityID": 9,
@@ -156,9 +154,7 @@ export const widgets = [
             "caption": "Status cards",
             "status": 1
         },
-        "WidgetConfig": [
-
-        ],
+        "WidgetConfig": [],
         "WidgetEntity": [
             {
                 "EntityID": 9,
@@ -669,286 +665,14 @@ export const tables = [
 ]
 
 export const dashboards = [
-
     {
         "AccountID": 1,
-        "DashBoardsID": 107,
+        "DashBoardsID": 143,
         "DashBoardsTitle": "dashboards.queue",
         "DashboardLayout": {
             "additionalProp1": {}
         },
-        "WidgetGroupList": [
-            {
-                "WidgetList": [
-                    {
-                        "Title": "1",
-                        "WidgetID": "160",
-                        "TemplateID": 3,
-                        "WidgetTime": {},
-                        "WidgetConfig": [
-                            {
-                                "ParameterID": 1,
-                                "WidgetParameterValue": ""
-                            }
-                        ],
-                        "WidgetEntity": [
-                            {
-                                "EntityID": 8,
-                                "EntityType": 1
-                            }
-                        ],
-                        "WidgetLayout": {
-                            "Order": 7,
-                            "Caption": "Users Table",
-                            "columns": [
-                                {
-                                    "prop": "name",
-                                    "align": "left",
-                                    "fixed": false,
-                                    "label": "Name"
-                                },
-                                {
-                                    "prop": "job",
-                                    "align": "left",
-                                    "fixed": false,
-                                    "label": "Job"
-                                },
-                                {
-                                    "prop": "progress",
-                                    "align": "center",
-                                    "fixed": false,
-                                    "label": "Progress"
-                                },
-                                {
-                                    "prop": "since",
-                                    "align": "center",
-                                    "fixed": false,
-                                    "label": "Since"
-                                },
-                                {
-                                    "prop": "salary",
-                                    "align": "center",
-                                    "fixed": false,
-                                    "label": "Salary"
-                                }
-                            ],
-                            "tableData": [
-                                {
-                                    "id": 1,
-                                    "img": "img/tania.jpg",
-                                    "job": "Develop",
-                                    "name": "Tania Mike",
-                                    "since": 2013,
-                                    "salary": "€ 99,225",
-                                    "progress": 25
-                                },
-                                {
-                                    "id": 2,
-                                    "img": "img/robi.jpg",
-                                    "job": "CEO",
-                                    "name": "John Doe",
-                                    "since": 2012,
-                                    "salary": "€ 89,241",
-                                    "progress": 77
-                                },
-                                {
-                                    "id": 3,
-                                    "img": "img/lora.jpg",
-                                    "job": "Design",
-                                    "name": "Alexa Mike",
-                                    "since": 2010,
-                                    "salary": "€ 92,144",
-                                    "progress": 41
-                                },
-                                {
-                                    "id": 4,
-                                    "img": "img/jana.jpg",
-                                    "job": "Marketing",
-                                    "name": "Jana Monday",
-                                    "since": 2013,
-                                    "salary": "€ 49,990",
-                                    "progress": 50
-                                },
-                                {
-                                    "id": 5,
-                                    "img": "img/mike.jpg",
-                                    "job": "Develop",
-                                    "name": "Paul Dickens",
-                                    "since": 2015,
-                                    "salary": "€ 69,201",
-                                    "progress": 100
-                                },
-                                {
-                                    "id": 6,
-                                    "img": "img/emilyz.jpg",
-                                    "job": "Manager",
-                                    "name": "Manuela Rico",
-                                    "since": 2012,
-                                    "salary": "€ 99,201",
-                                    "progress": 15
-                                }
-                            ]
-                        },
-                        "WidgetColumns": [
-                            {
-                                "WidgetID": 160,
-                                "ColumnName": "",
-                                "ColumnIndex": 0,
-                                "TemplateColumnID": 20,
-                                "WidgetColumnConfig": {}
-                            }
-                        ]
-                    },
-                    {
-                        "Title": "Calls Per Hours 2",
-                        "WidgetID": "192",
-                        "TemplateID": 2,
-                        "WidgetTime": {},
-                        "WidgetConfig": [
-                            {
-                                "ParameterID": 1,
-                                "WidgetParameterValue": ""
-                            }
-                        ],
-                        "WidgetEntity": [
-                            {
-                                "EntityID": 8,
-                                "EntityType": 1
-                            }
-                        ],
-                        "WidgetLayout": {
-                            "date": "05/29/2019 - 07/20/2019",
-                            "Order": 6,
-                            "Title": "Calls Per Hours 2",
-                            "chart": {
-                                "type": "column",
-                                "marginTop": 45
-                            },
-                            "title": {
-                                "text": ""
-                            },
-                            "xAxis": {
-                                "type": "datetime"
-                            },
-                            "series": [
-                                {
-                                    "data": [
-                                        {
-                                            "x": 1563441556000,
-                                            "y": 3
-                                        },
-                                        {
-                                            "x": 1564168362000,
-                                            "y": 2,
-                                            "color": "#d6dae1"
-                                        },
-                                        {
-                                            "x": 1564308352000,
-                                            "y": 1.6,
-                                            "color": "green"
-                                        }
-                                    ],
-                                    "pointWidth": 20
-                                }
-                            ],
-                            "tooltip": {
-                                "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
-                                "borderColor": "#ffffff",
-                                "borderRadius": 10,
-                                "backgroundColor": "#ffffff"
-                            }
-                        },
-                        "WidgetColumns": [
-                            {
-                                "WidgetID": 192,
-                                "ColumnName": "",
-                                "ColumnIndex": 0,
-                                "TemplateColumnID": 52,
-                                "WidgetColumnConfig": {}
-                            }
-                        ]
-                    },
-                    {
-                        "Title": "Status cards",
-                        "WidgetID": "228",
-                        "TemplateID": 6,
-                        "WidgetTime": {},
-                        "WidgetConfig": [
-                            {
-                                "ParameterID": 0,
-                                "WidgetParameterValue": ""
-                            }
-                        ],
-                        "WidgetEntity": [
-                            {
-                                "EntityID": 9,
-                                "EntityType": 2
-                            }
-                        ],
-                        "WidgetLayout": {
-                            "icon": "IconLogin",
-                            "Order": 1,
-                            "status": 9,
-                            "caption": "Status cards"
-                        },
-                        "WidgetColumns": [
-                            {
-                                "WidgetID": 228,
-                                "ColumnName": "Foo",
-                                "ColumnIndex": 1,
-                                "TemplateColumnID": 85,
-                                "WidgetColumnConfig": {
-                                    "additionalProp1": {}
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "WidgetGroupID": "75",
-                "WidgetGroupTitle": "TEST"
-            },
-            {
-                "WidgetList": [
-                    {
-                        "Title": "Status cards",
-                        "WidgetID": "249",
-                        "TemplateID": 6,
-                        "WidgetTime": {},
-                        "WidgetConfig": [
-                            {
-                                "ParameterID": 0,
-                                "WidgetParameterValue": ""
-                            }
-                        ],
-                        "WidgetEntity": [
-                            {
-                                "EntityID": 9,
-                                "EntityType": 2
-                            }
-                        ],
-                        "WidgetLayout": {
-                            "icon": "IconLogin",
-                            "Order": 1,
-                            "status": 1,
-                            "caption": "Status cards"
-                        },
-                        "WidgetColumns": [
-                            {
-                                "WidgetID": 249,
-                                "ColumnName": "Foo",
-                                "ColumnIndex": 1,
-                                "TemplateColumnID": 106,
-                                "WidgetColumnConfig": {
-                                    "additionalProp1": {}
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "WidgetGroupID": "142",
-                "WidgetGroupTitle": "TEST 1"
-            }
-        ],
+        "WidgetGroupList":[],
         "DashBoardsPermission": [
             {
                 "EntityID": 8,
@@ -968,6 +692,7 @@ export const settings = {
     },
     colors: {
         primary: "#2575FF",
-        secondary: "#876cff"
+        secondary: "#876cff",
+        primary_rgba: "37, 117, 255"
     }
 }
