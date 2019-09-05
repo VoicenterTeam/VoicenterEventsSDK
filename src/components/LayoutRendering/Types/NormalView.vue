@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.WidgetGroupID"
-             class="my-10"
+             class="my-10 px-2 sm:px-8"
              :class="{'editable-widgets':editMode}">
             <div v-if="editMode" class="flex items-center justify-between mb-8">
                 <base-input v-model="widgetGroup.WidgetGroupTitle"></base-input>

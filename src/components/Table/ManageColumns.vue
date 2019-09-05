@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="flex items-center column-management-header">{{$t('datatable.manage.columns.header')}}</div>
-        <div class="flex">
-            <div class="management-section">
-                <div class="flex justify-between items-center column-management-section">
+        <div class="flex items-center manage-columns-header">{{$t('datatable.manage.columns.header')}}</div>
+        <div class="flex flex-col sm:flex-row">
+            <div class="manage-columns-section">
+                <div class="flex justify-between items-center manage-columns-section-header">
                     <p class="items-selected">
                         {{$tc('datatable.manage.columns.items', numberOfSelectedColumns, { item: numberOfSelectedColumns })}}
                     </p>
@@ -11,7 +11,7 @@
                         {{$t('datatable.manage.columns.remove')}}
                     </el-button>
                 </div>
-                <div>
+                <div class="manage-columns-section-content">
                     <el-checkbox-group class="flex flex-col column-checkbox" v-model="valueToRemove">
                         <el-checkbox class="py-2" v-for="column in activeColumns" :label="column.prop"
                                      :key="column.label">{{column.label}}
@@ -19,8 +19,8 @@
                     </el-checkbox-group>
                 </div>
             </div>
-            <div class="management-section">
-                <div class="flex justify-between items-center column-management-section">
+            <div class="manage-columns-section">
+                <div class="flex justify-between items-center manage-columns-section-header">
                     <div class="w-4/6">
                         <el-input :placeholder="$t('datatable.manage.columns.search')"
                                   v-model="filter"
@@ -31,7 +31,7 @@
                         {{$t('datatable.manage.columns.add')}}
                     </el-button>
                 </div>
-                <div>
+                <div class="manage-columns-section-content">
                     <el-checkbox-group class="flex flex-col column-checkbox" v-model="valueToAdd">
                         <el-checkbox class="py-2" v-for="column in showAvailableColumns" :label="column.prop"
                                      :key="column.label">{{column.label}}
@@ -134,7 +134,7 @@
 </script>
 
 <style scoped lang="scss">
-    .column-management-header {
+    .manage-columns-header {
         height: 40px;
         padding: 10px 20px;
         box-shadow: 0 1px 0 0 var(--silver);
@@ -145,11 +145,16 @@
 
     }
 
-    .column-management-section {
+    .manage-columns-section-header {
         height: 60px;
         padding: 0 20px;
     }
 
+    .manage-columns-section-content{
+        overflow: auto;
+        min-height: 200px;
+        max-height: 250px;
+    }
     .items-selected {
         font-size: 14px;
         font-weight: normal;
@@ -160,13 +165,13 @@
         color: var(--charcoal-grey);
     }
 
-    .management-section {
+    .manage-columns-section {
         max-height: 300px;
         min-width: 350px;
         overflow-y: auto;
     }
 
-    .management-section + .management-section {
+    .manage-columns-section + .manage-columns-section {
         border-left: solid 1px var(--silver-color);
     }
 
@@ -213,9 +218,15 @@
             margin: 0;
         }
 
-        .management-section + .management-section {
+        .manage-columns-section + .manage-columns-section {
             border-left: none;
             border-right: solid 1px var(--silver-color);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .manage-columns-section + .manage-columns-section {
+            border-top: solid 1px var(--silver-color);
         }
     }
 </style>

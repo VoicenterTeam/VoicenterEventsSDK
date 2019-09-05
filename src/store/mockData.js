@@ -962,7 +962,7 @@ export const dashboards = [
                         ]
                     }
                 ],
-                "WidgetGroupID": "184","ColumnIndex": 0,
+                "WidgetGroupID": "184", "ColumnIndex": 0,
                 //             "TemplateColumnID": 161,
                 //             "WidgetColumnConfig": {}
                 //         }
