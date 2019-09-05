@@ -1,18 +1,21 @@
 <template>
     <div class="relative">
-        <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
-            <delete-button @click="removeWidget(widget)"/>
-        </div>
-        <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
-            <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
-                         :class="{'border border-primary': editable}">
-            </edit-button>
+        <div v-if="!loading">
+            <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
+                <delete-button @click="removeWidget(widget)"/>
+            </div>
+            <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
+                <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
+                             :class="{'border border-primary': editable}">
+                </edit-button>
+            </div>
         </div>
         <component :is="componentTypes[widget.TemplateID]"
                    :data="setComponentData(widget.TemplateID)"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
+                   @on-loading="(state) => onLoading(state)"
                    @update-item="(layout) => updateWidget(layout, widget)"
                    @change-extension-status="(status)=> changeExtensionStatus(status, widget)"
                    @remove-item="removeWidget(widget)">
@@ -72,11 +75,12 @@
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
                     [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
                 },
-                showUpdateDialog: false
+                showUpdateDialog: false,
+                loading: false
             }
         },
-        computed:{
-            showDeleteButton(){
+        computed: {
+            showDeleteButton() {
                 return ![widgetTypes.STATUS_CARDS_TYPE_ID, widgetTypes.STATISTICS_CARDS_TYPE_ID].includes(Number(this.widget.TemplateID))
             }
         },
@@ -103,9 +107,12 @@
                 }
                 return this.widget.WidgetLayout
             },
-            changeExtensionStatus(status, widget){
+            changeExtensionStatus(status, widget) {
                 widget.WidgetLayout.status = status
                 this.$emit('update-item', this.widget)
+            },
+            onLoading(state) {
+                this.loading = state
             }
         }
     }

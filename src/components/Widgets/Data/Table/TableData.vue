@@ -1,19 +1,21 @@
 <template>
-    <data-table
-        v-if="!loading"
-        :tableData="tableData"
-        :columns="columns"
-        :cell-style="getCellStyle"
-        :stripe="stripe"
-        :border="border"
-        :cell-class-name="getCellClassName">
-        <template v-slot:status_duration="{row, index}">
-            <status-duration :extension="userExtension(row.user_id, index)"></status-duration>
-        </template>
-        <template v-slot:status="{row, index}">
-            <user-status :userId="row.user_id" :extension="userExtension(row.user_id, index)"></user-status>
-        </template>
-    </data-table>
+    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
+        <data-table
+            v-if="!loading"
+            :tableData="tableData"
+            :columns="columns"
+            :cell-style="getCellStyle"
+            :stripe="stripe"
+            :border="border"
+            :cell-class-name="getCellClassName">
+            <template v-slot:status_duration="{row, index}">
+                <status-duration :extension="userExtension(row.user_id, index)"></status-duration>
+            </template>
+            <template v-slot:status="{row, index}">
+                <user-status :userId="row.user_id" :extension="userExtension(row.user_id, index)"></user-status>
+            </template>
+        </data-table>
+    </div>
 </template>
 <script>
     import DataTable from '@/components/Table/DataTable'
@@ -129,10 +131,12 @@
                 this.tableData = data
                 this.columns = columns
                 this.loading = false
+                this.$emit('on-loading', false)
             }
         },
         mounted() {
             this.getTableData()
+            this.$emit('on-loading', true)
         }
     }
 
