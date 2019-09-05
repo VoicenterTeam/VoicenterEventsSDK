@@ -1,0 +1,75 @@
+.el-table th {
+  .header-handle {
+    display: none;
+  }
+}
+
+.el-table th:hover .header-handle {
+  display: flex;
+  color: var(--primary-color);
+}
+
+.el-table th:hover {
+  @apply bg-gray-100;
+  @apply cursor-pointer;
+}
+
+.el-table th {
+  color: var(--greyish-brown);
+
+  &.is-left > .cell {
+    @apply flex;
+    @apply items-center;
+    > .header-handle {
+      @apply ml-auto;
+    }
+  }
+
+  &.is-center > .cell {
+    @apply flex;
+    @apply items-center;
+    justify-content: center;
+  }
+}
+
+.el-table::before {
+  background-color: white;
+}
+
+.el-table td > .cell {
+  color: var(--greyish-brown);
+}
+
+
+.rtl .el-select {
+  .el-tag__close.el-icon-close {
+    left: -5px;
+    right: auto;
+  }
+
+  .el-tag {
+    margin: 2px 6px 2px 0px;
+  }
+}
+
+.rtl .el-table {
+  td {
+    &.is-left {
+      text-align: right;
+    }
+  }
+
+  th {
+    &.is-center > .cell {
+      > .header-handle {
+        margin-right: 0;
+      }
+    }
+
+    &.is-left > .cell {
+      > .header-handle {
+        margin-left: 0;
+      }
+    }
+  }
+}

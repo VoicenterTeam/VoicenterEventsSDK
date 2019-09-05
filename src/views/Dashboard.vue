@@ -252,12 +252,13 @@
     }
 </script>
 <style>
+
     .editable-widgets {
         @apply bg-gray-100 rounded-lg;
-        border-radius: 10px;
-        min-width: 460px;
-        @apply p-8;
         @apply shadow;
+        @apply py-8;
+        border-radius: 10px;
+        min-width: 310px;
     }
 
     .flip-list-move {

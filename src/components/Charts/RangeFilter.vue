@@ -102,4 +102,14 @@
         }
     }
 
+    .range-filter /deep/ .el-date-editor--daterange{
+        width: 280px;
+    }
+
+    @media (min-width: 640px){
+        .range-filter /deep/ .el-date-editor--daterange{
+            width: 320px;
+        }
+    }
+
 </style>

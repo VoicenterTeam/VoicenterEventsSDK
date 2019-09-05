@@ -1,11 +1,13 @@
 <template>
     <div class="data-table__container">
-        <div class="flex items-center my-4 w-full">
-            <div class="flex w-64">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between my-4 w-full">
+            <div class="flex w-48 sm:w-64">
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
             </div>
-            <div class="flex items-center ml-auto mr-12 table-row__count">
-                <el-dropdown size="mini" class="mx-4" trigger="click">
+            <div class="flex items-center table-row__count mt-4 sm:mt-0"
+                 :class="margins">
+                <el-dropdown size="mini" trigger="click"
+                             :class="$rtl.isRTL ? 'ml-4' : 'mr-4'">
                     <el-button type="primary">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"></i>
@@ -32,27 +34,27 @@
                       v-on="listeners">
                 <slot name="">
                     <el-table-column
-                        v-for="(column, index) in renderedColumns"
-                        :key="column.prop"
-                        v-bind="column"
-                        :column-key="column.prop"
-                        :min-width="column.minWidth || '150px'"
-                        :fixed="column.fixed || false"
-                        :align="column.align"
-                        :type="column.type">
+                            v-for="(column, index) in renderedColumns"
+                            :key="column.prop"
+                            v-bind="column"
+                            :column-key="column.prop"
+                            :min-width="column.minWidth || '150px'"
+                            :fixed="column.fixed || false"
+                            :align="column.align"
+                            :type="column.type">
                         <template slot="header">
                         <span class="font-medium uppercase" @mouseover="hoverOverHeader(column)"
                               @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
                             <header-actions
-                                :availableColumns="availableColumns"
-                                :visibleColumns="visibleColumns"
-                                :currentColumn="column"
-                                @on-change-visibility="updateColumnsVisibility"
-                                @on-change-columns-size="updateColumnsSize"
-                                @on-pin-column="(value) => pinColumn(value, index)"
-                                @on-reset-props="resetColumnsProps">
+                                    :availableColumns="availableColumns"
+                                    :visibleColumns="visibleColumns"
+                                    :currentColumn="column"
+                                    @on-change-visibility="updateColumnsVisibility"
+                                    @on-change-columns-size="updateColumnsSize"
+                                    @on-pin-column="(value) => pinColumn(value, index)"
+                                    @on-reset-props="resetColumnsProps">
                             </header-actions>
                         </template>
                         <template slot-scope="{row, $index}">
@@ -140,6 +142,10 @@
             searchableFields: {
                 type: Array,
                 default: () => ['name', 'job', 'progress']
+            },
+            editable: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
@@ -166,6 +172,14 @@
                     obj[item.label] = item.prop
                     return obj
                 }, {});
+            },
+            margins() {
+                if (this.$rtl.isRTL) {
+                    return this.editable ? 'ml-24' : 'ml-12'
+
+                } else {
+                    return this.editable ? 'mr-24' : 'mr-12'
+                }
             }
         },
         methods: {
@@ -223,108 +237,6 @@
 
 <style lang="scss">
 
-    .el-table th {
-        .header-handle {
-            display: none;
-        }
-    }
-
-    .el-table th:hover .header-handle {
-        display: flex;
-        color: var(--primary-color);
-    }
-
-    .el-table th:hover {
-        @apply bg-gray-100;
-        @apply cursor-pointer;
-    }
-
-    .el-table th {
-        color: var(--greyish-brown);
-
-        &.is-left > .cell {
-            @apply flex;
-            @apply items-center;
-            > .header-handle {
-                @apply ml-auto;
-            }
-        }
-
-        &.is-center > .cell {
-            @apply flex;
-            @apply items-center;
-            justify-content: center;
-        }
-    }
-
-    .el-table::before {
-        background-color: white;
-    }
-
-    .el-table td > .cell {
-        color: var(--greyish-brown);
-    }
-
-    .rtl .el-select {
-        .el-tag__close.el-icon-close {
-            left: -5px;
-            right: auto;
-        }
-
-        .el-tag {
-            margin: 2px 6px 2px 0px;
-        }
-    }
-
-    .rtl .el-table {
-        td {
-            &.is-left {
-                text-align: right;
-            }
-        }
-
-        th {
-            &.is-center > .cell {
-                > .header-handle {
-                    margin-right: 0;
-                }
-            }
-
-            &.is-left > .cell {
-                > .header-handle {
-                    margin-left: 0;
-                }
-            }
-        }
-    }
-
-    .widget-delete__button {
-        + .widget-edit__button {
-            + .data-table__container {
-                .table-row__count {
-                    @apply mr-24;
-                }
-            }
-        }
-    }
-
-    .rtl .table-row__count {
-        margin-left: 2.7rem;
-        left: 0;
-        position: absolute;
-    }
-
-    .rtl .widget-delete__button {
-        + .widget-edit__button {
-            + .data-table__container {
-                .table-row__count {
-                    position: absolute;
-                    @apply ml-24;
-                }
-            }
-        }
-    }
-
     .el-dropdown-menu--mini {
         padding: 0;
 
@@ -337,11 +249,9 @@
         color: var(--primary-color);
     }
 
-</style>
-
-<style>
     .data-table /deep/ .sortable-ghost {
         opacity: 0.3;
         @apply bg-gray-300 rounded text-primary;
     }
+
 </style>

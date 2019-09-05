@@ -19,13 +19,23 @@
 @import "element-overrides/button";
 @import "element-overrides/collapse";
 @import "element-overrides/dialog";
+@import "element-overrides/dialog";
 @import "element-overrides/date-picker";
 @import "element-overrides/select";
 @import "element-overrides/tabs";
 @import "element-overrides/checkbox";
 @import "element-overrides/color-picker";
 @import "element-overrides/input";
+@import "element-overrides/table";
 
 body {
-  @apply bg-gray-200 px-24 font-montserrat;
+  @apply bg-gray-200 px-6 font-montserrat;
+  min-width: 320px;
+}
+
+@media (min-width: 768px) {
+  body {
+    @apply px-24 ;
+  }
+
 }
