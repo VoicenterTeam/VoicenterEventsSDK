@@ -26,10 +26,12 @@
     const dynamicColumns = [
         {
             'prop': 'status',
+            'fixed': false,
             'label': 'Status'
         },
         {
             'prop': 'status_duration',
+            'fixed': false,
             'label': 'Current Status Duration',
             'width': '250px'
         }
@@ -112,6 +114,7 @@
                     Object.keys(data[0]).forEach((el) => {
                         columns.push({
                             'prop': el,
+                            'fixed': false,
                             'label': el
                         })
                     })
