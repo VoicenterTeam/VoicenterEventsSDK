@@ -1,6 +1,8 @@
 <template>
     <data-table
-        :data="data"
+        v-if="!loading"
+        :tableData="tableData"
+        :columns="columns"
         :cell-style="getCellStyle"
         :stripe="stripe"
         :border="border"
@@ -14,11 +16,24 @@
     </data-table>
 </template>
 <script>
+    import DataTable from '@/components/Table/DataTable'
+    import UserStatus from './UserStatus'
+    import StatusDuration from './StatusDuration'
+    import statusTypes from '@/enum/statusTypes'
+    import {WidgetDataApi} from '@/api/widgetDataApi'
 
-    import DataTable from "@/components/Table/DataTable";
-    import UserStatus from "./UserStatus";
-    import StatusDuration from "./StatusDuration";
-    import statusTypes from "@/enum/statusTypes";
+    const dynamicRows = ['status', 'status_duration']
+    const dynamicColumns = [
+        {
+            'prop': 'status',
+            'label': 'Status'
+        },
+        {
+            'prop': 'status_duration',
+            'label': 'Current Status Duration',
+            'width': '250px'
+        }
+    ]
 
     export default {
         components: {
@@ -29,10 +44,7 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({
-                    tableData: [],
-                    columns: []
-                })
+                default: () => ({})
             },
             border: {
                 type: Boolean,
@@ -41,28 +53,41 @@
             stripe: {
                 type: Boolean,
                 default: true
-            }
+            },
         },
         data() {
             return {
                 statusMappings: statusTypes,
+                tableData: {
+                    type: Array,
+                    default: () => ([])
+                },
+                columns: {
+                    type: Array,
+                    default: () => ([])
+                },
+                loading: {
+                    type: Boolean,
+                    default: true
+                },
+                searchableFields: {
+                    type: Array,
+                    default: () => ['User', 'Department']
+                }
             }
         },
         computed: {
             extensions() {
                 return this.$store.state.extensions.extensions
-            }
+            },
         },
         methods: {
             userExtension(userId, rowIndex) {
                 return this.extensions.filter(e => e.userID === userId)[rowIndex]
             },
             getCellStyle({row, column, rowIndex}) {
-
-                if (column.property === 'status' || column.property === 'status_duration') {
-
+                if (dynamicRows.includes(column.property)) {
                     let extension = this.userExtension(row.user_id, rowIndex)
-
                     if (extension) {
                         let data = this.statusMappings[extension.representativeStatus]
                         let color = data.color
@@ -74,11 +99,34 @@
                 }
                 return {'background-color': 'white'}
             },
-            getCellClassName({row, column, rowIndex, columnIndex}) {
-                if (column.property === 'status' || column.property === 'status_duration') {
+            getCellClassName({column}) {
+                if (dynamicRows.includes(column.property)) {
                     return 'text-white'
                 }
+            },
+            async getTableData() {
+
+                let data = await WidgetDataApi.getTableData(this.data.WidgetID)
+                let columns = [];
+                if (data.length) {
+                    Object.keys(data[0]).forEach((el) => {
+                        columns.push({
+                            'prop': el,
+                            'label': el
+                        })
+                    })
+                    columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
+                    //TODO: update - this is current user_id for testing
+                    data[0]['user_id'] = 106576
+                }
+
+                this.tableData = data
+                this.columns = columns
+                this.loading = false
             }
+        },
+        mounted() {
+            this.getTableData()
         }
     }
 

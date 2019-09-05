@@ -25,7 +25,7 @@
         },
         computed: {
             statusText() {
-                let data = this.statusMappings[this.extension.representativeStatus] || {text: 'status.other'}
+                let data = this.statusMappings[this.extension.representativeStatus] || {text: ''}
                 let text = data.text
 
                 if (this.extension.calls && this.isTalking) {
@@ -48,12 +48,6 @@
                 }
                 return this.extension.calls.every(c => c.callAnswered !== 0)
             }
-        },
-        methods: {},
-
+        }
     }
 </script>
-
-<style>
-
-</style>

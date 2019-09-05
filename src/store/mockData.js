@@ -820,7 +820,7 @@ export const dashboards = [
                     //
                     {
                         "Title": "Table",
-                        "WidgetID": "314",
+                        "WidgetID": "203",
                         "TemplateID": 3,
                         "WidgetTime": {},
                         "WidgetConfig": [

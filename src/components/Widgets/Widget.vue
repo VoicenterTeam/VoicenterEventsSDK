@@ -98,7 +98,7 @@
             },
             setComponentData(TemplateID) {
                 // TODO We need a better way to check this when integrating with the api
-                if (TemplateID === 2 || TemplateID === '2') {
+                if (TemplateID == 2 || TemplateID == '3') {
                     return this.widget;
                 }
                 return this.widget.WidgetLayout
