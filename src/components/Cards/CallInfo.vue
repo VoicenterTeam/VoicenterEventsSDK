@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-    import Timer from './Timer'
+    import Timer from '@/util/Timer'
     const ISRAEL_TIMEZONE_OFFSET = - 180 * 60 * 1000;
     export default {
         props: {

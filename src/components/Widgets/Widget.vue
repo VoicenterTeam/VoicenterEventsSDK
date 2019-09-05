@@ -32,7 +32,7 @@
     import UpdateDialog from './UpdateDialog'
     import widgetTypes from '@/enum/widgetTypes'
     import EditButton from '@/components/EditButton'
-    import DataTable from '@/components/Table/DataTable'
+    import TableData from "./Data/Table/TableData";
     import DeleteButton from "@/components/Widgets/DeleteButton";
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
@@ -47,7 +47,7 @@
             ExtensionCards,
             StatusCards,
             StatisticsCards,
-            DataTable,
+            TableData,
             DeleteButton,
             EditButton,
             UpdateDialog
@@ -67,7 +67,7 @@
                 componentTypes: {
                     [widgetTypes.WIDGET_TYPE_ID]: 'WidgetCard',
                     [widgetTypes.CHART_TYPE_ID]: 'TimeLineChart',
-                    [widgetTypes.TABLE_TYPE_ID]: 'DataTable',
+                    [widgetTypes.TABLE_TYPE_ID]: 'TableData',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
                     [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',

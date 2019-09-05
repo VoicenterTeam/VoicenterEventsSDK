@@ -24,11 +24,11 @@
 </template>
 <script>
     import CallInfo from './CallInfo'
-    import Timer from './Timer'
+    import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
 
-    const ISRAEL_TIMEZONE_OFFSET = - 180 * 60 * 1000;
+    const ISRAEL_TIMEZONE_OFFSET = -180 * 60 * 1000;
     export default {
         components: {
             CallInfo,
@@ -43,6 +43,7 @@
         data() {
             let initialTime = new Date().getTime() - (this.extension.representativeUpdated + ISRAEL_TIMEZONE_OFFSET)
             let initialTimeInSeconds = Math.floor(initialTime / 1000)
+
             return {
                 timer: new Timer({
                     initialTimeInSeconds
@@ -54,8 +55,8 @@
             threshold() {
                 let show = true;
                 let icon = 'IconYellowBulb';
-                if ( (Array.isArray(this.extension.calls) &&
-                    this.extension.calls.length > 0 ) ||
+                if ((Array.isArray(this.extension.calls) &&
+                    this.extension.calls.length > 0) ||
                     !this.$store.state.settings.threshold.generalThreshold) {
                     show = false;
                 }
@@ -63,9 +64,9 @@
                 let minThreshold = this.$store.state.settings.threshold.generalThresholdLowValue
                 let maxThreshold = this.$store.state.settings.threshold.generalThresholdHeightValue
 
-                if(minThreshold > seconds){
+                if (minThreshold > seconds) {
                     show = false
-                } else if(seconds > maxThreshold && minThreshold < maxThreshold) {
+                } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
                     icon = 'IconRedBulb'
                 }
                 return {show, icon}
@@ -81,7 +82,7 @@
                 }
             },
             statusText() {
-                let data = this.statusMappings[this.extension.representativeStatus] || {text: 'Other'}
+                let data = this.statusMappings[this.extension.representativeStatus] || {text: 'other'}
                 let text = data.text
                 if (this.isTalking) {
                     text = 'status.talking'

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 export default class Timer {
-    constructor(options = { interval: 1000, initialTimeInSeconds: 0 }) {
+    constructor(options = {interval: 1000, initialTimeInSeconds: 0}) {
         this.state = {
             seconds: options.initialTimeInSeconds || 0
         }
@@ -17,7 +17,7 @@ export default class Timer {
             seconds = `0${seconds}`
         }
         if (minutes > 60) {
-            hours = Math.floor(minutes/60)
+            hours = Math.floor(minutes / 60)
             minutes = Math.floor(minutes % 60)
         }
         if (minutes < 10) {

@@ -5,12 +5,12 @@ import parseCatch from '../helpers/handleErrors'
 export const DashboardApi = {
     //TODO: update this..
     async getAll() {
-    //     try {
-    //         let res = await $axios.get('/DashBoards/GetAll/')
-    //         return res.DashBoards
-    //     } catch (e) {
-    //         if (process.env.VUE_APP_ENV === 'local') {
-//                  return dashboards
+        // try {
+        //     let res = await $axios.get('/DashBoards/GetAll/')
+        //     return res.DashBoards
+        // } catch (e) {
+        //     if (process.env.VUE_APP_ENV === 'local') {
+        //         return dashboards
         //     }
         //     parseCatch(e, true)
         // }
@@ -19,7 +19,7 @@ export const DashboardApi = {
 
     async find(id) {
         try {
-            let res =  await $axios.get(`/DashBoards/Get/${id}`)
+            let res = await $axios.get(`/DashBoards/Get/${id}`)
             return res.Dashboard
         } catch (e) {
             parseCatch(e, true)
