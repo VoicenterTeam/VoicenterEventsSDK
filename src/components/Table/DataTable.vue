@@ -43,10 +43,9 @@
                         :align="column.align"
                         :type="column.type">
                         <template slot="header">
-                        <span class="font-medium uppercase" @mouseover="hoverOverHeader(column)"
-                              @mouseleave="hoverOverHeader(column)">
-                            {{column.label}}
-                        </span>
+                            <span class="font-medium uppercase">
+                                {{column.label}}
+                            </span>
                             <header-actions
                                 :availableColumns="availableColumns"
                                 :visibleColumns="visibleColumns"
@@ -95,13 +94,13 @@
     import get from 'lodash/get';
     import Sortable from 'sortablejs';
     import bus from '@/event-bus/EventBus'
-    import cloneDeep from 'lodash/cloneDeep'
-    import {Table, TableColumn} from 'element-ui';
-    import HeaderActions from "./Header/HeaderActions";
-    import {Dropdown, DropdownMenu} from 'element-ui'
-    import ManageColumns from "./ManageColumns";
     import JsonExcel from 'vue-json-excel'
-    import DownloadIcon from "vue-feather-icons/icons/DownloadIcon";
+    import cloneDeep from 'lodash/cloneDeep'
+    import {Table, TableColumn} from 'element-ui'
+    import {Dropdown, DropdownMenu} from 'element-ui'
+    import HeaderActions from "./Header/HeaderActions"
+    import ManageColumns from './ManageColumns'
+    import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
 
     export default {
         inheritAttrs: false,
@@ -151,7 +150,7 @@
                 }
             },
             renderedColumns() {
-                return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop));
+                return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
             },
             rowsData() {
                 return this.tableData.filter(c => {
@@ -179,9 +178,6 @@
             }
         },
         methods: {
-            hoverOverHeader(column) {
-                this.$set(column, 'edit', !column.edit)
-            },
             tryInitSortable() {
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
                 const self = this
