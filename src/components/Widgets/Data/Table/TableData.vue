@@ -27,11 +27,13 @@
         {
             'prop': 'status',
             'fixed': false,
+            "align": "left",
             'label': 'Status'
         },
         {
             'prop': 'status_duration',
             'fixed': false,
+            "align": "left",
             'label': 'Current Status Duration',
             'width': '250px'
         }
@@ -115,6 +117,7 @@
                         columns.push({
                             'prop': el,
                             'fixed': false,
+                            "align": "left",
                             'label': el
                         })
                     })

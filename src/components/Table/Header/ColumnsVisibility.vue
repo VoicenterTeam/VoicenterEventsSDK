@@ -106,7 +106,6 @@
 
     .w-34 {
         width: 9.3rem;
-        overflow: auto;
     }
 
     .with-border__b {
@@ -115,6 +114,6 @@
 
     .columns-list {
         height: 150px;
-        overflow: auto;
+        overflow: scroll;
     }
 </style>

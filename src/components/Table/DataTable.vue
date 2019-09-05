@@ -45,15 +45,15 @@
                               @mouseleave="hoverOverHeader(column)">
                             {{column.label}}
                         </span>
-<!--                            <header-actions-->
-<!--                                :availableColumns="availableColumns"-->
-<!--                                :visibleColumns="visibleColumns"-->
-<!--                                :currentColumn="column"-->
-<!--                                @on-change-visibility="updateColumnsVisibility"-->
-<!--                                @on-change-columns-size="updateColumnsSize"-->
-<!--                                @on-pin-column="(value) => pinColumn(value, index)"-->
-<!--                                @on-reset-props="resetColumnsProps">-->
-<!--                            </header-actions>-->
+                            <header-actions
+                                :availableColumns="availableColumns"
+                                :visibleColumns="visibleColumns"
+                                :currentColumn="column"
+                                @on-change-visibility="updateColumnsVisibility"
+                                @on-change-columns-size="updateColumnsSize"
+                                @on-pin-column="(value) => pinColumn(value, index)"
+                                @on-reset-props="resetColumnsProps">
+                            </header-actions>
                         </template>
                         <template slot-scope="{row, $index}">
                             <slot :name="column.prop || column.type || column.label"
@@ -333,7 +333,7 @@
         color: var(--primary-color);
     }
 
-    th >div.cell > span {
+    th > div.cell > span {
         word-break: initial;
     }
 
