@@ -43,15 +43,5 @@ export default {
         icon: "IconBrief",
         color: '#1CBBB4',
         text: 'status.brief'
-    },
-    'Dialing': {
-        icon: '',
-        color: '#F88088',
-        text: 'status.brief'
-    },
-    'Talking': {
-        icon: '',
-        color: '#F42B38',
-        text: 'status.brief'
     }
 }

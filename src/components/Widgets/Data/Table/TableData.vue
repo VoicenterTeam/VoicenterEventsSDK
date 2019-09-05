@@ -21,25 +21,22 @@
     import DataTable from '@/components/Table/DataTable'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
-    import statusTypes from '@/enum/statusTypes'
     import {WidgetDataApi} from '@/api/widgetDataApi'
+    import {extensionColor} from '@/util/extensionStyles'
 
     const dynamicRows = ['status', 'status_duration']
-    const dynamicColumns = [
-        {
-            'prop': 'status',
-            'fixed': false,
-            "align": "left",
-            'label': 'Status'
-        },
-        {
-            'prop': 'status_duration',
-            'fixed': false,
-            "align": "left",
-            'label': 'Current Status Duration',
-            'width': '250px'
-        }
-    ]
+    const dynamicColumns = [{
+        prop: 'status',
+        fixed: false,
+        align: 'left',
+        label: 'Status'
+    }, {
+        prop: 'status_duration',
+        fixed: false,
+        align: 'left',
+        label: 'Current Status Duration',
+        width: '250px'
+    }]
 
     export default {
         components: {
@@ -63,23 +60,10 @@
         },
         data() {
             return {
-                statusMappings: statusTypes,
-                tableData: {
-                    type: Array,
-                    default: () => ([])
-                },
-                columns: {
-                    type: Array,
-                    default: () => ([])
-                },
-                loading: {
-                    type: Boolean,
-                    default: true
-                },
-                searchableFields: {
-                    type: Array,
-                    default: () => ['User', 'Department']
-                }
+                tableData: [],
+                columns: [],
+                loading: true,
+                searchableFields: ['User', 'Department']
             }
         },
         computed: {
@@ -89,49 +73,55 @@
         },
         methods: {
             userExtension(userId, rowIndex) {
-                return this.extensions.filter(e => e.userID === userId)[rowIndex]
+                let extensions = this.extensions.filter(e => e.userID === userId)
+                if (extensions) {
+                    return extensions[rowIndex]
+                }
+                return {}
             },
             getCellStyle({row, column, rowIndex}) {
+                let color = 'white'
                 if (dynamicRows.includes(column.property)) {
                     let extension = this.userExtension(row.user_id, rowIndex)
                     if (extension) {
-                        let data = this.statusMappings[extension.representativeStatus]
-                        let color = data.color
-                        if (extension.calls.length) {
-                            color = '#5EB300'
-                        }
-                        return {'background-color': color}
+                        color = extensionColor(extension)
                     }
                 }
-                return {'background-color': 'white'}
+                return {'background-color': color}
             },
             getCellClassName({column}) {
                 if (dynamicRows.includes(column.property)) {
                     return 'text-white'
                 }
+                return ''
             },
             async getTableData() {
+                try {
+                    let data = await WidgetDataApi.getTableData(this.data.WidgetID)
+                    let columns = [];
 
-                let data = await WidgetDataApi.getTableData(this.data.WidgetID)
-                let columns = [];
-                if (data.length) {
-                    Object.keys(data[0]).forEach((el) => {
-                        columns.push({
-                            'prop': el,
-                            'fixed': false,
-                            "align": "left",
-                            'label': el
-                        })
-                    })
-                    columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
-                    //TODO: update - this is current user_id for testing
-                    data[0]['user_id'] = 106576
+                    if (data.length) {
+                        for (let column in data[0]) {
+                            columns.push({
+                                prop: column,
+                                fixed: false,
+                                align: 'left',
+                                label: column
+                            })
+                        }
+
+                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
+                        //TODO: update - this is current user_id for testing
+                        data[0]['user_id'] = 106576
+                    }
+                    this.tableData = data
+                    this.columns = columns
+                } catch (e) {
+
+                } finally {
+                    this.loading = false
+                    this.$emit('on-loading', false)
                 }
-
-                this.tableData = data
-                this.columns = columns
-                this.loading = false
-                this.$emit('on-loading', false)
             }
         },
         mounted() {

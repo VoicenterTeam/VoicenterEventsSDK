@@ -27,6 +27,7 @@
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
+    import {extensionColor} from '@/util/extensionStyles'
 
     const ISRAEL_TIMEZONE_OFFSET = -180 * 60 * 1000;
     export default {
@@ -72,11 +73,7 @@
                 return {show, icon}
             },
             cardStyles() {
-                let data = this.statusMappings[this.extension.representativeStatus] || {color: 'white'}
-                let color = data.color
-                if (this.isCalling || this.isTalking) {
-                    color = '#5EB300'
-                }
+                let color = extensionColor(this.extension)
                 return {
                     border: `2px solid ${color}`
                 }

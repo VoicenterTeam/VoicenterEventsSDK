@@ -1,12 +1,10 @@
 <template>
-    <div v-if="timer && extension.representativeUpdated">
-        <div class="flex flex-col">
-            <div class="flex items-center justify-center">
-                <span class="font-mono">{{timer.displayTime}}</span>
-                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"></component>
-            </div>
-            <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :textColor="'text-white'"/>
+    <div class="flex flex-col">
+        <div class="flex items-center justify-center">
+            <span class="font-mono">{{timer.displayTime}}</span>
+            <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"></component>
         </div>
+        <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :textColor="'text-white'"/>
     </div>
 </template>
 

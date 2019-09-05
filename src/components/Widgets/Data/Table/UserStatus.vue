@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <span>{{statusText}}</span>
-    </div>
+    <span>{{statusText}}</span>
 </template>
 
 <script>
@@ -18,14 +16,9 @@
                 default: () => ({})
             }
         },
-        data() {
-            return {
-                statusMappings: statusTypes,
-            }
-        },
         computed: {
             statusText() {
-                let data = this.statusMappings[this.extension.representativeStatus] || {text: ''}
+                let data = statusTypes[this.extension.representativeStatus] || {text: ''}
                 let text = data.text
 
                 if (this.extension.calls && this.isTalking) {
