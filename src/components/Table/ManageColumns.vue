@@ -126,8 +126,11 @@
                 });
                 this.filteredColumns = filteredData
             },
-            visibleColumns() {
-                this.initData();
+            visibleColumns: {
+                immediate: true,
+                handler: function () {
+                    this.initData()
+                }
             }
         }
     }

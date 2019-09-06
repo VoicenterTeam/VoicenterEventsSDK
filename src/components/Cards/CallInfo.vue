@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col">
-            <span class="text-gray-500 text-xs mr-2">+{{call.callerphone}}</span>
+            <span class="text-xs mr-2" :class="textColor">+{{call.callerphone}}</span>
             <span v-if="call.callerphone !== call.callername" class="text-xs font-medium">{{call.callername}}</span>
         </div>
         <component :is="directionMappings[call.direction]" class="w-6 direction-icon"></component>
@@ -10,13 +10,17 @@
     </div>
 </template>
 <script>
-    import Timer from './Timer'
+    import Timer from '@/util/Timer'
     const ISRAEL_TIMEZONE_OFFSET = - 180 * 60 * 1000;
     export default {
         props: {
             call: {
                 type: Object,
                 default: () => ({})
+            },
+            textColor: {
+                type: String,
+                default: () => 'text-gray-500'
             }
         },
         data() {

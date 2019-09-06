@@ -14,12 +14,14 @@
                 </div>
             </div>
         </div>
-        <el-checkbox-group class="flex flex-col" v-model="checkedColumns"
-                           @change="handleCheckedColumnsChange">
-            <el-checkbox class="py-2 mx-4" v-for="column in filteredColumns" :label="column.prop"
-                         :key="column.label">{{column.label}}
-            </el-checkbox>
-        </el-checkbox-group>
+        <div class="columns-list">
+            <el-checkbox-group class="flex flex-col" v-model="checkedColumns"
+                               @change="handleCheckedColumnsChange">
+                <el-checkbox class="py-2 mx-4" v-for="column in filteredColumns" :label="column.prop"
+                             :key="column.label">{{column.label}}
+                </el-checkbox>
+            </el-checkbox-group>
+        </div>
     </div>
 </template>
 
@@ -108,5 +110,10 @@
 
     .with-border__b {
         border-bottom: solid 1px var(--silver-color);
+    }
+
+    .columns-list {
+        height: 150px;
+        overflow: scroll;
     }
 </style>

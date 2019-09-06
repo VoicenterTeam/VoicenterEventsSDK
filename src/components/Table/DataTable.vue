@@ -19,7 +19,7 @@
                         </manage-columns>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <p class="text-sm">{{rowsData.length}} / {{data.tableData.length}} row(s)</p>
+                <p class="text-sm">{{rowsData.length}} / {{tableData.length}} row(s)</p>
             </div>
         </div>
         <div class="bg-white rounded-lg my-4 data-table w-full">
@@ -34,27 +34,26 @@
                       v-on="listeners">
                 <slot name="">
                     <el-table-column
-                            v-for="(column, index) in renderedColumns"
-                            :key="column.prop"
-                            v-bind="column"
-                            :column-key="column.prop"
-                            :min-width="column.minWidth || '150px'"
-                            :fixed="column.fixed || false"
-                            :align="column.align"
-                            :type="column.type">
+                        v-for="(column, index) in renderedColumns"
+                        :key="column.prop"
+                        v-bind="column"
+                        :column-key="column.prop"
+                        :min-width="column.minWidth || '150px'"
+                        :fixed="column.fixed || false"
+                        :align="column.align"
+                        :type="column.type">
                         <template slot="header">
-                        <span class="font-medium uppercase" @mouseover="hoverOverHeader(column)"
-                              @mouseleave="hoverOverHeader(column)">
-                            {{column.label}}
-                        </span>
+                            <span class="font-medium uppercase">
+                                {{column.label}}
+                            </span>
                             <header-actions
-                                    :availableColumns="availableColumns"
-                                    :visibleColumns="visibleColumns"
-                                    :currentColumn="column"
-                                    @on-change-visibility="updateColumnsVisibility"
-                                    @on-change-columns-size="updateColumnsSize"
-                                    @on-pin-column="(value) => pinColumn(value, index)"
-                                    @on-reset-props="resetColumnsProps">
+                                :availableColumns="availableColumns"
+                                :visibleColumns="visibleColumns"
+                                :currentColumn="column"
+                                @on-change-visibility="updateColumnsVisibility"
+                                @on-change-columns-size="updateColumnsSize"
+                                @on-pin-column="(value) => pinColumn(value, index)"
+                                @on-reset-props="resetColumnsProps">
                             </header-actions>
                         </template>
                         <template slot-scope="{row, $index}">
@@ -70,7 +69,7 @@
         </div>
         <div class="flex items-center">
             <download-data class="mx-2  cursor-pointer export-button"
-                           :data="data.tableData"
+                           :data="tableData"
                            :fields="jsonFields">
                 <div class="flex items-center">
                     <p class="text-md">{{$t('general.export.excel')}}</p>
@@ -78,7 +77,7 @@
                 </div>
             </download-data>
             <download-data class="mx-2 cursor-pointer export-button"
-                           :data="data.tableData"
+                           :data="tableData"
                            :fields="jsonFields"
                            type="csv">
                 <div class="flex items-center">
@@ -95,21 +94,20 @@
     import get from 'lodash/get';
     import Sortable from 'sortablejs';
     import bus from '@/event-bus/EventBus'
-    import cloneDeep from 'lodash/cloneDeep'
-    import {Table, TableColumn} from 'element-ui';
-    import HeaderActions from "./Header/HeaderActions";
-    import {Dropdown, DropdownMenu} from 'element-ui'
-    import ManageColumns from "./ManageColumns";
     import JsonExcel from 'vue-json-excel'
-    import DownloadIcon from "vue-feather-icons/icons/DownloadIcon";
+    import cloneDeep from 'lodash/cloneDeep'
+    import {Table, TableColumn} from 'element-ui'
+    import {Dropdown, DropdownMenu} from 'element-ui'
+    import HeaderActions from "./Header/HeaderActions"
+    import ManageColumns from './ManageColumns'
+    import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
 
     export default {
-        name: "data-table",
         inheritAttrs: false,
         data() {
             return {
-                visibleColumns: this.data.columns.map(c => c.prop),
-                availableColumns: cloneDeep(this.data.columns),
+                visibleColumns: this.columns.map(c => c.prop),
+                availableColumns: cloneDeep(this.columns),
                 tableKey: 'table-key',
                 active: false,
                 fitWidth: true,
@@ -128,20 +126,17 @@
             [TableColumn.name]: TableColumn,
         },
         props: {
-            data: {
-                type: Object,
-                default: () => ({
-                    tableData: [],
-                    columns: []
-                })
+            tableData: {
+                type: Array,
+                default: () => ([])
             },
-            loading: {
-                type: Boolean,
-                default: false
+            columns: {
+                type: Array,
+                default: () => ([])
             },
             searchableFields: {
                 type: Array,
-                default: () => ['name', 'job', 'progress']
+                default: () => ['User', 'Department']
             },
             editable: {
                 type: Boolean,
@@ -155,10 +150,10 @@
                 }
             },
             renderedColumns() {
-                return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop));
+                return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
             },
             rowsData() {
-                return this.data.tableData.filter(c => {
+                return this.tableData.filter(c => {
                     return this.searchableFields.some(field => {
                         if (c.hasOwnProperty(field)) {
                             return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
@@ -183,9 +178,6 @@
             }
         },
         methods: {
-            hoverOverHeader(column) {
-                this.$set(column, 'edit', !column.edit)
-            },
             tryInitSortable() {
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
                 const self = this
@@ -219,12 +211,12 @@
                 })
             },
             resetColumnsProps() {
-                this.availableColumns = cloneDeep(this.data.columns)
-                this.visibleColumns = this.data.columns.map(c => c.prop)
+                this.availableColumns = cloneDeep(this.columns)
+                this.visibleColumns = this.columns.map(c => c.prop)
             }
         },
         watch: {
-            'data.columns'(value) {
+            'columns'(value) {
                 this.visibleColumns = value.map(c => c.prop)
                 this.availableColumns = cloneDeep(value)
             }
@@ -249,9 +241,15 @@
         color: var(--primary-color);
     }
 
+    th > div.cell > span {
+        word-break: initial;
+    }
+
+</style>
+
+<style>
     .data-table /deep/ .sortable-ghost {
         opacity: 0.3;
         @apply bg-gray-300 rounded text-primary;
     }
-
 </style>

@@ -1,18 +1,21 @@
 <template>
     <div class="relative">
-        <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
-            <delete-button @click="removeWidget(widget)"/>
-        </div>
-        <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
-            <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
-                         :class="{'border border-primary': editable}">
-            </edit-button>
+        <div v-if="!loading">
+            <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
+                <delete-button @click="removeWidget(widget)"/>
+            </div>
+            <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
+                <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
+                             :class="{'border border-primary': editable}">
+                </edit-button>
+            </div>
         </div>
         <component :is="componentTypes[widget.TemplateID]"
                    :data="setComponentData(widget.TemplateID)"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
+                   @on-loading="(state) => onLoading(state)"
                    @update-item="(layout) => updateWidget(layout, widget)"
                    @change-extension-status="(status)=> changeExtensionStatus(status, widget)"
                    @remove-item="removeWidget(widget)">
@@ -32,7 +35,7 @@
     import UpdateDialog from './UpdateDialog'
     import widgetTypes from '@/enum/widgetTypes'
     import EditButton from '@/components/EditButton'
-    import DataTable from '@/components/Table/DataTable'
+    import TableData from "./Data/Table/TableData";
     import DeleteButton from "@/components/Widgets/DeleteButton";
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
@@ -47,7 +50,7 @@
             ExtensionCards,
             StatusCards,
             StatisticsCards,
-            DataTable,
+            TableData,
             DeleteButton,
             EditButton,
             UpdateDialog
@@ -67,16 +70,17 @@
                 componentTypes: {
                     [widgetTypes.WIDGET_TYPE_ID]: 'WidgetCard',
                     [widgetTypes.CHART_TYPE_ID]: 'TimeLineChart',
-                    [widgetTypes.TABLE_TYPE_ID]: 'DataTable',
+                    [widgetTypes.TABLE_TYPE_ID]: 'TableData',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
                     [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
                 },
-                showUpdateDialog: false
+                showUpdateDialog: false,
+                loading: false
             }
         },
-        computed:{
-            showDeleteButton(){
+        computed: {
+            showDeleteButton() {
                 return ![widgetTypes.STATUS_CARDS_TYPE_ID, widgetTypes.STATISTICS_CARDS_TYPE_ID].includes(Number(this.widget.TemplateID))
             }
         },
@@ -98,14 +102,17 @@
             },
             setComponentData(TemplateID) {
                 // TODO We need a better way to check this when integrating with the api
-                if (TemplateID === 2 || TemplateID === '2') {
+                if (TemplateID == 2 || TemplateID == '3') {
                     return this.widget;
                 }
                 return this.widget.WidgetLayout
             },
-            changeExtensionStatus(status, widget){
+            changeExtensionStatus(status, widget) {
                 widget.WidgetLayout.status = status
                 this.$emit('update-item', this.widget)
+            },
+            onLoading(state) {
+                this.loading = state
             }
         }
     }

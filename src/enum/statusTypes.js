@@ -43,5 +43,5 @@ export default {
         icon: "IconBrief",
         color: '#1CBBB4',
         text: 'status.brief'
-    },
+    }
 }

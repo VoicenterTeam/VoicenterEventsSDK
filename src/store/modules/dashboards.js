@@ -57,7 +57,8 @@ const actions = {
     async selectDashboard({commit, state}, dashboard) {
         dashboard = dashboard || state.allDashboards[0]
         if (dashboard) {
-            dashboard = await DashboardApi.find(dashboard.DashBoardsID)
+            // dashboard = await DashboardApi.find(dashboard.DashboardID)
+            // dashboard = await DashboardApi.find(143)
             commit(types.SET_ACTIVE_DASHBOARD, dashboard)
         }
     },
