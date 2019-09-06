@@ -70,10 +70,8 @@
         methods: {
             onHideContainer() {
                 this.renderData = false
-                return true
-            debugger
             }
-        },
+        }
     }
 
 </script>
@@ -102,7 +100,7 @@
         .el-tabs__nav-scroll {
             justify-content: center;
             display: flex;
-            background:var(--bg-grey-modal);
+            background: var(--bg-grey-modal);
 
             .el-tabs__nav {
                 display: flex;
