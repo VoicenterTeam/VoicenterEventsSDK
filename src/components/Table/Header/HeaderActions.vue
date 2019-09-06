@@ -1,12 +1,12 @@
 <template>
     <el-dropdown class="flex header-handle" trigger="click">
-        <span class="el-dropdown-link" v-on:click.stop>
-            <align-justify-icon
-                class="flex w-5 h-5 -mx-1">
+        <span class="el-dropdown-link" v-on:click.stop @click="renderData = !renderData">
+            <align-justify-icon v-click-outside="onHideContainer"
+                                class="flex w-5 h-5 -mx-1">
             </align-justify-icon>
         </span>
         <el-dropdown-menu slot="dropdown" class="header-actions__container">
-            <el-tabs class="mx-0" v-model="activeTab" :stretch="true">
+            <el-tabs class="mx-0" v-model="activeTab" :stretch="true" v-if="renderData">
                 <el-tab-pane name="first">
                     <span slot="label"><IconGroup></IconGroup></span>
                     <columns-action
@@ -28,7 +28,6 @@
         </el-dropdown-menu>
     </el-dropdown>
 </template>
-
 <script>
 
     import ColumnsAction from './ColumnsAction';
@@ -50,7 +49,8 @@
         },
         data() {
             return {
-                activeTab: 'first'
+                activeTab: 'first',
+                renderData: false
             };
         },
         props: {
@@ -66,6 +66,13 @@
                 type: Object,
                 default: () => ({})
             },
+        },
+        methods: {
+            onHideContainer() {
+                this.renderData = false
+                return true
+            debugger
+            }
         },
     }
 
