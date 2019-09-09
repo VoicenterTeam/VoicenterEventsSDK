@@ -9,7 +9,8 @@ const types = {
 };
 const state = {
     allDashboards: [],
-    activeDashboard: null
+    activeDashboard: null,
+    loadingData: false
 };
 
 function sortDashboardWidgetsByorder(dashboard) {
@@ -57,8 +58,9 @@ const actions = {
     async selectDashboard({commit, state}, dashboard) {
         dashboard = dashboard || state.allDashboards[0]
         if (dashboard) {
-            // dashboard = await DashboardApi.find(dashboard.DashboardID)
-            // dashboard = await DashboardApi.find(143)
+            state.loadingData = true
+            dashboard = await DashboardApi.find(dashboard.DashboardID)
+            state.loadingData = false
             commit(types.SET_ACTIVE_DASHBOARD, dashboard)
         }
     },

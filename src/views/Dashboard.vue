@@ -1,54 +1,57 @@
 <template>
-    <div v-if="activeDashboardData">
-        <sidebar v-if="showSidebar"
-                 :activeTab="activeTab"
-                 :widgetGroupList="activeDashboardData.WidgetGroupList"
-                 @switch-tab="(tab) => switchTab(tab)"></sidebar>
-        <div class="pt-24" :class="getClass">
-            <div class="flex justify-end -mx-1">
-                <div class="my-4 flex">
-                    <AddButton v-if="editMode" class="mx-1" @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
-                    <EditButton
-                        @click.stop="editMode = !editMode"
-                        @reset-dashboard="resetDashboard"
-                        @save-dashboard="saveDashboard"
-                        :edit-mode="editMode">
-                    </EditButton>
+    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)" class="dashboard">
+        <div v-if="activeDashboardData">
+            <sidebar v-if="showSidebar"
+                     :activeTab="activeTab"
+                     :widgetGroupList="activeDashboardData.WidgetGroupList"
+                     @switch-tab="(tab) => switchTab(tab)"></sidebar>
+            <div class="pt-24" :class="getClass">
+                <div class="flex justify-end -mx-1">
+                    <div class="my-4 flex">
+                        <AddButton v-if="editMode" class="mx-1"
+                                   @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
+                        <EditButton
+                            @click.stop="editMode = !editMode"
+                            @reset-dashboard="resetDashboard"
+                            @save-dashboard="saveDashboard"
+                            :edit-mode="editMode">
+                        </EditButton>
+                    </div>
+                    <fade-transition>
+                        <WidgetMenu v-if="showWidgetMenu"
+                                    v-click-outside="onWidgetMenuClickOutside"
+                                    :widgets="allWidgets">
+                        </WidgetMenu>
+                    </fade-transition>
+                    <layout-switcher
+                        v-if="!editMode"
+                        :activeType="layoutType"
+                        @switch-layout="(type) => switchDashboardLayout(type)">
+                    </layout-switcher>
                 </div>
-                <fade-transition>
-                    <WidgetMenu v-if="showWidgetMenu"
-                                v-click-outside="onWidgetMenuClickOutside"
-                                :widgets="allWidgets">
-                    </WidgetMenu>
+                <div class="flex justify-end">
+                    <new-group-button
+                        @click.native="addNewGroup"
+                        v-if="editMode">
+                    </new-group-button>
+                </div>
+                <fade-transition mode="out-in" :duration="250">
+                    <component
+                        :is="layoutTypes[layoutType]"
+                        :activeDashboardData="activeDashboardData"
+                        :editMode="editMode"
+                        :activeTab="activeTab"
+                        :allWidgets="allWidgets"
+                        @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                        @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                        @onListChange="(data) => onListChange(data.list, data.group)"
+                        @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
+                        @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                        @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                        @switch-tab="(tab) => switchTab(tab)">
+                    </component>
                 </fade-transition>
-                <layout-switcher
-                    v-if="!editMode"
-                    :activeType="layoutType"
-                    @switch-layout="(type) => switchDashboardLayout(type)">
-                </layout-switcher>
             </div>
-            <div class="flex justify-end">
-                <new-group-button
-                    @click.native="addNewGroup"
-                    v-if="editMode">
-                </new-group-button>
-            </div>
-            <fade-transition mode="out-in" :duration="250">
-                <component
-                    :is="layoutTypes[layoutType]"
-                    :activeDashboardData="activeDashboardData"
-                    :editMode="editMode"
-                    :activeTab="activeTab"
-                    :allWidgets="allWidgets"
-                    @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                    @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                    @onListChange="(data) => onListChange(data.list, data.group)"
-                    @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
-                    @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                    @updateWidget="(data) => updateWidget(data.widget, data.group)"
-                    @switch-tab="(tab) => switchTab(tab)">
-                </component>
-            </fade-transition>
         </div>
     </div>
 </template>
@@ -60,13 +63,13 @@
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
     import EditButton from '@/components/EditButton'
-    import {widgetGroupModel} from "../models/instances";
+    import {widgetGroupModel} from '@/models/instances'
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
-    import Sidebar from "../components/LayoutRendering/Sidebar";
+    import Sidebar from '@/components/LayoutRendering/Sidebar'
 
     import EventsSDK from 'voicenter-events-sdk'
 
@@ -93,10 +96,13 @@
                 },
                 layoutType: 'normal',
                 previousLayoutType: '',
-                activeTab: get(this.$store.state.dashboards.activeDashboard.WidgetGroupList, '[0].WidgetGroupID').toString(),
+                activeTab: get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID'),
             }
         },
         computed: {
+            loading() {
+                return this.$store.state.dashboards.loadingData;
+            },
             dashboard() {
                 return this.$store.state.dashboards.activeDashboard
             },
@@ -276,6 +282,16 @@
 
     .rtl .el-button--default {
         margin-left: 10px;
+    }
+
+    .dashboard > .el-loading-mask > .el-loading-spinner {
+        @apply fixed;
+        margin-left: -6rem;
+    }
+
+    .rtl .dashboard > .el-loading-mask > .el-loading-spinner {
+        margin-left: 0;
+        margin-right: -6rem;
     }
 
 </style>
