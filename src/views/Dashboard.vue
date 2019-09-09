@@ -60,15 +60,15 @@
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
     import EditButton from '@/components/EditButton'
-    import {widgetGroupModel} from "../models/instances";
+    import {widgetGroupModel} from '@/models/instances'
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
-    import Sidebar from "../components/LayoutRendering/Sidebar";
-
+    import Sidebar from '@/components/LayoutRendering/Sidebar'
     import EventsSDK from 'voicenter-events-sdk'
+    import parseCatch from '@/helpers/handleErrors'
 
     export default {
         components: {
@@ -246,7 +246,7 @@
                 await this.sdk.login()
                 this.sdk.on('*', this.onNewEvent)
             } catch (e) {
-
+                parseCatch(e, true)
             }
         }
     }
