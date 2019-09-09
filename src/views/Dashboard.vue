@@ -72,6 +72,7 @@
     import Sidebar from '@/components/LayoutRendering/Sidebar'
 
     import EventsSDK from 'voicenter-events-sdk'
+    import parseCatch from '@/helpers/handleErrors'
 
     export default {
         components: {
@@ -252,7 +253,7 @@
                 await this.sdk.login()
                 this.sdk.on('*', this.onNewEvent)
             } catch (e) {
-
+                parseCatch(e, true)
             }
         }
     }
