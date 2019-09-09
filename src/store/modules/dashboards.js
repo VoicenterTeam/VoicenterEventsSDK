@@ -51,7 +51,9 @@ const mutations = {
 
 const actions = {
     async getDashboards({commit}) {
+        state.loadingData = true
         let dashboards = await DashboardApi.getAll()
+        state.loadingData = false
         commit(types.SET_ALL_DASHBOARDS, dashboards)
 
     },
