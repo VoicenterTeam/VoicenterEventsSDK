@@ -87,11 +87,9 @@
   "extensions.noData": "The extensions couldn't be loaded...",
   "switcher.title": "View type",
   "statusCard.update": "Update Status Card",
-  "dataTable": {
-    "show": "Show",
-    "entries": "Entries"
-  }
+  "validation.interval": "Switch category interval cannot be less than 5",
+  "validation.generalThresholdLowValue": "Inferior limit of the threshold cannot be less than 1",
+  "validation.generalThresholdHeightValue": "Superior limit of the threshold cannot be less than Inferior limit",
+  "validation.callThresholdLowValue": "Inferior limit of the call threshold cannot be less than 1",
+  "validation.callThresholdHeightValue": "Superior limit of the call cannot be less than Inferior limit"
 }
-
-
-
