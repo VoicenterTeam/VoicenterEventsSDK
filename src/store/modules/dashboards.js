@@ -5,7 +5,8 @@ const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
     SET_ACTIVE_DASHBOARD: 'SET_ACTIVE_DASHBOARD',
     ADD_DASHBOARD: 'ADD_DASHBOARD',
-    UPDATE_DASHBOARD: 'UPDATE_DASHBOARD'
+    UPDATE_DASHBOARD: 'UPDATE_DASHBOARD',
+    SET_LOADING: 'SET_LOADING'
 };
 const state = {
     allDashboards: [],
@@ -47,22 +48,25 @@ const mutations = {
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
     },
+    [types.SET_LOADING]: (state, loading) => {
+        state.loadingData = loading
+    }
 };
 
 const actions = {
     async getDashboards({commit}) {
-        state.loadingData = true
+        commit(types.SET_LOADING, true)
         let dashboards = await DashboardApi.getAll()
-        state.loadingData = false
+        commit(types.SET_LOADING, false)
         commit(types.SET_ALL_DASHBOARDS, dashboards)
 
     },
     async selectDashboard({commit, state}, dashboard) {
         dashboard = dashboard || state.allDashboards[0]
         if (dashboard) {
-            state.loadingData = true
+            commit(types.SET_LOADING, true)
             dashboard = await DashboardApi.find(dashboard.DashboardID)
-            state.loadingData = false
+            commit(types.SET_LOADING, false)
             commit(types.SET_ACTIVE_DASHBOARD, dashboard)
         }
     },
