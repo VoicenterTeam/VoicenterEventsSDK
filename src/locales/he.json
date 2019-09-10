@@ -84,7 +84,7 @@
   "extensions.sort.default": "Default",
   "extensions.sort.userName": "User name",
   "extensions.sort.activeTime": "Active time",
-  "extensions.noData": "This account has no extensions...",
+  "extensions.noData": "The extensions couldn't be loaded...",
   "switcher.title": "View type",
   "statusCard.update": "Update Status Card",
   "validation.interval": "Switch category interval cannot be less than 5",
