@@ -32,6 +32,8 @@
     </div>
 </template>
 <script>
+    
+    import orderBy from 'lodash/orderBy'
     import {Select, Option} from 'element-ui'
     import {FadeTransition} from 'vue2-transitions'
     import ExtensionCard from "@/components/Cards/ExtensionCard";
@@ -90,22 +92,7 @@
                 return this.extensions
             },
             sortedExtensions() {
-                if (!this.sortBy) {
-                    return this.onlineExtensions.sort((a, b) => {
-
-                    })
-                }
-                return this.onlineExtensions.sort((a, b) => {
-                    let aValue = a[this.sortBy]
-                    let bValue = b[this.sortBy]
-                    if (typeof aValue === 'number') {
-                        return aValue - bValue
-                    }
-                    if (typeof aValue === 'string') {
-                        return aValue.localeCompare(bValue)
-                    }
-                    return 0
-                })
+                return orderBy(this.onlineExtensions, this.sortBy, 'asc')
             },
             responsiveClass() {
                 if (this.editable && this.$rtl.isRTL) {
