@@ -73,6 +73,7 @@
                 </template>
             </el-dialog>
             <settings
+                v-if="showEditSettingsDialog"
                 :visible.sync="showEditSettingsDialog">
             </settings>
         </div>
@@ -158,7 +159,7 @@
                     this.$rtl.disableRTL()
                 }
             },
-        },
+        }
     }
 </script>
 

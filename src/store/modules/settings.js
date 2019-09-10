@@ -19,7 +19,7 @@ function fetchSettingsData(settings) {
 }
 
 const mutations = {
-    [types.SET_SETTING]: (stat, settings) => {
+    [types.SET_SETTING]: (state, settings) => {
         state.report = {...settings.report};
         state.colors = {...settings.colors};
         state.threshold = {...settings.threshold};
