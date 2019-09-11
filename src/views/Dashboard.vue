@@ -9,13 +9,14 @@
                 <div class="flex justify-end -mx-1">
                     <div class="my-4 flex">
                         <AddButton v-if="editMode" class="mx-1"
-                                   @click.stop="showWidgetMenu = !showWidgetMenu"></AddButton>
-                        <EditButton
+                                   @click.stop="showWidgetMenu = !showWidgetMenu">
+                        </AddButton>
+                        <manage-dashboard-buttons
                             @click.stop="editMode = !editMode"
                             @reset-dashboard="resetDashboard"
                             @save-dashboard="saveDashboard"
                             :edit-mode="editMode">
-                        </EditButton>
+                        </manage-dashboard-buttons>
                     </div>
                     <fade-transition>
                         <WidgetMenu v-if="showWidgetMenu"
@@ -59,6 +60,7 @@
 <script>
 
     import get from 'lodash/get';
+    import {Tooltip} from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
@@ -66,7 +68,6 @@
     import AddButton from '@/components/AddButton'
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
-    import EditButton from '@/components/EditButton'
     import draggableEvents from '@/enum/draggableEvents'
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
@@ -74,18 +75,20 @@
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
     import {runDashboardOperations} from '@/services/dashboardService'
+    import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
 
     export default {
         components: {
+            ManageDashboardButtons,
+            [Switcher.name]: Switcher,
+            [Tooltip.name]: Tooltip,
             NewGroupButton,
-            EditButton,
             AddButton,
             WidgetMenu,
             EventsSDK,
-            [Switcher.name]: Switcher,
             NormalView,
             TabbedView,
             Sidebar

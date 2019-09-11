@@ -5,7 +5,10 @@
             <div class="relative">
                 <div class="flex items-center py-3 mx-1 sm:mx-6">
                     <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
-                        <IconSettings class="text-primary"></IconSettings>
+                        <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
+                                    placement="bottom">
+                            <IconSettings class="text-primary"></IconSettings>
+                        </el-tooltip>
                     </div>
                     <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
@@ -81,7 +84,7 @@
     </nav>
 </template>
 <script>
-    import {Dialog} from 'element-ui'
+    import {Dialog, Tooltip} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
@@ -89,6 +92,7 @@
     export default {
         components: {
             [Dialog.name]: Dialog,
+            [Tooltip.name]: Tooltip,
             Settings,
             LanguageSelect
         },
