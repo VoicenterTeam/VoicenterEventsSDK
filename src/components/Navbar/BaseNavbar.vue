@@ -29,6 +29,11 @@
                           v-for="dashboard in allDashboards"
                           :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}">
                           {{$t(dashboard.DashboardTitle) || dashboard.DashboardTitle}}
+                        <IconMinus v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
+                                   class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
+                                   :class="$rtl.isRTL ? 'float-left' : 'float-right'"
+                                   v-on:click.stop.prevent="removeDashboard(dashboard)">
+                        </IconMinus>
                     </span>
                         <span
                             class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center"
@@ -141,6 +146,9 @@
             },
             removeUser(user) {
                 this.$store.dispatch('users/removeUser', user)
+            },
+            removeDashboard(dashboard) {
+                this.$store.dispatch('dashboards/removeDashboard', dashboard)
             },
             logout() {
                 localStorage.clear()

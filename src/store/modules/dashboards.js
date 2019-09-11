@@ -6,7 +6,8 @@ const types = {
     SET_ACTIVE_DASHBOARD: 'SET_ACTIVE_DASHBOARD',
     ADD_DASHBOARD: 'ADD_DASHBOARD',
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD',
-    SET_LOADING: 'SET_LOADING'
+    SET_LOADING: 'SET_LOADING',
+    REMOVE_DASHBOARD: 'REMOVE_DASHBOARD'
 };
 const state = {
     allDashboards: [],
@@ -47,7 +48,13 @@ const mutations = {
     },
     [types.SET_LOADING]: (state, loading) => {
         state.loadingData = loading
-    }
+    },
+    [types.REMOVE_DASHBOARD]: (state, dashboard) => {
+        let index = state.allDashboards.findIndex((d) => d.DashboardID === dashboard.DashboardID)
+        if (index !== -1) {
+            state.allDashboards.splice(index, 1)
+        }
+    },
 };
 
 const actions = {
@@ -78,6 +85,10 @@ const actions = {
     },
     async setLoadingData({commit}, value) {
         commit(types.SET_LOADING, value)
+    },
+    async removeDashboard({commit}, dashboard) {
+        await DashboardApi.destroy(dashboard.DashboardID)
+        commit(types.REMOVE_DASHBOARD, dashboard)
     }
 };
 const getters = {};

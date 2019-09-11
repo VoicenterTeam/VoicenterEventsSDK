@@ -56,4 +56,12 @@ export const DashboardApi = {
             parseCatch(e, true)
         }
     },
+
+    async destroy(dashboardID) {
+        try {
+            return await $axios.post(`/DashBoards/RemoveDashboard/${dashboardID}`)
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    }
 }
