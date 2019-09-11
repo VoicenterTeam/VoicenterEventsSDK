@@ -32,14 +32,11 @@ const mutations = {
         state.allDashboards = value;
     },
     [types.ADD_DASHBOARD]: (state, value) => {
-        state.allDashboards = {
-            ...state.allDashboards,
-            ...value
-        }
+        state.allDashboards.push(value)
     },
     [types.UPDATE_DASHBOARD]: (state, dashboard) => {
         state.allDashboards.forEach((el, index) => {
-            if (el.DashBoardsID === dashboard.DashBoardsID) {
+            if (el.DashboardID === dashboard.DashboardID) {
                 Vue.set(state.allDashboards, index, dashboard)
             }
         })
@@ -66,19 +63,21 @@ const actions = {
         if (dashboard) {
             commit(types.SET_LOADING, true)
             dashboard = await DashboardApi.find(dashboard.DashboardID)
-            commit(types.SET_LOADING, false)
             commit(types.SET_ACTIVE_DASHBOARD, dashboard)
+            commit(types.SET_LOADING, false)
         }
     },
     async createDashboard({commit}, dashboard) {
-        await DashboardApi.store(dashboard)
-
+        dashboard = await DashboardApi.store(dashboard)
         commit(types.ADD_DASHBOARD, dashboard)
         commit(types.SET_ACTIVE_DASHBOARD, dashboard)
     },
     async updateDashboard({commit}, dashboard) {
-        await DashboardApi.update(dashboard)
         commit(types.UPDATE_DASHBOARD, dashboard)
+        commit(types.SET_LOADING, false)
+    },
+    async setLoadingData({commit}, value) {
+        commit(types.SET_LOADING, value)
     }
 };
 const getters = {};

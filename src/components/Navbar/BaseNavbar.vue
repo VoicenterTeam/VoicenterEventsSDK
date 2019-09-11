@@ -10,7 +10,7 @@
                     <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                        <span class="mx-1 text-sm md:text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.DashBoardsTitle) || activeDashboard.DashBoardsTitle}}</span>
+                        <span class="mx-1 text-sm md:text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.DashboardTitle) || activeDashboard.DashboardTitle}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
@@ -27,8 +27,8 @@
                     <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
                           @click="chooseDashboard(dashboard)"
                           v-for="dashboard in allDashboards"
-                          :class="{ 'text-primary': activeDashboard.DashBoardsID === dashboard.DashBoardsID}">
-                          {{$t(dashboard.DashBoardsTitle) || dashboard.DashBoardsTitle}}
+                          :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}">
+                          {{$t(dashboard.DashboardTitle) || dashboard.DashboardTitle}}
                     </span>
                         <span
                             class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center"
@@ -64,7 +64,7 @@
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
-                        <el-input v-model="newDashboard.DashboardsTitle"></el-input>
+                        <el-input v-model="newDashboard.DashboardTitle"></el-input>
                     </el-form-item>
                 </el-form>
                 <template slot="footer">
@@ -84,7 +84,7 @@
     import {Dialog} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
-    import {dashboardModel} from "../../models/instances";
+    import {dashboardModel} from '@/models/instances'
 
     export default {
         components: {
@@ -97,7 +97,7 @@
                 showDashboardsMenu: false,
                 showUsersMenu: false,
                 showCreateDashboardDialog: false,
-                newDashboard: dashboardModel,
+                newDashboard: dashboardModel(),
                 showEditSettingsDialog: false,
             }
         },
@@ -128,7 +128,7 @@
                 this.$store.dispatch('dashboards/createDashboard', {
                     ...this.newDashboard
                 })
-                this.newDashboard = dashboardModel
+                this.newDashboard = dashboardModel()
                 this.showCreateDashboardDialog = false
             },
             onMenuClickOutside() {

@@ -2,7 +2,7 @@
     <DraggableWidgets group="widgets"
                       :value="widgets"
                       :disabled="!editable"
-                      @input="(val) => onListChange(val)">
+                      @change="(ev) => onListChange(ev)">
         <div v-for="widget in widgets"
              :key="widget.WidgetID"
              class="w-full px-2" :class="componentWidth[widget.TemplateID]">
@@ -71,8 +71,8 @@
             }
         },
         methods: {
-            onListChange(val) {
-                this.$emit('onListChange', {'list': val, 'group': this.widgetGroup})
+            onListChange(ev) {
+                this.$emit('onListChange', {'event': ev, 'group': this.widgetGroup})
             },
             addWidgetToGroup(val) {
                 this.$emit('addWidgetToGroup', {'widget': val, 'group': this.widgetGroup})

@@ -1,6 +1,6 @@
 import $axios from './apiConnection'
 import {dashboards} from '@/store/mockData'
-import parseCatch from '../helpers/handleErrors'
+import parseCatch from '@/helpers/handleErrors'
 
 export const DashboardApi = {
     async getAll() {
@@ -25,11 +25,35 @@ export const DashboardApi = {
     },
 
     async update(data) {
-        return await $axios.post(`/DashBoards/Update/`, data)
+        try {
+            return await $axios.post(`/DashBoards/Update/`, data)
+        } catch (e) {
+            parseCatch(e, true)
+        }
     },
 
     async store(data) {
-        let res = await $axios.post(`/DashBoards/Add/`, data)
-        return res.Dashboard
-    }
+        try {
+            let res = await $axios.post(`/DashBoards/Add/`, data)
+            return res.Dashboard
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    },
+
+    async addWidgetGroup(dashboardID, widgetGroupID) {
+        try {
+            return await $axios.post(`/DashBoards/AddWidgetGroup/${dashboardID}/${widgetGroupID}`)
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    },
+
+    async removeWidgetGroup(dashboardID, widgetGroupID) {
+        try {
+            return await $axios.post(`/DashBoards/RemoveWidgetGroup/${dashboardID}/${widgetGroupID}`)
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    },
 }

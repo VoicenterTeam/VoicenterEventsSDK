@@ -1,7 +1,7 @@
 export const widgets = [
     {
         "Title": "Calls Per Minute",
-        "WidgetID": 1,
+        "WidgetID": "162",
         "TemplateID": "2",
         "WidgetTime": {},
         "WidgetConfig": [
@@ -108,7 +108,7 @@ export const widgets = [
     },
     {
         "Title": "Realtime call cards",
-        "WidgetID": 2,
+        "WidgetID": "330",
         "TemplateID": "4",
         "WidgetTime": {},
         "WidgetLayout": {
@@ -126,7 +126,7 @@ export const widgets = [
     },
     {
         "Title": "Statistics cards",
-        "WidgetID": "111",
+        "WidgetID": "223",
         "TemplateID": "5",
         "WidgetTime": {},
         "WidgetLayout": {
@@ -145,22 +145,22 @@ export const widgets = [
     },
     {
         "Title": "Status cards",
-        "WidgetID": 112,
-        "TemplateID": "6",
+        "WidgetID": "228",
+        "TemplateID": 6,
         "WidgetTime": {},
-        "WidgetLayout": {
-            "Order": 1,
-            "icon": "IconLogin",
-            "caption": "Status cards",
-            "status": 1
-        },
         "WidgetConfig": [],
         "WidgetEntity": [
             {
                 "EntityID": 9,
                 "EntityType": 2
             }
-        ]
+        ],
+        "WidgetLayout": {
+            "icon": "IconLogin",
+            "Order": 1,
+            "status": 9,
+            "caption": "Status cards"
+        }
     },
     {
         "Title": "Table",
@@ -284,7 +284,7 @@ export const widgets = [
     },
     {
         "Title": "Calls Per Hour",
-        "WidgetID": 3,
+        "WidgetID": "323",
         "TemplateID": "2",
         "WidgetTime": {},
         "WidgetConfig": [
@@ -707,117 +707,6 @@ export const dashboards = [
                             }
                         ]
                     },
-                    // {
-                    //     "Title": "",
-                    //     "WidgetID": "313",
-                    //     "TemplateID": 2,
-                    //     "WidgetTime": {},
-                    //     "WidgetConfig": [
-                    //         {
-                    //             "ParameterID": 1,
-                    //             "WidgetParameterValue": ""
-                    //         }
-                    //     ],
-                    //     "WidgetEntity": [
-                    //         {
-                    //             "EntityID": 8,
-                    //             "EntityType": 1
-                    //         }
-                    //     ],
-                    //     "WidgetLayout": {
-                    //         "date": "06/29/2019 - 07/29/2019",
-                    //         "icon": "IconStats",
-                    //         "Order": 2,
-                    //         "title": {
-                    //             "text": ""
-                    //         },
-                    //         "xAxis": {
-                    //             "type": "datetime",
-                    //             "lineColor": ""
-                    //         },
-                    //         "yAxis": [
-                    //             {
-                    //                 "title": false,
-                    //                 "labels": {
-                    //                     "style": {
-                    //                         "color": "#bfc5d0",
-                    //                         "fontSize": "16px"
-                    //                     }
-                    //                 },
-                    //                 "opposite": false
-                    //             }
-                    //         ],
-                    //         "legend": {
-                    //             "y": -7,
-                    //             "align": "center",
-                    //             "enabled": true,
-                    //             "floating": true,
-                    //             "itemStyle": {
-                    //                 "color": "#899398",
-                    //                 "fontSize": "16px",
-                    //                 "fontFamily": "Montserrat"
-                    //             },
-                    //             "verticalAlign": "top"
-                    //         },
-                    //         "series": [
-                    //             {
-                    //                 "data": [
-                    //                     {
-                    //                         "x": 1563441556000,
-                    //                         "y": 1
-                    //                     },
-                    //                     {
-                    //                         "x": 1564168362000,
-                    //                         "y": 2
-                    //                     },
-                    //                     {
-                    //                         "x": 1564308352000,
-                    //                         "y": 3
-                    //                     }
-                    //                 ],
-                    //                 "name": "Outgoing",
-                    //                 "type": "spline",
-                    //                 "color": "#2675ff",
-                    //                 "shadow": {
-                    //                     "width": 20,
-                    //                     "offsetY": 15,
-                    //                     "opacity": 0.005
-                    //                 }
-                    //             },
-                    //             {
-                    //                 "data": [
-                    //                     {
-                    //                         "x": 1563441556000,
-                    //                         "y": 2.25
-                    //                     },
-                    //                     {
-                    //                         "x": 1564168362000,
-                    //                         "y": 1.5
-                    //                     },
-                    //                     {
-                    //                         "x": 1564308352000,
-                    //                         "y": 4
-                    //                     }
-                    //                 ],
-                    //                 "name": "Incoming",
-                    //                 "type": "spline",
-                    //                 "color": "#876cff",
-                    //                 "dashStyle": "shortdot"
-                    //             }
-                    //         ],
-                    //         "caption": "Calls per minute chart",
-                    //         "tooltip": {
-                    //             "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
-                    //             "borderColor": "#ffffff",
-                    //             "borderRadius": 10,
-                    //             "backgroundColor": "#ffffff"
-                    //         }
-                    //     },
-                    //     "WidgetColumns": [
-                    //         {
-                    //             "WidgetID": 313,
-                    //             "ColumnName": "",
-                    //
                     {
                         "Title": "Table",
                         "WidgetID": "203",

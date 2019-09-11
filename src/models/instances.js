@@ -1,11 +1,21 @@
-export const dashboardModel = {
+export const dashboardModel = () => ({
     "AccountID": 1,
-    "DashboardsTitle": '',
+    "DashboardTitle": '',
     "WidgetGroupList": []
-}
+})
 
-export const widgetGroupModel = {
+export const widgetGroupModel = () => ({
     "WidgetGroupID": Math.random() * 100,
     "WidgetGroupTitle": "",
-    "WidgetList": []
-}
+    "WidgetList": [],
+    "IsNew": true
+})
+
+export const dashboardOperation = (type, target, payload, parentID = null) => ({
+    type: type,
+    target: target,
+    payload: payload,
+    meta: {
+        parentID: parentID
+    }
+})

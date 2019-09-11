@@ -23,8 +23,9 @@
         <!--TODO: set dynamic edit dialog for all widget types-->
         <update-dialog
             width="30%"
-            :chartTitle="widget.Title"
-            @on-change="onChangeTitle"
+            v-if="showUpdateDialog"
+            :chartTitle="widget.WidgetLayout.Title"
+            @on-change="(title) => onChangeTitle(title, widget)"
             :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
@@ -95,10 +96,10 @@
                 }
                 this.showUpdateDialog = true
             },
-            onChangeTitle(title) {
-                this.widget.WidgetLayout.Title = title
-                this.widget = {...this.widget, ...this.widget.WidgetLayout}
-                this.$emit('update-item', this.widget)
+            onChangeTitle(title, widget) {
+                widget.WidgetLayout.Title = title
+                widget = {...widget, ...widget.WidgetLayout}
+                this.$emit('update-item', widget)
             },
             setComponentData(TemplateID) {
                 // TODO We need a better way to check this when integrating with the api

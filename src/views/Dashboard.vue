@@ -44,7 +44,7 @@
                         :allWidgets="allWidgets"
                         @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
                         @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                        @onListChange="(data) => onListChange(data.list, data.group)"
+                        @onListChange="(data) => onListChange(data.event, data.group)"
                         @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
                         @removeWidget="(data) => removeWidget(data.widget, data.group)"
                         @updateWidget="(data) => updateWidget(data.widget, data.group)"
@@ -60,19 +60,23 @@
 
     import get from 'lodash/get';
     import cloneDeep from 'lodash/cloneDeep'
+    import EventsSDK from 'voicenter-events-sdk'
+    import differenceBy from 'lodash/differenceBy'
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
+    import parseCatch from '@/helpers/handleErrors'
+    import {types, targets} from '@/enum/operations'
     import EditButton from '@/components/EditButton'
-    import {widgetGroupModel} from '@/models/instances'
+    import draggableEvents from '@/enum/draggableEvents'
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
+    import Sidebar from '@/components/LayoutRendering/Sidebar'
     import Switcher from '@/components/LayoutRendering/Switcher'
+    import DashboardOperations from '@/helpers/DashboardOperations'
+    import {runDashboardOperations} from '@/services/dashboardService'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
-    import Sidebar from '@/components/LayoutRendering/Sidebar'
-
-    import EventsSDK from 'voicenter-events-sdk'
-    import parseCatch from '@/helpers/handleErrors'
+    import {widgetGroupModel, dashboardOperation} from '@/models/instances'
 
     export default {
         components: {
@@ -98,6 +102,7 @@
                 layoutType: 'normal',
                 previousLayoutType: '',
                 activeTab: get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID'),
+                operations: new DashboardOperations()
             }
         },
         computed: {
@@ -131,6 +136,9 @@
             addWidgetToGroup(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 this.activeDashboardData.WidgetGroupList[index].WidgetList.push(widget);
+                if (!widgetGroup.IsNew) {
+                    this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                }
             },
             orderWidgetGroup(widgetGroup, direction) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -158,16 +166,30 @@
                     this.activeDashboardData.WidgetGroupList.splice(newIndex, 1, originWidget)
                     this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationWidget)
                 }
-
             },
-            onListChange(widgets, widgetGroup) {
-                let newWidgetGroup = {
-                    ...widgetGroup,
-                    WidgetList: widgets
+            //Order list & add to List - events
+            onListChange(event, widgetGroup) {
+
+                if (event[draggableEvents.MOVED]) {
+                    event = event[draggableEvents.MOVED]
+                    widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
+                    if (!widgetGroup.IsNew) {
+                        widgetGroup.WidgetList.forEach((widget) => {
+                            this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                        })
+                    }
+                } else {
+                    event = event[draggableEvents.ADDED]
+                    widgetGroup.WidgetList.splice(event.newIndex, 0, event.element);
+                    if (!widgetGroup.IsNew) {
+                        this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, event.element, widgetGroup.WidgetGroupID))
+                    }
                 }
+
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
-                    this.activeDashboardData.WidgetGroupList.splice(index, 1, newWidgetGroup)
+                    this.activeDashboardData.WidgetGroupList.splice(index, 1, widgetGroup)
+
                 }
             },
             onWidgetMenuClickOutside() {
@@ -179,6 +201,9 @@
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
                     if (widgetIndex !== -1) {
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1)
+                        if (!widgetGroup.IsNew) {
+                            this.operations.add(dashboardOperation(types.REMOVE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                        }
                     }
                 }
             },
@@ -186,10 +211,13 @@
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
                     this.activeDashboardData.WidgetGroupList.splice(index, 1)
+                    if (!widgetGroup.IsNew) {
+                        this.operations.removeGroup(dashboardOperation(types.REMOVE, targets.WIDGET_GROUP, widgetGroup))
+                    }
                 }
             },
             addNewGroup() {
-                this.activeDashboardData.WidgetGroupList.splice(0, 0, widgetGroupModel)
+                this.activeDashboardData.WidgetGroupList.splice(0, 0, widgetGroupModel())
             },
             updateWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -197,18 +225,32 @@
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
                     if (widgetIndex !== -1) {
                         this.activeDashboardData.WidgetGroupList[index].WidgetList[widgetIndex] = widget
-                        this.saveDashboard()
+                        if (!widgetGroup.IsNew) {
+                            this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                        }
+                        if (!this.editMode) {
+                            this.saveDashboard()
+                        }
                     }
                 }
             },
-            saveDashboard() {
-                let dashboard = this.activeDashboardData
-                this.$store.dispatch('dashboards/updateDashboard', dashboard)
+            async saveDashboard() {
+                await this.$store.dispatch('dashboards/setLoadingData', true)
+
+                let updatedWidgetGroups = differenceBy(this.activeDashboardData.WidgetGroupList, this.$store.state.dashboards.activeDashboard.WidgetGroupList, 'WidgetGroupTitle')
+                updatedWidgetGroups.forEach((widgetGroup) => {
+                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
+                })
+
+                let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
+                await this.$store.dispatch('dashboards/updateDashboard', dashboard)
+                this.operations = new DashboardOperations()
             },
             resetDashboard() {
                 let dashboard = this.$store.state.dashboards.activeDashboard
                 this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
+                this.operations = new DashboardOperations()
             },
             switchDashboardLayout(type) {
                 // TODO: update dashboard generalSettings
@@ -259,7 +301,6 @@
     }
 </script>
 <style>
-
     .editable-widgets {
         @apply bg-gray-100 rounded-lg;
         @apply shadow;

@@ -32,7 +32,7 @@
     </div>
 </template>
 <script>
-    
+
     import orderBy from 'lodash/orderBy'
     import {Select, Option} from 'element-ui'
     import {FadeTransition} from 'vue2-transitions'
@@ -45,7 +45,12 @@
             ExtensionCard,
             FadeTransition
         },
-        props: {},
+        props: {
+            editable: {
+                type: Boolean,
+                default: false
+            }
+        },
         data() {
             return {
                 statusMappings: {
@@ -99,7 +104,7 @@
                     return 'pl-24 mx-2'
                 }
                 if (this.$rtl.isRTL) {
-                    return 'pl-12'
+                    return 'pl-24'
                 }
                 if (this.editable) {
                     return 'pr-24'

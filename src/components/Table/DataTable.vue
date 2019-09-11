@@ -141,7 +141,7 @@
             editable: {
                 type: Boolean,
                 default: false
-            }
+            },
         },
         computed: {
             listeners() {
@@ -171,7 +171,6 @@
             margins() {
                 if (this.$rtl.isRTL) {
                     return this.editable ? 'ml-24' : 'ml-12'
-
                 } else {
                     return this.editable ? 'mr-24' : 'mr-12'
                 }

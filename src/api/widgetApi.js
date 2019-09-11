@@ -1,8 +1,9 @@
 import $axios from './apiConnection'
-
 import {widgets} from '@/store/mockData'
+import parseCatch from '@/helpers/handleErrors'
 
 export const WidgetApi = {
+    // TODO: get data from api
     async getAll() {
         return widgets
         /*try {
@@ -16,15 +17,11 @@ export const WidgetApi = {
         }*/
     },
 
-    find(id) {
-        // return $axios.get(`/Widgets/Get/{$id}`)
+    async update(data) {
+        try {
+            return await $axios.post(`/Widgets/Update/`, data)
+        } catch (e) {
+            parseCatch(e, true)
+        }
     },
-
-    update(data) {
-        // return $axios.post(`/Widgets/Update/`)
-    },
-
-    store(data) {
-        // return $axios.get(`/Widgets/Add/`)
-    }
 }

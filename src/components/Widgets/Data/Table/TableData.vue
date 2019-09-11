@@ -3,6 +3,7 @@
         <data-table
             v-if="!loading"
             :tableData="tableData"
+            :editable="editable"
             :columns="columns"
             :cell-style="getCellStyle"
             :stripe="stripe"
@@ -56,6 +57,10 @@
             stripe: {
                 type: Boolean,
                 default: true
+            },
+            editable: {
+                type: Boolean,
+                default: false
             },
         },
         data() {
