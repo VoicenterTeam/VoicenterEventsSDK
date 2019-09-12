@@ -1,7 +1,10 @@
 {
   "common.dashboards": "Dashboards",
   "common.newDashboard": "New Dashboard",
+  "common.deleteDashboard": "Delete dashboard",
   "common.cancel": "Cancel",
+  "common.confirm": "Confirm",
+  "common.confirm.question": "Are you sure?",
   "common.save": "Save",
   "common.edit": "Edit",
   "common.newGroup": "New Group",

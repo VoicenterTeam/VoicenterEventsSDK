@@ -29,11 +29,14 @@
                           v-for="dashboard in allDashboards"
                           :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}">
                           {{$t(dashboard.DashboardTitle) || dashboard.DashboardTitle}}
-                        <IconMinus v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
-                                   class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
-                                   :class="$rtl.isRTL ? 'float-left' : 'float-right'"
-                                   v-on:click.stop.prevent="removeDashboard(dashboard)">
-                        </IconMinus>
+                        <el-tooltip class="item" effect="dark" :content="$t('common.deleteDashboard')"
+                                    placement="top">
+                            <IconMinus v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
+                                       class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
+                                       :class="$rtl.isRTL ? 'float-left' : 'float-right'"
+                                       v-on:click.stop.prevent="deleteDashboard(dashboard)">
+                            </IconMinus>
+                        </el-tooltip>
                     </span>
                         <span
                             class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center"
@@ -65,7 +68,7 @@
                 </fade-transition>
             </div>
             <el-dialog :visible.sync="showCreateDashboardDialog"
-                       :append-to-body="true" width="30%">
+                       :append-to-body="true" :width="dialogWidth">
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
@@ -77,6 +80,17 @@
                     <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
                 </template>
             </el-dialog>
+            <el-dialog :visible.sync="showDeleteDashboardDialog"
+                       :append-to-body="true" :width="dialogWidth">
+                <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('common.confirm.question')}}</h3>
+                <el-form @submit.native.prevent="confirmDeleteDashboard">
+                    <p>{{$t('common.deleteDashboard')}} <b> {{dashboardToDelete.DashboardTitle}}</b></p>
+                </el-form>
+                <template slot="footer">
+                    <el-button @click="showDeleteDashboardDialog = false">{{$t('common.cancel')}}</el-button>
+                    <el-button type="primary" @click="confirmDeleteDashboard">{{$t('common.confirm')}}</el-button>
+                </template>
+            </el-dialog>
             <settings
                 v-if="showEditSettingsDialog"
                 :visible.sync="showEditSettingsDialog">
@@ -86,7 +100,8 @@
     </nav>
 </template>
 <script>
-    import {Dialog} from 'element-ui'
+
+    import {Dialog, Tooltip} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
@@ -94,6 +109,7 @@
     export default {
         components: {
             [Dialog.name]: Dialog,
+            [Tooltip.name]: Tooltip,
             Settings,
             LanguageSelect
         },
@@ -102,8 +118,11 @@
                 showDashboardsMenu: false,
                 showUsersMenu: false,
                 showCreateDashboardDialog: false,
+                showDeleteDashboardDialog: false,
                 newDashboard: dashboardModel(),
                 showEditSettingsDialog: false,
+                dashboardToDelete: {},
+                dialogWidth: '30%'
             }
         },
         computed: {
@@ -147,8 +166,14 @@
             removeUser(user) {
                 this.$store.dispatch('users/removeUser', user)
             },
-            removeDashboard(dashboard) {
-                this.$store.dispatch('dashboards/removeDashboard', dashboard)
+            deleteDashboard(dashboard) {
+                this.showDeleteDashboardDialog = true
+                this.dashboardToDelete = dashboard
+            },
+            confirmDeleteDashboard() {
+                this.$store.dispatch('dashboards/deleteDashboard', this.dashboardToDelete)
+                this.showDeleteDashboardDialog = false
+                this.dashboardToDelete = {}
             },
             logout() {
                 localStorage.clear()
