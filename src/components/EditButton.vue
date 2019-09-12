@@ -5,30 +5,14 @@
             v-on="$listeners">
         <EditIcon class="w-5 h-5 text-primary"></EditIcon>
     </button>
-    <div v-else class="flex">
-        <button class="btn p-2 shadow rounded bg-white hover:bg-green-100 mx-1"
-                @click="$emit('save-dashboard')"
-                v-bind="$attrs"
-                v-on="$listeners">
-            <CheckIcon class="w-5 h-5 text-green"></CheckIcon>
-        </button>
-        <button class="btn p-2 shadow rounded bg-white hover:bg-red-100 mx-1"
-                @click="$emit('reset-dashboard')"
-                v-bind="$attrs"
-                v-on="$listeners">
-            <XIcon class="w-5 h-5 text-red"></XIcon>
-        </button>
-    </div>
 </template>
 <script>
-    import {EditIcon, CheckIcon, XIcon} from 'vue-feather-icons'
+    import {EditIcon} from 'vue-feather-icons'
 
     export default {
         inheritAttrs: false,
         components: {
-            XIcon,
             EditIcon,
-            CheckIcon
         },
         props: {
             editMode: {

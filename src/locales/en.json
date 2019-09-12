@@ -91,5 +91,17 @@
   "validation.generalThresholdLowValue": "Inferior limit of the threshold cannot be less than 1",
   "validation.generalThresholdHeightValue": "Superior limit of the threshold cannot be less than Inferior limit",
   "validation.callThresholdLowValue": "Inferior limit of the call threshold cannot be less than 1",
-  "validation.callThresholdHeightValue": "Superior limit of the call cannot be less than Inferior limit"
+  "validation.callThresholdHeightValue": "Superior limit of the call cannot be less than Inferior limit",
+  "tooltip.general.settings": "Open general settings dialog",
+  "tooltip.add.widgets": "Add new widgets",
+  "tooltip.set.edit.mode": "Set edit mode",
+  "tooltip.reset.changes": "Reset changes",
+  "tooltip.update.dashboard": "Update dashboard",
+  "tooltip.select.tabbed.view": "Select tabbed view mode",
+  "tooltip.select.list.view": "Select list view mode",
+  "tooltip.remove.group": "Remove widget group",
+  "tooltip.remove.widget": "Remove widget",
+  "tooltip.edit.widget": "Edit widget",
+  "tooltip.move.group.up": "Move group up",
+  "tooltip.move.group.down": "Move group down"
 }
