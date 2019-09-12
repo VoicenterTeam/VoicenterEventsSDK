@@ -4,7 +4,7 @@
   "common.deleteDashboard": "Delete dashboard",
   "common.cancel": "Cancel",
   "common.confirm": "Confirm",
-  "common.confirm.question": "Are you sure?",
+  "common.confirm.question": "Are you sure you want to delete this {item}?",
   "common.save": "Save",
   "common.edit": "Edit",
   "common.newGroup": "New Group",

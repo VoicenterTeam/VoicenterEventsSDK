@@ -80,23 +80,11 @@
                     <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
                 </template>
             </el-dialog>
-            <el-dialog :visible.sync="showDeleteDashboardDialog"
-                       :append-to-body="true" :width="dialogWidth">
-                <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('common.confirm.question')}}</h3>
-                <el-form @submit.native.prevent="confirmDeleteDashboard">
-                    <p>{{$t('common.deleteDashboard')}} <b> {{dashboardToDelete.DashboardTitle}}</b>.</p>
-                </el-form>
-                <template slot="footer">
-                    <el-button @click="showDeleteDashboardDialog = false">{{$t('common.cancel')}}</el-button>
-                    <el-button type="primary" @click="confirmDeleteDashboard">{{$t('common.confirm')}}</el-button>
-                </template>
-            </el-dialog>
             <settings
                 v-if="showEditSettingsDialog"
                 :visible.sync="showEditSettingsDialog">
             </settings>
         </div>
-
     </nav>
 </template>
 <script>
@@ -111,17 +99,15 @@
             [Dialog.name]: Dialog,
             [Tooltip.name]: Tooltip,
             Settings,
-            LanguageSelect
+            LanguageSelect,
         },
         data() {
             return {
                 showDashboardsMenu: false,
                 showUsersMenu: false,
                 showCreateDashboardDialog: false,
-                showDeleteDashboardDialog: false,
                 newDashboard: dashboardModel(),
                 showEditSettingsDialog: false,
-                dashboardToDelete: {},
                 dialogWidth: '30%'
             }
         },
@@ -167,13 +153,15 @@
                 this.$store.dispatch('users/removeUser', user)
             },
             deleteDashboard(dashboard) {
-                this.showDeleteDashboardDialog = true
-                this.dashboardToDelete = dashboard
-            },
-            confirmDeleteDashboard() {
-                this.$store.dispatch('dashboards/deleteDashboard', this.dashboardToDelete)
-                this.showDeleteDashboardDialog = false
-                this.dashboardToDelete = {}
+                this.$confirm(
+                    this.$t('common.confirm.question', {
+                        item: 'dashboard',
+                    }), this.$t('common.deleteDashboard'), {
+                        cancelButtonText: this.$t('common.cancel'),
+                        confirmButtonText: this.$t('common.confirm'),
+                    }).then(() => {
+                    this.$store.dispatch('dashboards/deleteDashboard', dashboard)
+                })
             },
             logout() {
                 localStorage.clear()
