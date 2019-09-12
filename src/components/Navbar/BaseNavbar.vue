@@ -84,7 +84,7 @@
                        :append-to-body="true" :width="dialogWidth">
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('common.confirm.question')}}</h3>
                 <el-form @submit.native.prevent="confirmDeleteDashboard">
-                    <p>{{$t('common.deleteDashboard')}} <b> {{dashboardToDelete.DashboardTitle}}</b></p>
+                    <p>{{$t('common.deleteDashboard')}} <b> {{dashboardToDelete.DashboardTitle}}</b>.</p>
                 </el-form>
                 <template slot="footer">
                     <el-button @click="showDeleteDashboardDialog = false">{{$t('common.cancel')}}</el-button>
