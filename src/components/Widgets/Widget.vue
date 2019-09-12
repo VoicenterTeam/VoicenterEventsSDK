@@ -2,12 +2,16 @@
     <div class="relative">
         <div v-if="!loading">
             <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
-                <delete-button @click="removeWidget(widget)"/>
+                <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
+                    <delete-button @click="removeWidget(widget)"/>
+                </el-tooltip>
             </div>
             <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
-                <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
-                             :class="{'border border-primary': editable}">
-                </edit-button>
+                <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
+                    <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
+                                 :class="{'border border-primary': editable}">
+                    </edit-button>
+                </el-tooltip>
             </div>
         </div>
         <component :is="componentTypes[widget.TemplateID]"
@@ -32,15 +36,16 @@
 </template>
 <script>
 
+    import {Tooltip} from 'element-ui'
     import WidgetCard from "./WidgetCard"
     import UpdateDialog from './UpdateDialog'
     import widgetTypes from '@/enum/widgetTypes'
+    import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
-    import TableData from "./Data/Table/TableData";
-    import DeleteButton from "@/components/Widgets/DeleteButton";
+    import StatusCards from '@/components/Cards/StatusCards'
+    import DeleteButton from '@/components/Widgets/DeleteButton'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
-    import StatusCards from '@/components/Cards/StatusCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
 
     export default {
@@ -54,7 +59,8 @@
             TableData,
             DeleteButton,
             EditButton,
-            UpdateDialog
+            UpdateDialog,
+            [Tooltip.name]: Tooltip
         },
         props: {
             editable: {
