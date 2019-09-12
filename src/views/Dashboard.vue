@@ -60,7 +60,6 @@
 <script>
 
     import get from 'lodash/get';
-    import {Tooltip} from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
@@ -84,7 +83,6 @@
         components: {
             ManageDashboardButtons,
             [Switcher.name]: Switcher,
-            [Tooltip.name]: Tooltip,
             NewGroupButton,
             AddButton,
             WidgetMenu,

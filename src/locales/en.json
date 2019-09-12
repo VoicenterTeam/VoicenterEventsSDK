@@ -100,6 +100,8 @@
   "tooltip.select.tabbed.view": "Select tabbed view mode",
   "tooltip.select.list.view": "Select list view mode",
   "tooltip.remove.group": "Remove widget group",
+  "tooltip.remove.widget": "Remove widget",
+  "tooltip.edit.widget": "Edit widget",
   "tooltip.move.group.up": "Move group up",
   "tooltip.move.group.down": "Move group down"
 }

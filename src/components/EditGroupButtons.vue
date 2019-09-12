@@ -1,16 +1,16 @@
 <template>
     <div class="flex">
-        <el-tooltip class="item" effect="dark" :content="$t('tooltip.move.group.down')" placement="bottom">
+        <el-tooltip class="item" effect="dark" :content="$t('tooltip.move.group.down')" placement="top">
             <ArrowDownIcon class="flex align-center w-6 h-6 mx-1 text-primary cursor-pointer"
                            @click="orderWidgetGroup('down')">
             </ArrowDownIcon>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" :content="$t('tooltip.move.group.up')" placement="bottom">
+        <el-tooltip class="item" effect="dark" :content="$t('tooltip.move.group.up')" placement="top">
             <ArrowUpIcon class="flex align-center w-6 h-6 mx-2 text-primary cursor-pointer"
                          @click="orderWidgetGroup('up')">
             </ArrowUpIcon>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.group')" placement="bottom">
+        <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.group')" placement="top">
             <Trash2Icon class="flex align-center w-6 h-6 mx-1 text-red cursor-pointer"
                         @click="$emit('remove-group', widgetGroup)">
             </Trash2Icon>
