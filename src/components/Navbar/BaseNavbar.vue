@@ -32,6 +32,14 @@
                           v-for="dashboard in allDashboards"
                           :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}">
                           {{$t(dashboard.DashboardTitle) || dashboard.DashboardTitle}}
+                        <el-tooltip class="item" effect="dark" :content="$t('common.deleteDashboard')"
+                                    placement="top">
+                            <IconMinus v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
+                                       class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
+                                       :class="$rtl.isRTL ? 'float-left' : 'float-right'"
+                                       v-on:click.stop.prevent="deleteDashboard(dashboard)">
+                            </IconMinus>
+                        </el-tooltip>
                     </span>
                         <span
                             class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center"
@@ -63,7 +71,7 @@
                 </fade-transition>
             </div>
             <el-dialog :visible.sync="showCreateDashboardDialog"
-                       :append-to-body="true" width="30%">
+                       :append-to-body="true" :width="dialogWidth">
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
@@ -80,10 +88,10 @@
                 :visible.sync="showEditSettingsDialog">
             </settings>
         </div>
-
     </nav>
 </template>
 <script>
+
     import {Dialog, Tooltip} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
@@ -94,7 +102,7 @@
             [Dialog.name]: Dialog,
             [Tooltip.name]: Tooltip,
             Settings,
-            LanguageSelect
+            LanguageSelect,
         },
         data() {
             return {
@@ -103,6 +111,7 @@
                 showCreateDashboardDialog: false,
                 newDashboard: dashboardModel(),
                 showEditSettingsDialog: false,
+                dialogWidth: '30%'
             }
         },
         computed: {
@@ -145,6 +154,17 @@
             },
             removeUser(user) {
                 this.$store.dispatch('users/removeUser', user)
+            },
+            deleteDashboard(dashboard) {
+                this.$confirm(
+                    this.$t('common.confirm.question', {
+                        item: 'dashboard',
+                    }), this.$t('common.deleteDashboard'), {
+                        cancelButtonText: this.$t('common.cancel'),
+                        confirmButtonText: this.$t('common.confirm'),
+                    }).then(() => {
+                    this.$store.dispatch('dashboards/deleteDashboard', dashboard)
+                })
             },
             logout() {
                 localStorage.clear()

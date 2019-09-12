@@ -4,7 +4,7 @@ import router from './router'
 import store from './store/store'
 import dashboardPlugin from './plugins/dashboardPlugin'
 import authMiddleware from './middleware/authMiddleware'
-import {Notification} from 'element-ui';
+import {Notification, MessageBox} from 'element-ui';
 import './registerServiceWorker'
 import i18n from './i18n'
 
@@ -14,6 +14,7 @@ authMiddleware(router, store)
 
 Vue.use(dashboardPlugin)
 Vue.prototype.$notify = Notification;
+Vue.prototype.$confirm = MessageBox.confirm;
 
 new Vue({
     router,
