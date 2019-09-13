@@ -85,6 +85,7 @@
             </el-dialog>
             <settings
                 v-if="showEditSettingsDialog"
+                :activeDashboard="activeDashboard"
                 :visible.sync="showEditSettingsDialog">
             </settings>
         </div>

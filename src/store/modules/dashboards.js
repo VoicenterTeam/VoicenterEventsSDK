@@ -7,26 +7,14 @@ const types = {
     ADD_DASHBOARD: 'ADD_DASHBOARD',
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD',
     SET_LOADING: 'SET_LOADING',
-    DELETE_DASHBOARD: 'DELETE_DASHBOARD'
+    DELETE_DASHBOARD: 'DELETE_DASHBOARD',
 };
 const state = {
     allDashboards: [],
     activeDashboard: null,
-    loadingData: false
+    loadingData: false,
+    settings: {}
 };
-
-function sortDashboardWidgetsByorder(dashboard) {
-    dashboard.WidgetGroupList = dashboard.WidgetGroupList.map(widgetGroup => {
-        let WidgetList = widgetGroup.WidgetList.sort((a, b) => {
-            return a.WidgetLayout.Order - b.WidgetLayout.Order
-        });
-        return {
-            ...widgetGroup,
-            WidgetList
-        }
-    })
-    return dashboard
-}
 
 const mutations = {
     [types.SET_ALL_DASHBOARDS]: (state, value) => {
@@ -42,9 +30,11 @@ const mutations = {
             }
         })
         state.activeDashboard = dashboard
+        state.settings = dashboard.DashboardLayout.settings
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
+        state.settings = dashboard.DashboardLayout.settings
     },
     [types.SET_LOADING]: (state, loading) => {
         state.loadingData = loading

@@ -11,18 +11,17 @@
             this.$store.dispatch('dashboards/selectDashboard')
             this.$store.dispatch('widgets/getAllWidgets')
             this.$store.dispatch('charts/getAllCharts')
-            this.$store.dispatch('settings/setSettings')
             this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
         },
         computed: {
             colors() {
-                return this.$store.state.settings.colors
+                return this.$store.state.dashboards.settings.colors
             }
         },
         methods: {
-            initMainStyleVars() {
-                for (let color in this.colors) {
-                    document.documentElement.style.setProperty('--' + color + '-color', this.colors[color]);
+            initMainStyleVars(colors) {
+                for (let color in colors) {
+                    document.documentElement.style.setProperty('--' + color + '-color', colors[color]);
                 }
             },
             initializeLayout(lang) {
@@ -39,8 +38,8 @@
         watch: {
             colors: {
                 immediate: true,
-                handler: function () {
-                    this.initMainStyleVars()
+                handler: function (values) {
+                    this.initMainStyleVars(values)
                 }
             }
         }

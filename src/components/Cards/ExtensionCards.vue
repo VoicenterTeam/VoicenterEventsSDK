@@ -90,7 +90,7 @@
                 return this.$store.state.extensions.extensions
             },
             onlineExtensions() {
-                if (!this.$store.state.settings.showLoggedOutUsers) {
+                if (!this.$store.state.dashboards.settings.showLoggedOutUsers) {
                     let logoutStatus = 2
                     return this.extensions.filter(e => e.representativeStatus !== logoutStatus)
                 }

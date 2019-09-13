@@ -1,7 +1,12 @@
+import {settings} from '@/store/mockData'
+
 export const dashboardModel = () => ({
     "AccountID": 1,
     "DashboardTitle": '',
-    "WidgetGroupList": []
+    "WidgetGroupList": [],
+    "DashboardLayout": {
+        settings: settings
+    }
 })
 
 export const widgetGroupModel = () => ({
