@@ -4,7 +4,7 @@ const types = {
     SET_ALL_WIDGETS: 'SET_ALL_WIDGETS'
 };
 const state = {
-    allWidgets: {}
+    allWidgets: []
 };
 
 const mutations = {
