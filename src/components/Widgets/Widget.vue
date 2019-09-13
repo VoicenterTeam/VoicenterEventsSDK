@@ -75,8 +75,8 @@
         data() {
             return {
                 componentTypes: {
-                    [widgetTypes.WIDGET_TYPE_ID]: 'WidgetCard',
-                    [widgetTypes.CHART_TYPE_ID]: 'TimeLineChart',
+                    [widgetTypes.CHART_LINE_ID]: 'TimeLineChart',
+                    [widgetTypes.CHART_BARS_ID]: 'TimeLineChart',
                     [widgetTypes.TABLE_TYPE_ID]: 'TableData',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
@@ -96,7 +96,8 @@
                 this.$emit('remove-item', widget)
             },
             onShowUpdateDialog(TemplateID) {
-                if (TemplateID != 2) {
+                // TODO: updates
+                if (TemplateID != 2 && TemplateID != 1) {
                     alert('coming soon...')
                     return
                 }
@@ -108,8 +109,8 @@
                 this.$emit('update-item', widget)
             },
             setComponentData(TemplateID) {
-                // TODO We need a better way to check this when integrating with the api
-                if (TemplateID == 2 || TemplateID == '3') {
+                // TODO: We need a better way to check this when integrating with the api
+                if (TemplateID < '5') {
                     return this.widget;
                 }
                 return this.widget.WidgetLayout

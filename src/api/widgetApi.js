@@ -1,20 +1,14 @@
 import $axios from './apiConnection'
-import {widgets} from '@/store/mockData'
 import parseCatch from '@/helpers/handleErrors'
 
 export const WidgetApi = {
-    // TODO: get data from api
     async getAll() {
-        return widgets
-        /*try {
+        try {
             let res = await $axios.get('/Widgets/GetAllWidgets/')
             return res.WidgetList
         } catch (e) {
-            if (process.env.VUE_APP_ENV === 'local') {
-                return widgets
-            }
-            return []
-        }*/
+            parseCatch(e, true)
+        }
     },
 
     async update(data) {
