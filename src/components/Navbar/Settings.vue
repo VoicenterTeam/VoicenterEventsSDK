@@ -159,10 +159,13 @@
                             ...this.activeDashboard,
                             DashboardLayout: {...this.activeDashboard.DashboardLayout, ...{settings: this.settings}}
                         }
-                        dashboard = updateDashboard(dashboard)
 
-                        this.$store.dispatch('dashboards/updateDashboard', dashboard)
-                        this.toggleVisibility(false)
+                        updateDashboard(dashboard).then((dashboard) => {
+                            this.$store.dispatch('dashboards/updateDashboard', dashboard)
+                            this.toggleVisibility(false)
+                        }).catch(() => {
+                            this.toggleVisibility(false)
+                        })
                     }
                 });
             },
