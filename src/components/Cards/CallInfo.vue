@@ -40,12 +40,12 @@
             threshold() {
                 let show = true;
                 let icon = 'IconYellowBulb';
-                if (!this.$store.state.settings.threshold.callThreshold) {
+                if (!this.$store.state.dashboards.settings.threshold.callThreshold) {
                     show = false;
                 }
                 let seconds = this.timer.state.seconds;
-                let minThreshold = this.$store.state.settings.threshold.callThresholdLowValue
-                let maxThreshold = this.$store.state.settings.threshold.callThresholdHeightValue
+                let minThreshold = this.$store.state.dashboards.settings.threshold.callThresholdLowValue
+                let maxThreshold = this.$store.state.dashboards.settings.threshold.callThresholdHeightValue
 
                 if (minThreshold > seconds) {
                     show = false
