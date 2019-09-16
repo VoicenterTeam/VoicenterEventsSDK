@@ -81,8 +81,11 @@
     </el-dialog>
 </template>
 <script>
-    import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber} from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
+    import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber} from 'element-ui'
+    import convertHex from "@/helpers/convertHex";
+    import {updateDashboard} from '@/services/dashboardService'
+
 
     export default {
         inheritAttrs: false,
@@ -96,8 +99,14 @@
         },
         data() {
             return {
-                settings: cloneDeep(this.$store.state.settings),
+                settings: cloneDeep(this.$store.state.dashboards.settings),
                 activeCollapses: ['report', 'color', 'threshold'],
+            }
+        },
+        props: {
+            activeDashboard: {
+                type: Object,
+                default: () => ({})
             }
         },
         computed: {
@@ -145,7 +154,14 @@
             updateSettings() {
                 this.$refs.settings.validate((valid) => {
                     if (valid) {
-                        this.$store.dispatch('settings/update', this.settings)
+                        this.settings.colors.primary_rgba = convertHex(this.settings.colors.primary)
+                        let dashboard = {
+                            ...this.activeDashboard,
+                            DashboardLayout: {...this.activeDashboard.DashboardLayout, ...{settings: this.settings}}
+                        }
+                        dashboard = updateDashboard(dashboard)
+
+                        this.$store.dispatch('dashboards/updateDashboard', dashboard)
                         this.toggleVisibility(false)
                     }
                 });

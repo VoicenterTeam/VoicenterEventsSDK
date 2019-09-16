@@ -45,10 +45,10 @@
         },
         computed: {
             reportSettings() {
-                return this.$store.state.settings.report
+                return this.$store.state.dashboards.settings.report
             },
             circularTimeout() {
-                if (this.$store.state.settings.report.switching) {
+                if (this.$store.state.dashboards.settings.report.switching) {
                     return this.reportSettings.interval
                 } else {
                     return null
