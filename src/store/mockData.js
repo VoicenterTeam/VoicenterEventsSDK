@@ -670,7 +670,27 @@ export const dashboards = [
         "DashboardID": 143,
         "DashboardTitle": "dashboards.main",
         "DashboardLayout": {
-            "additionalProp1": {}
+            "settings": {
+                "colors": {
+                    "primary": "#E6761A",
+                    "secondary": "#876cff",
+                    "primary_rgba": "37, 117, 255"
+                },
+                "report": {
+                    "refresh": false,
+                    "interval": 5,
+                    "switching": true
+                },
+                "threshold": {
+                    "callThreshold": false,
+                    "generalThreshold": false,
+                    "callThresholdLowValue": 0,
+                    "callThresholdHeightValue": 0,
+                    "generalThresholdLowValue": 0,
+                    "generalThresholdHeightValue": 0
+                },
+                "showLoggedOutUsers": true
+            }
         },
         "WidgetGroupList": [
             {
@@ -706,7 +726,13 @@ export const dashboards = [
                                 "WidgetColumnConfig": {}
                             }
                         ]
-                    },
+                    }
+                ],
+                "WidgetGroupID": "184",
+                "WidgetGroupTitle": "Gr 1 - 1"
+            },
+            {
+                "WidgetList": [
                     {
                         "Title": "Table",
                         "WidgetID": "203",
@@ -851,13 +877,8 @@ export const dashboards = [
                         ]
                     }
                 ],
-                "WidgetGroupID": "184", "ColumnIndex": 0,
-                //             "TemplateColumnID": 161,
-                //             "WidgetColumnConfig": {}
-                //         }
-                //     ]
-                // },
-                "WidgetGroupTitle": ""
+                "WidgetGroupID": "185",
+                "WidgetGroupTitle": "Gr 1 - 2"
             }
         ],
         "DashBoardsPermission": [
