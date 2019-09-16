@@ -3,8 +3,8 @@
                       :value="widgets"
                       :disabled="!editable"
                       @change="(ev) => onListChange(ev)">
-        <div v-for="widget in widgets"
-             :key="widget.WidgetID"
+        <div v-for="(widget, index) in widgets"
+             :key="index"
              class="w-full px-2" :class="componentWidth[widget.TemplateID]">
             <Widget :widget="widget"
                     :editable="editable"
@@ -12,7 +12,7 @@
                     @update-item="(data) => updateWidget(data)">
             </Widget>
         </div>
-        <widget-empty-card v-if="editable" key="0"
+        <widget-empty-card v-if="editable" key="-1"
                            :widgets="widgets"
                            :all-widgets="allWidgets"
                            :widget-group="widgetGroup"
@@ -43,8 +43,8 @@
         data() {
             return {
                 componentWidth: {
-                    [widgetTypes.WIDGET_TYPE_ID]: 'lg:w-1/3',
-                    [widgetTypes.CHART_TYPE_ID]: 'lg:w-3/3',
+                    [widgetTypes.CHART_LINE_ID]: 'lg:w-3/3',
+                    [widgetTypes.CHART_BARS_ID]: 'lg:w-3/3',
                     [widgetTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'lg:w-3/3',
                     [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'lg:w-1/3',

@@ -159,7 +159,6 @@
                             ...this.activeDashboard,
                             DashboardLayout: {...this.activeDashboard.DashboardLayout, ...{settings: this.settings}}
                         }
-
                         updateDashboard(dashboard).then((dashboard) => {
                             this.$store.dispatch('dashboards/updateDashboard', dashboard)
                             this.toggleVisibility(false)

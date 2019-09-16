@@ -2,7 +2,7 @@ export const widgets = [
     {
         "Title": "Calls Per Minute",
         "WidgetID": "162",
-        "TemplateID": "2",
+        "TemplateID": "1",
         "WidgetTime": {},
         "WidgetConfig": [
             {
@@ -109,7 +109,7 @@ export const widgets = [
     {
         "Title": "Realtime call cards",
         "WidgetID": "330",
-        "TemplateID": "4",
+        "TemplateID": "5",
         "WidgetTime": {},
         "WidgetLayout": {
             "Order": 1,
@@ -125,47 +125,9 @@ export const widgets = [
         ]
     },
     {
-        "Title": "Statistics cards",
-        "WidgetID": "223",
-        "TemplateID": "5",
-        "WidgetTime": {},
-        "WidgetLayout": {
-            "Order": 1,
-            "icon": "IconIncomingCall",
-            "caption": "Statistics cards",
-            "status": 1
-        },
-        "WidgetConfig": [],
-        "WidgetEntity": [
-            {
-                "EntityID": 9,
-                "EntityType": 2
-            }
-        ]
-    },
-    {
-        "Title": "Status cards",
-        "WidgetID": "228",
-        "TemplateID": 6,
-        "WidgetTime": {},
-        "WidgetConfig": [],
-        "WidgetEntity": [
-            {
-                "EntityID": 9,
-                "EntityType": 2
-            }
-        ],
-        "WidgetLayout": {
-            "icon": "IconLogin",
-            "Order": 1,
-            "status": 9,
-            "caption": "Status cards"
-        }
-    },
-    {
         "Title": "Table",
         "WidgetID": "8",
-        "TemplateID": "3",
+        "TemplateID": "4",
         "WidgetTime": {},
         "WidgetConfig": [
             {
@@ -334,6 +296,45 @@ export const widgets = [
                 }
             ],
             "date": "06/29/2019 - 07/29/2019"
+        }
+    },
+
+    {
+        "Title": "Statistics cards",
+        "WidgetID": "223",
+        "TemplateID": "55",
+        "WidgetTime": {},
+        "WidgetLayout": {
+            "Order": 1,
+            "icon": "IconIncomingCall",
+            "caption": "Statistics cards",
+            "status": 1
+        },
+        "WidgetConfig": [],
+        "WidgetEntity": [
+            {
+                "EntityID": 9,
+                "EntityType": 2
+            }
+        ]
+    },
+    {
+        "Title": "Status cards",
+        "WidgetID": "228",
+        "TemplateID": "66",
+        "WidgetTime": {},
+        "WidgetConfig": [],
+        "WidgetEntity": [
+            {
+                "EntityID": 9,
+                "EntityType": 2
+            }
+        ],
+        "WidgetLayout": {
+            "icon": "IconLogin",
+            "Order": 1,
+            "status": 9,
+            "caption": "Status cards"
         }
     },
 ]
