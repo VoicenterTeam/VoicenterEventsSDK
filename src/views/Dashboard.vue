@@ -8,7 +8,7 @@
             <div class="pt-24" :class="getClass">
                 <div class="flex justify-end -mx-1">
                     <div class="my-4 flex">
-                        <AddButton v-if="editMode" class="mx-1"
+                        <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
                                    @click.stop="showWidgetMenu = !showWidgetMenu">
                         </AddButton>
                         <manage-dashboard-buttons
@@ -19,10 +19,12 @@
                         </manage-dashboard-buttons>
                     </div>
                     <fade-transition>
-                        <WidgetMenu v-if="showWidgetMenu"
-                                    v-click-outside="onWidgetMenuClickOutside"
-                                    :widgets="allWidgets">
-                        </WidgetMenu>
+                        <widget-menu v-if="showWidgetMenu"
+                                     :widgetGroup=firstWidgetGroup
+                                     @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
+                                     v-click-outside="onWidgetMenuClickOutside"
+                                     :widgets="allWidgets">
+                        </widget-menu>
                     </fade-transition>
                     <layout-switcher
                         v-if="!editMode"
@@ -46,7 +48,7 @@
                         @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
                         @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
                         @onListChange="(data) => onListChange(data.event, data.group)"
-                        @addWidgetToGroup="(data) => addWidgetToGroup(data.widget, data.group)"
+                        @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
                         @removeWidget="(data) => removeWidget(data.widget, data.group)"
                         @updateWidget="(data) => updateWidget(data.widget, data.group)"
                         @switch-tab="(tab) => switchTab(tab)">
@@ -134,15 +136,23 @@
             extensions() {
                 return this.$store.state.extensions.extensions
             },
+            firstWidgetGroup() {
+                return this.activeDashboardData.WidgetGroupList[0]
+            }
         },
         methods: {
-            addWidgetToGroup(widget, widgetGroup) {
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                widget.WidgetLayout.Order = widgetGroup.WidgetList.length + 1
-                this.activeDashboardData.WidgetGroupList[index].WidgetList.push(widget);
+            addWidgetsToGroup(widgets, widgetGroup) {
                 if (!widgetGroup.IsNew) {
-                    this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                    widgets.forEach((widget, index) => {
+                        let temporaryID = Math.random() * 100
+                        widget.temporaryID = temporaryID
+                        widget.WidgetLayout.Order = widgetGroup.WidgetList.length + index + 1
+                        this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID, temporaryID))
+                    })
                 }
+                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
+                this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(widgets)
+                this.showWidgetMenu = false
             },
             orderWidgetGroup(widgetGroup, direction) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -246,7 +256,13 @@
                     if (widgetIndex !== -1) {
                         this.activeDashboardData.WidgetGroupList[index].WidgetList[widgetIndex] = widget
                         if (!widgetGroup.IsNew) {
-                            this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                            //Check if widget is new or already is stored in group
+                            let oldWidgetIndex = this.$store.state.dashboards.activeDashboard.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
+                            if (oldWidgetIndex !== -1) {
+                                this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                            } else {
+                                this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                            }
                         }
                         if (!this.editMode) {
                             this.saveDashboard()
@@ -255,6 +271,7 @@
                 }
             },
             async saveDashboard() {
+                this.showWidgetMenu = false
                 await this.$store.dispatch('dashboards/setLoadingData', true)
                 //CheckWidgetGroupUpdates
                 this.updateDashboardOperations()
@@ -280,6 +297,7 @@
                 })
             },
             resetDashboard() {
+                this.showWidgetMenu = false
                 let dashboard = this.$store.state.dashboards.activeDashboard
                 this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)

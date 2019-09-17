@@ -4,7 +4,7 @@
             <div class="flex flex-col md:flex-row md:items-center">
                 <p class="text-2xl font-semibold"
                    :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
-                    {{data.WidgetLayout.Title}}
+                    {{data.WidgetLayout.caption}}
                 </p>
 
                 <range-filter class="mt-2 md:mt-0"

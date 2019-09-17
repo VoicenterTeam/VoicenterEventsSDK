@@ -106,5 +106,8 @@
   "tooltip.remove.widget": "Remove widget",
   "tooltip.edit.widget": "Edit widget",
   "tooltip.move.group.up": "Move group up",
-  "tooltip.move.group.down": "Move group down"
+  "tooltip.move.group.down": "Move group down",
+  "save.to.add": "Save to add",
+  "no.widgets.added": "There are no widgets added yet"
+
 }

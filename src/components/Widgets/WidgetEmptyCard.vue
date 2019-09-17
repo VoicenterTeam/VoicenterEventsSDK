@@ -1,14 +1,14 @@
 <template>
     <div class="w-full lg:w-1/3 p-4 my-4 bg-gray-300 flex items-center justify-center rounded-lg shadow cursor-pointer">
-        <div class="flex items-center justify-center"
-             @click.stop="updateEditWidget">
+        <div class="flex items-center justify-center">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.add.widgets')" placement="top">
-                <IconPlusCircle class="w-12 mr-4 text-primary"></IconPlusCircle>
+                <IconPlusCircle class="w-12 mr-4 text-primary" @click.stop="updateEditWidget"></IconPlusCircle>
             </el-tooltip>
             <fade-transition>
                 <WidgetMenu v-if="widgetGroup && widgetGroup.edit"
                             v-click-outside="onWidgetMenuClickOutside"
                             v-bind="$attrs"
+                            :widgetGroup="widgetGroup"
                             :widgets="allWidgets"
                             v-on="$listeners">
                 </WidgetMenu>
@@ -30,7 +30,7 @@
         props: {
             widgetGroup: {
                 type: Object,
-                default: null
+                default: () => ({})
             },
             allWidgets: {
                 type: Array,

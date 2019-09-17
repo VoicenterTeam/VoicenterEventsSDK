@@ -11,6 +11,7 @@ export async function runDashboardOperations(operations, dashboard) {
                 case targets.WIDGET_GROUP:
                     switch (operation.type) {
                         case types.ADD:
+                            delete operation.payload.IsNew
                             let newGroup = await WidgetGroupsApi.store(operation.payload)
                             await DashboardApi.addWidgetGroup(dashboardID, newGroup.WidgetGroupID)
                             break;
@@ -27,7 +28,11 @@ export async function runDashboardOperations(operations, dashboard) {
                 case targets.WIDGET:
                     switch (operation.type) {
                         case types.ADD:
-                            await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID)
+                            delete operation.payload.temporaryID
+                            let data = {
+                                'Order': operation.payload.WidgetLayout.Order
+                            }
+                            await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID, data)
                             break;
                         case types.UPDATE:
                             await WidgetApi.update(operation.payload)

@@ -6,7 +6,9 @@ export default class DashboardOperations {
     }
 
     add(operation) {
-        let index = this.operations.findIndex(op => op.payload[operation.target + 'ID'] === operation.payload[operation.target + 'ID'])
+
+        let index = this.checkIfEntityAlreadyAdded(operation)
+
         if (operation.type === types.REMOVE) {
             if (index === -1) {
                 this.operations.push(operation)
@@ -33,5 +35,13 @@ export default class DashboardOperations {
 
     all() {
         return this.operations
+    }
+
+    checkIfEntityAlreadyAdded(operation) {
+        if (operation.payload.temporaryID) {
+            return this.operations.findIndex(op => op.meta.temporaryID === operation.payload.temporaryID)
+        } else {
+            return this.operations.findIndex(op => op.payload[operation.target + 'ID'] === operation.payload[operation.target + 'ID'])
+        }
     }
 }

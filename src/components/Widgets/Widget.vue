@@ -28,7 +28,7 @@
         <update-dialog
             width="30%"
             v-if="showUpdateDialog"
-            :chartTitle="widget.WidgetLayout.Title"
+            :chartTitle="widget.WidgetLayout.caption"
             @on-change="(title) => onChangeTitle(title, widget)"
             :visible.sync="showUpdateDialog">
         </update-dialog>
@@ -104,7 +104,7 @@
                 this.showUpdateDialog = true
             },
             onChangeTitle(title, widget) {
-                widget.WidgetLayout.Title = title
+                widget.WidgetLayout.caption = title
                 widget = {...widget, ...widget.WidgetLayout}
                 this.$emit('update-item', widget)
             },

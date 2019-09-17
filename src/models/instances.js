@@ -17,11 +17,12 @@ export const widgetGroupModel = () => ({
     "IsNew": true
 })
 
-export const dashboardOperation = (type, target, payload, parentID = null) => ({
+export const dashboardOperation = (type, target, payload, parentID = null, temporaryID = false) => ({
     type: type,
     target: target,
     payload: payload,
     meta: {
-        parentID: parentID
+        parentID: parentID,
+        temporaryID: temporaryID
     }
 })

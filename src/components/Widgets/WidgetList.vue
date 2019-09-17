@@ -16,7 +16,8 @@
                            :widgets="widgets"
                            :all-widgets="allWidgets"
                            :widget-group="widgetGroup"
-                           @add-widget="(value) => addWidgetToGroup(value)">
+                           v-on="$listeners"
+                           @add-widget="(value) => addWidgetsToGroup(value)">
         </widget-empty-card>
         <div v-if="widgets === 0"
              class="w-full flex flex-col items-center mt-20"
@@ -74,8 +75,8 @@
             onListChange(ev) {
                 this.$emit('onListChange', {'event': ev, 'group': this.widgetGroup})
             },
-            addWidgetToGroup(val) {
-                this.$emit('addWidgetToGroup', {'widget': val, 'group': this.widgetGroup})
+            addWidgetsToGroup(val) {
+                this.$emit('addWidgetsToGroup', {'widgets': [val], 'group': this.widgetGroup})
             },
             removeWidget(val) {
                 this.$emit('removeWidget', {'widget': val, 'group': this.widgetGroup})

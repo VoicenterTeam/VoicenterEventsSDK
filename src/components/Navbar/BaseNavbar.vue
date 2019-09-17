@@ -13,7 +13,7 @@
                     <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                        <span class="mx-1 text-sm md:text-lg text-gray-700" v-if="activeDashboard">{{$t(activeDashboard.DashboardTitle) || activeDashboard.DashboardTitle}}</span>
+                        <span class="mx-1 text-sm md:text-lg text-gray-700" v-if="activeDashboard">{{activeDashboard.DashboardTitle}}</span>
                         <IconArrowDown></IconArrowDown>
                     </button>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
@@ -31,7 +31,7 @@
                           @click="chooseDashboard(dashboard)"
                           v-for="dashboard in allDashboards"
                           :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}">
-                          {{$t(dashboard.DashboardTitle) || dashboard.DashboardTitle}}
+                          {{dashboard.DashboardTitle}}
                         <el-tooltip class="item" effect="dark" :content="$t('common.deleteDashboard')"
                                     placement="top">
                             <IconMinus v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
