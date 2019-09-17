@@ -10,6 +10,7 @@ export const dashboardModel = () => ({
 })
 
 export const widgetGroupModel = () => ({
+    "Order": 0,
     "WidgetGroupID": Math.random() * 100,
     "WidgetGroupTitle": "",
     "WidgetList": [],

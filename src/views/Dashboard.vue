@@ -59,7 +59,9 @@
 
 <script>
 
-    import get from 'lodash/get';
+    import get from 'lodash/get'
+    import uniqBy from 'lodash/uniqBy'
+    import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
@@ -95,7 +97,7 @@
             return {
                 showWidgetMenu: false,
                 editMode: false,
-                activeDashboardData: cloneDeep(this.$store.state.dashboards.activeDashboard),
+                activeDashboardData: null,
                 layoutTypes: {
                     [layoutTypes.NORMAL]: 'NormalView',
                     [layoutTypes.TABBED]: 'TabbedView',
@@ -136,6 +138,7 @@
         methods: {
             addWidgetToGroup(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
+                widget.WidgetLayout.Order = widgetGroup.WidgetList.length + 1
                 this.activeDashboardData.WidgetGroupList[index].WidgetList.push(widget);
                 if (!widgetGroup.IsNew) {
                     this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
@@ -149,33 +152,41 @@
                 } else {
                     newIndex = index + 1;
                 }
-                let originWidget = this.activeDashboardData.WidgetGroupList[index];
-                let destinationWidget = this.activeDashboardData.WidgetGroupList[newIndex];
 
                 if (newIndex < 0) {
+                    //move first down
                     let selectedGroup = this.activeDashboardData.WidgetGroupList[0];
                     this.activeDashboardData.WidgetGroupList.splice(0, 1)
                     this.activeDashboardData.WidgetGroupList.push(selectedGroup)
-
+                    this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
+                        group.Order = index
+                    })
                 } else if (newIndex >= this.activeDashboardData.WidgetGroupList.length) {
+                    //move last up
                     let newPosition = this.activeDashboardData.WidgetGroupList.length - 1;
                     let selectedGroup = this.activeDashboardData.WidgetGroupList[newPosition];
                     this.activeDashboardData.WidgetGroupList.splice(newPosition, 1)
                     this.activeDashboardData.WidgetGroupList.splice(0, 0, selectedGroup)
-
+                    this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
+                        group.Order = index
+                    })
                 } else {
+                    let originWidget = this.activeDashboardData.WidgetGroupList[index];
+                    let destinationWidget = this.activeDashboardData.WidgetGroupList[newIndex];
+                    originWidget.Order = newIndex
+                    destinationWidget.Order = index
                     this.activeDashboardData.WidgetGroupList.splice(newIndex, 1, originWidget)
                     this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationWidget)
                 }
             },
             //Order list & add to List - events
             onListChange(event, widgetGroup) {
-
                 if (event[draggableEvents.MOVED]) {
                     event = event[draggableEvents.MOVED]
                     widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
                     if (!widgetGroup.IsNew) {
-                        widgetGroup.WidgetList.forEach((widget) => {
+                        widgetGroup.WidgetList.forEach((widget, index) => {
+                            widget.WidgetLayout.Order = index + 1
                             this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                         })
                     }
@@ -183,14 +194,19 @@
                     event = event[draggableEvents.ADDED]
                     widgetGroup.WidgetList.splice(event.newIndex, 0, event.element);
                     if (!widgetGroup.IsNew) {
+                        event.element.WidgetLayout.Order = event.newIndex
                         this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, event.element, widgetGroup.WidgetGroupID))
+                        let widgetsToUpdate = widgetGroup.WidgetList.slice(event.newIndex + 1)
+                        widgetsToUpdate.forEach((widget, index) => {
+                            widget.WidgetLayout.Order = index + 1 + event.newIndex
+                            this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                        })
                     }
                 }
 
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
                     this.activeDashboardData.WidgetGroupList.splice(index, 1, widgetGroup)
-
                 }
             },
             onWidgetMenuClickOutside() {
@@ -219,6 +235,9 @@
             },
             addNewGroup() {
                 this.activeDashboardData.WidgetGroupList.splice(0, 0, widgetGroupModel())
+                this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
+                    group.Order = index
+                })
             },
             updateWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -237,15 +256,28 @@
             },
             async saveDashboard() {
                 await this.$store.dispatch('dashboards/setLoadingData', true)
-
-                let updatedWidgetGroups = differenceBy(this.activeDashboardData.WidgetGroupList, this.$store.state.dashboards.activeDashboard.WidgetGroupList, 'WidgetGroupTitle')
-                updatedWidgetGroups.forEach((widgetGroup) => {
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
-                })
-
+                //CheckWidgetGroupUpdates
+                this.updateDashboardOperations()
+                //RunDashboardOperations
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.operations = new DashboardOperations()
+            },
+            updateDashboardOperations() {
+                let oldDashboardWidgetGroupList = this.$store.state.dashboards.activeDashboard.WidgetGroupList
+                //Check if some widgetGroups are updated and add changes to dashboard operations
+                let widgetGroupsToUpdate = differenceBy(this.activeDashboardData.WidgetGroupList, oldDashboardWidgetGroupList, 'WidgetGroupTitle')
+                //Check if the widgetsGroups are changed order
+                this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
+                    if (oldDashboardWidgetGroupList[index] && group.WidgetGroupID !== oldDashboardWidgetGroupList[index].WidgetGroupID) {
+                        widgetGroupsToUpdate.push(group)
+                    }
+                })
+                //Exclude additional operations duplicate(title updates)
+                widgetGroupsToUpdate = uniqBy(widgetGroupsToUpdate, "WidgetGroupID")
+                widgetGroupsToUpdate.forEach((widgetGroup) => {
+                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
+                })
             },
             resetDashboard() {
                 let dashboard = this.$store.state.dashboards.activeDashboard
@@ -272,11 +304,29 @@
                         this.$store.dispatch('extensions/updateExtension', {index, extension})
                     }
                 }
+            },
+            sortDashboardEntities(dashboard) {
+                try {
+                    dashboard.WidgetGroupList = orderBy(dashboard.WidgetGroupList, 'Order', 'asc')
+                    dashboard.WidgetGroupList = dashboard.WidgetGroupList.map((widgetGroup) => {
+                        let WidgetList = orderBy(widgetGroup.WidgetList, 'WidgetLayout.Order', 'asc')
+                        return {
+                            ...widgetGroup,
+                            WidgetList
+                        }
+                    })
+                    this.activeDashboardData = dashboard
+                } catch (e) {
+                }
             }
         },
         watch: {
-            dashboard() {
-                this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
+            dashboard: {
+                immediate: true,
+                handler: function () {
+                    let dashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
+                    this.sortDashboardEntities(dashboard)
+                }
             },
             editMode(val) {
                 if (val) {
