@@ -6,32 +6,39 @@
                      :widgetGroupList="activeDashboardData.WidgetGroupList"
                      @switch-tab="(tab) => switchTab(tab)"></sidebar>
             <div class="pt-24" :class="getClass">
-                <div class="flex justify-end -mx-1">
-                    <div class="my-4 flex">
-                        <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
-                                   @click.stop="showWidgetMenu = !showWidgetMenu">
-                        </AddButton>
-                        <manage-dashboard-buttons
-                            @click.stop="editMode = !editMode"
-                            @reset-dashboard="resetDashboard"
-                            @save-dashboard="saveDashboard"
-                            :edit-mode="editMode">
-                        </manage-dashboard-buttons>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
+                    <div class="flex w-48 sm:w-64">
+                        <el-input v-if="showGeneralWidgetSearch" placeholder="Search for existing elements" v-model="search"
+                                  prefix-icon="el-icon-search"></el-input>
                     </div>
-                    <fade-transition>
-                        <widget-menu v-if="showWidgetMenu"
-                                     :widgetGroup=firstWidgetGroup
-                                     @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
-                                     v-click-outside="onWidgetMenuClickOutside"
-                                     :widgets="allWidgets">
-                        </widget-menu>
-                    </fade-transition>
-                    <layout-switcher
-                        v-if="!editMode"
-                        :activeType="layoutType"
-                        @switch-layout="(type) => switchDashboardLayout(type)">
-                    </layout-switcher>
+                    <div class="flex justify-end -mx-1">
+                        <div class="my-4 flex">
+                            <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
+                                       @click.stop="showWidgetMenu = !showWidgetMenu">
+                            </AddButton>
+                            <manage-dashboard-buttons
+                                @click.stop="editMode = !editMode"
+                                @reset-dashboard="resetDashboard"
+                                @save-dashboard="saveDashboard"
+                                :edit-mode="editMode">
+                            </manage-dashboard-buttons>
+                        </div>
+                        <fade-transition>
+                            <widget-menu v-if="showWidgetMenu"
+                                         :widgetGroup=firstWidgetGroup
+                                         @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
+                                         v-click-outside="onWidgetMenuClickOutside"
+                                         :widgets="allWidgets">
+                            </widget-menu>
+                        </fade-transition>
+                        <layout-switcher
+                            v-if="!editMode"
+                            :activeType="layoutType"
+                            @switch-layout="(type) => switchDashboardLayout(type)">
+                        </layout-switcher>
+                    </div>
                 </div>
+
                 <div class="flex justify-end">
                     <new-group-button
                         @click.native="addNewGroup"
@@ -43,6 +50,7 @@
                         :is="layoutTypes[layoutType]"
                         :activeDashboardData="activeDashboardData"
                         :editMode="editMode"
+                        :search="search"
                         :activeTab="activeTab"
                         :allWidgets="allWidgets"
                         @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
@@ -106,8 +114,8 @@
                 },
                 layoutType: 'normal',
                 previousLayoutType: '',
-                activeTab: get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID'),
-                operations: new DashboardOperations()
+                operations: new DashboardOperations(),
+                search: ''
             }
         },
         computed: {
@@ -138,6 +146,12 @@
             },
             firstWidgetGroup() {
                 return this.activeDashboardData.WidgetGroupList[0]
+            },
+            showGeneralWidgetSearch() {
+                return this.$store.state.dashboards.settings.showGeneralWidgetSearch
+            },
+            activeTab() {
+                return get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             }
         },
         methods: {

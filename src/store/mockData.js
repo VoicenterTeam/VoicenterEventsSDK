@@ -905,6 +905,7 @@ export const settings = {
         primary_rgba: "37, 117, 255"
     },
     showLoggedOutUsers: true,
+    showGeneralWidgetSearch: true,
     threshold: {
         generalThreshold: false,
         generalThresholdLowValue: 0,

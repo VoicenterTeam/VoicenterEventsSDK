@@ -6,6 +6,7 @@
                     :widgets="tab.WidgetList"
                     :all-widgets="allWidgets"
                     :editable="editMode"
+                    v-bind="$attrs"
                     :widget-group="tab"
                     v-on="$listeners">
                 </widget-list>
@@ -62,12 +63,12 @@
         methods: {
             syncChartData(settings) {
                 clearInterval(this.timeoutId)
-                if (settings.refresh) {
-                    //TODO: CHECK API - get one chart data
-                    this.timeoutId = setInterval(() => {
-                        this.$store.dispatch('charts/getAllCharts')
-                    }, settings.interval * 1000)
-                }
+                //TODO: CHECK API - get one chart data
+                // if (settings.refresh) {
+                //     this.timeoutId = setInterval(() => {
+                //         this.$store.dispatch('charts/getAllCharts')
+                //     }, settings.interval * 1000)
+                // }
             },
         },
         watch: {

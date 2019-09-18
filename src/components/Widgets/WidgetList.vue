@@ -3,7 +3,7 @@
                       :value="widgets"
                       :disabled="!editable"
                       @change="(ev) => onListChange(ev)">
-        <div v-for="(widget, index) in widgets"
+        <div v-for="(widget, index) in filteredWidgets"
              :key="index"
              class="w-full px-2" :class="componentWidth[widget.TemplateID]">
             <Widget :widget="widget"
@@ -25,6 +25,7 @@
             <IconNoData v-if="!editable" class="h-56 w-56"></IconNoData>
             <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
         </div>
+
     </DraggableWidgets>
 </template>
 <script>
@@ -69,6 +70,20 @@
             allWidgets: {
                 type: Array,
                 default: () => []
+            },
+            search: {
+                type: String,
+                default: ''
+            }
+        },
+        computed: {
+            filteredWidgets() {
+                return this.widgets.filter((widget) => {
+                    if (widget.WidgetLayout.caption) {
+                        return widget.WidgetLayout.caption.toLowerCase().includes(this.search.toLowerCase())
+                    }
+                    return false
+                })
             }
         },
         methods: {
