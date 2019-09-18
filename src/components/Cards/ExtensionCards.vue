@@ -31,7 +31,7 @@
             </el-select>
         </div>
         <div>
-            <div class="flex py-6">
+            <div class="flex py-6 extension-cards">
                 <fade-transition class="flex flex-wrap w-full " group
                                  :style="renderColumns"
                                  :class="{'grid-container overflow-x-auto': sortedExtensions.length}">
@@ -158,24 +158,6 @@
     .extension-cards {
         min-height: 280px;
     }
-</style>
-<style lang="scss">
-    .flip-list-move {
-        transition: transform 5s;
-    }
-
-    .el-loading-mask .el-loading-spinner {
-        display: flex;
-        justify-content: center;
-    }
-
-    .el-row {
-        margin-bottom: 20px;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
 
     .icon-square {
         width: 20px;
@@ -196,5 +178,23 @@
 
     .grid-container {
         display: grid;
+    }
+</style>
+<style lang="scss">
+    .flip-list-move {
+        transition: transform 5s;
+    }
+
+    .el-loading-mask .el-loading-spinner {
+        display: flex;
+        justify-content: center;
+    }
+
+    .el-row {
+        margin-bottom: 20px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 </style>
