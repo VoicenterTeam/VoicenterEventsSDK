@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="47" height="47" viewBox="0 0 47 47">
+    <defs>
+        <rect id="b" width="41" height="41" rx="4"/>
+        <filter id="a" width="122%" height="122%" x="-11%" y="-11%" filterUnits="objectBoundingBox">
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1.5"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0.164705882 0 0 0 0 0.17254902 0 0 0 0 0.211764706 0 0 0 0.143399004 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(3 3)">
+            <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+            <use fill="#FFF" xlink:href="#b"/>
+        </g>
+        <g fill="#D6DAE1" transform="translate(7.824 9.03)">
+            <rect width="9.647" height="8.441" rx="1"/>
+            <rect width="9.647" height="8.441" x="10.853" rx="1"/>
+            <rect width="9.647" height="8.441" x="21.706" rx="1"/>
+        </g>
+        <g fill="#D6DAE1" transform="translate(7.824 19.882)">
+            <rect width="9.647" height="8.441" rx="1"/>
+            <rect width="9.647" height="8.441" x="10.853" rx="1"/>
+            <rect width="9.647" height="8.441" x="21.706" rx="1"/>
+        </g>
+        <g fill="#D6DAE1" transform="translate(7.824 30.735)">
+            <rect width="9.647" height="8.441" rx="1"/>
+            <rect width="9.647" height="8.441" x="10.853" rx="1"/>
+            <rect width="9.647" height="8.441" x="21.706" rx="1"/>
+        </g>
+    </g>
+</svg>
