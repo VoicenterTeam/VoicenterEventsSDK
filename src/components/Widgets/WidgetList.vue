@@ -71,7 +71,7 @@
                 type: Array,
                 default: () => []
             },
-            search: {
+            widgetsFilter: {
                 type: String,
                 default: ''
             }
@@ -80,7 +80,7 @@
             filteredWidgets() {
                 return this.widgets.filter((widget) => {
                     if (widget.WidgetLayout.caption) {
-                        return widget.WidgetLayout.caption.toLowerCase().includes(this.search.toLowerCase())
+                        return widget.WidgetLayout.caption.toLowerCase().includes(this.widgetsFilter.toLowerCase())
                     }
                     return false
                 })

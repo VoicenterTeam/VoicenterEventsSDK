@@ -8,7 +8,7 @@
             <div class="pt-24" :class="getClass">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
                     <div class="flex w-48 sm:w-64">
-                        <el-input v-if="showGeneralWidgetSearch" placeholder="Search for existing elements" v-model="search"
+                        <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')" v-model="widgetsFilter"
                                   prefix-icon="el-icon-search"></el-input>
                     </div>
                     <div class="flex justify-end -mx-1">
@@ -50,7 +50,7 @@
                         :is="layoutTypes[layoutType]"
                         :activeDashboardData="activeDashboardData"
                         :editMode="editMode"
-                        :search="search"
+                        :widgetsFilter="widgetsFilter"
                         :activeTab="activeTab"
                         :allWidgets="allWidgets"
                         @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
@@ -115,7 +115,7 @@
                 layoutType: 'normal',
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
-                search: ''
+                widgetsFilter: ''
             }
         },
         computed: {

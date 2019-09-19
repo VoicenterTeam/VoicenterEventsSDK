@@ -91,8 +91,8 @@
     import cloneDeep from 'lodash/cloneDeep'
     import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber} from 'element-ui'
     import convertHex from '@/helpers/convertHex'
+    import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
-
 
     export default {
         inheritAttrs: false,
@@ -161,8 +161,6 @@
             updateSettings() {
                 this.$refs.settings.validate((valid) => {
                     if (valid) {
-                        this.toggleVisibility(false)
-                        this.$store.dispatch('dashboards/setLoadingData', true)
                         this.settings.colors.primary_rgba = convertHex(this.settings.colors.primary)
                         let dashboard = {
                             ...this.activeDashboard,
@@ -170,7 +168,9 @@
                         }
                         updateDashboard(dashboard).then((dashboard) => {
                             this.$store.dispatch('dashboards/updateDashboard', dashboard)
-                        }).catch(() => {
+                            this.toggleVisibility(false)
+                        }).catch((e) => {
+                            parseCatch(e, true)
                         })
                     }
                 });
