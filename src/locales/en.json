@@ -44,6 +44,8 @@
   "settings.settings": "Settings",
   "settings.extension": "Extension Card Settings",
   "settings.reports": "Reports",
+  "settings.layout": "Layout",
+  "settings.widget.search": "Show general widget search input",
   "settings.colors": "Colors",
   "settings.threshold": "Threshold",
   "settings.color.primary": "Primary",
@@ -108,6 +110,7 @@
   "tooltip.move.group.up": "Move group up",
   "tooltip.move.group.down": "Move group down",
   "save.to.add": "Save to add",
-  "no.widgets.added": "There are no widgets added yet"
-
+  "no.widgets.added": "There are no widgets added yet",
+  "search.existing.elements": "Search for existing elements",
+  "columns.layout": "Columns Layout"
 }

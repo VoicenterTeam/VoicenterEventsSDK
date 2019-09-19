@@ -1,7 +1,26 @@
 <template>
     <div>
-        <div class="flex w-full justify-end pr-12"
-             :class="responsiveClass">
+        <div class="flex w-full justify-end pr-12" :class="responsiveClass">
+            <div class="mx-1 -my-1 cursor-pointer">
+                <div>
+                    <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"></IconCardsGrid>
+                </div>
+                <fade-transition :duration="250">
+                    <div v-if="showGridMenu"
+                         v-click-outside="onMenuClickOutside"
+                         class="bg-white rounded mt-1 absolute w-56 flex flex-col border-2">
+                        <div class="bg-gray-200 rounded-t border-b-2">
+                            <p class="p-2 text-sm font-medium">{{layoutColumns}} {{$t('columns.layout')}}</p>
+                        </div>
+                        <div class="flex items-center py-2">
+                            <i v-for="index in maxLayoutColumns"
+                               class="icon-square mx-margin--1"
+                               :class="{'bg-primary-100': index <= layoutColumns}"
+                               @click="updateGrid(index)"></i>
+                        </div>
+                    </div>
+                </fade-transition>
+            </div>
             <el-select placeholder="Sort by" v-model="sortBy">
                 <template v-slot:prefix>
                     <span class="h-full flex items-center">
@@ -13,12 +32,13 @@
         </div>
         <div>
             <div class="flex py-6 extension-cards">
-                <fade-transition class="flex flex-wrap w-full" group>
+                <fade-transition class="flex flex-wrap w-full " group
+                                 :style="renderColumns"
+                                 :class="{'grid-container overflow-x-auto': sortedExtensions.length}">
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
                          class="pr-4">
-                        <extension-card :extension="extension">
-                        </extension-card>
+                        <extension-card :extension="extension"></extension-card>
                     </div>
                     <div key="no-data"
                          class="flex flex-col w-full items-center"
@@ -33,10 +53,11 @@
 </template>
 <script>
 
+    import times from 'lodash/times'
     import orderBy from 'lodash/orderBy'
     import {Select, Option} from 'element-ui'
     import {FadeTransition} from 'vue2-transitions'
-    import ExtensionCard from "@/components/Cards/ExtensionCard";
+    import ExtensionCard from '@/components/Cards/ExtensionCard'
 
     export default {
         components: {
@@ -79,7 +100,10 @@
                         label: this.$t('extensions.sort.activeTime'),
                         value: 'representativeUpdated'
                     }
-                ]
+                ],
+                showGridMenu: false,
+                maxLayoutColumns: 10,
+                layoutColumns: 5
             }
         },
         computed: {
@@ -109,6 +133,23 @@
                 if (this.editable) {
                     return 'pr-24'
                 }
+            },
+            renderColumns() {
+                let columns = ''
+                times(this.layoutColumns, () => {
+                    columns = columns + ' auto'
+                })
+                return {
+                    'grid-template-columns': columns
+                }
+            }
+        },
+        methods: {
+            onMenuClickOutside() {
+                this.showGridMenu = false
+            },
+            updateGrid(val) {
+                this.layoutColumns = val
             }
         }
     }
@@ -116,6 +157,27 @@
 <style scoped>
     .extension-cards {
         min-height: 280px;
+    }
+
+    .icon-square {
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        border: 2px solid var(--silver-color);
+
+        &:hover {
+            background: var(--silver-color);
+            border: 2px solid var(--primary-color);
+        }
+    }
+
+    .mx-margin--1 {
+        margin-right: 1px;
+        margin-left: 1px;
+    }
+
+    .grid-container {
+        display: grid;
     }
 </style>
 <style lang="scss">
@@ -126,5 +188,13 @@
     .el-loading-mask .el-loading-spinner {
         display: flex;
         justify-content: center;
+    }
+
+    .el-row {
+        margin-bottom: 20px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 </style>

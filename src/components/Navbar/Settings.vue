@@ -3,6 +3,13 @@
         <h3 slot="title" class="text-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
         <el-form @submit.native.prevent="updateSettings" :rules="rules" ref="settings" :model="settings">
             <el-collapse v-model="activeCollapses">
+                <el-collapse-item :title="$t('settings.layout')" name="layout">
+                    <div class="md:flex md:flex-col md:justify-center">
+                        <el-checkbox v-model="settings.showGeneralWidgetSearch">
+                            {{$t('settings.widget.search')}}
+                        </el-checkbox>
+                    </div>
+                </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
                     <el-form-item prop="report.interval">
                         {{$t('settings.switch.title')}}
@@ -83,9 +90,9 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber} from 'element-ui'
-    import convertHex from "@/helpers/convertHex";
+    import convertHex from '@/helpers/convertHex'
+    import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
-
 
     export default {
         inheritAttrs: false,
@@ -100,7 +107,7 @@
         data() {
             return {
                 settings: cloneDeep(this.$store.state.dashboards.settings),
-                activeCollapses: ['report', 'color', 'threshold'],
+                activeCollapses: ['layout', 'report', 'color', 'threshold'],
             }
         },
         props: {
@@ -162,8 +169,8 @@
                         updateDashboard(dashboard).then((dashboard) => {
                             this.$store.dispatch('dashboards/updateDashboard', dashboard)
                             this.toggleVisibility(false)
-                        }).catch(() => {
-                            this.toggleVisibility(false)
+                        }).catch((e) => {
+                            parseCatch(e, true)
                         })
                     }
                 });

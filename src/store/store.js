@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate';
 import lang from './modules/lang'
 import users from './modules/users'
-import charts from './modules/charts'
 import widgets from './modules/widgets'
 import dashboards from './modules/dashboards'
 import extensions from './modules/extensions'
@@ -17,7 +16,6 @@ export default new Vuex.Store({
     modules: {
         dashboards,
         widgets,
-        charts,
         users,
         lang,
         extensions
