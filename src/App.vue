@@ -10,7 +10,6 @@
             await this.$store.dispatch('dashboards/getDashboards')
             this.$store.dispatch('dashboards/selectDashboard')
             this.$store.dispatch('widgets/getAllWidgets')
-            this.$store.dispatch('charts/getAllCharts')
             this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
         },
         computed: {

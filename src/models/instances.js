@@ -1,4 +1,4 @@
-import {settings} from '@/store/mockData'
+import {settings} from './defaultDashboardSettings'
 
 export const dashboardModel = () => ({
     "AccountID": 1,

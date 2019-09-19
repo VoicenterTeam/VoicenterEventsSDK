@@ -16,6 +16,7 @@
                     :widgets="widgetGroup.WidgetList"
                     :all-widgets="allWidgets"
                     :editable="editMode"
+                    v-bind="$attrs"
                     :widget-group="widgetGroup"
                     v-on="$listeners">
                 </widget-list>
@@ -46,7 +47,7 @@
             },
             allWidgets: {
                 type: Array,
-                default: () => ([])
+                default: () => []
             }
         }
     }
