@@ -111,5 +111,6 @@
   "tooltip.move.group.down": "Move group down",
   "save.to.add": "Save to add",
   "no.widgets.added": "There are no widgets added yet",
-  "search.existing.elements": "Search for existing elements"
+  "search.existing.elements": "Search for existing elements",
+  "columns.layout": "Columns Layout"
 }
