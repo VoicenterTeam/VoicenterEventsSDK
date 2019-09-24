@@ -1,12 +1,6 @@
 import Highcharts from 'highcharts'
-import noDataModule from 'highcharts/modules/no-data-to-display'
-import Exporting from 'highcharts/modules/exporting'
 import i18n from '@/i18n'
 import config from "../../config";
-
-Exporting(Highcharts)
-
-noDataModule(Highcharts)
 
 const yLineConfig = {
     gridLineDashStyle: 'longdash',
@@ -20,7 +14,7 @@ const yLineConfig = {
     },
 }
 
-Highcharts.setOptions({
+let chartConfig = {
     chart: {
         marginTop: 45
     },
@@ -107,8 +101,6 @@ Highcharts.setOptions({
             }
         },
     },
-})
-
-export default {
-    Highcharts,
 }
+
+export default chartConfig

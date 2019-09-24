@@ -8,7 +8,8 @@
             <div class="pt-24" :class="getClass">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
                     <div class="flex w-48 sm:w-64">
-                        <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')" v-model="widgetsFilter"
+                        <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
+                                  v-model="widgetsFilter"
                                   prefix-icon="el-icon-search"></el-input>
                     </div>
                     <div class="flex justify-end -mx-1">
@@ -64,6 +65,9 @@
                 </fade-transition>
             </div>
         </div>
+        <div class="px-8">
+            <demo-gauge-chart></demo-gauge-chart>
+        </div>
     </div>
 </template>
 
@@ -90,6 +94,7 @@
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
+    import DemoGaugeChart from './DemoGaugeChart'
 
     export default {
         components: {
@@ -101,7 +106,8 @@
             EventsSDK,
             NormalView,
             TabbedView,
-            Sidebar
+            Sidebar,
+            DemoGaugeChart
         },
         data() {
             return {
