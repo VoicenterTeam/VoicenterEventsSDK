@@ -326,6 +326,7 @@
                 this.activeTab = tab
             },
             onNewEvent(eventData) {
+                // console.log(eventData)
                 let {name, data} = eventData
                 if (name === 'AllExtensionsStatus') {
                     this.$store.dispatch('extensions/setExtensions', data.extensions)
@@ -336,6 +337,15 @@
                     if (index !== -1) {
                         this.$store.dispatch('extensions/updateExtension', {index, extension})
                     }
+                }
+
+                if (name === 'loginStatus') {
+                    this.$store.dispatch('queues/setQueues', data.queues[0])
+                }
+
+                if (name === 'QueueEvent') {
+
+                    this.$store.dispatch('queues/setQueues', data.data)
                 }
             },
             sortDashboardEntities(dashboard) {
@@ -376,8 +386,8 @@
                     token: this.token
                 })
                 await this.sdk.init()
-                await this.sdk.login()
                 this.sdk.on('*', this.onNewEvent)
+                await this.sdk.login()
             } catch (e) {
                 parseCatch(e, true)
             }

@@ -7,15 +7,16 @@
             </el-tooltip>
         </div>
         <div class="z-10" :class="{'-mt-8':editable}">
-            <highcharts :options="data"></highcharts>
+            <highcharts :options="qData"></highcharts>
         </div>
     </div>
 </template>
 <script>
-
+    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
+    import cloneDeep from 'lodash/cloneDeep'
     import {TrashIcon} from 'vue-feather-icons'
     import highchartsMoreInit from 'highcharts/highcharts-more'
 
@@ -35,7 +36,21 @@
             editable: {
                 type: Boolean,
                 default: true
+            },
+        },
+        data() {
+            return {
+                queueData: this.data
             }
+        },
+        computed: {
+            queueCalls() {
+                return get(this.$store.state.queues.queues, 'Calls')
+            },
+            qData() {
+                this.queueData.series = [{data: [this.queueCalls ? this.queueCalls.length : 0]}]
+                return this.queueData
+            },
         }
     }
 </script>
