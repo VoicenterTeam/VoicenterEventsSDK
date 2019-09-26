@@ -65,9 +65,6 @@
                 </fade-transition>
             </div>
         </div>
-        <div class="px-8">
-            <demo-gauge-chart></demo-gauge-chart>
-        </div>
     </div>
 </template>
 
@@ -94,7 +91,6 @@
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
-    import DemoGaugeChart from './DemoGaugeChart'
 
     export default {
         components: {
@@ -106,8 +102,7 @@
             EventsSDK,
             NormalView,
             TabbedView,
-            Sidebar,
-            DemoGaugeChart
+            Sidebar
         },
         data() {
             return {

@@ -1,6 +1,11 @@
 import Highcharts from 'highcharts'
 import i18n from '@/i18n'
-import config from "../../config";
+import config from '../../config'
+import Exporting from 'highcharts/modules/exporting'
+import noDataModule from 'highcharts/modules/no-data-to-display'
+
+Exporting(Highcharts)
+noDataModule(Highcharts)
 
 const yLineConfig = {
     gridLineDashStyle: 'longdash',
@@ -14,7 +19,17 @@ const yLineConfig = {
     },
 }
 
-let chartConfig = {
+let yAxisConfig = {
+    yAxis: [{
+        ...yLineConfig
+    }, {
+        linkedTo: 0,
+        opposite: true,
+        ...yLineConfig
+    }]
+}
+
+Highcharts.setOptions({
     chart: {
         marginTop: 45
     },
@@ -73,13 +88,6 @@ let chartConfig = {
     credits: {
         enabled: false
     },
-    yAxis: [{
-        ...yLineConfig
-    }, {
-        linkedTo: 0,
-        opposite: true,
-        ...yLineConfig
-    }],
     xAxis: {
         lineWidth: 1,
         tickWidth: 0,
@@ -101,6 +109,9 @@ let chartConfig = {
             }
         },
     },
-}
+})
 
-export default chartConfig
+export default {
+    Highcharts,
+    yAxisConfig
+}

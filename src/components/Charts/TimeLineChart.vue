@@ -21,13 +21,10 @@
 </template>
 <script>
 
+    import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import chartConfig from './chartConfig'
     import RangeFilter from './RangeFilter'
-    import noDataModule from 'highcharts/modules/no-data-to-display'
-    import Exporting from 'highcharts/modules/exporting'
-
-    import Highcharts from 'highcharts'
 
     export default {
         name: 'TimeLineChart',
@@ -51,9 +48,8 @@
         },
         computed: {
             chartOptions() {
-                return {
-                    ...this.data.WidgetLayout
-                }
+                return {...this.data.WidgetLayout, ...chartConfig.yAxisConfig}
+
             },
             widgetLayout() {
                 return this.data.WidgetLayout || {date: ''}
@@ -64,11 +60,6 @@
                 this.data.WidgetLayout.date = date
                 this.$emit('update-item', this.data)
             }
-        },
-        beforeMount() {
-            Highcharts.setOptions(chartConfig)
-            Exporting(Highcharts)
-            noDataModule(Highcharts)
         }
     }
 </script>

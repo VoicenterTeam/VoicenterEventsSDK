@@ -42,11 +42,13 @@
     import widgetTypes from '@/enum/widgetTypes'
     import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
+    import GaugeChart from '@/components/Charts/GaugeChart'
     import StatusCards from '@/components/Cards/StatusCards'
     import DeleteButton from '@/components/Widgets/DeleteButton'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
+
 
     export default {
         name: "widget",
@@ -60,7 +62,8 @@
             DeleteButton,
             EditButton,
             UpdateDialog,
-            [Tooltip.name]: Tooltip
+            [Tooltip.name]: Tooltip,
+            GaugeChart
         },
         props: {
             editable: {
@@ -77,6 +80,7 @@
                 componentTypes: {
                     [widgetTypes.CHART_LINE_ID]: 'TimeLineChart',
                     [widgetTypes.CHART_BARS_ID]: 'TimeLineChart',
+                    [widgetTypes.CHART_GAUGE_ID]: 'GaugeChart',
                     [widgetTypes.TABLE_TYPE_ID]: 'TableData',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
@@ -88,7 +92,7 @@
         },
         computed: {
             showDeleteButton() {
-                return ![widgetTypes.STATUS_CARDS_TYPE_ID, widgetTypes.STATISTICS_CARDS_TYPE_ID].includes(Number(this.widget.TemplateID))
+                return ![widgetTypes.STATUS_CARDS_TYPE_ID, widgetTypes.STATISTICS_CARDS_TYPE_ID, widgetTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
             }
         },
         methods: {
