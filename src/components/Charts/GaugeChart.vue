@@ -16,7 +16,6 @@
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
-    import cloneDeep from 'lodash/cloneDeep'
     import {TrashIcon} from 'vue-feather-icons'
     import highchartsMoreInit from 'highcharts/highcharts-more'
 
