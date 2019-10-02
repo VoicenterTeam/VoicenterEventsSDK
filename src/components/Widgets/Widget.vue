@@ -49,7 +49,6 @@
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
 
-
     export default {
         name: "widget",
         components: {
@@ -63,7 +62,7 @@
             EditButton,
             UpdateDialog,
             [Tooltip.name]: Tooltip,
-            GaugeChart
+            GaugeChart,
         },
         props: {
             editable: {

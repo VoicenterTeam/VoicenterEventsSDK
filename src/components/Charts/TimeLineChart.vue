@@ -23,15 +23,15 @@
 
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
-    import chartConfig from './chartConfig'
     import RangeFilter from './RangeFilter'
+    import chartConfig from './Configs/TimeLine'
 
     export default {
         name: 'TimeLineChart',
         components: {
             RangeFilter,
+            Highcharts,
             highcharts: Chart,
-            Highcharts
         },
         props: {
             data: {

@@ -3,15 +3,18 @@
         <div class="relative cursor-pointer z-50" v-if="editable">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
                 <trash-icon class="w-8 h-8 p-2 text-red trash-icon"
-                            @click="$emit('remove-item')"></trash-icon>
+                            @click="$emit('remove-item')">
+                </trash-icon>
             </el-tooltip>
         </div>
         <div class="z-10" :class="{'-mt-8':editable}">
-            <highcharts :options="qData"></highcharts>
+            <highcharts :options="chartOptions"></highcharts>
         </div>
     </div>
 </template>
+
 <script>
+
     import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
@@ -23,9 +26,9 @@
 
     export default {
         components: {
-            highcharts: Chart,
             TrashIcon,
-            [Tooltip.name]: Tooltip
+            highcharts: Chart,
+            [Tooltip.name]: Tooltip,
         },
         props: {
             data: {
@@ -37,22 +40,14 @@
                 default: true
             },
         },
-        data() {
-            return {
-                queueData: this.data
-            }
-        },
         computed: {
             queueCalls() {
-                return get(this.$store.state.queues.queues, 'Calls')
+                return get(this.$store.state.queues, 'queues.Calls')
             },
-            qData() {
-                this.queueData.series = [{data: [this.queueCalls ? this.queueCalls.length : 0]}]
-                return this.queueData
+            chartOptions() {
+                this.data.series = [{data: [this.queueCalls ? this.queueCalls.length : 0]}]
+                return this.data
             },
         }
     }
 </script>
-
-<style lang="scss">
-</style>

@@ -1,6 +1,6 @@
 import Highcharts from 'highcharts'
 import i18n from '@/i18n'
-import config from '../../config'
+import config from '../../../config'
 import Exporting from 'highcharts/modules/exporting'
 import noDataModule from 'highcharts/modules/no-data-to-display'
 
