@@ -1,11 +1,10 @@
 import Highcharts from 'highcharts'
-import noDataModule from 'highcharts/modules/no-data-to-display'
-import Exporting from 'highcharts/modules/exporting'
 import i18n from '@/i18n'
-import config from "../../config";
+import config from '../../../config'
+import Exporting from 'highcharts/modules/exporting'
+import noDataModule from 'highcharts/modules/no-data-to-display'
 
 Exporting(Highcharts)
-
 noDataModule(Highcharts)
 
 const yLineConfig = {
@@ -18,6 +17,16 @@ const yLineConfig = {
             fontSize: "16px"
         }
     },
+}
+
+let yAxisConfig = {
+    yAxis: [{
+        ...yLineConfig
+    }, {
+        linkedTo: 0,
+        opposite: true,
+        ...yLineConfig
+    }]
 }
 
 Highcharts.setOptions({
@@ -79,13 +88,6 @@ Highcharts.setOptions({
     credits: {
         enabled: false
     },
-    yAxis: [{
-        ...yLineConfig
-    }, {
-        linkedTo: 0,
-        opposite: true,
-        ...yLineConfig
-    }],
     xAxis: {
         lineWidth: 1,
         tickWidth: 0,
@@ -111,4 +113,5 @@ Highcharts.setOptions({
 
 export default {
     Highcharts,
+    yAxisConfig
 }

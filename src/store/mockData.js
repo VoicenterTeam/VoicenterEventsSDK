@@ -743,3 +743,65 @@ export const dashboards = [
         "DashBoardsUserPermission": "foo"
     }
 ]
+
+export const gaugeCharts = [{
+    title: {
+        text: 'Requests Per Second',
+        y: 70
+    },
+    yAxis: {
+        min: 0,
+        max: 100,
+    },
+    series: [{
+        data: [80],
+        dataLabels: {
+            format:
+                '<div style="text-align:center">' +
+                '<span style="font-size:22px">RPS</span><br/><br/>' +
+                '<span style="font-size:20px;opacity:0.4;">{y}</span>' +
+                '</div>',
+            y: -65
+        }
+    }]
+}, {
+    title: {
+        text: 'Bandwidth Per Second',
+        y: 70
+    },
+    yAxis: {
+        min: 0,
+        max: 100,
+    },
+    series: [{
+        data: [10],
+        dataLabels: {
+            format:
+                '<div style="text-align:center">' +
+                '<span style="font-size:22px">kb/s</span><br/><br/>' +
+                '<span style="font-size:20px;opacity:0.4;">{y:.1f}</span>' +
+                '</div>',
+            y: -65
+        }
+    }]
+}, {
+    title: {
+        text: 'Cache Hit Percentage',
+        y: 70
+    },
+    yAxis: {
+        min: 0,
+        max: 100,
+    },
+    series: [{
+        data: [55],
+        dataLabels: {
+            format:
+                '<div style="text-align:center">' +
+                '<span style="font-size:22px">Cache Hit %</span><br/><br/>' +
+                '<span style="font-size:20px;opacity:0.4;">{y:.1f} %</span>' +
+                '</div>',
+            y: -65
+        },
+    }]
+}]

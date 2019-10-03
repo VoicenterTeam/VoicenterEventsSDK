@@ -8,7 +8,8 @@
             <div class="pt-24" :class="getClass">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
                     <div class="flex w-48 sm:w-64">
-                        <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')" v-model="widgetsFilter"
+                        <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
+                                  v-model="widgetsFilter"
                                   prefix-icon="el-icon-search"></el-input>
                     </div>
                     <div class="flex justify-end -mx-1">
@@ -77,6 +78,7 @@
     import differenceBy from 'lodash/differenceBy'
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
+    import sdkEventTypes from '@/enum/sdkEventTypes'
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
@@ -86,10 +88,10 @@
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
     import {runDashboardOperations} from '@/services/dashboardService'
-    import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
+    import ManageDashboardButtons from '@/components/ManageDashboardButtons'
 
     export default {
         components: {
@@ -101,7 +103,7 @@
             EventsSDK,
             NormalView,
             TabbedView,
-            Sidebar
+            Sidebar,
         },
         data() {
             return {
@@ -326,15 +328,25 @@
             },
             onNewEvent(eventData) {
                 let {name, data} = eventData
-                if (name === 'AllExtensionsStatus') {
-                    this.$store.dispatch('extensions/setExtensions', data.extensions)
-                }
-                if (name === 'ExtensionEvent') {
-                    let extension = data.data
-                    let index = this.extensions.findIndex(e => e.userID === extension.userID)
-                    if (index !== -1) {
-                        this.$store.dispatch('extensions/updateExtension', {index, extension})
-                    }
+                switch (name) {
+                    case sdkEventTypes.ALL_EXTENSION_STATUS:
+                        this.$store.dispatch('extensions/setExtensions', data.extensions)
+                        break;
+                    case sdkEventTypes.EXTENSION_EVENT:
+                        let extension = data.data
+                        let index = this.extensions.findIndex(e => e.userID === extension.userID)
+                        if (index !== -1) {
+                            this.$store.dispatch('extensions/updateExtension', {index, extension})
+                        }
+                        break;
+                    case sdkEventTypes.LOGIN:
+                        this.$store.dispatch('queues/setQueues', data.queues[0])
+                        break;
+                    case sdkEventTypes.QUEUE_EVENT:
+                        this.$store.dispatch('queues/setQueues', data.data)
+                        break;
+                    default:
+                        break;
                 }
             },
             sortDashboardEntities(dashboard) {
@@ -375,8 +387,8 @@
                     token: this.token
                 })
                 await this.sdk.init()
-                await this.sdk.login()
                 this.sdk.on('*', this.onNewEvent)
+                await this.sdk.login()
             } catch (e) {
                 parseCatch(e, true)
             }

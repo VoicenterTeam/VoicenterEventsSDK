@@ -8,8 +8,8 @@
                 </p>
 
                 <range-filter class="mt-2 md:mt-0"
-                    :date="widgetLayout.date.split(' - ')"
-                    @on-change="onChangeDate">
+                              :date="widgetLayout.date.split(' - ')"
+                              @on-change="onChangeDate">
                 </range-filter>
             </div>
         </div>
@@ -21,14 +21,16 @@
 </template>
 <script>
 
+    import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
-    import chartConfig from './chartConfig'
-    import RangeFilter from "./RangeFilter";
+    import RangeFilter from './RangeFilter'
+    import chartConfig from './Configs/TimeLine'
 
     export default {
         name: 'TimeLineChart',
         components: {
             RangeFilter,
+            Highcharts,
             highcharts: Chart,
         },
         props: {
@@ -42,14 +44,12 @@
             }
         },
         data() {
-            return {
-            }
+            return {}
         },
         computed: {
             chartOptions() {
-                return {
-                    ...this.data.WidgetLayout
-                }
+                return {...this.data.WidgetLayout, ...chartConfig.yAxisConfig}
+
             },
             widgetLayout() {
                 return this.data.WidgetLayout || {date: ''}
@@ -60,7 +60,7 @@
                 this.data.WidgetLayout.date = date
                 this.$emit('update-item', this.data)
             }
-        },
+        }
     }
 </script>
 <style scoped>
