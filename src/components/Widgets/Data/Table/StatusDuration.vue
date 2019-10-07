@@ -7,13 +7,10 @@
         <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :textColor="'text-white'"/>
     </div>
 </template>
-
 <script>
-
-    import Timer from "@/util/Timer";
-    import CallInfo from "@/components/Cards/CallInfo";
-
-    const ISRAEL_TIMEZONE_OFFSET = -180 * 60 * 1000;
+    import Timer from '@/util/Timer'
+    import CallInfo from '@/components/Cards/CallInfo'
+    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
 
     export default {
         components: {
@@ -47,7 +44,7 @@
             },
         },
         data() {
-            let initialTime = new Date().getTime() - (this.extension.representativeUpdated + ISRAEL_TIMEZONE_OFFSET)
+            let initialTime = new Date().getTime() - (this.extension.representativeUpdated - ISRAEL_TIMEZONE_OFFSET)
             let initialTimeInSeconds = Math.floor(initialTime / 1000)
 
             return {

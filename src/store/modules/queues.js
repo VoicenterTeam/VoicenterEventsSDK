@@ -3,16 +3,15 @@ const types = {
     UPDATE_QUEUES: 'UPDATE_QUEUES',
 };
 const state = {
-    queues: [],
+    all: [],
 };
 
 const mutations = {
     [types.SET_QUEUES]: (state, value) => {
-        state.queues = value
+        state.all = value
     },
-    //TODO: to define complete functionality
     [types.UPDATE_QUEUES]: (state, {index, queue}) => {
-        state.queues.splice(index, 1, queue)
+        state.all.splice(index, 1, queue)
     },
 };
 
@@ -25,13 +24,9 @@ const actions = {
     },
 };
 
-const getters = {};
-
 export default {
     namespaced: true,
-    types,
     state,
     mutations,
-    actions,
-    getters
+    actions
 };

@@ -1,6 +1,6 @@
 import Highcharts from 'highcharts'
 import i18n from '@/i18n'
-import config from '../../../config'
+import config from '@/config'
 import Exporting from 'highcharts/modules/exporting'
 import noDataModule from 'highcharts/modules/no-data-to-display'
 
@@ -14,9 +14,10 @@ const yLineConfig = {
     labels: {
         style: {
             color: config.colors.warm_grey,
-            fontSize: "16px"
+            fontSize: "16px",
+            format: "{value} s"
         }
-    },
+    }
 }
 
 let yAxisConfig = {
@@ -29,10 +30,50 @@ let yAxisConfig = {
     }]
 }
 
+let queueChartYAxisConfig = {
+    yAxis: [{
+        ...yLineConfig,
+        ...{labels: {...yLineConfig.labels, ...{format: '{value} s'}}}
+    }, {
+        ...yLineConfig,
+        opposite: true,
+        tickInterval: 1
+    }]
+}
+
 Highcharts.setOptions({
     chart: {
-        marginTop: 45
+        marginTop: 45,
+        zoomType: 'x',
+        panning: true,
+        panKey: 'shift'
     },
+    tooltip: {
+        formatter: function () {
+            if (this.point.stackTotal) {
+                let percentage = (this.point.y * 100 / this.point.stackTotal).toFixed(2)
+                return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px;">${this.series.name}</p> <br><p style="text-align: center;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
+            } else {
+                return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
+            }
+        },
+        backgroundColor: "#ffffff",
+        borderColor: "#ffffff",
+        boxShadow: "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+        borderRadius: 10
+    },
+    colors: [
+        '#2575FF',
+        '#876cff',
+        '#48BB78',
+        '#61B5FF',
+        '#003B4D',
+        '#FF4D4D',
+        '#ED64A6',
+        '#667EEA',
+        '#9F7AEA',
+        '#1CBBB4'
+    ],
     lang: {
         viewFullscreen: i18n.t('chart.viewFullscreen'),
         printChart: i18n.t('chart.printChart'),
@@ -113,5 +154,6 @@ Highcharts.setOptions({
 
 export default {
     Highcharts,
-    yAxisConfig
+    yAxisConfig,
+    queueChartYAxisConfig,
 }

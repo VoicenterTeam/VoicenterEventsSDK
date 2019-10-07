@@ -112,5 +112,14 @@
   "save.to.add": "Save to add",
   "no.widgets.added": "There are no widgets added yet",
   "search.existing.elements": "Search for existing elements",
-  "columns.layout": "Columns Layout"
+  "columns.layout": "Columns Layout",
+  "queue.maximum.waiting.time": "Current Maximum waiting time",
+  "queue.amount.callers.waiting": "Current amount of callers waiting",
+  "queue.agents.available":  " Current count of agents available",
+  "queue.agents.on.a.call": " Current count of agents on a call",
+  "queue.agents.on.administrative.break":  " Current count of agents on administrative break",
+  "queue.agents.on.break": "Current count of agents on break",
+  "queue.config.dialog": "Manage what is displayed",
+  "queues.to.display": "Queues to display",
+  "blocks.to.display": "Blocks to display"
 }

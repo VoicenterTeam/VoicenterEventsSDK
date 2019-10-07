@@ -4,9 +4,8 @@
             <div class="flex flex-col md:flex-row md:items-center">
                 <p class="text-2xl font-semibold"
                    :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
-                    {{data.WidgetLayout.caption}}
+                    {{data.caption}}
                 </p>
-
                 <range-filter class="mt-2 md:mt-0"
                               :date="widgetLayout.date.split(' - ')"
                               @on-change="onChangeDate">
@@ -17,7 +16,6 @@
             <highcharts :options="chartOptions"></highcharts>
         </div>
     </div>
-
 </template>
 <script>
 
@@ -42,9 +40,6 @@
                 type: Boolean,
                 default: false
             }
-        },
-        data() {
-            return {}
         },
         computed: {
             chartOptions() {

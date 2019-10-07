@@ -43,11 +43,14 @@
     import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
     import GaugeChart from '@/components/Charts/GaugeChart'
+    import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
     import DeleteButton from '@/components/Widgets/DeleteButton'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
+
+    const editableWidgets = [1, 2, 11]
 
     export default {
         name: "widget",
@@ -63,6 +66,7 @@
             UpdateDialog,
             [Tooltip.name]: Tooltip,
             GaugeChart,
+            QueueChart,
         },
         props: {
             editable: {
@@ -80,6 +84,7 @@
                     [widgetTypes.CHART_LINE_ID]: 'TimeLineChart',
                     [widgetTypes.CHART_BARS_ID]: 'TimeLineChart',
                     [widgetTypes.CHART_GAUGE_ID]: 'GaugeChart',
+                    [widgetTypes.CHART_QUEUE_ID]: 'QueueChart',
                     [widgetTypes.TABLE_TYPE_ID]: 'TableData',
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
@@ -100,7 +105,7 @@
             },
             onShowUpdateDialog(TemplateID) {
                 // TODO: updates
-                if (TemplateID != 2 && TemplateID != 1) {
+                if (!editableWidgets.includes(TemplateID)) {
                     alert('coming soon...')
                     return
                 }

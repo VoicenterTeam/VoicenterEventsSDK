@@ -1,4 +1,4 @@
-const configs = {
+export default {
     chart: {
         type: 'solidgauge',
     },
@@ -18,19 +18,17 @@ const configs = {
         enabled: false
     },
     yAxis: {
-        stops: [
-            [0.1, '#55BF3B'],
-            [0.4, '#DDDF0D'],
-            [0.6, '#DF5353']
-        ],
+        tickInterval: false,
+        startOnTick: true,
+        lineWidth: 0,
         minorTickInterval: null,
+        tickWidth: 0,
+        title: {
+            y: -70
+        },
         labels: {
             y: 16
         },
-        tickPixelInterval: 400,
-        tickWidth: 0,
-        gridLineWidth: 0,
-        gridLineColor: 'transparent',
     },
     plotOptions: {
         solidgauge: {
@@ -45,6 +43,14 @@ const configs = {
     credits: {
         enabled: false
     },
+    series: [{
+        dataLabels: {
+            format:
+                '<div style="text-align:center">' +
+                '<span style="font-size:22px">kb/s</span><br/><br/>' +
+                '<span style="font-size:20px;opacity:0.4;">{y:.1f}</span>' +
+                '</div>',
+            y: -65
+        }
+    }]
 }
-
-export default configs

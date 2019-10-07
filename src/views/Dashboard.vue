@@ -18,10 +18,10 @@
                                        @click.stop="showWidgetMenu = !showWidgetMenu">
                             </AddButton>
                             <manage-dashboard-buttons
-                                @click.stop="editMode = !editMode"
-                                @reset-dashboard="resetDashboard"
-                                @save-dashboard="saveDashboard"
-                                :edit-mode="editMode">
+                                    @click.stop="editMode = !editMode"
+                                    @reset-dashboard="resetDashboard"
+                                    @save-dashboard="saveDashboard"
+                                    :edit-mode="editMode">
                             </manage-dashboard-buttons>
                         </div>
                         <fade-transition>
@@ -33,43 +33,41 @@
                             </widget-menu>
                         </fade-transition>
                         <layout-switcher
-                            v-if="!editMode"
-                            :activeType="layoutType"
-                            @switch-layout="(type) => switchDashboardLayout(type)">
+                                v-if="!editMode"
+                                :activeType="layoutType"
+                                @switch-layout="(type) => switchDashboardLayout(type)">
                         </layout-switcher>
                     </div>
                 </div>
 
                 <div class="flex justify-end">
                     <new-group-button
-                        @click.native="addNewGroup"
-                        v-if="editMode">
+                            @click.native="addNewGroup"
+                            v-if="editMode">
                     </new-group-button>
                 </div>
                 <fade-transition mode="out-in" :duration="250">
                     <component
-                        :is="layoutTypes[layoutType]"
-                        :activeDashboardData="activeDashboardData"
-                        :editMode="editMode"
-                        :widgetsFilter="widgetsFilter"
-                        :activeTab="activeTab"
-                        :allWidgets="allWidgets"
-                        @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                        @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                        @onListChange="(data) => onListChange(data.event, data.group)"
-                        @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
-                        @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                        @updateWidget="(data) => updateWidget(data.widget, data.group)"
-                        @switch-tab="(tab) => switchTab(tab)">
+                            :is="layoutTypes[layoutType]"
+                            :activeDashboardData="activeDashboardData"
+                            :editMode="editMode"
+                            :widgetsFilter="widgetsFilter"
+                            :activeTab="activeTab"
+                            :allWidgets="allWidgets"
+                            @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                            @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                            @onListChange="(data) => onListChange(data.event, data.group)"
+                            @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
+                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                            @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                            @switch-tab="(tab) => switchTab(tab)">
                     </component>
                 </fade-transition>
             </div>
         </div>
     </div>
 </template>
-
 <script>
-
     import get from 'lodash/get'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
@@ -117,7 +115,7 @@
                 layoutType: 'normal',
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
-                widgetsFilter: ''
+                widgetsFilter: '',
             }
         },
         computed: {
@@ -145,6 +143,9 @@
             },
             extensions() {
                 return this.$store.state.extensions.extensions
+            },
+            queues() {
+                return this.$store.state.queues.all
             },
             firstWidgetGroup() {
                 return this.activeDashboardData.WidgetGroupList[0]
@@ -340,10 +341,14 @@
                         }
                         break;
                     case sdkEventTypes.LOGIN:
-                        this.$store.dispatch('queues/setQueues', data.queues[0])
+                        this.$store.dispatch('queues/setQueues', data.queues)
                         break;
                     case sdkEventTypes.QUEUE_EVENT:
-                        this.$store.dispatch('queues/setQueues', data.data)
+                        let queue = data.data
+                        let _index = this.queues.findIndex(e => e.QueueID === queue.QueueID)
+                        if (_index !== -1) {
+                            this.$store.dispatch('queues/updateQueue', {_index, queue})
+                        }
                         break;
                     default:
                         break;
@@ -395,7 +400,7 @@
         }
     }
 </script>
-<style>
+<style lang="scss">
     .editable-widgets {
         @apply bg-gray-100 rounded-lg;
         @apply shadow;

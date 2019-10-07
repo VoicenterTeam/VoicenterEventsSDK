@@ -11,7 +11,8 @@
 </template>
 <script>
     import Timer from '@/util/Timer'
-    const ISRAEL_TIMEZONE_OFFSET = - 180 * 60 * 1000;
+    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+
     export default {
         props: {
             call: {
@@ -24,7 +25,7 @@
             }
         },
         data() {
-            let initialTime = new Date().getTime() - ((this.call.callStarted * 1000) + ISRAEL_TIMEZONE_OFFSET)
+            let initialTime = new Date().getTime() - ((this.call.callStarted * 1000) - ISRAEL_TIMEZONE_OFFSET)
             let initialTimeInSeconds = Math.floor(initialTime / 1000)
             return {
                 timer: new Timer({

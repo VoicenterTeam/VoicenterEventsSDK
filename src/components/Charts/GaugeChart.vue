@@ -12,17 +12,18 @@
         </div>
     </div>
 </template>
-
 <script>
-
-    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import {TrashIcon} from 'vue-feather-icons'
+    import gaugeChartConfig from './Configs/Gauge'
+    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import highchartsMoreInit from 'highcharts/highcharts-more'
+    import solidGaugeInit from 'highcharts/modules/solid-gauge'
 
     highchartsMoreInit(Highcharts)
+    solidGaugeInit(Highcharts)
 
     export default {
         components: {
@@ -42,12 +43,34 @@
         },
         computed: {
             queueCalls() {
-                return get(this.$store.state.queues, 'queues.Calls')
+                return this.$store.state.queues.all.filter((el) => el.Calls.length)
+            },
+            agentsOnline() {
+                return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
             },
             chartOptions() {
+                let agentsOnline = this.agentsOnline
+                let range = {
+                    min: 0,
+                    max: agentsOnline.length
+                }
+
+                let stops = [
+                    [0, '#55BF3B'],
+                    [agentsOnline.length/2 + 0.1, '#DDDF0D'],
+                    [agentsOnline.length, '#DF5353']
+                ]
+                let yAxisConfig = {
+                    ...gaugeChartConfig.yAxis,
+                    ...this.data.yAxis,
+                    ...range,
+                    ...{stops: stops}
+                }
                 this.data.series = [{data: [this.queueCalls ? this.queueCalls.length : 0]}]
-                return this.data
+                return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             },
+        },
+        mounted() {
         }
     }
 </script>
