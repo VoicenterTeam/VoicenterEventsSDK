@@ -41,6 +41,7 @@
     import UpdateDialog from './UpdateDialog'
     import widgetTypes from '@/enum/widgetTypes'
     import TableData from './Data/Table/TableData'
+    import DataByUser from './Data/Table/DataByUser'
     import EditButton from '@/components/EditButton'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
@@ -67,6 +68,7 @@
             [Tooltip.name]: Tooltip,
             GaugeChart,
             QueueChart,
+            DataByUser
         },
         props: {
             editable: {
@@ -89,6 +91,7 @@
                     [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                     [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
                     [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
+                    [widgetTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
                 },
                 showUpdateDialog: false,
                 loading: false
@@ -118,7 +121,7 @@
             },
             setComponentData(TemplateID) {
                 // TODO: We need a better way to check this when integrating with the api
-                if (TemplateID < '5') {
+                if (TemplateID < '5' || TemplateID == '9') {
                     return this.widget;
                 }
                 return this.widget.WidgetLayout

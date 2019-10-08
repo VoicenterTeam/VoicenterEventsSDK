@@ -7,4 +7,5 @@ export default  {
     STATUS_CARDS_TYPE_ID: 66,
     CHART_GAUGE_ID: 10,
     CHART_QUEUE_ID: 11,
+    REAL_TIME_USER_TABLE_ID: 9
 }
