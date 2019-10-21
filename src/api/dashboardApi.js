@@ -18,7 +18,7 @@ export const DashboardApi = {
     async find(id) {
         try {
             let res = await $axios.get(`/DashBoards/Get/${id}`)
-            return res.Dashboard
+            return res.Data.Dashboard
         } catch (e) {
             parseCatch(e, true)
         }

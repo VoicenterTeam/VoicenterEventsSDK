@@ -7,16 +7,17 @@
                               :enable-transition="false"
                               :group="{ name: 'widgets', pull: 'clone', put: false }">
                 <div v-for="widget in filteredWidgets"
-                     :key="widget.WidgetID"
+                     :key="widget.ID"
                      class="w-full px-2">
-                    <WidgetCard v-bind="widget.WidgetLayout"
-                                class="w-full"
-                                @add-widget="$emit('add-widget', widget)">
+                    <WidgetCard
+                            :name="widget.Name"
+                            class="w-full"
+                            @add-widget="$emit('add-widget', widget)">
                         <template v-slot:quantity>
                             <el-input-number :size="'mini'"
                                              controls-position="right"
                                              placeholder="0"
-                                             v-model="quantities[widget.WidgetID]"
+                                             v-model="quantities[widget.ID]"
                                              :min="0" :max="99">
                             </el-input-number>
                         </template>
@@ -29,7 +30,9 @@
         </div>
         <div class="flex items-center justify-between widget-menu-footer py-2">
             <p class="text-xs">{{$t('save.to.add')}}</p>
-            <el-button type="primary" size="small" @click="addWidgets" :disabled="!validForSubmit">{{$t('common.save')}}</el-button>
+            <el-button type="primary" size="small" @click="addWidgets" :disabled="!validForSubmit">
+                {{$t('common.save')}}
+            </el-button>
         </div>
     </div>
 </template>
@@ -65,15 +68,13 @@
         computed: {
             filteredWidgets() {
                 return this.widgets.filter((widget) => {
-                    if (widget.WidgetLayout.caption) {
-                        return widget.WidgetLayout.caption.toLowerCase().includes(this.search.toLowerCase())
-                    }
-                    return false
+                    return widget.Name.toLowerCase().includes(this.search.toLowerCase())
                 })
             },
             validForSubmit() {
                 return Object.keys(this.quantities).filter(key => this.quantities[key] > 0).length
-            }
+            },
+
         },
         methods: {
             addWidgets() {

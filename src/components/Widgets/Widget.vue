@@ -14,8 +14,8 @@
                 </el-tooltip>
             </div>
         </div>
-        <component :is="componentTypes[widget.TemplateID]"
-                   :data="setComponentData(widget.TemplateID)"
+        <component :is="componentTypes[widget.DataType.ID]"
+                   :data="setComponentData()"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
@@ -26,11 +26,11 @@
         </component>
         <!--TODO: set dynamic edit dialog for all widget types-->
         <update-dialog
-            width="30%"
-            v-if="showUpdateDialog"
-            :chartTitle="widget.WidgetLayout.caption"
-            @on-change="(title) => onChangeTitle(title, widget)"
-            :visible.sync="showUpdateDialog">
+                width="30%"
+                v-if="showUpdateDialog"
+                :chartTitle="widget.WidgetLayout.caption"
+                @on-change="(title) => onChangeTitle(title, widget)"
+                :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
 </template>
@@ -39,10 +39,10 @@
     import {Tooltip} from 'element-ui'
     import WidgetCard from "./WidgetCard"
     import UpdateDialog from './UpdateDialog'
-    import widgetTypes from '@/enum/widgetTypes'
     import TableData from './Data/Table/TableData'
     import DataByUser from './Data/Table/DataByUser'
     import EditButton from '@/components/EditButton'
+    import widgetDataTypes from '@/enum/widgetDataTypes'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
@@ -83,15 +83,15 @@
         data() {
             return {
                 componentTypes: {
-                    [widgetTypes.CHART_LINE_ID]: 'TimeLineChart',
-                    [widgetTypes.CHART_BARS_ID]: 'TimeLineChart',
-                    [widgetTypes.CHART_GAUGE_ID]: 'GaugeChart',
-                    [widgetTypes.CHART_QUEUE_ID]: 'QueueChart',
-                    [widgetTypes.TABLE_TYPE_ID]: 'TableData',
-                    [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
-                    [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
-                    [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
-                    [widgetTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
+                    [widgetDataTypes.CHART_LINE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.CHART_BARS_ID]: 'TimeLineChart',
+                    [widgetDataTypes.CHART_GAUGE_ID]: 'GaugeChart',
+                    [widgetDataTypes.CHART_QUEUE_ID]: 'QueueChart',
+                    [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
+                    [widgetDataTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
+                    [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
+                    [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
+                    [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
                 },
                 showUpdateDialog: false,
                 loading: false
@@ -99,7 +99,7 @@
         },
         computed: {
             showDeleteButton() {
-                return ![widgetTypes.STATUS_CARDS_TYPE_ID, widgetTypes.STATISTICS_CARDS_TYPE_ID, widgetTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
+                return ![widgetDataTypes.STATUS_CARDS_TYPE_ID, widgetDataTypes.STATISTICS_CARDS_TYPE_ID, widgetDataTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
             }
         },
         methods: {
@@ -119,12 +119,9 @@
                 widget = {...widget, ...widget.WidgetLayout}
                 this.$emit('update-item', widget)
             },
-            setComponentData(TemplateID) {
-                // TODO: We need a better way to check this when integrating with the api
-                if (TemplateID < '5' || TemplateID == '9') {
-                    return this.widget;
-                }
-                return this.widget.WidgetLayout
+            setComponentData() {
+                // this.widget.WidgetLayout
+                return this.widget;
             },
             changeExtensionStatus(status, widget) {
                 widget.WidgetLayout.status = status

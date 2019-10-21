@@ -5,7 +5,8 @@
                       @change="(ev) => onListChange(ev)">
         <div v-for="(widget, index) in filteredWidgets"
              :key="index"
-             class="w-full px-2" :class="componentWidth[widget.TemplateID]">
+             v-if="widget.DataType"
+             class="w-full px-2" :class="componentWidth[widget.DataType.ID]">
             <Widget :widget="widget"
                     :editable="editable"
                     @remove-item="removeWidget(widget)"
@@ -30,10 +31,10 @@
 </template>
 <script>
 
-    import Widget from "./Widget";
-    import widgetTypes from '@/enum/widgetTypes'
-    import WidgetEmptyCard from "./WidgetEmptyCard"
+    import Widget from './Widget'
+    import WidgetEmptyCard from './WidgetEmptyCard'
     import DraggableWidgets from './DraggableWidgets'
+    import widgetDataTypes from '@/enum/widgetDataTypes'
 
     export default {
         name: "widget-list",
@@ -45,15 +46,15 @@
         data() {
             return {
                 componentWidth: {
-                    [widgetTypes.CHART_LINE_ID]: 'lg:w-3/3',
-                    [widgetTypes.CHART_BARS_ID]: 'lg:w-3/3',
-                    [widgetTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
-                    [widgetTypes.CHART_GAUGE_ID]: 'lg:w-1/3',
-                    [widgetTypes.CHART_QUEUE_ID]: 'lg:w-3/3',
-                    [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'lg:w-3/3',
-                    [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'lg:w-1/3',
-                    [widgetTypes.STATUS_CARDS_TYPE_ID]: 'lg:w-1/3',
-                    [widgetTypes.REAL_TIME_USER_TABLE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.CHART_LINE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.CHART_BARS_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.CHART_GAUGE_ID]: 'lg:w-1/3',
+                    [widgetDataTypes.CHART_QUEUE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.EXTENSION_CARDS_TYPE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'lg:w-1/3',
+                    [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'lg:w-1/3',
+                    [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'lg:w-3/3',
                 }
             }
         },
@@ -82,8 +83,8 @@
         computed: {
             filteredWidgets() {
                 return this.widgets.filter((widget) => {
-                    if (widget.WidgetLayout.caption) {
-                        return widget.WidgetLayout.caption.toLowerCase().includes(this.widgetsFilter.toLowerCase())
+                    if (widget.Name) {
+                        return widget.Name.toLowerCase().includes(this.widgetsFilter.toLowerCase())
                     }
                     return false
                 })

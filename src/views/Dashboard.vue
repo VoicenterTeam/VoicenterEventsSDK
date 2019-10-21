@@ -126,7 +126,7 @@
                 return this.$store.state.dashboards.activeDashboard
             },
             allWidgets() {
-                return this.$store.state.widgets.allWidgets
+                return this.$store.state.widgetTemplate.allWidgetTemplates
             },
             getClass() {
                 if (this.layoutType === layoutTypes.TABBED) {
@@ -159,6 +159,7 @@
         },
         methods: {
             addWidgetsToGroup(widgets, widgetGroup) {
+                debugger
                 if (!widgetGroup.IsNew) {
                     widgets.forEach((widget, index) => {
                         let temporaryID = Math.random() * 100
@@ -213,7 +214,7 @@
                     widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
                     if (!widgetGroup.IsNew) {
                         widgetGroup.WidgetList.forEach((widget, index) => {
-                            widget.WidgetLayout.Order = index + 1
+                            // widget.WidgetLayout.Order = index + 1
                             this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                         })
                     }
@@ -221,11 +222,11 @@
                     event = event[draggableEvents.ADDED]
                     widgetGroup.WidgetList.splice(event.newIndex, 0, event.element);
                     if (!widgetGroup.IsNew) {
-                        event.element.WidgetLayout.Order = event.newIndex
+                        // event.element.WidgetLayout.Order = event.newIndex
                         this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, event.element, widgetGroup.WidgetGroupID))
                         let widgetsToUpdate = widgetGroup.WidgetList.slice(event.newIndex + 1)
                         widgetsToUpdate.forEach((widget, index) => {
-                            widget.WidgetLayout.Order = index + 1 + event.newIndex
+                            // widget.WidgetLayout.Order = index + 1 + event.newIndex
                             this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                         })
                     }
@@ -312,6 +313,7 @@
                 widgetGroupsToUpdate.forEach((widgetGroup) => {
                     this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
                 })
+
             },
             resetDashboard() {
                 this.showWidgetMenu = false

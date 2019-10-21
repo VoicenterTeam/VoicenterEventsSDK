@@ -4,9 +4,9 @@ import createPersistedState from 'vuex-persistedstate';
 import lang from './modules/lang'
 import users from './modules/users'
 import queues from './modules/queues'
-import widgets from './modules/widgets'
 import dashboards from './modules/dashboards'
 import extensions from './modules/extensions'
+import widgetTemplate from './modules/widgetTemplate'
 
 Vue.use(Vuex)
 
@@ -16,10 +16,10 @@ export default new Vuex.Store({
     })],
     modules: {
         dashboards,
-        widgets,
         users,
         lang,
         extensions,
-        queues
+        queues,
+        widgetTemplate,
     }
 })

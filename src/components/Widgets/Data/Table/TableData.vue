@@ -1,14 +1,14 @@
 <template>
     <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
         <data-table
-            v-if="!loading"
-            :tableData="tableData"
-            :editable="editable"
-            :columns="columns"
-            :cell-style="getCellStyle"
-            :stripe="stripe"
-            :border="border"
-            :cell-class-name="getCellClassName">
+                v-if="!loading"
+                :tableData="tableData"
+                :editable="editable"
+                :columns="columns"
+                :cell-style="getCellStyle"
+                :stripe="stripe"
+                :border="border"
+                :cell-class-name="getCellClassName">
             <template v-slot:status_duration="{row, index}">
                 <status-duration :extension="userExtension(row.user_id, index)"></status-duration>
             </template>
@@ -19,6 +19,7 @@
     </div>
 </template>
 <script>
+    import replace from 'lodash/replace'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
     import {WidgetDataApi} from '@/api/widgetDataApi'
@@ -89,7 +90,9 @@
             },
             async getTableData() {
                 try {
-                    let data = await WidgetDataApi.getTableData(this.data.WidgetID)
+                    let endPoint = replace(this.data.Endpoint, '{WidgetID}', this.data.ID)
+                    let data = await WidgetDataApi.getData(endPoint)
+
                     let columns = [];
 
                     if (data.length) {
