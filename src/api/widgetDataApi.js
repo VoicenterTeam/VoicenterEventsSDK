@@ -10,4 +10,13 @@ export const WidgetDataApi = {
             parseCatch(e, true)
         }
     },
+
+    async getDataByUser(widgetID) {
+        try {
+            let res = await $axios.post(`/WidgetsData/GetDataByUser/${widgetID}`)
+            return res.Data
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    },
 }

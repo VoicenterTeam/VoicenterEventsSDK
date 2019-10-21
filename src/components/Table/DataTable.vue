@@ -34,26 +34,26 @@
                       v-on="listeners">
                 <slot name="">
                     <el-table-column
-                        v-for="(column, index) in renderedColumns"
-                        :key="column.prop"
-                        v-bind="column"
-                        :column-key="column.prop"
-                        :min-width="column.minWidth || '150px'"
-                        :fixed="column.fixed || false"
-                        :align="column.align"
-                        :type="column.type">
+                            v-for="(column, index) in renderedColumns"
+                            :key="column.prop"
+                            v-bind="column"
+                            :column-key="column.prop"
+                            :min-width="column.minWidth || '150px'"
+                            :fixed="column.fixed || false"
+                            :align="column.align"
+                            :type="column.type">
                         <template slot="header">
                             <span class="font-medium uppercase">
                                 {{column.label}}
                             </span>
                             <header-actions
-                                :availableColumns="availableColumns"
-                                :visibleColumns="visibleColumns"
-                                :currentColumn="column"
-                                @on-change-visibility="updateColumnsVisibility"
-                                @on-change-columns-size="updateColumnsSize"
-                                @on-pin-column="(value) => pinColumn(value, index)"
-                                @on-reset-props="resetColumnsProps">
+                                    :availableColumns="availableColumns"
+                                    :visibleColumns="visibleColumns"
+                                    :currentColumn="column"
+                                    @on-change-visibility="updateColumnsVisibility"
+                                    @on-change-columns-size="updateColumnsSize"
+                                    @on-pin-column="(value) => pinColumn(value, index)"
+                                    @on-reset-props="resetColumnsProps">
                             </header-actions>
                         </template>
                         <template slot-scope="{row, $index}">
@@ -67,24 +67,29 @@
                 </slot>
             </el-table>
         </div>
-        <div class="flex items-center">
-            <download-data class="mx-2  cursor-pointer export-button"
-                           :data="tableData"
-                           :fields="jsonFields">
-                <div class="flex items-center">
-                    <p class="text-md">{{$t('general.export.excel')}}</p>
-                    <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
-                </div>
-            </download-data>
-            <download-data class="mx-2 cursor-pointer export-button"
-                           :data="tableData"
-                           :fields="jsonFields"
-                           type="csv">
-                <div class="flex items-center">
-                    <p class="text-md">{{$t('general.export.csv')}}</p>
-                    <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
-                </div>
-            </download-data>
+        <div class="flex items-center justify-between -mx-1">
+            <div class="flex">
+                <download-data class="mx-2 cursor-pointer export-button"
+                               :data="tableData"
+                               :fields="jsonFields">
+                    <div class="flex items-center">
+                        <p class="text-md">{{$t('general.export.excel')}}</p>
+                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
+                    </div>
+                </download-data>
+                <download-data class="mx-2 cursor-pointer export-button"
+                               :data="tableData"
+                               :fields="jsonFields"
+                               type="csv">
+                    <div class="flex items-center">
+                        <p class="text-md">{{$t('general.export.csv')}}</p>
+                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
+                    </div>
+                </download-data>
+            </div>
+            <div class="flex">
+                <slot name="pagination"></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -96,8 +101,7 @@
     import bus from '@/event-bus/EventBus'
     import JsonExcel from 'vue-json-excel'
     import cloneDeep from 'lodash/cloneDeep'
-    import {Table, TableColumn} from 'element-ui'
-    import {Dropdown, DropdownMenu} from 'element-ui'
+    import {Dropdown, DropdownMenu, Table, TableColumn} from 'element-ui'
     import HeaderActions from "./Header/HeaderActions"
     import ManageColumns from './ManageColumns'
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
@@ -136,7 +140,7 @@
             },
             searchableFields: {
                 type: Array,
-                default: () => ['User', 'Department']
+                default: () => []
             },
             editable: {
                 type: Boolean,
@@ -212,7 +216,7 @@
             resetColumnsProps() {
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
-            }
+            },
         },
         watch: {
             'columns'(value) {
