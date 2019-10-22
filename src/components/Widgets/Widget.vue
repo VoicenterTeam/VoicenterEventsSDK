@@ -8,7 +8,7 @@
             </div>
             <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
+                    <edit-button @click="onShowUpdateDialog(widget.WidgetLayout.DataTypeID)"
                                  :class="{'border border-primary': editable}">
                     </edit-button>
                 </el-tooltip>
@@ -51,7 +51,7 @@
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
 
-    const editableWidgets = [1, 2, 11]
+    const editableWidgets = [1, 2, 3]
 
     export default {
         name: "widget",
@@ -108,13 +108,9 @@
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onShowUpdateDialog(TemplateID) {
-                // TODO: updates
-                if (!editableWidgets.includes(TemplateID)) {
+            onShowUpdateDialog(DataTypeID) {
                     alert('coming soon...')
-                    return
-                }
-                this.showUpdateDialog = true
+                    return false
             },
             onChangeTitle(title, widget) {
                 widget.WidgetLayout.caption = title
