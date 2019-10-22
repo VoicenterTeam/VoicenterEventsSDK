@@ -28,7 +28,6 @@ export const WidgetApi = {
     },
 
     destroy(widgetId) {
-        console.log(widgetId)
         return $axios.post(`/Widgets/Delete/${widgetId}`)
     }
 }
