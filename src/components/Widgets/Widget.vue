@@ -14,7 +14,7 @@
                 </el-tooltip>
             </div>
         </div>
-        <component :is="componentTypes[widget.DataType.ID]"
+        <component :is="componentTypes[widget.WidgetLayout.DataTypeID]"
                    :data="setComponentData()"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
@@ -83,12 +83,14 @@
         data() {
             return {
                 componentTypes: {
-                    [widgetDataTypes.CHART_LINE_ID]: 'TimeLineChart',
-                    [widgetDataTypes.CHART_BARS_ID]: 'TimeLineChart',
+                    [widgetDataTypes.LINES_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.TIMELINE_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
+                    [widgetDataTypes.COUNTER_TYPE_ID]: 'ExtensionCards',
+                    // TODO: TBD dataTypes from API
                     [widgetDataTypes.CHART_GAUGE_ID]: 'GaugeChart',
                     [widgetDataTypes.CHART_QUEUE_ID]: 'QueueChart',
-                    [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
-                    [widgetDataTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
                     [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
                     [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
@@ -120,7 +122,6 @@
                 this.$emit('update-item', widget)
             },
             setComponentData() {
-                // this.widget.WidgetLayout
                 return this.widget;
             },
             changeExtensionStatus(status, widget) {

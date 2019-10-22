@@ -3,10 +3,6 @@ import parseCatch from "../helpers/handleErrors";
 
 export const WidgetGroupsApi = {
 
-    find(id) {
-        // return $axios.get(`/WidgetGroups/Get/{$id}`)
-    },
-
     async update(data) {
         try {
             return await $axios.post(`/WidgetsGroups/Update/`, data)

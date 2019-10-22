@@ -90,7 +90,7 @@
             },
             async getTableData() {
                 try {
-                    let endPoint = replace(this.data.Endpoint, '{WidgetID}', this.data.ID)
+                    let endPoint = replace(this.data.WidgetLayout.Endpoint, '{WidgetID}', this.data.WidgetID)
                     let data = await WidgetDataApi.getData(endPoint)
 
                     let columns = [];

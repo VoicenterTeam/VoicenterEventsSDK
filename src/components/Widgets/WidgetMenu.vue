@@ -3,28 +3,28 @@
         <el-input size="small" class="mb-2" placeholder="Search" v-model="search"
                   suffix-icon="el-icon-search"></el-input>
         <div class="widget-menu-container">
-            <DraggableWidgets v-model="widgets"
+            <DraggableWidgets v-model="widgetTemplates"
                               :enable-transition="false"
-                              :group="{ name: 'widgets', pull: 'clone', put: false }">
-                <div v-for="widget in filteredWidgets"
-                     :key="widget.ID"
+                              :group="{ name: 'widgetTemplates', pull: 'clone', put: false }">
+                <div v-for="widgetTemplate in filteredWidgetTemplates"
+                     :key="widgetTemplate.ID"
                      class="w-full px-2">
                     <WidgetCard
-                            :name="widget.Name"
+                            :name="widgetTemplate.Name"
                             class="w-full"
-                            @add-widget="$emit('add-widget', widget)">
+                            @add-widget="$emit('add-widget', widgetTemplate)">
                         <template v-slot:quantity>
                             <el-input-number :size="'mini'"
                                              controls-position="right"
                                              placeholder="0"
-                                             v-model="quantities[widget.ID]"
+                                             v-model="quantities[widgetTemplate.ID]"
                                              :min="0" :max="99">
                             </el-input-number>
                         </template>
                     </WidgetCard>
                 </div>
             </DraggableWidgets>
-            <h3 v-if="widgets.length === 0" class="text-2xl text-center mt-5">
+            <h3 v-if="widgetTemplates.length === 0" class="text-2xl text-center mt-5">
                 {{$t('no.widgets.added')}}
             </h3>
         </div>
@@ -37,7 +37,6 @@
     </div>
 </template>
 <script>
-
     import times from 'lodash/times'
     import {InputNumber} from 'element-ui'
     import WidgetCard from './WidgetCard'
@@ -56,7 +55,7 @@
             }
         },
         props: {
-            widgets: {
+            widgetTemplates: {
                 type: Array,
                 default: () => ([])
             },
@@ -66,28 +65,30 @@
             }
         },
         computed: {
-            filteredWidgets() {
-                return this.widgets.filter((widget) => {
-                    return widget.Name.toLowerCase().includes(this.search.toLowerCase())
+            filteredWidgetTemplates() {
+                return this.widgetTemplates.filter((widgetTemplate) => {
+                    if (widgetTemplate.Name) {
+                        return widgetTemplate.Name.toLowerCase().includes(this.search.toLowerCase())
+                    }
+                    return false
                 })
             },
             validForSubmit() {
                 return Object.keys(this.quantities).filter(key => this.quantities[key] > 0).length
             },
-
         },
         methods: {
             addWidgets() {
-                let widgetIdsToAdd = Object.keys(this.quantities).filter(key => this.quantities[key] > 0)
-                let widgetsToAdd = []
+                let widgetTemplateIdsToAdd = Object.keys(this.quantities).filter(key => this.quantities[key] > 0)
+                let widgetTemplatesToAdd = []
 
-                this.widgets.filter((widget) => {
-                    widgetIdsToAdd.includes(widget.WidgetID)
-                    return times(this.quantities[widget.WidgetID], () => {
-                        widgetsToAdd.push(widget)
+                this.widgetTemplates.filter((template) => {
+                    widgetTemplateIdsToAdd.includes(template.ID)
+                    return times(this.quantities[template.ID], () => {
+                        widgetTemplatesToAdd.push(template)
                     })
                 })
-                this.$emit('addWidgetsToGroup', {'widgets': widgetsToAdd, 'group': this.widgetGroup})
+                this.$emit('addWidgetsToGroup', {'widgetTemplates': widgetTemplatesToAdd, 'group': this.widgetGroup})
                 this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
             }
         }

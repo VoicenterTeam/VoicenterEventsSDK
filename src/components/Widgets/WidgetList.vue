@@ -1,12 +1,11 @@
 <template>
-    <DraggableWidgets group="widgets"
+    <DraggableWidgets group="widgetTemplates"
                       :value="widgets"
                       :disabled="!editable"
                       @change="(ev) => onListChange(ev)">
-        <div v-for="(widget, index) in filteredWidgets"
-             :key="index"
-             v-if="widget.DataType"
-             class="w-full px-2" :class="componentWidth[widget.DataType.ID]">
+        <div v-for="widget in filteredWidgets"
+             :key="widget.WidgetID"
+             class="w-full px-2" :class="componentWidth[widget.WidgetLayout.DataTypeID]">
             <Widget :widget="widget"
                     :editable="editable"
                     @remove-item="removeWidget(widget)"
@@ -14,9 +13,8 @@
             </Widget>
         </div>
         <widget-empty-card v-if="editable" key="-1"
-                           :widgets="widgets"
-                           :all-widgets="allWidgets"
-                           :widget-group="widgetGroup"
+                           :widgetGroup="widgetGroup"
+                           :widgetTemplates="widgetTemplates"
                            v-on="$listeners"
                            @add-widget="(value) => addWidgetsToGroup(value)">
         </widget-empty-card>
@@ -26,7 +24,6 @@
             <IconNoData v-if="!editable" class="h-56 w-56"></IconNoData>
             <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
         </div>
-
     </DraggableWidgets>
 </template>
 <script>
@@ -46,12 +43,14 @@
         data() {
             return {
                 componentWidth: {
-                    [widgetDataTypes.CHART_LINE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.CHART_BARS_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.LINES_TYPE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.TIMELINE_TYPE_ID]: 'lg:w-3/3',
                     [widgetDataTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-3/3',
+                    // TODO: TBD dataTypes from API
                     [widgetDataTypes.CHART_GAUGE_ID]: 'lg:w-1/3',
                     [widgetDataTypes.CHART_QUEUE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.EXTENSION_CARDS_TYPE_ID]: 'lg:w-3/3',
                     [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'lg:w-1/3',
                     [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'lg:w-1/3',
                     [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'lg:w-3/3',
@@ -71,7 +70,7 @@
                 type: Array,
                 default: () => []
             },
-            allWidgets: {
+            widgetTemplates: {
                 type: Array,
                 default: () => []
             },
@@ -83,10 +82,7 @@
         computed: {
             filteredWidgets() {
                 return this.widgets.filter((widget) => {
-                    if (widget.Name) {
-                        return widget.Name.toLowerCase().includes(this.widgetsFilter.toLowerCase())
-                    }
-                    return false
+                    return widget.Title.toLowerCase().includes(this.widgetsFilter.toLowerCase())
                 })
             }
         },
@@ -102,7 +98,7 @@
             },
             updateWidget(val) {
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
-            },
+            }
         },
     }
 </script>
