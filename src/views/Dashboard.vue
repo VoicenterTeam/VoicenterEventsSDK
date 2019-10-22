@@ -239,7 +239,11 @@
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
                     if (widgetIndex !== -1) {
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1)
-                        removeDummyWidgets([widget.WidgetID])
+                        if (!widgetGroup.IsNew) {
+                            this.operations.add(dashboardOperation(types.REMOVE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                        } else {
+                            removeDummyWidgets([widget.WidgetID])
+                        }
                     }
                 }
             },
@@ -249,10 +253,9 @@
                     this.activeDashboardData.WidgetGroupList.splice(index, 1)
                     if (!widgetGroup.IsNew) {
                         this.operations.removeGroup(dashboardOperation(types.REMOVE, targets.WIDGET_GROUP, widgetGroup))
-                    } else {
-                        let widgetIds = map(widgetGroup.WidgetList, 'WidgetID')
-                        removeDummyWidgets(widgetIds)
                     }
+                    let widgetIds = map(widgetGroup.WidgetList, 'WidgetID')
+                    removeDummyWidgets(widgetIds)
                 }
             },
             addNewGroup() {
