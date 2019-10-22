@@ -32,9 +32,9 @@
         </div>
         <div>
             <div class="flex py-6 extension-cards">
-                <fade-transition class="flex flex-wrap w-full " group
+                <fade-transition class="flex flex-wrap" group
                                  :style="renderColumns"
-                                 :class="{'grid-container overflow-x-auto': sortedExtensions.length}">
+                                 :class="{'grid-container overflow-x-auto': sortedExtensions.length, 'w-full': sortedExtensions.length === 0}">
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
                          class="pr-4">
