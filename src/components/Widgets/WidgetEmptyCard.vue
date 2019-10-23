@@ -9,7 +9,7 @@
                             v-click-outside="onWidgetMenuClickOutside"
                             v-bind="$attrs"
                             :widgetGroup="widgetGroup"
-                            :widgets="allWidgets"
+                            :widgetTemplate="widgetTemplate"
                             v-on="$listeners">
                 </WidgetMenu>
             </fade-transition>
@@ -32,7 +32,7 @@
                 type: Object,
                 default: () => ({})
             },
-            allWidgets: {
+            widgetTemplate: {
                 type: Array,
                 default: () => []
             }

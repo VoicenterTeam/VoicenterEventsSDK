@@ -26,3 +26,15 @@ export const dashboardOperation = (type, target, payload, parentID = null, tempo
         temporaryID: temporaryID
     }
 })
+
+export const widgetModel = (TemplateID, Title, WidgetLayout) => ({
+    Title: Title,
+    TemplateID: TemplateID,
+    WidgetLayout: WidgetLayout,
+    // TODO: check de ce da eroare
+    WidgetColumns: [
+        {
+            ColumnIndex: 1,
+        }
+    ]
+})

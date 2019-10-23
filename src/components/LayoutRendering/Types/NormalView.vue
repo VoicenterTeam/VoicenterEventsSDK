@@ -14,7 +14,7 @@
                 <h3 v-else class="font-semibold text-2xl text-gray-800">{{widgetGroup.WidgetGroupTitle}}</h3>
                 <widget-list
                         :widgets="widgetGroup.WidgetList"
-                        :all-widgets="allWidgets"
+                        :widgetTemplates="widgetTemplates"
                         :editable="editMode"
                         v-bind="$attrs"
                         :widget-group="widgetGroup"
@@ -24,7 +24,6 @@
         </transition-group>
     </div>
 </template>
-
 <script>
     import BaseInput from '@/components/BaseInput'
     import WidgetList from '@/components/Widgets/WidgetList'
@@ -45,7 +44,7 @@
                 type: Boolean,
                 default: false
             },
-            allWidgets: {
+            widgetTemplates: {
                 type: Array,
                 default: () => []
             }

@@ -1,5 +1,6 @@
-import {DashboardApi} from "@/api/dashboardApi";
 import Vue from 'vue'
+import {DashboardApi} from '@/api/dashboardApi'
+import {settings} from '@/models/defaultDashboardSettings'
 
 const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
@@ -29,11 +30,19 @@ const mutations = {
                 Vue.set(state.allDashboards, index, dashboard)
             }
         })
+        //TODO: REMOVE condition api update needs
+        if (!dashboard.DashboardLayout.settings) {
+            dashboard.DashboardLayout.settings = settings
+        }
         state.activeDashboard = dashboard
         state.settings = dashboard.DashboardLayout.settings
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
+        //TODO: REMOVE condition api update needs
+        if (!dashboard.DashboardLayout.settings) {
+            dashboard.DashboardLayout.settings = settings
+        }
         state.settings = dashboard.DashboardLayout.settings
     },
     [types.SET_LOADING]: (state, loading) => {

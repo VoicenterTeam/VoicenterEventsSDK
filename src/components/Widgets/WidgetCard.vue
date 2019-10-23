@@ -6,7 +6,7 @@
             </slot>
             <slot name="title">
                 <p class="text-sm mx-2 caption" @click="$emit('add-widget')">
-                    {{caption}}
+                    {{name}}
                 </p>
             </slot>
         </div>
@@ -19,7 +19,7 @@
     export default {
         props: {
             icon: String,
-            caption: {
+            name: {
                 type: [String, Number],
                 default: '- -'
             }

@@ -28,11 +28,7 @@ export async function runDashboardOperations(operations, dashboard) {
                 case targets.WIDGET:
                     switch (operation.type) {
                         case types.ADD:
-                            delete operation.payload.temporaryID
-                            let data = {
-                                'Order': operation.payload.WidgetLayout.Order
-                            }
-                            await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID, data)
+                            await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.ID)
                             break;
                         case types.UPDATE:
                             await WidgetApi.update(operation.payload)

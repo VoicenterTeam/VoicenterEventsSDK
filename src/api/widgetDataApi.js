@@ -2,18 +2,9 @@ import $axios from './apiConnection'
 import parseCatch from "../helpers/handleErrors";
 
 export const WidgetDataApi = {
-    async getTableData(widgetID) {
+    async getData(endPoint) {
         try {
-            let res = await $axios.post(`/WidgetsData/GetTableData/${widgetID}`)
-            return res.Data
-        } catch (e) {
-            parseCatch(e, true)
-        }
-    },
-
-    async getDataByUser(widgetID) {
-        try {
-            let res = await $axios.post(`/WidgetsData/GetDataByUser/${widgetID}`)
+            let res = await $axios.post(`${endPoint}`)
             return res.Data
         } catch (e) {
             parseCatch(e, true)

@@ -18,4 +18,16 @@ export const WidgetApi = {
             parseCatch(e, true)
         }
     },
+
+    async store(data) {
+        try {
+            return await $axios.post('/Widgets/Add/', data)
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    },
+
+    destroy(widgetId) {
+        return $axios.post(`/Widgets/Delete/${widgetId}`)
+    }
 }

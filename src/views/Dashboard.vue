@@ -31,9 +31,9 @@
                         <fade-transition>
                             <widget-menu v-if="showWidgetMenu"
                                          :widgetGroup=firstWidgetGroup
-                                         @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
+                                         @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgetTemplates, data.group)"
                                          v-click-outside="onWidgetMenuClickOutside"
-                                         :widgets="allWidgets">
+                                         :widgetTemplates="allWidgetTemplates">
                             </widget-menu>
                         </fade-transition>
                         <layout-switcher
@@ -50,7 +50,7 @@
                             :editMode="editMode"
                             :widgetsFilter="widgetsFilter"
                             :activeTab="activeTab"
-                            :allWidgets="allWidgets"
+                            :widgetTemplates="allWidgetTemplates"
                             @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
                             @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
                             @onListChange="(data) => onListChange(data.event, data.group)"
@@ -65,6 +65,7 @@
     </div>
 </template>
 <script>
+    import map from 'lodash/map'
     import get from 'lodash/get'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
@@ -87,6 +88,8 @@
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
+    import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
+
 
     export default {
         components: {
@@ -122,8 +125,8 @@
             dashboard() {
                 return this.$store.state.dashboards.activeDashboard
             },
-            allWidgets() {
-                return this.$store.state.widgets.allWidgets
+            allWidgetTemplates() {
+                return this.$store.state.widgetTemplate.allWidgetTemplates
             },
             getClass() {
                 if (this.layoutType === layoutTypes.TABBED) {
@@ -155,15 +158,9 @@
             }
         },
         methods: {
-            addWidgetsToGroup(widgets, widgetGroup) {
-                if (!widgetGroup.IsNew) {
-                    widgets.forEach((widget, index) => {
-                        let temporaryID = Math.random() * 100
-                        widget.temporaryID = temporaryID
-                        widget.WidgetLayout.Order = widgetGroup.WidgetList.length + index + 1
-                        this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID, temporaryID))
-                    })
-                }
+            async addWidgetsToGroup(widgetTemplates, widgetGroup) {
+                let widgets = await createNewWidgets(widgetTemplates, widgetGroup)
+
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(widgets)
                 this.showWidgetMenu = false
@@ -204,7 +201,7 @@
                 }
             },
             //Order list & add to List - events
-            onListChange(event, widgetGroup) {
+            async onListChange(event, widgetGroup) {
                 if (event[draggableEvents.MOVED]) {
                     event = event[draggableEvents.MOVED]
                     widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
@@ -216,18 +213,16 @@
                     }
                 } else {
                     event = event[draggableEvents.ADDED]
-                    widgetGroup.WidgetList.splice(event.newIndex, 0, event.element);
-                    if (!widgetGroup.IsNew) {
-                        event.element.WidgetLayout.Order = event.newIndex
-                        this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, event.element, widgetGroup.WidgetGroupID))
-                        let widgetsToUpdate = widgetGroup.WidgetList.slice(event.newIndex + 1)
-                        widgetsToUpdate.forEach((widget, index) => {
-                            widget.WidgetLayout.Order = index + 1 + event.newIndex
-                            this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
-                        })
-                    }
-                }
 
+                    let newWidget = await createNewWidgets([event.element], widgetGroup, event.newIndex)
+                    widgetGroup.WidgetList.splice(event.newIndex, 0, newWidget)
+
+                    let widgetsToUpdate = widgetGroup.WidgetList.slice(event.newIndex + 1)
+                    widgetsToUpdate.forEach((widget, index) => {
+                        widget.WidgetLayout.Order = index + 1 + event.newIndex
+                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                    })
+                }
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
                     this.activeDashboardData.WidgetGroupList.splice(index, 1, widgetGroup)
@@ -244,6 +239,8 @@
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1)
                         if (!widgetGroup.IsNew) {
                             this.operations.add(dashboardOperation(types.REMOVE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                        } else {
+                            removeDummyWidgets([widget.WidgetID])
                         }
                     }
                 }
@@ -255,6 +252,8 @@
                     if (!widgetGroup.IsNew) {
                         this.operations.removeGroup(dashboardOperation(types.REMOVE, targets.WIDGET_GROUP, widgetGroup))
                     }
+                    let widgetIds = map(widgetGroup.WidgetList, 'WidgetID')
+                    removeDummyWidgets(widgetIds)
                 }
             },
             addNewGroup() {
@@ -309,6 +308,7 @@
                 widgetGroupsToUpdate.forEach((widgetGroup) => {
                     this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
                 })
+
             },
             resetDashboard() {
                 this.showWidgetMenu = false
