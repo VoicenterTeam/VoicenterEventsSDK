@@ -8,14 +8,14 @@
             </div>
             <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-button @click="onShowUpdateDialog(widget.TemplateID)"
+                    <edit-button @click="onShowUpdateDialog(widget.WidgetLayout.DataTypeID)"
                                  :class="{'border border-primary': editable}">
                     </edit-button>
                 </el-tooltip>
             </div>
         </div>
-        <component :is="componentTypes[widget.TemplateID]"
-                   :data="setComponentData(widget.TemplateID)"
+        <component :is="componentTypes[widget.WidgetLayout.DataTypeID]"
+                   :data="setComponentData()"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
@@ -26,11 +26,11 @@
         </component>
         <!--TODO: set dynamic edit dialog for all widget types-->
         <update-dialog
-            width="30%"
-            v-if="showUpdateDialog"
-            :chartTitle="widget.WidgetLayout.caption"
-            @on-change="(title) => onChangeTitle(title, widget)"
-            :visible.sync="showUpdateDialog">
+                width="30%"
+                v-if="showUpdateDialog"
+                :chartTitle="widget.WidgetLayout.caption"
+                @on-change="(title) => onChangeTitle(title, widget)"
+                :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
 </template>
@@ -39,10 +39,10 @@
     import {Tooltip} from 'element-ui'
     import WidgetCard from "./WidgetCard"
     import UpdateDialog from './UpdateDialog'
-    import widgetTypes from '@/enum/widgetTypes'
     import TableData from './Data/Table/TableData'
     import DataByUser from './Data/Table/DataByUser'
     import EditButton from '@/components/EditButton'
+    import widgetDataTypes from '@/enum/widgetDataTypes'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
@@ -51,7 +51,7 @@
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
 
-    const editableWidgets = [1, 2, 11]
+    const editableWidgets = [1, 2, 3]
 
     export default {
         name: "widget",
@@ -83,15 +83,17 @@
         data() {
             return {
                 componentTypes: {
-                    [widgetTypes.CHART_LINE_ID]: 'TimeLineChart',
-                    [widgetTypes.CHART_BARS_ID]: 'TimeLineChart',
-                    [widgetTypes.CHART_GAUGE_ID]: 'GaugeChart',
-                    [widgetTypes.CHART_QUEUE_ID]: 'QueueChart',
-                    [widgetTypes.TABLE_TYPE_ID]: 'TableData',
-                    [widgetTypes.EXTENSION_CARDS_TYPE_ID]: 'ExtensionCards',
-                    [widgetTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
-                    [widgetTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
-                    [widgetTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
+                    [widgetDataTypes.LINES_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.TIMELINE_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
+                    [widgetDataTypes.COUNTER_TYPE_ID]: 'ExtensionCards',
+                    // TODO: TBD dataTypes from API
+                    [widgetDataTypes.CHART_GAUGE_ID]: 'GaugeChart',
+                    [widgetDataTypes.CHART_QUEUE_ID]: 'QueueChart',
+                    [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
+                    [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
+                    [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
                 },
                 showUpdateDialog: false,
                 loading: false
@@ -99,32 +101,24 @@
         },
         computed: {
             showDeleteButton() {
-                return ![widgetTypes.STATUS_CARDS_TYPE_ID, widgetTypes.STATISTICS_CARDS_TYPE_ID, widgetTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
+                return ![widgetDataTypes.STATUS_CARDS_TYPE_ID, widgetDataTypes.STATISTICS_CARDS_TYPE_ID, widgetDataTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
             }
         },
         methods: {
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onShowUpdateDialog(TemplateID) {
-                // TODO: updates
-                if (!editableWidgets.includes(TemplateID)) {
+            onShowUpdateDialog(DataTypeID) {
                     alert('coming soon...')
-                    return
-                }
-                this.showUpdateDialog = true
+                    return false
             },
             onChangeTitle(title, widget) {
                 widget.WidgetLayout.caption = title
                 widget = {...widget, ...widget.WidgetLayout}
                 this.$emit('update-item', widget)
             },
-            setComponentData(TemplateID) {
-                // TODO: We need a better way to check this when integrating with the api
-                if (TemplateID < '5' || TemplateID == '9') {
-                    return this.widget;
-                }
-                return this.widget.WidgetLayout
+            setComponentData() {
+                return this.widget;
             },
             changeExtensionStatus(status, widget) {
                 widget.WidgetLayout.status = status
