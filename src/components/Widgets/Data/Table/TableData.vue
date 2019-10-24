@@ -19,7 +19,6 @@
     </div>
 </template>
 <script>
-    import replace from 'lodash/replace'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
     import {WidgetDataApi} from '@/api/widgetDataApi'
@@ -49,6 +48,10 @@
             editable: {
                 type: Boolean,
                 default: false
+            },
+            endPoint: {
+                type: String,
+                default: ''
             },
         },
         data() {
@@ -90,8 +93,7 @@
             },
             async getTableData() {
                 try {
-                    let endPoint = replace(this.data.WidgetLayout.Endpoint, '{WidgetID}', this.data.WidgetID)
-                    let data = await WidgetDataApi.getData(endPoint)
+                    let data = await WidgetDataApi.getData(this.endPoint)
 
                     let columns = [];
 

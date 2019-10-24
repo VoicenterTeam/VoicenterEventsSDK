@@ -8,36 +8,35 @@
             </div>
             <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-button @click="onShowUpdateDialog(widget.WidgetLayout.DataTypeID)"
+                    <edit-button @click="showUpdateDialog = true"
                                  :class="{'border border-primary': editable}">
                     </edit-button>
                 </el-tooltip>
             </div>
         </div>
         <component :is="componentTypes[widget.WidgetLayout.DataTypeID]"
-                   :data="setComponentData()"
+                   :data="widget"
+                   :endPoint="setComponentEndPoint"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
                    @on-loading="(state) => onLoading(state)"
-                   @update-item="(layout) => updateWidget(layout, widget)"
                    @change-extension-status="(status)=> changeExtensionStatus(status, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
-        <!--TODO: set dynamic edit dialog for all widget types-->
         <update-dialog
                 width="30%"
                 v-if="showUpdateDialog"
-                :chartTitle="widget.WidgetLayout.caption"
-                @on-change="(title) => onChangeTitle(title, widget)"
+                :chartTitle="widget.Title"
+                @on-change-title="(title) => onChangeTitle(title, widget)"
                 :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
 </template>
 <script>
-
     import {Tooltip} from 'element-ui'
-    import WidgetCard from "./WidgetCard"
+    import replace from 'lodash/replace'
+    import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
     import DataByUser from './Data/Table/DataByUser'
@@ -50,8 +49,6 @@
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
-
-    const editableWidgets = [1, 2, 3]
 
     export default {
         name: "widget",
@@ -96,29 +93,25 @@
                     [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
                 },
                 showUpdateDialog: false,
-                loading: false
+                loading: false,
+                endPoint: ''
             }
         },
         computed: {
             showDeleteButton() {
                 return ![widgetDataTypes.STATUS_CARDS_TYPE_ID, widgetDataTypes.STATISTICS_CARDS_TYPE_ID, widgetDataTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
+            },
+            setComponentEndPoint() {
+                return replace(this.widget.WidgetLayout.Endpoint, '{WidgetID}', this.widget.WidgetID)
             }
         },
         methods: {
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onShowUpdateDialog(DataTypeID) {
-                    alert('coming soon...')
-                    return false
-            },
             onChangeTitle(title, widget) {
-                widget.WidgetLayout.caption = title
-                widget = {...widget, ...widget.WidgetLayout}
+                widget.Title = title
                 this.$emit('update-item', widget)
-            },
-            setComponentData() {
-                return this.widget;
             },
             changeExtensionStatus(status, widget) {
                 widget.WidgetLayout.status = status

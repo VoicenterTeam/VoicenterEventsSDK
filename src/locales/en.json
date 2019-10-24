@@ -33,8 +33,6 @@
   "chart.downloadPNG": "Download PNG image",
   "chart.downloadSVG": "Download SVG vector image",
   "chart.loading": "Loading..",
-  "chart.update": "Update chart",
-  "chart.update.title": "Update chart title",
   "settings.update.title": "General Settings",
   "settings.report.title": "Reports",
   "settings.switch.title": "Switch category every",
@@ -121,5 +119,7 @@
   "queue.agents.on.break": "Current count of agents on break",
   "queue.config.dialog": "Manage what is displayed",
   "queues.to.display": "Queues to display",
-  "blocks.to.display": "Blocks to display"
+  "blocks.to.display": "Blocks to display",
+  "widget.update": "Update widget",
+  "widget.update.title": "Update widget title"
 }
