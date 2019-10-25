@@ -58,7 +58,7 @@
                             @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
                             @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
                             @onListChange="(data) => onListChange(data.event, data.group)"
-                            @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
+                            @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgetTemplates, data.group)"
                             @removeWidget="(data) => removeWidget(data.widget, data.group)"
                             @updateWidget="(data) => updateWidget(data.widget, data.group)"
                             @switch-tab="(tab) => switchTab(tab)">
