@@ -25,12 +25,14 @@
                             </manage-dashboard-buttons>
                         </div>
                         <fade-transition>
-                            <widget-menu v-if="showWidgetMenu"
-                                         :widgetGroup=firstWidgetGroup
-                                         @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgetTemplates, data.group)"
-                                         v-click-outside="onWidgetMenuClickOutside"
-                                         :widgetTemplates="allWidgetTemplates">
-                            </widget-menu>
+                            <templates-category
+                                    class="mt-16"
+                                    v-if="showWidgetMenu"
+                                    :widgetGroup=firstWidgetGroup
+                                    @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgetTemplates, data.group)"
+                                    v-click-outside="onWidgetMenuClickOutside"
+                                    :widgetTemplates="allWidgetTemplates">
+                            </templates-category>
                         </fade-transition>
                         <layout-switcher
                                 v-if="!editMode"
@@ -88,6 +90,7 @@
     import {runDashboardOperations} from '@/services/dashboardService'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
+    import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
@@ -104,6 +107,7 @@
             NormalView,
             TabbedView,
             Sidebar,
+            TemplatesCategory,
         },
         data() {
             return {
@@ -217,7 +221,7 @@
                     event = event[draggableEvents.ADDED]
 
                     let newWidget = await createNewWidgets([event.element], widgetGroup, event.newIndex)
-                    widgetGroup.WidgetList.splice(event.newIndex, 0, newWidget)
+                    widgetGroup.WidgetList.splice(event.newIndex, 0, newWidget[0])
 
                     let widgetsToUpdate = widgetGroup.WidgetList.slice(event.newIndex + 1)
                     widgetsToUpdate.forEach((widget, index) => {

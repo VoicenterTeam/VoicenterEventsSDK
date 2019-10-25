@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 pb-0 shadow absolute max-w-xl bg-white mt-16 z-10 widget-menu">
+    <div>
         <el-input size="small" class="mb-2" placeholder="Search" v-model="search"
                   suffix-icon="el-icon-search"></el-input>
         <div class="widget-menu-container">
@@ -10,7 +10,7 @@
                      :key="widgetTemplate.ID"
                      class="w-full px-2">
                     <WidgetCard
-                            :name="widgetTemplate.Name"
+                            v-bind="widgetTemplate"
                             class="w-full"
                             @add-widget="$emit('add-widget', widgetTemplate)">
                         <template v-slot:quantity>
@@ -95,11 +95,6 @@
     }
 </script>
 <style scoped lang="scss">
-    .widget-menu {
-        width: 275px;
-        border-radius: 4px;
-        box-shadow: 0 0 22px 0 rgba(42, 44, 54, 0.19);
-    }
 
     .widget-menu-container {
         max-height: 400px;

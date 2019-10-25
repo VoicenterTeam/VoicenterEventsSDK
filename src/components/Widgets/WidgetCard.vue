@@ -2,11 +2,11 @@
     <div class="py-2 bg-white flex widget-card items-center justify-between">
         <div class="flex items-center">
             <slot name="icon">
-                <component class="w-7 mx-1 text-primary" :is="icon"></component>
+                <component class="w-7 mx-1 text-primary" :is="Icon"></component>
             </slot>
             <slot name="title">
                 <p class="text-sm mx-2 caption" @click="$emit('add-widget')">
-                    {{name}}
+                    {{Name}}
                 </p>
             </slot>
         </div>
@@ -18,12 +18,12 @@
 <script>
     export default {
         props: {
-            icon: String,
-            name: {
-                type: [String, Number],
+            Icon: String,
+            Name: {
+                type: String,
                 default: '- -'
             }
-        }
+        },
     }
 </script>
 <style lang="scss" scoped>
@@ -45,7 +45,7 @@
         }
 
         .el-input-number.is-controls-right .el-input__inner {
-            padding-right: 40px;
+            padding-right: 39px;
         }
 
         .el-input-number--mini {

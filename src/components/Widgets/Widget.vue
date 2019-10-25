@@ -15,12 +15,11 @@
             </div>
         </div>
         <component :is="componentTypes[widget.WidgetLayout.DataTypeID]"
-                   :data="setComponentData()"
+                   :data="widget"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
                    @on-loading="(state) => onLoading(state)"
-                   @update-item="(layout) => updateWidget(layout, widget)"
                    @change-extension-status="(status)=> changeExtensionStatus(status, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
@@ -35,18 +34,17 @@
     </div>
 </template>
 <script>
-
     import {Tooltip} from 'element-ui'
     import WidgetCard from "./WidgetCard"
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
     import DataByUser from './Data/Table/DataByUser'
     import EditButton from '@/components/EditButton'
+    import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
-    import DeleteButton from '@/components/Widgets/DeleteButton'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
@@ -109,16 +107,13 @@
                 this.$emit('remove-item', widget)
             },
             onShowUpdateDialog(DataTypeID) {
-                    alert('coming soon...')
-                    return false
+                alert('coming soon...')
+                return false
             },
             onChangeTitle(title, widget) {
                 widget.WidgetLayout.caption = title
                 widget = {...widget, ...widget.WidgetLayout}
                 this.$emit('update-item', widget)
-            },
-            setComponentData() {
-                return this.widget;
             },
             changeExtensionStatus(status, widget) {
                 widget.WidgetLayout.status = status

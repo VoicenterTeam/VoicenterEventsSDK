@@ -14,7 +14,7 @@
         </div>
         <widget-empty-card v-if="editable" key="-1"
                            :widgetGroup="widgetGroup"
-                           :widgetTemplates="widgetTemplates"
+                           v-bind="$attrs"
                            v-on="$listeners"
                            @add-widget="(value) => addWidgetsToGroup(value)">
         </widget-empty-card>
@@ -36,9 +36,9 @@
     export default {
         name: "widget-list",
         components: {
+            Widget,
             WidgetEmptyCard,
             DraggableWidgets,
-            Widget,
         },
         data() {
             return {
@@ -70,10 +70,6 @@
                 type: Array,
                 default: () => []
             },
-            widgetTemplates: {
-                type: Array,
-                default: () => []
-            },
             widgetsFilter: {
                 type: String,
                 default: ''
@@ -81,9 +77,7 @@
         },
         computed: {
             filteredWidgets() {
-                return this.widgets.filter((widget) => {
-                    return widget.Title.toLowerCase().includes(this.widgetsFilter.toLowerCase())
-                })
+                return this.widgets.filter((widget) => widget.Title.toLowerCase().includes(this.widgetsFilter.toLowerCase()))
             }
         },
         methods: {
