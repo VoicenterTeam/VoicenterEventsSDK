@@ -17,6 +17,7 @@
             <templates-category-card
                     v-for="templatesCategory in templatesCategories"
                     v-bind="templatesCategory"
+                    :key="templatesCategory.ID"
                     :templatesCategory="templatesCategory"
                     @on-select="onSelect">
                 <template v-slot:state-icon></template>
@@ -61,7 +62,7 @@
                 return this.$store.state.templatesCategory.all
             },
             filteredWidgetTemplates() {
-                return this.widgetTemplates.filter((template) => template.DataType.ID === this.selectedCategory.ID)
+                return this.widgetTemplates.filter((template) => template.TemplateCategoryID && template.TemplateCategoryID === this.selectedCategory.ID)
             }
         },
         methods: {
