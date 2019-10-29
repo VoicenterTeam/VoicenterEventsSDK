@@ -1,5 +1,9 @@
 <template>
     <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
+        <p v-if="data.Title" class="text-2xl font-semibold"
+           :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
+            {{data.Title}}
+        </p>
         <data-table :tableData="tableData"
                     :searchable-fields="searchableFields"
                     :editable="editable"
@@ -117,7 +121,7 @@
                         //TODO: update - this is current user_id for testing
                         data[0]['user_id'] = 106576
                     }
-                    this.tableData = data
+                    this.tableData = data.slice(0, 10) // add pagination later on
                     this.columns = columns
                 } catch (e) {
 

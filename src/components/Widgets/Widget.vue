@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
+    <div class="relative mt-6">
         <div v-if="!loading">
             <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
