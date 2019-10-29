@@ -5,6 +5,11 @@ export const WidgetGroupsApi = {
 
     async update(data) {
         try {
+            data.WidgetList.forEach(widget => {
+                if (!widget.WidgetTime) {
+                    widget.WidgetTime = {}
+                }
+            })
             return await $axios.post(`/WidgetsGroups/Update/`, data)
         } catch (e) {
             parseCatch(e, true)

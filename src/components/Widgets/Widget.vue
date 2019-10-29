@@ -14,7 +14,7 @@
                 </el-tooltip>
             </div>
         </div>
-        <component :is="componentTypes[widget.WidgetLayout.DataTypeID]"
+        <component :is="getComponentType(widget)"
                    :data="widget"
                    :endPoint="setComponentEndPoint"
                    v-bind="widget.WidgetLayout"
@@ -34,8 +34,8 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
-    import replace from 'lodash/replace'
     import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
@@ -43,6 +43,7 @@
     import EditButton from '@/components/EditButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import GaugeChart from '@/components/Charts/GaugeChart'
+    import WidgetRenderError from '@/components/WidgetRenderError'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
     import DeleteButton from '@/components/Widgets/DeleteButton'
@@ -54,6 +55,7 @@
         name: "widget",
         components: {
             WidgetCard,
+            WidgetRenderError,
             TimeLineChart,
             ExtensionCards,
             StatusCards,
@@ -91,6 +93,7 @@
                     [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
                     [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
+                    error: 'WidgetRenderError'
                 },
                 showUpdateDialog: false,
                 loading: false,
@@ -99,10 +102,14 @@
         },
         computed: {
             showDeleteButton() {
-                return ![widgetDataTypes.STATUS_CARDS_TYPE_ID, widgetDataTypes.STATISTICS_CARDS_TYPE_ID, widgetDataTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
+                // TODO Adapt condition based on component type
+                return true
             },
             setComponentEndPoint() {
-                return replace(this.widget.WidgetLayout.Endpoint, '{WidgetID}', this.widget.WidgetID)
+                return this.widget.WidgetLayout.Endpoint.replace('{WidgetID}', this.widget.WidgetID)
+            },
+            getWidgetTemplate() {
+                return this.$store.getters['widgetTemplate/getWidgetTemplate']
             }
         },
         methods: {
@@ -119,6 +126,14 @@
             },
             onLoading(state) {
                 this.loading = state
+            },
+            getComponentType(widget) {
+                let dataTypeId = get(widget, 'WidgetLayout.DataTypeID', 'error')
+                let endpoint = widget.WidgetLayout.Endpoint
+                if (endpoint.includes('GetDataByUser​')) {
+                    dataTypeId = widgetDataTypes.REAL_TIME_USER_TABLE_ID
+                }
+                return this.componentTypes[dataTypeId]
             }
         }
     }

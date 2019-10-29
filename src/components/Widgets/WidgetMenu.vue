@@ -88,7 +88,11 @@
                         widgetTemplatesToAdd.push(template)
                     })
                 })
-                this.$emit('addWidgetsToGroup', {'widgetTemplates': widgetTemplatesToAdd, 'group': this.widgetGroup})
+                let objectToEmit = {
+                    widgets: widgetTemplatesToAdd,
+                    group: this.widgetGroup
+                }
+                this.$emit('addWidgetsToGroup', objectToEmit)
                 this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
             }
         }

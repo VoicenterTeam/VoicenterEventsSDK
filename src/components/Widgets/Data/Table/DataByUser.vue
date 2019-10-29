@@ -38,6 +38,7 @@
 </template>
 <script>
     import startCase from 'lodash/startCase'
+    import get from 'lodash/get'
     import {Pagination, Select, Option} from 'element-ui'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
@@ -120,7 +121,9 @@
             },
             async getDataByUser() {
                 try {
-                    let data = await WidgetDataApi.getDataByUser(this.data.WidgetID)
+                    let endpoint = get(this.data, 'WidgetLayout.Endpoint', '')
+                    endpoint = endpoint.replace('{WidgetID}', this.data.WidgetID)
+                    let data = await WidgetDataApi.getData(endpoint)
                     let columns = [];
 
                     if (data.length) {

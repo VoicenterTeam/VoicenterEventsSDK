@@ -58,7 +58,7 @@
                 this.$emit('update-item', this.data)
             },
             async getChartData() {
-                // let data = await WidgetDataApi.getData(this.endPoint)
+                let chartData = await WidgetDataApi.getData(this.endPoint)
                 let data = {
                     "Order": 6,
                     "chart": {
@@ -101,7 +101,8 @@
                         "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
                         "borderRadius": 10,
                     },
-                    "date": "05/29/2019 - 07/20/2019"
+                    "date": "05/29/2019 - 07/20/2019",
+                    ...chartData
                 }
                 this.chartOptions = {...data, ...chartConfig.yAxisConfig}
                 this.loading = false

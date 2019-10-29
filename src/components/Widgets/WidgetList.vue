@@ -5,7 +5,8 @@
                       @change="(ev) => onListChange(ev)">
         <div v-for="widget in filteredWidgets"
              :key="widget.WidgetID"
-             class="w-full px-2" :class="componentWidth[widget.WidgetLayout.DataTypeID]">
+             class="w-full px-2"
+             :class="getWidgetDataTypeClass(widget)">
             <Widget :widget="widget"
                     :editable="editable"
                     @remove-item="removeWidget(widget)"
@@ -28,6 +29,7 @@
 </template>
 <script>
 
+    import get from 'lodash/get'
     import Widget from './Widget'
     import WidgetEmptyCard from './WidgetEmptyCard'
     import DraggableWidgets from './DraggableWidgets'
@@ -54,6 +56,7 @@
                     [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'lg:w-1/3',
                     [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'lg:w-1/3',
                     [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'lg:w-3/3',
+                    default: 'lg:w-3/3'
                 }
             }
         },
@@ -82,7 +85,8 @@
         computed: {
             filteredWidgets() {
                 return this.widgets.filter((widget) => {
-                    return widget.Title.toLowerCase().includes(this.widgetsFilter.toLowerCase())
+                    let title = get(widget, 'Title', '').toLowerCase()
+                    return title.includes(this.widgetsFilter.toLowerCase())
                 })
             }
         },
@@ -98,6 +102,10 @@
             },
             updateWidget(val) {
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
+            },
+            getWidgetDataTypeClass(widget) {
+                let dataType = get(widget, 'WidgetLayout.DataTypeID', 'default')
+                return this.componentWidth[dataType]
             }
         },
     }

@@ -1,14 +1,13 @@
 <template>
     <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
-        <data-table
-                v-if="!loading"
-                :tableData="tableData"
-                :editable="editable"
-                :columns="columns"
-                :cell-style="getCellStyle"
-                :stripe="stripe"
-                :border="border"
-                :cell-class-name="getCellClassName">
+        <data-table :tableData="tableData"
+                    :searchable-fields="searchableFields"
+                    :editable="editable"
+                    :columns="columns"
+                    :cell-style="getCellStyle"
+                    :stripe="stripe"
+                    :border="border"
+                    :cell-class-name="getCellClassName">
             <template v-slot:status_duration="{row, index}">
                 <status-duration :extension="userExtension(row.user_id, index)"></status-duration>
             </template>
@@ -59,12 +58,14 @@
                 tableData: [],
                 columns: [],
                 loading: true,
-                searchableFields: ['User', 'Department']
             }
         },
         computed: {
             extensions() {
                 return this.$store.state.extensions.extensions
+            },
+            searchableFields() {
+                return this.columns.map(c => c.prop)
             },
         },
         methods: {
@@ -94,19 +95,24 @@
             async getTableData() {
                 try {
                     let data = await WidgetDataApi.getData(this.endPoint)
-
                     let columns = [];
+                    this.tableData = data
+                    if (!data.length) {
+                        this.loading = false
+                        return
+                    }
+                    for (let column in data[0]) {
+                        columns.push({
+                            prop: column,
+                            align: 'left',
+                            showOverflowTooltip: true,
+                            label: column,
+                            resizable: true
+                        })
+                    }
 
-                    if (data.length) {
-                        for (let column in data[0]) {
-                            columns.push({
-                                prop: column,
-                                fixed: false,
-                                align: 'left',
-                                label: column
-                            })
-                        }
-
+                    // TODO use a better check later on
+                    if (this.endPoint.includes('GetDataByUser')) {
                         columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
                         //TODO: update - this is current user_id for testing
                         data[0]['user_id'] = 106576

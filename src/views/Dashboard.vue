@@ -31,7 +31,7 @@
                         <fade-transition>
                             <widget-menu v-if="showWidgetMenu"
                                          :widgetGroup=firstWidgetGroup
-                                         @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgetTemplates, data.group)"
+                                         @addWidgetsToGroup="addWidgetsToGroup"
                                          v-click-outside="onWidgetMenuClickOutside"
                                          :widgetTemplates="allWidgetTemplates">
                             </widget-menu>
@@ -54,7 +54,7 @@
                             @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
                             @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
                             @onListChange="(data) => onListChange(data.event, data.group)"
-                            @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
+                            @addWidgetsToGroup="addWidgetsToGroup"
                             @removeWidget="(data) => removeWidget(data.widget, data.group)"
                             @updateWidget="(data) => updateWidget(data.widget, data.group)"
                             @switch-tab="(tab) => switchTab(tab)">
@@ -158,11 +158,12 @@
             }
         },
         methods: {
-            async addWidgetsToGroup(widgetTemplates, widgetGroup) {
-                let widgets = await createNewWidgets(widgetTemplates, widgetGroup)
+            async addWidgetsToGroup(data = {}) {
+                let { widgets: widgetTemplates , group: widgetGroup } = data
+                let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(widgets)
+                this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
                 this.showWidgetMenu = false
             },
             orderWidgetGroup(widgetGroup, direction) {

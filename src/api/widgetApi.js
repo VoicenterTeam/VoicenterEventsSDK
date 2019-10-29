@@ -13,6 +13,9 @@ export const WidgetApi = {
 
     async update(data) {
         try {
+            if (!data.WidgetTime) {
+                data.WidgetTime = {}
+            }
             return await $axios.post(`/Widgets/Update/`, data)
         } catch (e) {
             parseCatch(e, true)
