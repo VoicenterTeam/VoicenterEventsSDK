@@ -208,7 +208,13 @@
                     widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
                     if (!widgetGroup.IsNew) {
                         widgetGroup.WidgetList.forEach((widget, index) => {
-                            widget.WidgetLayout.Order = index + 1
+                            if (!widget.WidgetLayout) {
+                                widget.WidgetLayout = {
+                                    Order: index + 1
+                                }
+                            } else {
+                                widget.WidgetLayout.Order = index + 1
+                            }
                             this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                         })
                     }

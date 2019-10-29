@@ -8,6 +8,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
     let widgets = []
     let index = 0
 
+    debugger
     for (let template of templates) {
         let newWidget = widgetModel(template.ID, template.Name, {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,

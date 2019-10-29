@@ -7,9 +7,9 @@
 <script>
     export default {
         async created() {
+            await this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
             await this.$store.dispatch('dashboards/getDashboards')
             this.$store.dispatch('dashboards/selectDashboard')
-            this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
             this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
         },
         computed: {
