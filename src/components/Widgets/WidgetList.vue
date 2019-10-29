@@ -37,6 +37,7 @@
     import DraggableWidgets from './DraggableWidgets'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
+    import { getWidgetDataType } from "@/helpers/wigetUtils";
     export default {
         name: "widget-list",
         components: {
@@ -107,7 +108,7 @@
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
             getWidgetDataTypeClass(widget) {
-                let dataType = get(widget, 'WidgetLayout.DataTypeID', 'default')
+                let dataType = getWidgetDataType(widget) || 'default'
                 return this.componentWidth[dataType]
             }
         },

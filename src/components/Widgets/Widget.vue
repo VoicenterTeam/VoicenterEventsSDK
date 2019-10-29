@@ -49,6 +49,7 @@
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
+    import { getWidgetDataType, getWidgetEndpoint } from "@/helpers/wigetUtils";
 
     export default {
         name: "widget",
@@ -101,8 +102,11 @@
                 let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER]
                 return !exceptions.includes(this.widget.TemplateID)
             },
+            getWidgetTemplate() {
+              return this.$store.getters['widgetTemplate/getWidgetTemplate']
+            },
             setComponentEndPoint() {
-                return this.widget.WidgetLayout.Endpoint.replace('{WidgetID}', this.widget.WidgetID)
+                return getWidgetEndpoint(this.widget)
             },
         },
         methods: {
@@ -121,7 +125,7 @@
                 this.loading = state
             },
             getComponentType(widget) {
-                let dataTypeId = get(widget, 'WidgetLayout.DataTypeID', 'error')
+                let dataTypeId = getWidgetDataType(widget)
                 return `${this.componentTypes[dataTypeId]}`
             }
         }

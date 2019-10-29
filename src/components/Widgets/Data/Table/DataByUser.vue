@@ -46,6 +46,7 @@
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
     import {dynamicRows, refreshDataInterval, dynamicColumns} from '@/enum/realTimeTableConfigs'
+    import { getWidgetEndpoint } from "@/helpers/wigetUtils";
 
     export default {
         components: {
@@ -121,8 +122,7 @@
             },
             async getDataByUser() {
                 try {
-                    let endpoint = get(this.data, 'WidgetLayout.Endpoint', '')
-                    endpoint = endpoint.replace('{WidgetID}', this.data.WidgetID)
+                    let endpoint = getWidgetEndpoint(this.data)
                     let data = await WidgetDataApi.getData(endpoint)
                     let columns = [];
 
