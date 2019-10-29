@@ -14,6 +14,10 @@
                     </div>
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex">
+                            <new-group-button
+                                    @click.native="addNewGroup"
+                                    v-if="editMode">
+                            </new-group-button>
                             <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
                                        @click.stop="showWidgetMenu = !showWidgetMenu">
                             </AddButton>
@@ -38,12 +42,6 @@
                                 @switch-layout="(type) => switchDashboardLayout(type)">
                         </layout-switcher>
                     </div>
-                </div>
-                <div class="flex justify-end">
-                    <new-group-button
-                            @click.native="addNewGroup"
-                            v-if="editMode">
-                    </new-group-button>
                 </div>
                 <fade-transition mode="out-in" :duration="250">
                     <component
