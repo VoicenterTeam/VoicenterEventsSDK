@@ -7,11 +7,13 @@
              :key="widget.WidgetID"
              class="w-full px-2"
              :class="getWidgetDataTypeClass(widget)">
-            <Widget :widget="widget"
-                    :editable="editable"
-                    @remove-item="removeWidget(widget)"
-                    @update-item="(data) => updateWidget(data)">
-            </Widget>
+            <WidgetErrorBoundary>
+                <Widget :widget="widget"
+                        :editable="editable"
+                        @remove-item="removeWidget(widget)"
+                        @update-item="(data) => updateWidget(data)">
+                </Widget>
+            </WidgetErrorBoundary>
         </div>
         <widget-empty-card v-if="editable" key="-1"
                            :widgetGroup="widgetGroup"
@@ -34,12 +36,13 @@
     import WidgetEmptyCard from './WidgetEmptyCard'
     import DraggableWidgets from './DraggableWidgets'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-
+    import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
     export default {
         name: "widget-list",
         components: {
             WidgetEmptyCard,
             DraggableWidgets,
+            WidgetErrorBoundary,
             Widget,
         },
         data() {

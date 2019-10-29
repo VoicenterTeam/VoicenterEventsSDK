@@ -122,5 +122,5 @@
   "blocks.to.display": "Blocks to display",
   "widget.update": "Update widget",
   "widget.update.title": "Update widget title",
-  "widget.content.renderError": "Could not render this widget as it has an unmapped data type."
+  "widget.content.renderError": "An error occurred while rendering the widget..."
 }

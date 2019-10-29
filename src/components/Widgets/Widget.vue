@@ -43,7 +43,6 @@
     import EditButton from '@/components/EditButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import GaugeChart from '@/components/Charts/GaugeChart'
-    import WidgetRenderError from '@/components/WidgetRenderError'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
     import DeleteButton from '@/components/Widgets/DeleteButton'
@@ -55,7 +54,6 @@
         name: "widget",
         components: {
             WidgetCard,
-            WidgetRenderError,
             TimeLineChart,
             ExtensionCards,
             StatusCards,
@@ -86,14 +84,11 @@
                     [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'TimeLineChart',
                     [widgetDataTypes.TIMELINE_TYPE_ID]: 'TimeLineChart',
                     [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
-                    [widgetDataTypes.COUNTER_TYPE_ID]: 'ExtensionCards',
-                    // TODO: TBD dataTypes from API
-                    [widgetDataTypes.CHART_GAUGE_ID]: 'GaugeChart',
-                    [widgetDataTypes.CHART_QUEUE_ID]: 'QueueChart',
-                    [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
-                    [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
-                    [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
-                    error: 'WidgetRenderError'
+                    [widgetDataTypes.COUNTER_TYPE_ID]: 'StatusCards',
+                    [widgetDataTypes.CHART_SPEEDOMETER]: 'GaugeChart',
+                    [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
+                    [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
+                    [widgetDataTypes.REAL_TIME_TABLE]: 'DataByUser',
                 },
                 showUpdateDialog: false,
                 loading: false,
@@ -103,14 +98,12 @@
         computed: {
             showDeleteButton() {
                 // TODO Adapt condition based on component type
-                return true
+                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER]
+                return !exceptions.includes(this.widget.TemplateID)
             },
             setComponentEndPoint() {
                 return this.widget.WidgetLayout.Endpoint.replace('{WidgetID}', this.widget.WidgetID)
             },
-            getWidgetTemplate() {
-                return this.$store.getters['widgetTemplate/getWidgetTemplate']
-            }
         },
         methods: {
             removeWidget(widget) {
@@ -129,11 +122,7 @@
             },
             getComponentType(widget) {
                 let dataTypeId = get(widget, 'WidgetLayout.DataTypeID', 'error')
-                let endpoint = widget.WidgetLayout.Endpoint
-                if (endpoint.includes('GetDataByUser​')) {
-                    dataTypeId = widgetDataTypes.REAL_TIME_USER_TABLE_ID
-                }
-                return this.componentTypes[dataTypeId]
+                return `${this.componentTypes[dataTypeId]}`
             }
         }
     }
