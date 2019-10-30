@@ -107,7 +107,12 @@
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
             getWidgetDataTypeClass(widget) {
-                let dataType = getWidgetDataType(widget) || 'default'
+                let dataType = 'default'
+                try {
+                    dataType = getWidgetDataType(widget) || 'default'
+                } catch (e) {
+                    console.warn(e)
+                }
                 return this.componentWidth[dataType]
             }
         },
