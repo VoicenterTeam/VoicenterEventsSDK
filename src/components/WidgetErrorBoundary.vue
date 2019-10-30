@@ -10,20 +10,20 @@
         errorCaptured(err, vm, info) {
             let vmName = get(vm, '$options.name', '')
             this.error = true
-            this.errorMessage = `${err.message} on "${info}" inside "${vmName}" component`
+            this.errorMessage = `${err.message} on '${info}' inside '${vmName}' component`
             this.errorInfo = info
             this.errorVm = vm
             console.warn(err, vm, info)
         },
         render(h) {
             let children = [
-                h('div', this.$t('widget.content.renderError')),
-                h('div', this.errorMessage),
+                h('div', { attrs: { class: 'text-xl text-center font-semibold' } }, this.$t('widget.content.renderError')),
+                h('div', { attrs: { class: 'text-sm text-center' } }, this.errorMessage),
             ]
             let extraClasses = this.error ? 'flex-col' : ''
             return this.error ? h('div', {
                 attrs: {
-                    class: `text-lg flex justify-center items-center w-full h-32 text-red-500 ${extraClasses}`
+                    class: `text-lg flex justify-center items-center w-full h-32 ${extraClasses}`
                 }
             }, children) : this.$slots.default[0]
         }

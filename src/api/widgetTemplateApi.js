@@ -4,7 +4,7 @@ import parseCatch from '@/helpers/handleErrors'
 export const widgetTemplateApi = {
     async getAll() {
         try {
-            let res = await $axios.get('/WidgetsTemplate/List/')
+            let res = await $axios.post('/WidgetsTemplate/List/', {})
             return res.Data
         } catch (e) {
             parseCatch(e, true, 'Widget Templates')
