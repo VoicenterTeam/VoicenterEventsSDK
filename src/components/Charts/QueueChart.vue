@@ -60,7 +60,15 @@
         data() {
             return {
                 fetchDataInterval: null,
-                chartData: cloneDeep(this.data),
+                chartData: {
+                    yAxis: {
+                        min: 0,
+                        max: 100,
+                    },
+                    series: [{
+                        data: [],
+                    }]
+                },
                 showManageQueuesDialog: false,
                 width: '50%',
                 initialConfig: true,

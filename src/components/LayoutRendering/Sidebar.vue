@@ -3,10 +3,10 @@
         <div class="tab-name padding-x_56  text-lg cursor-pointer" v-for="group in widgetGroupList">
             <p @click="switchTab(group.WidgetGroupID.toString())"
                class="whitespace-no-wrap"
-               :class="{'active': group.WidgetGroupID.toString() === activeTab}">
+               :class="{'active': group.WidgetGroupID.toString() === activeTab.toString()}">
                 {{group.WidgetGroupTitle}}
             </p>
-            <div v-if="group.WidgetGroupID.toString() === activeTab"
+            <div v-if="group.WidgetGroupID.toString() === activeTab.toString()"
                  class="self-border mt-3">
             </div>
         </div>
@@ -19,7 +19,10 @@
                 type: Array,
                 default: () => ([])
             },
-            activeTab: String
+            activeTab: {
+                type: [String, Number],
+                default: ''
+            }
         },
         methods: {
             switchTab(val) {

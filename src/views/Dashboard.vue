@@ -118,6 +118,7 @@
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
                 widgetsFilter: '',
+                activeTab: ''
             }
         },
         computed: {
@@ -155,7 +156,7 @@
             showGeneralWidgetSearch() {
                 return this.$store.state.dashboards.settings.showGeneralWidgetSearch
             },
-            activeTab() {
+            activeDashboardId() {
                 return get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             }
         },
@@ -389,6 +390,12 @@
                     this.layoutType = layoutTypes.NORMAL
                 } else {
                     this.layoutType = this.previousLayoutType
+                }
+            },
+            activeDashboardId: {
+                immediate: true,
+                handler(newVal) {
+                    this.activeTab = newVal
                 }
             }
         },

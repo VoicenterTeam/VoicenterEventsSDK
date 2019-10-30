@@ -16,7 +16,7 @@ export function getWidgetDataType(widget) {
     let dataType = get(widget, 'WidgetLayout.DataTypeID')
     if (!dataType) {
         let widgetTemplate = getWidgetTemplate(widget.TemplateID)
-        dataType = get(widgetTemplate, 'DataType.ID')
+        dataType = get(widgetTemplate, 'DataType.DataTypeID')
     }
     return dataType
 }

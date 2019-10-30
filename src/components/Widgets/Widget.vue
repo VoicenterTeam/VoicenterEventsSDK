@@ -34,7 +34,6 @@
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
@@ -87,6 +86,7 @@
                     [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
                     [widgetDataTypes.COUNTER_TYPE_ID]: 'StatusCards',
                     [widgetDataTypes.CHART_SPEEDOMETER]: 'GaugeChart',
+                    [widgetDataTypes.CHART_QUEUE]: 'QueueChart',
                     [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'DataByUser',
@@ -100,7 +100,8 @@
             showDeleteButton() {
                 // TODO Adapt condition based on component type
                 let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER]
-                return !exceptions.includes(this.widget.TemplateID)
+                let dataType = getWidgetDataType(this.widget)
+                return !exceptions.includes(dataType)
             },
             getWidgetTemplate() {
               return this.$store.getters['widgetTemplate/getWidgetTemplate']

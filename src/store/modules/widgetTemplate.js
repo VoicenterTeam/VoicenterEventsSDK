@@ -22,7 +22,7 @@ const actions = {
 
 const getters = {
     getWidgetTemplate: state => templateId => {
-        return state.allWidgetTemplates.find(t => t.ID === templateId)
+        return state.allWidgetTemplates.find(t => t.TemplateID.toString() === templateId.toString())
     }
 }
 

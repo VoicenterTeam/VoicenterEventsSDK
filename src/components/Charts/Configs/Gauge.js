@@ -1,6 +1,10 @@
+import i18n from '@/i18n'
 export default {
     chart: {
         type: 'solidgauge',
+    },
+    title: {
+        text: i18n.t('speedometer.chart.title')
     },
     pane: {
         center: ['50%', '85%'],
