@@ -38,7 +38,6 @@
 </template>
 <script>
     import startCase from 'lodash/startCase'
-    import get from 'lodash/get'
     import {Pagination, Select, Option} from 'element-ui'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'

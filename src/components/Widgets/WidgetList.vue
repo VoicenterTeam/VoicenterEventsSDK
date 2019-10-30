@@ -53,13 +53,12 @@
                     [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'lg:w-3/3',
                     [widgetDataTypes.TIMELINE_TYPE_ID]: 'lg:w-3/3',
                     [widgetDataTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-3/3',
-                    // TODO: TBD dataTypes from API
-                    [widgetDataTypes.CHART_GAUGE_ID]: 'lg:w-1/3',
-                    [widgetDataTypes.CHART_QUEUE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'lg:w-1/3',
-                    [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'lg:w-1/3',
-                    [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'lg:w-3/3',
+                    [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-1/3',
+                    [widgetDataTypes.CHART_SPEEDOMETER]: 'lg:w-1/3',
+                    [widgetDataTypes.CHART_QUEUE]: 'lg:w-3/3',
+                    [widgetDataTypes.EXTENSION_CARDS]: 'lg:w-1/3',
+                    [widgetDataTypes.HISTORY_COUNTERS]: 'lg:w-3/3',
+                    [widgetDataTypes.REAL_TIME_TABLE]: 'lg:w-3/3',
                     default: 'lg:w-3/3'
                 }
             }

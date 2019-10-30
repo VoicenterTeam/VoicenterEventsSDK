@@ -5,7 +5,7 @@
                      :activeTab="activeTab"
                      :widgetGroupList="activeDashboardData.WidgetGroupList"
                      @switch-tab="(tab) => switchTab(tab)"></sidebar>
-            <div class="pt-24" :class="getClass">
+            <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
                     <div class="flex w-48 sm:w-64">
                         <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
@@ -44,21 +44,23 @@
                     </div>
                 </div>
                 <fade-transition mode="out-in" :duration="250">
-                    <component
-                            :is="layoutTypes[layoutType]"
-                            :activeDashboardData="activeDashboardData"
-                            :editMode="editMode"
-                            :widgetsFilter="widgetsFilter"
-                            :activeTab="activeTab"
-                            :widgetTemplates="allWidgetTemplates"
-                            @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                            @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                            @onListChange="(data) => onListChange(data.event, data.group)"
-                            @addWidgetsToGroup="addWidgetsToGroup"
-                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                            @updateWidget="(data) => updateWidget(data.widget, data.group)"
-                            @switch-tab="(tab) => switchTab(tab)">
-                    </component>
+                    <keep-alive>
+                        <component
+                                :is="layoutTypes[layoutType]"
+                                :activeDashboardData="activeDashboardData"
+                                :editMode="editMode"
+                                :widgetsFilter="widgetsFilter"
+                                :activeTab="activeTab"
+                                :widgetTemplates="allWidgetTemplates"
+                                @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                                @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                                @onListChange="(data) => onListChange(data.event, data.group)"
+                                @addWidgetsToGroup="addWidgetsToGroup"
+                                @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                                @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                                @switch-tab="(tab) => switchTab(tab)">
+                        </component>
+                    </keep-alive>
                 </fade-transition>
             </div>
         </div>

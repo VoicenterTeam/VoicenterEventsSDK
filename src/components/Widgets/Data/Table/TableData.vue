@@ -4,7 +4,7 @@
            :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
             {{data.Title}}
         </p>
-        <data-table :tableData="tableData"
+        <data-table :tableData="paginatedTableData"
                     :searchable-fields="searchableFields"
                     :editable="editable"
                     :columns="columns"
@@ -18,10 +18,28 @@
             <template v-slot:status="{row, index}">
                 <user-status :userId="row.user_id" :extension="userExtension(row.user_id, index)"></user-status>
             </template>
+            <template v-slot:pagination>
+                <el-select
+                        v-model="pageSize"
+                        :size="'small'"
+                        class="w-16">
+                    <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"></el-option>
+                </el-select>
+                <el-pagination
+                        @current-change="handlePageChange"
+                        :page-sizes="pageSizes"
+                        :pager-count="pagerCount"
+                        :page-size="pageSize"
+                        :current-page="currentPage"
+                        layout="prev, pager, next"
+                        :total="tableData.length">
+                </el-pagination>
+            </template>
         </data-table>
     </div>
 </template>
 <script>
+    import {Pagination, Select, Option} from 'element-ui'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
     import {WidgetDataApi} from '@/api/widgetDataApi'
@@ -33,7 +51,10 @@
         components: {
             DataTable,
             UserStatus,
-            StatusDuration
+            StatusDuration,
+            [Select.name]: Select,
+            [Option.name]: Option,
+            [Pagination.name]: Pagination,
         },
         props: {
             data: {
@@ -62,6 +83,10 @@
                 tableData: [],
                 columns: [],
                 loading: true,
+                pageSizes: [5, 10, 25, 50],
+                pageSize: 5,
+                pagerCount: 5,
+                currentPage: 1,
             }
         },
         computed: {
@@ -71,6 +96,9 @@
             searchableFields() {
                 return this.columns.map(c => c.prop)
             },
+            paginatedTableData() {
+                return this.tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+            }
         },
         methods: {
             userExtension(userId, rowIndex) {
@@ -121,7 +149,7 @@
                         //TODO: update - this is current user_id for testing
                         data[0]['user_id'] = 106576
                     }
-                    this.tableData = data.slice(0, 10) // add pagination later on
+                    this.tableData = data
                     this.columns = columns
                 } catch (e) {
 
@@ -129,6 +157,9 @@
                     this.loading = false
                     this.$emit('on-loading', false)
                 }
+            },
+            handlePageChange(val) {
+                this.currentPage = val
             }
         },
         mounted() {
