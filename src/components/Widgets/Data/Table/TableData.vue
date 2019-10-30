@@ -124,6 +124,9 @@
                 }
                 return ''
             },
+            isDataValid(data) {
+              return data.every(row => Object.keys(row).length > 0)
+            },
             async getTableData() {
                 try {
                     let data = await WidgetDataApi.getData(this.endPoint)
@@ -149,8 +152,12 @@
                         //TODO: update - this is current user_id for testing
                         data[0]['user_id'] = 106576
                     }
-                    this.tableData = data
-                    this.columns = columns
+                    if (this.isDataValid(data)) {
+                        this.tableData = data
+                        this.columns = columns
+                    } else {
+                        this.tableData = []
+                    }
                 } catch (e) {
 
                 } finally {

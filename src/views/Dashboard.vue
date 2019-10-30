@@ -114,7 +114,7 @@
                     [layoutTypes.NORMAL]: 'NormalView',
                     [layoutTypes.TABBED]: 'TabbedView',
                 },
-                layoutType: 'normal',
+                layoutType: 'tabbed',
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
                 widgetsFilter: '',

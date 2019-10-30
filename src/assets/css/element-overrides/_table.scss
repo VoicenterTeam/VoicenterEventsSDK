@@ -40,6 +40,9 @@
   color: var(--greyish-brown);
 }
 
+.el-table .el-table__empty-block {
+  min-height: 150px;
+}
 
 .rtl .el-select {
   .el-tag__close.el-icon-close {
