@@ -10,11 +10,13 @@
                 :border="border"
                 :cell-style="getCellStyle"
                 :cell-class-name="getCellClassName">
-            <template v-slot:status_duration="{row, index}">
-                <status-duration :extension="userExtension(row.user_id, index)"></status-duration>
+            <template v-slot:status_duration="{row}">
+                <status-duration v-if="userExtension(row.user_id)" :extension="userExtension(row.user_id)"></status-duration>
+                <span v-else>{{$t('N/A')}}</span>
             </template>
-            <template v-slot:status="{row, index}">
-                <user-status :userId="row.user_id" :extension="userExtension(row.user_id, index)"></user-status>
+            <template v-slot:status="{row}">
+                <user-status v-if="userExtension(row.user_id)" :userId="row.user_id" :extension="userExtension(row.user_id)"></user-status>
+                <span v-else>{{$t('N/A')}}</span>
             </template>
             <template v-slot:pagination>
                 <el-select
@@ -96,25 +98,22 @@
             },
         },
         methods: {
-            userExtension(userId, rowIndex) {
-                let extensions = this.extensions.filter(e => e.userID === userId)
-                if (extensions) {
-                    return extensions[rowIndex]
-                }
-                return {}
+            userExtension(userId) {
+                return this.extensions.find(e => e.userID === userId)
             },
-            getCellStyle({row, column, rowIndex}) {
-                let color = 'white'
+            getCellStyle({row, column}) {
+                let color = 'transparent'
                 if (dynamicRows.includes(column.property)) {
-                    let extension = this.userExtension(row.user_id, rowIndex)
+                    let extension = this.userExtension(row.user_id)
                     if (extension) {
                         color = extensionColor(extension)
                     }
                 }
                 return {'background-color': color}
             },
-            getCellClassName({column}) {
-                if (dynamicRows.includes(column.property)) {
+            getCellClassName({column, row }) {
+                let extension = this.userExtension(row.user_id)
+                if (dynamicRows.includes(column.property) && extension) {
                     return 'text-white'
                 }
                 return ''
@@ -135,8 +134,6 @@
                             })
                         }
                         columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
-                        //TODO: update - this is current user_id for testing
-                        data[0]['user_id'] = 106576
                     }
 
                     this.tableData = data
