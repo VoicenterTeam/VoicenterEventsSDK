@@ -46,7 +46,6 @@
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
             },
             agentsInACall() {
-                debugger
                 return this.agentsOnline.filter(agent => agent.calls.length)
             },
             chartOptions() {
