@@ -1,13 +1,13 @@
 <template>
     <div class="w-full flex items-center sidebar-tabs__container">
-        <div class="tab-name padding-x_56  text-lg cursor-pointer" v-for="group in widgetGroupList">
+        <div class="tab-name px-16 text-lg cursor-pointer" v-for="group in widgetGroupList">
             <p @click="switchTab(group.WidgetGroupID.toString())"
                class="whitespace-no-wrap"
                :class="{'active': group.WidgetGroupID.toString() === activeTab.toString()}">
                 {{group.WidgetGroupTitle}}
             </p>
             <div v-if="group.WidgetGroupID.toString() === activeTab.toString()"
-                 class="self-border mt-3">
+                 class="self-border mt-4">
             </div>
         </div>
     </div>
@@ -57,12 +57,11 @@
 
         :hover, .active {
             color: var(--greyish-brown);
-            @apply font-medium;
         }
     }
 
     .self-border {
-        height: 6px;
+        height: 3px;
         border-radius: 4.5px;
         background-color: var(--primary-color);
         width: 144%;
@@ -72,11 +71,4 @@
     .rtl .self-border {
         margin-right: -22%;
     }
-
-    .padding-x_56 {
-        padding: 0 3.5rem;
-    }
-
-    /*3.5rem*/
-
 </style>
