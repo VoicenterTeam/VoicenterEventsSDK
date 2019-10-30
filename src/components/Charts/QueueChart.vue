@@ -48,10 +48,6 @@
             QueueConfigDialog,
         },
         props: {
-            data: {
-                type: Object,
-                default: () => ({})
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -65,15 +61,34 @@
                         min: 0,
                         max: 100,
                     },
-                    series: [{
-                        data: [],
-                    }]
+                    series: [
+                        {
+                            data: [],
+                        },
+                        {
+                            data: [],
+                        },
+                        {
+                            data: [],
+                        },
+                        {
+                            data: [],
+                        },
+                        {
+                            data: [],
+                        },
+                        {
+                            data: [],
+                        }
+                    ],
+                    legend: {
+                        enabled: false,
+                    }
                 },
                 showManageQueuesDialog: false,
                 width: '50%',
                 initialConfig: true,
                 showQueues: [],
-                //Series indexes
                 showSeries: [0, 1, 2, 3, 4, 5],
                 loading: false
             };
