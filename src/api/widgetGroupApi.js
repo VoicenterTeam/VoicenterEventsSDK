@@ -12,7 +12,7 @@ export const WidgetGroupsApi = {
             })
             return await $axios.post(`/WidgetsGroups/Update/`, data)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Update Widget Groups')
         }
     },
 
@@ -20,7 +20,7 @@ export const WidgetGroupsApi = {
         try {
             return await $axios.post('/WidgetsGroups/Add/', data)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Add Widget Group')
         }
     },
 
@@ -28,7 +28,7 @@ export const WidgetGroupsApi = {
         try {
             return await $axios.post(`/WidgetsGroups/AddWidget/${groupID}/${widgetID}`, data)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Add Widget to Widget Group')
         }
     },
 
@@ -36,7 +36,7 @@ export const WidgetGroupsApi = {
         try {
             return await $axios.post(`/WidgetsGroups/RemoveWidget/${groupID}/${widgetID}`)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Remove Widget from Widget Group')
         }
     },
 }

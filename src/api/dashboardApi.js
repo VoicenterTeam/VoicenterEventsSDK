@@ -11,7 +11,7 @@ export const DashboardApi = {
             if (process.env.VUE_APP_ENV === 'local') {
                 return dashboards
             }
-            parseCatch(e, true)
+            parseCatch(e, true, 'Get Dashboard')
         }
     },
 
@@ -20,7 +20,7 @@ export const DashboardApi = {
             let res = await $axios.get(`/DashBoards/Get/${id}`)
             return res.Data.Dashboard
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Find Dashboard')
         }
     },
 
@@ -28,7 +28,7 @@ export const DashboardApi = {
         try {
             return await $axios.post(`/DashBoards/Update/`, data)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Update Dashboard')
         }
     },
 
@@ -37,7 +37,7 @@ export const DashboardApi = {
             let res = await $axios.post(`/DashBoards/Add/`, data)
             return res.Dashboard
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Add Dashboard')
         }
     },
 
@@ -45,7 +45,7 @@ export const DashboardApi = {
         try {
             return await $axios.post(`/DashBoards/AddWidgetGroup/${dashboardID}/${widgetGroupID}`)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Add widget group to dashboard')
         }
     },
 
@@ -53,7 +53,7 @@ export const DashboardApi = {
         try {
             return await $axios.post(`/DashBoards/RemoveWidgetGroup/${dashboardID}/${widgetGroupID}`)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Remove widget group from dashboard')
         }
     },
 

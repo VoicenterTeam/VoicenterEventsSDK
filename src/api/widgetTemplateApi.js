@@ -7,7 +7,7 @@ export const widgetTemplateApi = {
             let res = await $axios.get('/WidgetsTemplate/List/')
             return res.Data
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Widget Templates')
         }
     }
 }
