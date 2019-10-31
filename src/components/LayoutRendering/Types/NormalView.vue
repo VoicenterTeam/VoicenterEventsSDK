@@ -1,5 +1,5 @@
 <template>
-    <div :key="activeDashboardData.ID">
+    <div :key="dashboardKey">
         <transition-group name="flip-list">
             <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.WidgetGroupID"
                  class="my-10"
@@ -47,6 +47,11 @@
             widgetTemplates: {
                 type: Array,
                 default: () => []
+            }
+        },
+        computed: {
+            dashboardKey() {
+                return this.activeDashboardData.ID
             }
         }
     }

@@ -5,7 +5,7 @@
                      :activeTab="activeTab"
                      :widgetGroupList="activeDashboardData.WidgetGroupList"
                      @switch-tab="(tab) => switchTab(tab)"></sidebar>
-            <div class="pt-24" :class="getClass">
+            <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
                     <div class="flex w-48 sm:w-64">
                         <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
@@ -31,7 +31,7 @@
                         <fade-transition>
                             <widget-menu v-if="showWidgetMenu"
                                          :widgetGroup=firstWidgetGroup
-                                         @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgetTemplates, data.group)"
+                                         @addWidgetsToGroup="addWidgetsToGroup"
                                          v-click-outside="onWidgetMenuClickOutside"
                                          :widgetTemplates="allWidgetTemplates">
                             </widget-menu>
@@ -44,21 +44,23 @@
                     </div>
                 </div>
                 <fade-transition mode="out-in" :duration="250">
-                    <component
-                            :is="layoutTypes[layoutType]"
-                            :activeDashboardData="activeDashboardData"
-                            :editMode="editMode"
-                            :widgetsFilter="widgetsFilter"
-                            :activeTab="activeTab"
-                            :widgetTemplates="allWidgetTemplates"
-                            @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                            @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                            @onListChange="(data) => onListChange(data.event, data.group)"
-                            @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgets, data.group)"
-                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                            @updateWidget="(data) => updateWidget(data.widget, data.group)"
-                            @switch-tab="(tab) => switchTab(tab)">
-                    </component>
+                    <keep-alive>
+                        <component
+                                :is="layoutTypes[layoutType]"
+                                :activeDashboardData="activeDashboardData"
+                                :editMode="editMode"
+                                :widgetsFilter="widgetsFilter"
+                                :activeTab="activeTab"
+                                :widgetTemplates="allWidgetTemplates"
+                                @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                                @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                                @onListChange="(data) => onListChange(data.event, data.group)"
+                                @addWidgetsToGroup="addWidgetsToGroup"
+                                @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                                @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                                @switch-tab="(tab) => switchTab(tab)">
+                        </component>
+                    </keep-alive>
                 </fade-transition>
             </div>
         </div>
@@ -112,10 +114,11 @@
                     [layoutTypes.NORMAL]: 'NormalView',
                     [layoutTypes.TABBED]: 'TabbedView',
                 },
-                layoutType: 'normal',
+                layoutType: 'tabbed',
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
                 widgetsFilter: '',
+                activeTab: ''
             }
         },
         computed: {
@@ -153,16 +156,17 @@
             showGeneralWidgetSearch() {
                 return this.$store.state.dashboards.settings.showGeneralWidgetSearch
             },
-            activeTab() {
+            activeDashboardId() {
                 return get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             }
         },
         methods: {
-            async addWidgetsToGroup(widgetTemplates, widgetGroup) {
-                let widgets = await createNewWidgets(widgetTemplates, widgetGroup)
+            async addWidgetsToGroup(data = {}) {
+                let { widgets: widgetTemplates , group: widgetGroup } = data
+                let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(widgets)
+                this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
                 this.showWidgetMenu = false
             },
             orderWidgetGroup(widgetGroup, direction) {
@@ -207,7 +211,13 @@
                     widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
                     if (!widgetGroup.IsNew) {
                         widgetGroup.WidgetList.forEach((widget, index) => {
-                            widget.WidgetLayout.Order = index + 1
+                            if (!widget.WidgetLayout) {
+                                widget.WidgetLayout = {
+                                    Order: index + 1
+                                }
+                            } else {
+                                widget.WidgetLayout.Order = index + 1
+                            }
                             this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                         })
                     }
@@ -380,6 +390,12 @@
                     this.layoutType = layoutTypes.NORMAL
                 } else {
                     this.layoutType = this.previousLayoutType
+                }
+            },
+            activeDashboardId: {
+                immediate: true,
+                handler(newVal) {
+                    this.activeTab = newVal
                 }
             }
         },

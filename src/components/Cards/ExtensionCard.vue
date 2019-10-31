@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 extension-card" :style="cardStyles">
+    <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 flex flex-col extension-card" :style="cardStyles">
         <div class="flex items-center mb-2">
             <fade-transition mode="out-in">
                 <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top"
@@ -13,9 +13,9 @@
             </fade-transition>
             <span class="text-xl font-medium leading-tight mx-2">{{extension.userName}}</span>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
-                <span class="text-center text-2xl ml-2 font-mono">{{timer.displayTime}}</span>
+                <span class="text-center text-2xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
                 <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"></component>
             </div>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call"/>

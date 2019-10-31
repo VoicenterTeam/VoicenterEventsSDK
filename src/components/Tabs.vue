@@ -10,7 +10,7 @@
 </template>
 <script>
 
-    import {Tabs, TabPane} from 'element-ui'
+    import { Tabs, TabPane } from 'element-ui'
     import get from 'lodash/get';
 
     export default {
@@ -21,7 +21,7 @@
                 type: Array,
                 default: () => []
             },
-            newActiveTab: String
+            newActiveTab: [String, Number]
         },
         components: {
             [Tabs.name]: Tabs,

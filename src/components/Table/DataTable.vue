@@ -43,10 +43,16 @@
                             :align="column.align"
                             :type="column.type">
                         <template slot="header">
-                            <span class="font-medium uppercase">
-                                {{column.label}}
-                            </span>
+                            <div class="truncate">
+                                <el-tooltip :content="column.label" :open-delay="300" placement="top">
+                                <span class="font-medium uppercase">
+                                    {{column.label}}
+                                </span>
+                                </el-tooltip>
+                            </div>
+                            <!-- This part is bulky from UI perspective. Has to be refined-->
                             <header-actions
+                                    v-if="false"
                                     :availableColumns="availableColumns"
                                     :visibleColumns="visibleColumns"
                                     :currentColumn="column"
@@ -55,6 +61,7 @@
                                     @on-pin-column="(value) => pinColumn(value, index)"
                                     @on-reset-props="resetColumnsProps">
                             </header-actions>
+                            <!-- This part is bulky from UI perspective. Has to be refined-->
                         </template>
                         <template slot-scope="{row, $index}">
                             <slot :name="column.prop || column.type || column.label"
@@ -101,30 +108,20 @@
     import bus from '@/event-bus/EventBus'
     import JsonExcel from 'vue-json-excel'
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dropdown, DropdownMenu, Table, TableColumn} from 'element-ui'
+    import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
     import HeaderActions from "./Header/HeaderActions"
     import ManageColumns from './ManageColumns'
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
 
     export default {
         inheritAttrs: false,
-        data() {
-            return {
-                visibleColumns: this.columns.map(c => c.prop),
-                availableColumns: cloneDeep(this.columns),
-                tableKey: 'table-key',
-                active: false,
-                fitWidth: true,
-                drawTable: true,
-                filter: ''
-            }
-        },
         components: {
             DownloadIcon,
             ManageColumns,
             HeaderActions,
             DownloadData: JsonExcel,
             [Table.name]: Table,
+            [Tooltip.name]: Tooltip,
             [Dropdown.name]: Dropdown,
             [DropdownMenu.name]: DropdownMenu,
             [TableColumn.name]: TableColumn,
@@ -147,6 +144,17 @@
                 default: false
             },
         },
+        data() {
+            return {
+                visibleColumns: this.columns.map(c => c.prop),
+                availableColumns: cloneDeep(this.columns),
+                tableKey: 'table-key',
+                active: false,
+                fitWidth: true,
+                drawTable: true,
+                filter: ''
+            }
+        },
         computed: {
             listeners() {
                 return {
@@ -157,9 +165,12 @@
                 return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
             },
             rowsData() {
+                if (!this.filter || this.searchableFields.length === 0) {
+                    return this.tableData
+                }
                 return this.tableData.filter(c => {
                     return this.searchableFields.some(field => {
-                        if (c.hasOwnProperty(field)) {
+                        if (c[field]) {
                             return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
                         }
                         return false;

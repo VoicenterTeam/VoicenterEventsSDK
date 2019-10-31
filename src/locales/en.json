@@ -121,5 +121,8 @@
   "queues.to.display": "Queues to display",
   "blocks.to.display": "Blocks to display",
   "widget.update": "Update widget",
-  "widget.update.title": "Update widget title"
+  "widget.update.title": "Update widget title",
+  "widget.content.renderError": "An error occurred while rendering the widget...",
+  "speedometer.chart.title": "Agents in a call vs total agents",
+  "queue.chart.title": "Queues real time chart"
 }
