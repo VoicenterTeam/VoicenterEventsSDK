@@ -32,7 +32,7 @@
             </el-select>
         </div>
         <div>
-            <div class="flex py-6 extension-cards">
+            <div class="flex py-6 extension-cards justify-center">
                 <fade-transition class="flex flex-wrap justify-center" group>
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
