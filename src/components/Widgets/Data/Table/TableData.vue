@@ -1,51 +1,53 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
-        <p v-if="data.Title" class="text-2xl font-semibold"
-           :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
-            {{data.Title}}
-        </p>
-        <data-table :tableData="paginatedTableData"
-                    :searchable-fields="searchableFields"
-                    :editable="editable"
-                    :columns="columns"
-                    :cell-style="getCellStyle"
-                    :stripe="stripe"
-                    :border="border"
-                    :cell-class-name="getCellClassName">
-            <template v-slot:status_duration="{row, index}">
-                <status-duration :extension="userExtension(row.user_id, index)"></status-duration>
+    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)" class="pb-6">
+        <data-table
+            v-if="!loading"
+            :tableData="fetchTableData"
+            :editable="editable"
+            :columns="columns"
+            :stripe="stripe"
+            :searchableFields="searchableFields"
+            :border="border"
+            :cell-style="getCellStyle"
+            :cell-class-name="getCellClassName">
+            <template v-slot:status_duration="{row}">
+                <status-duration v-if="userExtension(row.user_id)" :extension="userExtension(row.user_id)"></status-duration>
+                <span v-else>{{$t('N/A')}}</span>
             </template>
-            <template v-slot:status="{row, index}">
-                <user-status :userId="row.user_id" :extension="userExtension(row.user_id, index)"></user-status>
+            <template v-slot:status="{row}">
+                <user-status v-if="userExtension(row.user_id)" :userId="row.user_id" :extension="userExtension(row.user_id)"></user-status>
+                <span v-else>{{$t('N/A')}}</span>
             </template>
             <template v-slot:pagination>
                 <el-select
-                        v-model="pageSize"
-                        :size="'small'"
-                        class="w-16">
+                    v-model="pageSize"
+                    :size="'small'"
+                    class="w-16">
                     <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"></el-option>
                 </el-select>
                 <el-pagination
-                        @current-change="handlePageChange"
-                        :page-sizes="pageSizes"
-                        :pager-count="pagerCount"
-                        :page-size="pageSize"
-                        :current-page="currentPage"
-                        layout="prev, pager, next"
-                        :total="tableData.length">
+                    @current-change="handlePageChange"
+                    :page-sizes="pageSizes"
+                    :pager-count="pagerCount"
+                    :page-size="pageSize"
+                    :current-page="currentPage"
+                    layout="prev, pager, next"
+                    :total="tableData.length">
                 </el-pagination>
             </template>
         </data-table>
     </div>
 </template>
 <script>
+    import startCase from 'lodash/startCase'
     import {Pagination, Select, Option} from 'element-ui'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
-    import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
+    import {dynamicRows, refreshDataInterval, dynamicColumns} from '@/enum/realTimeTableConfigs'
+    import { getWidgetEndpoint } from "@/helpers/wigetUtils";
 
     export default {
         components: {
@@ -73,98 +75,71 @@
                 type: Boolean,
                 default: false
             },
-            endPoint: {
-                type: String,
-                default: ''
-            },
         },
         data() {
             return {
                 tableData: [],
                 columns: [],
                 loading: true,
+                searchableFields: ['user_id'],
                 pageSizes: [5, 10, 25, 50],
                 pageSize: 5,
                 pagerCount: 5,
                 currentPage: 1,
+                fetchDataInterval: null
             }
         },
         computed: {
+            fetchTableData() {
+                return this.tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+            },
             extensions() {
                 return this.$store.state.extensions.extensions
             },
-            searchableFields() {
-                return this.columns.map(c => c.prop)
-            },
-            paginatedTableData() {
-                if (!this.tableData) {
-                    return []
-                }
-                return this.tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
-            }
         },
         methods: {
-            userExtension(userId, rowIndex) {
-                let extensions = this.extensions.filter(e => e.userID === userId)
-                if (extensions) {
-                    return extensions[rowIndex]
-                }
-                return {}
+            userExtension(userId) {
+                return this.extensions.find(e => e.userID === userId)
             },
-            getCellStyle({row, column, rowIndex}) {
-                let color = 'white'
+            getCellStyle({row, column}) {
+                let color = 'transparent'
                 if (dynamicRows.includes(column.property)) {
-                    let extension = this.userExtension(row.user_id, rowIndex)
+                    let extension = this.userExtension(row.user_id)
                     if (extension) {
                         color = extensionColor(extension)
                     }
                 }
                 return {'background-color': color}
             },
-            getCellClassName({column}) {
-                if (dynamicRows.includes(column.property)) {
+            getCellClassName({column, row }) {
+                let extension = this.userExtension(row.user_id)
+                if (dynamicRows.includes(column.property) && extension) {
                     return 'text-white'
                 }
                 return ''
             },
-            isDataValid(data) {
-              return data.every(row => Object.keys(row).length > 0)
-            },
-            async getTableData() {
+            async getDataByUser() {
                 try {
-                    let data = await WidgetDataApi.getData(this.endPoint)
+                    let endpoint = getWidgetEndpoint(this.data)
+                    let data = await WidgetDataApi.getData(endpoint)
                     let columns = [];
-                    if (!data.length) {
-                        this.loading = false
-                        return
+
+                    if (data.length) {
+                        for (let column in data[0]) {
+                            columns.push({
+                                prop: column,
+                                fixed: false,
+                                align: 'center',
+                                label: startCase(column)
+                            })
+                        }
+                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
                     }
 
                     this.tableData = data
-
-                    for (let column in data[0]) {
-                        columns.push({
-                            prop: column,
-                            align: 'left',
-                            showOverflowTooltip: true,
-                            label: column,
-                            resizable: true
-                        })
-                    }
-
-                    // TODO use a better check later on
-                    if (this.endPoint.includes('GetDataByUser')) {
-                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
-                        //TODO: update - this is current user_id for testing
-                        data[0]['user_id'] = 106576
-                    }
-                    if (this.isDataValid(data)) {
-                        this.tableData = data
-                        this.columns = columns
-                    } else {
-                        this.tableData = []
-                    }
+                    this.columns = columns
                 } catch (e) {
-
+                    console.warn(e)
                 } finally {
                     this.loading = false
                     this.$emit('on-loading', false)
@@ -172,16 +147,21 @@
             },
             handlePageChange(val) {
                 this.currentPage = val
-            }
+            },
         },
         mounted() {
-            this.getTableData()
+            this.getDataByUser()
+            this.fetchDataInterval = setInterval(() => {
+                this.getDataByUser()
+            }, refreshDataInterval)
             this.$emit('on-loading', true)
+            console.log('Realtime User Table')
+        },
+        beforeDestroy() {
+            clearInterval(this.fetchDataInterval)
         }
     }
-
 </script>
-
 <style lang="scss">
     td.text-white > .cell {
         color: white;

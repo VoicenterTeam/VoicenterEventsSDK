@@ -38,7 +38,6 @@
     import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
-    import DataByUser from './Data/Table/DataByUser'
     import EditButton from '@/components/EditButton'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
@@ -65,7 +64,6 @@
             [Tooltip.name]: Tooltip,
             GaugeChart,
             QueueChart,
-            DataByUser
         },
         props: {
             editable: {
@@ -89,7 +87,7 @@
                     [widgetDataTypes.CHART_QUEUE]: 'QueueChart',
                     [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
-                    [widgetDataTypes.REAL_TIME_TABLE]: 'DataByUser',
+                    [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
                 },
                 showUpdateDialog: false,
                 loading: false,
