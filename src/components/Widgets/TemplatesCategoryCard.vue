@@ -33,7 +33,11 @@
         },
         computed: {
             getCategoryImage() {
-                return 'Icon' + this.CategoryImage.charAt(0).toUpperCase() + this.CategoryImage.slice(1)
+                let iconName = this.CategoryImage.split('.')[0] || '' // get rid of extension
+                if (iconName.length > 2) {
+                    iconName = iconName.charAt(0).toUpperCase() + iconName.slice(1)
+                }
+                return 'Icon' + iconName
             }
         }
     }

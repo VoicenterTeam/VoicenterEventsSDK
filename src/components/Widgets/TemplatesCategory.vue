@@ -59,7 +59,7 @@
         },
         computed: {
             templatesCategories() {
-                return this.$store.state.templatesCategory.all
+                return this.$store.state.templatesCategory.all.filter(t => t.CategoryName)
             }
         },
         methods: {
