@@ -14,8 +14,8 @@ const mutations = {
 };
 
 const actions = {
-    getAllTemplatesCategory({commit}) {
-        let templatesCategories = templateCategoryApi.getAll()
+    async getAllTemplatesCategory({commit}) {
+        let templatesCategories = await templateCategoryApi.getAll()
         commit(types.SET_ALL_TEMPLATES_CATEGORY, templatesCategories)
     }
 };

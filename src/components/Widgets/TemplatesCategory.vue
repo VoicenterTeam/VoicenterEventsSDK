@@ -4,9 +4,9 @@
         <div v-if="selectedCategory">
             <el-tooltip class="item" effect="dark" :content="$t('select.another.templates.category')" placement="top">
                 <templates-category-card
-                        v-bind="selectedCategory"
-                        :templatesCategory="selectedCategory"
-                        @on-select="onSelect(null)">
+                    v-bind="selectedCategory"
+                    :templatesCategory="selectedCategory"
+                    @on-select="onSelect(null)">
                     <template v-slot:state-icon>
                         <XIcon class="w-5 h-5 text-red ml-auto"></XIcon>
                     </template>
@@ -15,19 +15,19 @@
         </div>
         <div v-else>
             <templates-category-card
-                    v-for="templatesCategory in templatesCategories"
-                    v-bind="templatesCategory"
-                    :key="templatesCategory.ID"
-                    :templatesCategory="templatesCategory"
-                    @on-select="onSelect">
+                v-for="templatesCategory in templatesCategories"
+                v-bind="templatesCategory"
+                :key="templatesCategory.CategoryID"
+                :templatesCategory="templatesCategory"
+                @on-select="onSelect">
                 <template v-slot:state-icon></template>
             </templates-category-card>
         </div>
         <widget-menu
-                v-if="selectedCategory"
-                v-on="$listeners"
-                v-bind="$attrs"
-                :widgetTemplates="filteredWidgetTemplates">
+            v-if="selectedCategory"
+            v-on="$listeners"
+            v-bind="$attrs"
+            :widgetTemplates="selectedCategory.TemplatesList">
         </widget-menu>
     </div>
 </template>
@@ -60,9 +60,6 @@
         computed: {
             templatesCategories() {
                 return this.$store.state.templatesCategory.all
-            },
-            filteredWidgetTemplates() {
-                return this.widgetTemplates.filter((template) => template.TemplateCategoryID && template.TemplateCategoryID === this.selectedCategory.ID)
             }
         },
         methods: {

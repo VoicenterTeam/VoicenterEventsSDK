@@ -6,7 +6,7 @@
             </slot>
             <slot name="title">
                 <p class="text-sm mx-2 caption">
-                    {{Name}}
+                    {{CategoryName}}
                 </p>
             </slot>
             <slot name="state-icon"></slot>
@@ -17,7 +17,7 @@
     export default {
         props: {
             Icon: String,
-            Name: {
+            CategoryName: {
                 type: String,
                 default: '- -'
             },

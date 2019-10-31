@@ -15,52 +15,52 @@
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex">
                             <new-group-button
-                                    @click.native="addNewGroup"
-                                    v-if="editMode">
+                                @click.native="addNewGroup"
+                                v-if="editMode">
                             </new-group-button>
                             <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
                                        @click.stop="showWidgetMenu = !showWidgetMenu">
                             </AddButton>
                             <manage-dashboard-buttons
-                                    @click.stop="editMode = !editMode"
-                                    @reset-dashboard="resetDashboard"
-                                    @save-dashboard="saveDashboard"
-                                    :edit-mode="editMode">
+                                @click.stop="editMode = !editMode"
+                                @reset-dashboard="resetDashboard"
+                                @save-dashboard="saveDashboard"
+                                :edit-mode="editMode">
                             </manage-dashboard-buttons>
                         </div>
                         <fade-transition>
                             <templates-category
-                                    class="mt-16"
-                                    v-if="showWidgetMenu"
-                                    :widgetGroup=firstWidgetGroup
-                                    @addWidgetsToGroup="(data) => addWidgetsToGroup(data.widgetTemplates, data.group)"
-                                    v-click-outside="onWidgetMenuClickOutside"
-                                    :widgetTemplates="allWidgetTemplates">
+                                class="mt-16"
+                                v-if="showWidgetMenu"
+                                :widgetGroup=firstWidgetGroup
+                                @addWidgetsToGroup="addWidgetsToGroup"
+                                v-click-outside="onWidgetMenuClickOutside"
+                                :widgetTemplates="allWidgetTemplates">
                             </templates-category>
                         </fade-transition>
                         <layout-switcher
-                                v-if="!editMode"
-                                :activeType="layoutType"
-                                @switch-layout="(type) => switchDashboardLayout(type)">
+                            v-if="!editMode"
+                            :activeType="layoutType"
+                            @switch-layout="(type) => switchDashboardLayout(type)">
                         </layout-switcher>
                     </div>
                 </div>
                 <fade-transition mode="out-in" :duration="250">
                     <keep-alive>
                         <component
-                                :is="layoutTypes[layoutType]"
-                                :activeDashboardData="activeDashboardData"
-                                :editMode="editMode"
-                                :widgetsFilter="widgetsFilter"
-                                :activeTab="activeTab"
-                                :widgetTemplates="allWidgetTemplates"
-                                @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                                @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                                @onListChange="(data) => onListChange(data.event, data.group)"
-                                @addWidgetsToGroup="addWidgetsToGroup"
-                                @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                                @updateWidget="(data) => updateWidget(data.widget, data.group)"
-                                @switch-tab="(tab) => switchTab(tab)">
+                            :is="layoutTypes[layoutType]"
+                            :activeDashboardData="activeDashboardData"
+                            :editMode="editMode"
+                            :widgetsFilter="widgetsFilter"
+                            :activeTab="activeTab"
+                            :widgetTemplates="allWidgetTemplates"
+                            @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                            @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                            @onListChange="(data) => onListChange(data.event, data.group)"
+                            @addWidgetsToGroup="addWidgetsToGroup"
+                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                            @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                            @switch-tab="(tab) => switchTab(tab)">
                         </component>
                     </keep-alive>
                 </fade-transition>
@@ -160,13 +160,13 @@
             showGeneralWidgetSearch() {
                 return this.$store.state.dashboards.settings.showGeneralWidgetSearch
             },
-            activeDashboardId() {
+            activeWidgetGroupID() {
                 return get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             }
         },
         methods: {
             async addWidgetsToGroup(data = {}) {
-                let { widgets: widgetTemplates , group: widgetGroup } = data
+                let {widgets: widgetTemplates, group: widgetGroup} = data
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -396,7 +396,7 @@
                     this.layoutType = this.previousLayoutType
                 }
             },
-            activeDashboardId: {
+            activeWidgetGroupID: {
                 immediate: true,
                 handler(newVal) {
                     this.activeTab = newVal

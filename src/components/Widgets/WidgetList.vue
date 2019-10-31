@@ -95,7 +95,11 @@
                 this.$emit('onListChange', {'event': ev, 'group': this.widgetGroup})
             },
             addWidgetsToGroup(val) {
-                this.$emit('addWidgetsToGroup', {'widgetTemplates': [val], 'group': this.widgetGroup})
+                let objectToEmit = {
+                    widgets: [val],
+                    group: this.widgetGroup
+                }
+                this.$emit('addWidgetsToGroup', objectToEmit)
             },
             removeWidget(val) {
                 this.$emit('removeWidget', {'widget': val, 'group': this.widgetGroup})
