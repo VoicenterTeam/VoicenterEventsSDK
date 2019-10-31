@@ -5,7 +5,7 @@
                 <div class="flex">
                     <p class="text-2xl font-semibold"
                        :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
-                        {{data.caption}}
+                        {{chartTitle}}
                     </p>
                 </div>
                 <div v-if="queues.length" class="flex cursor-pointer outline-none pr-12" :class="responsiveClass"
@@ -32,13 +32,13 @@
     </div>
 </template>
 <script>
-    import {Chart} from 'highcharts-vue'
-    import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Tooltip} from 'element-ui'
+    import { Chart } from 'highcharts-vue'
+    import { Dialog, Tooltip } from 'element-ui'
     import chartConfig from './Configs/TimeLine'
-    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+    import { ISRAEL_TIMEZONE_OFFSET } from '@/enum/generic'
     import QueueConfigDialog from './Configs/QueueConfigDialog'
-    import {administrativeStatuses, breakStatuses, LOGOUT_STATUS, LOGIN_STATUS} from '@/enum/extensionStatuses'
+    import { administrativeStatuses, breakStatuses, LOGOUT_STATUS, LOGIN_STATUS } from '@/enum/extensionStatuses'
+    import colors from "@/enum/colors";
 
     export default {
         components: {
@@ -48,10 +48,6 @@
             QueueConfigDialog,
         },
         props: {
-            data: {
-                type: Object,
-                default: () => ({})
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -60,12 +56,76 @@
         data() {
             return {
                 fetchDataInterval: null,
-                chartData: cloneDeep(this.data),
+                chartTitle: this.$t('queue.chart.title'),
+                chartData: {
+                    title: {
+                        text: this.$t('queue.chart.title'),
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                    },
+                    ...chartConfig.queueChartYAxisConfig,
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal'
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Max Waiting time',
+                            data: [],
+                            yAxis: 0,
+                        },
+                        {
+                            name: 'Queue Calls',
+                            data: [],
+                            yAxis: 0,
+                        },
+                        {
+                            name: 'Agents available',
+                            type: 'column',
+                            color: colors.LOGIN_COLOR,
+                            pointWidth: 20,
+                            stack: 0,
+                            yAxis: 1,
+                            data: [],
+                        },
+                        {
+                            name: 'Agents in Call',
+                            type: 'column',
+                            color: colors.LIGHT_GREEN,
+                            yAxis: 1,
+                            pointWidth: 20,
+                            stack: 0,
+                            data: [],
+                        },
+                        {
+                            name: 'Agents in administrative break',
+                            type: 'column',
+                            color: colors.ADMINISTRATIVE_COLOR,
+                            pointWidth: 20,
+                            stack: 0,
+                            yAxis: 1,
+                            data: [],
+                        },
+                        {
+                            name: 'Agents in Break',
+                            type: 'column',
+                            color: colors.PRIVATE_COLOR,
+                            pointWidth: 20,
+                            stack: 0,
+                            yAxis: 1,
+                            data: [],
+                        }
+                    ],
+                    legend: {
+                        enabled: false,
+                    }
+                },
                 showManageQueuesDialog: false,
                 width: '50%',
                 initialConfig: true,
                 showQueues: [],
-                //Series indexes
                 showSeries: [0, 1, 2, 3, 4, 5],
                 loading: false
             };
@@ -89,58 +149,10 @@
                 if (this.fetchDataInterval) {
                     clearInterval(this.fetchDataInterval)
                 }
-
-                let queues = this.filteredQueues
-
-                let minJoinTimeStamp = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET / 1000
-                let queueCalls = 0
-
-                queues.forEach((queue) => {
-                    queue.Calls.forEach((call) => {
-                        if (call.JoinTimeStamp < minJoinTimeStamp) {
-                            minJoinTimeStamp = call.JoinTimeStamp
-                            queueCalls++
-                        }
-                    })
-                })
-
-                let agentsOnline = this.agentsOnline
-
                 this.fetchDataInterval = setInterval(() => {
-                    let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + ISRAEL_TIMEZONE_OFFSET / 1000 - minJoinTimeStamp) : 0
-                    let currentTime = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET;
-
-                    if (this.chartData.series[0].data.length > 11) {
-                        this.chartData.xAxis = {
-                            ...this.chartData.xAxis,
-                            ...{
-                                min: new Date().setMinutes(new Date().getMinutes() - 1) + ISRAEL_TIMEZONE_OFFSET,
-                                max: new Date().getTime() + ISRAEL_TIMEZONE_OFFSET,
-                            }
-                        }
-                    }
-
-                    let agentsAvailable = agentsOnline.filter((e) => e.representativeStatus === LOGIN_STATUS).length
-                    let agentsInCall = agentsOnline.filter((e) => e.calls.length > 0).length
-                    let agentsInAdministrativeBreak = agentsOnline.filter((e) => e.calls.length === 0 && administrativeStatuses.includes(e.representativeStatus)).length
-                    let agentsInBreak = agentsOnline.filter((e) => e.calls.length === 0 && breakStatuses.includes(e.representativeStatus)).length;
-
-                    [
-                        maxWaitingTime,
-                        queueCalls,
-                        agentsAvailable,
-                        agentsInCall,
-                        agentsInAdministrativeBreak,
-                        agentsInBreak,
-                    ].forEach((el, index) => {
-                        this.chartData.series[index].data.push({
-                            x: currentTime,
-                            y: el
-                        });
-                    })
+                    this.updateChartData()
                 }, 5000)
-                this.chartData.legend.enabled = false
-                return {...this.chartData, ...chartConfig.queueChartYAxisConfig}
+                return this.chartData
             },
             responsiveClass() {
                 if (this.editable && this.$rtl.isRTL) {
@@ -164,6 +176,55 @@
                     this.chartData.series[index].visible = this.showSeries.includes(index);
                 })
             },
+            updateChartData() {
+                let queues = this.filteredQueues
+
+                let minJoinTimeStamp = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET / 1000
+                let queueCalls = 0
+
+                queues.forEach((queue) => {
+                    queue.Calls.forEach((call) => {
+                        if (call.JoinTimeStamp < minJoinTimeStamp) {
+                            minJoinTimeStamp = call.JoinTimeStamp
+                            queueCalls++
+                        }
+                    })
+                })
+
+                let agentsOnline = this.agentsOnline
+                let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + ISRAEL_TIMEZONE_OFFSET / 1000 - minJoinTimeStamp) : 0
+                let currentTime = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET;
+
+                if (this.chartData.series[0].data.length > 11) {
+                    this.chartData.xAxis = {
+                        ...this.chartData.xAxis,
+                        ...{
+                            min: new Date().setMinutes(new Date().getMinutes() - 1) + ISRAEL_TIMEZONE_OFFSET,
+                            max: new Date().getTime() + ISRAEL_TIMEZONE_OFFSET,
+                        }
+                    }
+                }
+
+                let agentsAvailable = agentsOnline.filter((e) => e.representativeStatus === LOGIN_STATUS).length
+                let agentsInCall = agentsOnline.filter((e) => e.calls.length > 0).length
+                let agentsInAdministrativeBreak = agentsOnline.filter((e) => e.calls.length === 0 && administrativeStatuses.includes(e.representativeStatus)).length
+                let agentsInBreak = agentsOnline.filter((e) => e.calls.length === 0 && breakStatuses.includes(e.representativeStatus)).length;
+
+                [
+                    maxWaitingTime,
+                    queueCalls,
+                    agentsAvailable,
+                    agentsInCall,
+                    agentsInAdministrativeBreak,
+                    agentsInBreak,
+                ].forEach((el, index) => {
+                    this.chartData.series[index].data.push({
+                        x: currentTime,
+                        y: el
+                    });
+                })
+                this.loading = false
+            },
             showConfigDialog() {
                 if (this.initialConfig) {
                     this.showQueues = this.queues.map((el) => el.QueueID)
@@ -178,9 +239,7 @@
         },
         mounted() {
             this.loading = true
-            setTimeout(() => {
-                this.loading = false
-            }, 6000)
+            this.$nextTick(this.updateChartData)
         }
     }
 </script>

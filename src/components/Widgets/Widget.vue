@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
+    <div class="relative mt-6">
         <div v-if="!loading">
             <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
@@ -8,14 +8,15 @@
             </div>
             <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-button @click="onShowUpdateDialog(widget.WidgetLayout.DataTypeID)"
+                    <edit-button @click="showUpdateDialog = true"
                                  :class="{'border border-primary': editable}">
                     </edit-button>
                 </el-tooltip>
             </div>
         </div>
-        <component :is="componentTypes[widget.WidgetLayout.DataTypeID]"
+        <component :is="getComponentType(widget)"
                    :data="widget"
+                   :endPoint="setComponentEndPoint"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
@@ -23,19 +24,18 @@
                    @change-extension-status="(status)=> changeExtensionStatus(status, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
-        <!--TODO: set dynamic edit dialog for all widget types-->
         <update-dialog
-                width="30%"
-                v-if="showUpdateDialog"
-                :chartTitle="widget.WidgetLayout.caption"
-                @on-change="(title) => onChangeTitle(title, widget)"
-                :visible.sync="showUpdateDialog">
+            width="30%"
+            v-if="showUpdateDialog"
+            :chartTitle="widget.Title"
+            @on-change-title="(title) => onChangeTitle(title, widget)"
+            :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
 </template>
 <script>
     import {Tooltip} from 'element-ui'
-    import WidgetCard from "./WidgetCard"
+    import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
     import DataByUser from './Data/Table/DataByUser'
@@ -48,8 +48,7 @@
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
-
-    const editableWidgets = [1, 2, 3]
+    import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/wigetUtils";
 
     export default {
         name: "widget",
@@ -85,34 +84,38 @@
                     [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'TimeLineChart',
                     [widgetDataTypes.TIMELINE_TYPE_ID]: 'TimeLineChart',
                     [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
-                    [widgetDataTypes.COUNTER_TYPE_ID]: 'ExtensionCards',
-                    // TODO: TBD dataTypes from API
-                    [widgetDataTypes.CHART_GAUGE_ID]: 'GaugeChart',
-                    [widgetDataTypes.CHART_QUEUE_ID]: 'QueueChart',
-                    [widgetDataTypes.STATUS_CARDS_TYPE_ID]: 'StatusCards',
-                    [widgetDataTypes.STATISTICS_CARDS_TYPE_ID]: 'StatisticsCards',
-                    [widgetDataTypes.REAL_TIME_USER_TABLE_ID]: 'DataByUser',
+                    [widgetDataTypes.COUNTER_TYPE_ID]: 'StatusCards',
+                    [widgetDataTypes.CHART_SPEEDOMETER]: 'GaugeChart',
+                    [widgetDataTypes.CHART_QUEUE]: 'QueueChart',
+                    [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
+                    [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
+                    [widgetDataTypes.REAL_TIME_TABLE]: 'DataByUser',
                 },
                 showUpdateDialog: false,
-                loading: false
+                loading: false,
+                endPoint: ''
             }
         },
         computed: {
             showDeleteButton() {
-                return ![widgetDataTypes.STATUS_CARDS_TYPE_ID, widgetDataTypes.STATISTICS_CARDS_TYPE_ID, widgetDataTypes.CHART_GAUGE_ID].includes(Number(this.widget.TemplateID))
-            }
+                // TODO Adapt condition based on component type
+                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER]
+                let dataType = getWidgetDataType(this.widget)
+                return !exceptions.includes(dataType)
+            },
+            getWidgetTemplate() {
+                return this.$store.getters['widgetTemplate/getWidgetTemplate']
+            },
+            setComponentEndPoint() {
+                return getWidgetEndpoint(this.widget)
+            },
         },
         methods: {
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onShowUpdateDialog(DataTypeID) {
-                alert('coming soon...')
-                return false
-            },
             onChangeTitle(title, widget) {
-                widget.WidgetLayout.caption = title
-                widget = {...widget, ...widget.WidgetLayout}
+                widget.Title = title
                 this.$emit('update-item', widget)
             },
             changeExtensionStatus(status, widget) {
@@ -121,6 +124,10 @@
             },
             onLoading(state) {
                 this.loading = state
+            },
+            getComponentType(widget) {
+                let dataTypeId = getWidgetDataType(widget)
+                return `${this.componentTypes[dataTypeId]}`
             }
         }
     }

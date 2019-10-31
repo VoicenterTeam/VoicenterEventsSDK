@@ -7,17 +7,17 @@
                               :enable-transition="false"
                               :group="{ name: 'widgetTemplates', pull: 'clone', put: false }">
                 <div v-for="widgetTemplate in filteredWidgetTemplates"
-                     :key="widgetTemplate.ID"
+                     :key="widgetTemplate.TemplateID"
                      class="w-full px-2">
                     <WidgetCard
-                            v-bind="widgetTemplate"
-                            class="w-full"
-                            @add-widget="$emit('add-widget', widgetTemplate)">
+                        v-bind="widgetTemplate"
+                        class="w-full"
+                        @add-widget="$emit('add-widget', widgetTemplate)">
                         <template v-slot:quantity>
                             <el-input-number :size="'mini'"
                                              controls-position="right"
                                              placeholder="0"
-                                             v-model="quantities[widgetTemplate.ID]"
+                                             v-model="quantities[widgetTemplate.TemplateID]"
                                              :min="0" :max="99">
                             </el-input-number>
                         </template>
@@ -67,8 +67,8 @@
         computed: {
             filteredWidgetTemplates() {
                 return this.widgetTemplates.filter((widgetTemplate) => {
-                    if (widgetTemplate.Name) {
-                        return widgetTemplate.Name.toLowerCase().includes(this.search.toLowerCase())
+                    if (widgetTemplate.TemplateName) {
+                        return widgetTemplate.TemplateName.toLowerCase().includes(this.search.toLowerCase())
                     }
                     return false
                 })
@@ -83,12 +83,16 @@
                 let widgetTemplatesToAdd = []
 
                 this.widgetTemplates.filter((template) => {
-                    widgetTemplateIdsToAdd.includes(template.ID)
-                    return times(this.quantities[template.ID], () => {
+                    widgetTemplateIdsToAdd.includes(template.TemplateID)
+                    return times(this.quantities[template.TemplateID], () => {
                         widgetTemplatesToAdd.push(template)
                     })
                 })
-                this.$emit('addWidgetsToGroup', {'widgetTemplates': widgetTemplatesToAdd, 'group': this.widgetGroup})
+                let objectToEmit = {
+                    widgets: widgetTemplatesToAdd,
+                    group: this.widgetGroup
+                }
+                this.$emit('addWidgetsToGroup', objectToEmit)
                 this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
             }
         }

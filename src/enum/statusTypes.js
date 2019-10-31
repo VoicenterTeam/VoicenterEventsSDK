@@ -1,47 +1,49 @@
+import colors from "@/enum/colors";
+
 export default {
     1: {
         icon: "IconLogin",
-        color: '#48BB78',
+        color: colors.LOGIN_COLOR,
         text: 'status.login'
     },
     2: {
         icon: "IconLogout",
-        color: '#A0AEC0',
+        color: colors.LOGOUT_COLOR,
         text: 'status.logout'
     },
     3: {
         icon: "IconLunch",
-        color: '#61B5FF',
+        color: colors.LUNCH_COLOR,
         text: 'status.lunch'
     },
     5: {
         icon: "IconAdministrative",
-        color: '#003B4D',
+        color: colors.ADMINISTRATIVE_COLOR,
         text: 'status.administrative'
     },
     7: {
         icon: "IconPrivate",
-        color: '#FF4D4D',
+        color: colors.PRIVATE_COLOR,
         text: 'status.private'
     },
     9: {
         icon: "IconOther",
-        color: '#ED64A6',
+        color: colors.OTHER_COLOR,
         text: 'status.other'
     },
     11: {
         icon: "IconTraining",
-        color: '#667EEA',
+        color: colors.TRAINING_COLOR,
         text: 'status.training'
     },
     12: {
         icon: "IconTeamMeeting",
-        color: '#9F7AEA',
+        color: colors.TEAM_MEETING_COLOR,
         text: 'status.teamMeeting'
     },
     13: {
         icon: "IconBrief",
-        color: '#1CBBB4',
+        color: colors.BRIEF_COLOR,
         text: 'status.brief'
     }
 }

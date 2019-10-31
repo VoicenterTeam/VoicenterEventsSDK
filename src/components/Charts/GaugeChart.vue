@@ -42,11 +42,11 @@
             },
         },
         computed: {
-            queueCalls() {
-                return this.$store.state.queues.all.filter((el) => el.Calls.length)
-            },
             agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
+            },
+            agentsInACall() {
+                return this.agentsOnline.filter(agent => agent.calls.length)
             },
             chartOptions() {
                 let agentsOnline = this.agentsOnline
@@ -64,13 +64,11 @@
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
                     ...range,
-                    ...{stops: stops}
+                    stops,
                 }
-                this.data.series = [{data: [this.queueCalls ? this.queueCalls.length : 0]}]
+                this.data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             },
         },
-        mounted() {
-        }
     }
 </script>

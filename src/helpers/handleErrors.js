@@ -1,7 +1,7 @@
 import {Notification} from 'element-ui';
 import get from 'lodash/get';
 
-const parseCatch = (apiError, showAxiosErrorMessage = false) => {
+const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '') => {
     let message;
 
     if (get(apiError.response, 'data')) {
@@ -11,7 +11,7 @@ const parseCatch = (apiError, showAxiosErrorMessage = false) => {
     }
 
     if (showAxiosErrorMessage && message) {
-        Notification.error(message);
+        Notification.error(`${messagePrefix} ${message}`);
     }
 };
 

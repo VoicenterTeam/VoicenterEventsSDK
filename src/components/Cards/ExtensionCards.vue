@@ -2,10 +2,11 @@
     <div>
         <div class="flex w-full justify-end pr-12" :class="responsiveClass">
             <div class="mx-1 -my-1 cursor-pointer">
-                <div>
+                <!-- Enable later on when it works correctly-->
+                <div v-if="false">
                     <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"></IconCardsGrid>
                 </div>
-                <fade-transition :duration="250">
+                <fade-transition :duration="250" v-if="false">
                     <div v-if="showGridMenu"
                          v-click-outside="onMenuClickOutside"
                          class="bg-white rounded mt-1 absolute w-56 flex flex-col border-2">
@@ -31,10 +32,8 @@
             </el-select>
         </div>
         <div>
-            <div class="flex py-6 extension-cards">
-                <fade-transition class="flex flex-wrap w-full " group
-                                 :style="renderColumns"
-                                 :class="{'grid-container overflow-x-auto': sortedExtensions.length}">
+            <div class="flex py-6 extension-cards justify-center">
+                <fade-transition class="flex flex-wrap justify-center" group>
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
                          class="pr-4">
@@ -103,7 +102,7 @@
                 ],
                 showGridMenu: false,
                 maxLayoutColumns: 10,
-                layoutColumns: 5
+                layoutColumns: 6
             }
         },
         computed: {
@@ -154,7 +153,7 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
     .extension-cards {
         min-height: 280px;
     }

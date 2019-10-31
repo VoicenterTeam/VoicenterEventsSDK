@@ -117,6 +117,9 @@
             }
         },
         computed: {
+            storeSettings() {
+              return this.$store.state.dashboards.settings
+            },
             rules() {
                 return {
                     'report.interval': [
@@ -155,6 +158,11 @@
                         }
                     ],
                 }
+            }
+        },
+        watch: {
+            storeSettings(newVal) {
+                this.settings = cloneDeep(newVal)
             }
         },
         methods: {

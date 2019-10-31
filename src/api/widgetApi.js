@@ -7,15 +7,21 @@ export const WidgetApi = {
             let res = await $axios.get('/Widgets/GetAllWidgets/')
             return res.WidgetList
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Get Widgets')
         }
     },
 
     async update(data) {
         try {
+            if (!data.WidgetTime) {
+                data.WidgetTime = {}
+            }
+            if (data.Order === null) {
+                data.Order = 0
+            }
             return await $axios.post(`/Widgets/Update/`, data)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Update Widget')
         }
     },
 
@@ -23,7 +29,7 @@ export const WidgetApi = {
         try {
             return await $axios.post('/Widgets/Add/', data)
         } catch (e) {
-            parseCatch(e, true)
+            parseCatch(e, true, 'Add Widget')
         }
     },
 

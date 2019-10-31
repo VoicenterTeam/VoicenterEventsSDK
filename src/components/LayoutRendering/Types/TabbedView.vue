@@ -37,7 +37,7 @@
                 type: Array,
                 default: () => ([])
             },
-            activeTab: String
+            activeTab: [String, Number]
         },
         data() {
             return {

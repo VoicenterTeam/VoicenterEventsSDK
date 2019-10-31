@@ -20,10 +20,17 @@ const actions = {
     }
 };
 
+const getters = {
+    getWidgetTemplate: state => templateId => {
+        return state.allWidgetTemplates.find(t => t.TemplateID.toString() === templateId.toString())
+    }
+}
+
 export default {
     namespaced: true,
     types,
     state,
     mutations,
+    getters,
     actions,
 };
