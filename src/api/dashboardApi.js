@@ -34,8 +34,7 @@ export const DashboardApi = {
 
     async store(data) {
         try {
-            let res = await $axios.post(`/DashBoards/Add/`, data)
-            return res.Dashboard
+            return await $axios.post(`/DashBoards/Add/`, data)
         } catch (e) {
             parseCatch(e, true, 'Add Dashboard')
         }

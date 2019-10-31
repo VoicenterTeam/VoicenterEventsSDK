@@ -25,11 +25,11 @@
                    @remove-item="removeWidget(widget)">
         </component>
         <update-dialog
-                width="30%"
-                v-if="showUpdateDialog"
-                :chartTitle="widget.Title"
-                @on-change-title="(title) => onChangeTitle(title, widget)"
-                :visible.sync="showUpdateDialog">
+            width="30%"
+            v-if="showUpdateDialog"
+            :chartTitle="widget.Title"
+            @on-change-title="(title) => onChangeTitle(title, widget)"
+            :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
 </template>
@@ -40,15 +40,15 @@
     import TableData from './Data/Table/TableData'
     import DataByUser from './Data/Table/DataByUser'
     import EditButton from '@/components/EditButton'
+    import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
-    import DeleteButton from '@/components/Widgets/DeleteButton'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
-    import { getWidgetDataType, getWidgetEndpoint } from "@/helpers/wigetUtils";
+    import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/wigetUtils";
 
     export default {
         name: "widget",
@@ -104,7 +104,7 @@
                 return !exceptions.includes(dataType)
             },
             getWidgetTemplate() {
-              return this.$store.getters['widgetTemplate/getWidgetTemplate']
+                return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
             setComponentEndPoint() {
                 return getWidgetEndpoint(this.widget)

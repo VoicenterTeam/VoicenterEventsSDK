@@ -17,7 +17,7 @@
         </div>
         <widget-empty-card v-if="editable" key="-1"
                            :widgetGroup="widgetGroup"
-                           :widgetTemplates="widgetTemplates"
+                           v-bind="$attrs"
                            v-on="$listeners"
                            @add-widget="(value) => addWidgetsToGroup(value)">
         </widget-empty-card>
@@ -37,14 +37,15 @@
     import DraggableWidgets from './DraggableWidgets'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
-    import { getWidgetDataType } from "@/helpers/wigetUtils";
+    import {getWidgetDataType} from "@/helpers/wigetUtils";
+
     export default {
         name: "widget-list",
         components: {
+            Widget,
             WidgetEmptyCard,
             DraggableWidgets,
             WidgetErrorBoundary,
-            Widget,
         },
         data() {
             return {
@@ -76,10 +77,6 @@
                 type: Array,
                 default: () => []
             },
-            widgetTemplates: {
-                type: Array,
-                default: () => []
-            },
             widgetsFilter: {
                 type: String,
                 default: ''
@@ -98,7 +95,11 @@
                 this.$emit('onListChange', {'event': ev, 'group': this.widgetGroup})
             },
             addWidgetsToGroup(val) {
-                this.$emit('addWidgetsToGroup', {'widgets': [val], 'group': this.widgetGroup})
+                let objectToEmit = {
+                    widgets: [val],
+                    group: this.widgetGroup
+                }
+                this.$emit('addWidgetsToGroup', objectToEmit)
             },
             removeWidget(val) {
                 this.$emit('removeWidget', {'widget': val, 'group': this.widgetGroup})

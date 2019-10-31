@@ -7,6 +7,10 @@
       background-color: rgba(var(--primary_rgba-color), 0.50);
       border-color: var(--primary-color);
     }
+    &.is-disabled {
+      background-color: rgba(var(--primary_rgba-color), 0.40);
+      border-color: rgba(var(--primary_rgba-color), 0.20);
+    }
   }
 
   &.el-button--default:hover {

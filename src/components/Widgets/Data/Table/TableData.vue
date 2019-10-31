@@ -134,11 +134,13 @@
                 try {
                     let data = await WidgetDataApi.getData(this.endPoint)
                     let columns = [];
-                    this.tableData = data
                     if (!data.length) {
                         this.loading = false
                         return
                     }
+
+                    this.tableData = data
+
                     for (let column in data[0]) {
                         columns.push({
                             prop: column,

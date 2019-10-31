@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 470 470" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>allwidgets</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="allwidgets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="0" y="0" width="470" height="470"></rect>
+        <g id="483244" fill="CurrentColor" fill-rule="nonzero">
+            <path d="M448,0 L21.333,0 C9.542,0 0,9.552 0,21.333 L0,448 C0,459.781 9.542,469.333 21.333,469.333 L448,469.333 C459.792,469.333 469.333,459.781 469.333,448 L469.333,21.333 C469.333,9.552 459.792,0 448,0 Z M213.334,426.667 L42.667,426.667 L42.667,181.333 L213.334,181.333 L213.334,426.667 Z M426.667,426.667 L256,426.667 L256,181.333 L426.667,181.333 L426.667,426.667 Z M426.667,138.667 L42.667,138.667 L42.667,42.667 L426.667,42.667 L426.667,138.667 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

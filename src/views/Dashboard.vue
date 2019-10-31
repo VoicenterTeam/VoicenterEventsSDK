@@ -15,50 +15,52 @@
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex">
                             <new-group-button
-                                    @click.native="addNewGroup"
-                                    v-if="editMode">
+                                @click.native="addNewGroup"
+                                v-if="editMode">
                             </new-group-button>
                             <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
                                        @click.stop="showWidgetMenu = !showWidgetMenu">
                             </AddButton>
                             <manage-dashboard-buttons
-                                    @click.stop="editMode = !editMode"
-                                    @reset-dashboard="resetDashboard"
-                                    @save-dashboard="saveDashboard"
-                                    :edit-mode="editMode">
+                                @click.stop="editMode = !editMode"
+                                @reset-dashboard="resetDashboard"
+                                @save-dashboard="saveDashboard"
+                                :edit-mode="editMode">
                             </manage-dashboard-buttons>
                         </div>
                         <fade-transition>
-                            <widget-menu v-if="showWidgetMenu"
-                                         :widgetGroup=firstWidgetGroup
-                                         @addWidgetsToGroup="addWidgetsToGroup"
-                                         v-click-outside="onWidgetMenuClickOutside"
-                                         :widgetTemplates="allWidgetTemplates">
-                            </widget-menu>
+                            <templates-category
+                                class="mt-16"
+                                v-if="showWidgetMenu"
+                                :widgetGroup=firstWidgetGroup
+                                @addWidgetsToGroup="addWidgetsToGroup"
+                                v-click-outside="onWidgetMenuClickOutside"
+                                :widgetTemplates="allWidgetTemplates">
+                            </templates-category>
                         </fade-transition>
                         <layout-switcher
-                                v-if="!editMode"
-                                :activeType="layoutType"
-                                @switch-layout="(type) => switchDashboardLayout(type)">
+                            v-if="!editMode"
+                            :activeType="layoutType"
+                            @switch-layout="(type) => switchDashboardLayout(type)">
                         </layout-switcher>
                     </div>
                 </div>
                 <fade-transition mode="out-in" :duration="250">
                     <keep-alive>
                         <component
-                                :is="layoutTypes[layoutType]"
-                                :activeDashboardData="activeDashboardData"
-                                :editMode="editMode"
-                                :widgetsFilter="widgetsFilter"
-                                :activeTab="activeTab"
-                                :widgetTemplates="allWidgetTemplates"
-                                @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                                @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
-                                @onListChange="(data) => onListChange(data.event, data.group)"
-                                @addWidgetsToGroup="addWidgetsToGroup"
-                                @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                                @updateWidget="(data) => updateWidget(data.widget, data.group)"
-                                @switch-tab="(tab) => switchTab(tab)">
+                            :is="layoutTypes[layoutType]"
+                            :activeDashboardData="activeDashboardData"
+                            :editMode="editMode"
+                            :widgetsFilter="widgetsFilter"
+                            :activeTab="activeTab"
+                            :widgetTemplates="allWidgetTemplates"
+                            @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                            @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                            @onListChange="(data) => onListChange(data.event, data.group)"
+                            @addWidgetsToGroup="addWidgetsToGroup"
+                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                            @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                            @switch-tab="(tab) => switchTab(tab)">
                         </component>
                     </keep-alive>
                 </fade-transition>
@@ -88,6 +90,7 @@
     import {runDashboardOperations} from '@/services/dashboardService'
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
+    import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
@@ -104,6 +107,7 @@
             NormalView,
             TabbedView,
             Sidebar,
+            TemplatesCategory,
         },
         data() {
             return {
@@ -156,13 +160,13 @@
             showGeneralWidgetSearch() {
                 return this.$store.state.dashboards.settings.showGeneralWidgetSearch
             },
-            activeDashboardId() {
+            activeWidgetGroupID() {
                 return get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             }
         },
         methods: {
             async addWidgetsToGroup(data = {}) {
-                let { widgets: widgetTemplates , group: widgetGroup } = data
+                let {widgets: widgetTemplates, group: widgetGroup} = data
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -225,7 +229,7 @@
                     event = event[draggableEvents.ADDED]
 
                     let newWidget = await createNewWidgets([event.element], widgetGroup, event.newIndex)
-                    widgetGroup.WidgetList.splice(event.newIndex, 0, newWidget)
+                    widgetGroup.WidgetList.splice(event.newIndex, 0, newWidget[0])
 
                     let widgetsToUpdate = widgetGroup.WidgetList.slice(event.newIndex + 1)
                     widgetsToUpdate.forEach((widget, index) => {
@@ -392,7 +396,7 @@
                     this.layoutType = this.previousLayoutType
                 }
             },
-            activeDashboardId: {
+            activeWidgetGroupID: {
                 immediate: true,
                 handler(newVal) {
                     this.activeTab = newVal
