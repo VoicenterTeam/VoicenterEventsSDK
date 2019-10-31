@@ -3,6 +3,7 @@
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
             <template v-slot="{tab, activeTab}">
                 <widget-list
+                    v-if="activeTab.toString() === tab.WidgetGroupID.toString()"
                     :widgets="tab.WidgetList"
                     :all-widgets="allWidgets"
                     :editable="editMode"
