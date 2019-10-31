@@ -16,6 +16,9 @@ export const WidgetApi = {
             if (!data.WidgetTime) {
                 data.WidgetTime = {}
             }
+            if (data.Order === null) {
+                data.Order = 0
+            }
             return await $axios.post(`/Widgets/Update/`, data)
         } catch (e) {
             parseCatch(e, true, 'Update Widget')

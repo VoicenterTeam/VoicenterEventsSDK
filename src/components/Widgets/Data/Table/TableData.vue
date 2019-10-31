@@ -97,6 +97,9 @@
                 return this.columns.map(c => c.prop)
             },
             paginatedTableData() {
+                if (!this.tableData) {
+                    return []
+                }
                 return this.tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             }
         },

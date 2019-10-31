@@ -5,7 +5,7 @@ export function getWidgetEndpoint(widget) {
     let endpoint = get(widget, 'WidgetLayout.Endpoint')
     if (!endpoint) {
         let widgetTemplate = getWidgetTemplate(widget)
-        endpoint = get(widgetTemplate, 'Endpoint')
+        endpoint = get(widgetTemplate, 'Endpoint', '')
     }
     return endpoint.replace('{WidgetID}', widget.WidgetID)
 }

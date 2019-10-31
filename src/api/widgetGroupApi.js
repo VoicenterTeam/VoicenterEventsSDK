@@ -10,6 +10,9 @@ export const WidgetGroupsApi = {
                     widget.WidgetTime = {}
                 }
             })
+            if (data.Order === null) {
+                data.Order = 0
+            }
             return await $axios.post(`/WidgetsGroups/Update/`, data)
         } catch (e) {
             parseCatch(e, true, 'Update Widget Groups')
