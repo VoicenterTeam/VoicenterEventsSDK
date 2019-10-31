@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
-        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mx-10 md:flex">
+        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mb-2 ml-24 md:flex">
         <div>
             <div class="relative">
                 <div class="flex items-center py-3 mx-1 sm:mx-6">

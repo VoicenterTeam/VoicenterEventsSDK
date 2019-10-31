@@ -41,11 +41,9 @@
         overflow-x: auto;
         min-width: 320px;
         width: 100vw;
-    }
-
-    @media (min-width: 768px) {
-        .sidebar-tabs__container {
-            margin-left: -6rem;
+        @apply -ml-6;
+        @screen md {
+            @apply -ml-24;
         }
     }
     .tab-name {
@@ -55,6 +53,10 @@
 
         :hover, .active {
             color: var(--greyish-brown);
+        }
+
+        &:first-child {
+            margin-left: 65px;
         }
     }
 
