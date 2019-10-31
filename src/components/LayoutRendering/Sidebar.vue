@@ -34,19 +34,17 @@
 <style scoped lang="scss">
     .sidebar-tabs__container {
         position: absolute;
-        margin-right: -1.5rem;
-        margin-left: -1.5rem;
         box-shadow: 0 0 1px 0 var(--silver-two), 0 1px 4px 0 var(--silver-two);
         background-color: #ffffff;
         height: 58px;
         margin-top: 90px;
         overflow-x: auto;
         min-width: 320px;
+        width: 100vw;
     }
 
     @media (min-width: 768px) {
         .sidebar-tabs__container {
-            margin-right: -6rem;
             margin-left: -6rem;
         }
     }
