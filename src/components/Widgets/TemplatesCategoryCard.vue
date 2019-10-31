@@ -2,7 +2,7 @@
     <div class="py-2 bg-white flex items-center">
         <div class="flex items-center widget-card w-full py-2 px-2 cursor-pointer" @click="onSelectCategory">
             <slot name="icon">
-                <component class="w-7 mx-1 text-primary" :is="Icon"></component>
+                <component class="w-7 mx-1 text-primary" :is="CategoryImage"></component>
             </slot>
             <slot name="title">
                 <p class="text-sm mx-2 caption">
@@ -16,7 +16,7 @@
 <script>
     export default {
         props: {
-            Icon: String,
+            CategoryImage: String,
             CategoryName: {
                 type: String,
                 default: '- -'
