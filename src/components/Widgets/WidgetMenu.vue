@@ -24,7 +24,7 @@
                     </WidgetCard>
                 </div>
             </DraggableWidgets>
-            <h3 v-if="widgetTemplates.length === 0" class="text-xl text-center my-4">
+            <h3 v-if="widgetTemplates.length === 0" class="text-center my-4">
                 {{$t('no.widgets.added')}}
             </h3>
         </div>
