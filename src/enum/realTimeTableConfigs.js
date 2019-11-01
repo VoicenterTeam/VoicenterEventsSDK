@@ -1,6 +1,11 @@
 export const dynamicRows = ['status', 'status_duration']
 
 export const dynamicColumns = [{
+    prop: 'user_name',
+    fixed: false,
+    align: 'center',
+    label: 'User Name',
+}, {
     prop: 'status',
     fixed: false,
     align: 'center',

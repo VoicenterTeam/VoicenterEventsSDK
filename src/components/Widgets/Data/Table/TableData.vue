@@ -18,6 +18,10 @@
                 <user-status v-if="userExtension(row.user_id)" :userId="row.user_id" :extension="userExtension(row.user_id)"></user-status>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
+            <template v-slot:user_name="{row}">
+                <span v-if="userExtension(row.user_id)">{{userExtension(row.user_id).userName}}</span>
+                <span v-else>{{$t('N/A')}}</span>
+            </template>
             <template v-slot:pagination>
                 <el-select
                     v-model="pageSize"
@@ -133,7 +137,7 @@
                                 label: startCase(column)
                             })
                         }
-                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
+                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                     }
 
                     this.tableData = data
