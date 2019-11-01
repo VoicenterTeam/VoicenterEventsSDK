@@ -20,7 +20,7 @@
             </template>
             <template v-slot:user_name="{row}">
                 <span v-if="userExtension(row.user_id)">{{userExtension(row.user_id).userName}}</span>
-                <span v-else>{{$t('N/A')}}</span>
+                <span v-else>---</span>
             </template>
             <template v-slot:pagination>
                 <el-select
