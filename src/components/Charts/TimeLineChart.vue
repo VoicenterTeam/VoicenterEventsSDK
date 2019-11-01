@@ -72,35 +72,19 @@
                 this.$emit('update-item', this.data)
             },
             async getChartData() {
-                let demoSeries = [
-                    {
-                        data: [
-                            {
-                                "x": 1563441556000,
-                                "y": 3
-                            },
-                            {
-                                "x": 1564168362000,
-                                "y": 2,
-                                "color": "#d6dae1"
-                            },
-                            {
-                                "x": 1564308352000,
-                                "y": 1.6,
-                                "color": "green"
-                            }
-                        ]
-                    }
-                ]
-
                 let widgetDataType = getWidgetDataType(this.data)
                 let Data = await WidgetDataApi.getData(this.endPoint)
-                let chartData = get(Data, '0', { series: demoSeries })
+                let chartData = get(Data, '0', { series: [] })
                 let chartType = ''
                 if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
                     chartType = 'line'
                 } else if (widgetDataType === widgetDataTypes.BARS_WITH_LINES_TYPE_ID) {
                     chartType = 'column'
+                } else if (widgetDataType === widgetDataType.CHART_QUEUE) {
+                    chartData = {
+                        ...chartData,
+                        ...chartConfig.yAxisConfig
+                    }
                 }
                 let data = {
                     "Order": 6,
@@ -119,7 +103,7 @@
                     },
                     ...chartData,
                 }
-                this.chartOptions = {...data, ...chartConfig.yAxisConfig}
+                this.chartOptions = data
                 this.loading = false
                 this.$emit('on-loading', false)
             }
