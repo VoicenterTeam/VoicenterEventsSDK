@@ -6,8 +6,9 @@
                    :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
                     {{data.Title}}
                 </p>
+                <!-- TODO adapt based on api data. Check exactly how to change the chart interval via api-->
                 <range-filter
-                        v-if="chartOptions.date"
+                        v-if="chartOptions.date && typeof chartOptions.date === 'string'"
                         :date="chartOptions.date.split(' - ')"
                         @on-change="onChangeDate">
                 </range-filter>
@@ -19,6 +20,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import RangeFilter from './RangeFilter'
@@ -70,53 +72,35 @@
                 this.$emit('update-item', this.data)
             },
             async getChartData() {
-                let widgetDataType = getWidgetDataType(this.data)
-                let chartData = await WidgetDataApi.getData(this.endPoint)
-                let chartType = ''
-                let seriesData = [
+                let demoSeries = [
                     {
-                        "x": 1563441556000,
-                        "y": 3
-                    },
-                    {
-                        "x": 1564168362000,
-                        "y": 2,
-                        "color": "#d6dae1"
-                    },
-                    {
-                        "x": 1564308352000,
-                        "y": 1.6,
-                        "color": "green"
+                        data: [
+                            {
+                                "x": 1563441556000,
+                                "y": 3
+                            },
+                            {
+                                "x": 1564168362000,
+                                "y": 2,
+                                "color": "#d6dae1"
+                            },
+                            {
+                                "x": 1564308352000,
+                                "y": 1.6,
+                                "color": "green"
+                            }
+                        ]
                     }
                 ]
 
+                let widgetDataType = getWidgetDataType(this.data)
+                let Data = await WidgetDataApi.getData(this.endPoint)
+                let chartData = get(Data, '0', { series: demoSeries })
+                let chartType = ''
                 if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
                     chartType = 'line'
                 } else if (widgetDataType === widgetDataTypes.BARS_WITH_LINES_TYPE_ID) {
                     chartType = 'column'
-                } else if (widgetDataType === widgetDataTypes.TIMELINE_TYPE_ID) {
-                    seriesData = [{
-                        name: 'Start prototype',
-                        start: Date.UTC(2014, 10, 18),
-                        end: Date.UTC(2014, 10, 25),
-                        completed: 0.25
-                    }, {
-                        name: 'Test prototype',
-                        start: Date.UTC(2014, 10, 27),
-                        end: Date.UTC(2014, 10, 29)
-                    }, {
-                        name: 'Develop',
-                        start: Date.UTC(2014, 10, 20),
-                        end: Date.UTC(2014, 10, 25),
-                        completed: {
-                            amount: 0.12,
-                            fill: '#fa0'
-                        }
-                    }, {
-                        name: 'Run acceptance tests',
-                        start: Date.UTC(2014, 10, 23),
-                        end: Date.UTC(2014, 10, 26)
-                    }]
                 }
                 let data = {
                     "Order": 6,
@@ -124,18 +108,6 @@
                         "type": chartType,
                         "marginTop": 45
                     },
-                    "title": {
-                        "text": this.data.Title
-                    },
-                    "xAxis": {
-                        "type": "datetime",
-                    },
-                    "series": [
-                        {
-                            "pointWidth": 20,
-                            "data": seriesData
-                        }
-                    ],
                     "tooltip": {
                         "formatter": function () {
                             return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
@@ -145,7 +117,7 @@
                         "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
                         "borderRadius": 10,
                     },
-                    "date": "05/29/2019 - 07/20/2019",
+                    ...chartData,
                 }
                 this.chartOptions = {...data, ...chartConfig.yAxisConfig}
                 this.loading = false
