@@ -12,8 +12,10 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
         let newWidget = widgetModel(template.TemplateID, template.TemplateName, {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,
             DataTypeID: template.DataType.DataTypeID,
-            Endpoint: template.Endpoint
+            Endpoint: template.Endpoint,
         })
+        newWidget.WidgetConfig= template.DefaultWidgetConfig || [],
+        newWidget.WidgetTime= template.DefaultWidgetTime || {},
 
         newWidget = await WidgetApi.store(newWidget)
         widgets.push(newWidget)
