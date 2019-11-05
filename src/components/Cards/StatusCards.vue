@@ -1,14 +1,21 @@
 <template>
     <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow">
-        <div class="w-full flex items-center justify-between">
+        <div class="w-full flex items-center">
             <slot name="icon">
                 <component class="w-16 mx-1 text-primary" :is="cardIcon"></component>
             </slot>
-            <slot name="title">
-                <h5 class="text-6xl font-bold mx-3" v-if="cardValue" :style="textColor">
-                    {{cardValue}}
+            <slot name="text">
+                <h5 class="text-xl font-bold mx-3" v-if="showText" :style="textColor">
+                    {{statusText}}
                 </h5>
             </slot>
+            <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
+                <slot name="value">
+                    <h5 class="text-6xl font-bold mx-3" v-if="cardValue" :style="textColor">
+                        {{cardValue}}
+                    </h5>
+                </slot>
+            </div>
         </div>
         <div class="flex editable-content" v-if="editable">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
@@ -31,16 +38,18 @@
         <extension-update-dialog
             width="30%"
             :status="status"
+            :showText="showText"
             :visible.sync="showModal"
-            @on-change="changeStatus">
+            @on-change="changeStatus"
+            @on="handleTextVisibility">
         </extension-update-dialog>
     </div>
 </template>
 <script>
-    import {Tooltip} from 'element-ui';
-    import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
-    import ExtensionUpdateDialog from './ExtensionUpdateDialog'
+    import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
+    import ExtensionUpdateDialog from './ExtensionUpdateDialog'
+    import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
 
     export default {
         name: 'status-card',
@@ -52,6 +61,10 @@
             editable: {
                 type: Boolean,
                 default: true
+            },
+            showText: {
+                type: Boolean,
+                default: false
             }
         },
         components: {
@@ -59,7 +72,7 @@
             EditIcon,
             MoreVerticalIcon,
             ExtensionUpdateDialog,
-            [Tooltip.name]: Tooltip
+            [Tooltip.name]: Tooltip,
         },
         data() {
             return {
@@ -77,6 +90,9 @@
             cardIcon() {
                 return this.statusMappings[this.status].icon
             },
+            statusText() {
+                return this.$t(this.statusMappings[this.status].text)
+            },
             textColor() {
                 let color = this.statusMappings[this.status].color
                 return {
@@ -85,8 +101,11 @@
             }
         },
         methods: {
-            changeStatus(newStatus) {
-                this.$emit('change-extension-status', newStatus);
+            changeStatus(data = {}) {
+                this.$emit('change-extension-status', data);
+            },
+            handleTextVisibility(val) {
+                console.log(val)
             }
         }
     }
