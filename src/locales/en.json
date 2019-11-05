@@ -68,9 +68,13 @@
     "datatable.props.autosize_columns": "Autosize All Columns",
     "datatable.props.reset_columns": "Reset Columns",
     "datatable.manage.columns": "Manage Columns",
+    "datatable.manage.check.all": "Check All Columns",
+    "datatable.manage.uncheck.all": "Uncheck All Columns",
     "datatable.manage.columns.header": "Manage Realtime Columns",
-    "datatable.manage.columns.add": "Add all",
-    "datatable.manage.columns.remove": "Remove all",
+    "datatable.manage.columns.add": "Add",
+    "datatable.manage.columns.remove": "Remove",
+    "datatable.manage.columns.add.all": "Add all",
+    "datatable.manage.columns.remove.all": "Remove all",
     "datatable.manage.columns.items": "No items selected | {item} item selected | {item} items selected",
     "datatable.manage.columns.search": "Search column name",
     "status.login": "Logged in",
@@ -126,5 +130,6 @@
     "widget.update.title": "Update widget title",
     "widget.content.renderError": "An error occurred while rendering the widget...",
     "speedometer.chart.title": "Agents in a call vs total agents",
-    "queue.chart.title": "Queues real time chart"
+    "queue.chart.title": "Queues real time chart",
+    "N/A": "N/A"
 }

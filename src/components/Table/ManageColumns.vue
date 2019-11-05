@@ -2,59 +2,41 @@
     <div>
         <div class="flex items-center manage-columns-header">{{$t('datatable.manage.columns.header')}}</div>
         <div class="flex flex-col sm:flex-row">
-            <div class="manage-columns-section">
-                <div class="flex justify-between items-center manage-columns-section-header">
-                    <p class="items-selected">
-                        {{$tc('datatable.manage.columns.items', numberOfSelectedColumns, { item: numberOfSelectedColumns })}}
-                    </p>
-                    <el-button type="danger" size="small" @click="removeColumns">
-                        {{$t('datatable.manage.columns.remove')}}
+            <manage-columns-section
+                :availableColumns="activeColumns">
+                <template v-slot:button="{columns, allChecked}">
+                    <el-button type="danger" size="small" @click="removeColumns(columns)">
+                        {{allChecked ? $t('datatable.manage.columns.remove.all') :
+                        $t('datatable.manage.columns.remove')}}
                     </el-button>
-                </div>
-                <div class="manage-columns-section-content">
-                    <el-checkbox-group class="flex flex-col column-checkbox" v-model="valueToRemove">
-                        <el-checkbox class="py-2" v-for="column in activeColumns" :label="column.prop"
-                                     :key="column.label">{{column.label}}
-                        </el-checkbox>
-                    </el-checkbox-group>
-                </div>
-            </div>
-            <div class="manage-columns-section">
-                <div class="flex justify-between items-center manage-columns-section-header">
+                </template>
+            </manage-columns-section>
+            <manage-columns-section
+                :availableColumns="showAvailableColumns">
+                <template v-slot:search>
                     <div class="w-4/6">
                         <el-input :placeholder="$t('datatable.manage.columns.search')"
                                   v-model="filter"
                                   suffix-icon="el-icon-search" class="search-columns"></el-input>
                     </div>
-
-                    <el-button type="success" size="small" @click="addColumns">
-                        {{$t('datatable.manage.columns.add')}}
+                </template>
+                <template v-slot:button="{columns, allChecked}">
+                    <el-button type="success" size="small" @click="addColumns(columns)">
+                        {{allChecked ? $t('datatable.manage.columns.add.all') : $t('datatable.manage.columns.add')}}
                     </el-button>
-                </div>
-                <div class="manage-columns-section-content">
-                    <el-checkbox-group class="flex flex-col column-checkbox" v-model="valueToAdd">
-                        <el-checkbox class="py-2" v-for="column in showAvailableColumns" :label="column.prop"
-                                     :key="column.label">{{column.label}}
-                        </el-checkbox>
-                    </el-checkbox-group>
-                </div>
-            </div>
+                </template>
+            </manage-columns-section>
         </div>
     </div>
 </template>
-
 <script>
-
     import xor from 'lodash/xor'
-    import {Checkbox, CheckboxGroup, Select, Option} from 'element-ui'
+    import ManageColumnsSection from './ManageColumnsSection'
+
 
     export default {
-        name: "manage-columns",
         components: {
-            [Select.name]: Select,
-            [Option.name]: Option,
-            [Checkbox.name]: Checkbox,
-            [CheckboxGroup.name]: CheckboxGroup,
+            ManageColumnsSection,
         },
         props: {
             availableColumns: {
@@ -74,21 +56,19 @@
                 valueToAdd: [],
                 activeColumns: [],
                 unselectedColumns: [],
-                filteredColumns: []
+                filteredColumns: [],
+                isIndeterminate: false,
             }
         },
         computed: {
-            numberOfSelectedColumns() {
-                return this.valueToRemove.length
-            },
             showAvailableColumns() {
                 return this.filter ? this.filteredColumns : this.unselectedColumns
             }
         },
         methods: {
-            addColumns() {
-                let itemToRemove = this.unselectedColumns.filter(c => this.valueToAdd.includes(c.prop));
-                let remainingItems = this.unselectedColumns.filter(c => !this.valueToAdd.includes(c.prop));
+            addColumns(columns) {
+                let itemToRemove = this.unselectedColumns.filter(c => columns.includes(c.prop));
+                let remainingItems = this.unselectedColumns.filter(c => !columns.includes(c.prop));
                 this.activeColumns = this.activeColumns.concat([...itemToRemove]);
                 this.unselectedColumns = remainingItems;
 
@@ -96,11 +76,12 @@
                 this.valueToAdd = [];
 
                 let newColumns = this.activeColumns.map(c => c.prop);
+
                 this.$emit('on-change-visibility', newColumns)
             },
-            removeColumns() {
-                let itemToRemove = this.activeColumns.filter(c => this.valueToRemove.includes(c.prop));
-                let remainingItems = this.activeColumns.filter(c => !this.valueToRemove.includes(c.prop));
+            removeColumns(columns) {
+                let itemToRemove = this.activeColumns.filter(c => columns.includes(c.prop));
+                let remainingItems = this.activeColumns.filter(c => !columns.includes(c.prop));
                 this.unselectedColumns = this.unselectedColumns.concat([...itemToRemove]);
                 this.activeColumns = remainingItems;
 
@@ -114,6 +95,10 @@
                 this.unselectedColumns = xor(this.availableColumns, this.activeColumns)
                 this.allColumnsValue = this.activeColumns.map(c => c.prop);
                 this.valueToRemove = this.allColumnsValue;
+            },
+            handleCheckAllChange(checked, section) {
+                this[section] = checked ? this.allColumnsValue : [];
+                this.isIndeterminate = false;
             }
         },
         watch: {
@@ -135,7 +120,6 @@
         }
     }
 </script>
-
 <style scoped lang="scss">
     .manage-columns-header {
         height: 40px;
@@ -145,91 +129,5 @@
         font-size: 14px;
         font-weight: normal;
         color: var(--greyish-brown);
-
-    }
-
-    .manage-columns-section-header {
-        height: 60px;
-        padding: 0 20px;
-    }
-
-    .manage-columns-section-content{
-        overflow: auto;
-        min-height: 200px;
-        max-height: 250px;
-    }
-    .items-selected {
-        font-size: 14px;
-        font-weight: normal;
-        font-style: normal;
-        font-stretch: normal;
-        line-height: normal;
-        letter-spacing: normal;
-        color: var(--charcoal-grey);
-    }
-
-    .manage-columns-section {
-        max-height: 300px;
-        min-width: 350px;
-        overflow-y: auto;
-    }
-
-    .manage-columns-section + .manage-columns-section {
-        border-left: solid 1px var(--silver-color);
-    }
-
-    .search-columns /deep/ input {
-        height: 32px;
-        border-radius: 4px;
-        border: solid 1px var(--silver-color);
-        font-size: 12px;
-        font-weight: 300;
-        color: #4b4d56;
-    }
-
-    .search-columns /deep/ .el-input__suffix .el-input__icon {
-        line-height: 32px;
-    }
-
-    .column-checkbox /deep/ .el-checkbox {
-        margin-right: 0;
-        padding: 10px 20px;
-
-        .el-checkbox__input + .el-checkbox__label {
-            font-size: 12px;
-            font-weight: normal;
-        }
-
-        .el-checkbox__input > .el-checkbox__inner {
-            height: 18px;
-            width: 18px;
-
-            &::after {
-                border-width: 2px;
-                height: 10px;
-                left: 6px;
-            }
-        }
-    }
-
-    .column-checkbox /deep/ .el-checkbox.is-checked {
-        background-color: var(--bg-grey-modal);
-    }
-
-    .rtl {
-        .column-checkbox .el-checkbox:last-child {
-            margin: 0;
-        }
-
-        .manage-columns-section + .manage-columns-section {
-            border-left: none;
-            border-right: solid 1px var(--silver-color);
-        }
-    }
-
-    @media (max-width: 640px) {
-        .manage-columns-section + .manage-columns-section {
-            border-top: solid 1px var(--silver-color);
-        }
     }
 </style>
