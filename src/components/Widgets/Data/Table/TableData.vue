@@ -6,21 +6,18 @@
             :editable="editable"
             :columns="columns"
             :stripe="stripe"
-            :searchableFields="searchableFields"
             :border="border"
             :cell-style="getCellStyle"
             :cell-class-name="getCellClassName">
             <template v-slot:status_duration="{row}">
-                <status-duration v-if="userExtension(row.user_id)" :extension="userExtension(row.user_id)"></status-duration>
+                <status-duration v-if="userExtension(row.user_id)"
+                                 :extension="userExtension(row.user_id)"></status-duration>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
             <template v-slot:status="{row}">
-                <user-status v-if="userExtension(row.user_id)" :userId="row.user_id" :extension="userExtension(row.user_id)"></user-status>
+                <user-status v-if="userExtension(row.user_id)" :userId="row.user_id"
+                             :extension="userExtension(row.user_id)"></user-status>
                 <span v-else>{{$t('N/A')}}</span>
-            </template>
-            <template v-slot:user_name="{row}">
-                <span v-if="userExtension(row.user_id)">{{userExtension(row.user_id).userName}}</span>
-                <span v-else>---</span>
             </template>
             <template v-slot:pagination>
                 <el-select
@@ -36,8 +33,14 @@
                     :page-size="pageSize"
                     :current-page="currentPage"
                     layout="prev, pager, next"
-                    :total="tableData.length">
+                    :total="paginationTotal">
                 </el-pagination>
+            </template>
+            <template v-slot:search-input>
+                <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
+            </template>
+            <template v-slot:data-counts>
+                <p class="text-sm">{{fetchTableData.length}} / {{tableData.length}} row(s)</p>
             </template>
         </data-table>
     </div>
@@ -51,7 +54,7 @@
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
     import {dynamicRows, refreshDataInterval, dynamicColumns} from '@/enum/realTimeTableConfigs'
-    import { getWidgetEndpoint } from "@/helpers/wigetUtils";
+    import {getWidgetEndpoint} from "@/helpers/wigetUtils";
 
     export default {
         components: {
@@ -90,12 +93,31 @@
                 pageSize: 5,
                 pagerCount: 5,
                 currentPage: 1,
-                fetchDataInterval: null
+                fetchDataInterval: null,
+                filter: '',
+                paginationTotal: null
             }
         },
         computed: {
             fetchTableData() {
-                return this.tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+                let tableData = this.tableData
+
+                if (this.filter && this.searchableFields.length > 0) {
+                    tableData = this.tableData.filter(c => {
+                        return this.searchableFields.some(field => {
+                            if (c[field]) {
+                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
+                            }
+                            return false;
+                        })
+                    })
+                    this.paginationTotal = tableData.length
+                    this.currentPage = 1
+                } else {
+                    this.paginationTotal = this.tableData.length
+                }
+
+                return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             },
             extensions() {
                 return this.$store.state.extensions.extensions
@@ -115,7 +137,7 @@
                 }
                 return {'background-color': color}
             },
-            getCellClassName({column, row }) {
+            getCellClassName({column, row}) {
                 let extension = this.userExtension(row.user_id)
                 if (dynamicRows.includes(column.property) && extension) {
                     return 'text-white'
@@ -137,7 +159,7 @@
                                 label: startCase(column)
                             })
                         }
-                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
+                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
                     }
 
                     this.tableData = data
@@ -155,11 +177,10 @@
         },
         mounted() {
             this.getDataByUser()
-            this.fetchDataInterval = setInterval(() => {
-                this.getDataByUser()
-            }, refreshDataInterval)
+            // this.fetchDataInterval = setInterval(() => {
+            //     this.getDataByUser()
+            // }, refreshDataInterval)
             this.$emit('on-loading', true)
-            console.log('Realtime User Table')
         },
         beforeDestroy() {
             clearInterval(this.fetchDataInterval)

@@ -126,5 +126,6 @@
     "widget.update.title": "Update widget title",
     "widget.content.renderError": "An error occurred while rendering the widget...",
     "speedometer.chart.title": "Agents in a call vs total agents",
-    "queue.chart.title": "Queues real time chart"
+    "queue.chart.title": "Queues real time chart",
+    "N/A": "N/A"
 }
