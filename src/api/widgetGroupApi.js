@@ -29,7 +29,7 @@ export const WidgetGroupsApi = {
 
     async addWidget(groupID, widgetID, data) {
         try {
-            return await $axios.post(`/WidgetsGroups/AddWidget/${groupID}/${widgetID}`, data)
+            return await $axios.post(`/WidgetsGroups/AddWidget/${groupID}/${widgetID}`, data || {})
         } catch (e) {
             parseCatch(e, true, 'Add Widget to Widget Group')
         }
