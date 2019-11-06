@@ -5,12 +5,12 @@
             <component class="w-8 mx-1" :is="selectedIcon"></component>
             <p slot="title" class="text-lg font-semibold text-gray-700">{{this.selectedOption.label}}</p>
         </div>
-        <div class="w-full flex items-center -mx-2">
+        <div class="w-full flex flex-col">
             <el-select :placeholder="$t('common.selectStatus')"
                        label="select"
                        v-model="selectedStatus"
                        @change="onStatusChange"
-                       class="w-full mx-2">
+                       class="w-full">
                 <el-option v-for="option in options"
                            v-bind="option"
                            :key="option.label">
@@ -20,7 +20,7 @@
                     </div>
                 </el-option>
             </el-select>
-            <el-checkbox v-model="showStatusText">
+            <el-checkbox v-model="showStatusText" class="pt-4">
                 {{$t('status.show.text')}}
             </el-checkbox>
         </div>

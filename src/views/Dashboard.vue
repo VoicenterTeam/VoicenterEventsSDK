@@ -94,7 +94,7 @@
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
-
+    import pageSizeMixin from '@/util/mixins/pageSizeMixin'
 
     export default {
         components: {
@@ -109,6 +109,7 @@
             Sidebar,
             TemplatesCategory,
         },
+        mixins: [pageSizeMixin],
         data() {
             return {
                 showWidgetMenu: false,
