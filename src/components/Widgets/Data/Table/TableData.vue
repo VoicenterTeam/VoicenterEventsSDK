@@ -159,7 +159,6 @@
                 this.getDataByUser()
             }, refreshDataInterval)
             this.$emit('on-loading', true)
-            console.log('Realtime User Table')
         },
         beforeDestroy() {
             clearInterval(this.fetchDataInterval)

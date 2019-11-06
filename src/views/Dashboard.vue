@@ -13,7 +13,13 @@
                                   prefix-icon="el-icon-search"></el-input>
                     </div>
                     <div class="flex justify-end -mx-1">
-                        <div class="my-4 flex">
+                        <div class="my-4 flex items-center">
+                            <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
+                                <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
+                                            placement="bottom">
+                                    <IconSettings class="text-primary"></IconSettings>
+                                </el-tooltip>
+                            </div>
                             <new-group-button
                                 @click.native="addNewGroup"
                                 v-if="editMode">
@@ -55,7 +61,7 @@
                             :activeTab="activeTab"
                             :widgetTemplates="allWidgetTemplates"
                             @remove-group="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                            @order-groups="(data) => orderWidgetGroup(data.widgetGroup, data.direction)"
+                            @move-groups="(data) => moveWidgetGroup(data.widgetGroup, data.direction)"
                             @onListChange="(data) => onListChange(data.event, data.group)"
                             @addWidgetsToGroup="addWidgetsToGroup"
                             @removeWidget="(data) => removeWidget(data.widget, data.group)"
@@ -66,9 +72,19 @@
                 </fade-transition>
             </div>
         </div>
+        <reorder-layout-dialog
+            :width="'50%'"
+            v-if="showReorderDataDialog"
+            :widgetGroupList="activeDashboardData.WidgetGroupList"
+            :visible.sync="showReorderDataDialog"
+            @reorder-group="reorderWidgetGroup"
+            @on-cancel="showReorderDataDialog = false"
+            @on-submit="saveDashboard"
+        ></reorder-layout-dialog>
     </div>
 </template>
 <script>
+    import {Tooltip} from 'element-ui'
     import map from 'lodash/map'
     import get from 'lodash/get'
     import uniqBy from 'lodash/uniqBy'
@@ -93,8 +109,8 @@
     import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
     import {widgetGroupModel, dashboardOperation} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
+    import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
-
 
     export default {
         components: {
@@ -108,6 +124,8 @@
             TabbedView,
             Sidebar,
             TemplatesCategory,
+            ReorderLayoutDialog,
+            [Tooltip.name]: Tooltip,
         },
         data() {
             return {
@@ -122,7 +140,8 @@
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
                 widgetsFilter: '',
-                activeTab: ''
+                activeTab: '',
+                showReorderDataDialog: false
             }
         },
         computed: {
@@ -166,6 +185,7 @@
         },
         methods: {
             async addWidgetsToGroup(data = {}) {
+                debugger
                 let {widgets: widgetTemplates, group: widgetGroup} = data
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
@@ -173,7 +193,7 @@
                 this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
                 this.showWidgetMenu = false
             },
-            orderWidgetGroup(widgetGroup, direction) {
+            moveWidgetGroup(widgetGroup, direction) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 let newIndex = index;
                 if (direction === 'up') {
@@ -208,12 +228,28 @@
                     this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationWidget)
                 }
             },
+
+            //Event contains element, newIndex & oldIndex
+            reorderWidgetGroup(event) {
+                let {element: element, newIndex: newIndex, oldIndex: oldIndex} = event
+                let WidgetGroupList = this.activeDashboardData.WidgetGroupList
+
+                if (oldIndex > 0) {
+                    WidgetGroupList = this.activeDashboardData.WidgetGroupList.slice(newIndex)
+                }
+            
+                debugger
+                WidgetGroupList.forEach((widgetGroup, index) => {
+                    widgetGroup.Order = index + 1
+                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
+                })
+            },
             //Order list & add to List - events
             async onListChange(event, widgetGroup) {
                 if (event[draggableEvents.MOVED]) {
                     event = event[draggableEvents.MOVED]
-                    widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
                     if (!widgetGroup.IsNew) {
+                        widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
                         widgetGroup.WidgetList.forEach((widget, index) => {
                             if (!widget.WidgetLayout) {
                                 widget.WidgetLayout = {
