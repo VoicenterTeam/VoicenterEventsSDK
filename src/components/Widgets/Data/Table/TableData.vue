@@ -19,11 +19,18 @@
                              :extension="userExtension(row.user_id)"></user-status>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
+            <template v-slot:user_name="{row}">
+                <span v-if="userExtension(row.user_id)">
+                    {{userExtension(row.user_id).userName}}
+                </span>
+                <span v-else>---</span>
+            </template>
             <template v-slot:pagination>
                 <el-select
                     v-model="pageSize"
+                    @change="handlePageChange(1)"
                     :size="'small'"
-                    class="w-16">
+                    class="w-16 mx-1">
                     <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"></el-option>
                 </el-select>
                 <el-pagination
@@ -33,14 +40,16 @@
                     :page-size="pageSize"
                     :current-page="currentPage"
                     layout="prev, pager, next"
+                    :hide-on-single-page="hideOnSinglePage"
                     :total="paginationTotal">
                 </el-pagination>
             </template>
             <template v-slot:search-input>
-                <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
+                <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"
+                          clearable></el-input>
             </template>
             <template v-slot:data-counts>
-                <p class="text-sm">{{fetchTableData.length}} / {{tableData.length}} row(s)</p>
+                <p class="text-sm">{{dataCounts}} / {{tableData.length}} row(s)</p>
             </template>
         </data-table>
     </div>
@@ -88,14 +97,16 @@
                 tableData: [],
                 columns: [],
                 loading: true,
-                searchableFields: ['user_id'],
+                searchableFields: [],
                 pageSizes: [5, 10, 25, 50],
                 pageSize: 5,
                 pagerCount: 5,
                 currentPage: 1,
+                lastCurrentPage: 1,
                 fetchDataInterval: null,
                 filter: '',
-                paginationTotal: null
+                paginationTotal: null,
+                hideOnSinglePage: true
             }
         },
         computed: {
@@ -122,6 +133,12 @@
             extensions() {
                 return this.$store.state.extensions.extensions
             },
+            dataCounts() {
+                if (this.tableData.length) {
+                    return [this.pageSize * (this.lastCurrentPage - 1) + 1] + ' - ' + [(this.pageSize * this.lastCurrentPage) < this.tableData.length ? (this.pageSize * this.lastCurrentPage) : this.tableData.length]
+                }
+                return 0 + ' - ' + 0
+            }
         },
         methods: {
             userExtension(userId) {
@@ -144,22 +161,31 @@
                 }
                 return ''
             },
-            async getDataByUser() {
+            async getTableData() {
                 try {
                     let endpoint = getWidgetEndpoint(this.data)
                     let data = await WidgetDataApi.getData(endpoint)
                     let columns = [];
+                    let hasUserNameColumn = false
 
                     if (data.length) {
                         for (let column in data[0]) {
+                            if (column === 'User Name') {
+                                hasUserNameColumn = true
+                            }
                             columns.push({
                                 prop: column,
                                 fixed: false,
                                 align: 'center',
                                 label: startCase(column)
                             })
+                            this.searchableFields.push(column)
                         }
-                        columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1])
+                        columns.splice(3, 0, dynamicColumns[1], dynamicColumns[2])
+                        if (!hasUserNameColumn) {
+                            columns.splice(3, 0, dynamicColumns[0])
+                            this.searchableFields.push('user_name')
+                        }
                     }
 
                     this.tableData = data
@@ -172,13 +198,13 @@
                 }
             },
             handlePageChange(val) {
-                this.currentPage = val
+                this.currentPage = this.lastCurrentPage = val
             },
         },
         mounted() {
-            this.getDataByUser()
+            this.getTableData()
             // this.fetchDataInterval = setInterval(() => {
-            //     this.getDataByUser()
+            //     this.getTableData()
             // }, refreshDataInterval)
             this.$emit('on-loading', true)
         },
