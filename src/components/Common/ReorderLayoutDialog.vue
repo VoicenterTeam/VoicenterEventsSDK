@@ -21,12 +21,14 @@
         </el-collapse>
         <template slot="footer">
             <el-button @click="$emit('on-cancel')">{{$t('common.cancel')}}</el-button>
-            <el-button @click="$emit('on-submit')" type="primary">{{$t('common.save')}}</el-button>
+            <el-button @click="onSubmit()" type="primary">{{$t('common.save')}}</el-button>
         </template>
     </el-dialog>
 </template>
 <script>
     import draggable from 'vuedraggable'
+    import cloneDeep from 'lodash/cloneDeep'
+    import differenceBy from 'lodash/differenceBy'
     import {Dialog, Collapse, CollapseItem} from 'element-ui'
     import draggableEvents from '@/enum/draggableEvents'
 
@@ -46,29 +48,32 @@
         data() {
             return {
                 activeCollapses: [],
-                widgetGroups: this.widgetGroupList
+                widgetGroups: cloneDeep(this.widgetGroupList)
             }
         },
         mounted() {
-            this.activeCollapses = this.widgetGroupList.map((el) => el.WidgetGroupTitle)
+            //TODO: TBD
+            // this.activeCollapses = this.widgetGroupList.map((el) => el.WidgetGroupTitle)
         },
         methods: {
             onGroupListChange(ev) {
                 let eventData = ev[draggableEvents.MOVED],
                     {newIndex: newIndex, oldIndex: oldIndex} = eventData
+                this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0]);
+            },
+            onSubmit() {
+                this.widgetGroups.forEach((group, index) => {
+                    group.Order = index + 1
+                })
 
-                let WidgetGroupList = this.widgetGroups
-                WidgetGroupList.splice(newIndex, 0, WidgetGroupList.splice(oldIndex, 1)[0]);
+                let widgetGroupsToUpdate = differenceBy(this.widgetGroups, this.widgetGroupList, 'Order')
 
-                if (oldIndex > 0) {
-                    WidgetGroupList = this.widgetGroupList.slice(oldIndex)
-                }
                 let objectToEmit = {
-                    groups: WidgetGroupList,
-                    oldIndex: eventData.oldIndex
+                    groupsToUpdate: widgetGroupsToUpdate,
+                    allGroups: this.widgetGroups
                 }
 
-                this.$emit('reorder-group', objectToEmit)
+                this.$emit('on-submit', objectToEmit)
             },
             onWidgetListChange(ev) {
 

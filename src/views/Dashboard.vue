@@ -77,9 +77,8 @@
             v-if="showReorderDataDialog"
             :widgetGroupList="activeDashboardData.WidgetGroupList"
             :visible.sync="showReorderDataDialog"
-            @reorder-group="reorderWidgetGroup"
+            @on-submit="reorderWidgetGroup"
             @on-cancel="showReorderDataDialog = false"
-            @on-submit="saveDashboard"
         ></reorder-layout-dialog>
     </div>
 </template>
@@ -187,7 +186,6 @@
         },
         methods: {
             async addWidgetsToGroup(data = {}) {
-                debugger
                 let {widgets: widgetTemplates, group: widgetGroup} = data
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
@@ -231,12 +229,12 @@
                 }
             },
 
-            reorderWidgetGroup(data) {
-                let {groups: widgetGroupList, oldIndex: oldIndex} = data
-                widgetGroupList.forEach((widgetGroup, index) => {
-                    widgetGroup.Order = index + 1
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
-                    this.activeDashboardData.WidgetGroupList[oldIndex + index] = widgetGroup
+            reorderWidgetGroup(data = {}) {
+                let {allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate} = data
+                this.activeDashboardData.WidgetGroupList = allWidgetGroups
+
+                groupsToUpdate.forEach((group) => {
+                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, group))
                 })
             },
             //Order list & add to List - events
