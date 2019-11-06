@@ -5,7 +5,7 @@
             <component class="w-8 mx-1" :is="selectedIcon"></component>
             <p slot="title" class="text-lg font-semibold text-gray-700">{{this.selectedOption.label}}</p>
         </div>
-        <div class="w-full flex">
+        <div class="w-full flex flex-col">
             <el-select :placeholder="$t('common.selectStatus')"
                        label="select"
                        v-model="selectedStatus"
@@ -20,6 +20,9 @@
                     </div>
                 </el-option>
             </el-select>
+            <el-checkbox v-model="showStatusText" class="pt-4">
+                {{$t('status.show.text')}}
+            </el-checkbox>
         </div>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -28,7 +31,7 @@
     </el-dialog>
 </template>
 <script>
-    import {Dialog, Select, Option} from 'element-ui'
+    import {Dialog, Select, Option, Checkbox} from 'element-ui'
 
     export default {
         name: 'extension-update-dialog',
@@ -37,6 +40,7 @@
             [Dialog.name]: Dialog,
             [Select.name]: Select,
             [Option.name]: Option,
+            [Checkbox.name]: Checkbox,
         },
         props: {
             extension: {
@@ -45,6 +49,10 @@
             },
             status: {
                 type: Number
+            },
+            showText: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -52,6 +60,7 @@
                 selectedStatus: '',
                 selectedIcon: '',
                 selectedOption: {},
+                showStatusText: this.showText,
                 options: [
                     {
                         label: this.$t('status.login'),
@@ -114,7 +123,12 @@
                 this.selectedIcon = option.icon;
             },
             onChange() {
-                this.$emit('on-change', this.selectedStatus);
+                let objectToEmit = {
+                    status: this.selectedStatus,
+                    showText: this.showStatusText
+                }
+
+                this.$emit('on-change', objectToEmit);
                 this.toggleVisibility(false);
             },
             toggleVisibility(value) {

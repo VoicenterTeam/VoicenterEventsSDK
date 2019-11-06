@@ -62,7 +62,7 @@
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
-    import {dynamicRows, refreshDataInterval, dynamicColumns} from '@/enum/realTimeTableConfigs'
+    import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
     import {getWidgetEndpoint} from "@/helpers/wigetUtils";
 
     export default {
@@ -203,9 +203,6 @@
         },
         mounted() {
             this.getTableData()
-            // this.fetchDataInterval = setInterval(() => {
-            //     this.getTableData()
-            // }, refreshDataInterval)
             this.$emit('on-loading', true)
         },
         beforeDestroy() {
