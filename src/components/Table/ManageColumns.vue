@@ -5,23 +5,27 @@
             <manage-columns-section
                 :availableColumns="activeColumns">
                 <template v-slot:button="{columns, allChecked}">
-                    <el-button type="danger" size="small" @click="removeColumns(columns)">
-                        {{allChecked ? $t('datatable.manage.columns.remove.all') :
-                        $t('datatable.manage.columns.remove')}}
-                    </el-button>
+                    <div :class="getClass">
+                        <el-button :disabled="!activeColumns.length" class="w-24" type="danger" size="small"
+                                   @click="removeColumns(columns)">
+                            {{allChecked ? $t('datatable.manage.columns.remove.all') :
+                            $t('datatable.manage.columns.remove')}}
+                        </el-button>
+                    </div>
                 </template>
             </manage-columns-section>
             <manage-columns-section
                 :availableColumns="showAvailableColumns">
                 <template v-slot:search>
-                    <div class="w-4/6">
+                    <div class="w-4/6 mx-2">
                         <el-input :placeholder="$t('datatable.manage.columns.search')"
                                   v-model="filter"
                                   suffix-icon="el-icon-search" class="search-columns"></el-input>
                     </div>
                 </template>
                 <template v-slot:button="{columns, allChecked}">
-                    <el-button type="success" size="small" @click="addColumns(columns)">
+                    <el-button :disabled="!showAvailableColumns.length" class="w-24" type="success" size="small"
+                               @click="addColumns(columns)">
                         {{allChecked ? $t('datatable.manage.columns.add.all') : $t('datatable.manage.columns.add')}}
                     </el-button>
                 </template>
@@ -32,7 +36,6 @@
 <script>
     import xor from 'lodash/xor'
     import ManageColumnsSection from './ManageColumnsSection'
-
 
     export default {
         components: {
@@ -63,6 +66,16 @@
         computed: {
             showAvailableColumns() {
                 return this.filter ? this.filteredColumns : this.unselectedColumns
+            },
+            getClass() {
+                if (this.activeColumns.length === 0) {
+                    if (this.$rtl.isRTL) {
+                        return 'mr-auto'
+                    } else {
+                        return 'ml-auto'
+                    }
+                }
+                return ''
             }
         },
         methods: {

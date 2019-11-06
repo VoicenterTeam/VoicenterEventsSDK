@@ -2,6 +2,7 @@
     <div class="manage-columns-section">
         <div class="flex justify-between items-center manage-columns-section-header">
             <el-tooltip class="item" effect="dark"
+                        v-if="availableColumns.length"
                         :content="allChecked ? $t('datatable.manage.uncheck.all') : $t('datatable.manage.check.all')"
                         placement="top">
                 <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange"
