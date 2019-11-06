@@ -61,7 +61,7 @@
     }
 
     .self-border {
-        height: 3px;
+        height: 2px;
         border-radius: 4.5px;
         background-color: var(--primary-color);
         width: 144%;

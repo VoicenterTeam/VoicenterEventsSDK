@@ -98,6 +98,7 @@
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
+    import pageSizeMixin from '@/util/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
     import Sidebar from '@/components/LayoutRendering/Sidebar'
@@ -127,6 +128,7 @@
             ReorderLayoutDialog,
             [Tooltip.name]: Tooltip,
         },
+        mixins: [pageSizeMixin],
         data() {
             return {
                 showWidgetMenu: false,
@@ -482,5 +484,4 @@
         margin-left: 0;
         margin-right: -6rem;
     }
-
 </style>
