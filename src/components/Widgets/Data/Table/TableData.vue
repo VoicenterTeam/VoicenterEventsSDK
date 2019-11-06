@@ -9,20 +9,20 @@
             :border="border"
             :cell-style="getCellStyle"
             :cell-class-name="getCellClassName">
-            <template v-slot:status_duration="{row}">
+            <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
                 <status-duration v-if="userExtension(row.user_id)"
                                  :extension="userExtension(row.user_id)"></status-duration>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
-            <template v-slot:status="{row}">
+            <template v-if="isRealTimeTable" v-slot:status="{row}">
                 <user-status v-if="userExtension(row.user_id)" :userId="row.user_id"
                              :extension="userExtension(row.user_id)"></user-status>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
-            <template v-slot:user_name="{row}">
-                <span v-if="userExtension(row.user_id)">
-                    {{userExtension(row.user_id).userName}}
-                </span>
+            <template v-if="isRealTimeTable" v-slot:user_name="{row}">
+                        <span v-if="userExtension(row.user_id)">
+                            {{userExtension(row.user_id).userName}}
+                        </span>
                 <span v-else>---</span>
             </template>
             <template v-slot:pagination>
@@ -41,7 +41,7 @@
                     :current-page="currentPage"
                     layout="prev, pager, next"
                     :hide-on-single-page="hideOnSinglePage"
-                    :total="paginationTotal">
+                    :total="filteredDataLength">
                 </el-pagination>
             </template>
             <template v-slot:search-input>
@@ -49,7 +49,7 @@
                           clearable></el-input>
             </template>
             <template v-slot:data-counts>
-                <p class="text-sm">{{dataCounts}} / {{tableData.length}} row(s)</p>
+                <p class="text-sm">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
             </template>
         </data-table>
     </div>
@@ -62,7 +62,7 @@
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
-    import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
+    import {dynamicRows, dynamicColumns, realTimeTableKey} from '@/enum/realTimeTableConfigs'
     import {getWidgetEndpoint} from "@/helpers/wigetUtils";
 
     export default {
@@ -102,11 +102,11 @@
                 pageSize: 5,
                 pagerCount: 5,
                 currentPage: 1,
-                lastCurrentPage: 1,
                 fetchDataInterval: null,
                 filter: '',
-                paginationTotal: null,
-                hideOnSinglePage: true
+                filteredDataLength: null,
+                hideOnSinglePage: true,
+                endPoint: ''
             }
         },
         computed: {
@@ -122,10 +122,9 @@
                             return false;
                         })
                     })
-                    this.paginationTotal = tableData.length
-                    this.currentPage = 1
+                    this.filteredDataLength = tableData.length
                 } else {
-                    this.paginationTotal = this.tableData.length
+                    this.filteredDataLength = this.tableData.length
                 }
 
                 return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
@@ -134,11 +133,16 @@
                 return this.$store.state.extensions.extensions
             },
             dataCounts() {
-                if (this.tableData.length) {
-                    return [this.pageSize * (this.lastCurrentPage - 1) + 1] + ' - ' + [(this.pageSize * this.lastCurrentPage) < this.tableData.length ? (this.pageSize * this.lastCurrentPage) : this.tableData.length]
+                if (this.filteredDataLength) {
+                    let from = this.pageSize * (this.currentPage - 1) + 1;
+                    let to = (this.pageSize * this.currentPage) < this.filteredDataLength ? (this.pageSize * this.currentPage) : this.filteredDataLength
+                    return from + ' - ' + to
                 }
                 return 0 + ' - ' + 0
-            }
+            },
+            isRealTimeTable() {
+                return !!this.endPoint.includes(realTimeTableKey)
+            },
         },
         methods: {
             userExtension(userId) {
@@ -163,16 +167,11 @@
             },
             async getTableData() {
                 try {
-                    let endpoint = getWidgetEndpoint(this.data)
-                    let data = await WidgetDataApi.getData(endpoint)
+                    let data = await WidgetDataApi.getData(this.endPoint)
                     let columns = [];
-                    let hasUserNameColumn = false
 
                     if (data.length) {
                         for (let column in data[0]) {
-                            if (column === 'User Name') {
-                                hasUserNameColumn = true
-                            }
                             columns.push({
                                 prop: column,
                                 fixed: false,
@@ -181,13 +180,11 @@
                             })
                             this.searchableFields.push(column)
                         }
-                        columns.splice(3, 0, dynamicColumns[1], dynamicColumns[2])
-                        if (!hasUserNameColumn) {
-                            columns.splice(3, 0, dynamicColumns[0])
-                            this.searchableFields.push('user_name')
+
+                        if (this.isRealTimeTable) {
+                            columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
                     }
-
                     this.tableData = data
                     this.columns = columns
                 } catch (e) {
@@ -198,16 +195,22 @@
                 }
             },
             handlePageChange(val) {
-                this.currentPage = this.lastCurrentPage = val
+                this.currentPage = val
             },
         },
         mounted() {
+            this.endPoint = getWidgetEndpoint(this.data)
             this.getTableData()
             this.$emit('on-loading', true)
         },
         beforeDestroy() {
             clearInterval(this.fetchDataInterval)
-        }
+        },
+        watch: {
+            filter() {
+                this.currentPage = 1
+            }
+        },
     }
 </script>
 <style lang="scss">
