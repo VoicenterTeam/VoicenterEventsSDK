@@ -158,17 +158,7 @@
                 return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
             },
             rowsData() {
-                // if (!this.filter || this.searchableFields.length === 0) {
                 return this.tableData
-                // }
-                // return this.tableData.filter(c => {
-                //     return this.searchableFields.some(field => {
-                //         if (c[field]) {
-                //             return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
-                //         }
-                //         return false;
-                //     })
-                // })
             },
             jsonFields() {
                 return this.availableColumns.reduce((obj, item) => {
