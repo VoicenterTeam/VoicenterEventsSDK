@@ -1,13 +1,12 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
         <h3 slot="title" class="text-xl font-medium text-gray-700">{{$t('tooltip.reorder.dashboard.layout')}}</h3>
-
         <el-collapse v-model="activeCollapses">
             <draggable
-                group="widgetGroupList"
-                :value="widgetGroupList"
+                group="widgetGroups"
+                :value="widgetGroups"
                 @change="(ev) => onGroupListChange(ev)">
-                <el-collapse-item v-for="(widgetGroup, index) in widgetGroupList" :title="widgetGroup.WidgetGroupTitle"
+                <el-collapse-item v-for="(widgetGroup, index) in widgetGroups" :title="widgetGroup.WidgetGroupTitle"
                                   :name="widgetGroup.WidgetGroupTitle" class="cursor-move" :key="index">
                     <draggable
                         group="widgets"
@@ -29,6 +28,7 @@
 <script>
     import draggable from 'vuedraggable'
     import {Dialog, Collapse, CollapseItem} from 'element-ui'
+    import draggableEvents from '@/enum/draggableEvents'
 
     export default {
         components: {
@@ -45,7 +45,8 @@
         },
         data() {
             return {
-                activeCollapses: []
+                activeCollapses: [],
+                widgetGroups: this.widgetGroupList
             }
         },
         mounted() {
@@ -53,7 +54,21 @@
         },
         methods: {
             onGroupListChange(ev) {
-                this.$emit('reorder-group', ev.moved)
+                let eventData = ev[draggableEvents.MOVED],
+                    {newIndex: newIndex, oldIndex: oldIndex} = eventData
+
+                let WidgetGroupList = this.widgetGroups
+                WidgetGroupList.splice(newIndex, 0, WidgetGroupList.splice(oldIndex, 1)[0]);
+
+                if (oldIndex > 0) {
+                    WidgetGroupList = this.widgetGroupList.slice(oldIndex)
+                }
+                let objectToEmit = {
+                    groups: WidgetGroupList,
+                    oldIndex: eventData.oldIndex
+                }
+
+                this.$emit('reorder-group', objectToEmit)
             },
             onWidgetListChange(ev) {
 

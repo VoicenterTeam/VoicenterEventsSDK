@@ -155,9 +155,9 @@
         },
         mounted() {
             this.getDataByUser()
-            this.fetchDataInterval = setInterval(() => {
-                this.getDataByUser()
-            }, refreshDataInterval)
+            // this.fetchDataInterval = setInterval(() => {
+            //     this.getDataByUser()
+            // }, refreshDataInterval)
             this.$emit('on-loading', true)
         },
         beforeDestroy() {

@@ -127,5 +127,6 @@
     "widget.content.renderError": "An error occurred while rendering the widget...",
     "speedometer.chart.title": "Agents in a call vs total agents",
     "queue.chart.title": "Queues real time chart",
-    "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout"
+    "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout",
+    "N/A": "N/A"
 }

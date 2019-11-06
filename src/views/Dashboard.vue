@@ -14,7 +14,7 @@
                     </div>
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex items-center">
-                            <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
+                            <div v-if="editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                             placement="bottom">
                                     <IconSettings class="text-primary"></IconSettings>
@@ -229,19 +229,12 @@
                 }
             },
 
-            //Event contains element, newIndex & oldIndex
-            reorderWidgetGroup(event) {
-                let {element: element, newIndex: newIndex, oldIndex: oldIndex} = event
-                let WidgetGroupList = this.activeDashboardData.WidgetGroupList
-
-                if (oldIndex > 0) {
-                    WidgetGroupList = this.activeDashboardData.WidgetGroupList.slice(newIndex)
-                }
-            
-                debugger
-                WidgetGroupList.forEach((widgetGroup, index) => {
+            reorderWidgetGroup(data) {
+                let {groups: widgetGroupList, oldIndex: oldIndex} = data
+                widgetGroupList.forEach((widgetGroup, index) => {
                     widgetGroup.Order = index + 1
                     this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
+                    this.activeDashboardData.WidgetGroupList[oldIndex + index] = widgetGroup
                 })
             },
             //Order list & add to List - events
@@ -342,6 +335,7 @@
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.operations = new DashboardOperations()
+                this.showReorderDataDialog = false
             },
             updateDashboardOperations() {
                 let oldDashboardWidgetGroupList = this.$store.state.dashboards.activeDashboard.WidgetGroupList
