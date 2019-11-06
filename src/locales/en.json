@@ -84,6 +84,7 @@
     "status.brief": "Brief",
     "status.calling": "Calling...",
     "status.talking": "Is Talking",
+    "status.show.text": "Show status text",
     "extensions.sort.default": "Default",
     "extensions.sort.userName": "User name",
     "extensions.sort.activeTime": "Active time",
