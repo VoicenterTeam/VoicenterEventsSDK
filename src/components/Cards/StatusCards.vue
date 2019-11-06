@@ -5,9 +5,11 @@
                 <component class="min-w-16 mx-1 text-primary" :is="cardIcon"></component>
             </slot>
             <slot name="text">
-                <h5 class="text-xl font-bold mx-3 status-text" v-if="showText" :style="textColor">
-                    {{statusText}}
-                </h5>
+                <el-tooltip v-if="showText" class="item" effect="dark" :content="statusText" placement="top">
+                    <h5 class="text-xl font-bold mx-3 status-text" :style="textColor">
+                        {{statusText}}
+                    </h5>
+                </el-tooltip>
             </slot>
             <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
                 <slot name="value">
@@ -154,7 +156,4 @@
         text-overflow: ellipsis;
     }
 
-    .min-w-16 {
-        min-width: 4rem;
-    }
 </style>

@@ -33,6 +33,9 @@ module.exports = {
             },
             boxShadow: {
                 default: '0 10px 20px 0 rgba(209, 213, 223, 0.25)'
+            },
+            minWidth: {
+                16: '4rem'
             }
         }
     },
