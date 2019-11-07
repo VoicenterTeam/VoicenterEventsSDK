@@ -15,7 +15,7 @@
                                    @change="(ev) => onWidgetListChange(ev, widgetGroup, groupIndex)">
                         <div v-for="widget in widgetGroup.WidgetList" class="w-full p-2" :key="widget.WidgetID">
                             <div class="widget-item">
-                                {{widget.Title}} --- {{widget.WidgetLayout.Order}}
+                                {{widget.Title}}
                             </div>
                         </div>
                     </DraggableList>
@@ -89,11 +89,12 @@
 
                 this.$emit('on-submit', objectToEmit)
             },
-            onWidgetListChange(ev, group, groupIndex) {
 
+            onWidgetListChange(ev, group, groupIndex) {
                 let action = get(Object.keys(ev), 0),
                     eventData = ev[action],
                     {element: widget, newIndex: newIndex, oldIndex: oldIndex} = eventData;
+
                 switch (action) {
                     case draggableEvents.MOVED:
                         this.widgetGroups[groupIndex].WidgetList.splice(newIndex, 0, group.WidgetList.splice(oldIndex, 1)[0])
@@ -107,20 +108,15 @@
                 }
 
                 if (action !== draggableEvents.MOVED) {
-                    let index = this.widgetsToUpdate.findIndex(
-                        (el) => el.operation && widget.operation && el.operation.parentID === group.WidgetGroupID
-                    )
-                    if (index === -1) {
-                        this.widgetsToUpdate.push({
-                            ...widget,
-                            ...{
-                                operation: {
-                                    type: action,
-                                    parentID: group.WidgetGroupID
-                                }
+                    this.widgetsToUpdate.push({
+                        ...widget,
+                        ...{
+                            operation: {
+                                type: action,
+                                parentID: group.WidgetGroupID
                             }
-                        })
-                    }
+                        }
+                    })
                 }
             },
         }

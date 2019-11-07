@@ -6,7 +6,7 @@ export default class DashboardOperations {
     }
 
     add(operation) {
-        if ([types.MOVED_IN, types.MOVED_OUT].includes(operation.type)) {
+        if ([types.MOVED_IN, types.MOVED_OUT, types.MOVED].includes(operation.type)) {
             this.operations.push(operation)
         } else {
             let index = this.checkIfEntityAlreadyAdded(operation)

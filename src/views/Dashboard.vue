@@ -235,9 +235,10 @@
                 groupsToUpdate.forEach((group) => {
                     this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, group))
                 })
+
                 widgetsToUpdate.forEach((widget) => {
                     if (!widget.operation) {
-                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget))
+                        this.operations.add(dashboardOperation(types.MOVED, targets.WIDGET, widget))
                     } else {
                         switch (widget.operation.type) {
                             case draggableEvents.ADDED:
