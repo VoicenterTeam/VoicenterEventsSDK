@@ -228,13 +228,26 @@
                     this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationWidget)
                 }
             },
-
             reorderWidgetGroup(data = {}) {
-                let {allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate} = data
+                let {allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate, widgetsToUpdate: widgetsToUpdate} = data
                 this.activeDashboardData.WidgetGroupList = allWidgetGroups
 
                 groupsToUpdate.forEach((group) => {
                     this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, group))
+                })
+                widgetsToUpdate.forEach((widget) => {
+                    if (!widget.operation) {
+                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget))
+                    } else {
+                        switch (widget.operation.type) {
+                            case draggableEvents.ADDED:
+                                this.operations.add(dashboardOperation(types.MOVED_IN, targets.WIDGET, widget, widget.operation.parentID))
+                                break
+                            case draggableEvents.REMOVED:
+                                this.operations.add(dashboardOperation(types.MOVED_OUT, targets.WIDGET, widget, widget.operation.parentID))
+                                break
+                        }
+                    }
                 })
                 this.showReorderDataDialog = false
             },

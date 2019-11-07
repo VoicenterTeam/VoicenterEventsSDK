@@ -27,12 +27,16 @@ export async function runDashboardOperations(operations, dashboard) {
                     break;
                 case targets.WIDGET:
                     switch (operation.type) {
+                        case types.MOVED_IN:
+                            await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID)
+                            break;
                         case types.ADD:
                             await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.ID)
                             break;
                         case types.UPDATE:
                             await WidgetApi.update(operation.payload)
                             break;
+                        case types.MOVED_OUT:
                         case types.REMOVE:
                             await WidgetGroupsApi.removeWidget(operation.meta.parentID, operation.payload.WidgetID)
                             break;

@@ -1,4 +1,4 @@
-import {types, targets} from '@/enum/operations'
+import {types} from '@/enum/operations'
 
 export default class DashboardOperations {
     constructor() {
@@ -6,24 +6,27 @@ export default class DashboardOperations {
     }
 
     add(operation) {
-
-        let index = this.checkIfEntityAlreadyAdded(operation)
-
-        if (operation.type === types.REMOVE) {
-            if (index === -1) {
-                this.operations.push(operation)
-            } else {
-                this.operations.splice(index, 1)
-            }
+        if ([types.MOVED_IN, types.MOVED_OUT].includes(operation.type)) {
+            this.operations.push(operation)
         } else {
-            // New widget group
-            if (operation.payload.IsNew) {
-                operation.type = types.ADD
-            }
-            if (index !== -1) {
-                this.operations.splice(index, 1, operation)
+            let index = this.checkIfEntityAlreadyAdded(operation)
+
+            if (operation.type === types.REMOVE) {
+                if (index === -1) {
+                    this.operations.push(operation)
+                } else {
+                    this.operations.splice(index, 1)
+                }
             } else {
-                this.operations.push(operation)
+                // New widget group
+                if (operation.payload.IsNew) {
+                    operation.type = types.ADD
+                }
+                if (index !== -1) {
+                    this.operations.splice(index, 1, operation)
+                } else {
+                    this.operations.push(operation)
+                }
             }
         }
     }
