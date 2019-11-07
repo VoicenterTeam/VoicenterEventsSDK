@@ -236,6 +236,7 @@
                 groupsToUpdate.forEach((group) => {
                     this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, group))
                 })
+                this.showReorderDataDialog = false
             },
             //Order list & add to List - events
             async onListChange(event, widgetGroup) {
