@@ -1,7 +1,7 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
         <h3 slot="title" class="text-xl font-medium text-gray-700">{{$t('tooltip.reorder.dashboard.layout')}}</h3>
-        <el-collapse v-model="activeCollapses" class="w-full">
+        <el-collapse v-model="activeCollapses" class="w-full reorder-layout">
             <DraggableList group="widgetGroups"
                            :value="widgetGroups"
                            @change="(ev) => onGroupListChange(ev)">
@@ -56,14 +56,11 @@
                 widgetsToUpdate: []
             }
         },
-        mounted() {
-            // TODO: to be defined
-            // this.activeCollapses = this.widgetGroupList.map((el) => el.WidgetGroupTitle)
-        },
         methods: {
             onGroupListChange(ev) {
-                let eventData = ev[draggableEvents.MOVED],
-                    {newIndex: newIndex, oldIndex: oldIndex} = eventData
+                let eventData = ev[draggableEvents.MOVED]
+                let {newIndex: newIndex, oldIndex: oldIndex} = eventData
+
                 this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0]);
             },
             onSubmit() {
@@ -91,9 +88,9 @@
             },
 
             onWidgetListChange(ev, group, groupIndex) {
-                let action = get(Object.keys(ev), 0),
-                    eventData = ev[action],
-                    {element: widget, newIndex: newIndex, oldIndex: oldIndex} = eventData;
+                let action = get(Object.keys(ev), 0)
+                let eventData = ev[action]
+                let {element: widget, newIndex: newIndex, oldIndex: oldIndex} = eventData;
 
                 switch (action) {
                     case draggableEvents.MOVED:
@@ -108,21 +105,18 @@
                 }
 
                 if (action !== draggableEvents.MOVED) {
-                    this.widgetsToUpdate.push({
-                        ...widget,
-                        ...{
-                            operation: {
-                                type: action,
-                                parentID: group.WidgetGroupID
-                            }
-                        }
-                    })
+                    widget['operation'] = {
+                        type: action,
+                        parentID: group.WidgetGroupID
+                    }
+                    this.widgetsToUpdate.push(widget)
                 }
             },
         }
     }
 </script>
 <style lang="scss">
+
     .widget-item {
         border: 1px dashed;
         border-radius: 4px;

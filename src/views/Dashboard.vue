@@ -14,7 +14,7 @@
                     </div>
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex items-center">
-                            <div v-if="editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
+                            <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                             placement="bottom">
                                     <IconSettings class="text-primary"></IconSettings>
@@ -251,6 +251,7 @@
                     }
                 })
                 this.showReorderDataDialog = false
+                this.saveDashboard()
             },
             //Order list & add to List - events
             async onListChange(event, widgetGroup) {
@@ -350,7 +351,6 @@
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.operations = new DashboardOperations()
-                this.showReorderDataDialog = false
             },
             updateDashboardOperations() {
                 let oldDashboardWidgetGroupList = this.$store.state.dashboards.activeDashboard.WidgetGroupList

@@ -1,12 +1,14 @@
 import {types} from '@/enum/operations'
 
 export default class DashboardOperations {
+
     constructor() {
         this.operations = []
+        this.moveWidgetTypes = [types.MOVED_IN, types.MOVED_OUT, types.MOVED]
     }
 
     add(operation) {
-        if ([types.MOVED_IN, types.MOVED_OUT, types.MOVED].includes(operation.type)) {
+        if (this.moveWidgetTypes.includes(operation.type)) {
             this.operations.push(operation)
         } else {
             let index = this.checkIfEntityAlreadyAdded(operation)
