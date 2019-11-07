@@ -1,5 +1,8 @@
 export const dynamicRows = ['status', 'status_duration']
 
+// Real Time Table suggestive word/key
+export const realTimeTableKey = 'GetDataByUser'
+
 export const dynamicColumns = [{
     prop: 'user_name',
     fixed: false,
