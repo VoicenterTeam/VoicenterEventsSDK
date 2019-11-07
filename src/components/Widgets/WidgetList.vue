@@ -60,6 +60,7 @@
                     [widgetDataTypes.EXTENSION_CARDS]: 'lg:w-3/3',
                     [widgetDataTypes.HISTORY_COUNTERS]: 'lg:w-3/3',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'lg:w-3/3',
+                    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'lg:w-1/3',
                     default: 'lg:w-3/3'
                 }
             }
