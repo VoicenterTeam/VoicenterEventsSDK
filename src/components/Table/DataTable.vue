@@ -2,7 +2,7 @@
     <div class="data-table__container">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between my-4 w-full">
             <div class="flex w-48 sm:w-64">
-                <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"></el-input>
+                <slot name="search-input"></slot>
             </div>
             <div class="flex items-center table-row__count mt-4 sm:mt-0"
                  :class="margins">
@@ -19,7 +19,7 @@
                         </manage-columns>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <p class="text-sm">{{rowsData.length}} / {{tableData.length}} row(s)</p>
+                <slot name="data-counts"></slot>
             </div>
         </div>
         <div class="bg-white rounded-lg my-4 data-table w-full">
@@ -34,14 +34,14 @@
                       v-on="listeners">
                 <slot name="">
                     <el-table-column
-                            v-for="(column, index) in renderedColumns"
-                            :key="column.prop"
-                            v-bind="column"
-                            :column-key="column.prop"
-                            :min-width="column.minWidth || '150px'"
-                            :fixed="column.fixed || false"
-                            :align="column.align"
-                            :type="column.type">
+                        v-for="(column, index) in renderedColumns"
+                        :key="column.prop"
+                        v-bind="column"
+                        :column-key="column.prop"
+                        :min-width="column.minWidth || '150px'"
+                        :fixed="column.fixed || false"
+                        :align="column.align"
+                        :type="column.type">
                         <template slot="header">
                             <div class="truncate">
                                 <el-tooltip :content="column.label" :open-delay="300" placement="top">
@@ -52,14 +52,14 @@
                             </div>
                             <!-- This part is bulky from UI perspective. Has to be refined-->
                             <header-actions
-                                    v-if="false"
-                                    :availableColumns="availableColumns"
-                                    :visibleColumns="visibleColumns"
-                                    :currentColumn="column"
-                                    @on-change-visibility="updateColumnsVisibility"
-                                    @on-change-columns-size="updateColumnsSize"
-                                    @on-pin-column="(value) => pinColumn(value, index)"
-                                    @on-reset-props="resetColumnsProps">
+                                v-if="false"
+                                :availableColumns="availableColumns"
+                                :visibleColumns="visibleColumns"
+                                :currentColumn="column"
+                                @on-change-visibility="updateColumnsVisibility"
+                                @on-change-columns-size="updateColumnsSize"
+                                @on-pin-column="(value) => pinColumn(value, index)"
+                                @on-reset-props="resetColumnsProps">
                             </header-actions>
                             <!-- This part is bulky from UI perspective. Has to be refined-->
                         </template>
@@ -100,9 +100,7 @@
         </div>
     </div>
 </template>
-
 <script>
-
     import get from 'lodash/get';
     import Sortable from 'sortablejs';
     import bus from '@/event-bus/EventBus'
@@ -135,10 +133,6 @@
                 type: Array,
                 default: () => ([])
             },
-            searchableFields: {
-                type: Array,
-                default: () => []
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -151,8 +145,7 @@
                 tableKey: 'table-key',
                 active: false,
                 fitWidth: true,
-                drawTable: true,
-                filter: ''
+                drawTable: true
             }
         },
         computed: {
@@ -165,17 +158,7 @@
                 return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
             },
             rowsData() {
-                if (!this.filter || this.searchableFields.length === 0) {
-                    return this.tableData
-                }
-                return this.tableData.filter(c => {
-                    return this.searchableFields.some(field => {
-                        if (c[field]) {
-                            return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
-                        }
-                        return false;
-                    })
-                })
+                return this.tableData
             },
             jsonFields() {
                 return this.availableColumns.reduce((obj, item) => {
@@ -240,7 +223,6 @@
         }
     }
 </script>
-
 <style lang="scss">
 
     .el-dropdown-menu--mini {
