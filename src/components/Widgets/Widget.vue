@@ -90,8 +90,7 @@
                     [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
-                    // TODO: update with correct TemplateID
-                    // [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
+                    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
                 },
                 showUpdateDialog: false,
                 loading: false,
@@ -101,7 +100,7 @@
         computed: {
             showDeleteButton() {
                 // TODO Adapt condition based on component type
-                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER]
+                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER, widgetDataTypes.QUEUE_COUNTER_TYPE_ID]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
             },
@@ -132,11 +131,6 @@
             },
             getComponentType(widget) {
                 let dataTypeId = getWidgetDataType(widget)
-                // TODO: remove - is just for test
-                if (widget.WidgetLayout && widget.WidgetLayout.queueType) {
-                    return 'QueueCards'
-                    debu
-                }
                 return `${this.componentTypes[dataTypeId]}`
             }
         }
