@@ -1,14 +1,14 @@
-import colors from "@/enum/colors";
+import config from '@/config'
 
 export default {
     1: {
-        icon: "",
-        color: colors,
-        text: ''
+        icon: "IconOutgoing",
+        color: config.colors.info,
+        text: 'queue.counter.callers'
     },
     2: {
-        icon: "",
-        color: colors,
-        text: 'status.logout'
+        icon: "IconPhone",
+        color: config.colors.default,
+        text: 'queue.maximum.waiting.caller'
     },
 }

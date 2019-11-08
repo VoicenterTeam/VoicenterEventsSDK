@@ -21,7 +21,7 @@
                    :editable="editable"
                    class="widget"
                    @on-loading="(state) => onLoading(state)"
-                   @change-extension-status="(data)=> changeExtensionStatus(data, widget)"
+                   @on-update-layout="(data)=> onUpdateLayout(data, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
         <update-dialog
@@ -119,7 +119,7 @@
                 widget.Title = title
                 this.$emit('update-item', widget)
             },
-            changeExtensionStatus(data = {}, widget) {
+            onUpdateLayout(data = {}, widget) {
                 widget.WidgetLayout = {
                     ...widget.WidgetLayout,
                     ...data

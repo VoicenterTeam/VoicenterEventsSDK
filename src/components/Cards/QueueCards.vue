@@ -13,8 +13,11 @@
             </slot>
             <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
                 <slot name="value">
-                    <h5 class="text-6xl font-bold -mr-3" v-if="cardValue" :style="textColor">
-                        {{cardValue}}
+                    <!--                    <h5 class="text-6xl font-bold -mr-3" v-if="cardValue" :style="textColor">-->
+                    <!--                        {{cardValue}}-->
+                    <!--                    </h5>     -->
+                    <h5 class="text-6xl font-bold -mr-3" :style="textColor">
+                        2
                     </h5>
                 </slot>
             </div>
@@ -37,27 +40,25 @@
                 </el-tooltip>
             </div>
         </div>
-        <queue-update-dialog
-            :width="setWidth"
-            :status="status"
-            :showText="showText"
-            :visible.sync="showModal"
-            @on-change="changeStatus">
-        </queue-update-dialog>
+        <!--        <queue-update-dialog-->
+        <!--            :width="setWidth"-->
+        <!--            :queues="queues"-->
+        <!--            :showText="showText"-->
+        <!--            :visible.sync="showModal">-->
+        <!--        </queue-update-dialog>-->
     </div>
 </template>
 <script>
     import {Tooltip} from 'element-ui'
+    import UpdateDialog from './UpdateDialog'
     import queueCounters from '@/enum/queueCounters'
-    import QueueUpdateDialog from './QueueUpdateDialog'
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
 
     export default {
-        name: 'status-card',
         props: {
             status: {
                 type: Number,
-                default: 3
+                default: 1
             },
             editable: {
                 type: Boolean,
@@ -72,30 +73,29 @@
             TrashIcon,
             EditIcon,
             MoreVerticalIcon,
-            QueueUpdateDialog,
+            UpdateDialog,
             [Tooltip.name]: Tooltip,
         },
         data() {
             return {
                 showModal: false,
-                statusMappings: statusTypes,
             }
         },
         computed: {
-            extensions() {
-                return this.$store.state.extensions.extensions
+            queues() {
+                return this.$store.state.queues.all
             },
-            cardValue() {
-                return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
-            },
+            // cardValue() {
+            //     return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
+            // },
             cardIcon() {
-                return this.statusMappings[this.status].icon
+                return queueCounters[this.status].icon
             },
             statusText() {
-                return this.$t(this.statusMappings[this.status].text)
+                return this.$t(queueCounters[this.status].text)
             },
             textColor() {
-                let color = this.statusMappings[this.status].color
+                let color = queueCounters[this.status].color
                 return {
                     color: `${color}`
                 }
@@ -111,49 +111,8 @@
                 }
             }
         },
-        methods: {
-            changeStatus(data = {}) {
-                this.$emit('change-extension-status', data);
-            }
-        }
     }
 </script>
-
 <style lang="scss" scoped>
-
-    .trash-icon, .edit-icon {
-        position: relative;
-        top: -40px;
-        right: -30px;
-        cursor: pointer;
-    }
-
-    .edit-card-icon {
-        position: relative;
-        top: -40px;
-        right: -20px;
-        cursor: pointer;
-    }
-
-    .rtl .trash-icon,
-    .rtl .edit-icon {
-        left: -30px;
-        right: auto;
-    }
-
-    .rtl .edit-card-icon {
-        left: -20px;
-        right: auto;
-    }
-
-    .editable-content {
-        transition: all 0.3s ease-in-out 0s;
-    }
-
-    .status-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
+    @import "../../assets/css/widgets/card";
 </style>
