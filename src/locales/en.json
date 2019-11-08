@@ -94,7 +94,7 @@
     "extensions.sort.activeTime": "Active time",
     "extensions.noData": "The extensions couldn't be loaded...",
     "switcher.title": "View type",
-    "extensionCard.update": "Update Status Card",
+    "extensionCard.update": "Update Card",
     "validation.interval": "Switch category interval cannot be less than 5",
     "validation.generalThresholdLowValue": "Inferior limit of the threshold cannot be less than 1",
     "validation.generalThresholdHeightValue": "Superior limit of the threshold cannot be less than Inferior limit",
@@ -134,6 +134,7 @@
     "queue.chart.title": "Queues real time chart",
     "N/A": "N/A",
     "queue.counter.callers": "Counter Callers",
+    "queue.counter.type": "Counter Type",
     "queue.maximum.waiting.caller": "Maximum Waiting Caller"
 
 }

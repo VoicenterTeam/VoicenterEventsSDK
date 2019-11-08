@@ -90,6 +90,7 @@
                     [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
+                    // TODO: update with correct TemplateID
                     // [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
                 },
                 showUpdateDialog: false,
@@ -131,6 +132,11 @@
             },
             getComponentType(widget) {
                 let dataTypeId = getWidgetDataType(widget)
+                // TODO: remove - is just for test
+                if (widget.WidgetLayout && widget.WidgetLayout.queueType) {
+                    return 'QueueCards'
+                    debu
+                }
                 return `${this.componentTypes[dataTypeId]}`
             }
         }
@@ -152,6 +158,5 @@
                 @apply left-0;
             }
         }
-
     }
 </style>

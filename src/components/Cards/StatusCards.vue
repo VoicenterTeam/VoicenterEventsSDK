@@ -38,8 +38,6 @@
             </div>
         </div>
         <update-dialog
-            :status="status"
-            :showText="showText"
             :visible.sync="showModal"
             @on-change="onChange">
             <template v-slot:header>
@@ -163,7 +161,6 @@
         }
     }
 </script>
-
 <style lang="scss" scoped>
     @import "../../assets/css/widgets/card";
 </style>

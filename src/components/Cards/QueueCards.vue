@@ -5,19 +5,16 @@
                 <component class="min-w-16 mx-1 text-primary" :is="cardIcon"></component>
             </slot>
             <slot name="text">
-                <el-tooltip v-if="showText" class="item" effect="dark" :content="statusText" placement="top">
+                <el-tooltip v-if="showText" class="item" effect="dark" :content="queueText" placement="top">
                     <h5 class="text-xl font-bold mx-3 status-text" :style="textColor">
-                        {{statusText}}
+                        {{queueText}}
                     </h5>
                 </el-tooltip>
             </slot>
             <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
                 <slot name="value">
-                    <!--                    <h5 class="text-6xl font-bold -mr-3" v-if="cardValue" :style="textColor">-->
-                    <!--                        {{cardValue}}-->
-                    <!--                    </h5>     -->
                     <h5 class="text-6xl font-bold -mr-3" :style="textColor">
-                        2
+                        {{cardValue}}
                     </h5>
                 </slot>
             </div>
@@ -40,33 +37,82 @@
                 </el-tooltip>
             </div>
         </div>
-        <!--        <queue-update-dialog-->
-        <!--            :width="setWidth"-->
-        <!--            :queues="queues"-->
-        <!--            :showText="showText"-->
-        <!--            :visible.sync="showModal">-->
-        <!--        </queue-update-dialog>-->
+        <update-dialog
+            :visible.sync="showModal"
+            @on-change="onChange">
+            <template v-slot:content>
+                <el-form @submit.native.prevent="onChange" :label-position="labelPosition">
+                    <div class="flex w-full flex-col lg:flex-row">
+                        <div class="flex lg:w-1/2">
+                            <el-form-item class="font-bold" :label="$t('queues.to.display')">
+                                <el-select
+                                    :class="$rtl.isRTL ? 'lg:pl-2' : 'lg:pr-2'"
+                                    v-model="selectedQueues"
+                                    collapse-tags
+                                    multiple
+                                    filterable>
+                                    <el-option
+                                        v-for="(queue, index) in allQueues"
+                                        :key="index"
+                                        :label="queue.QueueName"
+                                        :value="queue.QueueID">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="flex lg:w-1/2">
+                            <el-form-item class="font-bold" :label="$t('queue.counter.type')">
+                                <el-select
+                                    :class="$rtl.isRTL ? 'lg:pr-2' : 'lg:pl-2'"
+                                    v-model="selectedType"
+                                    filterable>
+                                    <el-option
+                                        class="queue-type"
+                                        v-for="(type, index) in availableTypes"
+                                        :key="index"
+                                        :label="$t(type)"
+                                        :value="index">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <el-checkbox v-model="showStatusText" class="pt-4">
+                        {{$t('status.show.text')}}
+                    </el-checkbox>
+                </el-form>
+            </template>
+            <template v-slot:footer>
+                <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
+                <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
+            </template>
+        </update-dialog>
     </div>
 </template>
 <script>
-    import {Tooltip} from 'element-ui'
+    import {Tooltip, Select, Option, Checkbox} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
-    import queueCounters from '@/enum/queueCounters'
+    import {types, typeNames, typeKeys} from '@/enum/queueCounters'
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
+    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
 
     export default {
         props: {
-            status: {
+            queues: {
+                type: Array,
+                default: () => []
+            },
+            queueType: {
                 type: Number,
-                default: 1
+                default: () => 0
             },
             editable: {
                 type: Boolean,
-                default: true
+                default: () => true
             },
             showText: {
                 type: Boolean,
-                default: false
+                default: () => false
             }
         },
         components: {
@@ -74,45 +120,99 @@
             EditIcon,
             MoreVerticalIcon,
             UpdateDialog,
+            [Select.name]: Select,
+            [Option.name]: Option,
             [Tooltip.name]: Tooltip,
+            [Checkbox.name]: Checkbox,
         },
         data() {
             return {
                 showModal: false,
+                labelPosition: 'top',
+                selectedQueues: this.queues,
+                selectedType: this.queueType,
+                availableTypes: typeNames,
+                showStatusText: this.showText,
+                timeout: null,
+                dataCount: 0
             }
         },
         computed: {
-            queues() {
+            allQueues() {
                 return this.$store.state.queues.all
             },
-            // cardValue() {
-            //     return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
-            // },
-            cardIcon() {
-                return queueCounters[this.status].icon
+            filteredQueue() {
+                return this.allQueues.filter(e => this.selectedQueues.includes(e.QueueID))
             },
-            statusText() {
-                return this.$t(queueCounters[this.status].text)
+            cardValue() {
+                clearInterval(this.timeout)
+                this.dataCount = 0
+                if (this.selectedType === typeKeys.CALLERS_ID) {
+                    this.filteredQueue.forEach((el) => {
+                        this.dataCount += el.Calls.length
+                    })
+                } else if (this.selectedType === typeKeys.MAXIMUM_WAITING_ID) {
+                    let minJoinTimeStamp = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET / 1000
+                    let queueCalls = 0
+                    this.filteredQueue.forEach((queue) => {
+                        queue.Calls.forEach((call) => {
+                            if (call.JoinTimeStamp < minJoinTimeStamp) {
+                                minJoinTimeStamp = call.JoinTimeStamp
+                                queueCalls++
+                            }
+                        })
+                    })
+                    if (queueCalls > 0) {
+                        this.dataCount = parseInt((new Date()).getTime() / 1000) + ISRAEL_TIMEZONE_OFFSET / 1000 - minJoinTimeStamp
+                        setInterval(() => {
+                            this.dataCount++
+                        }, 1000)
+                    }
+                }
+                return this.dataCount
+            },
+            cardIcon() {
+                return types[this.queueType].icon
+            },
+            queueText() {
+                return this.$t(types[this.queueType].text)
             },
             textColor() {
-                let color = queueCounters[this.status].color
+                let color = types[this.queueType].color
                 return {
                     color: `${color}`
                 }
             },
-            isMobileOrTablet() {
-                return this.$store.getters['utils/isMobileOrTablet']
-            },
-            setWidth() {
-                if (this.isMobileOrTablet) {
-                    return '80%'
-                } else {
-                    return '40%'
-                }
-            }
+
         },
+        methods: {
+            onChange() {
+                let objectToEmit = {
+                    queues: this.selectedQueues,
+                    queueType: this.selectedType,
+                    showText: this.showStatusText
+                }
+
+                this.$emit('on-update-layout', objectToEmit);
+                this.showModal = false;
+            },
+        },
+        beforeDestroy() {
+            clearInterval(this.timeout)
+        }
     }
 </script>
 <style lang="scss" scoped>
     @import "../../assets/css/widgets/card";
+
+    .el-form-item {
+        @apply w-full;
+        .el-select {
+            @apply w-full;
+        }
+    }
+
+    .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+        color: var(--primary-color);
+    }
 </style>
