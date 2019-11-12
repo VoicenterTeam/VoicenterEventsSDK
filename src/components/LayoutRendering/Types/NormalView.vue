@@ -52,7 +52,7 @@
         computed: {
             dashboardKey() {
                 return this.activeDashboardData.ID
-            }
+            },
         }
     }
 </script>
