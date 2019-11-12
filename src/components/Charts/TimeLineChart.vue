@@ -8,9 +8,9 @@
                 </p>
                 <!-- TODO adapt based on api data. Check exactly how to change the chart interval via api-->
                 <range-filter
-                        v-if="chartOptions.date && typeof chartOptions.date === 'string'"
-                        :date="chartOptions.date.split(' - ')"
-                        @on-change="onChangeDate">
+                    v-if="chartOptions.date && typeof chartOptions.date === 'string'"
+                    :date="chartOptions.date.split(' - ')"
+                    @on-change="onChangeDate">
                 </range-filter>
             </div>
         </div>
@@ -26,7 +26,7 @@
     import RangeFilter from './RangeFilter'
     import chartConfig from './Configs/TimeLine'
     import {WidgetDataApi} from '../../api/widgetDataApi'
-    import { getWidgetDataType } from "@/helpers/wigetUtils";
+    import {getWidgetDataType} from "@/helpers/wigetUtils";
     import widgetDataTypes from "@/enum/widgetDataTypes";
 
     export default {
@@ -56,7 +56,7 @@
                 loading: true,
             }
         },
-        computed:{
+        computed: {
             chartConstructorType() {
                 let widgetDataType = getWidgetDataType(this.data)
                 if (widgetDataType === widgetDataTypes.TIMELINE_TYPE_ID) {
@@ -64,7 +64,6 @@
                 }
                 return 'chart'
             }
-
         },
         methods: {
             onChangeDate(date) {
@@ -74,7 +73,7 @@
             async getChartData() {
                 let widgetDataType = getWidgetDataType(this.data)
                 let Data = await WidgetDataApi.getData(this.endPoint)
-                let chartData = get(Data, '0', { series: [] })
+                let chartData = get(Data, '0', {series: []})
                 let chartType = ''
                 if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
                     chartType = 'line'
@@ -110,7 +109,15 @@
         },
         mounted() {
             this.$emit('on-loading', true)
-            this.getChartData()
+
+        },
+        watch: {
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.getChartData()
+                }
+            },
         }
     }
 </script>

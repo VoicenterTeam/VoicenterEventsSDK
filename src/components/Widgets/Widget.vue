@@ -27,8 +27,9 @@
         <update-dialog
             width="30%"
             v-if="showUpdateDialog"
-            :chartTitle="widget.Title"
-            @on-change-title="(title) => onChangeTitle(title, widget)"
+            :title="widget.Title"
+            :time="widget.WidgetTime"
+            @on-change="(data)=> onChange(data, widget)"
             :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
@@ -112,8 +113,11 @@
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onChangeTitle(title, widget) {
-                widget.Title = title
+            onChange(data = {}, widget) {
+                widget = {
+                    ...widget,
+                    ...data
+                }
                 this.$emit('update-item', widget)
             },
             changeExtensionStatus(data = {}, widget) {
@@ -121,7 +125,7 @@
                     ...widget.WidgetLayout,
                     ...data
                 }
-                this.$emit('update-item', this.widget)
+                this.$emit('update-item', widget)
             },
             onLoading(state) {
                 this.loading = state
@@ -149,6 +153,5 @@
                 @apply left-0;
             }
         }
-
     }
 </style>

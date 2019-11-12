@@ -129,8 +129,15 @@
     "select.another.templates.category": "Select Another Templates Category",
     "widget.update": "Update widget",
     "widget.update.title": "Update widget title",
+    "widget.title": "Widget title",
+    "widget.time.interval": "Time interval",
     "widget.content.renderError": "An error occurred while rendering the widget...",
     "speedometer.chart.title": "Agents in a call vs total agents",
     "queue.chart.title": "Queues real time chart",
-    "N/A": "N/A"
+    "N/A": "N/A",
+    "widget.time.today": "Today",
+    "widget.time.yesterday": "Yesterday",
+    "widget.time.this_week": "This week",
+    "widget.time.this_month": "This month",
+    "widget.time.this_year": "This year"
 }
