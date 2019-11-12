@@ -47,7 +47,7 @@
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
-    import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/wigetUtils";
+    import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/widgetUtils";
 
     export default {
         name: "widget",

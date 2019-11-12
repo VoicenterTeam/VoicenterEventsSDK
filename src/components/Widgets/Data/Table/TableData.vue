@@ -63,7 +63,7 @@
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
     import {dynamicRows, dynamicColumns, realTimeTableKey} from '@/enum/realTimeTableConfigs'
-    import {getWidgetEndpoint} from "@/helpers/wigetUtils";
+    import {getWidgetEndpoint} from "@/helpers/widgetUtils";
 
     export default {
         components: {
