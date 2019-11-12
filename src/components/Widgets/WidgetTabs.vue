@@ -1,21 +1,22 @@
 <template>
     <el-tabs v-model="activeTab" v-bind="$attrs">
-        <el-tab-pane v-for="(widget, index) in filteredWidgets" :label="widget.Title"
-                     :name="widget.WidgetID.toString()"
+        <el-tab-pane v-for="(tab, index) in tabsData" :label="tab.title"
+                     :name="tab.key"
                      :key="index">
-            <div
-                v-if="activeTab.toString() === widget.WidgetID.toString()"
-                class="w-full px-2"
-                :class="getWidgetDataTypeClass(widget)">
-                <WidgetErrorBoundary>
-                    <Widget :widget="widget"
-                            :editable="editable"
-                            @remove-item="removeWidget(widget)"
-                            @update-item="(data) => updateWidget(data)">
-                    </Widget>
-                </WidgetErrorBoundary>
+            <div :class="{'flex flex-wrap -mx-2': tab.groupedWidgets}">
+                <div
+                    class="w-full px-2"
+                    v-for="widget in tab.widgets"
+                    :class="getWidgetDataTypeClass(widget)">
+                    <WidgetErrorBoundary v-if="activeTab.toString() === tab.key">
+                        <Widget :widget="widget"
+                                :editable="editable"
+                                @remove-item="removeWidget(widget)"
+                                @update-item="(data) => updateWidget(data)">
+                        </Widget>
+                    </WidgetErrorBoundary>
+                </div>
             </div>
-
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -27,7 +28,7 @@
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import {getDataTypeClass} from '@/helpers/widgetUtils'
     import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
-    import {getWidgetDataType} from "../../helpers/widgetUtils";
+    import {getWidgetDataType} from '@/helpers/widgetUtils'
 
     export default {
         inheritAttrs: false,
@@ -67,14 +68,6 @@
                     return title.includes(this.widgetsFilter.toLowerCase())
                 })
             },
-        },
-        methods: {
-            removeWidget(val) {
-                this.$emit('removeWidget', {'widget': val, 'group': this.widgetGroup})
-            },
-            updateWidget(val) {
-                this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
-            },
             // Group widgets
             tabsData() {
                 let widgets = this.filteredWidgets
@@ -95,11 +88,12 @@
                             groupedData[el.DataTypeID] = {
                                 widgets: [],
                                 title: '',
-                                key: ''
+                                key: '',
+                                groupedWidgets: true
                             }
+                            groupedData[el.DataTypeID].key = el.WidgetID.toString()
+                            groupedData[el.DataTypeID].title = el.Title
                         }
-                        groupedData[el.DataTypeID].title = el.Title
-                        groupedData[el.DataTypeID].key = el.WidgetID.toString()
 
                         groupedData[el.DataTypeID]['widgets'].push(el)
                     } else {
@@ -115,17 +109,21 @@
                 let exceptionsData = Object.values(groupedData)
 
                 if (exceptionsData.length) {
-                    tabs.push(exceptionsData)
+                    tabs.push(...exceptionsData)
                 }
-
                 return tabs
+            },
+        },
+        methods: {
+            removeWidget(val) {
+                this.$emit('removeWidget', {'widget': val, 'group': this.widgetGroup})
+            },
+            updateWidget(val) {
+                this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
             getWidgetDataTypeClass(widget) {
                 return getDataTypeClass(widget)
-            }
+            },
         },
-        mounted() {
-            this.tabsData()
-        }
     }
 </script>
