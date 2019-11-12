@@ -30,7 +30,6 @@
     </DraggableWidgets>
 </template>
 <script>
-
     import get from 'lodash/get'
     import Widget from './Widget'
     import WidgetEmptyCard from './WidgetEmptyCard'
@@ -119,6 +118,3 @@
         },
     }
 </script>
-<style>
-
-</style>

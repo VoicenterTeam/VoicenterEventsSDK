@@ -9,9 +9,8 @@
     </div>
 </template>
 <script>
-
-    import { Tabs, TabPane } from 'element-ui'
-    import get from 'lodash/get';
+    import get from 'lodash/get'
+    import {Tabs, TabPane} from 'element-ui'
 
     export default {
         inheritAttrs: false,
@@ -73,7 +72,6 @@
         }
     }
 </script>
-
 <style lang="scss">
     .rtl .tabs-container .el-tabs__nav-wrap {
         display: flex;
@@ -108,6 +106,5 @@
             font-size: 18px;
             @apply font-medium;
         }
-
     }
 </style>

@@ -16,7 +16,6 @@
     </div>
 </template>
 <script>
-
     import Tabs from '@/components/Tabs'
     import WidgetList from '@/components/Widgets/WidgetList'
 
@@ -40,11 +39,6 @@
             },
             activeTab: [String, Number]
         },
-        data() {
-            return {
-                timeoutId: null
-            };
-        },
         computed: {
             reportSettings() {
                 return this.$store.state.dashboards.settings.report
@@ -60,32 +54,6 @@
                 let data = this.activeDashboardData.WidgetGroupList
                 return this.$rtl.isRTL ? data.reverse() : data
             }
-        },
-        methods: {
-            syncChartData(settings) {
-                clearInterval(this.timeoutId)
-                //TODO: CHECK API - get one chart data
-                // if (settings.refresh) {
-                //     this.timeoutId = setInterval(() => {
-                //         this.$store.dispatch('charts/getAllCharts')
-                //     }, settings.interval * 1000)
-                // }
-            },
-        },
-        watch: {
-            reportSettings: {
-                immediate: true,
-                handler: function (settings) {
-                    this.syncChartData(settings)
-                }
-            }
-        },
-        beforeDestroy() {
-            clearInterval(this.timeoutId)
         }
     }
 </script>
-
-<style scoped>
-
-</style>
