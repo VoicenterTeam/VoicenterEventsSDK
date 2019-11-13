@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
-import {authorizationData} from "../helpers/authUtil";
+import {authorizationData} from '@/helpers/authUtil'
 
 const $axios = axios.create({
     baseURL: process.env.VUE_APP_API_URL,
