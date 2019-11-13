@@ -1,0 +1,34 @@
+.trash-icon, .edit-icon {
+    position: relative;
+    top: -40px;
+    right: -30px;
+    cursor: pointer;
+}
+
+.edit-card-icon {
+    position: relative;
+    top: -40px;
+    right: -20px;
+    cursor: pointer;
+}
+
+.rtl .trash-icon,
+.rtl .edit-icon {
+    left: -30px;
+    right: auto;
+}
+
+.rtl .edit-card-icon {
+    left: -20px;
+    right: auto;
+}
+
+.editable-content {
+    transition: all 0.3s ease-in-out 0s;
+}
+
+.status-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

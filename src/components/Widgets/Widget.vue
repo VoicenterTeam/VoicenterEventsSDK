@@ -21,7 +21,7 @@
                    :editable="editable"
                    class="widget"
                    @on-loading="(state) => onLoading(state)"
-                   @change-extension-status="(data)=> changeExtensionStatus(data, widget)"
+                   @on-update-layout="(data)=> onUpdateLayout(data, widget)"
                    @remove-item="removeWidget(widget)">
         </component>
         <update-dialog
@@ -41,6 +41,7 @@
     import EditButton from '@/components/EditButton'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
+    import QueueCards from '@/components/Cards/QueueCards'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
@@ -64,6 +65,7 @@
             [Tooltip.name]: Tooltip,
             GaugeChart,
             QueueChart,
+            QueueCards,
         },
         props: {
             editable: {
@@ -88,6 +90,7 @@
                     [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
+                    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
                 },
                 showUpdateDialog: false,
                 loading: false,
@@ -97,7 +100,7 @@
         computed: {
             showDeleteButton() {
                 // TODO Adapt condition based on component type
-                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER]
+                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER, widgetDataTypes.QUEUE_COUNTER_TYPE_ID]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
             },
@@ -116,7 +119,7 @@
                 widget.Title = title
                 this.$emit('update-item', widget)
             },
-            changeExtensionStatus(data = {}, widget) {
+            onUpdateLayout(data = {}, widget) {
                 widget.WidgetLayout = {
                     ...widget.WidgetLayout,
                     ...data
@@ -149,6 +152,5 @@
                 @apply left-0;
             }
         }
-
     }
 </style>
