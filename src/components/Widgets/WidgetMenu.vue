@@ -3,7 +3,7 @@
         <el-input size="small" class="mb-2" placeholder="Search" v-model="search"
                   suffix-icon="el-icon-search"></el-input>
         <div class="widget-menu-container">
-            <DraggableWidgets v-model="widgetTemplates"
+            <DraggableList v-model="widgetTemplates"
                               :enable-transition="false"
                               :group="{ name: 'widgetTemplates', pull: 'clone', put: false }">
                 <div v-for="widgetTemplate in filteredWidgetTemplates"
@@ -23,7 +23,7 @@
                         </template>
                     </WidgetCard>
                 </div>
-            </DraggableWidgets>
+            </DraggableList>
             <h3 v-if="widgetTemplates.length === 0" class="text-center my-4">
                 {{$t('no.widgets.added')}}
             </h3>
@@ -40,12 +40,12 @@
     import times from 'lodash/times'
     import {InputNumber} from 'element-ui'
     import WidgetCard from './WidgetCard'
-    import DraggableWidgets from './DraggableWidgets'
+    import DraggableList from './DraggableList'
 
     export default {
         components: {
             WidgetCard,
-            DraggableWidgets,
+            DraggableList,
             [InputNumber.name]: InputNumber
         },
         data() {
