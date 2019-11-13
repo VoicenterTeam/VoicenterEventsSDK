@@ -1,11 +1,5 @@
-const persistentData = JSON.parse(localStorage.getItem('vuex'))
+import store from '@/store/store'
 
-export function autorizationData() {
-    let userData = persistentData.users
-
-    if (userData && userData.tokens) {
-        // TODO: define with backend type of data
-        return 'Bearer ' + JSON.stringify(userData.tokens)
-    }
-    return ''
+export function authorizationData() {
+    return 'Bearer ' + store.getters['users/currentUser']
 }

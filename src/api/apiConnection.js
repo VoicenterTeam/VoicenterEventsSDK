@@ -1,19 +1,25 @@
 import Vue from 'vue'
 import axios from 'axios'
-import {autorizationData} from '@/helpers/authUtil'
+import {authorizationData} from "../helpers/authUtil";
 
 const $axios = axios.create({
     baseURL: process.env.VUE_APP_API_URL,
-    headers: {
-        Authorization: autorizationData(),
-    }
 })
 
-$axios.interceptors.response.use((res) => {
-    return res.data
-}, (e) => {
-    return Promise.reject(e)
-})
+$axios.interceptors.request.use(
+    (config) => {
+        config.headers.authorization = authorizationData()
+        return config
+    }, (e) => {
+        return Promise.reject(e)
+    })
+
+$axios.interceptors.response.use(
+    (res) => {
+        return res.data
+    }, (e) => {
+        return Promise.reject(e)
+    })
 
 Vue.prototype.$axios = $axios
 
