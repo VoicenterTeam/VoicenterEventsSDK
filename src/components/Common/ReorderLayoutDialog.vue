@@ -9,11 +9,10 @@
                                   :title="widgetGroup.WidgetGroupTitle"
                                   :name="widgetGroup.WidgetGroupTitle" class="w-full p-2 widget-group"
                                   :key="groupIndex">
-
                     <DraggableList group="widgets"
                                    :value="widgetGroup.WidgetList"
                                    @change="(ev) => onWidgetListChange(ev, widgetGroup, groupIndex)">
-                        <div v-for="widget in widgetGroup.WidgetList" class="w-full p-2" :key="widget.WidgetID">
+                        <div v-for="widget in widgetGroup.WidgetList" class="w-full p-2 items" :key="widget.WidgetID">
                             <div class="widget-item">
                                 {{widget.Title}}
                             </div>
@@ -115,9 +114,9 @@
         }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 
-    .widget-item {
+    .items .widget-item {
         border: 1px dashed;
         border-radius: 4px;
         @apply bg-gray-100 w-full p-2;
