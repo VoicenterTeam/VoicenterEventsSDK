@@ -132,9 +132,9 @@
     "widget.content.renderError": "An error occurred while rendering the widget...",
     "speedometer.chart.title": "Agents in a call vs total agents",
     "queue.chart.title": "Queues real time chart",
-    "N/A": "N/A",
     "queue.counter.callers": "Counter Callers",
     "queue.counter.type": "Counter Type",
-    "queue.maximum.waiting.caller": "Maximum Waiting Caller"
-
+    "queue.maximum.waiting.caller": "Maximum Waiting Caller",
+    "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout",
+    "N/A": "N/A"
 }

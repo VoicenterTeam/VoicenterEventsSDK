@@ -38,7 +38,7 @@
         },
         methods: {
             orderWidgetGroup(direction) {
-                this.$emit('order-groups', {'widgetGroup': this.widgetGroup, 'direction': direction})
+                this.$emit('move-groups', {'widgetGroup': this.widgetGroup, 'direction': direction})
             }
         }
     }
