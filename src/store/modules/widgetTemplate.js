@@ -28,7 +28,6 @@ const getters = {
 
 export default {
     namespaced: true,
-    types,
     state,
     mutations,
     getters,
