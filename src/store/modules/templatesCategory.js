@@ -22,7 +22,6 @@ const actions = {
 
 export default {
     namespaced: true,
-    types,
     state,
     mutations,
     actions,
