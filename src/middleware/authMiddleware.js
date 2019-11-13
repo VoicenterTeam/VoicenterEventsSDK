@@ -40,7 +40,10 @@ export default function authMiddleware(router, store) {
         if (!tokens) {
             return redirectToLogin(next)
         }
+
         try {
+            // TODO: define flow with back-end
+            // let validTokens = filterExpiredTokens(decodeTokens(tokens))
             if (tokens.length === 0) {
                 store.dispatch('users/logout')
                 return redirectToLogin(next)
