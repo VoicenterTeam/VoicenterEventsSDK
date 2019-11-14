@@ -2,27 +2,31 @@
     <div>
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
             <template v-slot="{tab, activeTab}">
-                <widget-list
-                    v-if="activeTab.toString() === tab.WidgetGroupID.toString()"
-                    :widgets="tab.WidgetList"
-                    :all-widgets="allWidgets"
-                    :editable="editMode"
-                    v-bind="$attrs"
-                    :widget-group="tab"
-                    v-on="$listeners">
-                </widget-list>
+                <component :is="widgetsViewMode"
+                           v-if="activeTab.toString() === tab.WidgetGroupID.toString()"
+                           :widgets="tab.WidgetList"
+                           :editable="editMode"
+                           v-bind="$attrs"
+                           :widget-group="tab"
+                           :class="getClass(tab.WidgetList)"
+                           v-on="$listeners">
+                </component>
             </template>
         </tabs>
     </div>
 </template>
 <script>
-
+    import get from 'lodash/get'
+    import uniq from 'lodash/uniq'
     import Tabs from '@/components/Tabs'
+    import widgetViewTypes from '@/enum/widgetViewTypes'
     import WidgetList from '@/components/Widgets/WidgetList'
+    import WidgetTabs from '@/components/Widgets/WidgetTabs'
 
     export default {
         components: {
             WidgetList,
+            WidgetTabs,
             Tabs
         },
         props: {
@@ -34,20 +38,14 @@
                 type: Boolean,
                 default: false
             },
-            allWidgets: {
-                type: Array,
-                default: () => ([])
-            },
             activeTab: [String, Number]
         },
-        data() {
-            return {
-                timeoutId: null
-            };
-        },
         computed: {
+            dashboardSettings() {
+                return this.$store.state.dashboards.settings
+            },
             reportSettings() {
-                return this.$store.state.dashboards.settings.report
+                return this.dashboardSettings.report
             },
             circularTimeout() {
                 if (this.$store.state.dashboards.settings.report.switching) {
@@ -59,33 +57,25 @@
             tabs() {
                 let data = this.activeDashboardData.WidgetGroupList
                 return this.$rtl.isRTL ? data.reverse() : data
-            }
-        },
-        methods: {
-            syncChartData(settings) {
-                clearInterval(this.timeoutId)
-                //TODO: CHECK API - get one chart data
-                // if (settings.refresh) {
-                //     this.timeoutId = setInterval(() => {
-                //         this.$store.dispatch('charts/getAllCharts')
-                //     }, settings.interval * 1000)
-                // }
+            },
+            widgetsViewMode() {
+                let showWidgetAsTabs = get(this.dashboardSettings, 'showWidgetAsTabs')
+                if (showWidgetAsTabs && !this.editMode) {
+                    return widgetViewTypes.TABS
+                }
+                return widgetViewTypes.LIST
             },
         },
-        watch: {
-            reportSettings: {
-                immediate: true,
-                handler: function (settings) {
-                    this.syncChartData(settings)
+        methods: {
+            getClass(widgets) {
+                if (widgets) {
+                    let tabsToDisplay = uniq(widgets.map((el) => el.DataTypeID))
+                    if (tabsToDisplay.length > 1) {
+                        return 'display-widget__tabs'
+                    }
                 }
+                return ''
             }
-        },
-        beforeDestroy() {
-            clearInterval(this.timeoutId)
         }
     }
 </script>
-
-<style scoped>
-
-</style>

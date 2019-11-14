@@ -40,7 +40,7 @@
                     group: "description",
                     disabled: this.disabled || this.dragDisabled,
                     ghostClass: "ghost"
-                };
+                }
             },
             attributes() {
                 return {

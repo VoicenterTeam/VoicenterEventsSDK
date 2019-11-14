@@ -90,13 +90,10 @@ const actions = {
         commit(types.DELETE_DASHBOARD, dashboard)
     }
 };
-const getters = {};
 
 export default {
     namespaced: true,
-    types,
     state,
     mutations,
     actions,
-    getters
 };

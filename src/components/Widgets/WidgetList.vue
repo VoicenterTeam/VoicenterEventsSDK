@@ -1,8 +1,8 @@
 <template>
-    <DraggableWidgets group="widgetTemplates"
-                      :value="widgets"
-                      :disabled="!editable"
-                      @change="(ev) => onListChange(ev)">
+    <DraggableList group="widgetTemplates"
+                   :value="widgets"
+                   :disabled="!editable"
+                   @change="(ev) => onListChange(ev)">
         <div v-for="widget in filteredWidgets"
              :key="widget.WidgetID"
              class="w-full px-2"
@@ -27,42 +27,27 @@
             <IconNoData v-if="!editable" class="h-56 w-56"></IconNoData>
             <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
         </div>
-    </DraggableWidgets>
+    </DraggableList>
 </template>
 <script>
-
     import get from 'lodash/get'
     import Widget from './Widget'
     import WidgetEmptyCard from './WidgetEmptyCard'
-    import DraggableWidgets from './DraggableWidgets'
+    import {getDataTypeClass} from '@/helpers/widgetUtils'
+    import DraggableList from './DraggableList'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
-    import {getWidgetDataType} from "@/helpers/wigetUtils";
 
     export default {
         name: "widget-list",
         components: {
             Widget,
             WidgetEmptyCard,
-            DraggableWidgets,
+            DraggableList,
             WidgetErrorBoundary,
         },
         data() {
-            return {
-                componentWidth: {
-                    [widgetDataTypes.LINES_TYPE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.TIMELINE_TYPE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
-                    [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-1/3',
-                    [widgetDataTypes.CHART_SPEEDOMETER]: 'lg:w-1/3',
-                    [widgetDataTypes.CHART_QUEUE]: 'lg:w-3/3',
-                    [widgetDataTypes.EXTENSION_CARDS]: 'lg:w-3/3',
-                    [widgetDataTypes.HISTORY_COUNTERS]: 'lg:w-3/3',
-                    [widgetDataTypes.REAL_TIME_TABLE]: 'lg:w-3/3',
-                    default: 'lg:w-3/3'
-                }
-            }
+            return {}
         },
         props: {
             widgetGroup: {
@@ -108,17 +93,8 @@
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
             getWidgetDataTypeClass(widget) {
-                let dataType = 'default'
-                try {
-                    dataType = getWidgetDataType(widget) || 'default'
-                } catch (e) {
-                    console.warn(e)
-                }
-                return this.componentWidth[dataType]
+                return getDataTypeClass(widget)
             }
         },
     }
 </script>
-<style>
-
-</style>

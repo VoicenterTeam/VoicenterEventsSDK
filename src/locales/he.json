@@ -86,7 +86,7 @@
   "extensions.sort.activeTime": "זמן פעיל",
   "extensions.noData": "לא הצליח לטעון את השלוחות...",
   "switcher.title": "סוג תצוגה",
-  "statusCard.update": "עדכן סטטוס ריבוע",
+  "extensionCard.update": "עדכן סטטוס ריבוע",
   "validation.interval": "לא ניתן לקבוע זמן קצר מ5 שניות לרענון",
   "validation.generalThresholdLowValue": "סף מינימלי לא יכול להיות פחות מ1",
   "validation.generalThresholdHeightValue": "סף מקסימלי לא יכול להיות נמוך מהסף המינימלי",

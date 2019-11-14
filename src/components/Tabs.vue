@@ -9,9 +9,8 @@
     </div>
 </template>
 <script>
-
-    import { Tabs, TabPane } from 'element-ui'
-    import get from 'lodash/get';
+    import get from 'lodash/get'
+    import {Tabs, TabPane} from 'element-ui'
 
     export default {
         inheritAttrs: false,
@@ -73,22 +72,23 @@
         }
     }
 </script>
-
 <style lang="scss">
-    .rtl .tabs-container .el-tabs__nav-wrap {
-        display: flex;
-    }
-
     .tabs-container {
         .el-tabs__header {
-            box-shadow: 0 0 1px 0 var(--silver-two), 0 1px 4px 0 var(--silver-two);
-            background-color: white;
-            border-radius: 2px;
             display: none;
         }
 
+        .el-tabs__content {
+            .display-widget__tabs {
+                .el-tabs__header {
+                    display: block !important;
+                    @apply mt-6;
+                }
+            }
+        }
+
         .el-tabs__nav-scroll {
-            padding: 0 56px;
+            @apply px-2;
         }
 
         .el-tabs__nav-wrap::after {
@@ -96,18 +96,21 @@
         }
 
         .el-tabs__active-bar {
-            height: 4px;
+            height: 2px;
             border-radius: 4.5px;
         }
 
         .el-tabs__item {
-            height: 58px;
-            padding: 10px 20px;
+            height: 48px;
+            padding: 5px 20px;
             color: var(--steel);
             cursor: pointer;
-            font-size: 18px;
-            @apply font-medium;
+            font-size: 14px;
         }
 
+        .el-tabs__nav-next, .el-tabs__nav-prev {
+            line-height: 50px;
+            font-size: 20px;
+        }
     }
 </style>

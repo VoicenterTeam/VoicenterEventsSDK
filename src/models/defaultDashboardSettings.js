@@ -11,6 +11,7 @@ export const settings = {
     },
     showLoggedOutUsers: true,
     showGeneralWidgetSearch: true,
+    showWidgetAsTabs: true,
     threshold: {
         generalThreshold: false,
         generalThresholdLowValue: 0,
@@ -18,5 +19,5 @@ export const settings = {
         callThreshold: false,
         callThresholdLowValue: 0,
         callThresholdHeightValue: 0
-    }
+    },
 }

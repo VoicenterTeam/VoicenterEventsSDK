@@ -37,23 +37,47 @@
                 </el-tooltip>
             </div>
         </div>
-        <extension-update-dialog
-            :width="setWidth"
-            :status="status"
-            :showText="showText"
+        <update-dialog
             :visible.sync="showModal"
-            @on-change="changeStatus">
-        </extension-update-dialog>
+            @on-change="onChange">
+            <template v-slot:header>
+                <component class="w-8 mx-1" :is="selectedIcon"></component>
+                <p slot="title" class="text-lg font-semibold text-gray-700">{{$t(selectedOption.text)}}</p>
+            </template>
+            <template v-slot:content>
+                <el-select :placeholder="$t('common.selectStatus')"
+                           label="select"
+                           v-model="selectedStatus"
+                           @change="onStatusChange"
+                           class="w-full">
+                    <el-option v-for="option in statuses"
+                               v-bind="option"
+                               :key="option.value"
+                               :label="$t(option.text)">
+                        <div class="flex">
+                            <component class="w-5 mx-1 text-primary" :is="option.icon"></component>
+                            <span class="w-16 mx-1">{{$t(option.text)}}</span>
+                        </div>
+                    </el-option>
+                </el-select>
+                <el-checkbox v-model="showStatusText" class="pt-4">
+                    {{$t('status.show.text')}}
+                </el-checkbox>
+            </template>
+            <template v-slot:footer>
+                <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
+                <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
+            </template>
+        </update-dialog>
     </div>
 </template>
 <script>
-    import {Tooltip} from 'element-ui'
+    import {Tooltip, Select, Option, Checkbox} from 'element-ui'
+    import UpdateDialog from './UpdateDialog'
     import statusTypes from '@/enum/statusTypes'
-    import ExtensionUpdateDialog from './ExtensionUpdateDialog'
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
 
     export default {
-        name: 'status-card',
         props: {
             status: {
                 type: Number,
@@ -71,17 +95,26 @@
         components: {
             TrashIcon,
             EditIcon,
+            UpdateDialog,
             MoreVerticalIcon,
-            ExtensionUpdateDialog,
+            [Option.name]: Option,
+            [Select.name]: Select,
             [Tooltip.name]: Tooltip,
+            [Checkbox.name]: Checkbox,
         },
         data() {
             return {
                 showModal: false,
-                statusMappings: statusTypes,
+                selectedStatus: '',
+                selectedIcon: '',
+                selectedOption: {},
+                showStatusText: this.showText,
             }
         },
         computed: {
+            statuses() {
+                return Object.values(statusTypes)
+            },
             extensions() {
                 return this.$store.state.extensions.extensions
             },
@@ -89,13 +122,13 @@
                 return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
             },
             cardIcon() {
-                return this.statusMappings[this.status].icon
+                return statusTypes[this.status].icon
             },
             statusText() {
-                return this.$t(this.statusMappings[this.status].text)
+                return this.$t(statusTypes[this.status].text)
             },
             textColor() {
-                let color = this.statusMappings[this.status].color
+                let color = statusTypes[this.status].color
                 return {
                     color: `${color}`
                 }
@@ -103,57 +136,31 @@
             isMobileOrTablet() {
                 return this.$store.getters['utils/isMobileOrTablet']
             },
-            setWidth() {
-                if (this.isMobileOrTablet) {
-                    return '80%'
-                } else {
-                    return '40%'
-                }
-            }
         },
         methods: {
-            changeStatus(data = {}) {
-                this.$emit('change-extension-status', data);
-            }
+            onChange() {
+                let objectToEmit = {
+                    status: this.selectedStatus,
+                    showText: this.showStatusText
+                }
+
+                this.$emit('on-update-layout', objectToEmit);
+                this.showModal = false;
+            },
+            onStatusChange(value) {
+                let option = statusTypes[value];
+                this.selectedOption = option;
+                this.selectedStatus = option.value;
+                this.selectedIcon = option.icon;
+            },
+        },
+        mounted() {
+            this.selectedStatus = this.status;
+            this.selectedOption = statusTypes[this.status];
+            this.selectedIcon = this.selectedOption.icon;
         }
     }
 </script>
-
 <style lang="scss" scoped>
-
-    .trash-icon, .edit-icon {
-        position: relative;
-        top: -40px;
-        right: -30px;
-        cursor: pointer;
-    }
-
-    .edit-card-icon {
-        position: relative;
-        top: -40px;
-        right: -20px;
-        cursor: pointer;
-    }
-
-    .rtl .trash-icon,
-    .rtl .edit-icon {
-        left: -30px;
-        right: auto;
-    }
-
-    .rtl .edit-card-icon {
-        left: -20px;
-        right: auto;
-    }
-
-    .editable-content {
-        transition: all 0.3s ease-in-out 0s;
-    }
-
-    .status-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
+    @import "../../assets/css/widgets/card";
 </style>

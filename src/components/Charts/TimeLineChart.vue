@@ -25,9 +25,9 @@
     import {Chart} from 'highcharts-vue'
     import RangeFilter from './RangeFilter'
     import chartConfig from './Configs/TimeLine'
-    import {WidgetDataApi} from '../../api/widgetDataApi'
-    import {getWidgetDataType} from "@/helpers/wigetUtils";
-    import widgetDataTypes from "@/enum/widgetDataTypes";
+    import {WidgetDataApi} from '@/api/widgetDataApi'
+    import widgetDataTypes from '@/enum/widgetDataTypes'
+    import { getWidgetDataType } from '@/helpers/widgetUtils'
 
     export default {
         name: 'TimeLineChart',
