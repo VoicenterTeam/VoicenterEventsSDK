@@ -20,7 +20,6 @@
         </el-tab-pane>
     </el-tabs>
 </template>
-
 <script>
     import get from 'lodash/get'
     import {Tabs, TabPane} from 'element-ui'
@@ -73,7 +72,7 @@
                 let widgets = this.filteredWidgets
                 let tabs = []
                 let groupedData = {}
-                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.CHART_SPEEDOMETER]
+                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.CHART_SPEEDOMETER, widgetDataTypes.QUEUE_COUNTER_TYPE_ID]
 
                 widgets.forEach((el) => {
                     if (!el.DataTypeID) {

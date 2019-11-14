@@ -32,6 +32,7 @@ export const componentWidth = {
     [widgetDataTypes.TABLE_TYPE_ID]: 'lg:w-3/3',
     [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-1/3',
     [widgetDataTypes.CHART_SPEEDOMETER]: 'lg:w-1/3',
+    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'lg:w-1/3',
     [widgetDataTypes.CHART_QUEUE]: 'lg:w-3/3',
     [widgetDataTypes.EXTENSION_CARDS]: 'lg:w-3/3',
     [widgetDataTypes.HISTORY_COUNTERS]: 'lg:w-3/3',
