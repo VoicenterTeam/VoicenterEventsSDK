@@ -124,7 +124,6 @@
 </script>
 <style scoped>
     .extension-card {
-        min-width: 270px;
         min-height: 200px;
         transition: all .2s;
     }
