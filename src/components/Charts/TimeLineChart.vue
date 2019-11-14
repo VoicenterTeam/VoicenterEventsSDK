@@ -27,7 +27,11 @@
     import chartConfig from './Configs/TimeLine'
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import { getWidgetDataType } from '@/helpers/widgetUtils'
+    import {getWidgetDataType} from '@/helpers/widgetUtils'
+
+    //Points to do/clarify:
+    //Make sure charts refresh every X seconds based on some configuration
+    const refreshInterval = 15000
 
     export default {
         name: 'TimeLineChart',
@@ -54,6 +58,7 @@
             return {
                 chartOptions: {},
                 loading: true,
+                fetchDataInterval: null
             }
         },
         computed: {
@@ -109,16 +114,21 @@
         },
         mounted() {
             this.$emit('on-loading', true)
-
+            this.getChartData()
+            this.fetchDataInterval = setInterval(() => {
+                this.getChartData()
+            }, refreshInterval)
         },
         watch: {
-            data: {
-                immediate: true,
-                handler: function () {
-                    this.getChartData()
-                }
+            data() {
+                this.getChartData()
             },
-        }
+        },
+        beforeDestroy() {
+            if (this.fetchDataInterval) {
+                clearInterval(this.fetchDataInterval)
+            }
+        },
     }
 </script>
 <style scoped>
