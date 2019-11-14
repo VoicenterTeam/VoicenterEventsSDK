@@ -11,7 +11,8 @@ export default {
         gray: '#899398',
         light_gray: '#bfc5d0',
         warm_grey: '#9b9b9b',
-        charcoal_grey: '#2a2c36'
+        charcoal_grey: '#2a2c36',
+        light_green: '#5EB300',
     },
     fields: {
         jitter: {

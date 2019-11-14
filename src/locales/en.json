@@ -95,7 +95,7 @@
     "extensions.sort.activeTime": "Active time",
     "extensions.noData": "The extensions couldn't be loaded...",
     "switcher.title": "View type",
-    "statusCard.update": "Update Status Card",
+    "extensionCard.update": "Update Card",
     "validation.interval": "Switch category interval cannot be less than 5",
     "validation.generalThresholdLowValue": "Inferior limit of the threshold cannot be less than 1",
     "validation.generalThresholdHeightValue": "Superior limit of the threshold cannot be less than Inferior limit",
@@ -133,5 +133,9 @@
     "widget.content.renderError": "An error occurred while rendering the widget...",
     "speedometer.chart.title": "Agents in a call vs total agents",
     "queue.chart.title": "Queues real time chart",
+    "queue.counter.callers": "Counter Callers",
+    "queue.counter.type": "Counter Type",
+    "queue.maximum.waiting.caller": "Maximum Waiting Caller",
+    "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout",
     "N/A": "N/A"
 }

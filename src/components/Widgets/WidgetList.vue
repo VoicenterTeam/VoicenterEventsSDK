@@ -1,8 +1,8 @@
 <template>
-    <DraggableWidgets group="widgetTemplates"
-                      :value="widgets"
-                      :disabled="!editable"
-                      @change="(ev) => onListChange(ev)">
+    <DraggableList group="widgetTemplates"
+                   :value="widgets"
+                   :disabled="!editable"
+                   @change="(ev) => onListChange(ev)">
         <div v-for="widget in filteredWidgets"
              :key="widget.WidgetID"
              class="w-full px-2"
@@ -27,22 +27,23 @@
             <IconNoData v-if="!editable" class="h-56 w-56"></IconNoData>
             <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
         </div>
-    </DraggableWidgets>
+    </DraggableList>
 </template>
 <script>
     import get from 'lodash/get'
     import Widget from './Widget'
     import WidgetEmptyCard from './WidgetEmptyCard'
-    import DraggableWidgets from './DraggableWidgets'
     import {getDataTypeClass} from '@/helpers/widgetUtils'
-    import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
+    import DraggableList from './DraggableList'
+    import widgetDataTypes from '@/enum/widgetDataTypes'
+    import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
 
     export default {
         name: "widget-list",
         components: {
             Widget,
             WidgetEmptyCard,
-            DraggableWidgets,
+            DraggableList,
             WidgetErrorBoundary,
         },
         data() {
