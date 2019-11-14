@@ -44,6 +44,7 @@
     "settings.reports": "Reports",
     "settings.layout": "Layout",
     "settings.widget.search": "Show general widget search input",
+    "settings.widget.tabbed.view": "Show widget as tabs in widget groups",
     "settings.colors": "Colors",
     "settings.threshold": "Threshold",
     "settings.color.primary": "Primary",

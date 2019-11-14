@@ -26,7 +26,7 @@
     import RangeFilter from './RangeFilter'
     import chartConfig from './Configs/TimeLine'
     import {WidgetDataApi} from '../../api/widgetDataApi'
-    import { getWidgetDataType } from "@/helpers/wigetUtils";
+    import { getWidgetDataType } from "@/helpers/widgetUtils";
     import widgetDataTypes from "@/enum/widgetDataTypes";
 
     export default {

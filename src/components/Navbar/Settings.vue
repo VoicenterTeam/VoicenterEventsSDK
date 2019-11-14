@@ -4,10 +4,17 @@
         <el-form @submit.native.prevent="updateSettings" :rules="rules" ref="settings" :model="settings">
             <el-collapse v-model="activeCollapses">
                 <el-collapse-item :title="$t('settings.layout')" name="layout">
-                    <div class="md:flex md:flex-col md:justify-center">
-                        <el-checkbox v-model="settings.showGeneralWidgetSearch">
-                            {{$t('settings.widget.search')}}
-                        </el-checkbox>
+                    <div class="flex flex-col">
+                        <div class="md:flex md:flex-col md:justify-center">
+                            <el-checkbox v-model="settings.showGeneralWidgetSearch">
+                                {{$t('settings.widget.search')}}
+                            </el-checkbox>
+                        </div>
+                        <div class="md:flex md:flex-col md:justify-center mt-4">
+                            <el-checkbox v-model="settings.showWidgetAsTabs">
+                                {{$t('settings.widget.tabbed.view')}}
+                            </el-checkbox>
+                        </div>
                     </div>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
@@ -118,7 +125,7 @@
         },
         computed: {
             storeSettings() {
-              return this.$store.state.dashboards.settings
+                return this.$store.state.dashboards.settings
             },
             rules() {
                 return {
