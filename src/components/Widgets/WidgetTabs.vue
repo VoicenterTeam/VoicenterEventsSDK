@@ -26,9 +26,14 @@
     import Widget from './Widget'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import {getDataTypeClass} from '@/helpers/widgetUtils'
-    import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
     import {getWidgetDataType} from '@/helpers/widgetUtils'
+    import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
 
+    const groupedWidgets = [
+        widgetDataTypes.COUNTER_TYPE_ID,
+        widgetDataTypes.CHART_SPEEDOMETER,
+        widgetDataTypes.QUEUE_COUNTER_TYPE_ID
+    ]
     export default {
         inheritAttrs: false,
         components: {
@@ -67,12 +72,12 @@
                     return title.includes(this.widgetsFilter.toLowerCase())
                 })
             },
-            // Group widgets
+            // Grouping Widgets
             tabsData() {
                 let widgets = this.filteredWidgets
                 let tabs = []
                 let groupedData = {}
-                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.CHART_SPEEDOMETER, widgetDataTypes.QUEUE_COUNTER_TYPE_ID]
+
 
                 widgets.forEach((el) => {
                     if (!el.DataTypeID) {
@@ -82,7 +87,7 @@
                         }
                     }
 
-                    if (exceptions.includes(el.DataTypeID)) {
+                    if (groupedWidgets.includes(el.DataTypeID)) {
                         if (!groupedData[el.DataTypeID]) {
                             groupedData[el.DataTypeID] = {
                                 widgets: [],
@@ -112,6 +117,7 @@
                 }
                 return tabs
             },
+
         },
         methods: {
             removeWidget(val) {

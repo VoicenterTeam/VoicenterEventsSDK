@@ -8,6 +8,7 @@
                            :editable="editMode"
                            v-bind="$attrs"
                            :widget-group="tab"
+                           :class="getClass(tab.WidgetList)"
                            v-on="$listeners">
                 </component>
             </template>
@@ -16,6 +17,7 @@
 </template>
 <script>
     import get from 'lodash/get'
+    import uniq from 'lodash/uniq'
     import Tabs from '@/components/Tabs'
     import widgetViewTypes from '@/enum/widgetViewTypes'
     import WidgetList from '@/components/Widgets/WidgetList'
@@ -58,10 +60,21 @@
             },
             widgetsViewMode() {
                 let showWidgetAsTabs = get(this.dashboardSettings, 'showWidgetAsTabs')
-                if(showWidgetAsTabs && !this.editMode) {
+                if (showWidgetAsTabs && !this.editMode) {
                     return widgetViewTypes.TABS
                 }
                 return widgetViewTypes.LIST
+            },
+        },
+        methods: {
+            getClass(widgets) {
+                if (widgets) {
+                    let tabsToDisplay = uniq(widgets.map((el) => el.DataTypeID))
+                    if (tabsToDisplay.length > 1) {
+                        return 'display-widget__tabs'
+                    }
+                }
+                return ''
             }
         }
     }

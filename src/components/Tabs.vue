@@ -75,21 +75,20 @@
 <style lang="scss">
     .tabs-container {
         .el-tabs__header {
-            box-shadow: 0 0 1px 0 var(--silver-two), 0 1px 4px 0 var(--silver-two);
-            background-color: white;
-            border-radius: 2px;
             display: none;
         }
 
         .el-tabs__content {
-            .el-tabs__header {
-                display: block;
-                @apply mt-6;
+            .display-widget__tabs {
+                .el-tabs__header {
+                    display: block !important;
+                    @apply mt-6;
+                }
             }
         }
 
         .el-tabs__nav-scroll {
-            padding: 0 50px;
+            @apply px-2;
         }
 
         .el-tabs__nav-wrap::after {
