@@ -14,7 +14,6 @@
                 </el-tooltip>
             </div>
         </div>
-<!--        {{getComponentType(widget)}}-->
         <component :is="getComponentType(widget)"
                    :data="widget"
                    :endPoint="setComponentEndPoint"

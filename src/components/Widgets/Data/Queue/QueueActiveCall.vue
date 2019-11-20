@@ -56,7 +56,7 @@
                         })
                     })
                 })
-                return orderBy(data, function(e) { return e.Call.JoinTimeStamp}, ['asc']);
+                return orderBy(data, function(q) { return q.Call.JoinTimeStamp}, ['asc']);
             }
         },
     }
