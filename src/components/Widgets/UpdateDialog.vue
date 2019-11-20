@@ -33,14 +33,14 @@
         </template>
     </el-dialog>
 </template>
-
 <script>
-    import cloneDeep from 'lodash/cloneDeep'
+
     import ExtensionCards from './WidgetUpdateForm/ExtensionCards'
     import get from 'lodash/get'
     import find from 'lodash/find'
     import {Dialog, Select, Option} from 'element-ui'
     import {widgetTimeOptions,} from '@/enum/widgetTimeOptions'
+    import {settings} from '@/enum/defaultRealTimeWidgetSettings'
 
     export default {
         inheritAttrs: false,
@@ -60,28 +60,34 @@
             return {
                 title: '',
                 timeInterval: {},
-                settings: cloneDeep(this.$store.state.dashboards.settings),
                 widgetTimeOptions: widgetTimeOptions,
+                settings: settings
             }
         },
+        computed: {},
         methods: {
             onChange() {
-                this.widget.Title = this.title;
+                this.$refs.cardSettings.validate((valid) => {
+                    if (valid) {
+                        this.widget.Title = this.title;
 
-                if (this.widget.WidgetTime.Date_interval) {
-                    let widgetTime = widgetTimeOptions.find((el) => el.label === this.timeInterval)
-                    this.widget.WidgetTime = {
-                        ...this.widget.WidgetTime,
-                        ...widgetTime
+                        if (this.widget.WidgetTime.Date_interval) {
+                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.timeInterval)
+                            this.widget.WidgetTime = {
+                                ...this.widget.WidgetTime,
+                                ...widgetTime
+                            }
+                        }
+
+                        this.widget.WidgetLayout = {
+                            ...this.widget.WidgetLayout,
+                            ...{settings: this.settings}
+                        };
+
+                        this.$emit('on-update', this.widget)
+                        this.toggleVisibility(false);
                     }
-                }
-                this.$emit('on-update', this.widget);
-
-                if (this.widget.componentType === 'ExtensionCards') {
-                    this.$emit('onUpdateSettings', this.settings)
-                }
-
-                this.toggleVisibility(false);
+                })
             },
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
@@ -96,6 +102,7 @@
                         Date_interval: parseInt(get(this.widget.WidgetTime, 'Date_interval'))
                     }
                 ), 'label')
+            this.settings = this.widget.WidgetLayout.settings || settings
         },
     }
 </script>

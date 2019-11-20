@@ -34,6 +34,8 @@
         </update-dialog>
     </div>
 </template>
+
+
 <script>
     import {Tooltip} from 'element-ui'
     import WidgetCard from './WidgetCard'

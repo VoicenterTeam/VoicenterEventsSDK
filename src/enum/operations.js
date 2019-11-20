@@ -10,5 +10,4 @@ export const types = {
 export const targets = {
     WIDGET_GROUP: 'WidgetGroup',
     WIDGET: 'Widget',
-    DASHBOARD: 'Dashboard',
 }
