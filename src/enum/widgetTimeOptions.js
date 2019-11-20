@@ -1,9 +1,3 @@
-const now = new Date();
-const start = new Date(now.getFullYear(), 0, 0);
-const oneDay = 1000 * 60 * 60 * 24;
-const diff = now - start;
-const dayOfYear = Math.floor(diff / oneDay);
-
 export const widgetTimeOptions = [
     {
         label: 'widget.time.today',
@@ -16,18 +10,18 @@ export const widgetTimeOptions = [
         Date_interval: 1
     },
     {
-        label: 'widget.time.this_week',
+        label: 'widget.time.last_7_days',
         datedeff: 7,
         Date_interval: 7
     },
     {
-        label: 'widget.time.this_month',
-        datedeff: now.getDate(),
-        Date_interval: now.getDate()
+        label: 'widget.time.last_30_days',
+        datedeff: 30,
+        Date_interval: 30
     },
     {
-        label: 'widget.time.this_year',
-        datedeff: dayOfYear,
-        Date_interval: dayOfYear
+        label: 'widget.time.last_90_days',
+        datedeff: 90,
+        Date_interval: 90
     },
 ];
