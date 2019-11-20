@@ -11,6 +11,7 @@
                     <WidgetErrorBoundary v-if="activeTab.toString() === tab.key">
                         <Widget :widget="widget"
                                 :editable="editable"
+                                v-on="$listeners"
                                 @remove-item="removeWidget(widget)"
                                 @update-item="(data) => updateWidget(data)">
                         </Widget>

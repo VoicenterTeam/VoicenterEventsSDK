@@ -5,6 +5,11 @@
             <el-form-item :label="$t('widget.update.title')">
                 <el-input v-model="title"></el-input>
             </el-form-item>
+            <component
+                :is="widget.componentType"
+                :data="widget"
+                :settings="settings">
+            </component>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -14,33 +19,45 @@
 </template>
 <script>
     import {Dialog} from 'element-ui'
+    import cloneDeep from 'lodash/cloneDeep'
+    import ExtensionCards from './WidgetUpdateForm/ExtensionCards'
 
     export default {
         inheritAttrs: false,
         components: {
+            ExtensionCards,
             [Dialog.name]: Dialog
         },
         props: {
-            chartTitle: String,
+            widget: {
+                type: Object,
+                default: () => ({})
+            },
             index: Number,
         },
         data() {
             return {
                 showForm: false,
-                title: ''
+                title: '',
+                settings: cloneDeep(this.$store.state.dashboards.settings),
             }
-        },
-        mounted() {
-            this.title = this.chartTitle
         },
         methods: {
             onChange() {
                 this.$emit('on-change-title', this.title);
+
+                if (this.widget.componentType === 'ExtensionCards') {
+                    this.$emit('onUpdateSettings', this.settings)
+                }
+
                 this.toggleVisibility(false);
             },
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
             }
+        },
+        mounted() {
+            this.title = this.widget.Title
         },
     }
 </script>

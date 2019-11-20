@@ -10,6 +10,7 @@
             <WidgetErrorBoundary>
                 <Widget :widget="widget"
                         :editable="editable"
+                        v-on="$listeners"
                         @remove-item="removeWidget(widget)"
                         @update-item="(data) => updateWidget(data)">
                 </Widget>

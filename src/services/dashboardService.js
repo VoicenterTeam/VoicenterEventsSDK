@@ -45,6 +45,13 @@ export async function runDashboardOperations(operations, dashboard) {
                             break;
                     }
                     break;
+                case targets.DASHBOARD:
+                    switch (operation.type) {
+                        case types.UPDATE:
+                            await DashboardApi.update(operation.payload)
+                            break;
+                    }
+                    break;
                 default:
                     break;
             }

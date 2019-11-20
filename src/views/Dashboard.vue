@@ -66,6 +66,7 @@
                             @addWidgetsToGroup="addWidgetsToGroup"
                             @removeWidget="(data) => removeWidget(data.widget, data.group)"
                             @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                            @onUpdateSettings="updateSettings"
                             @switch-tab="(tab) => switchTab(tab)">
                         </component>
                     </keep-alive>
@@ -340,6 +341,16 @@
                             this.saveDashboard()
                         }
                     }
+                }
+            },
+            updateSettings(settings = {}) {
+                this.activeDashboardData.DashboardLayout = {...this.activeDashboardData.DashboardLayout, ...{settings}}
+
+                this.$store.dispatch('dashboards/updateDashboard', this.activeDashboardData)
+                this.operations.add(dashboardOperation(types.UPDATE, targets.DASHBOARD, this.activeDashboardData))
+
+                if (!this.editMode) {
+                    this.saveDashboard()
                 }
             },
             async saveDashboard() {

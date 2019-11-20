@@ -25,10 +25,11 @@
                    @remove-item="removeWidget(widget)">
         </component>
         <update-dialog
-            width="30%"
+            width="35%"
             v-if="showUpdateDialog"
-            :chartTitle="widget.Title"
+            :widget="widget"
             @on-change-title="(title) => onChangeTitle(title, widget)"
+            v-on="$listeners"
             :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
@@ -48,7 +49,7 @@
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
-    import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/widgetUtils";
+    import {getWidgetDataType, getWidgetEndpoint} from '@/helpers/widgetUtils'
 
     export default {
         name: "widget",
@@ -131,9 +132,11 @@
             },
             getComponentType(widget) {
                 let dataTypeId = getWidgetDataType(widget)
-                return `${this.componentTypes[dataTypeId]}`
+                let componentType = `${this.componentTypes[dataTypeId]}`
+                this.$set(widget, 'componentType', componentType)
+                return componentType
             }
-        }
+        },
     }
 </script>
 <style scoped lang="scss">
