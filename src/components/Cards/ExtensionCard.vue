@@ -16,7 +16,7 @@
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
                 <span class="text-center text-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
-                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"></component>
+                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"></component>
             </div>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call"/>
         </div>
