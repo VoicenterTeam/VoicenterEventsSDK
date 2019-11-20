@@ -27,8 +27,9 @@
         <update-dialog
             width="30%"
             v-if="showUpdateDialog"
-            :chartTitle="widget.Title"
-            @on-change-title="(title) => onChangeTitle(title, widget)"
+            :title="widget.Title"
+            :time="widget.WidgetTime"
+            @on-change="(data)=> onChange(data, widget)"
             :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
@@ -49,6 +50,7 @@
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/widgetUtils";
+    import QueueActiveCall from "./Data/Queue/QueueActiveCall";
 
     export default {
         name: "widget",
@@ -66,6 +68,7 @@
             GaugeChart,
             QueueChart,
             QueueCards,
+            QueueActiveCall
         },
         props: {
             editable: {
@@ -91,6 +94,7 @@
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
                     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
+                    [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
                 },
                 showUpdateDialog: false,
                 loading: false,
@@ -115,8 +119,11 @@
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onChangeTitle(title, widget) {
-                widget.Title = title
+            onChange(data = {}, widget) {
+                widget = {
+                    ...widget,
+                    ...data
+                }
                 this.$emit('update-item', widget)
             },
             onUpdateLayout(data = {}, widget) {
@@ -124,7 +131,7 @@
                     ...widget.WidgetLayout,
                     ...data
                 }
-                this.$emit('update-item', this.widget)
+                this.$emit('update-item', widget)
             },
             onLoading(state) {
                 this.loading = state

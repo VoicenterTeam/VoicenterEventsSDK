@@ -35,7 +35,7 @@
     import {XIcon} from 'vue-feather-icons'
     import {Select, Option, Tooltip} from 'element-ui'
     import WidgetMenu from './WidgetMenu'
-    import TemplatesCategoryCard from "./TemplatesCategoryCard";
+    import TemplatesCategoryCard from './TemplatesCategoryCard'
 
     export default {
         components: {
@@ -66,7 +66,7 @@
             onSelect(category) {
                 this.selectedCategory = category
             }
-        }
+        },
     }
 </script>
 <style>

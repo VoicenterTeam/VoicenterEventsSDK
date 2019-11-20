@@ -11,4 +11,5 @@ export default  {
     EXTENSION_CARDS: 9,
     HISTORY_COUNTERS: 10,
     REAL_TIME_TABLE: 11,
+    QUEUE_ACTIVE_CALL: 12,
 }
