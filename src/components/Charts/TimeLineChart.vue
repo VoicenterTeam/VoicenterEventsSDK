@@ -2,16 +2,9 @@
     <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
         <div class="flex items-center my-4">
             <div class="flex flex-col md:flex-row md:items-center">
-                <p v-if="data.Title" class="text-2xl font-semibold"
-                   :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
+                <p v-if="data.Title" class="text-2xl font-semibold">
                     {{data.Title}}
                 </p>
-                <!-- TODO adapt based on api data. Check exactly how to change the chart interval via api-->
-                <range-filter
-                    v-if="chartOptions.date && typeof chartOptions.date === 'string'"
-                    :date="chartOptions.date.split(' - ')"
-                    @on-change="onChangeDate">
-                </range-filter>
             </div>
         </div>
         <div class="bg-white p-4 rounded-lg py-4 my-4" v-if="data.WidgetID">
@@ -23,20 +16,14 @@
     import get from 'lodash/get'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
-    import RangeFilter from './RangeFilter'
     import chartConfig from './Configs/TimeLine'
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import {getWidgetDataType} from '@/helpers/widgetUtils'
 
-    //Points to do/clarify:
-    //Make sure charts refresh every X seconds based on some configuration
-    const refreshInterval = 15000
-
     export default {
         name: 'TimeLineChart',
         components: {
-            RangeFilter,
             Highcharts,
             highcharts: Chart,
         },
@@ -68,13 +55,12 @@
                     return 'ganttChart'
                 }
                 return 'chart'
+            },
+            refreshInterval() {
+                return get(this.data.WidgetLayout, 'refreshInterval')
             }
         },
         methods: {
-            onChangeDate(date) {
-                this.data.WidgetLayout.date = date
-                this.$emit('update-item', this.data)
-            },
             async getChartData() {
                 let widgetDataType = getWidgetDataType(this.data)
                 let Data = await WidgetDataApi.getData(this.endPoint)
@@ -115,9 +101,11 @@
         mounted() {
             this.$emit('on-loading', true)
             this.getChartData()
-            this.fetchDataInterval = setInterval(() => {
-                this.getChartData()
-            }, refreshInterval)
+            if (this.refreshInterval) {
+                this.fetchDataInterval = setInterval(() => {
+                    this.getChartData()
+                }, this.refreshInterval)
+            }
         },
         watch: {
             data() {
