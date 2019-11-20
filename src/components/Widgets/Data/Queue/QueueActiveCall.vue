@@ -50,13 +50,12 @@
                     queue.Calls.forEach((call) => {
                         data.push({
                             QueueName: queue.QueueName,
-                            CallerNumber: ' - ',
+                            CallerNumber: queue.CallerPhone || ' - ',
                             CallerName: call.CallerName,
                             Call: call
                         })
                     })
                 })
-
                 return orderBy(data, function(e) { return e.Call.JoinTimeStamp}, ['asc']);
             }
         },
