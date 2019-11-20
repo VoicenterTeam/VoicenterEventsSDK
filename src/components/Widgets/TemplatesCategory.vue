@@ -35,7 +35,9 @@
     import {XIcon} from 'vue-feather-icons'
     import {Select, Option, Tooltip} from 'element-ui'
     import WidgetMenu from './WidgetMenu'
-    import TemplatesCategoryCard from "./TemplatesCategoryCard";
+    import TemplatesCategoryCard from './TemplatesCategoryCard'
+    //TODO: to remove
+    import {widgetTemplateApi} from '@/api/widgetTemplateApi'
 
     export default {
         components: {
@@ -66,6 +68,19 @@
             onSelect(category) {
                 this.selectedCategory = category
             }
+        },
+        //TODO: to remove, the backend will group all templates into the categories
+        async mounted() {
+            console.log(this.$store.state.templatesCategory.all)
+            let all = {
+                "CategoryID": 99,
+                "CategoryName": "Without category too!",
+                "CategoryImage": "Performance",
+                "TemplatesList": await widgetTemplateApi.getAll()
+            }
+            this.$store.state.templatesCategory.all.splice(5,this.$store.state.templatesCategory.all.length)
+
+            this.$store.state.templatesCategory.all.push(all)
         }
     }
 </script>

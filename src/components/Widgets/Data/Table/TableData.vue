@@ -79,14 +79,6 @@
                 type: Object,
                 default: () => ({})
             },
-            border: {
-                type: Boolean,
-                default: true
-            },
-            stripe: {
-                type: Boolean,
-                default: true
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -106,7 +98,9 @@
                 filter: '',
                 filteredDataLength: null,
                 hideOnSinglePage: true,
-                endPoint: ''
+                endPoint: '',
+                border: true,
+                stripe: true
             }
         },
         computed: {
@@ -185,6 +179,7 @@
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
                     }
+                    data[0]['user_id'] = 106576
                     this.tableData = data
                     this.columns = columns
                 } catch (e) {

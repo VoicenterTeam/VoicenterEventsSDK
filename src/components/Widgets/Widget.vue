@@ -14,6 +14,7 @@
                 </el-tooltip>
             </div>
         </div>
+<!--        {{getComponentType(widget)}}-->
         <component :is="getComponentType(widget)"
                    :data="widget"
                    :endPoint="setComponentEndPoint"
@@ -49,6 +50,7 @@
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/widgetUtils";
+    import QueueActiveCall from "./Data/Queue/QueueActiveCall";
 
     export default {
         name: "widget",
@@ -66,6 +68,7 @@
             GaugeChart,
             QueueChart,
             QueueCards,
+            QueueActiveCall
         },
         props: {
             editable: {
@@ -91,6 +94,7 @@
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
                     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
+                    [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
                 },
                 showUpdateDialog: false,
                 loading: false,
