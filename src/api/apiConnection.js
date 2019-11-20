@@ -8,7 +8,7 @@ const $axios = axios.create({
 
 $axios.interceptors.request.use(
     (config) => {
-        config.headers.authorization = authorizationData()
+        config.headers.Authorization = authorizationData()
         return config
     }, (e) => {
         return Promise.reject(e)
