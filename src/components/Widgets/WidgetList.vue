@@ -36,7 +36,6 @@
     import WidgetEmptyCard from './WidgetEmptyCard'
     import {getDataTypeClass} from '@/helpers/widgetUtils'
     import DraggableList from './DraggableList'
-    import widgetDataTypes from '@/enum/widgetDataTypes'
     import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
 
     export default {

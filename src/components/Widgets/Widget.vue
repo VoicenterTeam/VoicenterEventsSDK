@@ -46,10 +46,11 @@
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
+    import QueueActiveCall from './Data/Queue/QueueActiveCall'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
-    import {getWidgetDataType, getWidgetEndpoint} from '@/helpers/widgetUtils'
+    import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/widgetUtils";
 
     export default {
         name: "widget",
@@ -67,6 +68,7 @@
             GaugeChart,
             QueueChart,
             QueueCards,
+            QueueActiveCall
         },
         props: {
             editable: {
@@ -92,6 +94,7 @@
                     [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
                     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
                     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
+                    [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
                 },
                 showUpdateDialog: false,
                 loading: false,

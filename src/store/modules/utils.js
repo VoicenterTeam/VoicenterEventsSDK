@@ -81,7 +81,10 @@ const getters = {
             boundingRect.bottom <= state.page.height &&
             boundingRect.right <= state.page.width
         );
-    }
+    },
+    pageWidth: state => {
+        return state.page.width
+    },
 };
 
 export default {

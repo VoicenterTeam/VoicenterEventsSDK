@@ -11,7 +11,7 @@
 </template>
 <script>
     import Timer from '@/util/Timer'
-    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+    import {getTimezoneTimestamp} from '@/util/TimezoneUtils'
 
     export default {
         props: {
@@ -25,7 +25,7 @@
             }
         },
         data() {
-            let initialTime = new Date().getTime() - ((this.call.callStarted * 1000) - ISRAEL_TIMEZONE_OFFSET)
+            let initialTime = new Date().getTime() - getTimezoneTimestamp(this.call.callStarted)
             let initialTimeInSeconds = Math.floor(initialTime / 1000)
             return {
                 timer: new Timer({

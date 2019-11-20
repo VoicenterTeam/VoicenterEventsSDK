@@ -79,14 +79,6 @@
                 type: Object,
                 default: () => ({})
             },
-            border: {
-                type: Boolean,
-                default: true
-            },
-            stripe: {
-                type: Boolean,
-                default: true
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -106,7 +98,9 @@
                 filter: '',
                 filteredDataLength: null,
                 hideOnSinglePage: true,
-                endPoint: ''
+                endPoint: '',
+                border: true,
+                stripe: true
             }
         },
         computed: {

@@ -1,19 +1,18 @@
 <template>
     <div>
         <div class="flex w-full justify-end pr-12" :class="responsiveClass">
-            <div class="mx-1 -my-1 cursor-pointer">
-                <!-- Enable later on when it works correctly-->
-                <div v-if="false">
+            <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
+                <div>
                     <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"></IconCardsGrid>
                 </div>
-                <fade-transition :duration="250" v-if="false">
+                <fade-transition :duration="250">
                     <div v-if="showGridMenu"
                          v-click-outside="onMenuClickOutside"
-                         class="bg-white rounded mt-1 absolute w-56 flex flex-col border-2">
+                         class="bg-white rounded mt-1 absolute flex flex-col border-2">
                         <div class="bg-gray-200 rounded-t border-b-2">
                             <p class="p-2 text-sm font-medium">{{layoutColumns}} {{$t('columns.layout')}}</p>
                         </div>
-                        <div class="flex items-center py-2">
+                        <div class="w-full flex p-2 justify-between">
                             <i v-for="index in maxLayoutColumns"
                                class="icon-square mx-margin--1"
                                :class="{'bg-primary-100': index <= layoutColumns}"
@@ -33,7 +32,9 @@
         </div>
         <div>
             <div class="flex py-6 extension-cards justify-center">
-                <fade-transition class="flex flex-wrap justify-center" group>
+                <fade-transition class="flex flex-wrap" group
+                                 :style="renderColumns"
+                                 :class="{'grid-container overflow-x-auto': sortedExtensions.length, 'w-full': sortedExtensions.length === 0}">
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
                          class="pr-4">
@@ -51,12 +52,13 @@
     </div>
 </template>
 <script>
-
     import times from 'lodash/times'
     import orderBy from 'lodash/orderBy'
     import {Select, Option} from 'element-ui'
     import {FadeTransition} from 'vue2-transitions'
     import ExtensionCard from '@/components/Cards/ExtensionCard'
+
+    const cardWidth = 256;
 
     export default {
         components: {
@@ -101,8 +103,8 @@
                     }
                 ],
                 showGridMenu: false,
-                maxLayoutColumns: 10,
-                layoutColumns: 6
+                maxLayoutColumns: 0,
+                layoutColumns: 0
             }
         },
         computed: {
@@ -120,6 +122,7 @@
                 return this.extensions
             },
             sortedExtensions() {
+                return orderBy(this.extensions, this.sortBy, 'asc')
                 return orderBy(this.onlineExtensions, this.sortBy, 'asc')
             },
             responsiveClass() {
@@ -141,6 +144,9 @@
                 return {
                     'grid-template-columns': columns
                 }
+            },
+            pageWidth() {
+                return this.$store.getters['utils/pageWidth']
             }
         },
         methods: {
@@ -150,6 +156,16 @@
             updateGrid(val) {
                 this.layoutColumns = val
             }
+        },
+        watch: {
+            pageWidth: {
+                immediate: true,
+                handler: function (val) {
+                    let numCardsWhichFit = parseInt(val / cardWidth - 1)
+                    this.layoutColumns = numCardsWhichFit
+                    this.maxLayoutColumns = numCardsWhichFit
+                }
+            },
         }
     }
 </script>
