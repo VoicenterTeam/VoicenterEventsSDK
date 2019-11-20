@@ -113,6 +113,10 @@
             showText: {
                 type: Boolean,
                 default: () => false
+            },
+            data: {
+                type: Object,
+                default: () => ({})
             }
         },
         components: {
@@ -187,13 +191,18 @@
         },
         methods: {
             onChange() {
-                let objectToEmit = {
+                let data = {
                     queues: this.selectedQueues,
                     queueType: this.selectedType,
                     showText: this.showStatusText
                 }
 
-                this.$emit('on-update-layout', objectToEmit);
+                this.data.WidgetLayout = {
+                    ...this.data.WidgetLayout,
+                    ...data
+                }
+
+                this.$emit('on-update', this.data);
                 this.showModal = false;
             },
         },

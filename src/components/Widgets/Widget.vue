@@ -21,14 +21,14 @@
                    :editable="editable"
                    class="widget"
                    @on-loading="(state) => onLoading(state)"
-                   @on-update-layout="(data)=> onUpdateLayout(data, widget)"
+                   @on-update="(data) => onUpdate(data)"
                    @remove-item="removeWidget(widget)">
         </component>
         <update-dialog
             width="35%"
             v-if="showUpdateDialog"
             :widget="widget"
-            @on-change-title="(title) => onChangeTitle(title, widget)"
+            @on-update="(data) => onUpdate(data)"
             v-on="$listeners"
             :visible.sync="showUpdateDialog">
         </update-dialog>
@@ -116,16 +116,8 @@
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onChangeTitle(title, widget) {
-                widget.Title = title
+            onUpdate(widget) {
                 this.$emit('update-item', widget)
-            },
-            onUpdateLayout(data = {}, widget) {
-                widget.WidgetLayout = {
-                    ...widget.WidgetLayout,
-                    ...data
-                }
-                this.$emit('update-item', this.widget)
             },
             onLoading(state) {
                 this.loading = state

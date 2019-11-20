@@ -44,7 +44,8 @@
         },
         methods: {
             onChange() {
-                this.$emit('on-change-title', this.title);
+                this.widget.Title = this.title
+                this.$emit('on-update', this.widget);
 
                 if (this.widget.componentType === 'ExtensionCards') {
                     this.$emit('onUpdateSettings', this.settings)

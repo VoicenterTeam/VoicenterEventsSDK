@@ -12,7 +12,7 @@
         </el-tooltip>
         <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.group')" placement="top">
             <Trash2Icon class="flex align-center w-6 h-6 mx-1 text-red cursor-pointer"
-                        @click="$emit('remove-group', widgetGroup)">
+                        @click="$emit('removeGroup', widgetGroup)">
             </Trash2Icon>
         </el-tooltip>
     </div>
@@ -38,7 +38,7 @@
         },
         methods: {
             orderWidgetGroup(direction) {
-                this.$emit('move-groups', {'widgetGroup': this.widgetGroup, 'direction': direction})
+                this.$emit('moveGroups', {'widgetGroup': this.widgetGroup, 'direction': direction})
             }
         }
     }
