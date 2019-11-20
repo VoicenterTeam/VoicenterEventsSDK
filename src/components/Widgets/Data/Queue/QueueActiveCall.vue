@@ -1,26 +1,27 @@
 <template>
     <div>
         <data-table
-            v-if="!loading"
             :tableData="fetchTableData"
             :editable="editable"
             :columns="columns"
             :stripe="stripe"
             :border="border">
+            <template v-slot:WaitingTime="{row}">
+                <waiting-time :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
+            </template>
         </data-table>
-
-        {{queueActiveCalls}}
-
-
     </div>
 </template>
 <script>
-    import {activeCallColumns} from '@/enum/queueConfigs'
+    import orderBy from 'lodash/orderBy'
+    import WaitingTime from './WaitingTime'
     import DataTable from '@/components/Table/DataTable'
+    import {activeCallColumns} from '@/enum/queueConfigs'
 
     export default {
         components: {
-            DataTable
+            DataTable,
+            WaitingTime,
         },
         props: {
             data: {
@@ -40,20 +41,24 @@
             }
         },
         computed: {
-            queueActiveCalls() {
+            queueWithActiveCalls() {
                 return this.$store.state.queues.all.filter((el) => el.Calls.length)
             },
-
             fetchTableData() {
+                let data = []
+                this.queueWithActiveCalls.forEach((queue) => {
+                    queue.Calls.forEach((call) => {
+                        data.push({
+                            QueueName: queue.QueueName,
+                            CallerNumber: ' - ',
+                            CallerName: call.CallerName,
+                            Call: call
+                        })
+                    })
+                })
 
-
-
-                return []
+                return orderBy(data, function(e) { return e.Call.JoinTimeStamp}, ['asc']);
             }
         },
-
     }
 </script>
-<style lang="scss" scoped>
-
-</style>

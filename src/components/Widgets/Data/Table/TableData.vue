@@ -179,7 +179,6 @@
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
                     }
-                    data[0]['user_id'] = 106576
                     this.tableData = data
                     this.columns = columns
                 } catch (e) {

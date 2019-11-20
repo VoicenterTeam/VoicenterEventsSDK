@@ -4,7 +4,7 @@ export const activeCallColumns = [{
     align: 'center',
     label: 'Queue Name',
 }, {
-    prop: 'caller_number',
+    prop: 'CallerNumber',
     fixed: false,
     align: 'center',
     label: 'Caller Number'
@@ -14,7 +14,7 @@ export const activeCallColumns = [{
     align: 'center',
     label: 'Caller Name'
 }, {
-    prop: 'waiting_time',
+    prop: 'WaitingTime',
     fixed: false,
     align: 'center',
     label: 'Waiting Time'
