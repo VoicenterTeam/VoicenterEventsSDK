@@ -70,7 +70,6 @@
         methods: {
             getClass(widgets) {
                 if (widgets.length) {
-
                     let tabsToDisplay = uniq(widgets.map((widget) => {
                         return getWidgetDataType(widget)
                     }))
@@ -78,7 +77,7 @@
                         return 'display-widget__tabs'
                     }
                 }
-                return '123'
+                return ''
             }
         }
     }
