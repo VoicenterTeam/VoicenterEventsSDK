@@ -1,6 +1,6 @@
 <template>
     <el-collapse v-model="activeCollapse" class="pt-4">
-        <el-collapse-item :title="$t('settings.extension')" name="threshold">
+        <el-collapse-item :title="$t('settings.threshold')" name="threshold">
             <div class="flex flex-col">
                 <div class="md:flex md:flex-col md:justify-center my-4">
                     <el-checkbox v-model="model.settings.showLoggedOutUsers">
