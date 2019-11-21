@@ -39,9 +39,11 @@
     import cloneDeep from 'lodash/cloneDeep'
     import {Dialog, Select, Option} from 'element-ui'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
     import {widgetTimeOptions} from '@/enum/widgetTimeOptions'
     import {settings} from '@/enum/defaultRealTimeWidgetSettings'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
+
 
     export default {
         inheritAttrs: false,
@@ -69,38 +71,11 @@
         },
         computed: {
             rules() {
-                return {
-                    'settings.generalThresholdLowValue': [
-                        {
-                            min: this.model.settings.generalThreshold ? 1 : 0,
-                            type: 'number',
-                            message: this.$t('validation.generalThresholdLowValue'),
-                        }
-                    ],
-                    'settings.generalThresholdHeightValue': [
-                        {
-                            min: this.model.settings.generalThreshold ? (this.model.settings.generalThresholdLowValue + 1) : 0,
-                            type: 'number',
-                            message: this.$t('validation.generalThresholdHeightValue'),
-                        }
-                    ],
-                    'settings.callThresholdLowValue': [
-                        {
-                            min: this.model.settings.callThreshold ? 1 : 0,
-                            type: 'number',
-                            message: this.$t('validation.callThresholdLowValue'),
-                        }
-                    ],
-                    'settings.callThresholdHeightValue': [
-                        {
-                            min: this.model.settings.callThreshold ? (this.model.settings.callThresholdLowValue + 1) : 0,
-                            type: 'number',
-                            message: this.$t('validation.callThresholdHeightValue'),
-                        }
-                    ],
+                if (isRealtimeWidget(this.widget)) {
+                    return realTimeWidgetRules(this.model)
                 }
+                return {}
             },
-
         },
         methods: {
             onChange() {
