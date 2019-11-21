@@ -20,6 +20,10 @@
             extension: {
                 type: Object,
                 default: () => ({})
+            },
+            settings: {
+                type: Object,
+                default: () => ({})
             }
         },
         computed: {
@@ -28,12 +32,12 @@
                 let icon = 'IconYellowBulb';
                 if ((Array.isArray(this.extension.calls) &&
                     this.extension.calls.length > 0) ||
-                    !this.$store.state.dashboards.settings.threshold.generalThreshold) {
+                    !this.settings.generalThreshold) {
                     show = false;
                 }
                 let seconds = this.timer.state.seconds;
-                let minThreshold = this.$store.state.dashboards.settings.threshold.generalThresholdLowValue
-                let maxThreshold = this.$store.state.dashboards.settings.threshold.generalThresholdHeightValue
+                let minThreshold = this.settings.generalThresholdLowValue
+                let maxThreshold = this.settings.generalThresholdHeightValue
 
                 if (minThreshold > seconds) {
                     show = false

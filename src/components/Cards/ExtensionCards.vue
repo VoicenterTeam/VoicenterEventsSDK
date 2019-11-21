@@ -38,7 +38,7 @@
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
                          class="pr-4">
-                        <extension-card :extension="extension"></extension-card>
+                        <extension-card :extension="extension" :settings="getSettings"></extension-card>
                     </div>
                     <div key="no-data"
                          class="flex flex-col w-full items-center"
@@ -52,11 +52,14 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import times from 'lodash/times'
     import orderBy from 'lodash/orderBy'
     import {Select, Option} from 'element-ui'
     import {FadeTransition} from 'vue2-transitions'
+    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import ExtensionCard from '@/components/Cards/ExtensionCard'
+    import {settings} from '@/enum/defaultRealTimeWidgetSettings'
 
     const cardWidth = 256;
 
@@ -71,6 +74,10 @@
             editable: {
                 type: Boolean,
                 default: false
+            },
+            data: {
+                type: Object,
+                default: () => ({})
             }
         },
         data() {
@@ -104,7 +111,7 @@
                 ],
                 showGridMenu: false,
                 maxLayoutColumns: 0,
-                layoutColumns: 0
+                layoutColumns: 0,
             }
         },
         computed: {
@@ -115,14 +122,13 @@
                 return this.$store.state.extensions.extensions
             },
             onlineExtensions() {
-                if (!this.$store.state.dashboards.settings.showLoggedOutUsers) {
-                    let logoutStatus = 2
-                    return this.extensions.filter(e => e.representativeStatus !== logoutStatus)
+                let showLoggedOutUsers = get(this.data.WidgetLayout.settings, 'showLoggedOutUsers')
+                if (!showLoggedOutUsers) {
+                    return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
                 }
                 return this.extensions
             },
             sortedExtensions() {
-                return orderBy(this.extensions, this.sortBy, 'asc')
                 return orderBy(this.onlineExtensions, this.sortBy, 'asc')
             },
             responsiveClass() {
@@ -147,6 +153,9 @@
             },
             pageWidth() {
                 return this.$store.getters['utils/pageWidth']
+            },
+            getSettings() {
+                return this.data.WidgetLayout.settings || settings
             }
         },
         methods: {
@@ -166,7 +175,7 @@
                     this.maxLayoutColumns = numCardsWhichFit
                 }
             },
-        }
+        },
     }
 </script>
 <style scoped lang="scss">

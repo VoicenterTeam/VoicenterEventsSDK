@@ -19,7 +19,6 @@
     import chartConfig from './Configs/TimeLine'
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import {getWidgetDataType} from '@/helpers/widgetUtils'
 
     export default {
         name: 'TimeLineChart',
@@ -36,10 +35,6 @@
                 type: Boolean,
                 default: false
             },
-            endPoint: {
-                type: String,
-                default: ''
-            },
         },
         data() {
             return {
@@ -50,7 +45,7 @@
         },
         computed: {
             chartConstructorType() {
-                let widgetDataType = getWidgetDataType(this.data)
+                let widgetDataType = this.data.DataTypeID
                 if (widgetDataType === widgetDataTypes.TIMELINE_TYPE_ID) {
                     return 'ganttChart'
                 }
@@ -62,8 +57,8 @@
         },
         methods: {
             async getChartData() {
-                let widgetDataType = getWidgetDataType(this.data)
-                let Data = await WidgetDataApi.getData(this.endPoint)
+                let widgetDataType = this.data.DataTypeID
+                let Data = await WidgetDataApi.getData(this.data.EndPoint)
                 let chartData = get(Data, '0', {series: []})
                 let chartType = ''
                 if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {

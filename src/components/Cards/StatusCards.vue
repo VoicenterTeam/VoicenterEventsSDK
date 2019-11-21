@@ -90,6 +90,10 @@
             showText: {
                 type: Boolean,
                 default: false
+            },
+            data: {
+                type: Object,
+                default: () => ({})
             }
         },
         components: {
@@ -139,12 +143,18 @@
         },
         methods: {
             onChange() {
-                let objectToEmit = {
+
+                let data = {
                     status: this.selectedStatus,
                     showText: this.showStatusText
                 }
 
-                this.$emit('on-update-layout', objectToEmit);
+                this.data.WidgetLayout = {
+                    ...this.data.WidgetLayout,
+                    ...data
+                }
+
+                this.$emit('on-update', this.data);
                 this.showModal = false;
             },
             onStatusChange(value) {

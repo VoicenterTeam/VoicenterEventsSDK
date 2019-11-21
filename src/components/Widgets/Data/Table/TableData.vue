@@ -11,7 +11,9 @@
             :cell-class-name="getCellClassName">
             <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
                 <status-duration v-if="userExtension(row.user_id)"
-                                 :extension="userExtension(row.user_id)"></status-duration>
+                                 :extension="userExtension(row.user_id)"
+                                 :settings="getSettings">
+                </status-duration>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
             <template v-if="isRealTimeTable" v-slot:status="{row}">
@@ -62,8 +64,9 @@
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
-    import {dynamicRows, dynamicColumns, realTimeTableKey} from '@/enum/realTimeTableConfigs'
-    import {getWidgetEndpoint} from "@/helpers/widgetUtils";
+    import {isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {settings} from '@/enum/defaultRealTimeWidgetSettings'
+    import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
 
     export default {
         components: {
@@ -98,7 +101,6 @@
                 filter: '',
                 filteredDataLength: null,
                 hideOnSinglePage: true,
-                endPoint: '',
                 border: true,
                 stripe: true
             }
@@ -135,8 +137,11 @@
                 return 0 + ' - ' + 0
             },
             isRealTimeTable() {
-                return !!this.endPoint.includes(realTimeTableKey)
+                return isRealtimeWidget(this.data)
             },
+            getSettings() {
+                return this.data.WidgetLayout.settings || settings
+            }
         },
         methods: {
             userExtension(userId) {
@@ -161,7 +166,7 @@
             },
             async getTableData() {
                 try {
-                    let data = await WidgetDataApi.getData(this.endPoint)
+                    let data = await WidgetDataApi.getData(this.data.EndPoint)
                     let columns = [];
 
                     if (data.length) {
@@ -192,8 +197,7 @@
                 this.currentPage = val
             },
         },
-        mounted() {
-            this.endPoint = getWidgetEndpoint(this.data)
+        beforeMount() {
             this.getTableData()
             this.$emit('on-loading', true)
         },
