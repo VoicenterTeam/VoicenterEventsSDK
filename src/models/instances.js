@@ -1,4 +1,4 @@
-import {settings} from './defaultDashboardSettings'
+import {settings} from '@/enum/defaultDashboardSettings'
 
 export const dashboardModel = () => ({
     "AccountID": 1,

@@ -22,6 +22,10 @@
             textColor: {
                 type: String,
                 default: () => 'text-gray-500'
+            },
+            settings: {
+                type: Object,
+                default: () => ({})
             }
         },
         data() {
@@ -41,12 +45,13 @@
             threshold() {
                 let show = true;
                 let icon = 'IconYellowBulb';
-                if (!this.$store.state.dashboards.settings.threshold.callThreshold) {
+
+                if (!this.settings.callThreshold) {
                     show = false;
                 }
                 let seconds = this.timer.state.seconds;
-                let minThreshold = this.$store.state.dashboards.settings.threshold.callThresholdLowValue
-                let maxThreshold = this.$store.state.dashboards.settings.threshold.callThresholdHeightValue
+                let minThreshold = this.settings.callThresholdLowValue
+                let maxThreshold = this.settings.callThresholdHeightValue
 
                 if (minThreshold > seconds) {
                     show = false

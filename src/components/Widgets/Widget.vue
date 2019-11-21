@@ -14,22 +14,21 @@
                 </el-tooltip>
             </div>
         </div>
-        <component :is="getComponentType(widget)"
+        <component :is="getComponentTypeAndSetData(widget)"
                    :data="widget"
-                   :endPoint="setComponentEndPoint"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
                    @on-loading="(state) => onLoading(state)"
-                   @on-update-layout="(data)=> onUpdateLayout(data, widget)"
+                   @on-update="(data) => onUpdate(data)"
                    @remove-item="removeWidget(widget)">
         </component>
         <update-dialog
-            width="30%"
+            width="35%"
             v-if="showUpdateDialog"
-            :title="widget.Title"
-            :time="widget.WidgetTime"
-            @on-change="(data)=> onChange(data, widget)"
+            :widget="widget"
+            @on-update="(data) => onUpdate(data)"
+            v-on="$listeners"
             :visible.sync="showUpdateDialog">
         </update-dialog>
     </div>
@@ -46,11 +45,11 @@
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
+    import QueueActiveCall from './Data/Queue/QueueActiveCall'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/widgetUtils";
-    import QueueActiveCall from "./Data/Queue/QueueActiveCall";
 
     export default {
         name: "widget",
@@ -98,7 +97,6 @@
                 },
                 showUpdateDialog: false,
                 loading: false,
-                endPoint: ''
             }
         },
         computed: {
@@ -111,36 +109,31 @@
             getWidgetTemplate() {
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
-            setComponentEndPoint() {
-                return getWidgetEndpoint(this.widget)
-            },
+
         },
         methods: {
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onChange(data = {}, widget) {
-                widget = {
-                    ...widget,
-                    ...data
-                }
-                this.$emit('update-item', widget)
-            },
-            onUpdateLayout(data = {}, widget) {
-                widget.WidgetLayout = {
-                    ...widget.WidgetLayout,
-                    ...data
-                }
+            onUpdate(widget) {
                 this.$emit('update-item', widget)
             },
             onLoading(state) {
                 this.loading = state
             },
-            getComponentType(widget) {
+            getComponentTypeAndSetData(widget) {
                 let dataTypeId = getWidgetDataType(widget)
-                return `${this.componentTypes[dataTypeId]}`
-            }
-        }
+                let componentType = `${this.componentTypes[dataTypeId]}`
+                let endPoint = this.setComponentEndPoint(widget)
+                this.$set(widget, 'ComponentType', componentType)
+                this.$set(widget, 'DataTypeID', dataTypeId)
+                this.$set(widget, 'EndPoint', endPoint)
+                return componentType
+            },
+            setComponentEndPoint(widget) {
+                return getWidgetEndpoint(widget)
+            },
+        },
     }
 </script>
 <style scoped lang="scss">

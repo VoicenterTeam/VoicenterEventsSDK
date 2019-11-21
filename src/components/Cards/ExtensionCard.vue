@@ -18,7 +18,7 @@
                 <span class="text-center text-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
                 <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"></component>
             </div>
-            <call-info v-for="(call, index) in extension.calls" :key="index" :call="call"/>
+            <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :settings="settings"/>
         </div>
     </div>
 </template>
@@ -37,6 +37,10 @@
         },
         props: {
             extension: {
+                type: Object,
+                default: () => ({})
+            },
+            settings: {
                 type: Object,
                 default: () => ({})
             }
@@ -58,12 +62,13 @@
                 let icon = 'IconYellowBulb';
                 if ((Array.isArray(this.extension.calls) &&
                     this.extension.calls.length > 0) ||
-                    !this.$store.state.dashboards.settings.threshold.generalThreshold) {
+                    !this.settings.generalThreshold) {
                     show = false;
                 }
+
                 let seconds = this.timer.state.seconds;
-                let minThreshold = this.$store.state.dashboards.settings.threshold.generalThresholdLowValue
-                let maxThreshold = this.$store.state.dashboards.settings.threshold.generalThresholdHeightValue
+                let minThreshold = this.settings.generalThresholdLowValue
+                let maxThreshold = this.settings.generalThresholdHeightValue
 
                 if (minThreshold > seconds) {
                     show = false

@@ -682,15 +682,6 @@ export const dashboards = [
                     "interval": 5,
                     "switching": true
                 },
-                "threshold": {
-                    "callThreshold": false,
-                    "generalThreshold": false,
-                    "callThresholdLowValue": 0,
-                    "callThresholdHeightValue": 0,
-                    "generalThresholdLowValue": 0,
-                    "generalThresholdHeightValue": 0
-                },
-                "showLoggedOutUsers": true
             }
         },
         "WidgetGroupList": [
