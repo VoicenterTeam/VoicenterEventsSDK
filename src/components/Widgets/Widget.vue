@@ -14,9 +14,8 @@
                 </el-tooltip>
             </div>
         </div>
-        <component :is="getComponentType(widget)"
+        <component :is="getComponentTypeAndSetData(widget)"
                    :data="widget"
-                   :endPoint="setComponentEndPoint"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
@@ -34,8 +33,6 @@
         </update-dialog>
     </div>
 </template>
-
-
 <script>
     import {Tooltip} from 'element-ui'
     import WidgetCard from './WidgetCard'
@@ -100,7 +97,6 @@
                 },
                 showUpdateDialog: false,
                 loading: false,
-                endPoint: ''
             }
         },
         computed: {
@@ -113,9 +109,7 @@
             getWidgetTemplate() {
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
-            setComponentEndPoint() {
-                return getWidgetEndpoint(this.widget)
-            },
+
         },
         methods: {
             removeWidget(widget) {
@@ -127,12 +121,18 @@
             onLoading(state) {
                 this.loading = state
             },
-            getComponentType(widget) {
+            getComponentTypeAndSetData(widget) {
                 let dataTypeId = getWidgetDataType(widget)
                 let componentType = `${this.componentTypes[dataTypeId]}`
-                this.$set(widget, 'componentType', componentType)
+                let endPoint = this.setComponentEndPoint(widget)
+                this.$set(widget, 'ComponentType', componentType)
+                this.$set(widget, 'DataTypeID', dataTypeId)
+                this.$set(widget, 'EndPoint', endPoint)
                 return componentType
-            }
+            },
+            setComponentEndPoint(widget) {
+                return getWidgetEndpoint(widget)
+            },
         },
     }
 </script>

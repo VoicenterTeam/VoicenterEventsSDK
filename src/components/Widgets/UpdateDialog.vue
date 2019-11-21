@@ -1,15 +1,15 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
         <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
-        <el-form @submit.native.prevent="onChange">
+        <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model">
             <el-form-item>
                 <div>
                     <label>{{$t('widget.title')}}</label>
-                    <el-input v-model="title"></el-input>
+                    <el-input v-model="model.title"></el-input>
                 </div>
                 <div v-if="widget.WidgetTime.Date_interval">
                     <label>{{$t('widget.time.interval')}}</label>
-                    <el-select v-model="timeInterval"
+                    <el-select v-model="model.timeInterval"
                                placeholder="Select"
                                class="w-full pt-2">
                         <el-option
@@ -21,11 +21,11 @@
                     </el-select>
                 </div>
             </el-form-item>
-            <component
-                :is="widget.componentType"
+            <Real-time-settings
+                v-if="validateComponentType(widget)"
                 :data="widget"
-                :settings="settings">
-            </component>
+                :model="model">
+            </Real-time-settings>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -34,18 +34,19 @@
     </el-dialog>
 </template>
 <script>
-
-    import ExtensionCards from './WidgetUpdateForm/ExtensionCards'
     import get from 'lodash/get'
     import find from 'lodash/find'
+    import cloneDeep from 'lodash/cloneDeep'
     import {Dialog, Select, Option} from 'element-ui'
-    import {widgetTimeOptions,} from '@/enum/widgetTimeOptions'
+    import {isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {widgetTimeOptions} from '@/enum/widgetTimeOptions'
     import {settings} from '@/enum/defaultRealTimeWidgetSettings'
+    import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
 
     export default {
         inheritAttrs: false,
         components: {
-            ExtensionCards,
+            RealTimeSettings,
             [Dialog.name]: Dialog,
             [Select.name]: Select,
             [Option.name]: Option,
@@ -58,21 +59,58 @@
         },
         data() {
             return {
-                title: '',
-                timeInterval: {},
                 widgetTimeOptions: widgetTimeOptions,
-                settings: settings
+                model: {
+                    settings: settings,
+                    title: '',
+                    timeInterval: {},
+                },
             }
         },
-        computed: {},
+        computed: {
+            rules() {
+                return {
+                    'settings.generalThresholdLowValue': [
+                        {
+                            min: this.model.settings.generalThreshold ? 1 : 0,
+                            type: 'number',
+                            message: this.$t('validation.generalThresholdLowValue'),
+                        }
+                    ],
+                    'settings.generalThresholdHeightValue': [
+                        {
+                            min: this.model.settings.generalThreshold ? (this.model.settings.generalThresholdLowValue + 1) : 0,
+                            type: 'number',
+                            message: this.$t('validation.generalThresholdHeightValue'),
+                        }
+                    ],
+                    'settings.callThresholdLowValue': [
+                        {
+                            min: this.model.settings.callThreshold ? 1 : 0,
+                            type: 'number',
+                            message: this.$t('validation.callThresholdLowValue'),
+                        }
+                    ],
+                    'settings.callThresholdHeightValue': [
+                        {
+                            min: this.model.settings.callThreshold ? (this.model.settings.callThresholdLowValue + 1) : 0,
+                            type: 'number',
+                            message: this.$t('validation.callThresholdHeightValue'),
+                        }
+                    ],
+                }
+            },
+
+        },
         methods: {
             onChange() {
-                this.$refs.cardSettings.validate((valid) => {
+                this.$refs.updateWidget.validate((valid) => {
                     if (valid) {
-                        this.widget.Title = this.title;
+                        this.widget.Title = this.model.title;
 
                         if (this.widget.WidgetTime.Date_interval) {
-                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.timeInterval)
+
+                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.timeInterval)
                             this.widget.WidgetTime = {
                                 ...this.widget.WidgetTime,
                                 ...widgetTime
@@ -81,7 +119,7 @@
 
                         this.widget.WidgetLayout = {
                             ...this.widget.WidgetLayout,
-                            ...{settings: this.settings}
+                            ...{settings: this.model.settings}
                         };
 
                         this.$emit('on-update', this.widget)
@@ -91,18 +129,23 @@
             },
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
+            },
+            validateComponentType() {
+                return isRealtimeWidget(this.widget)
             }
         },
         mounted() {
-            this.title = this.widget.Title
-            this.timeInterval = get(
+            this.model.title = this.widget.Title
+            this.model.timeInterval = get(
                 find(this.widgetTimeOptions,
                     {
                         datedeff: parseInt(get(this.widget.WidgetTime, 'datedeff')),
                         Date_interval: parseInt(get(this.widget.WidgetTime, 'Date_interval'))
                     }
                 ), 'label')
-            this.settings = this.widget.WidgetLayout.settings || settings
+            if (isRealtimeWidget(this.widget)) {
+                this.model.settings = cloneDeep(this.widget.WidgetLayout.settings || settings)
+            }
         },
     }
 </script>

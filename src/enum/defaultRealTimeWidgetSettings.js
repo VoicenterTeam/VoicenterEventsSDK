@@ -1,5 +1,5 @@
 export const settings = {
-    showLoggedOutUsers: true,
+    showLoggedOutUsers: false,
     generalThreshold: false,
     generalThresholdLowValue: 0,
     generalThresholdHeightValue: 0,

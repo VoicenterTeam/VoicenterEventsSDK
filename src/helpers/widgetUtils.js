@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 import store from '@/store/store'
-import widgetDataTypes from '../enum/widgetDataTypes'
+import widgetDataTypes from '@/enum/widgetDataTypes'
+import {realTimeTableKey} from '@/enum/realTimeTableConfigs'
 
 export function getWidgetEndpoint(widget) {
     let endpoint = get(widget, 'WidgetLayout.Endpoint')
@@ -40,4 +41,13 @@ export function getDataTypeClass(widget) {
         console.warn(e)
     }
     return componentWidth[dataType]
+}
+
+export function isRealtimeWidget(widget) {
+    if (widget.EndPoint.includes(realTimeTableKey)) {
+        return true
+    } else if (widget.DataTypeID === widgetDataTypes.EXTENSION_CARDS) {
+        return true
+    }
+    return false
 }
