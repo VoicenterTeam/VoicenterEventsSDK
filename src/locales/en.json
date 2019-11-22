@@ -46,6 +46,7 @@
     "settings.widget.tabbed.view": "Show widget as tabs in widget groups",
     "settings.colors": "Colors",
     "settings.threshold": "Threshold settings",
+    "settings.time.frame": "Time frame",
     "settings.color.primary": "Primary",
     "settings.color.secondary": "Secondary",
     "settings.extension.logout": "Show logged out users",

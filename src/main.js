@@ -16,6 +16,12 @@ Vue.use(dashboardPlugin)
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;
 
+Vue.mixin({
+    methods: {
+        capitalizeFirstLetter: str => str.charAt(0).toUpperCase() + str.slice(1)
+    }
+});
+
 new Vue({
     router,
     store,
