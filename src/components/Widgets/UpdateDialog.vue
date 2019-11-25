@@ -27,7 +27,6 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
-
             <el-collapse v-model="activeCollapse" class="pt-4" v-if="filters.length">
                 <el-collapse-item :title="$t('settings.filters')" name="filters">
                     <auto-complete v-for="filter in filters" :data="filter"></auto-complete>
@@ -86,7 +85,7 @@
                     title: '',
                     timeInterval: {},
                 },
-                activeCollapse: ['filters', 'otherFilters']
+                activeCollapse: ['filters']
             }
         },
         computed: {
@@ -97,10 +96,10 @@
                 return {}
             },
             filters() {
-                return this.widget.WidgetConfig.filter(f => filterIDs.includes(f.ParameterID))
+                return this.widget.WidgetConfig.filter(f => f.ParameterID && filterIDs.includes(f.ParameterID))
             },
             otherFilters() {
-                return this.widget.WidgetConfig.filter(f => !filterIDs.includes(f.ParameterID))
+                return this.widget.WidgetConfig.filter(f => f.ParameterID && !filterIDs.includes(f.ParameterID))
             }
         },
         methods: {
@@ -132,7 +131,8 @@
                             this.widget.WidgetConfig.forEach((config) => {
                                 config.WidgetParameterValue = config.WidgetParameterValue.join()
                             })
-                        } catch (e) { }
+                        } catch (e) {
+                        }
 
                         this.$emit('on-update', this.widget)
                         this.toggleVisibility(false);
