@@ -2,7 +2,6 @@
     <input
         class="w-full my-2 py-2 px-4 appearance-none border rounded focus:outline-none focus:border-primary"
         v-bind="$attrs"
-        type="text"
         v-on="listeners">
     </input>
 </template>

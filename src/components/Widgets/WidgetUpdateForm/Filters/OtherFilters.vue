@@ -4,6 +4,7 @@
             {{data.ParameterPrettyName}}
         </label>
         <component :is="getComponent.name"
+                   :type="getComponent.type"
                    :placeholder="$t('settings.add.filter')"
                    v-model="data.WidgetParameterValue">
         </component>
