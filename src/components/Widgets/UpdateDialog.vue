@@ -27,7 +27,17 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
-            <filters :data="widget"></filters>
+
+            <el-collapse v-model="activeCollapse" class="pt-4" v-if="filters.length">
+                <el-collapse-item :title="$t('settings.filters')" name="filters">
+                    <auto-complete v-for="filter in filters" :data="filter"></auto-complete>
+                </el-collapse-item>
+            </el-collapse>
+            <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length">
+                <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
+                    <other-filters v-for="filter in otherFilters" :data="filter"></other-filters>
+                </el-collapse-item>
+            </el-collapse>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -37,15 +47,16 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Radio, RadioGroup} from 'element-ui'
-    import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
+    import {Dialog, Radio, RadioGroup, Collapse, CollapseItem} from 'element-ui'
+    import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
+    import {filterIDs} from '@/enum/widgetTemplateConfigs'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
+    import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
-    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {settings} from '@/enum/defaultRealTimeWidgetSettings'
+    import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
-
-    import Filters from './WidgetUpdateForm/Filters'
+    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
 
     export default {
         inheritAttrs: false,
@@ -55,7 +66,10 @@
             [Radio.name]: Radio,
             [Dialog.name]: Dialog,
             [RadioGroup.name]: RadioGroup,
-            Filters
+            [Collapse.name]: Collapse,
+            [CollapseItem.name]: CollapseItem,
+            AutoComplete,
+            OtherFilters
         },
         props: {
             widget: {
@@ -72,6 +86,7 @@
                     title: '',
                     timeInterval: {},
                 },
+                activeCollapse: ['filters', 'otherFilters']
             }
         },
         computed: {
@@ -81,6 +96,12 @@
                 }
                 return {}
             },
+            filters() {
+                return this.widget.WidgetConfig.filter(f => filterIDs.includes(f.ParameterID))
+            },
+            otherFilters() {
+                return this.widget.WidgetConfig.filter(f => !filterIDs.includes(f.ParameterID))
+            }
         },
         methods: {
             onChange() {
@@ -105,7 +126,13 @@
                         this.widget.WidgetLayout = {
                             ...this.widget.WidgetLayout,
                             ...{settings: this.model.settings}
-                        };
+                        }
+
+                        try {
+                            this.widget.WidgetConfig.forEach((config) => {
+                                config.WidgetParameterValue = config.WidgetParameterValue.join()
+                            })
+                        } catch (e) { }
 
                         this.$emit('on-update', this.widget)
                         this.toggleVisibility(false);

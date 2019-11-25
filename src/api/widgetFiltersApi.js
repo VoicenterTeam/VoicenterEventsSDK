@@ -5,8 +5,7 @@ export const WidgetFiltersApi = {
     async getAutocompletes(endPoint) {
         try {
             let res = await httpInterceptor.post(endPoint, {})
-            console.log(res)
-            return res
+            return res.Data
         } catch (e) {
             parseCatch(e, true, 'Get Filter Data')
         }
