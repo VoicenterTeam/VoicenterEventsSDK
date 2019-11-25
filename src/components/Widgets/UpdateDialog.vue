@@ -27,6 +27,7 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
+            <filters :data="widget"></filters>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -44,6 +45,8 @@
     import {settings} from '@/enum/defaultRealTimeWidgetSettings'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
 
+    import Filters from './WidgetUpdateForm/Filters'
+
     export default {
         inheritAttrs: false,
         components: {
@@ -52,6 +55,7 @@
             [Radio.name]: Radio,
             [Dialog.name]: Dialog,
             [RadioGroup.name]: RadioGroup,
+            Filters
         },
         props: {
             widget: {

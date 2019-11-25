@@ -13,6 +13,7 @@
     import {Collapse, CollapseItem} from 'element-ui'
     import TimeAbsolute from './TimeAbsolute'
     import TimeRelative from './TimeRelative'
+    import {capitalizeFirstLetter} from '@/helpers/util'
 
     export default {
         components: {
@@ -29,12 +30,12 @@
         },
         data() {
             return {
-                activeCollapse: ['timeFrame'],
+                activeCollapse: 'timeFrame',
             }
         },
         computed: {
             getComponent() {
-                return 'Time' + this.capitalizeFirstLetter(this.timeFrameType)
+                return 'Time' + capitalizeFirstLetter(this.timeFrameType)
             }
         }
     }
