@@ -1,5 +1,5 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)" class="pb-6">
+    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)" class="pb-20">
         <data-table
             v-if="!loading"
             :tableData="fetchTableData"

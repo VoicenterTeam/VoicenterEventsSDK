@@ -1,0 +1,14 @@
+.el-loading-mask {
+    .el-loading-spinner {
+        .circular {
+            height: 60px;
+            width: 60px;
+        }
+
+        .path {
+            stroke-width: 3.5px;
+            stroke: var(--primary-color);
+        }
+    }
+}
+
