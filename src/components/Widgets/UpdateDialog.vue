@@ -109,17 +109,15 @@
                     if (valid) {
                         this.widget.Title = this.model.title;
 
-                        if (this.widget.WidgetTime.Date_interval === 'relative') {
-                            if (this.model.widgetTime.label) {
-                                let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.widgetTime.label)
-                                this.widget.WidgetTime = {
-                                    ...this.widget.WidgetTime,
-                                    ...widgetTime
-                                }
-                            } else {
-                                this.widget.WidgetTime = this.model.widgetTime
-                                delete this.widget.WidgetTime.label
+                        if (this.model.widgetTime.type === 'relative') {
+                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.widgetTime.label)
+                            this.widget.WidgetTime = {
+                                ...this.widget.WidgetTime,
+                                ...widgetTime
                             }
+                        } else {
+                            this.widget.WidgetTime = this.model.widgetTime
+                            this.widget.WidgetTime.label = null
                         }
 
                         this.widget.WidgetLayout = {
