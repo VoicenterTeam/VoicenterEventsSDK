@@ -4,20 +4,20 @@
             <sidebar v-if="showSidebar"
                      :activeTab="activeTab"
                      :widgetGroupList="activeDashboardData.WidgetGroupList"
-                     @switch-tab="(tab) => switchTab(tab)"></sidebar>
+                     @switch-tab="(tab) => switchTab(tab)"/>
             <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
                     <div class="flex w-48 sm:w-64">
                         <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
                                   v-model="widgetsFilter"
-                                  prefix-icon="el-icon-search"></el-input>
+                                  prefix-icon="el-icon-search"/>
                     </div>
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex items-center">
                             <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                             placement="bottom">
-                                    <IconSettings class="text-primary"></IconSettings>
+                                    <IconSettings class="text-primary"/>
                                 </el-tooltip>
                             </div>
                             <new-group-button

@@ -5,6 +5,7 @@ import lang from './modules/lang'
 import users from './modules/users'
 import utils from './modules/utils'
 import queues from './modules/queues'
+import entities from './modules/entities'
 import dashboards from './modules/dashboards'
 import extensions from './modules/extensions'
 import widgetTemplate from './modules/widgetTemplate'
@@ -21,6 +22,7 @@ export default new Vuex.Store({
         utils,
         users,
         queues,
+        entities,
         dashboards,
         extensions,
         widgetTemplate,

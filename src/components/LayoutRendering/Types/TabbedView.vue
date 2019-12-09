@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="tabs.length">
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
             <template v-slot="{tab, activeTab}">
                 <component :is="widgetsViewMode"
