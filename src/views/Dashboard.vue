@@ -16,7 +16,10 @@
                         <el-tooltip class="item" effect="dark" :content="$t('tooltip.refresh.entities.list')"
                                     placement="bottom">
                             <div :class="{'mx-2': showGeneralWidgetSearch}">
-                                <el-button :disabled="loadEntitiesList" :loading="loadEntitiesList" type="default" icon="el-icon-refresh" @click="refreshEntitiesList"/>
+                                <RefreshButton
+                                    :disabled="loadEntitiesList"
+                                    :loading="loadEntitiesList"
+                                    @click.native="refreshEntitiesList"/>
                             </div>
                         </el-tooltip>
                     </div>
@@ -101,6 +104,7 @@
     import differenceBy from 'lodash/differenceBy'
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
+    import RefreshButton from '@/components/RefreshButton'
     import sdkEventTypes from '@/enum/sdkEventTypes'
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
@@ -126,6 +130,7 @@
             [Switcher.name]: Switcher,
             NewGroupButton,
             AddButton,
+            RefreshButton,
             WidgetMenu,
             EventsSDK,
             NormalView,

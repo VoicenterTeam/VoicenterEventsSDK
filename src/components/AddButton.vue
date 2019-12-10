@@ -3,7 +3,7 @@
         <button class="btn p-3 shadow rounded bg-white hover:bg-primary-100 hover:text-primary" v-bind="$attrs"
                 v-on="$listeners">
             <slot>
-                <IconPlus class="w-3 h-3 text-primary"></IconPlus>
+                <IconPlus class="w-3 h-3 text-primary"/>
             </slot>
         </button>
     </el-tooltip>
