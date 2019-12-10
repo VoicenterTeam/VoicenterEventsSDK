@@ -19,7 +19,6 @@
 <script>
     import {Option, Select} from 'element-ui'
     import {filters} from '@/enum/widgetTemplateConfigs'
-    import {WidgetFiltersApi} from '@/api/widgetFiltersApi'
 
     export default {
         components: {
@@ -40,10 +39,11 @@
             }
         },
         methods: {
-            async getData() {
+            getData() {
                 try {
                     this.loading = true;
-                    this.options = await WidgetFiltersApi.getAutocompletes(this.templateConfig.EndPoint)
+                    let key = this.templateConfig.EntitiesListKey
+                    this.options = this.$store.getters['entities/getEntityList'](key)
                     this.data.WidgetParameterValue.split(',')
                 } catch (e) {
                     console.warn(e)
@@ -52,8 +52,8 @@
                 }
             },
         },
-        async mounted() {
-            await this.getData()
+        mounted() {
+            this.getData()
         }
     }
 </script>

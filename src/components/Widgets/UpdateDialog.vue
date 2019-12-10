@@ -29,12 +29,12 @@
             </real-time-settings>
             <el-collapse v-model="activeCollapse" class="pt-4" v-if="filters.length">
                 <el-collapse-item :title="$t('settings.filters')" name="filters">
-                    <auto-complete v-for="filter in filters" :data="filter"></auto-complete>
+                    <auto-complete v-for="filter in filters" :data="filter"/>
                 </el-collapse-item>
             </el-collapse>
             <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length">
                 <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
-                    <other-filters v-for="filter in otherFilters" :data="filter"></other-filters>
+                    <other-filters v-for="filter in otherFilters" :data="filter"/>
                 </el-collapse-item>
             </el-collapse>
         </el-form>
