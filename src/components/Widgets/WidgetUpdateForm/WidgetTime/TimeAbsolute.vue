@@ -2,6 +2,7 @@
     <range-filter class="pt-2" :pickerOptions="pickerOptions" :date="fetchDate" @on-change="onChange"/>
 </template>
 <script>
+    import {TIME_LINE_TIMESTAMP} from '@/enum/generic'
     import RangeFilter from '../../../Common/RangeFilter'
 
     export default {
@@ -44,10 +45,10 @@
         methods: {
             onChange(dates) {
                 let Difference_In_Time = new Date().getTime() - dates[0].getTime()
-                this.model.WidgetTime.datedeff = parseInt(Difference_In_Time / (1000 * 3600 * 24))
+                this.model.WidgetTime.datedeff = parseInt(Difference_In_Time / TIME_LINE_TIMESTAMP.DAY)
 
                 let _Difference_In_Time = dates[1].getTime() - dates[0].getTime()
-                this.model.WidgetTime.Date_interval = parseInt(_Difference_In_Time / (1000 * 3600 * 24))
+                this.model.WidgetTime.Date_interval = parseInt(_Difference_In_Time / TIME_LINE_TIMESTAMP.DAY)
             }
         }
     }

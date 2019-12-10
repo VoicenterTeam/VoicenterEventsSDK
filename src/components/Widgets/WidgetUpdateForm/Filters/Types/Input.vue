@@ -7,6 +7,7 @@
 </template>
 <script>
     export default {
+        inheritAttrs: false,
         computed: {
             listeners() {
                 return {
@@ -17,10 +18,6 @@
         },
         methods: {
             onInput(evt) {
-
-                if (!this.touched) {
-                    this.touched = true;
-                }
                 this.$emit('input', evt.target.value);
             }
         }

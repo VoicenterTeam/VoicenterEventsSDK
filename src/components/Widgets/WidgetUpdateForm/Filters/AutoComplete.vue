@@ -44,8 +44,7 @@
                     let key = this.templateConfig.EntitiesListKey
                     this.options = this.$store.getters['entities/getEntityList'](key)
                     this.model.WidgetParameterValue = this.model.WidgetParameterValue.split(',').map(el => {
-                        let n = Number(el);
-                        return n === 0 ? n : n || el;
+                        return Number(el);
                     });
                 } catch (e) {
                     console.warn(e)

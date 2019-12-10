@@ -109,32 +109,32 @@
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {
 
-                    if (valid) {
-                        if (this.model.WidgetTime.type === 'relative') {
-                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.WidgetTime.label)
-                            this.model.WidgetTime = {
-                                ...this.model.WidgetTime,
-                                ...widgetTime
-                            }
-                        } else {
-                            this.model.WidgetTime.label = null
-                        }
+                    if (!valid) return;
 
-                        this.model.WidgetLayout = {
-                            ...this.model.WidgetLayout,
-                            ...{settings: this.model.settings}
+                    if (this.model.WidgetTime.type === 'relative') {
+                        let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.WidgetTime.label)
+                        this.model.WidgetTime = {
+                            ...this.model.WidgetTime,
+                            ...widgetTime
                         }
-
-                        try {
-                            this.model.WidgetConfig.forEach((config) => {
-                                config.WidgetParameterValue = config.WidgetParameterValue.join()
-                            })
-                        } catch (e) {
-                        }
-
-                        this.$emit('on-update', this.model)
-                        this.toggleVisibility(false);
+                    } else {
+                        this.model.WidgetTime.label = null
                     }
+
+                    this.model.WidgetLayout = {
+                        ...this.model.WidgetLayout,
+                        ...{settings: this.model.settings}
+                    }
+
+                    try {
+                        this.model.WidgetConfig.forEach((config) => {
+                            config.WidgetParameterValue = config.WidgetParameterValue.join()
+                        })
+                    } catch (e) {
+                    }
+
+                    this.$emit('on-update', this.model)
+                    this.toggleVisibility(false);
                 })
             },
             toggleVisibility(value) {
