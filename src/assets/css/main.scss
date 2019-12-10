@@ -32,15 +32,4 @@
 @import "element-overrides/pagination";
 @import "element-overrides/spiner";
 
-body {
-  @apply bg-gray-200 px-6 font-montserrat;
-  min-width: 320px;
-}
-
-@media (min-width: 768px) {
-  body {
-    @apply px-24;
-  }
-}
-
 @import "layout/dashboard";

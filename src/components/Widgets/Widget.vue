@@ -6,7 +6,9 @@
                     <delete-button @click="removeWidget(widget)"/>
                 </el-tooltip>
             </div>
-            <div class="absolute top-0 right-0 widget-edit__button" v-if="showDeleteButton">
+            <div class="absolute top-0 right-0 widget-edit__button"
+                 v-if="showDeleteButton"
+                 :class="getClass">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                     <edit-button @click="showUpdateDialog = true"
                                  :class="{'border border-primary': editable}">
@@ -109,7 +111,14 @@
             getWidgetTemplate() {
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
-
+            getClass() {
+                if (this.editable) return;
+                if (!this.$rtl.isRTL) {
+                    return 'mt-8 mr-4'
+                } else {
+                    return 'mt-8 ml-4'
+                }
+            }
         },
         methods: {
             removeWidget(widget) {

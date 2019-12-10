@@ -1,16 +1,22 @@
 body {
+    @apply px-6 font-montserrat;
+    min-width: 320px;
+}
+
+@media (min-width: 768px) {
+    body {
+        @apply px-24;
+    }
+}
+
+body {
     background: var(--background-color);
     border: 1px solid var(--frames-color);
     border-bottom: none;
 }
 
-.el-tabs__content .widget, .editable-widgets{
+.el-tabs__content .widget, .editable-widgets {
     background: var(--widgetGroupBackground-color);
     border: 1px solid var(--widgetGroupFrames-color);
-    //padding: 15px;
+    @apply p-4 rounded-lg;
 }
-
-
-//
-//widgetGroupBackground
-//widgetGroupFrames
