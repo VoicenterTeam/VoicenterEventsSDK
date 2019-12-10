@@ -1,14 +1,14 @@
 <template>
-    <div>
+    <div v-if="!loading">
         <label>
-            {{data.ParameterPrettyName}}
+            {{model.ParameterPrettyName}}
         </label>
         <el-select class="w-full py-2"
                    filterable
                    :loading="loading"
                    multiple
                    :v-on="$listeners"
-                   v-model="data.WidgetParameterValue">
+                   v-model="model.WidgetParameterValue">
             <el-option v-for="(option, key) in options"
                        :label="option[templateConfig.label]"
                        :value="option[templateConfig.value]"
@@ -26,25 +26,27 @@
             [Option.name]: Option,
         },
         props: {
-            data: {
+            model: {
                 type: Object,
                 default: () => ({})
-            }
+            },
         },
         data() {
             return {
-                loading: false,
+                loading: true,
                 options: [],
-                templateConfig: filters[this.data.ParameterID]
+                templateConfig: filters[this.model.ParameterID],
             }
         },
         methods: {
             getData() {
                 try {
-                    this.loading = true;
                     let key = this.templateConfig.EntitiesListKey
                     this.options = this.$store.getters['entities/getEntityList'](key)
-                    this.data.WidgetParameterValue.split(',')
+                    this.model.WidgetParameterValue = this.model.WidgetParameterValue.split(',').map(el => {
+                        let n = Number(el);
+                        return n === 0 ? n : n || el;
+                    });
                 } catch (e) {
                     console.warn(e)
                 } finally {

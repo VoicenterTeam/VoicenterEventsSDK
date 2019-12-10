@@ -1,5 +1,5 @@
 <template>
-    <el-select v-model="model.widgetTime.label"
+    <el-select v-model="model.WidgetTime.label"
                placeholder="Select"
                class="w-full pt-2">
         <el-option

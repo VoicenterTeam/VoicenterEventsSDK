@@ -1,5 +1,5 @@
 <template>
-    <range-filter class="pt-2" :pickerOptions="pickerOptions" :date="fetchDate" @on-change="onChange"></range-filter>
+    <range-filter class="pt-2" :pickerOptions="pickerOptions" :date="fetchDate" @on-change="onChange"/>
 </template>
 <script>
     import RangeFilter from '../../../Common/RangeFilter'
@@ -31,7 +31,7 @@
         computed: {
             fetchDate() {
                 let newDate = new Date()
-                let widgetTime = this.model.widgetTime
+                let widgetTime = this.model.WidgetTime
 
                 let startDate = newDate.setDate(newDate.getDate() - widgetTime.datedeff);
 
@@ -44,10 +44,10 @@
         methods: {
             onChange(dates) {
                 let Difference_In_Time = new Date().getTime() - dates[0].getTime()
-                this.model.widgetTime.datedeff = parseInt(Difference_In_Time / (1000 * 3600 * 24))
+                this.model.WidgetTime.datedeff = parseInt(Difference_In_Time / (1000 * 3600 * 24))
 
                 let _Difference_In_Time = dates[1].getTime() - dates[0].getTime()
-                this.model.widgetTime.Date_interval = parseInt(_Difference_In_Time / (1000 * 3600 * 24))
+                this.model.WidgetTime.Date_interval = parseInt(_Difference_In_Time / (1000 * 3600 * 24))
             }
         }
     }

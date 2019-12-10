@@ -1,10 +1,10 @@
 <template>
     <el-collapse v-model="activeCollapse" class="pt-4">
         <el-collapse-item :title="$t('settings.time.frame')" name="timeFrame">
-            <slot name="frame-types"></slot>
+            <slot name="frame-types"/>
             <div>
                 <label>{{$t('widget.time.interval')}}</label>
-                <component :is="getComponent" v-bind="$attrs"></component>
+                <component :is="getComponent" v-bind="$attrs"/>
             </div>
         </el-collapse-item>
     </el-collapse>

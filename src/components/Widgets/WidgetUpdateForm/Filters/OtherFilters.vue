@@ -1,12 +1,12 @@
 <template>
     <div>
         <label>
-            {{data.ParameterPrettyName}}
+            {{model.ParameterPrettyName}}
         </label>
         <component :is="getComponent.name"
                    :type="getComponent.type"
                    :placeholder="$t('settings.add.filter')"
-                   v-model="data.WidgetParameterValue">
+                   v-model="model.WidgetParameterValue">
         </component>
     </div>
 </template>
@@ -19,14 +19,14 @@
             Input,
         },
         props: {
-            data: {
+            model: {
                 type: Object,
                 default: () => ({})
             }
         },
         computed: {
             getComponent() {
-                return componentTypes[this.data.ParameterType]
+                return componentTypes[this.model.ParameterType]
             }
         }
     }

@@ -5,15 +5,15 @@
             <el-form-item>
                 <div>
                     <label>{{$t('widget.title')}}</label>
-                    <el-input v-model="model.title"></el-input>
+                    <el-input v-model="model.Title"/>
                 </div>
-                <div v-if="model.widgetTime && widget.WidgetTime.Date_interval">
+                <div v-if="model.WidgetTime && widget.WidgetTime.Date_interval">
                     <time-frame
                         :model="model"
-                        :timeFrameType="model.widgetTime.type"
+                        :timeFrameType="model.WidgetTime.type"
                         :widgetTimeOptions="widgetTimeOptions">
                         <template v-slot:frame-types>
-                            <el-radio-group v-model="model.widgetTime.type" class="pb-4">
+                            <el-radio-group v-model="model.WidgetTime.type" class="pb-4">
                                 <el-radio v-for="widgetTimeType in widgetTimeTypes" v-bind="widgetTimeType">
                                     {{widgetTimeType.text}}
                                 </el-radio>
@@ -27,14 +27,18 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
-            <el-collapse v-model="activeCollapse" class="pt-4" v-if="filters.length">
+            <el-collapse v-model="activeCollapse" class="pt-4" v-if="filters.length && model.WidgetConfig">
                 <el-collapse-item :title="$t('settings.filters')" name="filters">
-                    <auto-complete v-for="filter in filters" :data="filter"/>
+                    <auto-complete
+                        v-for="(filter, index) in filters"
+                        :model="model.WidgetConfig[index]"/>
                 </el-collapse-item>
             </el-collapse>
-            <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length">
+            <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length && model.WidgetConfig">
                 <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
-                    <other-filters v-for="filter in otherFilters" :data="filter"/>
+                    <other-filters
+                        v-for="(filter, index) in otherFilters"
+                        :model="model.WidgetConfig[index]"/>
                 </el-collapse-item>
             </el-collapse>
         </el-form>
@@ -46,7 +50,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Radio, RadioGroup, Collapse, CollapseItem} from 'element-ui'
+    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup} from 'element-ui'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
     import {filterIDs} from '@/enum/widgetTemplateConfigs'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
@@ -82,7 +86,6 @@
                 widgetTimeTypes: widgetTimeTypes,
                 model: {
                     settings: settings,
-                    title: '',
                     timeInterval: {},
                 },
                 activeCollapse: ['filters']
@@ -96,10 +99,10 @@
                 return {}
             },
             filters() {
-                return this.widget.WidgetConfig.filter(f => f.ParameterID && filterIDs.includes(f.ParameterID))
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && filterIDs.includes(c.ParameterID))
             },
             otherFilters() {
-                return this.widget.WidgetConfig.filter(f => f.ParameterID && !filterIDs.includes(f.ParameterID))
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && !filterIDs.includes(c.ParameterID))
             }
         },
         methods: {
@@ -107,16 +110,14 @@
                 this.$refs.updateWidget.validate((valid) => {
 
                     if (valid) {
-                        this.widget.Title = this.model.title;
-
-                        if (this.model.widgetTime.type === 'relative') {
-                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.widgetTime.label)
+                        this.widget = this.model
+                        if (this.widget.WidgetTime.type === 'relative') {
+                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.widget.WidgetTime.label)
                             this.widget.WidgetTime = {
                                 ...this.widget.WidgetTime,
                                 ...widgetTime
                             }
                         } else {
-                            this.widget.WidgetTime = this.model.widgetTime
                             this.widget.WidgetTime.label = null
                         }
 
@@ -145,9 +146,7 @@
             }
         },
         mounted() {
-            this.model.title = this.widget.Title
-            this.model.widgetTime = this.widget.WidgetTime
-
+            this.model = cloneDeep(this.widget)
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = cloneDeep(this.widget.WidgetLayout.settings || settings)
             }
