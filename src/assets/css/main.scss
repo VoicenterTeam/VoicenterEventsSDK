@@ -14,7 +14,6 @@
   --pale-grey: #f0f2f4;
 }
 
-
 @import "tailwind";
 @import "animations";
 @import "common";
@@ -42,5 +41,6 @@ body {
   body {
     @apply px-24;
   }
-
 }
+
+@import "layout/dashboard";

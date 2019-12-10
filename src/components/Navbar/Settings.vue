@@ -21,7 +21,7 @@
                     <el-form-item prop="report.interval">
                         {{$t('settings.switch.title')}}
                         <el-input-number class="mx-2 w-36" size="small" :min="0"
-                                         v-model.number="settings.report.interval"></el-input-number>
+                                         v-model.number="settings.report.interval"/>
                         {{$t('settings.switch.interval')}}
                     </el-form-item>
                     <el-form-item prop="report.switching">
@@ -35,17 +35,30 @@
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.colors')" name="color">
                     <div class="flex">
-                        <el-color-picker v-model="settings.colors.primary"></el-color-picker>
+                        <el-color-picker v-model="settings.colors.primary"/>
                         <span class="p-2">{{$t('settings.color.primary')}}</span>
-                        <el-color-picker v-model="settings.colors.secondary"></el-color-picker>
+                        <el-color-picker v-model="settings.colors.secondary"/>
                         <span class="p-2">{{$t('settings.color.secondary')}}</span>
+                        <el-color-picker v-model="settings.colors.background"/>
+                        <span class="p-2">{{$t('settings.color.background')}}</span>
+                        <el-color-picker v-model="settings.colors.frames"/>
+                        <span class="p-2">{{$t('settings.color.frames')}}</span>
+                        <el-color-picker v-model="settings.colors.widgetGroupBackground"/>
+                        <span class="p-2">{{$t('settings.color.widgetGroupBackground')}}</span>
+                        <el-color-picker v-model="settings.colors.widgetGroupFrames"/>
+                        <span class="p-2">{{$t('settings.color.widgetGroupFrames')}}</span>
                     </div>
                 </el-collapse-item>
             </el-collapse>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
-            <el-button type="primary" @click="updateSettings">{{$t('common.save')}}</el-button>
+            <el-button
+                :disabled="storingData"
+                :loading="storingData"
+                type="primary"
+                @click="updateSettings">{{$t('common.save')}}
+            </el-button>
         </template>
     </el-dialog>
 </template>
@@ -70,6 +83,7 @@
             return {
                 settings: cloneDeep(this.$store.state.dashboards.settings),
                 activeCollapses: ['layout', 'report', 'color'],
+                storingData: false
             }
         },
         props: {
@@ -103,6 +117,7 @@
             updateSettings() {
                 this.$refs.settings.validate((valid) => {
                     if (valid) {
+                        this.storingData = true
                         this.settings.colors.primary_rgba = convertHex(this.settings.colors.primary)
                         let dashboard = {
                             ...this.activeDashboard,
@@ -113,6 +128,8 @@
                             this.toggleVisibility(false)
                         }).catch((e) => {
                             parseCatch(e, true)
+                        }).finally((e) => {
+                            this.storingData = false
                         })
                     }
                 });

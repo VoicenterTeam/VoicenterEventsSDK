@@ -7,7 +7,11 @@ export const settings = {
     colors: {
         primary: "#2575FF",
         secondary: "#876cff",
-        primary_rgba: "37, 117, 255"
+        primary_rgba: "37, 117, 255",
+        background: "",
+        frames: "",
+        widgetGroupBackground: "",
+        widgetGroupFrames: "",
     },
     showGeneralWidgetSearch: true,
     showWidgetAsTabs: true,

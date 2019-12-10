@@ -464,7 +464,7 @@
 </script>
 <style lang="scss">
     .editable-widgets {
-        @apply bg-gray-100 rounded-lg;
+        @apply rounded-lg;
         @apply shadow;
         @apply py-8;
         border-radius: 10px;
