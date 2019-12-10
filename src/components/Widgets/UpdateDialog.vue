@@ -110,30 +110,29 @@
                 this.$refs.updateWidget.validate((valid) => {
 
                     if (valid) {
-                        this.widget = this.model
-                        if (this.widget.WidgetTime.type === 'relative') {
-                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.widget.WidgetTime.label)
-                            this.widget.WidgetTime = {
-                                ...this.widget.WidgetTime,
+                        if (this.model.WidgetTime.type === 'relative') {
+                            let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.WidgetTime.label)
+                            this.model.WidgetTime = {
+                                ...this.model.WidgetTime,
                                 ...widgetTime
                             }
                         } else {
-                            this.widget.WidgetTime.label = null
+                            this.model.WidgetTime.label = null
                         }
 
-                        this.widget.WidgetLayout = {
-                            ...this.widget.WidgetLayout,
+                        this.model.WidgetLayout = {
+                            ...this.model.WidgetLayout,
                             ...{settings: this.model.settings}
                         }
 
                         try {
-                            this.widget.WidgetConfig.forEach((config) => {
+                            this.model.WidgetConfig.forEach((config) => {
                                 config.WidgetParameterValue = config.WidgetParameterValue.join()
                             })
                         } catch (e) {
                         }
 
-                        this.$emit('on-update', this.widget)
+                        this.$emit('on-update', this.model)
                         this.toggleVisibility(false);
                     }
                 })
