@@ -116,6 +116,7 @@
     "tooltip.edit.widget": "Edit widget",
     "tooltip.move.group.up": "Move group up",
     "tooltip.move.group.down": "Move group down",
+    "tooltip.refresh.entities.list": "Refresh Dashboard Entities List",
     "save.to.add": "Save to add",
     "no.widgets.added": "No widgets in this category",
     "search.existing.elements": "Search for existing elements",

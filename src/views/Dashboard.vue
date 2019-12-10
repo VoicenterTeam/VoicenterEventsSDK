@@ -7,10 +7,18 @@
                      @switch-tab="(tab) => switchTab(tab)"/>
             <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
-                    <div class="flex w-48 sm:w-64">
-                        <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
-                                  v-model="widgetsFilter"
-                                  prefix-icon="el-icon-search"/>
+                    <div class="flex items-center">
+                        <div class="w-48 sm:w-64">
+                            <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
+                                      v-model="widgetsFilter"
+                                      prefix-icon="el-icon-search"/>
+                        </div>
+                        <el-tooltip class="item" effect="dark" :content="$t('tooltip.refresh.entities.list')"
+                                    placement="bottom">
+                            <div :class="{'mx-2': showGeneralWidgetSearch}">
+                                <el-button :disabled="loadEntitiesList" :loading="loadEntitiesList" type="default" icon="el-icon-refresh" @click="refreshEntitiesList"/>
+                            </div>
+                        </el-tooltip>
                     </div>
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex items-center">
@@ -142,7 +150,8 @@
                 operations: new DashboardOperations(),
                 widgetsFilter: '',
                 activeTab: '',
-                showReorderDataDialog: false
+                showReorderDataDialog: false,
+                loadEntitiesList: false
             }
         },
         computed: {
@@ -423,6 +432,11 @@
                     this.activeDashboardData = dashboard
                 } catch (e) {
                 }
+            },
+            async refreshEntitiesList() {
+                this.loadEntitiesList = true
+                await this.$store.dispatch('entities/getEntitiesList')
+                this.loadEntitiesList = false
             }
         },
         watch: {
