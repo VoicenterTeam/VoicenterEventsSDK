@@ -1,14 +1,18 @@
 .rtl .el-tabs__nav.is-top {
-  width: 100%;
-  display: flex;
-  padding-bottom: 5px;
-  flex-direction: row-reverse;
+    width: 100%;
+    display: flex;
+    padding-bottom: 5px;
+    flex-direction: row-reverse;
 }
 
 div.el-tabs__item.is-active {
-  color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 div.el-tabs__active-bar {
-  background-color: var(--primary-color);
+    background-color: var(--primary-color);
+}
+
+div.el-tabs__item {
+    @apply font-semibold;
 }

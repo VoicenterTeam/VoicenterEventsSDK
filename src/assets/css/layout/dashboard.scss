@@ -1,5 +1,5 @@
 body {
-    @apply px-6 font-montserrat;
+    @apply px-6 font-montserrat font-semibold;
     min-width: 320px;
 }
 
@@ -19,4 +19,8 @@ body {
     background: var(--widgetGroupBackground-color);
     border: 1px solid var(--widgetGroupFrames-color);
     @apply p-4 rounded-lg;
+}
+
+input, .el-button, .el-checkbox, button {
+    @apply font-semibold;
 }

@@ -2,7 +2,7 @@
     <div class="flex items-center layout-types__switcher"
          :class="this.$rtl ? 'm-margin__left-15' : 'm-margin__right-15'">
         <div class="flex mr-4">
-            <p class="text-sm font-normal">{{$t('switcher.title')}}</p>
+            <p class="text-sm">{{$t('switcher.title')}}</p>
         </div>
         <div>
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.select.tabbed.view')" placement="top">
