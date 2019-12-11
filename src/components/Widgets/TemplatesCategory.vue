@@ -8,7 +8,7 @@
                     :templatesCategory="selectedCategory"
                     @on-select="onSelect(null)">
                     <template v-slot:state-icon>
-                        <XIcon class="w-5 h-5 text-red ml-auto"></XIcon>
+                        <XIcon class="w-5 h-5 text-red ml-auto"/>
                     </template>
                 </templates-category-card>
             </el-tooltip>
@@ -20,7 +20,7 @@
                 :key="templatesCategory.CategoryID"
                 :templatesCategory="templatesCategory"
                 @on-select="onSelect">
-                <template v-slot:state-icon></template>
+                <template v-slot:state-icon/>
             </templates-category-card>
         </div>
         <widget-menu

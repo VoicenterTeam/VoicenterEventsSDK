@@ -4,20 +4,31 @@
             <sidebar v-if="showSidebar"
                      :activeTab="activeTab"
                      :widgetGroupList="activeDashboardData.WidgetGroupList"
-                     @switch-tab="(tab) => switchTab(tab)"></sidebar>
+                     @switch-tab="(tab) => switchTab(tab)"/>
             <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
-                    <div class="flex w-48 sm:w-64">
-                        <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
-                                  v-model="widgetsFilter"
-                                  prefix-icon="el-icon-search"></el-input>
+                    <div class="flex items-center">
+                        <div class="w-48 sm:w-64">
+                            <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
+                                      v-model="widgetsFilter"
+                                      prefix-icon="el-icon-search"/>
+                        </div>
+                        <el-tooltip class="item" effect="dark" :content="$t('tooltip.refresh.entities.list')"
+                                    placement="bottom">
+                            <div :class="{'mx-2': showGeneralWidgetSearch}">
+                                <RefreshButton
+                                    :disabled="loadEntitiesList"
+                                    :loading="loadEntitiesList"
+                                    @click.native="refreshEntitiesList"/>
+                            </div>
+                        </el-tooltip>
                     </div>
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex items-center">
                             <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                             placement="bottom">
-                                    <IconSettings class="text-primary"></IconSettings>
+                                    <IconSettings class="text-primary"/>
                                 </el-tooltip>
                             </div>
                             <new-group-button
@@ -93,6 +104,7 @@
     import differenceBy from 'lodash/differenceBy'
     import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
+    import RefreshButton from '@/components/RefreshButton'
     import sdkEventTypes from '@/enum/sdkEventTypes'
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
@@ -118,6 +130,7 @@
             [Switcher.name]: Switcher,
             NewGroupButton,
             AddButton,
+            RefreshButton,
             WidgetMenu,
             EventsSDK,
             NormalView,
@@ -142,7 +155,8 @@
                 operations: new DashboardOperations(),
                 widgetsFilter: '',
                 activeTab: '',
-                showReorderDataDialog: false
+                showReorderDataDialog: false,
+                loadEntitiesList: false
             }
         },
         computed: {
@@ -423,6 +437,11 @@
                     this.activeDashboardData = dashboard
                 } catch (e) {
                 }
+            },
+            async refreshEntitiesList() {
+                this.loadEntitiesList = true
+                await this.$store.dispatch('entities/getEntitiesList')
+                this.loadEntitiesList = false
             }
         },
         watch: {

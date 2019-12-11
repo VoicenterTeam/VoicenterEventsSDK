@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-        <base-navbar></base-navbar>
-        <router-view></router-view>
+        <base-navbar/>
+        <router-view/>
     </div>
 </template>
 <script>
@@ -9,6 +9,7 @@
         async created() {
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
             await this.$store.dispatch('dashboards/getDashboards')
+            await this.$store.dispatch('entities/getEntitiesList')
             this.$store.dispatch('dashboards/selectDashboard')
             this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
             this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
