@@ -1,3 +1,6 @@
+// Datedeff: how many days back from today
+// Date_interval: from that day forward how many days to aggregate
+
 export const widgetTimeOptions = [
     {
         label: 'widget.time.today',
@@ -25,3 +28,14 @@ export const widgetTimeOptions = [
         Date_interval: 90
     },
 ];
+
+export const widgetTimeTypes = [
+    {
+        label: 'relative',
+        text: 'Relative',
+    },
+    {
+        label: 'absolute',
+        text: 'Absolute',
+    },
+]
