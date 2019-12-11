@@ -34,19 +34,31 @@
                     </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.colors')" name="color">
-                    <div class="flex">
-                        <el-color-picker v-model="settings.colors.primary"/>
-                        <span class="p-2">{{$t('settings.color.primary')}}</span>
-                        <el-color-picker v-model="settings.colors.secondary"/>
-                        <span class="p-2">{{$t('settings.color.secondary')}}</span>
-                        <el-color-picker v-model="settings.colors.background"/>
-                        <span class="p-2">{{$t('settings.color.background')}}</span>
-                        <el-color-picker v-model="settings.colors.frames"/>
-                        <span class="p-2">{{$t('settings.color.frames')}}</span>
-                        <el-color-picker v-model="settings.colors.widgetGroupBackground"/>
-                        <span class="p-2">{{$t('settings.color.widgetGroupBackground')}}</span>
-                        <el-color-picker v-model="settings.colors.widgetGroupFrames"/>
-                        <span class="p-2">{{$t('settings.color.widgetGroupFrames')}}</span>
+                    <div class="flex flex-wrap">
+                        <div class="flex items-center pt-2">
+                            <el-color-picker v-model="settings.colors.primary"/>
+                            <span class="p-2">{{$t('settings.color.primary')}}</span>
+                        </div>
+                        <div class="flex items-center pt-2">
+                            <el-color-picker v-model="settings.colors.secondary"/>
+                            <span class="p-2">{{$t('settings.color.secondary')}}</span>
+                        </div>
+                        <div class="flex items-center pt-2">
+                            <el-color-picker v-model="settings.colors.background"/>
+                            <span class="p-2">{{$t('settings.color.background')}}</span>
+                        </div>
+                        <div class="flex items-center pt-2">
+                            <el-color-picker v-model="settings.colors.frames"/>
+                            <span class="p-2">{{$t('settings.color.frames')}}</span>
+                        </div>
+                        <div class="flex items-center pt-2">
+                            <el-color-picker v-model="settings.colors.widgetGroupBackground"/>
+                            <span class="p-2">{{$t('settings.color.widgetGroupBackground')}}</span>
+                        </div>
+                        <div class="flex items-center pt-2">
+                            <el-color-picker v-model="settings.colors.widgetGroupFrames"/>
+                            <span class="p-2">{{$t('settings.color.widgetGroupFrames')}}</span>
+                        </div>
                     </div>
                 </el-collapse-item>
             </el-collapse>

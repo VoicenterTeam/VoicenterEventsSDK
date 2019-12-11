@@ -86,6 +86,7 @@
             <settings
                 v-if="showEditSettingsDialog"
                 :activeDashboard="activeDashboard"
+                :width="'55%'"
                 :visible.sync="showEditSettingsDialog">
             </settings>
         </div>

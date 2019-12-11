@@ -1,21 +1,21 @@
 .el-select {
-  .el-input:active input.el-input__inner,
-  .el-input.is-focus input.el-input__inner, input.el-input__inner:focus{
-    border-color: var(--primary-color);
-  }
+    .el-input:active input.el-input__inner,
+    .el-input.is-focus input.el-input__inner, input.el-input__inner:focus {
+        border-color: var(--primary-color);
+    }
 }
 
 .el-select-dropdown {
-  .el-select-dropdown__item.selected {
-    color: var(--primary-color);
-  }
+    .el-select-dropdown__item.selected {
+        color: var(--primary-color);
+    }
 }
 
 li.el-select-dropdown__item.hover, li.el-select-dropdown__item:hover {
-  background-color: rgba(var(--primary_rgba-color), 0.15);
-  color: var(--primary-color);
+    background-color: rgba(var(--primary_rgba-color), 0.15);
+    color: var(--primary-color);
 }
 
 .el-select .el-input__inner:focus {
-  border-color: var(--primary-color);
+    border-color: var(--primary-color);
 }

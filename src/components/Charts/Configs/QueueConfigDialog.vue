@@ -6,16 +6,16 @@
                 <div class="flex lg:w-1/2">
                     <el-form-item :label="$t('queues.to.display')">
                         <el-select
-                                :class="$rtl.isRTL ? 'lg:pl-2' : 'lg:pr-2'"
-                                v-model="selectedQueues"
-                                multiple
-                                collapse-tags
-                                filterable>
+                            :class="$rtl.isRTL ? 'lg:pl-2' : 'lg:pr-2'"
+                            v-model="selectedQueues"
+                            multiple
+                            collapse-tags
+                            filterable>
                             <el-option
-                                    v-for="(queue, index) in queues"
-                                    :key="index"
-                                    :label="queue.QueueName"
-                                    :value="queue.QueueID">
+                                v-for="(queue, index) in queues"
+                                :key="index"
+                                :label="queue.QueueName"
+                                :value="queue.QueueID">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -23,16 +23,16 @@
                 <div class="flex lg:w-1/2">
                     <el-form-item :label="$t('blocks.to.display')">
                         <el-select
-                                :class="$rtl.isRTL ? 'lg:pr-2' : 'lg:pl-2'"
-                                v-model="selectedSeries"
-                                multiple
-                                collapse-tags
-                                filterable>
+                            :class="$rtl.isRTL ? 'lg:pr-2' : 'lg:pl-2'"
+                            v-model="selectedSeries"
+                            multiple
+                            collapse-tags
+                            filterable>
                             <el-option
-                                    v-for="(serie, index) in series"
-                                    :key="index"
-                                    :label="$t(serie)"
-                                    :value="index">
+                                v-for="(serie, index) in series"
+                                :key="index"
+                                :label="$t(serie)"
+                                :value="index">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -103,5 +103,9 @@
         .el-select {
             @apply w-full;
         }
+    }
+
+    .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+        color: var(--primary-color);
     }
 </style>

@@ -2,7 +2,7 @@
     <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow">
         <div class="w-full flex items-center">
             <slot name="icon">
-                <component class="min-w-16 mx-1 text-primary" :is="cardIcon"></component>
+                <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
             </slot>
             <slot name="text">
                 <el-tooltip v-if="showText" class="item" effect="dark" :content="statusText" placement="top">
@@ -21,27 +21,28 @@
             <div class="flex editable-content" v-if="editable">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
                     <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
-                                @click="$emit('remove-item')"></trash-icon>
+                                @click="$emit('remove-item')"/>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                     <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-primary"
-                               @click="()=>{this.showModal = true}"></edit-icon>
+                               @click="()=>{this.showModal = true}"/>
                 </el-tooltip>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
+                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
+                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
             </div>
             <div v-else class="flex">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                     <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
-                               @click="()=>{this.showModal = true}"></edit-icon>
+                               @click="()=>{this.showModal = true}"/>
                 </el-tooltip>
             </div>
         </div>
         <update-dialog
             :visible.sync="showModal"
+            :widgetLayout="data.widgetLayout"
             @on-change="onChange">
             <template v-slot:header>
-                <component class="w-8 mx-1" :is="selectedIcon"></component>
+                <component class="w-8 mx-1" :is="selectedIcon"/>
                 <p slot="title" class="text-lg font-semibold text-gray-700">{{$t(selectedOption.text)}}</p>
             </template>
             <template v-slot:content>
@@ -55,7 +56,7 @@
                                :key="option.value"
                                :label="$t(option.text)">
                         <div class="flex">
-                            <component class="w-5 mx-1 text-primary" :is="option.icon"></component>
+                            <component class="w-5 mx-1 text-primary" :is="option.icon"/>
                             <span class="w-16 mx-1">{{$t(option.text)}}</span>
                         </div>
                     </el-option>
@@ -171,6 +172,3 @@
         }
     }
 </script>
-<style lang="scss" scoped>
-    @import "../../assets/css/widgets/card";
-</style>
