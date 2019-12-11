@@ -119,12 +119,14 @@
                 try {
                     return {
                         'background': styles.background,
-                        'border': '1px solid' + styles.frames
+                        'border': '1px solid' + styles.frames,
+                        'color': styles.fonts
                     }
                 } catch (e) {
                     return {
                         'background': defaultColors.background,
-                        'border': '1px solid' + defaultColors.frames
+                        'border': '1px solid' + defaultColors.frames,
+                        'color': defaultColors.fonts
                     }
                 }
             }

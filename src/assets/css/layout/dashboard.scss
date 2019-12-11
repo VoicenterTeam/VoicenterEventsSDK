@@ -15,7 +15,7 @@ body {
     border-bottom: none;
 }
 
-.widget-group, .editable-widgets {
+.widget--group_section, .editable-widgets {
     background: var(--widgetGroupBackground-color);
     border: 1px solid var(--widgetGroupFrames-color);
     @apply p-4 rounded-lg;

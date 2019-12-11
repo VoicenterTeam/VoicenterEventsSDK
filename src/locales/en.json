@@ -154,5 +154,7 @@
     "queue.maximum.waiting.caller": "Maximum Waiting Caller",
     "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout",
     "N/A": "N/A",
-    "widget.layout.colors": "Widget Layout Colors"
+    "widget.layout.colors": "Widget Layout Colors",
+    "chart.update": "Update chart"
+
 }

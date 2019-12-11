@@ -114,8 +114,3 @@
         },
     }
 </script>
-<style scoped>
-    .text-2xl {
-        color: #2a2c36;
-    }
-</style>

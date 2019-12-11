@@ -105,7 +105,6 @@
         border-radius: 4px;
         border: solid 1px var(--silver-color);
         font-size: 12px;
-        font-weight: 300;
         color: #4b4d56;
     }
 
