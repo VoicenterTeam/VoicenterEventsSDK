@@ -12,4 +12,6 @@ export default  {
     HISTORY_COUNTERS: 10,
     REAL_TIME_TABLE: 11,
     QUEUE_ACTIVE_CALL: 12,
+    // TODO: update with correct TemplateID
+    EXTERNAL_DATA_TYPE_ID: 999, //for test
 }

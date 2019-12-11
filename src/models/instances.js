@@ -32,3 +32,10 @@ export const widgetModel = (TemplateID, Title, WidgetLayout) => ({
     TemplateID: TemplateID,
     WidgetLayout: WidgetLayout
 })
+
+export const externalDataModel = () => ({
+    ID: null,
+    Title: '',
+    DataTypeID: null,
+    // ... TBD
+})

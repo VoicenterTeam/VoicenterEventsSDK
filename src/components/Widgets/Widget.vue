@@ -23,14 +23,15 @@
                    @on-update="(data) => onUpdate(data)"
                    @remove-item="removeWidget(widget)">
         </component>
-        <update-dialog
+        <component
+            :is="getDialogComponent"
             width="35%"
             v-if="showUpdateDialog"
             :widget="widget"
             @on-update="(data) => onUpdate(data)"
             v-on="$listeners"
             :visible.sync="showUpdateDialog">
-        </update-dialog>
+        </component>
     </div>
 </template>
 <script>
@@ -41,6 +42,7 @@
     import EditButton from '@/components/EditButton'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
+    import ConfigDialog from './ExternalData/ConfigDialog'
     import QueueCards from '@/components/Cards/QueueCards'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
@@ -48,8 +50,10 @@
     import QueueActiveCall from './Data/Queue/QueueActiveCall'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
+    import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
-    import {getWidgetDataType, getWidgetEndpoint} from "@/helpers/widgetUtils";
+    import ExternalDataWidget from './ExternalData/ExternalDataWidget'
+    import {getWidgetDataType, getWidgetEndpoint} from '@/helpers/widgetUtils'
 
     export default {
         name: "widget",
@@ -67,7 +71,9 @@
             GaugeChart,
             QueueChart,
             QueueCards,
-            QueueActiveCall
+            QueueActiveCall,
+            ExternalDataWidget,
+            ConfigDialog,
         },
         props: {
             editable: {
@@ -81,20 +87,6 @@
         },
         data() {
             return {
-                componentTypes: {
-                    [widgetDataTypes.LINES_TYPE_ID]: 'TimeLineChart',
-                    [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'TimeLineChart',
-                    [widgetDataTypes.TIMELINE_TYPE_ID]: 'TimeLineChart',
-                    [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
-                    [widgetDataTypes.COUNTER_TYPE_ID]: 'StatusCards',
-                    [widgetDataTypes.CHART_SPEEDOMETER]: 'GaugeChart',
-                    [widgetDataTypes.CHART_QUEUE]: 'QueueChart',
-                    [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
-                    [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
-                    [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
-                    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
-                    [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
-                },
                 showUpdateDialog: false,
                 loading: false,
             }
@@ -109,7 +101,12 @@
             getWidgetTemplate() {
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
-
+            getDialogComponent() {
+                if (this.widget.DataTypeID === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
+                    return 'ConfigDialog'
+                }
+                return 'UpdateDialog'
+            }
         },
         methods: {
             removeWidget(widget) {
@@ -123,7 +120,7 @@
             },
             getComponentTypeAndSetData(widget) {
                 let dataTypeId = getWidgetDataType(widget)
-                let componentType = `${this.componentTypes[dataTypeId]}`
+                let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)
