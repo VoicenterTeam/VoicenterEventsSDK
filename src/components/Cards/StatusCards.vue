@@ -38,6 +38,7 @@
             </div>
         </div>
         <update-dialog
+            v-if="showModal"
             :visible.sync="showModal"
             :model="model"
             @on-change="onChange">
@@ -172,7 +173,14 @@
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
-            this.model.colors = cloneDeep(this.data.WidgetLayout.colors || defaultColors)
+        },
+        watch: {
+            data: {
+                immediate: true,
+                handler: function (widget) {
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                }
+            }
         }
     }
 </script>

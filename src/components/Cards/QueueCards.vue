@@ -38,6 +38,7 @@
             </div>
         </div>
         <update-dialog
+            v-if="showModal"
             :visible.sync="showModal"
             :model="model"
             @on-change="onChange">
@@ -213,8 +214,13 @@
         beforeDestroy() {
             clearInterval(this.timeout)
         },
-        mounted() {
-            this.model.colors = cloneDeep(this.data.WidgetLayout.colors || defaultColors)
+        watch: {
+            data: {
+                immediate: true,
+                handler: function (widget) {
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                }
+            }
         }
     }
 </script>
