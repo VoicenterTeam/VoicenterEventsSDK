@@ -15,7 +15,7 @@ body {
     border-bottom: none;
 }
 
-.el-tabs__content .widget, .editable-widgets {
+.widget-group, .editable-widgets {
     background: var(--widgetGroupBackground-color);
     border: 1px solid var(--widgetGroupFrames-color);
     @apply p-4 rounded-lg;

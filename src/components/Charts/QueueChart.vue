@@ -16,7 +16,7 @@
                     </el-tooltip>
                 </div>
             </div>
-            <div class="bg-white p-4 rounded-lg py-4 my-4">
+            <div class="bg-white p-4 rounded-lg py-4 mt-4">
                 <highcharts :options="chartOptions"></highcharts>
             </div>
             <queue-config-dialog

@@ -10,7 +10,7 @@ export const settings = {
         primary_rgba: "37, 117, 255",
         background: "#edf2f7",
         frames: "#FFFFFF",
-        widgetGroupBackground: "#f7fafc",
+        widgetGroupBackground: "#edf2f7",
         widgetGroupFrames: "#FFFFFF",
     },
     showGeneralWidgetSearch: true,

@@ -1,14 +1,14 @@
 <template>
-    <div class="relative mt-6">
+    <div class="relative my-3" :class="{'mt-6 mb-0': editable}">
         <div v-if="!loading">
-            <div class="absolute top-0 right-0 mr-12 widget-delete__button" v-if="editable && showDeleteButton">
+            <div class="absolute top-0 right-0 mt-4 mr-16 widget-delete__button"
+                 v-if="editable && showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
                     <delete-button @click="removeWidget(widget)"/>
                 </el-tooltip>
             </div>
-            <div class="absolute top-0 right-0 widget-edit__button"
-                 v-if="showDeleteButton"
-                 :class="getClass">
+            <div class="absolute top-0 right-0 widget-edit__button mr-4 mt-4"
+                 v-if="showDeleteButton">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                     <edit-button @click="showUpdateDialog = true"
                                  :class="{'border border-primary': editable}">
@@ -21,6 +21,7 @@
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
                    class="widget"
+                   :style="getStyles"
                    @on-loading="(state) => onLoading(state)"
                    @on-update="(data) => onUpdate(data)"
                    @remove-item="removeWidget(widget)">
@@ -36,6 +37,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
@@ -48,6 +50,7 @@
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
     import QueueActiveCall from './Data/Queue/QueueActiveCall'
+    import {defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
@@ -111,12 +114,18 @@
             getWidgetTemplate() {
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
-            getClass() {
-                if (this.editable) return;
-                if (!this.$rtl.isRTL) {
-                    return 'mt-8 mr-4'
-                } else {
-                    return 'mt-8 ml-4'
+            getStyles() {
+                let styles = get(this.widget.WidgetLayout, 'colors');
+                try {
+                    return {
+                        'background': styles.background,
+                        'border': '1px solid' + styles.frames
+                    }
+                } catch (e) {
+                    return {
+                        'background': defaultColors.background,
+                        'border': '1px solid' + defaultColors.frames
+                    }
                 }
             }
         },
@@ -149,17 +158,20 @@
     .rtl {
         .widget-edit__button {
             right: auto;
-            @apply left-0;
+            @apply left-0 ml-4;
         }
 
         .widget-delete__button {
             right: auto;
-            @apply left-0;
+            @apply left-0 ml-4;
             + .widget-edit__button {
                 right: auto;
-                @apply ml-10;
-                @apply left-0;
+                @apply left-0 ml-14;
             }
         }
+    }
+
+    .widget {
+        @apply p-4 rounded-lg;
     }
 </style>

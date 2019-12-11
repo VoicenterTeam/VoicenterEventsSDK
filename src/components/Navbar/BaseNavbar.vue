@@ -1,9 +1,9 @@
 <template>
     <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
-        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mb-2 ml-24 md:flex">
+        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mb-2 mx-16 md:flex">
         <div>
             <div class="relative">
-                <div class="flex items-center py-3 mx-1 sm:mx-6">
+                <div class="flex items-center py-3 mx-1 sm:mx-16">
                     <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
                         <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
                                     placement="bottom">

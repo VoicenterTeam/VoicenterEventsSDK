@@ -1,14 +1,14 @@
 <template>
     <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
-        <div class="flex items-center my-4">
+        <div class="flex items-center mb-4">
             <div class="flex flex-col md:flex-row md:items-center">
                 <p v-if="data.Title" class="text-2xl font-semibold">
                     {{data.Title}}
                 </p>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 my-4" v-if="data.WidgetID">
-            <highcharts :contstructor-chart="chartConstructorType" :options="chartOptions"></highcharts>
+        <div class="bg-white p-4 rounded-lg py-4 mt-4" v-if="data.WidgetID">
+            <highcharts :contstructor-chart="chartConstructorType" :options="chartOptions"/>
         </div>
     </div>
 </template>
