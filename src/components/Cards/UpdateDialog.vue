@@ -10,21 +10,21 @@
         <template slot="footer">
             <slot name="footer"/>
         </template>
+        <WidgetColors :model="model"/>
     </el-dialog>
 </template>
 <script>
     import {Dialog} from 'element-ui'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
-
-    // data.WidgetLayout
+    import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
     export default {
         inheritAttrs: false,
         components: {
             [Dialog.name]: Dialog,
+            WidgetColors,
         },
         props: {
-            widgetLayout: {
+            model: {
                 type: Object,
                 default: () => ({})
             }
@@ -38,8 +38,5 @@
                 }
             }
         },
-        mounted() {
-            console.log(this.widgetLayout)
-        }
     }
 </script>

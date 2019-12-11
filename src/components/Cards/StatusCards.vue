@@ -39,7 +39,7 @@
         </div>
         <update-dialog
             :visible.sync="showModal"
-            :widgetLayout="data.widgetLayout"
+            :model="model"
             @on-change="onChange">
             <template v-slot:header>
                 <component class="w-8 mx-1" :is="selectedIcon"/>
@@ -73,9 +73,11 @@
     </div>
 </template>
 <script>
+    import cloneDeep from 'lodash/cloneDeep'
     import {Tooltip, Select, Option, Checkbox} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
     import statusTypes from '@/enum/statusTypes'
+    import {defaultColors} from '@/enum/defaultWidgetSettings'
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
 
     export default {
@@ -114,6 +116,7 @@
                 selectedIcon: '',
                 selectedOption: {},
                 showStatusText: this.showText,
+                model: {},
             }
         },
         computed: {
@@ -144,7 +147,6 @@
         },
         methods: {
             onChange() {
-
                 let data = {
                     status: this.selectedStatus,
                     showText: this.showStatusText
@@ -152,8 +154,9 @@
 
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
-                    ...data
-                }
+                    ...data,
+                    ...this.model
+                };
 
                 this.$emit('on-update', this.data);
                 this.showModal = false;
@@ -169,6 +172,7 @@
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
+            this.model.colors = cloneDeep(this.data.WidgetLayout.colors || defaultColors)
         }
     }
 </script>

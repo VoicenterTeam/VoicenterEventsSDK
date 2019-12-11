@@ -39,6 +39,7 @@
         </div>
         <update-dialog
             :visible.sync="showModal"
+            :model="model"
             @on-change="onChange">
             <template v-slot:content>
                 <el-form @submit.native.prevent="onChange" :label-position="labelPosition">
@@ -90,11 +91,13 @@
     </div>
 </template>
 <script>
+    import cloneDeep from 'lodash/cloneDeep'
     import {Tooltip, Select, Option, Checkbox} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
     import {types, typeNames, typeKeys} from '@/enum/queueCounters'
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
     import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+    import {defaultColors} from '@/enum/defaultWidgetSettings'
 
     export default {
         props: {
@@ -138,7 +141,8 @@
                 availableTypes: typeNames,
                 showStatusText: this.showText,
                 timeout: null,
-                dataCount: 0
+                dataCount: 0,
+                model: {}
             }
         },
         computed: {
@@ -198,7 +202,8 @@
 
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
-                    ...data
+                    ...data,
+                    ...this.model
                 }
 
                 this.$emit('on-update', this.data);
@@ -207,6 +212,9 @@
         },
         beforeDestroy() {
             clearInterval(this.timeout)
+        },
+        mounted() {
+            this.model.colors = cloneDeep(this.data.WidgetLayout.colors || defaultColors)
         }
     }
 </script>
