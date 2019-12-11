@@ -65,7 +65,7 @@
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
-    import {settings} from '@/enum/defaultRealTimeWidgetSettings'
+    import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
 
     export default {
@@ -140,7 +140,7 @@
                 return isRealtimeWidget(this.data)
             },
             getSettings() {
-                return this.data.WidgetLayout.settings || settings
+                return this.data.WidgetLayout.settings || realTimeSettings
             }
         },
         methods: {

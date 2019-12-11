@@ -3,7 +3,7 @@
         <div class="flex w-full justify-end pr-12" :class="responsiveClass">
             <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
                 <div>
-                    <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"></IconCardsGrid>
+                    <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"/>
                 </div>
                 <fade-transition :duration="250">
                     <div v-if="showGridMenu"
@@ -16,7 +16,7 @@
                             <i v-for="index in maxLayoutColumns"
                                class="icon-square mx-margin--1"
                                :class="{'bg-primary-100': index <= layoutColumns}"
-                               @click="updateGrid(index)"></i>
+                               @click="updateGrid(index)"/>
                         </div>
                     </div>
                 </fade-transition>
@@ -24,10 +24,10 @@
             <el-select placeholder="Sort by" v-model="sortBy">
                 <template v-slot:prefix>
                     <span class="h-full flex items-center">
-                        <i class="el-icon-d-caret"></i>
+                        <i class="el-icon-d-caret"/>
                     </span>
                 </template>
-                <el-option v-for="option in sortByOptions" v-bind="option" :key="option.label"></el-option>
+                <el-option v-for="option in sortByOptions" v-bind="option" :key="option.label"/>
             </el-select>
         </div>
         <div>
@@ -38,13 +38,13 @@
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
                          class="pr-4">
-                        <extension-card :extension="extension" :settings="getSettings"></extension-card>
+                        <extension-card :extension="extension" :settings="getSettings"/>
                     </div>
                     <div key="no-data"
                          class="flex flex-col w-full items-center"
                          v-if="sortedExtensions.length === 0">
                         <h3 class="text-xl">{{$t('extensions.noData')}}</h3>
-                        <icon-no-data class="w-64"></icon-no-data>
+                        <icon-no-data class="w-64"/>
                     </div>
                 </fade-transition>
             </div>
@@ -59,7 +59,7 @@
     import {FadeTransition} from 'vue2-transitions'
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import ExtensionCard from '@/components/Cards/ExtensionCard'
-    import {settings} from '@/enum/defaultRealTimeWidgetSettings'
+    import {realTimeSettings} from '@/enum/defaultWidgetSettings'
 
     const cardWidth = 256;
 
@@ -155,7 +155,7 @@
                 return this.$store.getters['utils/pageWidth']
             },
             getSettings() {
-                return this.data.WidgetLayout.settings || settings
+                return this.data.WidgetLayout.settings || realTimeSettings
             }
         },
         methods: {

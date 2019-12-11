@@ -7,6 +7,12 @@
                     <label>{{$t('widget.title')}}</label>
                     <el-input v-model="model.Title"/>
                 </div>
+                {{model.colors}}
+            </el-form-item>
+            <el-form-item>
+                <widget-colors :model="model"/>
+            </el-form-item>
+            <el-form-item>
                 <div v-if="model.WidgetTime && widget.WidgetTime.Date_interval">
                     <time-frame
                         :model="model"
@@ -56,10 +62,11 @@
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
-    import {settings} from '@/enum/defaultRealTimeWidgetSettings'
+    import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
+    import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
 
     export default {
         inheritAttrs: false,
@@ -72,7 +79,8 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             AutoComplete,
-            OtherFilters
+            OtherFilters,
+            WidgetColors,
         },
         props: {
             widget: {
@@ -85,7 +93,8 @@
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
                 model: {
-                    settings: settings,
+                    settings: realTimeSettings,
+                    colors: defaultColors,
                     timeInterval: {},
                 },
                 activeCollapse: ['filters']
@@ -123,7 +132,8 @@
 
                     this.model.WidgetLayout = {
                         ...this.model.WidgetLayout,
-                        ...{settings: this.model.settings}
+                        ...{settings: this.model.settings},
+                        ...{colors: this.model.colors}
                     }
 
                     try {
@@ -147,8 +157,9 @@
         mounted() {
             this.model = cloneDeep(this.widget)
             if (isRealtimeWidget(this.widget)) {
-                this.model.settings = cloneDeep(this.widget.WidgetLayout.settings || settings)
+                this.model.settings = cloneDeep(this.widget.WidgetLayout.settings || realTimeSettings)
             }
+            this.model.colors = this.model.WidgetLayout.colors || defaultColors
         },
     }
 </script>
