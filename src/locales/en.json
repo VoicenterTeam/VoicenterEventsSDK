@@ -52,9 +52,10 @@
     "settings.add.filter": "Add filter",
     "settings.color.primary": "Primary",
     "settings.color.secondary": "Secondary",
-    "settings.color.background":  "Background",
+    "settings.color.background": "Background",
     "settings.color.frames": "Frames",
-    "settings.color.widgetGroupBackground":  "Widget Group Background",
+    "settings.color.fonts": "Fonts",
+    "settings.color.widgetGroupBackground": "Widget Group Background",
     "settings.color.widgetGroupFrames": "Widget Group Frames",
     "settings.extension.logout": "Show logged out users",
     "settings.set.threshold": "Activate general threshold",
@@ -152,5 +153,6 @@
     "queue.counter.type": "Counter Type",
     "queue.maximum.waiting.caller": "Maximum Waiting Caller",
     "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout",
-    "N/A": "N/A"
+    "N/A": "N/A",
+    "widget.layout.colors": "Widget Layout Colors"
 }

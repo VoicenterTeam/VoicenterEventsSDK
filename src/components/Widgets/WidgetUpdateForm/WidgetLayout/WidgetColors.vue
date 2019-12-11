@@ -1,6 +1,6 @@
 <template>
     <el-collapse v-model="activeCollapse" class="pt-4">
-        <el-collapse-item :title="$t('widget.colors.layout')" name="colors">
+        <el-collapse-item :title="$t('widget.layout.colors')" name="colors">
             <div class="flex">
                 <el-color-picker v-model="model.colors.background"/>
                 <span class="p-2">{{$t('settings.color.background')}}</span>
@@ -32,8 +32,5 @@
                 activeCollapse: 'colors',
             }
         },
-        mounted() {
-            console.log('widget colors layout')
-        }
     }
 </script>

@@ -7,7 +7,6 @@
                     <label>{{$t('widget.title')}}</label>
                     <el-input v-model="model.Title"/>
                 </div>
-                {{model.colors}}
             </el-form-item>
             <el-form-item>
                 <widget-colors :model="model"/>
