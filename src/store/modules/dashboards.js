@@ -82,9 +82,16 @@ const actions = {
     }
 };
 
+const getters = {
+    baseColors: state =>  {
+        return state.settings.colors
+    }
+}
+
 export default {
     namespaced: true,
     state,
     mutations,
     actions,
+    getters
 };

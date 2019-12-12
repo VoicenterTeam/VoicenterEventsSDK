@@ -34,30 +34,12 @@
                     </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.colors')" name="color">
-                    <div class="flex flex-wrap">
-                        <div class="flex items-center pt-2">
-                            <el-color-picker v-model="settings.colors.primary"/>
-                            <span class="p-2">{{$t('settings.color.primary')}}</span>
-                        </div>
-                        <div class="flex items-center pt-2">
-                            <el-color-picker v-model="settings.colors.secondary"/>
-                            <span class="p-2">{{$t('settings.color.secondary')}}</span>
-                        </div>
-                        <div class="flex items-center pt-2">
-                            <el-color-picker v-model="settings.colors.background"/>
-                            <span class="p-2">{{$t('settings.color.background')}}</span>
-                        </div>
-                        <div class="flex items-center pt-2">
-                            <el-color-picker v-model="settings.colors.frames"/>
-                            <span class="p-2">{{$t('settings.color.frames')}}</span>
-                        </div>
-                        <div class="flex items-center pt-2">
-                            <el-color-picker v-model="settings.colors.widgetGroupBackground"/>
-                            <span class="p-2">{{$t('settings.color.widgetGroupBackground')}}</span>
-                        </div>
-                        <div class="flex items-center pt-2">
-                            <el-color-picker v-model="settings.colors.widgetGroupFrames"/>
-                            <span class="p-2">{{$t('settings.color.widgetGroupFrames')}}</span>
+                    <div class="flex flex-col">
+                        <div class="flex flex-row" v-for="option of settingsColors">
+                            <color-picker
+                                v-model="settings.colors[option]"
+                                :predefine="predefinedColors"/>
+                            <span class="p-2">{{$t('settings.color.'+option)}}</span>
                         </div>
                     </div>
                 </el-collapse-item>
@@ -75,11 +57,14 @@
     </el-dialog>
 </template>
 <script>
+
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber} from 'element-ui'
+    import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber} from 'element-ui'
+    import ColorPicker from '../Common/ColorPicker'
     import convertHex from '@/helpers/convertHex'
     import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
+    import {settingsColors, predefinedColors} from '@/enum/layout'
 
     export default {
         inheritAttrs: false,
@@ -89,13 +74,15 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
-            [ColorPicker.name]: ColorPicker,
+            ColorPicker,
         },
         data() {
             return {
                 settings: cloneDeep(this.$store.state.dashboards.settings),
                 activeCollapses: ['layout', 'report', 'color'],
-                storingData: false
+                predefinedColors,
+                storingData: false,
+                settingsColors,
             }
         },
         props: {
@@ -149,7 +136,7 @@
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
             }
-        }
+        },
     }
 </script>
 <style lang="scss">

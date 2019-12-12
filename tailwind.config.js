@@ -7,9 +7,6 @@ module.exports = {
                     default: 'var(--primary-color)',
                     100: 'var(--primary-color-opacity)'
                 },
-                secondary: {
-                    default: 'var(--secondary-color)'
-                },
                 gray: {
                     ...defaultTheme.colors.gray,
                     500: '#899398'
