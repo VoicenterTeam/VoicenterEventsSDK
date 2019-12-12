@@ -9,16 +9,15 @@
 <script>
     import DefaultCard from './DefaultCard'
     import TableData from '../Data/Table/TableData'
-    import {externalDataModel} from '@/models/instances'
     import GaugeChart from '@/components/Charts/GaugeChart'
-    import StatusCards from '@/components/Cards/StatusCards'
+    import CounterCard from '@/components/Cards/CounterCard'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
 
     export default {
         components: {
             DefaultCard,
-            StatusCards,
+            CounterCard,
             GaugeChart,
             TableData,
             TimeLineChart
@@ -38,11 +37,5 @@
                 return widgetComponentTypes[this.data.WidgetLayout.SomeFieldID]
             }
         },
-        mounted() {
-            // console.log(this.$listeners)
-        },
     }
 </script>
-<style lang="scss" scoped>
-
-</style>

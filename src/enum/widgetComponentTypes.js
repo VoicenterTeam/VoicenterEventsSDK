@@ -13,5 +13,6 @@ export default {
     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
     [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
-    [widgetDataTypes.EXTERNAL_DATA_TYPE_ID]: 'ExternalDataWidget', //ID: 1055
+    [widgetDataTypes.EXTERNAL_DATA_TYPE_ID]: 'ExternalDataWidget',
+    [widgetDataTypes.INFO_TYPE_ID]: 'CounterCard',
 }

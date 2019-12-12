@@ -1,13 +1,30 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
-        <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model">
+        <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model" v-if="model.WidgetLayout">
             <el-form-item>
                 <label>{{$t('widget.title')}}</label>
                 <el-input v-model="model.Title"/>
             </el-form-item>
             <el-form-item>
-
+                <label>{{$t('widget.type')}}</label>
+                <el-select v-model="model.WidgetLayout.SomeFieldID"
+                           placeholder="Select"
+                           class="w-full pt-2">
+                    <el-option
+                        v-for="(item, index) of options"
+                        :key="index"
+                        v-bind="item">
+                    </el-option>
+                </el-select>
             </el-form-item>
+            <br>
+            <el-alert
+                class="mt-12"
+                :description="dictionary[model.WidgetLayout.SomeFieldID]"
+                type="info"
+                :closable="false"
+                show-icon>
+            </el-alert>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -16,12 +33,16 @@
     </el-dialog>
 </template>
 <script>
-    import {Dialog} from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
+    import {Dialog, Select, Option, Alert} from 'element-ui'
+    import {options, dictionary} from '@/enum/externalDataWidgetConfig'
 
     export default {
         components: {
             [Dialog.name]: Dialog,
+            [Select.name]: Select,
+            [Option.name]: Option,
+            [Alert.name]: Alert,
         },
         props: {
             widget: {
@@ -32,6 +53,8 @@
         data() {
             return {
                 model: {},
+                options,
+                dictionary
             }
         },
         computed: {
@@ -53,6 +76,3 @@
         }
     }
 </script>
-<style lang="scss" scoped>
-
-</style>
