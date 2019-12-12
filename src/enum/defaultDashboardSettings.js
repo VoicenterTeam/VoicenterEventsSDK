@@ -6,7 +6,6 @@ export const settings = {
     },
     colors: {
         primary: "#2575FF",
-        secondary: "#876cff",
         primary_rgba: "37, 117, 255",
         background: "#edf2f7",
         frames: "#ff000000",
