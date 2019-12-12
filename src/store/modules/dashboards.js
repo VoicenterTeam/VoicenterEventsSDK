@@ -84,7 +84,9 @@ const actions = {
 
 const getters = {
     baseColors: state =>  {
-        return state.settings.colors
+        let colors = state.settings.colors
+        delete colors.primary_rgba
+        return colors
     }
 }
 
