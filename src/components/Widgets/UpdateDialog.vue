@@ -147,7 +147,7 @@
         mounted() {
             this.model = cloneDeep(this.widget)
             if (isRealtimeWidget(this.widget)) {
-                this.model.settings = cloneDeep(this.widget.WidgetLayout.settings || settings)
+                this.model.settings = this.widget.WidgetLayout.settings || settings
             }
         },
     }
