@@ -6,6 +6,11 @@
                 <el-input v-model="model.Title"/>
             </el-form-item>
             <el-form-item>
+                <label>{{$t('widget.external.endpoint')}}</label>
+<!--//TODO: set field -->
+                <el-input/>
+            </el-form-item>
+            <el-form-item>
                 <label>{{$t('widget.type')}}</label>
                 <el-select v-model="model.WidgetLayout.SomeFieldID"
                            placeholder="Select"
