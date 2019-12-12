@@ -32,7 +32,7 @@
 @import "element-overrides/pagination";
 @import "element-overrides/radio";
 @import "element-overrides/spiner";
-@import "widgets/card.scss";
+@import "widgets/card";
 
 body {
     @apply bg-gray-200 px-6 font-montserrat;
@@ -44,3 +44,5 @@ body {
         @apply px-24;
     }
 }
+
+@import "layout/dashboard";

@@ -7,9 +7,6 @@ module.exports = {
                     default: 'var(--primary-color)',
                     100: 'var(--primary-color-opacity)'
                 },
-                secondary: {
-                    default: 'var(--secondary-color)'
-                },
                 gray: {
                     ...defaultTheme.colors.gray,
                     500: '#899398'
@@ -36,6 +33,9 @@ module.exports = {
             },
             minWidth: {
                 16: '4rem'
+            },
+            spacing: {
+                '14': '3.5rem'
             }
         }
     },

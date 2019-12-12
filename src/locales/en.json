@@ -50,8 +50,14 @@
     "settings.filters": "Filters",
     "settings.other.filters": "Other filters",
     "settings.add.filter": "Add filter",
-    "settings.color.primary": "Primary",
-    "settings.color.secondary": "Secondary",
+    "settings.color.primary": "Primary Color (color of base components in the application)",
+    "settings.color.background": "Dashboard Background",
+    "settings.color.frames": "Dashboard Border",
+    "widget.settings.color.fonts": "Text",
+    "widget.settings.color.background": "Background",
+    "widget.settings.color.frames": "Border",
+    "settings.color.widgetGroupBackground": "Widget Groups Background",
+    "settings.color.widgetGroupFrames": "Widget Groups Border",
     "settings.extension.logout": "Show logged out users",
     "settings.set.threshold": "Activate general threshold",
     "settings.set.threshold.call": "Activate call threshold",
@@ -93,6 +99,7 @@
     "status.calling": "Calling...",
     "status.talking": "Is Talking",
     "status.show.text": "Show status text",
+    "status.display.border": "Display card border",
     "extensions.sort.default": "Default",
     "extensions.sort.userName": "User name",
     "extensions.sort.activeTime": "Active time",
@@ -148,5 +155,7 @@
     "queue.counter.type": "Counter Type",
     "queue.maximum.waiting.caller": "Maximum Waiting Caller",
     "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout",
-    "N/A": "N/A"
+    "N/A": "N/A",
+    "widget.layout.colors": "Widget Layout Colors",
+    "chart.update": "Update chart"
 }

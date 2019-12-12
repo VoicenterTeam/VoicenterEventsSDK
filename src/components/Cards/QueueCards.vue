@@ -1,8 +1,8 @@
 <template>
-    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow">
+    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow" :style="borderColor">
         <div class="w-full flex items-center">
             <slot name="icon">
-                <component class="min-w-16 mx-1 text-primary" :is="cardIcon"></component>
+                <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
             </slot>
             <slot name="text">
                 <el-tooltip v-if="showText" class="item" effect="dark" :content="queueText" placement="top">
@@ -21,24 +21,26 @@
             <div class="flex editable-content" v-if="editable">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
                     <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
-                                @click="$emit('remove-item')"></trash-icon>
+                                @click="$emit('remove-item')"/>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                     <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-primary"
-                               @click="()=>{this.showModal = true}"></edit-icon>
+                               @click="()=>{this.showModal = true}"/>
                 </el-tooltip>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"></more-vertical-icon>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"></more-vertical-icon>
+                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
+                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
             </div>
             <div v-else class="flex">
                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                     <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
-                               @click="()=>{this.showModal = true}"></edit-icon>
+                               @click="()=>{this.showModal = true}"/>
                 </el-tooltip>
             </div>
         </div>
         <update-dialog
+            v-if="showModal"
             :visible.sync="showModal"
+            :model="model"
             @on-change="onChange">
             <template v-slot:content>
                 <el-form @submit.native.prevent="onChange" :label-position="labelPosition">
@@ -90,11 +92,13 @@
     </div>
 </template>
 <script>
+    import cloneDeep from 'lodash/cloneDeep'
     import {Tooltip, Select, Option, Checkbox} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
     import {types, typeNames, typeKeys} from '@/enum/queueCounters'
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
     import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+    import {defaultColors} from '@/enum/defaultWidgetSettings'
 
     export default {
         props: {
@@ -113,6 +117,10 @@
             showText: {
                 type: Boolean,
                 default: () => false
+            },
+            displayBorder: {
+                type: Boolean,
+                default: false
             },
             data: {
                 type: Object,
@@ -137,8 +145,10 @@
                 selectedType: this.queueType,
                 availableTypes: typeNames,
                 showStatusText: this.showText,
+                displayItemBorder: this.displayBorder,
                 timeout: null,
-                dataCount: 0
+                dataCount: 0,
+                model: {}
             }
         },
         computed: {
@@ -187,33 +197,48 @@
                     color: `${color}`
                 }
             },
-
+            borderColor() {
+                if (!this.displayBorder) return;
+                let color = types[this.queueType].color
+                return {
+                    border: `2px solid ${color}`
+                }
+            },
         },
         methods: {
             onChange() {
                 let data = {
                     queues: this.selectedQueues,
                     queueType: this.selectedType,
-                    showText: this.showStatusText
+                    showText: this.showStatusText,
+                    displayBorder: this.displayItemBorder,
                 }
 
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
-                    ...data
+                    ...data,
+                    ...this.model
                 }
 
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },
+
         },
         beforeDestroy() {
             clearInterval(this.timeout)
+        },
+        watch: {
+            data: {
+                immediate: true,
+                handler: function (widget) {
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                }
+            }
         }
     }
 </script>
 <style lang="scss" scoped>
-    @import "../../assets/css/widgets/card";
-
     .el-form-item {
         @apply w-full;
         .el-select {

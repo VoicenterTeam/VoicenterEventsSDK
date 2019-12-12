@@ -4,8 +4,8 @@
             <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.WidgetGroupID"
                  class="my-10"
                  :class="{'editable-widgets px-2 sm:px-8':editMode}">
-                <div v-if="editMode" class="flex items-center justify-between mb-8">
-                    <base-input v-model="widgetGroup.WidgetGroupTitle"></base-input>
+                <div v-if="editMode" class="flex items-center justify-between">
+                    <base-input v-model="widgetGroup.WidgetGroupTitle"/>
                     <edit-group-buttons
                             v-on="$listeners"
                             :widgetGroup="widgetGroup">

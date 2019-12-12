@@ -1,0 +1,27 @@
+body {
+    @apply px-6 font-montserrat font-semibold;
+    min-width: 320px;
+}
+
+@media (min-width: 768px) {
+    body {
+        @apply px-24;
+    }
+}
+
+body {
+    background: var(--background-color);
+    border: 1px solid var(--frames-color);
+    border-bottom: none;
+}
+
+.widget--group_section, .editable-widgets {
+    background: var(--widgetGroupBackground-color);
+    border: 2px solid var(--widgetGroupFrames-color);
+    @apply p-4 rounded-lg;
+}
+
+input, .el-dropdown .el-button, .el-button .el-checkbox,
+.el-dialog__footer button, .el-collapse-item .el-collapse-item__header, .el-checkbox__label {
+    @apply font-semibold;
+}

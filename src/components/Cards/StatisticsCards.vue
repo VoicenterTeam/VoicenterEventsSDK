@@ -34,6 +34,7 @@
 <script>
     import {Tooltip} from 'element-ui';
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
+
     export default {
         name: 'statistics-cards',
         props: {
@@ -48,7 +49,7 @@
             editable: {
                 type: Boolean,
                 default: true
-            }
+            },
         },
         components: {
             TrashIcon,

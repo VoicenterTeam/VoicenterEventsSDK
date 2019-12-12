@@ -1,26 +1,26 @@
 <template>
     <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
-        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mb-2 ml-24 md:flex">
+        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mb-2 mx-16 md:flex">
         <div>
             <div class="relative">
-                <div class="flex items-center py-3 mx-1 sm:mx-6">
+                <div class="flex items-center py-3 mx-1 sm:mx-16">
                     <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
                         <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
                                     placement="bottom">
-                            <IconSettings class="text-primary"></IconSettings>
+                            <IconSettings class="text-primary"/>
                         </el-tooltip>
                     </div>
-                    <language-select :value="$i18n.locale" @change="onLocaleChange"></language-select>
+                    <language-select :value="$i18n.locale" @change="onLocaleChange"/>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
                         <span class="mx-1 text-sm md:text-lg text-gray-700" v-if="activeDashboard">{{activeDashboard.DashboardTitle}}</span>
-                        <IconArrowDown></IconArrowDown>
+                        <IconArrowDown/>
                     </button>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
                         <span
                             class="mx-1 text-sm md:text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
-                        <IconArrowDown></IconArrowDown>
+                        <IconArrowDown/>
                     </button>
                 </div>
                 <fade-transition :duration="250">
@@ -44,7 +44,7 @@
                         <span
                             class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center"
                             @click="createNewDashboard()">
-                        <IconPlus class="w-3 mr-1 mb-1 text-primary"></IconPlus>
+                        <IconPlus class="w-3 mr-1 mb-1 text-primary"/>
                         <span>{{$t('common.newDashboard')}}</span>
                     </span>
                     </div>
@@ -75,7 +75,7 @@
                 <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
-                        <el-input v-model="newDashboard.DashboardTitle"></el-input>
+                        <el-input v-model="newDashboard.DashboardTitle"/>
                     </el-form-item>
                 </el-form>
                 <template slot="footer">
@@ -86,13 +86,13 @@
             <settings
                 v-if="showEditSettingsDialog"
                 :activeDashboard="activeDashboard"
+                :width="'55%'"
                 :visible.sync="showEditSettingsDialog">
             </settings>
         </div>
     </nav>
 </template>
 <script>
-
     import {Dialog, Tooltip} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
