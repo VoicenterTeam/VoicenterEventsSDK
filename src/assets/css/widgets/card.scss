@@ -1,10 +1,3 @@
-.trash-icon, .edit-icon {
-    position: relative;
-    top: -40px;
-    right: -30px;
-    cursor: pointer;
-}
-
 .edit-card-icon {
     position: relative;
     top: -40px;
@@ -12,10 +5,19 @@
     cursor: pointer;
 }
 
-.rtl .trash-icon,
-.rtl .edit-icon {
-    left: -30px;
-    right: auto;
+.editable-content {
+    .trash-icon, .edit-icon {
+        position: relative;
+        top: -40px;
+        right: -30px;
+        cursor: pointer;
+    }
+
+    .rtl .trash-icon,
+    .rtl .edit-icon {
+        left: -30px;
+        right: auto;
+    }
 }
 
 .rtl .edit-card-icon {
