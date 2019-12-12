@@ -1,5 +1,6 @@
 <template>
-    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow">
+    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow"
+         :style="borderColor">
         <div class="w-full flex items-center">
             <slot name="icon">
                 <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
@@ -65,6 +66,9 @@
                 <el-checkbox v-model="showStatusText" class="pt-4">
                     {{$t('status.show.text')}}
                 </el-checkbox>
+                <el-checkbox v-model="displayItemBorder" class="pt-4">
+                    {{$t('status.display.border')}}
+                </el-checkbox>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -95,6 +99,10 @@
                 type: Boolean,
                 default: false
             },
+            displayBorder: {
+                type: Boolean,
+                default: false
+            },
             data: {
                 type: Object,
                 default: () => ({})
@@ -117,6 +125,7 @@
                 selectedIcon: '',
                 selectedOption: {},
                 showStatusText: this.showText,
+                displayItemBorder: this.displayBorder,
                 model: {},
             }
         },
@@ -142,6 +151,13 @@
                     color: `${color}`
                 }
             },
+            borderColor() {
+                if (!this.displayBorder) return;
+                let color = statusTypes[this.status].color
+                return {
+                    border: `2px solid ${color}`
+                }
+            },
             isMobileOrTablet() {
                 return this.$store.getters['utils/isMobileOrTablet']
             },
@@ -150,7 +166,8 @@
             onChange() {
                 let data = {
                     status: this.selectedStatus,
-                    showText: this.showStatusText
+                    showText: this.showStatusText,
+                    displayBorder: this.displayItemBorder,
                 }
 
                 this.data.WidgetLayout = {

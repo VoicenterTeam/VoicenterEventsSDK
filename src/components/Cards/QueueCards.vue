@@ -1,5 +1,6 @@
 <template>
-    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow">
+    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow"
+         :style="borderColor">
         <div class="w-full flex items-center">
             <slot name="icon">
                 <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
@@ -118,6 +119,10 @@
                 type: Boolean,
                 default: () => false
             },
+            displayBorder: {
+                type: Boolean,
+                default: false
+            },
             data: {
                 type: Object,
                 default: () => ({})
@@ -141,6 +146,7 @@
                 selectedType: this.queueType,
                 availableTypes: typeNames,
                 showStatusText: this.showText,
+                displayItemBorder: this.displayBorder,
                 timeout: null,
                 dataCount: 0,
                 model: {}
@@ -192,13 +198,21 @@
                     color: `${color}`
                 }
             },
+            borderColor() {
+                if (!this.displayBorder) return;
+                let color = types[this.queueType].color
+                return {
+                    border: `2px solid ${color}`
+                }
+            },
         },
         methods: {
             onChange() {
                 let data = {
                     queues: this.selectedQueues,
                     queueType: this.selectedType,
-                    showText: this.showStatusText
+                    showText: this.showStatusText,
+                    displayBorder: this.displayItemBorder,
                 }
 
                 this.data.WidgetLayout = {
@@ -210,6 +224,7 @@
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },
+
         },
         beforeDestroy() {
             clearInterval(this.timeout)

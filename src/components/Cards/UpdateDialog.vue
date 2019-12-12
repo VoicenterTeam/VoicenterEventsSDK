@@ -10,7 +10,7 @@
         <template slot="footer">
             <slot name="footer"/>
         </template>
-        <widget-colors :model="model"/>
+        <widget-colors :model="model" :onlyBackground="true"/>
     </el-dialog>
 </template>
 <script>

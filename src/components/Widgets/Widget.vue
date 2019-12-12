@@ -106,7 +106,6 @@
         },
         computed: {
             showDeleteButton() {
-                // TODO Adapt condition based on component type
                 let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER, widgetDataTypes.QUEUE_COUNTER_TYPE_ID]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
@@ -115,20 +114,29 @@
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
             getStyles() {
-                let styles = get(this.widget.WidgetLayout, 'colors');
+                let styles = {};
+                let colors = get(this.widget.WidgetLayout, 'colors');
+
                 try {
-                    return {
-                        'background': styles.background,
-                        'border': '1px solid' + styles.frames,
-                        'color': styles.fonts
+                    styles = {
+                        'background': colors.background,
+                        'color': colors.fonts
                     }
                 } catch (e) {
-                    return {
+                    styles = {
                         'background': defaultColors.background,
-                        'border': '1px solid' + defaultColors.frames,
                         'color': defaultColors.fonts
                     }
                 }
+
+                if(this.showDeleteButton) {
+                    let border = {'border': '2px solid' + colors.frames ||defaultColors.frames}
+                    styles = {
+                        ...styles,
+                        ...border
+                    }
+                }
+                return styles;
             }
         },
         methods: {
