@@ -82,9 +82,18 @@ const actions = {
     }
 };
 
+const getters = {
+    baseColors: state =>  {
+        let colors = state.settings.colors
+        delete colors.primary_rgba
+        return colors
+    }
+}
+
 export default {
     namespaced: true,
     state,
     mutations,
     actions,
+    getters
 };

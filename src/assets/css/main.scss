@@ -14,7 +14,6 @@
   --pale-grey: #f0f2f4;
 }
 
-
 @import "tailwind";
 @import "animations";
 @import "common";
@@ -34,14 +33,6 @@
 @import "element-overrides/radio";
 @import "element-overrides/spiner";
 
-body {
-  @apply bg-gray-200 px-6 font-montserrat;
-  min-width: 320px;
-}
+@import "widgets/card";
 
-@media (min-width: 768px) {
-  body {
-    @apply px-24;
-  }
-
-}
+@import "layout/dashboard";

@@ -1,8 +1,8 @@
 <template>
     <div class="data-table__container">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between my-4 w-full">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
             <div class="flex w-48 sm:w-64">
-                <slot name="search-input"></slot>
+                <slot name="search-input"/>
             </div>
             <div class="flex items-center table-row__count mt-4 sm:mt-0"
                  :class="margins">
@@ -10,7 +10,7 @@
                              :class="$rtl.isRTL ? 'ml-4' : 'mr-4'">
                     <el-button type="primary">
                         {{$t('datatable.manage.columns')}}
-                        <i class="el-icon-arrow-down el-icon--right"></i>
+                        <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                         <manage-columns :available-columns="availableColumns"

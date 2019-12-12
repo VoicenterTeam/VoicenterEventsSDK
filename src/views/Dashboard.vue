@@ -100,9 +100,9 @@
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
+    import {layoutTypes} from '@/enum/layout'
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
-    import layoutTypes from '@/enum/layoutTypes'
     import AddButton from '@/components/AddButton'
     import RefreshButton from '@/components/RefreshButton'
     import sdkEventTypes from '@/enum/sdkEventTypes'
@@ -483,7 +483,7 @@
 </script>
 <style lang="scss">
     .editable-widgets {
-        @apply bg-gray-100 rounded-lg;
+        @apply rounded-lg;
         @apply shadow;
         @apply py-8;
         border-radius: 10px;

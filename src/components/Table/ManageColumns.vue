@@ -140,7 +140,6 @@
         box-shadow: 0 1px 0 0 var(--silver);
         background-color: var(--bg-grey-modal);
         font-size: 14px;
-        font-weight: normal;
         color: var(--greyish-brown);
     }
 </style>

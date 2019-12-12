@@ -21,7 +21,7 @@
                     <el-form-item prop="report.interval">
                         {{$t('settings.switch.title')}}
                         <el-input-number class="mx-2 w-36" size="small" :min="0"
-                                         v-model.number="settings.report.interval"></el-input-number>
+                                         v-model.number="settings.report.interval"/>
                         {{$t('settings.switch.interval')}}
                     </el-form-item>
                     <el-form-item prop="report.switching">
@@ -34,27 +34,37 @@
                     </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.colors')" name="color">
-                    <div class="flex">
-                        <el-color-picker v-model="settings.colors.primary"></el-color-picker>
-                        <span class="p-2">{{$t('settings.color.primary')}}</span>
-                        <el-color-picker v-model="settings.colors.secondary"></el-color-picker>
-                        <span class="p-2">{{$t('settings.color.secondary')}}</span>
+                    <div class="flex flex-col">
+                        <div class="flex flex-row" v-for="option of settingsColors">
+                            <color-picker
+                                v-model="settings.colors[option]"
+                                :predefine="predefinedColors"/>
+                            <span class="p-2">{{$t('settings.color.'+option)}}</span>
+                        </div>
                     </div>
                 </el-collapse-item>
             </el-collapse>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
-            <el-button type="primary" @click="updateSettings">{{$t('common.save')}}</el-button>
+            <el-button
+                :disabled="storingData"
+                :loading="storingData"
+                type="primary"
+                @click="updateSettings">{{$t('common.save')}}
+            </el-button>
         </template>
     </el-dialog>
 </template>
 <script>
+
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber} from 'element-ui'
+    import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber} from 'element-ui'
+    import ColorPicker from '../Common/ColorPicker'
     import convertHex from '@/helpers/convertHex'
     import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
+    import {settingsColors, predefinedColors} from '@/enum/layout'
 
     export default {
         inheritAttrs: false,
@@ -64,12 +74,15 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
-            [ColorPicker.name]: ColorPicker,
+            ColorPicker,
         },
         data() {
             return {
                 settings: cloneDeep(this.$store.state.dashboards.settings),
                 activeCollapses: ['layout', 'report', 'color'],
+                predefinedColors,
+                storingData: false,
+                settingsColors,
             }
         },
         props: {
@@ -103,6 +116,7 @@
             updateSettings() {
                 this.$refs.settings.validate((valid) => {
                     if (valid) {
+                        this.storingData = true
                         this.settings.colors.primary_rgba = convertHex(this.settings.colors.primary)
                         let dashboard = {
                             ...this.activeDashboard,
@@ -113,6 +127,8 @@
                             this.toggleVisibility(false)
                         }).catch((e) => {
                             parseCatch(e, true)
+                        }).finally((e) => {
+                            this.storingData = false
                         })
                     }
                 });
@@ -120,7 +136,7 @@
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
             }
-        }
+        },
     }
 </script>
 <style lang="scss">

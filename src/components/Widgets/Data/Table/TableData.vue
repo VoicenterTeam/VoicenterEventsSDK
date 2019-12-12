@@ -1,5 +1,5 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)" class="pb-20">
+    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
         <data-table
             v-if="!loading"
             :tableData="fetchTableData"
@@ -18,7 +18,7 @@
             </template>
             <template v-if="isRealTimeTable" v-slot:status="{row}">
                 <user-status v-if="userExtension(row.user_id)" :userId="row.user_id"
-                             :extension="userExtension(row.user_id)"></user-status>
+                             :extension="userExtension(row.user_id)"/>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
             <template v-if="isRealTimeTable" v-slot:user_name="{row}">
@@ -33,7 +33,7 @@
                     @change="handlePageChange(1)"
                     :size="'small'"
                     class="w-16 mx-1">
-                    <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"></el-option>
+                    <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"/>
                 </el-select>
                 <el-pagination
                     @current-change="handlePageChange"
@@ -65,7 +65,7 @@
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
-    import {settings} from '@/enum/defaultRealTimeWidgetSettings'
+    import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
 
     export default {
@@ -140,7 +140,7 @@
                 return isRealtimeWidget(this.data)
             },
             getSettings() {
-                return this.data.WidgetLayout.settings || settings
+                return this.data.WidgetLayout.settings || realTimeSettings
             }
         },
         methods: {
