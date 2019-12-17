@@ -43,8 +43,8 @@
                 return this.$store.state.extensions.extensions
             },
             filteredExtensions() {
-                let hideLoggedOutUsers = get(this.data.WidgetLayout, 'countLoggedOutAgents')
-                
+                let hideLoggedOutUsers = get(this.data.WidgetLayout, 'hideLoggedOutUsers')
+
                 if (hideLoggedOutUsers) {
                     return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
                 }

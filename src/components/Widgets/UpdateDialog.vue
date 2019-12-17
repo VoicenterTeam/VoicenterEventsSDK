@@ -12,7 +12,7 @@
                 <widget-colors :model="model"/>
             </el-form-item>
             <el-form-item v-if="isPieWidget(widget)">
-                <el-checkbox v-model="model.WidgetLayout.countLoggedOutAgents" class="pt-4">
+                <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-4">
                     {{$t('Don`t count logged out agents')}}
                 </el-checkbox>
             </el-form-item>
@@ -164,6 +164,9 @@
                 this.widget.WidgetLayout.settings = this.widget.WidgetLayout.settings || settings
             }
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
+            if (isPieWidget(this.widget)) {
+                this.widget.WidgetLayout.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
+            }
         },
     }
 </script>
