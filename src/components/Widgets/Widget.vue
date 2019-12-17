@@ -120,8 +120,8 @@
                     'color': colors.fonts
                 }
 
-                if(this.showDeleteButton) {
-                    let border = {'border': '2px solid' + colors.frames ||defaultColors.frames}
+                if (this.showDeleteButton) {
+                    let border = {'border': '2px solid' + colors.frames}
                     styles = {
                         ...styles,
                         ...border
