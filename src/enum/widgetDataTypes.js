@@ -15,4 +15,5 @@ export default  {
     // TODO: update with correct TemplateID
     EXTERNAL_DATA_TYPE_ID: 999, //for test
     INFO_TYPE_ID: 13,
+    PIE_TYPE_ID: 111,
 }

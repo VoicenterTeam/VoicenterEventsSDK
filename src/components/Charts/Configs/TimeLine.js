@@ -150,6 +150,9 @@ Highcharts.setOptions({
             }
         },
     },
+    title: {
+        text: ''
+    }
 })
 
 export default {

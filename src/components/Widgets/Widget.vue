@@ -44,6 +44,7 @@
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
+    import PieChart from '@/components/Charts/PieChart'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import ConfigDialog from './ExternalData/ConfigDialog'
@@ -79,6 +80,7 @@
             QueueActiveCall,
             ExternalDataWidget,
             ConfigDialog,
+            PieChart,
         },
         props: {
             editable: {
@@ -92,13 +94,33 @@
         },
         data() {
             return {
-                showUpdateDialog: false,
-                loading: false,
+                componentTypes: {
+                    [widgetDataTypes.LINES_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.TIMELINE_TYPE_ID]: 'TimeLineChart',
+                    [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
+                    [widgetDataTypes.COUNTER_TYPE_ID]: 'StatusCards',
+                    [widgetDataTypes.CHART_SPEEDOMETER]: 'GaugeChart',
+                    [widgetDataTypes.CHART_QUEUE]: 'QueueChart',
+                    [widgetDataTypes.EXTENSION_CARDS]: 'ExtensionCards',
+                    [widgetDataTypes.HISTORY_COUNTERS]: 'StatisticsCards',
+                    [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
+                    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
+                    [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
+                    [widgetDataTypes.PIE_TYPE_ID]: 'PieChart',
+                    showUpdateDialog: false,
+                    loading: false,
+                }
             }
         },
         computed: {
             showDeleteButton() {
-                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER, widgetDataTypes.QUEUE_COUNTER_TYPE_ID]
+                let exceptions = [
+                    widgetDataTypes.COUNTER_TYPE_ID,
+                    widgetDataTypes.HISTORY_COUNTERS,
+                    widgetDataTypes.CHART_SPEEDOMETER,
+                    widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
+                ]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
             },
@@ -113,22 +135,15 @@
             },
             getStyles() {
                 let styles = {};
-                let colors = get(this.widget.WidgetLayout, 'colors');
+                let colors = get(this.widget.WidgetLayout, 'colors') || defaultColors;
 
-                try {
-                    styles = {
-                        'background': colors.background,
-                        'color': colors.fonts
-                    }
-                } catch (e) {
-                    styles = {
-                        'background': defaultColors.background,
-                        'color': defaultColors.fonts
-                    }
+                styles = {
+                    'background': colors.background,
+                    'color': colors.fonts
                 }
 
-                if(this.showDeleteButton) {
-                    let border = {'border': '2px solid' + colors.frames ||defaultColors.frames}
+                if (this.showDeleteButton) {
+                    let border = {'border': '2px solid' + colors.frames}
                     styles = {
                         ...styles,
                         ...border

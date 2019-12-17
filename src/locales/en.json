@@ -157,5 +157,8 @@
     "tooltip.reorder.dashboard.layout": "Reorder Dashboard Layout",
     "N/A": "N/A",
     "widget.layout.colors": "Widget Layout Colors",
-    "chart.update": "Update chart"
+    "chart.update": "Update chart",
+    "Agents real time status": "Agents real time status",
+    "Agents": "Agents",
+    "Don`t count logged out agents": "Don`t count logged out agents"
 }

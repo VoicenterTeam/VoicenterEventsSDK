@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-bind="$attrs" v-on="$listeners">
+    <el-dialog v-bind="$attrs" v-on="$listeners" v-if="model.WidgetLayout">
         <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
         <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model">
             <el-form-item>
@@ -10,6 +10,11 @@
             </el-form-item>
             <el-form-item>
                 <widget-colors :model="model"/>
+            </el-form-item>
+            <el-form-item v-if="isPieWidget(widget)">
+                <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-4">
+                    {{$t('Don`t count logged out agents')}}
+                </el-checkbox>
             </el-form-item>
             <el-form-item>
                 <div v-if="model.WidgetTime && widget.WidgetTime.Date_interval">
@@ -28,7 +33,7 @@
                 </div>
             </el-form-item>
             <real-time-settings
-                v-if="validateComponentType(widget)"
+                v-if="isRealtimeWidget(widget)"
                 :data="widget"
                 :model="model">
             </real-time-settings>
@@ -55,10 +60,10 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup} from 'element-ui'
+    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup, Checkbox} from 'element-ui'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
     import {filterIDs} from '@/enum/widgetTemplateConfigs'
-    import {isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {isRealtimeWidget, isPieWidget} from '@/helpers/widgetUtils'
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
     import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
@@ -77,6 +82,7 @@
             [RadioGroup.name]: RadioGroup,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            [Checkbox.name]: Checkbox,
             AutoComplete,
             OtherFilters,
             WidgetColors,
@@ -114,6 +120,8 @@
             }
         },
         methods: {
+            isRealtimeWidget,
+            isPieWidget,
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {
 
@@ -132,7 +140,7 @@
                     this.model.WidgetLayout = {
                         ...this.model.WidgetLayout,
                         ...{settings: this.model.settings},
-                        ...{colors: this.model.colors}
+                        ...{colors: this.model.colors},
                     }
 
                     try {
@@ -149,16 +157,16 @@
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
             },
-            validateComponentType() {
-                return isRealtimeWidget(this.widget)
-            }
         },
         mounted() {
             this.model = cloneDeep(this.widget)
             if (isRealtimeWidget(this.widget)) {
-                this.model.settings = this.widget.WidgetLayout.settings || settings
+                this.widget.WidgetLayout.settings = this.widget.WidgetLayout.settings || settings
             }
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
+            if (isPieWidget(this.widget)) {
+                this.widget.WidgetLayout.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
+            }
         },
     }
 </script>

@@ -52,6 +52,6 @@ export function isRealtimeWidget(widget) {
     return false
 }
 
-export function parseAbsoluteTime(date) {
-
+export function isPieWidget(widget) {
+    return widget.DataTypeID === widgetDataTypes.PIE_TYPE_ID;
 }
