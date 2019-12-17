@@ -51,7 +51,3 @@ export function isRealtimeWidget(widget) {
     }
     return false
 }
-
-export function parseAbsoluteTime(date) {
-
-}
