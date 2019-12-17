@@ -118,7 +118,7 @@
                 let exceptions = [
                     widgetDataTypes.COUNTER_TYPE_ID,
                     widgetDataTypes.HISTORY_COUNTERS,
-                    widgetDataTypes.CHART_SPEEDOMETER,
+                    widgetDataTypes.INFO_TYPE_ID,
                     widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
                 ]
                 let dataType = getWidgetDataType(this.widget)

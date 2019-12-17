@@ -28,8 +28,8 @@ export function getWidgetTemplate(widget) {
 
 export const componentWidth = {
     [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-1/3',
-    [widgetDataTypes.CHART_SPEEDOMETER]: 'lg:w-1/3',
     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'lg:w-1/3',
+    [widgetDataTypes.INFO_TYPE_ID]: 'lg:w-1/3',
     default: 'lg:w-3/3'
 }
 

@@ -1,14 +1,14 @@
 <template>
-    <div class="w-full p-4 bg-white rounded-lg shadow">
-        <div class="relative cursor-pointer z-50" v-if="editable">
-            <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
-                <trash-icon class="w-8 h-8 p-2 text-red trash-icon"
-                            @click="$emit('remove-item')">
-                </trash-icon>
-            </el-tooltip>
+    <div>
+        <div class="flex items-center mb-4">
+            <div class="flex flex-col md:flex-row md:items-center">
+                <p v-if="data.Title" class="text-2xl font-semibold">
+                    {{data.Title}}
+                </p>
+            </div>
         </div>
-        <div class="z-10" :class="{'-mt-8':editable}">
-            <highcharts :options="chartOptions"></highcharts>
+        <div class="bg-white p-4 rounded-lg py-4 mt-4">
+            <highcharts :options="chartOptions"/>
         </div>
     </div>
 </template>

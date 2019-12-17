@@ -2,7 +2,7 @@ import widgetDataTypes from './widgetDataTypes'
 import i18n from '@/i18n'
 
 export const types = {
-    COUNTER: widgetDataTypes.HISTORY_COUNTERS,
+    COUNTER: widgetDataTypes.INFO_TYPE_ID,
     SPEEDOMETER: widgetDataTypes.CHART_SPEEDOMETER,
     TABLE: widgetDataTypes.TABLE_TYPE_ID,
     LINES: widgetDataTypes.LINES_TYPE_ID,

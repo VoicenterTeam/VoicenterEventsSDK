@@ -3,12 +3,9 @@ export default {
     chart: {
         type: 'solidgauge',
     },
-    title: {
-        text: i18n.t('speedometer.chart.title')
-    },
     pane: {
         center: ['50%', '85%'],
-        size: '100%',
+        size: '160%',
         startAngle: -90,
         endAngle: 90,
         background: {
