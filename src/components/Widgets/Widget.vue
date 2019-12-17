@@ -108,9 +108,9 @@
                     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
                     [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
                     [widgetDataTypes.PIE_TYPE_ID]: 'PieChart',
-                    showUpdateDialog: false,
-                    loading: false,
-                }
+                },
+                showUpdateDialog: false,
+                loading: false,
             }
         },
         computed: {

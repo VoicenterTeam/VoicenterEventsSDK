@@ -9,6 +9,7 @@
 <script>
     import DefaultCard from './DefaultCard'
     import TableData from '../Data/Table/TableData'
+    import PieChart from '@/components/Charts/PieChart'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import CounterCard from '@/components/Cards/CounterCard'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
@@ -20,7 +21,8 @@
             CounterCard,
             GaugeChart,
             TableData,
-            TimeLineChart
+            TimeLineChart,
+            PieChart,
         },
         props: {
             data: {

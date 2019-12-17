@@ -6,7 +6,7 @@ export const types = {
     SPEEDOMETER: widgetDataTypes.CHART_SPEEDOMETER,
     TABLE: widgetDataTypes.TABLE_TYPE_ID,
     LINES: widgetDataTypes.LINES_TYPE_ID,
-    PIE: 5, // add this later
+    PIE: widgetDataTypes.PIE_TYPE_ID
 };
 
 export const options = [
@@ -26,11 +26,16 @@ export const options = [
         label: i18n.t('Lines'),
         value: types.LINES
     },
+    {
+        label: i18n.t('Pie'),
+        value: types.PIE
+    },
 ];
 
 export const dictionary = {
     [`${types.COUNTER}`]: 'COUNTER: The rules for valid data structure.',
     [`${types.SPEEDOMETER}`]: 'SPEEDOMETER: The rules for valid data structure.',
     [`${types.TABLE}`]: 'TABLE: The rules for valid data structure.',
-    [`${types.LINES}`]: 'LINES: The rules for valid data structure.'
+    [`${types.LINES}`]: 'LINES: The rules for valid data structure.',
+    [`${types.PIE}`]: 'PIE: The rules for valid data structure.'
 };

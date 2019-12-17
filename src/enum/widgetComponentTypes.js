@@ -15,4 +15,5 @@ export default {
     [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
     [widgetDataTypes.EXTERNAL_DATA_TYPE_ID]: 'ExternalDataWidget',
     [widgetDataTypes.INFO_TYPE_ID]: 'CounterCard',
+    [widgetDataTypes.PIE_TYPE_ID]: 'PieChart',
 }

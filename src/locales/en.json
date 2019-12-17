@@ -160,5 +160,12 @@
     "chart.update": "Update chart",
     "Agents real time status": "Agents real time status",
     "Agents": "Agents",
-    "Don`t count logged out agents": "Don`t count logged out agents"
+    "Don`t count logged out agents": "Don`t count logged out agents",
+    "Counter": "Counter",
+    "Speedometer": "Speedometer",
+    "Table":  "Table",
+    "Lines": "Lines",
+    "Pie":  "Pie",
+    "Widget type": "Widget type",
+    "Widget external endpoint": "Widget external endpoint"
 }
