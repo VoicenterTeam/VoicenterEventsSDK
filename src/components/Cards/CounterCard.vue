@@ -8,21 +8,36 @@
             </slot>
             <slot name="content">
                 <h2 class="text-6xl font-bold mx-3 text-green">
-                    {{data.WidgetID}}
+                    {{cardValue}}
                 </h2>
             </slot>
         </div>
     </div>
 </template>
 <script>
-    //TODO: update with (tbd) data structure
+    import get from 'lodash/get'
+    import UpdateDialog from "./UpdateDialog";
+
     export default {
-        name: 'statistics-cards',
+        components: {
+            UpdateDialog,
+        },
         props: {
             data: {
                 type: Object,
                 default: () => ({})
             }
         },
+        data() {
+          return {
+              showUpdateDialog: false
+          }
+        },
+        computed: {
+            cardValue() {
+                let value = get(this.data.WidgetLayout, 'CounterValue') || 0
+                return value
+            }
+        }
     }
 </script>
