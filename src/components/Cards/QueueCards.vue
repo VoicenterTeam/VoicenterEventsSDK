@@ -1,5 +1,6 @@
 <template>
-    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow" :style="borderColor">
+    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow"
+         :style="borderColor">
         <div class="w-full flex items-center">
             <slot name="icon">
                 <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
