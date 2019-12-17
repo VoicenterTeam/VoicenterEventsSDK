@@ -1,24 +1,26 @@
 <template>
-    <div class="w-full p-4 bg-white rounded-lg shadow">
-        <div class="relative cursor-pointer z-50" v-if="editable">
-            <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
-                <trash-icon class="w-8 h-8 p-2 text-red trash-icon"
-                            @click="$emit('remove-item')">
-                </trash-icon>
-            </el-tooltip>
+    <div>
+        <div class="flex items-center mb-4">
+            <div class="flex flex-col md:flex-row md:items-center">
+                <p v-if="data.Title" class="text-2xl font-semibold">
+                    {{data.Title}}
+                </p>
+            </div>
         </div>
-        <div class="z-10" :class="{'-mt-8':editable}">
+        <div class="bg-white p-4 rounded-lg py-4 mt-4">
             <highcharts :options="chartOptions"/>
         </div>
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
+    import groupBy from 'lodash/groupBy'
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import {TrashIcon} from 'vue-feather-icons'
     import statusTypes from '@/enum/statusTypes'
-    import groupBy from 'lodash/groupBy'
+    import {LOGOUT_STATUS} from "@/enum/extensionStatuses";
 
     export default {
         components: {
@@ -40,13 +42,20 @@
             extensions() {
                 return this.$store.state.extensions.extensions
             },
+            filteredExtensions() {
+                let hideLoggedOutUsers = get(this.data.WidgetLayout, 'countLoggedOutAgents')
+                
+                if (hideLoggedOutUsers) {
+                    return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
+                }
+                return this.extensions
+            },
             chartOptions() {
-
                 let statusData = []
-                let extensions = this.extensions
+                let extensions = this.filteredExtensions
 
                 if (extensions) {
-                    statusData = groupBy(this.extensions, 'representativeStatus')
+                    statusData = groupBy(extensions, 'representativeStatus')
                 }
 
                 let data = []
@@ -74,9 +83,6 @@
                         plotBorderWidth: null,
                         plotShadow: false,
                         type: 'pie'
-                    },
-                    title: {
-                        text: this.$t('Agents real time status')
                     },
                     series: [{
                         name: this.$t('Agents'),

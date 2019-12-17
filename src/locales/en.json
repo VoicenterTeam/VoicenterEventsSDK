@@ -159,5 +159,6 @@
     "widget.layout.colors": "Widget Layout Colors",
     "chart.update": "Update chart",
     "Agents real time status": "Agents real time status",
-    "Agents": "Agents"
+    "Agents": "Agents",
+    "Don`t count logged out agents": "Don`t count logged out agents"
 }

@@ -114,7 +114,6 @@
                     widgetDataTypes.HISTORY_COUNTERS,
                     widgetDataTypes.CHART_SPEEDOMETER,
                     widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
-                    widgetDataTypes.PIE_TYPE_ID,
                 ]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
