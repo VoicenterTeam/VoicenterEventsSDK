@@ -161,11 +161,11 @@
         mounted() {
             this.model = cloneDeep(this.widget)
             if (isRealtimeWidget(this.widget)) {
-                this.widget.WidgetLayout.settings = this.widget.WidgetLayout.settings || settings
+                this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
             if (isPieWidget(this.widget)) {
-                this.widget.WidgetLayout.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
+                this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
             }
         },
     }

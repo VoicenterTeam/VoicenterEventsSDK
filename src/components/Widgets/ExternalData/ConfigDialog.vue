@@ -7,8 +7,7 @@
             </el-form-item>
             <el-form-item>
                 <label>{{$t('Widget external endpoint')}}</label>
-<!--//TODO: set field -->
-                <el-input/>
+                <el-input v-model="model.WidgetLayout.Endpoint"/>
             </el-form-item>
             <el-form-item>
                 <label>{{$t('Widget type')}}</label>

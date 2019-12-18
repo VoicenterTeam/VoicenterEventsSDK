@@ -8,36 +8,51 @@
             </slot>
             <slot name="content">
                 <h2 class="text-6xl font-bold mx-3 text-green">
-                    {{cardValue}}
+                    {{CounterValue}}
                 </h2>
             </slot>
         </div>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
-    import UpdateDialog from "./UpdateDialog";
+    import {WidgetDataApi} from '@/api/widgetDataApi'
 
     export default {
-        components: {
-            UpdateDialog,
-        },
         props: {
             data: {
                 type: Object,
                 default: () => ({})
+            },
+            Endpoint: {
+                type: String,
+                default: ''
+            },
+            editable: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
-          return {
-              showUpdateDialog: false
-          }
-        },
-        computed: {
-            cardValue() {
-                let value = get(this.data.WidgetLayout, 'CounterValue') || 0
-                return value
+            return {
+                CounterValue: 0,
             }
+        },
+        methods: {
+            getData() {
+                try {
+                    let data = WidgetDataApi.getData(this.EndPoint)
+                    this.CounterValue = data.CounterValue
+                } catch (e) {
+                    console.warn(e)
+                } finally {
+                    this.loading = false
+                    this.$emit('on-loading', false)
+                }
+            }
+        },
+        beforeMount() {
+            this.getData()
+            console.log(this.$attrs)
         }
     }
 </script>

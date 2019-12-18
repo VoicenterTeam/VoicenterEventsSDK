@@ -1,5 +1,5 @@
 <template>
-    <component :is="getComponentType()"
+    <component :is="getComponentType"
                :data="data"
                v-bind="data.WidgetLayout"
                :editable="editable"
@@ -7,7 +7,6 @@
     </component>
 </template>
 <script>
-    import DefaultCard from './DefaultCard'
     import TableData from '../Data/Table/TableData'
     import PieChart from '@/components/Charts/PieChart'
     import GaugeChart from '@/components/Charts/GaugeChart'
@@ -17,7 +16,6 @@
 
     export default {
         components: {
-            DefaultCard,
             CounterCard,
             GaugeChart,
             TableData,
@@ -34,7 +32,7 @@
                 default: false
             },
         },
-        methods: {
+        computed: {
             getComponentType() {
                 return widgetComponentTypes[this.data.WidgetLayout.SomeFieldID]
             }

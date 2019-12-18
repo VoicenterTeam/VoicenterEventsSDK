@@ -10,4 +10,14 @@ export const WidgetDataApi = {
             parseCatch(e, true)
         }
     },
+
+    async getExternalData(endPoint) {
+        // try {
+        //     let res = await $axios.post(endPoint)
+        //     return res.Data
+        // } catch (e) {
+        //     parseCatch(e, true)
+        // }
+    }
+
 }
