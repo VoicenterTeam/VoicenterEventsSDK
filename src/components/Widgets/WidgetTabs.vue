@@ -63,7 +63,7 @@
         },
         data() {
             return {
-                activeTab: get(this.widgets, '[0].WidgetID').toString()
+                activeTab: get(this.widgets, '[0].WidgetID')
             };
         },
         computed: {
