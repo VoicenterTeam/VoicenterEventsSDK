@@ -62,8 +62,9 @@
             },
         },
         data() {
+            let firstWidgetID = get(this.widgets, '[0].WidgetID')
             return {
-                activeTab: get(this.widgets, '[0].WidgetID')
+                activeTab: firstWidgetID ? firstWidgetID.toString() : ''
             };
         },
         computed: {
