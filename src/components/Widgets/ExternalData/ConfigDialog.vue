@@ -11,7 +11,7 @@
             </el-form-item>
             <el-form-item>
                 <label>{{$t('Widget type')}}</label>
-                <el-select v-model="model.WidgetLayout.SomeFieldID"
+                <el-select v-model="model.WidgetLayout.ComponentTypeID"
                            placeholder="Select"
                            class="w-full pt-2">
                     <el-option
@@ -24,7 +24,7 @@
             <br>
             <el-alert
                 class="mt-12"
-                :description="dictionary[model.WidgetLayout.SomeFieldID]"
+                :description="dictionary[model.WidgetLayout.ComponentTypeID]"
                 type="info"
                 :closable="false"
                 show-icon>

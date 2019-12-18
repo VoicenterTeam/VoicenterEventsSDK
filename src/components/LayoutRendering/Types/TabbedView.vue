@@ -69,6 +69,7 @@
         },
         methods: {
             getClass(widgets) {
+                // return 'display-widget__tabs'
                 if (widgets.length) {
                     let tabsToDisplay = uniq(widgets.map((widget) => {
                         return getWidgetDataType(widget)

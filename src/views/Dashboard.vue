@@ -350,6 +350,7 @@
                                 this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                             }
                         }
+
                         if (!this.editMode) {
                             this.saveDashboard()
                         }

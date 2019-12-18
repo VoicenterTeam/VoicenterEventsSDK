@@ -13,6 +13,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,
             DataTypeID: template.DataType.DataTypeID,
             Endpoint: template.Endpoint,
+            ComponentTypeID: 1 // default for external widget data type: 1 - line chart
         })
         newWidget.WidgetConfig= template.DefaultWidgetConfig || [],
         newWidget.WidgetTime= template.DefaultWidgetTime || {},

@@ -167,5 +167,6 @@
     "Lines": "Lines",
     "Pie":  "Pie",
     "Widget type": "Widget type",
-    "Widget external endpoint": "Widget external endpoint"
+    "Widget external endpoint": "Widget external endpoint",
+    "Select a widget type": "Select a widget type"
 }
