@@ -37,20 +37,24 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
-            <el-collapse v-model="activeCollapse" class="pt-4" v-if="filters.length && model.WidgetConfig">
-                <el-collapse-item :title="$t('settings.filters')" name="filters">
-                    <auto-complete
-                        v-for="(filter, index) in filters"
-                        :model="model.WidgetConfig[index]"/>
-                </el-collapse-item>
-            </el-collapse>
-            <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length && model.WidgetConfig">
-                <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
-                    <other-filters
-                        v-for="(filter, index) in otherFilters"
-                        :model="model.WidgetConfig[index]"/>
-                </el-collapse-item>
-            </el-collapse>
+            <div v-if="model.WidgetConfig">
+                <el-collapse v-model="activeCollapse" class="pt-4">
+                    <el-collapse-item :title="$t('settings.filters')" name="filters">
+                        <auto-complete
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isAutoComplete(filter)"
+                            :model="model.WidgetConfig[index]"/>
+                    </el-collapse-item>
+                </el-collapse>
+                <el-collapse v-model="activeCollapse" class="pt-4">
+                    <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
+                        <other-filters
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isOtherFilters(filter)"
+                            :model="model.WidgetConfig[index]"/>
+                    </el-collapse-item>
+                </el-collapse>
+            </div>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -112,16 +116,16 @@
                 }
                 return {}
             },
-            filters() {
-                return this.widget.WidgetConfig.filter(c => c.ParameterID && filterIDs.includes(c.ParameterID))
-            },
-            otherFilters() {
-                return this.widget.WidgetConfig.filter(c => c.ParameterID && !filterIDs.includes(c.ParameterID))
-            }
         },
         methods: {
             isRealtimeWidget,
             isPieWidget,
+            isAutoComplete(WidgetConfig) {
+                return !!filterIDs.includes(WidgetConfig.ParameterID);
+            },
+            isOtherFilters(WidgetConfig) {
+                return !filterIDs.includes(WidgetConfig.ParameterID);
+            },
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {
 
