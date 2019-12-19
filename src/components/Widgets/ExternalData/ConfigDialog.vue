@@ -24,11 +24,12 @@
             <br>
             <el-alert
                 class="mt-12"
-                :description="dictionary[model.WidgetLayout.ComponentTypeID]"
+                v-html="dictionary[model.WidgetLayout.ComponentTypeID]"
                 type="info"
                 :closable="false"
                 show-icon>
             </el-alert>
+<!--                :description="dictionary[model.WidgetLayout.ComponentTypeID]"-->
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>

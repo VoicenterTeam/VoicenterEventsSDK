@@ -33,9 +33,9 @@ export const options = [
 ];
 
 export const dictionary = {
-    [`${types.COUNTER}`]: 'COUNTER: The rules for valid data structure.',
-    [`${types.SPEEDOMETER}`]: 'SPEEDOMETER: The rules for valid data structure.',
-    [`${types.TABLE}`]: 'TABLE: The rules for valid data structure.',
-    [`${types.LINES}`]: 'LINES: The rules for valid data structure.',
-    [`${types.PIE}`]: 'PIE: The rules for valid data structure.'
+    [`${types.COUNTER}`]: 'The response must be a value or an object with the key: CounterValue.',
+    [`${types.SPEEDOMETER}`]: "<a href='https://www.highcharts.com/demo/gauge-solid' target='_blank'>Click to see the documentation</a>",
+    [`${types.TABLE}`]: 'The response must be an array of objects: [{key: value...},{...}]',
+    [`${types.LINES}`]: "<a href='https://www.highcharts.com/demo/line-basic' target='_blank'>Click to see the documentation</a>",
+    [`${types.PIE}`]: "<a href='https://www.highcharts.com/demo/pie-legend' target='_blank'>Click to see the documentation</a>",
 };

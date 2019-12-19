@@ -37,7 +37,7 @@
             getData() {
                 try {
                     let data = WidgetDataApi.getExternalData(this.data.EndPoint)
-                    this.CounterValue = data.CounterValue
+                    this.CounterValue = data.CounterValue || data
                 } catch (e) {
                     console.warn(e)
                 }
