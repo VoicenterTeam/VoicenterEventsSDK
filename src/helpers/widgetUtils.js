@@ -53,7 +53,7 @@ export function isRealtimeWidget(widget) {
 }
 
 export function isPieWidget(widget) {
-    return widget.DataTypeID === widgetDataTypes.PIE_TYPE_ID;
+    return widget.DataTypeID === widgetDataTypes.PIE_TYPE_ID || widget.WidgetLayout.ComponentTypeID === widgetDataTypes.PIE_TYPE_ID;
 }
 
 export function isExternalDataWidget(widget) {

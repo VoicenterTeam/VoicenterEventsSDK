@@ -21,6 +21,8 @@
     import {TrashIcon} from 'vue-feather-icons'
     import statusTypes from '@/enum/statusTypes'
     import {LOGOUT_STATUS} from "@/enum/extensionStatuses";
+    import {isExternalDataWidget} from '@/helpers/widgetUtils'
+    import {WidgetDataApi} from "../../api/widgetDataApi";
 
     export default {
         components: {
@@ -51,30 +53,12 @@
                 return this.extensions
             },
             chartOptions() {
-                let statusData = []
-                let extensions = this.filteredExtensions
-
-                if (extensions) {
-                    statusData = groupBy(extensions, 'representativeStatus')
-                }
-
                 let data = []
 
-                for (let status in statusData) {
-                    let statusType = statusTypes[status]
-
-                    let sliceObject = {
-                        color: statusType.color,
-                        name: this.$t(statusType.text),
-                        y: statusData[status].length,
-                    }
-
-                    if (!data.length) {
-                        sliceObject.sliced = true
-                        sliceObject.selected = true
-                    }
-
-                    data.push(sliceObject);
+                if (isExternalDataWidget) {
+                    data = WidgetDataApi.getExternalData(this.data.EndPoint)
+                } else {
+                    data = this.getExtensionsData()
                 }
 
                 return {
@@ -102,5 +86,33 @@
                 };
             },
         },
+        methods: {
+            getExtensionsData() {
+                let statusData = []
+                let extensions = this.filteredExtensions
+
+                if (extensions) {
+                    statusData = groupBy(extensions, 'representativeStatus')
+                }
+
+                for (let status in statusData) {
+                    let statusType = statusTypes[status]
+
+                    let sliceObject = {
+                        color: statusType.color,
+                        name: this.$t(statusType.text),
+                        y: statusData[status].length,
+                    }
+
+                    if (!data.length) {
+                        sliceObject.sliced = true
+                        sliceObject.selected = true
+                    }
+
+                    data.push(sliceObject);
+                }
+                return data
+            }
+        }
     }
 </script>

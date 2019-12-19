@@ -22,6 +22,11 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item v-if="model && isPieWidget(model)">
+                <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-4">
+                    {{$t('Don`t count logged out agents')}}
+                </el-checkbox>
+            </el-form-item>
             <br>
             <el-alert
                 class="mt-12"
@@ -42,17 +47,19 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Select, Option, Alert} from 'element-ui'
+    import {Dialog, Select, Option, Alert, Checkbox} from 'element-ui'
+    import {isPieWidget} from '@/helpers/widgetUtils'
     import {options, dictionary} from '@/enum/externalDataWidgetConfig'
     import WidgetColors from '../../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
     export default {
         components: {
+            [Checkbox.name]: Checkbox,
             [Dialog.name]: Dialog,
             [Select.name]: Select,
             [Option.name]: Option,
             [Alert.name]: Alert,
-            WidgetColors
+            WidgetColors,
         },
         props: {
             widget: {
@@ -73,6 +80,7 @@
             },
         },
         methods: {
+            isPieWidget,
             onChange() {
                 this.$confirm(
                     this.$t('common.confirm.question', {

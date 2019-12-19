@@ -18,9 +18,11 @@
     import {Chart} from 'highcharts-vue'
     import {TrashIcon} from 'vue-feather-icons'
     import gaugeChartConfig from './Configs/Gauge'
+    import {WidgetDataApi} from '@/api/widgetDataApi'
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import highchartsMoreInit from 'highcharts/highcharts-more'
     import solidGaugeInit from 'highcharts/modules/solid-gauge'
+    import {isExternalDataWidget} from '@/helpers/widgetUtils'
 
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
@@ -49,26 +51,40 @@
                 return this.agentsOnline.filter(agent => agent.calls.length)
             },
             chartOptions() {
+                if (isExternalDataWidget) {
+                    let data = WidgetDataApi.getExternalData(this.data.EndPoint)
+                    return {...gaugeChartConfig, ...data}
+                } else {
+                    return this.getAgentsData()
+                }
+            },
+        },
+        methods: {
+            getAgentsData() {
                 let agentsOnline = this.agentsOnline
+
                 let range = {
                     min: 0,
                     max: agentsOnline.length
                 }
 
-                let stops = [
-                    [0, '#55BF3B'],
-                    [agentsOnline.length/2 + 0.1, '#DDDF0D'],
-                    [agentsOnline.length, '#DF5353']
-                ]
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
                     ...range,
                     stops,
                 }
-                this.data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
+
+                let stops = [
+                    [0, '#55BF3B'],
+                    [agentsOnline.length / 2 + 0.1, '#DDDF0D'],
+                    [agentsOnline.length, '#DF5353']
+                ]
+
+                data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
+
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
-            },
-        },
+            }
+        }
     }
 </script>
