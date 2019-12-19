@@ -20,6 +20,7 @@
     import CounterCard from '@/components/Cards/CounterCard'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
+    import {defaultColors} from "../../../enum/defaultWidgetSettings";
 
     export default {
         components: {
@@ -44,5 +45,8 @@
                 return widgetComponentTypes[this.data.WidgetLayout.ComponentTypeID]
             }
         },
+        mounted() {
+            this.data.colors = this.data.WidgetLayout.colors || defaultColors
+        }
     }
 </script>

@@ -1,6 +1,7 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
-        <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model" v-if="model.WidgetLayout">
+        <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model"
+                 v-if="model.WidgetLayout">
             <el-form-item>
                 <label>{{$t('widget.title')}}</label>
                 <el-input v-model="model.Title"/>
@@ -29,7 +30,9 @@
                 :closable="false"
                 show-icon>
             </el-alert>
-<!--                :description="dictionary[model.WidgetLayout.ComponentTypeID]"-->
+            <el-form-item>
+                <widget-colors :model="model"/>
+            </el-form-item>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -41,6 +44,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import {Dialog, Select, Option, Alert} from 'element-ui'
     import {options, dictionary} from '@/enum/externalDataWidgetConfig'
+    import WidgetColors from '../../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
     export default {
         components: {
@@ -48,6 +52,7 @@
             [Select.name]: Select,
             [Option.name]: Option,
             [Alert.name]: Alert,
+            WidgetColors
         },
         props: {
             widget: {
@@ -69,6 +74,10 @@
         },
         methods: {
             onChange() {
+                this.model.WidgetLayout = {
+                    ...this.model.WidgetLayout,
+                    ...{colors: this.model.colors},
+                }
                 this.$emit('on-update', this.model)
                 this.toggleVisibility(false);
             },
