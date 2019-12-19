@@ -90,7 +90,7 @@
             :visible.sync="showReorderDataDialog"
             @on-submit="reorderWidgetGroup"
             @on-cancel="showReorderDataDialog = false"
-        ></reorder-layout-dialog>
+        />
     </div>
 </template>
 <script>

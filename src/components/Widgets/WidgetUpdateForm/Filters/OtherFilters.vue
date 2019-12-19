@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="this.model.ParameterType">
         <label>
             {{model.ParameterPrettyName}}
         </label>

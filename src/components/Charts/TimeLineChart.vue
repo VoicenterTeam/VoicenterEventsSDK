@@ -57,7 +57,6 @@
         },
         methods: {
             async getChartData() {
-                console.log(123)
                 let widgetDataType = this.data.DataTypeID
                 let Data = await getWidgetData(this.data)
                 let chartData = get(Data, '0', {series: []})
