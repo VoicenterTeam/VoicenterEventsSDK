@@ -74,12 +74,21 @@
         },
         methods: {
             onChange() {
-                this.model.WidgetLayout = {
-                    ...this.model.WidgetLayout,
-                    ...{colors: this.model.colors},
-                }
-                this.$emit('on-update', this.model)
-                this.toggleVisibility(false);
+                this.$confirm(
+                    this.$t('common.confirm.question', {
+                        action: 'to update widget',
+                    }), this.$t('widget.update'), {
+                        cancelButtonText: this.$t('common.cancel'),
+                        confirmButtonText: this.$t('common.confirm'),
+                    }).then(() => {
+
+                    this.model.WidgetLayout = {
+                        ...this.model.WidgetLayout,
+                        ...{colors: this.model.colors},
+                    }
+                    this.$emit('on-update', this.model)
+                    this.toggleVisibility(false);
+                })
             },
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
