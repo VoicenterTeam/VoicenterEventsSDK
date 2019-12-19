@@ -20,7 +20,7 @@
     import uniq from 'lodash/uniq'
     import Tabs from '@/components/Tabs'
     import widgetViewTypes from '@/enum/widgetViewTypes'
-    import {getWidgetDataType} from '@/helpers/widgetUtils'
+    import {getWidgetDataType, groupedWidgets} from '@/helpers/widgetUtils'
     import WidgetList from '@/components/Widgets/WidgetList'
     import WidgetTabs from '@/components/Widgets/WidgetTabs'
 
@@ -69,16 +69,20 @@
         },
         methods: {
             getClass(widgets) {
-                // return 'display-widget__tabs'
-                if (widgets.length) {
-                    let tabsToDisplay = uniq(widgets.map((widget) => {
-                        return getWidgetDataType(widget)
-                    }))
-                    if (tabsToDisplay.length > 1) {
-                        return 'display-widget__tabs'
+                if (!widgets.length) {
+                    return ''
+                }
+
+                let tabsToDisplay = uniq(widgets.map((widget) => {
+                    return getWidgetDataType(widget)
+                }))
+
+                if (tabsToDisplay.length === 1) {
+                    if (groupedWidgets.includes(tabsToDisplay[0]) || widgets.length === 1) {
+                        return ''
                     }
                 }
-                return ''
+                return 'display-widget__tabs'
             }
         }
     }

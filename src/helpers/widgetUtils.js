@@ -55,3 +55,9 @@ export function isRealtimeWidget(widget) {
 export function isPieWidget(widget) {
     return widget.DataTypeID === widgetDataTypes.PIE_TYPE_ID;
 }
+
+export const groupedWidgets = [
+    widgetDataTypes.COUNTER_TYPE_ID,
+    widgetDataTypes.CHART_SPEEDOMETER,
+    widgetDataTypes.QUEUE_COUNTER_TYPE_ID
+]
