@@ -56,6 +56,10 @@ export function isPieWidget(widget) {
     return widget.DataTypeID === widgetDataTypes.PIE_TYPE_ID;
 }
 
+export function isExternalDataWidget(widget) {
+    return widget.DataTypeID === widgetDataTypes.EXTERNAL_DATA_TYPE_ID;
+}
+
 export const groupedWidgets = [
     widgetDataTypes.COUNTER_TYPE_ID,
     widgetDataTypes.CHART_SPEEDOMETER,

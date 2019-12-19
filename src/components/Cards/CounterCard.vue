@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-white px-8 py-4 my-4 flex items-center justify-between rounded-lg shadow">
+    <div class="w-full bg-white px-8 py-4 -mt-2 flex items-center justify-between rounded-lg shadow">
         <div class="w-full flex flex-row items-center justify-between">
             <slot name="title">
                 <h5 class="text-2xl font-bold mx-3">
@@ -23,10 +23,6 @@
                 type: Object,
                 default: () => ({})
             },
-            Endpoint: {
-                type: String,
-                default: ''
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -40,19 +36,20 @@
         methods: {
             getData() {
                 try {
-                    let data = WidgetDataApi.getData(this.EndPoint)
+                    let data = WidgetDataApi.getExternalData(this.data.EndPoint)
                     this.CounterValue = data.CounterValue
                 } catch (e) {
                     console.warn(e)
-                } finally {
-                    this.loading = false
-                    this.$emit('on-loading', false)
                 }
             }
         },
-        beforeMount() {
-            this.getData()
-            console.log(this.$attrs)
-        }
+        watch: {
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.getData()
+                }
+            }
+        },
     }
 </script>
