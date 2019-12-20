@@ -57,6 +57,8 @@
                 }
                 return this.extensions
             },
+        },
+        methods: {
             async chartOptions() {
                 let data = []
 
@@ -90,8 +92,6 @@
                     }]
                 };
             },
-        },
-        methods: {
             getExtensionsData() {
                 let statusData = []
                 let extensions = this.filteredExtensions
@@ -118,6 +118,14 @@
                 }
                 return data
             }
-        }
+        },
+        watch: {
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.chartOptions()
+                }
+            }
+        },
     }
 </script>

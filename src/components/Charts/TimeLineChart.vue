@@ -60,6 +60,11 @@
                 let widgetDataType = this.data.DataTypeID
                 let Data = await getWidgetData(this.data)
                 let chartData = get(Data, '0', {series: []})
+                if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
+                    chartData = {series: Data}
+                } else {
+                    chartData = get(Data, '0', {series: []})
+                }
                 let chartType = ''
                 if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
                     chartType = 'line'
@@ -90,11 +95,7 @@
                     ...chartData,
                 }
 
-                if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
-                    this.chartOptions = Data
-                } else {
-                    this.chartOptions = data
-                }
+                this.chartOptions = data
                 this.loading = false
                 this.$emit('on-loading', false)
             }

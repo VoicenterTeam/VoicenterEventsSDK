@@ -55,16 +55,16 @@
             agentsInACall() {
                 return this.agentsOnline.filter(agent => agent.calls.length)
             },
+        },
+        methods: {
             async chartOptions() {
                 if (isExternalDataWidget) {
                     let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
-                    this.chartData = {...gaugeChartConfig, ...data}
+                    this.chartData = {...gaugeChartConfig, ...{series: data}}
                 } else {
                     this.chartData = this.getAgentsData()
                 }
             },
-        },
-        methods: {
             getAgentsData() {
                 let agentsOnline = this.agentsOnline
 
@@ -86,10 +86,18 @@
                     [agentsOnline.length, '#DF5353']
                 ]
 
-                data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
+                this.data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             }
-        }
+        },
+        watch: {
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.chartOptions()
+                }
+            }
+        },
     }
 </script>
