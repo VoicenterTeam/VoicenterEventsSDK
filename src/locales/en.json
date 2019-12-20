@@ -17,6 +17,7 @@
     "dashboards.queue": "Queue Dashboard",
     "dashboards.new.title": "Create new Dashboard",
     "dashboards.new.form.title": "Dashboard title",
+    "dashboards.new.form.logo": "Dashboard logo",
     "dashboards.widgets.noData": "This dashboard contains no data. Click on the plus icon to drag and drop new widgets",
     "widgets.phoneNumbers.description": "Telephone Numbers",
     "widgets.users.description": "Users",
@@ -160,5 +161,6 @@
     "chart.update": "Update chart",
     "Agents real time status": "Agents real time status",
     "Agents": "Agents",
-    "Don`t count logged out agents": "Don`t count logged out agents"
+    "Don`t count logged out agents": "Don`t count logged out agents",
+    "Upload Logo": "Upload Logo"
 }

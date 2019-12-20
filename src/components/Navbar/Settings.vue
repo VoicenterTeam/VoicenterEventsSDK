@@ -4,18 +4,39 @@
         <el-form @submit.native.prevent="updateSettings" :rules="rules" ref="settings" :model="settings">
             <el-collapse v-model="activeCollapses">
                 <el-collapse-item :title="$t('settings.layout')" name="layout">
-                    <div class="flex flex-col">
-                        <div class="md:flex md:flex-col md:justify-center">
-                            <el-checkbox v-model="settings.showGeneralWidgetSearch">
-                                {{$t('settings.widget.search')}}
-                            </el-checkbox>
+                    <el-form-item prop="DashboardTitle">
+                        {{$t('dashboards.new.form.title')}}
+                        <el-input v-model="DashboardTitle"/>
+                    </el-form-item>
+                    <el-form-item prop="logo" class="">
+                        {{$t('dashboards.new.form.logo')}}
+                        <div class="image-upload upload-button flex">
+                            <label for="file-input" class="cursor-pointer flex items-center">
+                                <img class="px-2" src="https://cdn.shopify.com/s/files/1/2065/6315/t/46/assets/UploadIcon.svg"/>
+                                {{$t('Upload Logo')}}
+                            </label>
+                            <input
+                                id="file-input"
+                                type="file"
+                                accept="image/*"
+                                @change="onFileChange()"/>
+                            <div class="flex items-center" v-if="settings.logoName">
+                                <p class="text-black px-2">{{settings.logoName}} </p>
+                                <trash-icon class="cursor-pointer w-5 h-5 text-red trash-icon"
+                                            @click="removeFile()"/>
+                            </div>
                         </div>
-                        <div class="md:flex md:flex-col md:justify-center mt-4">
-                            <el-checkbox v-model="settings.showWidgetAsTabs">
-                                {{$t('settings.widget.tabbed.view')}}
-                            </el-checkbox>
-                        </div>
-                    </div>
+                    </el-form-item>
+                    <el-form-item prop="showGeneralWidgetSearch">
+                        <el-checkbox v-model="settings.showGeneralWidgetSearch">
+                            {{$t('settings.widget.search')}}
+                        </el-checkbox>
+                    </el-form-item>
+                    <el-form-item prop="showWidgetAsTabs">
+                        <el-checkbox v-model="settings.showWidgetAsTabs">
+                            {{$t('settings.widget.tabbed.view')}}
+                        </el-checkbox>
+                    </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
                     <el-form-item prop="report.interval">
@@ -57,7 +78,6 @@
     </el-dialog>
 </template>
 <script>
-
     import cloneDeep from 'lodash/cloneDeep'
     import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber} from 'element-ui'
     import ColorPicker from '../Common/ColorPicker'
@@ -65,6 +85,8 @@
     import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
     import {settingsColors, predefinedColors} from '@/enum/layout'
+    import {getBase64} from '@/helpers/util'
+    import {TrashIcon} from 'vue-feather-icons'
 
     export default {
         inheritAttrs: false,
@@ -75,6 +97,7 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             ColorPicker,
+            TrashIcon,
         },
         data() {
             return {
@@ -83,12 +106,13 @@
                 predefinedColors,
                 storingData: false,
                 settingsColors,
+                DashboardTitle: this.activeDashboard.DashboardTitle
             }
         },
         props: {
             activeDashboard: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             }
         },
         computed: {
@@ -104,6 +128,11 @@
                             message: this.$t('validation.interval'),
                         }
                     ],
+                    DashboardTitle: {
+                        min: 5,
+                        max: 10,
+                        message: this.$t('validation.interval'),
+                    }
                 }
             }
         },
@@ -120,6 +149,7 @@
                         this.settings.colors.primary_rgba = convertHex(this.settings.colors.primary)
                         let dashboard = {
                             ...this.activeDashboard,
+                            ...{DashboardTitle: this.DashboardTitle},
                             DashboardLayout: {...this.activeDashboard.DashboardLayout, ...{settings: this.settings}}
                         }
                         updateDashboard(dashboard).then((dashboard) => {
@@ -135,6 +165,14 @@
             },
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
+            },
+            async onFileChange() {
+                let file = event.target.files[0]
+                this.settings.logo = await getBase64(file)
+                this.settings.logoName = file.name
+            },
+            removeFile() {
+                this.settings.logoName = ''
             }
         },
     }
@@ -154,5 +192,14 @@
         &.is-error {
             margin-bottom: 15px;
         }
+    }
+
+    .image-upload > input {
+        display: none;
+    }
+
+    .upload-button {
+        color: #678ee3;
+        /*color: var(--primary-color);*/
     }
 </style>

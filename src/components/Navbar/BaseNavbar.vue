@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
-        <img src="/img/navbar/logo.png" alt="Logo" class="hidden h-10 mb-2 mx-16 md:flex">
+        <img :src="getLogo" alt="Logo" class="hidden h-10 mb-2 mx-16 md:flex">
         <div>
             <div class="relative">
                 <div class="flex items-center py-3 mx-1 sm:mx-16">
@@ -93,6 +93,7 @@
     </nav>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Dialog, Tooltip} from 'element-ui'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
@@ -112,7 +113,7 @@
                 showCreateDashboardDialog: false,
                 newDashboard: dashboardModel(),
                 showEditSettingsDialog: false,
-                dialogWidth: '30%'
+                dialogWidth: '30%',
             }
         },
         computed: {
@@ -127,6 +128,9 @@
             },
             allUsers() {
                 return this.$store.state.users.allUsers
+            },
+            getLogo() {
+                return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
         },
         methods: {
