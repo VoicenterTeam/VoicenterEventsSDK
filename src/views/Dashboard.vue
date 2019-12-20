@@ -340,7 +340,6 @@
                 if (index !== -1) {
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
                     if (widgetIndex !== -1) {
-                        this.activeDashboardData.WidgetGroupList[index].WidgetList[widgetIndex] = widget
                         if (!widgetGroup.IsNew) {
                             //Check if widget is new or already is stored in group
                             let oldWidgetIndex = this.$store.state.dashboards.activeDashboard.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
@@ -350,7 +349,7 @@
                                 this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                             }
                         }
-
+                        this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, widget)
                         if (!this.editMode) {
                             this.saveDashboard()
                         }
