@@ -159,5 +159,8 @@
     "N/A": "N/A",
     "widget.layout.colors": "Widget Layout Colors",
     "chart.update": "Update chart",
+    "Agents real time status": "Agents real time status",
+    "Agents": "Agents",
+    "Don`t count logged out agents": "Don`t count logged out agents",
     "Upload Logo": "Upload Logo"
 }

@@ -43,6 +43,7 @@
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
+    import PieChart from '@/components/Charts/PieChart'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import QueueCards from '@/components/Cards/QueueCards'
@@ -72,7 +73,8 @@
             GaugeChart,
             QueueChart,
             QueueCards,
-            QueueActiveCall
+            QueueActiveCall,
+            PieChart,
         },
         props: {
             editable: {
@@ -99,6 +101,7 @@
                     [widgetDataTypes.REAL_TIME_TABLE]: 'TableData',
                     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
                     [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
+                    [widgetDataTypes.PIE_TYPE_ID]: 'PieChart',
                 },
                 showUpdateDialog: false,
                 loading: false,
@@ -106,7 +109,12 @@
         },
         computed: {
             showDeleteButton() {
-                let exceptions = [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.HISTORY_COUNTERS, widgetDataTypes.CHART_SPEEDOMETER, widgetDataTypes.QUEUE_COUNTER_TYPE_ID]
+                let exceptions = [
+                    widgetDataTypes.COUNTER_TYPE_ID,
+                    widgetDataTypes.HISTORY_COUNTERS,
+                    widgetDataTypes.CHART_SPEEDOMETER,
+                    widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
+                ]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
             },
@@ -114,8 +122,10 @@
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
             getStyles() {
+                let styles = {};
                 let colors = get(this.widget.WidgetLayout, 'colors') || defaultColors;
-                let styles = {
+
+                styles = {
                     'background': colors.background,
                     'color': colors.fonts
                 }
