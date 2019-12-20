@@ -45,8 +45,13 @@
                 return widgetComponentTypes[this.data.WidgetLayout.ComponentTypeID]
             }
         },
-        mounted() {
-            this.data.colors = this.data.WidgetLayout.colors || defaultColors
+        watch: {
+            data: {
+                immediate: true,
+                handler: function (widget) {
+                    this.data.colors = widget.WidgetLayout.colors || defaultColors
+                }
+            }
         }
     }
 </script>
