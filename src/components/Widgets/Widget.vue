@@ -114,23 +114,14 @@
                 return this.$store.getters['widgetTemplate/getWidgetTemplate']
             },
             getStyles() {
-                let styles = {};
-                let colors = get(this.widget.WidgetLayout, 'colors');
-
-                try {
-                    styles = {
-                        'background': colors.background,
-                        'color': colors.fonts
-                    }
-                } catch (e) {
-                    styles = {
-                        'background': defaultColors.background,
-                        'color': defaultColors.fonts
-                    }
+                let colors = get(this.widget.WidgetLayout, 'colors') || defaultColors;
+                let styles = {
+                    'background': colors.background,
+                    'color': colors.fonts
                 }
 
-                if(this.showDeleteButton) {
-                    let border = {'border': '2px solid' + colors.frames ||defaultColors.frames}
+                if (this.showDeleteButton) {
+                    let border = {'border': '2px solid' + colors.frames}
                     styles = {
                         ...styles,
                         ...border
