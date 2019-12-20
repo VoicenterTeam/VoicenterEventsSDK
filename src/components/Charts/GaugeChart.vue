@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="bg-white p-4 rounded-lg py-4 mt-4">
-            <highcharts :options="chartOptions"/>
+            <highcharts :options="chartData"/>
         </div>
     </div>
 </template>
@@ -43,6 +43,11 @@
                 default: true
             },
         },
+        data() {
+            return {
+                chartData: {}
+            }
+        },
         computed: {
             agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
@@ -53,9 +58,9 @@
             async chartOptions() {
                 if (isExternalDataWidget) {
                     let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
-                    return {...gaugeChartConfig, ...data}
+                    this.chartData = {...gaugeChartConfig, ...data}
                 } else {
-                    return this.getAgentsData()
+                    this.chartData = this.getAgentsData()
                 }
             },
         },

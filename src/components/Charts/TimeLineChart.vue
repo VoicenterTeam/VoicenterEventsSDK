@@ -71,6 +71,7 @@
                         ...chartConfig.yAxisConfig
                     }
                 }
+
                 let data = {
                     "Order": 6,
                     "chart": {
@@ -88,7 +89,12 @@
                     },
                     ...chartData,
                 }
-                this.chartOptions = data
+
+                if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
+                    this.chartOptions = Data
+                } else {
+                    this.chartOptions = data
+                }
                 this.loading = false
                 this.$emit('on-loading', false)
             }
