@@ -58,7 +58,7 @@
         },
         methods: {
             async chartOptions() {
-                if (isExternalDataWidget) {
+                if (isExternalDataWidget(this.data)) {
                     let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
                     this.chartData = {...gaugeChartConfig, ...{series: data}}
                 } else {

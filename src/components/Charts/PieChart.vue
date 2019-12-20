@@ -62,7 +62,7 @@
             async chartOptions() {
                 let data = []
 
-                if (isExternalDataWidget) {
+                if (isExternalDataWidget(this.data)) {
                     data = await WidgetDataApi.getExternalData(this.data.EndPoint)
                 } else {
                     data = this.getExtensionsData()
@@ -93,6 +93,7 @@
                 };
             },
             getExtensionsData() {
+                let data = []
                 let statusData = []
                 let extensions = this.filteredExtensions
 
