@@ -17,6 +17,7 @@
     "dashboards.queue": "Queue Dashboard",
     "dashboards.new.title": "Create new Dashboard",
     "dashboards.new.form.title": "Dashboard title",
+    "dashboards.new.form.logo": "Dashboard logo",
     "dashboards.widgets.noData": "This dashboard contains no data. Click on the plus icon to drag and drop new widgets",
     "widgets.phoneNumbers.description": "Telephone Numbers",
     "widgets.users.description": "Users",
@@ -168,5 +169,6 @@
     "Pie":  "Pie",
     "Widget type": "Widget type",
     "Widget external endpoint": "Widget external endpoint",
-    "Select a widget type": "Select a widget type"
+    "Select a widget type": "Select a widget type",
+    "Upload Logo": "Upload Logo"
 }
