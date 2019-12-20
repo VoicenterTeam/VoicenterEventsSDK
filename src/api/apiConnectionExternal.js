@@ -1,9 +1,6 @@
 import axios from 'axios'
 
-//TODO: reset baseURL
-const instance = axios.create({
-    baseURL: process.env.VUE_APP_API_URL,
-})
+const instance = axios.create()
 
 instance.interceptors.request.use(
     (config) => {
