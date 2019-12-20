@@ -52,11 +52,11 @@
                 }
                 return this.extensions
             },
-            chartOptions() {
+            async chartOptions() {
                 let data = []
 
                 if (isExternalDataWidget) {
-                    data = WidgetDataApi.getExternalData(this.data.EndPoint)
+                    data = await WidgetDataApi.getExternalData(this.data.EndPoint)
                 } else {
                     data = this.getExtensionsData()
                 }

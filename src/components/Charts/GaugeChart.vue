@@ -50,9 +50,9 @@
             agentsInACall() {
                 return this.agentsOnline.filter(agent => agent.calls.length)
             },
-            chartOptions() {
+            async chartOptions() {
                 if (isExternalDataWidget) {
-                    let data = WidgetDataApi.getExternalData(this.data.EndPoint)
+                    let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
                     return {...gaugeChartConfig, ...data}
                 } else {
                     return this.getAgentsData()

@@ -34,10 +34,10 @@
             }
         },
         methods: {
-            getData() {
+            async getData() {
                 try {
-                    let data = WidgetDataApi.getExternalData(this.data.EndPoint)
-                    this.CounterValue = data.CounterValue || data
+                    let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
+                    this.CounterValue = data.CounterValue || '--'
                 } catch (e) {
                     console.warn(e)
                 }
