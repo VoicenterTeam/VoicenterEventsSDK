@@ -90,7 +90,7 @@
             :visible.sync="showReorderDataDialog"
             @on-submit="reorderWidgetGroup"
             @on-cancel="showReorderDataDialog = false"
-        ></reorder-layout-dialog>
+        />
     </div>
 </template>
 <script>
@@ -350,6 +350,7 @@
                                 this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                             }
                         }
+
                         if (!this.editMode) {
                             this.saveDashboard()
                         }

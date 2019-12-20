@@ -1,17 +1,17 @@
 :root {
-  --primary-color: #2575FF;
-  --primary_rgba-color: 37, 117, 255;
-  --secondary-color: #876cff;
-  --greyish-brown: #4a4a4a;
-  --silver-color: #d6dae1;
-  --silver-two: #bfc5d0;
-  --steel: #888f9d;
-  --bg-grey-modal: #f0f2f4;
-  --color: 240, 240, 240;
-  --primary-color-opacity: rgba(var(--primary_rgba-color), 0.15);
-  --dark: #110f24;
-  --cool-grey: #899398;
-  --pale-grey: #f0f2f4;
+    --primary-color: #2575FF;
+    --primary_rgba-color: 37, 117, 255;
+    --secondary-color: #876cff;
+    --greyish-brown: #4a4a4a;
+    --silver-color: #d6dae1;
+    --silver-two: #bfc5d0;
+    --steel: #888f9d;
+    --bg-grey-modal: #f0f2f4;
+    --color: 240, 240, 240;
+    --primary-color-opacity: rgba(var(--primary_rgba-color), 0.15);
+    --dark: #110f24;
+    --cool-grey: #899398;
+    --pale-grey: #f0f2f4;
 }
 
 @import "tailwind";
@@ -32,7 +32,17 @@
 @import "element-overrides/pagination";
 @import "element-overrides/radio";
 @import "element-overrides/spiner";
-
 @import "widgets/card";
+
+body {
+    @apply bg-gray-200 px-6 font-montserrat;
+    min-width: 320px;
+}
+
+@media (min-width: 768px) {
+    body {
+        @apply px-24;
+    }
+}
 
 @import "layout/dashboard";

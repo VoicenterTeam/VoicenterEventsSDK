@@ -4,7 +4,7 @@
     "common.deleteDashboard": "Delete dashboard",
     "common.cancel": "Cancel",
     "common.confirm": "Confirm",
-    "common.confirm.question": "Are you sure you want to delete this {item}?",
+    "common.confirm.question": "Are you sure you want {action}?",
     "common.save": "Save",
     "common.edit": "Edit",
     "common.newGroup": "New Group",
@@ -162,5 +162,13 @@
     "Agents real time status": "Agents real time status",
     "Agents": "Agents",
     "Don`t count logged out agents": "Don`t count logged out agents",
+    "Counter": "Counter",
+    "Speedometer": "Speedometer",
+    "Table":  "Table",
+    "Lines": "Lines",
+    "Pie":  "Pie",
+    "Widget type": "Widget type",
+    "Widget external endpoint": "Widget external endpoint",
+    "Select a widget type": "Select a widget type",
     "Upload Logo": "Upload Logo"
 }

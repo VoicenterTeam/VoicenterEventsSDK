@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="bg-white p-4 rounded-lg py-4 mt-4">
-            <highcharts :options="chartOptions"/>
+            <highcharts :options="chartData"/>
         </div>
     </div>
 </template>
@@ -21,6 +21,8 @@
     import {TrashIcon} from 'vue-feather-icons'
     import statusTypes from '@/enum/statusTypes'
     import {LOGOUT_STATUS} from "@/enum/extensionStatuses";
+    import {isExternalDataWidget} from '@/helpers/widgetUtils'
+    import {WidgetDataApi} from "../../api/widgetDataApi";
 
     export default {
         components: {
@@ -38,6 +40,11 @@
                 default: true
             },
         },
+        data() {
+            return {
+                chartData: {}
+            }
+        },
         computed: {
             extensions() {
                 return this.$store.state.extensions.extensions
@@ -50,34 +57,18 @@
                 }
                 return this.extensions
             },
-            chartOptions() {
-                let statusData = []
-                let extensions = this.filteredExtensions
-
-                if (extensions) {
-                    statusData = groupBy(extensions, 'representativeStatus')
-                }
-
+        },
+        methods: {
+            async chartOptions() {
                 let data = []
 
-                for (let status in statusData) {
-                    let statusType = statusTypes[status]
-
-                    let sliceObject = {
-                        color: statusType.color,
-                        name: this.$t(statusType.text),
-                        y: statusData[status].length,
-                    }
-
-                    if (!data.length) {
-                        sliceObject.sliced = true
-                        sliceObject.selected = true
-                    }
-
-                    data.push(sliceObject);
+                if (isExternalDataWidget) {
+                    data = await WidgetDataApi.getExternalData(this.data.EndPoint)
+                } else {
+                    data = this.getExtensionsData()
                 }
 
-                return {
+                this.chartData = {
                     chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
@@ -101,6 +92,40 @@
                     }]
                 };
             },
+            getExtensionsData() {
+                let statusData = []
+                let extensions = this.filteredExtensions
+
+                if (extensions) {
+                    statusData = groupBy(extensions, 'representativeStatus')
+                }
+
+                for (let status in statusData) {
+                    let statusType = statusTypes[status]
+
+                    let sliceObject = {
+                        color: statusType.color,
+                        name: this.$t(statusType.text),
+                        y: statusData[status].length,
+                    }
+
+                    if (!data.length) {
+                        sliceObject.sliced = true
+                        sliceObject.selected = true
+                    }
+
+                    data.push(sliceObject);
+                }
+                return data
+            }
+        },
+        watch: {
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.chartOptions()
+                }
+            }
         },
     }
 </script>

@@ -17,8 +17,8 @@
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import chartConfig from './Configs/TimeLine'
-    import {WidgetDataApi} from '@/api/widgetDataApi'
     import widgetDataTypes from '@/enum/widgetDataTypes'
+    import {getWidgetData} from '@/services/widgetService'
 
     export default {
         name: 'TimeLineChart',
@@ -58,8 +58,13 @@
         methods: {
             async getChartData() {
                 let widgetDataType = this.data.DataTypeID
-                let Data = await WidgetDataApi.getData(this.data.EndPoint)
+                let Data = await getWidgetData(this.data)
                 let chartData = get(Data, '0', {series: []})
+                if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
+                    chartData = {series: Data}
+                } else {
+                    chartData = get(Data, '0', {series: []})
+                }
                 let chartType = ''
                 if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
                     chartType = 'line'
@@ -71,6 +76,7 @@
                         ...chartConfig.yAxisConfig
                     }
                 }
+
                 let data = {
                     "Order": 6,
                     "chart": {
@@ -88,6 +94,7 @@
                     },
                     ...chartData,
                 }
+
                 this.chartOptions = data
                 this.loading = false
                 this.$emit('on-loading', false)

@@ -48,7 +48,7 @@
             </template>
             <template v-slot:search-input>
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"
-                          clearable></el-input>
+                          clearable/>
             </template>
             <template v-slot:data-counts>
                 <p class="text-sm">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
@@ -61,12 +61,12 @@
     import {Pagination, Select, Option} from 'element-ui'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
-    import {WidgetDataApi} from '@/api/widgetDataApi'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
+    import {getWidgetData} from '@/services/widgetService'
 
     export default {
         components: {
@@ -166,7 +166,8 @@
             },
             async getTableData() {
                 try {
-                    let data = await WidgetDataApi.getData(this.data.EndPoint)
+
+                    let data = await getWidgetData(this.data)
                     let columns = [];
 
                     if (data.length) {
@@ -197,16 +198,19 @@
                 this.currentPage = val
             },
         },
-        beforeMount() {
-            this.getTableData()
-            this.$emit('on-loading', true)
-        },
         beforeDestroy() {
             clearInterval(this.fetchDataInterval)
         },
         watch: {
             filter() {
                 this.currentPage = 1
+            },
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.getTableData()
+                    this.$emit('on-loading', true)
+                }
             }
         },
     }

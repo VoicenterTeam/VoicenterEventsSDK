@@ -1,5 +1,6 @@
 import $axios from './apiConnection'
-import parseCatch from "../helpers/handleErrors";
+import instance from './apiConnectionExternal'
+import parseCatch from '../helpers/handleErrors'
 
 export const WidgetDataApi = {
     async getData(endPoint) {
@@ -10,4 +11,13 @@ export const WidgetDataApi = {
             parseCatch(e, true)
         }
     },
+
+    async getExternalData(endPoint) {
+        try {
+            let res = await instance.get(endPoint)
+            return res.Data
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    }
 }

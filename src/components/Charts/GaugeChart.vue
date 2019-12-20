@@ -1,14 +1,14 @@
 <template>
-    <div class="w-full p-4 bg-white rounded-lg shadow">
-        <div class="relative cursor-pointer z-50" v-if="editable">
-            <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
-                <trash-icon class="w-8 h-8 p-2 text-red trash-icon"
-                            @click="$emit('remove-item')">
-                </trash-icon>
-            </el-tooltip>
+    <div>
+        <div class="flex items-center mb-4">
+            <div class="flex flex-col md:flex-row md:items-center">
+                <p v-if="data.Title" class="text-2xl font-semibold">
+                    {{data.Title}}
+                </p>
+            </div>
         </div>
-        <div class="z-10" :class="{'-mt-8':editable}">
-            <highcharts :options="chartOptions"></highcharts>
+        <div class="bg-white p-4 rounded-lg py-4 mt-4">
+            <highcharts :options="chartData"/>
         </div>
     </div>
 </template>
@@ -18,9 +18,11 @@
     import {Chart} from 'highcharts-vue'
     import {TrashIcon} from 'vue-feather-icons'
     import gaugeChartConfig from './Configs/Gauge'
+    import {WidgetDataApi} from '@/api/widgetDataApi'
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import highchartsMoreInit from 'highcharts/highcharts-more'
     import solidGaugeInit from 'highcharts/modules/solid-gauge'
+    import {isExternalDataWidget} from '@/helpers/widgetUtils'
 
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
@@ -41,6 +43,11 @@
                 default: true
             },
         },
+        data() {
+            return {
+                chartData: {}
+            }
+        },
         computed: {
             agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
@@ -48,27 +55,49 @@
             agentsInACall() {
                 return this.agentsOnline.filter(agent => agent.calls.length)
             },
-            chartOptions() {
+        },
+        methods: {
+            async chartOptions() {
+                if (isExternalDataWidget) {
+                    let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
+                    this.chartData = {...gaugeChartConfig, ...{series: data}}
+                } else {
+                    this.chartData = this.getAgentsData()
+                }
+            },
+            getAgentsData() {
                 let agentsOnline = this.agentsOnline
+
                 let range = {
                     min: 0,
                     max: agentsOnline.length
                 }
 
-                let stops = [
-                    [0, '#55BF3B'],
-                    [agentsOnline.length/2 + 0.1, '#DDDF0D'],
-                    [agentsOnline.length, '#DF5353']
-                ]
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
                     ...range,
                     stops,
                 }
+
+                let stops = [
+                    [0, '#55BF3B'],
+                    [agentsOnline.length / 2 + 0.1, '#DDDF0D'],
+                    [agentsOnline.length, '#DF5353']
+                ]
+
                 this.data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
+
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
-            },
+            }
+        },
+        watch: {
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.chartOptions()
+                }
+            }
         },
     }
 </script>

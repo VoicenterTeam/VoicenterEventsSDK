@@ -25,16 +25,10 @@
     import get from 'lodash/get'
     import {Tabs, TabPane} from 'element-ui'
     import Widget from './Widget'
-    import widgetDataTypes from '@/enum/widgetDataTypes'
     import {getDataTypeClass} from '@/helpers/widgetUtils'
-    import {getWidgetDataType} from '@/helpers/widgetUtils'
+    import {getWidgetDataType, groupedWidgets} from '@/helpers/widgetUtils'
     import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
 
-    const groupedWidgets = [
-        widgetDataTypes.COUNTER_TYPE_ID,
-        widgetDataTypes.CHART_SPEEDOMETER,
-        widgetDataTypes.QUEUE_COUNTER_TYPE_ID
-    ]
     export default {
         inheritAttrs: false,
         components: {
@@ -62,8 +56,9 @@
             },
         },
         data() {
+            let firstWidgetID = get(this.widgets, '[0].WidgetID')
             return {
-                activeTab: get(this.widgets, '[0].WidgetID').toString()
+                activeTab: firstWidgetID ? firstWidgetID.toString() : ''
             };
         },
         computed: {

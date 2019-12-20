@@ -1,6 +1,8 @@
 import {WidgetApi} from '@/api/widgetApi'
 import {widgetModel} from '@/models/instances'
+import {WidgetDataApi} from '@/api/widgetDataApi'
 import {WidgetGroupsApi} from '@/api/widgetGroupApi'
+import {isExternalDataWidget} from '@/helpers/widgetUtils'
 
 // Create new widgets from Widget Templates
 export async function createNewWidgets(templates, widgetGroup, Order = false) {
@@ -31,4 +33,12 @@ export function removeDummyWidgets(widgetIds) {
     widgetIds.forEach((id) => {
         WidgetApi.destroy(id)
     })
+}
+
+export async function getWidgetData(widget) {
+    if(isExternalDataWidget(widget)) {
+        return await WidgetDataApi.getExternalData(widget.EndPoint)
+    } else {
+        return await WidgetDataApi.getData(widget.EndPoint);
+    }
 }
