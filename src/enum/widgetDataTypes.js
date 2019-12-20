@@ -12,7 +12,7 @@ export default  {
     QUEUE_ACTIVE_CALL: 12,
     EXTERNAL_DATA_TYPE_ID: 13,
     QUEUE_COUNTER_TYPE_ID: 14,
+    PIE_TYPE_ID: 15,
 
     INFO_TYPE_ID: 222,
-    PIE_TYPE_ID: 111,
 }
