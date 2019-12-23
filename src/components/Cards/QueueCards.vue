@@ -80,9 +80,16 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <el-checkbox v-model="showStatusText" class="pt-4">
-                        {{$t('status.show.text')}}
-                    </el-checkbox>
+                    <el-form-item>
+                        <el-checkbox v-model="showStatusText">
+                            {{$t('status.show.text')}}
+                        </el-checkbox>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-checkbox v-model="displayItemBorder">
+                            {{$t('status.display.border')}}
+                        </el-checkbox>
+                    </el-form-item>
                 </el-form>
             </template>
             <template v-slot:footer>

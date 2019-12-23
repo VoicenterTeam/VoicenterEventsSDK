@@ -43,7 +43,7 @@
         width: 100vw;
         @apply -ml-6;
         @screen md {
-            @apply -ml-24;
+            @apply -ml-12;
         }
     }
     .tab-name {

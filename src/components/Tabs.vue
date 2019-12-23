@@ -82,7 +82,7 @@
             .display-widget__tabs {
                 .el-tabs__header {
                     display: block !important;
-                    @apply mt-6;
+                    @apply m-0;
                 }
             }
         }

@@ -2,7 +2,7 @@
     <div :key="dashboardKey">
         <transition-group name="flip-list">
             <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.WidgetGroupID"
-                 class="my-10"
+                 class=""
                  :class="{'editable-widgets px-2 sm:px-8':editMode}">
                 <div v-if="editMode" class="flex items-center justify-between">
                     <base-input v-model="widgetGroup.WidgetGroupTitle"/>
