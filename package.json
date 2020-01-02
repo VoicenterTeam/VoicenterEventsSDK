@@ -38,7 +38,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=8.9 <9"
+    "node": ">=8.9 <12"
   },
   "jsdelivr": "dist/voicenter-events-sdk.umd.js",
   "main": "dist/voicenter-events-sdk.cjs.js",
