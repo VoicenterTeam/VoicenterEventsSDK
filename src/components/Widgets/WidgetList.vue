@@ -93,7 +93,8 @@
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
             getWidgetDataTypeClass(widget) {
-                return getDataTypeClass(widget)
+                return widget.WidgetLayout.width || getDataTypeClass(widget)
+                // return getDataTypeClass(widget)
             }
         },
     }

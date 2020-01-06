@@ -10,24 +10,30 @@
         <template slot="footer">
             <slot name="footer"/>
         </template>
-        <widget-colors :model="model" :onlyBackground="true"/>
+        <el-collapse v-model="activeCollapse" class="pt-4">
+            <el-collapse-item :title="$t('widget.layout')" name="layout">
+                <widget-colors :model="model" :onlyBackground="true"/>
+            </el-collapse-item>
+        </el-collapse>
     </el-dialog>
 </template>
 <script>
-    import {Dialog} from 'element-ui'
+    import {Collapse, CollapseItem, Dialog} from 'element-ui'
     import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
     export default {
         inheritAttrs: false,
         components: {
             [Dialog.name]: Dialog,
+            [Collapse.name]: Collapse,
+            [CollapseItem.name]: CollapseItem,
             WidgetColors,
         },
         props: {
             model: {
                 type: Object,
                 default: () => ({})
-            }
+            },
         },
         computed: {
             setWidth() {
@@ -38,5 +44,10 @@
                 }
             }
         },
+        data() {
+            return {
+                activeCollapse: ['layout']
+            }
+        }
     }
 </script>

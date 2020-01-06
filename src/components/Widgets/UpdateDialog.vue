@@ -8,9 +8,17 @@
                     <el-input v-model="model.Title"/>
                 </div>
             </el-form-item>
-            <el-form-item>
-                <widget-colors :model="model"/>
-            </el-form-item>
+            <el-collapse v-model="activeCollapse" class="pt-4">
+                <el-collapse-item :title="$t('widget.layout')" name="layout">
+                    <el-form-item>
+                        <widget-width :model="model"/>
+                    </el-form-item>
+                    <el-form-item>
+                        <widget-padding :model="model"/>
+                    </el-form-item>
+                    <widget-colors :model="model"/>
+                </el-collapse-item>
+            </el-collapse>
             <el-form-item v-if="isPieWidget(widget)">
                 <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-4">
                     {{$t('Don`t count logged out agents')}}
@@ -75,10 +83,13 @@
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
+    import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
+    import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
 
     export default {
         inheritAttrs: false,
         components: {
+            WidgetWidth,
             RealTimeSettings,
             TimeFrame,
             [Radio.name]: Radio,
@@ -90,6 +101,7 @@
             AutoComplete,
             OtherFilters,
             WidgetColors,
+            WidgetPadding,
         },
         props: {
             widget: {
@@ -106,7 +118,7 @@
                     colors: defaultColors,
                     timeInterval: {},
                 },
-                activeCollapse: ['filters']
+                activeCollapse: ['layout', 'filters']
             }
         },
         computed: {
@@ -145,6 +157,7 @@
                         ...this.model.WidgetLayout,
                         ...{settings: this.model.settings},
                         ...{colors: this.model.colors},
+                        ...{width: this.model.WidgetLayout.width},
                     }
 
                     try {

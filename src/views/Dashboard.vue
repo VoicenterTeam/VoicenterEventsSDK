@@ -66,6 +66,7 @@
                     <keep-alive>
                         <component
                             :is="layoutTypes[layoutType]"
+                            :layoutType="layoutType"
                             :activeDashboardData="activeDashboardData"
                             :editMode="editMode"
                             :widgetsFilter="widgetsFilter"
