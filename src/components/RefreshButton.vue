@@ -1,5 +1,5 @@
 <template>
-    <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100 mx-1"
+    <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100 mx-1 border border-primary"
             v-bind="$attrs"
             v-on="$listeners">
         <RefreshCwIcon class="w-5 h-5 text-primary"/>
