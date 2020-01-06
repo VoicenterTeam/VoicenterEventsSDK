@@ -34,10 +34,10 @@
                 let newDate = new Date()
                 let widgetTime = this.model.WidgetTime
 
-                let startDate = newDate.setDate(newDate.getDate() - widgetTime.datedeff);
+                let startDate = newDate.setDate(newDate.getDate() - parseInt(widgetTime.datedeff));
 
                 newDate = new Date();
-                let endDate = newDate.setDate(newDate.getDate() + (-widgetTime.datedeff + widgetTime.Date_interval))
+                let endDate = newDate.setDate(newDate.getDate() + (-parseInt(widgetTime.datedeff) + parseInt(widgetTime.Date_interval)))
 
                 return [startDate, endDate]
             }
