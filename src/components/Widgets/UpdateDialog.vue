@@ -121,7 +121,7 @@
             isRealtimeWidget,
             isPieWidget,
             isAutoComplete(WidgetConfig) {
-                return !!filterIDs.includes(WidgetConfig.ParameterID);
+                return filterIDs.includes(WidgetConfig.ParameterID);
             },
             isOtherFilters(WidgetConfig) {
                 return !filterIDs.includes(WidgetConfig.ParameterID);
