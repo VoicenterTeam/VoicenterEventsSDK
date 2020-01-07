@@ -6,24 +6,32 @@
                         :content="allChecked ? $t('datatable.manage.uncheck.all') : $t('datatable.manage.check.all')"
                         placement="top">
                 <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange"
-                             v-model="allChecked"></el-checkbox>
+                             v-model="allChecked"/>
             </el-tooltip>
-            <slot name="search"></slot>
+            <slot name="search"/>
             <slot name="button"
                   :allChecked="allChecked"
-                  :columns="checkedColumns"></slot>
+                  :columns="checkedColumns"/>
         </div>
         <div class="manage-columns-section-content">
             <el-checkbox-group class="flex flex-col column-checkbox" v-model="checkedColumns"
                                @change="handleCheckedColumnsChange">
-                <el-checkbox class="py-2 px-4" v-for="column in availableColumns" :label="column.prop"
-                             :key="column.label">{{column.label}}
-                </el-checkbox>
+                <draggable
+                    v-bind="dragOptions"
+                    class="flex flex-col columns-section-container"
+                    :list="availableColumns"
+                    group="columns"
+                    @change="onChange">
+                    <el-checkbox class="py-2 px-4" v-for="column in availableColumns" :label="column.prop"
+                                 :key="column.label"><i class="el-icon-rank text-primary font-bold"/> {{column.label}}
+                    </el-checkbox>
+                </draggable>
             </el-checkbox-group>
         </div>
     </div>
 </template>
 <script>
+    import draggable from 'vuedraggable'
     import {Checkbox, CheckboxGroup, Select, Option, Tooltip} from 'element-ui'
 
     export default {
@@ -33,12 +41,13 @@
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [CheckboxGroup.name]: CheckboxGroup,
+            draggable,
         },
         data() {
             return {
                 isIndeterminate: false,
                 checkedColumns: [],
-                allChecked: false
+                allChecked: false,
             }
         },
         props: {
@@ -47,7 +56,16 @@
                 default: () => []
             },
         },
-        computed: {},
+        computed: {
+            dragOptions() {
+                return {
+                    animation: 200,
+                    ghostClass: "moving-columns",
+                    swapThreshold: 0.8,
+                    drag: true
+                };
+            },
+        },
         methods: {
             handleCheckAllChange(val) {
                 this.checkedColumns = val ? this.availableColumns.map(c => c.prop) : []
@@ -57,7 +75,10 @@
                 let checkedCount = val.length;
                 this.allChecked = checkedCount === this.availableColumns.length;
                 this.isIndeterminate = checkedCount > 0 && checkedCount < this.availableColumns.length;
-            }
+            },
+            onChange(evt) {
+                this.$emit('onChange', evt)
+            },
         },
         watch: {
             availableColumns() {
@@ -115,11 +136,6 @@
     .column-checkbox /deep/ .el-checkbox, .manage-columns-section-header /deep/ .el-checkbox {
         margin-right: 0;
 
-        .el-checkbox__input + .el-checkbox__label {
-            font-size: 12px;
-            font-weight: normal;
-        }
-
         .el-checkbox__input > .el-checkbox__inner {
             height: 18px;
             width: 18px;
@@ -155,5 +171,12 @@
         .manage-columns-section + .manage-columns-section {
             border-top: solid 1px var(--silver-color);
         }
+    }
+
+    .moving-columns {
+        @apply opacity-50 bg-gray-100 border border-primary cursor-move;
+    }
+    .columns-section-container {
+        min-height: 200px;
     }
 </style>

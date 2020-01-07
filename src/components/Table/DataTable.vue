@@ -13,9 +13,11 @@
                         <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
-                        <manage-columns :available-columns="availableColumns"
-                                        :visible-columns="visibleColumns"
-                                        @on-change-visibility="updateColumnsVisibility">
+                        <manage-columns
+                            :available-columns="availableColumns"
+                            :visible-columns="visibleColumns"
+                            @on-change-visibility="updateColumnsVisibility"
+                            @on-reorder-column="reorderColumn">
                         </manage-columns>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -196,6 +198,19 @@
             },
             updateColumnsVisibility(columns) {
                 this.visibleColumns = columns
+            },
+            reorderColumn(data) {
+                let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data;
+
+                oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
+
+                this.availableColumns.splice(oldIndex, 1);
+                this.availableColumns.splice(newIndex, 0, column);
+                
+                this.drawTable = false
+                this.$nextTick(() => {
+                    this.drawTable = true
+                })
             },
             pinColumn(column, columnIndex) {
                 this.availableColumns[columnIndex] = column
