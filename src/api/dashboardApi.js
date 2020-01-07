@@ -7,7 +7,12 @@ export const DashboardApi = {
             let res = await $axios.get('/DashBoards/GetAll/')
             return res.DashBoards
         } catch (e) {
+            //TODO: redirect to login when status code = 401 (sync with back)
             parseCatch(e, true, 'Get Dashboard')
+            //Show error for user
+            setTimeout(() => {
+                window.location.href = process.env.VUE_APP_FALLBACK_URL
+            }, 2000)
         }
     },
 
