@@ -110,10 +110,9 @@
             },
             // on list change
             onColumnChange(evt, section) {
-
                 let action = get(Object.keys(evt), 0)
                 let eventData = evt[action]
-                let {element: column, newIndex: newIndex, oldIndex: oldIndex} = eventData;
+                let column = get(eventData, 'element')
 
                 if (action === draggableEvents.MOVED && section === sectionsToManage.TO_HIDE) {
                     this.$emit('on-reorder-column', eventData)
