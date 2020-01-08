@@ -3,6 +3,7 @@ import {widgetModel} from '@/models/instances'
 import {WidgetDataApi} from '@/api/widgetDataApi'
 import {WidgetGroupsApi} from '@/api/widgetGroupApi'
 import {isExternalDataWidget} from '@/helpers/widgetUtils'
+import {getOptionsValues} from '@/helpers/entitiesList'
 
 // Create new widgets from Widget Templates
 export async function createNewWidgets(templates, widgetGroup, Order = false) {
@@ -16,8 +17,18 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
             DataTypeID: template.DataType.DataTypeID,
             Endpoint: template.Endpoint,
         })
-        newWidget.WidgetConfig= template.DefaultWidgetConfig || [],
-        newWidget.WidgetTime= template.DefaultWidgetTime || {},
+
+        let WidgetConfig = []
+        if (template.DefaultWidgetConfig.length) {
+            for (let config of template.DefaultWidgetConfig) {
+                let options = getOptionsValues(config.ParameterID)
+                config.WidgetParameterValue = options.toString()
+                WidgetConfig.push(config)
+            }
+        }
+
+        newWidget.WidgetConfig = WidgetConfig
+        newWidget.WidgetTime = template.DefaultWidgetTime || {}
 
         newWidget = await WidgetApi.store(newWidget)
         widgets.push(newWidget)
@@ -36,7 +47,7 @@ export function removeDummyWidgets(widgetIds) {
 }
 
 export async function getWidgetData(widget) {
-    if(isExternalDataWidget(widget)) {
+    if (isExternalDataWidget(widget)) {
         return await WidgetDataApi.getExternalData(widget.EndPoint)
     } else {
         return await WidgetDataApi.getData(widget.EndPoint);

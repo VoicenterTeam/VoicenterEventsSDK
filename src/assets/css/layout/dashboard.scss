@@ -1,11 +1,17 @@
 body {
-    @apply px-6 font-montserrat font-semibold;
+    .dashboard-container {
+        @apply px-6;
+    }
+
     min-width: 320px;
+    @apply font-montserrat font-semibold;
 }
 
 @media (min-width: 768px) {
     body {
-        @apply px-24;
+        .dashboard-container {
+            @apply px-24;
+        }
     }
 }
 
