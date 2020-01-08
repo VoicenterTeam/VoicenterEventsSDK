@@ -1,9 +1,11 @@
+import get from 'lodash/get'
 import store from '../store/store'
 import {filters} from '../enum/widgetTemplateConfigs'
 
 export function getOptionsList(ParameterID) {
     let templateConfig = getTemplateConfig(ParameterID)
-    return store.getters['entities/getEntityList'](templateConfig.EntitiesListKey)
+    let EntitiesListKey = get(templateConfig, 'EntitiesListKey')
+    return store.getters['entities/getEntityList'](EntitiesListKey)
 }
 
 export function getTemplateConfig(ParameterID) {
@@ -12,6 +14,9 @@ export function getTemplateConfig(ParameterID) {
 
 export function getOptionsValues(ParameterID) {
     let options = getOptionsList(ParameterID)
+
+    if (!options) return;
+
     let templateConfig = getTemplateConfig(ParameterID)
 
     options = options.map(el => {
