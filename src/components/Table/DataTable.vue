@@ -21,7 +21,7 @@
                         </manage-columns>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <slot name="data-counts"></slot>
+                <slot name="additional-data"/>
             </div>
         </div>
         <div class="bg-white rounded-lg my-4 data-table w-full">

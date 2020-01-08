@@ -22,10 +22,10 @@
                            v-on="$listeners"
                            @add-widget="(value) => addWidgetsToGroup(value)">
         </widget-empty-card>
-        <div v-if="widgets === 0"
+        <div v-if="widgets.length === 0"
              class="w-full flex flex-col items-center mt-20"
              key="no-data">
-            <IconNoData v-if="!editable" class="h-56 w-56"></IconNoData>
+            <IconNoData v-if="!editable" class="h-56 w-56"/>
             <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
         </div>
     </DraggableList>

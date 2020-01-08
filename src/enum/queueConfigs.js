@@ -3,6 +3,7 @@ export const activeCallColumns = [{
     fixed: false,
     align: 'center',
     label: 'Queue Name',
+    sortable: true
 }, {
     prop: 'CallerNumber',
     fixed: false,
@@ -12,10 +13,12 @@ export const activeCallColumns = [{
     prop: 'CallerName',
     fixed: false,
     align: 'center',
-    label: 'Caller Name'
+    label: 'Caller Name',
+    sortable: true
 }, {
     prop: 'WaitingTime',
     fixed: false,
     align: 'center',
-    label: 'Waiting Time'
+    label: 'Waiting Time',
+    sortable: true
 }]

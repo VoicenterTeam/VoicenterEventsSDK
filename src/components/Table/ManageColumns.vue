@@ -7,7 +7,8 @@
                 @onChange="(evt) => onColumnChange(evt , sectionsToManage.TO_HIDE)">
                 <template v-slot:button="{columns, allChecked}">
                     <div :class="getClass">
-                        <el-button :disabled="!activeColumns.length" class="w-24" type="danger" size="small"
+                        <el-button :disabled="!activeColumns.length || !columns.length" class="w-24" type="danger"
+                                   size="small"
                                    @click="removeColumns(columns)">
                             {{allChecked ? $t('datatable.manage.columns.remove.all') :
                             $t('datatable.manage.columns.remove')}}
@@ -26,7 +27,8 @@
                     </div>
                 </template>
                 <template v-slot:button="{columns, allChecked}">
-                    <el-button :disabled="!showAvailableColumns.length" class="w-24" type="success" size="small"
+                    <el-button :disabled="!showAvailableColumns.length || !columns.length" class="w-24" type="success"
+                               size="small"
                                @click="addColumns(columns)">
                         {{allChecked ? $t('datatable.manage.columns.add.all') : $t('datatable.manage.columns.add')}}
                     </el-button>
