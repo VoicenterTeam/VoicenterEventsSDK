@@ -1,6 +1,6 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)" class="dashboard">
-        <div v-if="activeDashboardData">
+    <div v-loading="loading" class="dashboard">
+        <div v-if="activeDashboardData" class="dashboard-container">
             <sidebar v-if="showSidebar"
                      :activeTab="activeTab"
                      :widgetGroupList="activeDashboardData.WidgetGroupList"
@@ -346,7 +346,6 @@
             },
             async saveDashboard() {
                 this.showWidgetMenu = false
-                await this.$store.dispatch('dashboards/setLoadingData', true)
                 //CheckWidgetGroupUpdates
                 this.updateDashboardOperations()
                 //RunDashboardOperations
@@ -492,11 +491,5 @@
 
     .dashboard > .el-loading-mask > .el-loading-spinner {
         @apply fixed;
-        margin-left: -6rem;
-    }
-
-    .rtl .dashboard > .el-loading-mask > .el-loading-spinner {
-        margin-left: 0;
-        margin-right: -6rem;
     }
 </style>
