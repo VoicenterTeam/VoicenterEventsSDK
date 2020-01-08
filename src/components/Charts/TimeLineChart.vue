@@ -1,5 +1,5 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
+    <div>
         <div class="flex items-center mb-4">
             <div class="flex flex-col md:flex-row md:items-center">
                 <p v-if="data.Title" class="text-2xl font-semibold">
@@ -39,7 +39,6 @@
         data() {
             return {
                 chartOptions: {},
-                loading: true,
                 fetchDataInterval: null
             }
         },
@@ -96,12 +95,9 @@
                 }
 
                 this.chartOptions = data
-                this.loading = false
-                this.$emit('on-loading', false)
             }
         },
         mounted() {
-            this.$emit('on-loading', true)
             this.getChartData()
             if (this.refreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
