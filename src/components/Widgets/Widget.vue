@@ -1,20 +1,18 @@
 <template>
-    <div class="relative my-3" :class="{'mt-6 mb-0': editable}" :style="getPadding">
-        <div v-if="!loading">
-            <div class="absolute top-0 right-0 mt-4 mr-16 widget-delete__button"
-                 v-if="editable && showDeleteButton" :style="getPadding">
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
-                    <delete-button @click="removeWidget(widget)"/>
-                </el-tooltip>
-            </div>
-            <div class="absolute top-0 right-0 widget-edit__button mr-4 mt-4"
-                 v-if="showDeleteButton" :style="getPadding">
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-button @click="showUpdateDialog = true"
-                                 :class="{'border border-primary': editable}">
-                    </edit-button>
-                </el-tooltip>
-            </div>
+    <div class="relative my-3" :class="{'mt-6 mb-0': editable}">
+        <div class="absolute top-0 right-0 mt-4 mr-16 widget-delete__button"
+             v-if="editable && showDeleteButton">
+            <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
+                <delete-button @click="removeWidget(widget)"/>
+            </el-tooltip>
+        </div>
+        <div class="absolute top-0 right-0 widget-edit__button mr-4 mt-4"
+             v-if="showDeleteButton">
+            <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
+                <edit-button @click="showUpdateDialog = true"
+                             :class="{'border border-primary': editable}">
+                </edit-button>
+            </el-tooltip>
         </div>
         <component :is="getComponentTypeAndSetData(widget)"
                    :data="widget"
@@ -22,7 +20,6 @@
                    :editable="editable"
                    class="widget"
                    :style="getStyles"
-                   @on-loading="(state) => onLoading(state)"
                    @on-update="(data) => onUpdate(data)"
                    @remove-item="removeWidget(widget)">
         </component>
@@ -151,9 +148,6 @@
             },
             onUpdate(widget) {
                 this.$emit('update-item', widget)
-            },
-            onLoading(state) {
-                this.loading = state
             },
             getComponentTypeAndSetData(widget) {
                 let dataTypeId = getWidgetDataType(widget)

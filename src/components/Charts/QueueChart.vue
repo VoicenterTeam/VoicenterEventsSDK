@@ -1,44 +1,42 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
-        <div>
-            <div class="flex flex-row md:items-center justify-between">
-                <div class="flex">
-                    <p class="text-2xl font-semibold"
-                       :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
-                        {{data.Title}}
-                    </p>
-                </div>
-                <div v-if="queues.length" class="flex cursor-pointer outline-none pr-12" :class="responsiveClass"
-                     @click="showConfigDialog()">
-                    <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
-                                placement="bottom">
-                        <IconSettings class="text-primary"/>
-                    </el-tooltip>
-                </div>
+    <div>
+        <div class="flex flex-row md:items-center justify-between">
+            <div class="flex">
+                <p class="text-2xl font-semibold"
+                   :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
+                    {{data.Title}}
+                </p>
             </div>
-            <div class="bg-white p-4 rounded-lg py-4 mt-4">
-                <highcharts :options="chartOptions"/>
+            <div v-if="queues.length" class="flex cursor-pointer outline-none pr-12" :class="responsiveClass"
+                 @click="showConfigDialog()">
+                <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
+                            placement="bottom">
+                    <IconSettings class="text-primary"/>
+                </el-tooltip>
             </div>
-            <queue-config-dialog
-                v-if="showManageQueuesDialog"
-                :queues="queues"
-                :showQueues=showQueues
-                :showSeries=showSeries
-                :width="width"
-                @on-update="((config)=>updateChart(config.queues, config.series))"
-                :visible.sync="showManageQueuesDialog">
-            </queue-config-dialog>
         </div>
+        <div class="bg-white p-4 rounded-lg py-4 mt-4">
+            <highcharts :options="chartOptions"/>
+        </div>
+        <queue-config-dialog
+            v-if="showManageQueuesDialog"
+            :queues="queues"
+            :showQueues=showQueues
+            :showSeries=showSeries
+            :width="width"
+            @on-update="((config)=>updateChart(config.queues, config.series))"
+            :visible.sync="showManageQueuesDialog">
+        </queue-config-dialog>
     </div>
 </template>
 <script>
+    import colors from '@/enum/colors'
     import {Chart} from 'highcharts-vue'
     import {Dialog, Tooltip} from 'element-ui'
     import chartConfig from './Configs/TimeLine'
     import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
     import QueueConfigDialog from './Configs/QueueConfigDialog'
     import {administrativeStatuses, breakStatuses, LOGOUT_STATUS, LOGIN_STATUS} from '@/enum/extensionStatuses'
-    import colors from "@/enum/colors";
 
     export default {
         components: {
@@ -131,7 +129,6 @@
                 initialConfig: true,
                 showQueues: [],
                 showSeries: [0, 1, 2, 3, 4, 5],
-                loading: false
             };
         },
         computed: {
@@ -227,7 +224,6 @@
                         y: el
                     });
                 })
-                this.loading = false
             },
             showConfigDialog() {
                 if (this.initialConfig) {
@@ -242,7 +238,6 @@
             }
         },
         mounted() {
-            this.loading = true
             this.$nextTick(this.updateChartData)
         }
     }

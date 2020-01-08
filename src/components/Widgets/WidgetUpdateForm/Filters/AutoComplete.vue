@@ -6,8 +6,9 @@
         <el-select class="w-full py-2"
                    filterable
                    :loading="loading"
-                   multiple
                    :v-on="$listeners"
+                   :collapse-tags="collapseTags"
+                   multiple
                    v-model="model.WidgetParameterValue">
             <el-option v-for="(option, key) in options"
                        :label="option[templateConfig.label]"
@@ -18,7 +19,7 @@
 </template>
 <script>
     import {Option, Select} from 'element-ui'
-    import {filters} from '@/enum/widgetTemplateConfigs'
+    import {getOptionsList, getTemplateConfig} from '@/helpers/entitiesList'
 
     export default {
         components: {
@@ -35,14 +36,14 @@
             return {
                 loading: true,
                 options: [],
-                templateConfig: filters[this.model.ParameterID],
+                templateConfig: getTemplateConfig(this.model.ParameterID),
+                collapseTags: true
             }
         },
         methods: {
             getData() {
                 try {
-                    let key = this.templateConfig.EntitiesListKey
-                    this.options = this.$store.getters['entities/getEntityList'](key)
+                    this.options = getOptionsList(this.model.ParameterID)
                     this.model.WidgetParameterValue = this.model.WidgetParameterValue.split(',').map(el => {
                         return Number(el);
                     });

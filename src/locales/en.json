@@ -173,5 +173,7 @@
     "Select a widget type": "Select a widget type",
     "Upload Logo": "Upload Logo",
     "Widget width": "Widget width",
-    "Widget padding": "Widget padding"
+    "Widget padding": "Widget padding",
+    "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…",
+    "refresh.filter.data": "Refresh filter data"
 }
