@@ -45,7 +45,7 @@
                         :loading="loadEntitiesList"
                         @click.native="refreshEntitiesList"/>
                 </div>
-                <el-collapse v-model="activeCollapse" class="pt-4">
+                <el-collapse v-model="activeCollapse" class="pt-4" v-if="autoCompletes.length">
                     <el-collapse-item :title="$t('settings.filters')" name="filters">
                         <auto-complete
                             v-for="(filter, index) in model.WidgetConfig"
@@ -53,7 +53,7 @@
                             :model="model.WidgetConfig[index]"/>
                     </el-collapse-item>
                 </el-collapse>
-                <el-collapse v-model="activeCollapse" class="pt-4">
+                <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length">
                     <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
                         <other-filters
                             v-for="(filter, index) in model.WidgetConfig"
@@ -126,6 +126,12 @@
                     return realTimeWidgetRules(this.model)
                 }
                 return {}
+            },
+            autoCompletes() {
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && filterIDs.includes(c.ParameterID))
+            },
+            otherFilters() {
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && !filterIDs.includes(c.ParameterID))
             },
         },
         methods: {

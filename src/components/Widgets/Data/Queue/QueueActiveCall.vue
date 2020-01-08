@@ -5,9 +5,10 @@
             :editable="editable"
             :columns="columns"
             :stripe="stripe"
+            @sort-change="sortChange"
             :border="border">
             <template v-slot:WaitingTime="{row}">
-                <waiting-time :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
+                <waiting-time v-if="drawRow" :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
             </template>
             <template v-slot:additional-data>
                 <div class="flex cursor-pointer outline-none"
@@ -63,6 +64,7 @@
                 width: '30%',
                 showQueues: [],
                 initialConfig: true,
+                drawRow: true
             }
         },
         computed: {
@@ -102,6 +104,12 @@
                     this.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                 }
                 this.showConfigDialog = true
+            },
+            sortChange() {
+                this.drawRow = false
+                this.$nextTick(() => {
+                    this.drawRow = true
+                })
             }
         }
     }
