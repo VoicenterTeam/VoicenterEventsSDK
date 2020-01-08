@@ -76,39 +76,41 @@
         </div>
         <div class="flex items-center justify-between -mx-1">
             <div class="flex">
-                <download-data class="mx-2 cursor-pointer export-button"
-                               :data="tableData"
-                               :fields="jsonFields">
+                <div class="mx-2 cursor-pointer export-button" @click="exportToXLSX">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.excel')}}</p>
-                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
+                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
                     </div>
-                </download-data>
+                </div>
                 <download-data class="mx-2 cursor-pointer export-button"
                                :data="tableData"
                                :fields="jsonFields"
+                               :name="getFileName"
                                type="csv">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.csv')}}</p>
-                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
+                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
                     </div>
                 </download-data>
             </div>
             <div class="flex">
-                <slot name="pagination"></slot>
+                <slot name="pagination"/>
             </div>
         </div>
     </div>
 </template>
 <script>
+
+    import XLSX from 'xlsx'
     import get from 'lodash/get';
     import Sortable from 'sortablejs';
     import bus from '@/event-bus/EventBus'
     import JsonExcel from 'vue-json-excel'
     import cloneDeep from 'lodash/cloneDeep'
     import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
-    import HeaderActions from "./Header/HeaderActions"
+    import {currentDate} from '@/helpers/util'
     import ManageColumns from './ManageColumns'
+    import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
 
     export default {
@@ -137,6 +139,10 @@
                 type: Boolean,
                 default: false
             },
+            widgetTitle: {
+                type: String,
+                default: '- -'
+            }
         },
         data() {
             return {
@@ -172,6 +178,10 @@
                 } else {
                     return this.editable ? 'mr-24' : 'mr-12'
                 }
+            },
+            getFileName() {
+                let widgetTitle = this.widgetTitle || this.$t('widget.title')
+                return widgetTitle + ' ' + currentDate()
             }
         },
         methods: {
@@ -211,6 +221,17 @@
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
             },
+            exportToXLSX() {
+                if (!this.tableData.length) return;
+                // only array possible
+                let data = XLSX.utils.json_to_sheet(this.tableData)
+                let wb = XLSX.utils.book_new() // make Workbook of Excel
+                // add Worksheet to Workbook
+                XLSX.utils.book_append_sheet(wb, data, 'data')
+                let fileName = this.getFileName + '.xlsx'
+                // export Excel file
+                XLSX.writeFile(wb, fileName)
+            }
         },
         watch: {
             'columns'(value) {
