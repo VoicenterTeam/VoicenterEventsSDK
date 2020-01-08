@@ -41,11 +41,12 @@
         overflow-x: auto;
         min-width: 320px;
         width: 100vw;
-        @apply -ml-6;
+        @apply -ml-12;
         @screen md {
             @apply -ml-12;
         }
     }
+
     .tab-name {
         height: 22px;
         line-height: normal;
@@ -68,7 +69,13 @@
         margin-left: -22%;
     }
 
-    .rtl .self-border {
-        margin-right: -22%;
+    .rtl {
+        .self-border {
+            margin-right: -22%;
+        }
+
+        .sidebar-tabs__container {
+            @apply -mr-12;
+        }
     }
 </style>
