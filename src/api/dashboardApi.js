@@ -1,3 +1,4 @@
+import i18n from '@/i18n'
 import $axios from './apiConnection'
 import parseCatch from '@/helpers/handleErrors'
 
@@ -8,7 +9,10 @@ export const DashboardApi = {
             return res.DashBoards
         } catch (e) {
             //TODO: redirect to login when status code = 401 (sync with back)
-            parseCatch(e, true, 'Get Dashboard')
+            let message = {
+                message: i18n.t('invalid.token')
+            }
+            parseCatch(message, true)
             //Show error for user
             setTimeout(() => {
                 window.location.href = process.env.VUE_APP_FALLBACK_URL
