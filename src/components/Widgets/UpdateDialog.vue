@@ -149,13 +149,11 @@
                     if (!valid) return;
 
                     if (this.model.WidgetTime.type === 'relative') {
-                        let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.WidgetTime.label)
+                        let widgetTime = widgetTimeOptions.find((el) => el.datedeff === this.model.WidgetTime.datedeff)
                         this.model.WidgetTime = {
                             ...this.model.WidgetTime,
                             ...widgetTime
                         }
-                    } else {
-                        this.model.WidgetTime.label = null
                     }
 
                     this.model.WidgetLayout = {

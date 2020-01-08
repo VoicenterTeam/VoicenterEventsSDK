@@ -22,7 +22,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
         if (template.DefaultWidgetConfig.length) {
             for (let config of template.DefaultWidgetConfig) {
                 let options = getOptionsValues(config.ParameterID)
-                config.WidgetParameterValue = options.toString()
+                config.WidgetParameterValue = options ? options.toString() : ''
                 WidgetConfig.push(config)
             }
         }

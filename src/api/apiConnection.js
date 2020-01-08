@@ -21,6 +21,7 @@ $axios.interceptors.response.use(
         store.dispatch('dashboards/setLoadingData', false)
         return res.data
     }, (e) => {
+        store.dispatch('dashboards/setLoadingData', false)
         return Promise.reject(e)
     })
 
