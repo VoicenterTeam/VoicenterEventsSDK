@@ -1,7 +1,6 @@
 <template>
-    <div v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.0)">
+    <div>
         <data-table
-            v-if="!loading"
             :tableData="fetchTableData"
             :editable="editable"
             :columns="columns"
@@ -91,7 +90,6 @@
             return {
                 tableData: [],
                 columns: [],
-                loading: true,
                 searchableFields: [],
                 pageSizes: [5, 10, 25, 50],
                 pageSize: 5,
@@ -190,8 +188,6 @@
                 } catch (e) {
                     console.warn(e)
                 } finally {
-                    this.loading = false
-                    this.$emit('on-loading', false)
                 }
             },
             handlePageChange(val) {
@@ -209,7 +205,6 @@
                 immediate: true,
                 handler: function () {
                     this.getTableData()
-                    this.$emit('on-loading', true)
                 }
             }
         },
