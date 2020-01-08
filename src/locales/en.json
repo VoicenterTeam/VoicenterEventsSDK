@@ -170,5 +170,6 @@
     "Widget type": "Widget type",
     "Widget external endpoint": "Widget external endpoint",
     "Select a widget type": "Select a widget type",
-    "Upload Logo": "Upload Logo"
+    "Upload Logo": "Upload Logo",
+    "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…"
 }
