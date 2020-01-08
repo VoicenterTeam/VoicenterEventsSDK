@@ -76,22 +76,18 @@
         </div>
         <div class="flex items-center justify-between -mx-1">
             <div class="flex">
-                <div class="mx-2 cursor-pointer export-button" @click="exportToXLSX">
+                <div class="mx-2 cursor-pointer export-button" @click="exportTableData(EXPORT_TO.XLSX)">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.excel')}}</p>
                         <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
                     </div>
                 </div>
-                <download-data class="mx-2 cursor-pointer export-button"
-                               :data="tableData"
-                               :fields="jsonFields"
-                               :name="getFileName"
-                               type="csv">
+                <div class="mx-2 cursor-pointer export-button" @click="exportTableData(EXPORT_TO.CSV)">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.csv')}}</p>
                         <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
                     </div>
-                </download-data>
+                </div>
             </div>
             <div class="flex">
                 <slot name="pagination"/>
@@ -105,7 +101,6 @@
     import get from 'lodash/get';
     import Sortable from 'sortablejs';
     import bus from '@/event-bus/EventBus'
-    import JsonExcel from 'vue-json-excel'
     import cloneDeep from 'lodash/cloneDeep'
     import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
     import {currentDate} from '@/helpers/util'
@@ -113,13 +108,17 @@
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
 
+    const EXPORT_TO = {
+        'XLSX': '.xlsx',
+        'CSV': '.csv'
+    }
+
     export default {
         inheritAttrs: false,
         components: {
             DownloadIcon,
             ManageColumns,
             HeaderActions,
-            DownloadData: JsonExcel,
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
             [Dropdown.name]: Dropdown,
@@ -151,7 +150,8 @@
                 tableKey: 'table-key',
                 active: false,
                 fitWidth: true,
-                drawTable: true
+                drawTable: true,
+                EXPORT_TO
             }
         },
         computed: {
@@ -166,12 +166,6 @@
             rowsData() {
                 return this.tableData
             },
-            jsonFields() {
-                return this.availableColumns.reduce((obj, item) => {
-                    obj[item.label] = item.prop
-                    return obj
-                }, {});
-            },
             margins() {
                 if (this.$rtl.isRTL) {
                     return this.editable ? 'ml-24' : 'ml-12'
@@ -179,10 +173,6 @@
                     return this.editable ? 'mr-24' : 'mr-12'
                 }
             },
-            getFileName() {
-                let widgetTitle = this.widgetTitle || this.$t('widget.title')
-                return widgetTitle + ' ' + currentDate()
-            }
         },
         methods: {
             tryInitSortable() {
@@ -221,14 +211,18 @@
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
             },
-            exportToXLSX() {
+            getFileName(type) {
+                let widgetTitle = this.widgetTitle || this.$t('widget.title')
+                return widgetTitle + ' ' + currentDate() + type
+            },
+            exportTableData(exportTo) {
                 if (!this.tableData.length) return;
                 // only array possible
                 let data = XLSX.utils.json_to_sheet(this.tableData)
                 let wb = XLSX.utils.book_new() // make Workbook of Excel
                 // add Worksheet to Workbook
                 XLSX.utils.book_append_sheet(wb, data, 'data')
-                let fileName = this.getFileName + '.xlsx'
+                let fileName = this.getFileName(exportTo)
                 // export Excel file
                 XLSX.writeFile(wb, fileName)
             }
