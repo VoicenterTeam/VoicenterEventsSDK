@@ -13,5 +13,5 @@ export const settings = {
         widgetGroupFrames: "#ff000000",
     },
     showGeneralWidgetSearch: true,
-    showWidgetAsTabs: true,
+    showWidgetAsTabs: false,
 }

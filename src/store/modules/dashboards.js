@@ -73,7 +73,7 @@ const actions = {
         commit(types.UPDATE_DASHBOARD, dashboard)
         commit(types.SET_LOADING, false)
     },
-    async setLoadingData({commit}, value) {
+    setLoadingData({commit}, value) {
         commit(types.SET_LOADING, value)
     },
     async deleteDashboard({commit}, dashboard) {
