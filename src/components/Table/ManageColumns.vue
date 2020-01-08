@@ -110,8 +110,8 @@
                 let newColumns = this.activeColumns.map(c => c.prop);
                 this.$emit('on-change-visibility', newColumns)
             },
-            // on list change
             onColumnChange(evt, section) {
+                // DOCS: This event is called with one argument containing one of the following properties: added/removed/moved
                 let action = get(Object.keys(evt), 0)
                 let eventData = evt[action]
                 let column = get(eventData, 'element')

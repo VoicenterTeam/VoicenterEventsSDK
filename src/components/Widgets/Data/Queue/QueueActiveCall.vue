@@ -3,9 +3,11 @@
         <data-table
             :tableData="fetchTableData"
             :editable="editable"
-            :columns="columns"
+            :columns="availableColumns"
+            :showColumns="visibleColumns"
             :stripe="stripe"
             @sort-change="sortChange"
+            @on-update-layout="onUpdateLayout"
             :border="border">
             <template v-slot:WaitingTime="{row}">
                 <waiting-time v-if="drawRow" :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
@@ -31,10 +33,13 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import orderBy from 'lodash/orderBy'
+    import cloneDeep from 'lodash/cloneDeep'
     import WaitingTime from './WaitingTime'
     import ConfigDialog from './ConfigDialog'
+    import {WidgetApi} from '@/api/widgetApi'
     import DataTable from '@/components/Table/DataTable'
     import {activeCallColumns} from '@/enum/queueConfigs'
 
@@ -57,14 +62,15 @@
         },
         data() {
             return {
-                columns: activeCallColumns,
+                activeCallColumns,
                 border: true,
                 stripe: true,
                 showConfigDialog: false,
                 width: '30%',
                 showQueues: [],
                 initialConfig: true,
-                drawRow: true
+                drawRow: true,
+                widget: cloneDeep(this.data)
             }
         },
         computed: {
@@ -92,6 +98,12 @@
                 return orderBy(data, function (q) {
                     return q.Call.JoinTimeStamp
                 }, ['asc']);
+            },
+            availableColumns() {
+                return get(this.widget.WidgetLayout, 'Columns.availableColumns') || activeCallColumns
+            },
+            visibleColumns() {
+                return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || activeCallColumns.map(c => c.prop)
             }
         },
         methods: {
@@ -110,6 +122,11 @@
                 this.$nextTick(() => {
                     this.drawRow = true
                 })
+            },
+            async onUpdateLayout(data) {
+                this.widget.WidgetLayout['Columns'] = data
+                await WidgetApi.update(this.widget)
+                this.widget = await WidgetApi.find(this.widget.WidgetID)
             }
         }
     }

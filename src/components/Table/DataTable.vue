@@ -135,6 +135,10 @@
                 type: Array,
                 default: () => ([])
             },
+            showColumns: {
+                type: Array,
+                default: () => ([])
+            },
             editable: {
                 type: Boolean,
                 default: false
@@ -142,7 +146,7 @@
         },
         data() {
             return {
-                visibleColumns: this.columns.map(c => c.prop),
+                visibleColumns: cloneDeep(this.showColumns),
                 availableColumns: cloneDeep(this.columns),
                 tableKey: 'table-key',
                 active: false,
@@ -198,6 +202,7 @@
             },
             updateColumnsVisibility(columns) {
                 this.visibleColumns = columns
+                this.updateLayout()
             },
             reorderColumn(data) {
                 let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data;
@@ -211,6 +216,14 @@
                 this.$nextTick(() => {
                     this.drawTable = true
                 })
+                this.updateLayout()
+            },
+            updateLayout() {
+                let objToEmit = {
+                    visibleColumns: this.visibleColumns,
+                    availableColumns: this.availableColumns,
+                }
+                this.$emit('on-update-layout', objToEmit)
             },
             pinColumn(column, columnIndex) {
                 this.availableColumns[columnIndex] = column
@@ -226,12 +239,6 @@
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
             },
-        },
-        watch: {
-            'columns'(value) {
-                this.visibleColumns = value.map(c => c.prop)
-                this.availableColumns = cloneDeep(value)
-            }
         },
         mounted() {
             this.tryInitSortable()
