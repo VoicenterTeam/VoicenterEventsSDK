@@ -113,6 +113,8 @@
             onColumnChange(evt, section) {
                 // DOCS: This event is called with one argument containing one of the following properties: added/removed/moved
                 let action = get(Object.keys(evt), 0)
+                if (action === draggableEvents.REMOVED) return;
+
                 let eventData = evt[action]
                 let column = get(eventData, 'element')
 
