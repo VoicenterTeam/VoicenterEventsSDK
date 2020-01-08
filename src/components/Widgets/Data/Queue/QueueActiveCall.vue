@@ -9,12 +9,30 @@
             <template v-slot:WaitingTime="{row}">
                 <waiting-time :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
             </template>
+            <!--            v-if="queueWithActiveCalls.length"-->
+            <template v-slot:data-counts>
+                <div class="flex cursor-pointer outline-none"
+                     @click="showConfigDialog = true">
+                    <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
+                                placement="bottom">
+                        <IconSettings class="text-primary"/>
+                    </el-tooltip>
+                </div>
+            </template>
         </data-table>
+        <config-dialog
+            v-if="showConfigDialog"
+            :queues="queueWithActiveCalls"
+            :width="width"
+            :visible.sync="showConfigDialog">
+        </config-dialog>
     </div>
 </template>
 <script>
+    import {Tooltip} from 'element-ui'
     import orderBy from 'lodash/orderBy'
     import WaitingTime from './WaitingTime'
+    import ConfigDialog from './ConfigDialog'
     import DataTable from '@/components/Table/DataTable'
     import {activeCallColumns} from '@/enum/queueConfigs'
 
@@ -22,6 +40,8 @@
         components: {
             DataTable,
             WaitingTime,
+            ConfigDialog,
+            [Tooltip.name]: Tooltip,
         },
         props: {
             data: {
@@ -37,7 +57,9 @@
             return {
                 columns: activeCallColumns,
                 border: true,
-                stripe: true
+                stripe: true,
+                showConfigDialog: false,
+                width: '30%'
             }
         },
         computed: {
@@ -56,7 +78,9 @@
                         })
                     })
                 })
-                return orderBy(data, function(q) { return q.Call.JoinTimeStamp}, ['asc']);
+                return orderBy(data, function (q) {
+                    return q.Call.JoinTimeStamp
+                }, ['asc']);
             }
         },
     }
