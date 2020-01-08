@@ -9,10 +9,9 @@
             <template v-slot:WaitingTime="{row}">
                 <waiting-time :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
             </template>
-            <!--            v-if="queueWithActiveCalls.length"-->
             <template v-slot:data-counts>
                 <div class="flex cursor-pointer outline-none"
-                     @click="showConfigDialog = true">
+                     @click="showDialog">
                     <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
                                 placement="bottom">
                         <IconSettings class="text-primary"/>
@@ -23,6 +22,8 @@
         <config-dialog
             v-if="showConfigDialog"
             :queues="queueWithActiveCalls"
+            :showQueues=showQueues
+            @on-update="updateTable"
             :width="width"
             :visible.sync="showConfigDialog">
         </config-dialog>
@@ -59,16 +60,24 @@
                 border: true,
                 stripe: true,
                 showConfigDialog: false,
-                width: '30%'
+                width: '30%',
+                showQueues: [],
+                initialConfig: true,
             }
         },
         computed: {
             queueWithActiveCalls() {
                 return this.$store.state.queues.all.filter((el) => el.Calls.length)
             },
+            filteredQueues() {
+                if (this.showQueues && !this.initialConfig) {
+                    return this.queueWithActiveCalls.filter(e => this.showQueues.includes(e.QueueID))
+                }
+                return this.queueWithActiveCalls
+            },
             fetchTableData() {
                 let data = []
-                this.queueWithActiveCalls.forEach((queue) => {
+                this.filteredQueues.forEach((queue) => {
                     queue.Calls.forEach((call) => {
                         data.push({
                             QueueName: queue.QueueName,
@@ -83,5 +92,17 @@
                 }, ['asc']);
             }
         },
+        methods: {
+            updateTable(queues) {
+                this.initialConfig = false
+                this.showQueues = queues
+            },
+            showDialog() {
+                if (this.initialConfig) {
+                    this.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
+                }
+                this.showConfigDialog = true
+            }
+        }
     }
 </script>

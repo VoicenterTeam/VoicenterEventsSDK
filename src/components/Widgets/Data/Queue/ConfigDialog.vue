@@ -41,6 +41,10 @@
                 type: Array,
                 default: () => []
             },
+            showQueues: {
+                type: Array,
+                default: () => []
+            },
         },
         data() {
             return {
