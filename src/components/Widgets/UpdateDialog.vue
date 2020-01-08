@@ -38,6 +38,13 @@
                 :model="model">
             </real-time-settings>
             <div v-if="model.WidgetConfig">
+                <div class="flex items-center justify-between">
+                    {{$t('tooltip.refresh.entities.list')}}
+                    <RefreshButton
+                        :disabled="loadEntitiesList"
+                        :loading="loadEntitiesList"
+                        @click.native="refreshEntitiesList"/>
+                </div>
                 <el-collapse v-model="activeCollapse" class="pt-4">
                     <el-collapse-item :title="$t('settings.filters')" name="filters">
                         <auto-complete
@@ -64,17 +71,18 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup, Checkbox} from 'element-ui'
-    import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
+    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup, Checkbox, Tooltip} from 'element-ui'
+    import RefreshButton from '@/components/RefreshButton'
     import {filterIDs} from '@/enum/widgetTemplateConfigs'
-    import {isRealtimeWidget, isPieWidget} from '@/helpers/widgetUtils'
-    import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
-    import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
+    import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
-    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
+    import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
+    import {isRealtimeWidget, isPieWidget} from '@/helpers/widgetUtils'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
+    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
+    import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
 
     export default {
         inheritAttrs: false,
@@ -90,6 +98,8 @@
             AutoComplete,
             OtherFilters,
             WidgetColors,
+            RefreshButton,
+            [Tooltip.name]: Tooltip,
         },
         props: {
             widget: {
@@ -106,7 +116,8 @@
                     colors: defaultColors,
                     timeInterval: {},
                 },
-                activeCollapse: ['filters']
+                activeCollapse: ['filters'],
+                loadEntitiesList: false,
             }
         },
         computed: {
@@ -121,7 +132,7 @@
             isRealtimeWidget,
             isPieWidget,
             isAutoComplete(WidgetConfig) {
-                return !!filterIDs.includes(WidgetConfig.ParameterID);
+                return filterIDs.includes(WidgetConfig.ParameterID);
             },
             isOtherFilters(WidgetConfig) {
                 return !filterIDs.includes(WidgetConfig.ParameterID);
@@ -159,6 +170,11 @@
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
             },
+            async refreshEntitiesList() {
+                this.loadEntitiesList = true
+                await this.$store.dispatch('entities/getEntitiesList')
+                this.loadEntitiesList = false
+            }
         },
         mounted() {
             this.model = cloneDeep(this.widget)
