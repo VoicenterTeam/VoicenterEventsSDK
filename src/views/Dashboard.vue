@@ -13,15 +13,6 @@
                                       v-model="widgetsFilter"
                                       prefix-icon="el-icon-search"/>
                         </div>
-                        <el-tooltip class="item" effect="dark" :content="$t('tooltip.refresh.entities.list')"
-                                    placement="bottom">
-                            <div :class="{'mx-2': showGeneralWidgetSearch}">
-                                <RefreshButton
-                                    :disabled="loadEntitiesList"
-                                    :loading="loadEntitiesList"
-                                    @click.native="refreshEntitiesList"/>
-                            </div>
-                        </el-tooltip>
                     </div>
                     <div class="flex justify-end -mx-1">
                         <div class="my-4 flex items-center">
@@ -94,9 +85,9 @@
     </div>
 </template>
 <script>
-    import {Tooltip} from 'element-ui'
     import map from 'lodash/map'
     import get from 'lodash/get'
+    import {Tooltip} from 'element-ui'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
@@ -104,7 +95,6 @@
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
     import AddButton from '@/components/AddButton'
-    import RefreshButton from '@/components/RefreshButton'
     import sdkEventTypes from '@/enum/sdkEventTypes'
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
@@ -130,7 +120,6 @@
             [Switcher.name]: Switcher,
             NewGroupButton,
             AddButton,
-            RefreshButton,
             WidgetMenu,
             EventsSDK,
             NormalView,
@@ -156,7 +145,6 @@
                 widgetsFilter: '',
                 activeTab: '',
                 showReorderDataDialog: false,
-                loadEntitiesList: false
             }
         },
         computed: {
@@ -437,11 +425,6 @@
                 } catch (e) {
                 }
             },
-            async refreshEntitiesList() {
-                this.loadEntitiesList = true
-                await this.$store.dispatch('entities/getEntitiesList')
-                this.loadEntitiesList = false
-            }
         },
         watch: {
             dashboard: {
