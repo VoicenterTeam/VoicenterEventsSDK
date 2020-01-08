@@ -50,7 +50,7 @@
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"
                           clearable/>
             </template>
-            <template v-slot:data-counts>
+            <template v-slot:additional-data>
                 <p class="text-sm">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
             </template>
         </data-table>

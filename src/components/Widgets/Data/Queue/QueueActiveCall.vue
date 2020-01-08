@@ -9,7 +9,7 @@
             <template v-slot:WaitingTime="{row}">
                 <waiting-time :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
             </template>
-            <template v-slot:data-counts>
+            <template v-slot:additional-data>
                 <div class="flex cursor-pointer outline-none"
                      @click="showDialog">
                     <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
