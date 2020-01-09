@@ -125,7 +125,7 @@
 
                 styles = {
                     'background': colors.background,
-                    'color': colors.fonts
+                    'color': colors.fonts,
                 }
 
                 if (this.showDeleteButton) {

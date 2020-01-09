@@ -2,11 +2,10 @@
     <div>
         <label>{{$t('Widget padding')}}</label>
         <el-slider
-            class="px-1"
-            :class="$rtl.isRTL ? 'pr-2' : 'pl-2'"
-            v-model="model.WidgetLayout.padding"
-            show-input>
-        </el-slider>
+        class="px-1"
+        v-model="model.WidgetLayout.padding"
+        show-input>
+    </el-slider>
     </div>
 </template>
 

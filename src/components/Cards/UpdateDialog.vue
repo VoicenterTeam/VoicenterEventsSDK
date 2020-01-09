@@ -12,6 +12,10 @@
         </template>
         <el-collapse v-model="activeCollapse" class="pt-4">
             <el-collapse-item :title="$t('widget.layout')" name="layout">
+                <div class="flex flex-col">
+                    <label class="pt-3 pb-2">{{$t('Widget width')}}</label>
+                    <el-input type="number"/>
+                </div>
                 <widget-colors :model="model" :onlyBackground="true"/>
             </el-collapse-item>
         </el-collapse>

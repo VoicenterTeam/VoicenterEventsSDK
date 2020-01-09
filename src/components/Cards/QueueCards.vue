@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow"
+    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card"
          :style="borderColor">
         <div class="w-full flex items-center">
             <slot name="icon">
@@ -156,7 +156,7 @@
                 displayItemBorder: this.displayBorder,
                 timeout: null,
                 dataCount: 0,
-                model: {}
+                colors: {}
             }
         },
         computed: {
@@ -240,7 +240,7 @@
             data: {
                 immediate: true,
                 handler: function (widget) {
-                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                    this.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
                 }
             }
         }

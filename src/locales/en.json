@@ -175,5 +175,6 @@
     "Widget width": "Widget width",
     "Widget padding": "Widget padding",
     "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…",
-    "refresh.filter.data": "Refresh filter data"
+    "refresh.filter.data": "Refresh filter data",
+    "widget.font.size": "Widget font size"
 }

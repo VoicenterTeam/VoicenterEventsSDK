@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow"
+    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card"
          :style="borderColor">
         <div class="w-full flex items-center">
             <slot name="icon">
