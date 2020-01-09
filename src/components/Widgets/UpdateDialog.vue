@@ -38,7 +38,14 @@
                 :model="model">
             </real-time-settings>
             <div v-if="model.WidgetConfig">
-                <el-collapse v-model="activeCollapse" class="pt-4">
+                <div class="flex items-center justify-between">
+                    {{$t('tooltip.refresh.entities.list')}}
+                    <RefreshButton
+                        :disabled="loadEntitiesList"
+                        :loading="loadEntitiesList"
+                        @click.native="refreshEntitiesList"/>
+                </div>
+                <el-collapse v-model="activeCollapse" class="pt-4" v-if="autoCompletes.length">
                     <el-collapse-item :title="$t('settings.filters')" name="filters">
                         <auto-complete
                             v-for="(filter, index) in model.WidgetConfig"
@@ -46,7 +53,7 @@
                             :model="model.WidgetConfig[index]"/>
                     </el-collapse-item>
                 </el-collapse>
-                <el-collapse v-model="activeCollapse" class="pt-4">
+                <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length">
                     <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
                         <other-filters
                             v-for="(filter, index) in model.WidgetConfig"
@@ -64,17 +71,18 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup, Checkbox} from 'element-ui'
-    import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
+    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup, Checkbox, Tooltip} from 'element-ui'
+    import RefreshButton from '@/components/RefreshButton'
     import {filterIDs} from '@/enum/widgetTemplateConfigs'
-    import {isRealtimeWidget, isPieWidget} from '@/helpers/widgetUtils'
-    import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
-    import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
+    import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
-    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
+    import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
+    import {isRealtimeWidget, isPieWidget} from '@/helpers/widgetUtils'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
+    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
+    import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
 
     export default {
         inheritAttrs: false,
@@ -90,6 +98,8 @@
             AutoComplete,
             OtherFilters,
             WidgetColors,
+            RefreshButton,
+            [Tooltip.name]: Tooltip,
         },
         props: {
             widget: {
@@ -106,7 +116,8 @@
                     colors: defaultColors,
                     timeInterval: {},
                 },
-                activeCollapse: ['filters']
+                activeCollapse: ['filters'],
+                loadEntitiesList: false,
             }
         },
         computed: {
@@ -116,12 +127,18 @@
                 }
                 return {}
             },
+            autoCompletes() {
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && filterIDs.includes(c.ParameterID))
+            },
+            otherFilters() {
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && !filterIDs.includes(c.ParameterID))
+            },
         },
         methods: {
             isRealtimeWidget,
             isPieWidget,
             isAutoComplete(WidgetConfig) {
-                return !!filterIDs.includes(WidgetConfig.ParameterID);
+                return filterIDs.includes(WidgetConfig.ParameterID);
             },
             isOtherFilters(WidgetConfig) {
                 return !filterIDs.includes(WidgetConfig.ParameterID);
@@ -132,13 +149,11 @@
                     if (!valid) return;
 
                     if (this.model.WidgetTime.type === 'relative') {
-                        let widgetTime = widgetTimeOptions.find((el) => el.label === this.model.WidgetTime.label)
+                        let widgetTime = widgetTimeOptions.find((el) => el.datedeff === this.model.WidgetTime.datedeff)
                         this.model.WidgetTime = {
                             ...this.model.WidgetTime,
                             ...widgetTime
                         }
-                    } else {
-                        this.model.WidgetTime.label = null
                     }
 
                     this.model.WidgetLayout = {
@@ -161,6 +176,11 @@
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
             },
+            async refreshEntitiesList() {
+                this.loadEntitiesList = true
+                await this.$store.dispatch('entities/getEntitiesList')
+                this.loadEntitiesList = false
+            }
         },
         mounted() {
             this.model = cloneDeep(this.widget)

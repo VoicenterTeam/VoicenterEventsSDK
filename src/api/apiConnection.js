@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
+import store from "../store/store";
 import {authorizationData} from '@/helpers/authUtil'
 
 const $axios = axios.create({
@@ -9,6 +10,7 @@ const $axios = axios.create({
 $axios.interceptors.request.use(
     (config) => {
         config.headers.Authorization = authorizationData()
+        store.dispatch('dashboards/setLoadingData', true)
         return config
     }, (e) => {
         return Promise.reject(e)
@@ -16,8 +18,10 @@ $axios.interceptors.request.use(
 
 $axios.interceptors.response.use(
     (res) => {
+        store.dispatch('dashboards/setLoadingData', false)
         return res.data
     }, (e) => {
+        store.dispatch('dashboards/setLoadingData', false)
         return Promise.reject(e)
     })
 

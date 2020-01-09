@@ -796,3 +796,29 @@ export const gaugeCharts = [{
         },
     }]
 }]
+
+
+export const queueExample = [
+    {
+        "QueueID": 10031,
+        "Calls": [
+            {
+                "CallerID": "0532559065",
+                "CallerName": "VC Support",
+                "IvrUniqueID": "202001081642500136917c76ded7ddd4",
+                "JoinTimeStamp": 1578501818,
+                "calldurationinterval": 1578501818,
+                "ivrid": "202001081642500136917c76ded7ddd4"
+            },
+            {
+                "CallerID": "0528711001",
+                "CallerName": "VC Customer Service",
+                "IvrUniqueID": "2020010816424301361a549c3c50e7b1",
+                "JoinTimeStamp": 1578501824,
+                "calldurationinterval": 1578501824,
+                "ivrid": "2020010816424301361a549c3c50e7b1"
+            }
+        ],
+        "QueueName": "VC Support"
+    }
+]

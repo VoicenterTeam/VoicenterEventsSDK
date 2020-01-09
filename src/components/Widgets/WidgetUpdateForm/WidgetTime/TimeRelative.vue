@@ -1,12 +1,12 @@
 <template>
-    <el-select v-model="model.WidgetTime.label"
+    <el-select v-model="model.WidgetTime.datedeff"
                placeholder="Select"
                class="w-full pt-2">
         <el-option
             v-for="(item, index) of widgetTimeOptions"
             :key="index"
             :label="$t(item.label)"
-            :value="item.label">
+            :value="item.datedeff">
         </el-option>
     </el-select>
 </template>

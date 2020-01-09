@@ -6,7 +6,8 @@
                 :availableColumns="activeColumns">
                 <template v-slot:button="{columns, allChecked}">
                     <div :class="getClass">
-                        <el-button :disabled="!activeColumns.length" class="w-24" type="danger" size="small"
+                        <el-button :disabled="!activeColumns.length || !columns.length" class="w-24" type="danger"
+                                   size="small"
                                    @click="removeColumns(columns)">
                             {{allChecked ? $t('datatable.manage.columns.remove.all') :
                             $t('datatable.manage.columns.remove')}}
@@ -20,11 +21,12 @@
                     <div class="w-4/6 mx-2">
                         <el-input :placeholder="$t('datatable.manage.columns.search')"
                                   v-model="filter"
-                                  suffix-icon="el-icon-search" class="search-columns"></el-input>
+                                  suffix-icon="el-icon-search" class="search-columns"/>
                     </div>
                 </template>
                 <template v-slot:button="{columns, allChecked}">
-                    <el-button :disabled="!showAvailableColumns.length" class="w-24" type="success" size="small"
+                    <el-button :disabled="!showAvailableColumns.length || !columns.length" class="w-24" type="success"
+                               size="small"
                                @click="addColumns(columns)">
                         {{allChecked ? $t('datatable.manage.columns.add.all') : $t('datatable.manage.columns.add')}}
                     </el-button>
