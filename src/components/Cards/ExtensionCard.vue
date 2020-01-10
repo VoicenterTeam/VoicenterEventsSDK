@@ -1,6 +1,7 @@
 <template>
     <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 flex flex-col extension-card" :style="cardStyles">
         <div class="flex items-center mb-2">
+
             <fade-transition mode="out-in">
                 <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top"
                             :open-delay="300">
@@ -16,7 +17,7 @@
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
                 <span class="text-center text-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
-                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"></component>
+                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"/>
             </div>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :settings="settings"/>
         </div>
@@ -27,8 +28,9 @@
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
+    import {getInitialTime} from '@/util/timeUtils'
+    import {sdkEventReasons} from '@/enum/sdkEvents'
     import {extensionColor} from '@/util/extensionStyles'
-    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
 
     export default {
         components: {
@@ -46,8 +48,7 @@
             }
         },
         data() {
-            let initialTime = new Date().getTime() - (this.extension.representativeUpdated - ISRAEL_TIMEZONE_OFFSET)
-            let initialTimeInSeconds = Math.floor(initialTime / 1000)
+            let initialTimeInSeconds = getInitialTime(this.extension.lastAnsweredCallEventEpoch)
 
             return {
                 timer: new Timer({
@@ -115,8 +116,20 @@
             }
         },
         watch: {
-            'extension.representativeStatus'(newVal, oldVal) {
+            'extension.representativeStatus'() {
                 this.timer.reset()
+            },
+            'extension.calls'(newVal, oldVal) {
+                if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
+                    return
+                }
+
+                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.HANGUP) {
+                    let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
+                    if (call) {
+                        this.timer.reset()
+                    }
+                }
             }
         },
         mounted() {

@@ -2,9 +2,14 @@
     <el-collapse v-model="activeCollapse" class="pt-4">
         <el-collapse-item :title="$t('settings.threshold')" name="threshold">
             <div class="flex flex-col">
-                <div class="md:flex md:flex-col md:justify-center my-4">
+                <div class="flex my-2">
                     <el-checkbox v-model="model.settings.showLoggedOutUsers">
                         {{$t('settings.extension.logout')}}
+                    </el-checkbox>
+                </div>
+                <div class="flex my-2">
+                    <el-checkbox v-model="model.settings.resetIdleTime">
+                        {{$t('settings.extension.resetIdleTime')}}
                     </el-checkbox>
                 </div>
                 <div class="md:flex md:flex-col md:justify-center mt-4">
