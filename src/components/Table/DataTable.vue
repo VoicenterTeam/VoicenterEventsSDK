@@ -99,12 +99,12 @@
 <script>
 
     import XLSX from 'xlsx'
-    import get from 'lodash/get';
-    import Sortable from 'sortablejs';
+    import get from 'lodash/get'
+    import {format} from 'date-fns'
+    import Sortable from 'sortablejs'
     import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
     import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
-    import {currentDate} from '@/helpers/util'
     import ManageColumns from './ManageColumns'
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
@@ -214,14 +214,16 @@
             },
             getFileName(type) {
                 let widgetTitle = this.widgetTitle || this.$t('widget.title')
-                return widgetTitle + ' ' + currentDate() + type
+                let currentDate = format(new Date(), 'MM-dd-yyyy')
+
+                return widgetTitle + ' ' + currentDate + type
             },
             exportTableData(exportTo) {
                 let fileName = this.getFileName(exportTo)
                 // export Excel file
-                let tbl = document.getElementById('table');
-                let wb = XLSX.utils.table_to_book(tbl);
-                XLSX.writeFile(wb, fileName)
+                let tableElement = document.getElementById('table');
+                let excelWorkBook = XLSX.utils.table_to_book(tableElement);
+                XLSX.writeFile(excelWorkBook, fileName)
             }
         },
         watch: {
