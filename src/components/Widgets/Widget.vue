@@ -1,12 +1,12 @@
 <template>
     <div class="relative my-3" :class="{'mt-6 mb-0': editable}">
-        <div class="absolute top-0 right-0 mt-4 mr-16 widget-delete__button"
+        <div class="absolute top-0 right-0 mt-5 mr-16 widget-delete__button"
              v-if="editable && showDeleteButton">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
                 <delete-button @click="removeWidget(widget)"/>
             </el-tooltip>
         </div>
-        <div class="absolute top-0 right-0 widget-edit__button mr-4 mt-4"
+        <div class="absolute top-0 right-0 widget-edit__button mr-4 mt-5"
              v-if="showDeleteButton">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                 <edit-button @click="showUpdateDialog = true"

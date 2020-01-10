@@ -16,7 +16,7 @@
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
                 <span class="text-center text-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
-                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"></component>
+                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"/>
             </div>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :settings="settings"/>
         </div>
@@ -27,6 +27,7 @@
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
+    import {sdkEventReasons} from '@/enum/sdkEvents'
     import {extensionColor} from '@/util/extensionStyles'
     import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
 
@@ -115,8 +116,20 @@
             }
         },
         watch: {
-            'extension.representativeStatus'(newVal, oldVal) {
+            'extension.representativeStatus'() {
                 this.timer.reset()
+            },
+            'extension.calls'(newVal, oldVal) {
+                if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
+                    return
+                }
+
+                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.HANGUP) {
+                    let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
+                    if (call) {
+                        this.timer.reset()
+                    }
+                }
             }
         },
         mounted() {

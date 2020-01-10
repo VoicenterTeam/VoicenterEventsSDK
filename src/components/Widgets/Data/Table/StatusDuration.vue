@@ -10,6 +10,7 @@
 <script>
     import Timer from '@/util/Timer'
     import CallInfo from '@/components/Cards/CallInfo'
+    import {sdkEventReasons} from '@/enum/sdkEvents'
     import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
 
     export default {
@@ -60,7 +61,21 @@
         watch: {
             'extension.representativeStatus'() {
                 this.timer.reset()
-            }
+            },
+            watch: {
+                'extension.calls'(newVal, oldVal) {
+                    if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
+                        return
+                    }
+
+                    if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.HANGUP) {
+                        let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
+                        if (call) {
+                            this.timer.reset()
+                        }
+                    }
+                }
+            },
         },
         mounted() {
             this.timer.start()
