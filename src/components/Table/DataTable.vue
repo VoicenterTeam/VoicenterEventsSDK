@@ -13,9 +13,11 @@
                         <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
-                        <manage-columns :available-columns="availableColumns"
-                                        :visible-columns="visibleColumns"
-                                        @on-change-visibility="updateColumnsVisibility">
+                        <manage-columns
+                            :available-columns="availableColumns"
+                            :visible-columns="visibleColumns"
+                            @on-change-visibility="updateColumnsVisibility"
+                            @on-reorder-column="reorderColumn">
                         </manage-columns>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -135,6 +137,10 @@
                 type: Array,
                 default: () => ([])
             },
+            showColumns: {
+                type: Array,
+                default: () => ([])
+            },
             editable: {
                 type: Boolean,
                 default: false
@@ -146,7 +152,7 @@
         },
         data() {
             return {
-                visibleColumns: this.columns.map(c => c.prop),
+                visibleColumns: cloneDeep(this.showColumns),
                 availableColumns: cloneDeep(this.columns),
                 tableKey: 'table-key',
                 active: false,
@@ -197,6 +203,28 @@
             },
             updateColumnsVisibility(columns) {
                 this.visibleColumns = columns
+                this.updateLayout()
+            },
+            reorderColumn(data) {
+                let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data;
+
+                oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
+
+                this.availableColumns.splice(oldIndex, 1);
+                this.availableColumns.splice(newIndex, 0, column);
+                
+                this.drawTable = false
+                this.$nextTick(() => {
+                    this.drawTable = true
+                })
+                this.updateLayout()
+            },
+            updateLayout() {
+                let objToEmit = {
+                    visibleColumns: this.visibleColumns,
+                    availableColumns: this.availableColumns,
+                }
+                this.$emit('on-update-layout', objToEmit)
             },
             pinColumn(column, columnIndex) {
                 this.availableColumns[columnIndex] = column
@@ -224,12 +252,6 @@
                 let tableElement = document.getElementById('table');
                 let excelWorkBook = XLSX.utils.table_to_book(tableElement);
                 XLSX.writeFile(excelWorkBook, fileName)
-            }
-        },
-        watch: {
-            'columns'(value) {
-                this.visibleColumns = value.map(c => c.prop)
-                this.availableColumns = cloneDeep(value)
             }
         },
         mounted() {
