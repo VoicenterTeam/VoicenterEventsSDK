@@ -19,7 +19,7 @@ export const sdkEventTypes = {
 }
 
 export const sdkEventReasons = {
-    NEWCALL: 'new_call',
-    ANSWER: 'answer',
-    HANGUP: 'hangup'
+    NEWCALL: 'NEWCALL',
+    ANSWER: 'ANSWER',
+    HANGUP: 'HANGUP'
 }
