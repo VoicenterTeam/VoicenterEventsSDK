@@ -172,5 +172,6 @@
     "Select a widget type": "Select a widget type",
     "Upload Logo": "Upload Logo",
     "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…",
-    "refresh.filter.data": "Refresh filter data"
+    "refresh.filter.data": "Refresh filter data",
+    "settings.extension.resetIdleTime": "Reset Idle time after a call with duration or a status change."
 }

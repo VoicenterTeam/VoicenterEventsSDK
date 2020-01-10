@@ -33,7 +33,7 @@
                 </div>
             </el-form-item>
             <real-time-settings
-                v-if="isRealtimeWidget(widget)"
+                v-if="isRealtimeWidget(widget) && model.settings"
                 :data="widget"
                 :model="model">
             </real-time-settings>
@@ -185,6 +185,10 @@
         mounted() {
             this.model = cloneDeep(this.widget)
             if (isRealtimeWidget(this.widget)) {
+                // this.model.settings = {
+                //     ...realTimeSettings,
+                //     ...this.widget.WidgetLayout.settings
+                // }
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
