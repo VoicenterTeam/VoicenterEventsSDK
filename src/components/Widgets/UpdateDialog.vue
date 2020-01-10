@@ -185,10 +185,6 @@
         mounted() {
             this.model = cloneDeep(this.widget)
             if (isRealtimeWidget(this.widget)) {
-                // this.model.settings = {
-                //     ...realTimeSettings,
-                //     ...this.widget.WidgetLayout.settings
-                // }
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
