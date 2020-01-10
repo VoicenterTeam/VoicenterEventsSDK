@@ -24,6 +24,7 @@
         </div>
         <div class="bg-white rounded-lg my-4 data-table w-full">
             <el-table ref="table"
+                      id="table"
                       row-key="id"
                       class="rounded-lg"
                       v-if="drawTable"
@@ -74,7 +75,7 @@
                 </slot>
             </el-table>
         </div>
-        <div class="flex items-center justify-between -mx-1">
+        <div class="flex items-center justify-between -mx-1" v-if="tableData.length">
             <div class="flex">
                 <div class="mx-2 cursor-pointer export-button" @click="exportTableData(EXPORT_TO.XLSX)">
                     <div class="flex items-center">
@@ -216,14 +217,10 @@
                 return widgetTitle + ' ' + currentDate() + type
             },
             exportTableData(exportTo) {
-                if (!this.tableData.length) return;
-                // only array possible
-                let data = XLSX.utils.json_to_sheet(this.tableData)
-                let wb = XLSX.utils.book_new() // make Workbook of Excel
-                // add Worksheet to Workbook
-                XLSX.utils.book_append_sheet(wb, data, 'data')
                 let fileName = this.getFileName(exportTo)
                 // export Excel file
+                let tbl = document.getElementById('table');
+                let wb = XLSX.utils.table_to_book(tbl);
                 XLSX.writeFile(wb, fileName)
             }
         },
