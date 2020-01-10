@@ -1,6 +1,7 @@
 <template>
     <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 flex flex-col extension-card" :style="cardStyles">
         <div class="flex items-center mb-2">
+
             <fade-transition mode="out-in">
                 <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top"
                             :open-delay="300">
@@ -27,9 +28,9 @@
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
+    import {getInitialTime} from '@/util/timeUtils'
     import {sdkEventReasons} from '@/enum/sdkEvents'
     import {extensionColor} from '@/util/extensionStyles'
-    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
 
     export default {
         components: {
@@ -47,8 +48,7 @@
             }
         },
         data() {
-            let initialTime = new Date().getTime() - (this.extension.representativeUpdated - ISRAEL_TIMEZONE_OFFSET)
-            let initialTimeInSeconds = Math.floor(initialTime / 1000)
+            let initialTimeInSeconds = getInitialTime(this.extension.lastAnsweredCallEventEpoch)
 
             return {
                 timer: new Timer({

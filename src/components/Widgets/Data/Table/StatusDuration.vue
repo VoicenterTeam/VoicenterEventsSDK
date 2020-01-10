@@ -9,9 +9,9 @@
 </template>
 <script>
     import Timer from '@/util/Timer'
-    import CallInfo from '@/components/Cards/CallInfo'
+    import {getInitialTime} from '@/util/timeUtils'
     import {sdkEventReasons} from '@/enum/sdkEvents'
-    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+    import CallInfo from '@/components/Cards/CallInfo'
 
     export default {
         components: {
@@ -49,8 +49,7 @@
             },
         },
         data() {
-            let initialTime = new Date().getTime() - (this.extension.representativeUpdated - ISRAEL_TIMEZONE_OFFSET)
-            let initialTimeInSeconds = Math.floor(initialTime / 1000)
+            let initialTimeInSeconds = getInitialTime(this.extension.lastAnsweredCallEventEpoch)
 
             return {
                 timer: new Timer({
@@ -62,20 +61,18 @@
             'extension.representativeStatus'() {
                 this.timer.reset()
             },
-            watch: {
-                'extension.calls'(newVal, oldVal) {
-                    if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
-                        return
-                    }
+            'extension.calls'(newVal, oldVal) {
+                if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
+                    return
+                }
 
-                    if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.HANGUP) {
-                        let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
-                        if (call) {
-                            this.timer.reset()
-                        }
+                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.HANGUP) {
+                    let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
+                    if (call) {
+                        this.timer.reset()
                     }
                 }
-            },
+            }
         },
         mounted() {
             this.timer.start()

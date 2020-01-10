@@ -4,14 +4,14 @@
             <span class="text-xs mr-2" :class="textColor">+{{call.callerphone}}</span>
             <span v-if="call.callerphone !== call.callername" class="text-xs font-medium">{{call.callername}}</span>
         </div>
-        <component :is="directionMappings[call.direction]" class="w-6 direction-icon"></component>
-        <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"></component>
+        <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
+        <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"/>
         <span class="font-medium tracking-wide call-time font-mono">{{timer.displayTime}}</span>
     </div>
 </template>
 <script>
     import Timer from '@/util/Timer'
-    import {getTimezoneTimestamp} from '@/util/TimezoneUtils'
+    import {getInitialTime} from '@/util/timeUtils'
 
     export default {
         props: {
@@ -29,8 +29,7 @@
             }
         },
         data() {
-            let initialTime = new Date().getTime() - getTimezoneTimestamp(this.call.callStarted)
-            let initialTimeInSeconds = Math.floor(initialTime / 1000)
+            let initialTimeInSeconds = getInitialTime(this.call.callStarted)
             return {
                 timer: new Timer({
                     initialTimeInSeconds
