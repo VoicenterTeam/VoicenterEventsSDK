@@ -44,7 +44,7 @@
                 </div>
             </el-form-item>
             <real-time-settings
-                v-if="isRealtimeWidget(widget)"
+                v-if="isRealtimeWidget(widget) && model.settings"
                 :data="widget"
                 :model="model">
             </real-time-settings>

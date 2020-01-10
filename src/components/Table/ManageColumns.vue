@@ -3,7 +3,8 @@
         <div class="flex items-center manage-columns-header">{{$t('datatable.manage.columns.header')}}</div>
         <div class="flex flex-col sm:flex-row">
             <manage-columns-section
-                :availableColumns="activeColumns">
+                :availableColumns="activeColumns"
+                @onChange="(evt) => onColumnChange(evt , sectionsToManage.TO_HIDE)">
                 <template v-slot:button="{columns, allChecked}">
                     <div :class="getClass">
                         <el-button :disabled="!activeColumns.length || !columns.length" class="w-24" type="danger"
@@ -16,7 +17,8 @@
                 </template>
             </manage-columns-section>
             <manage-columns-section
-                :availableColumns="showAvailableColumns">
+                :availableColumns="showAvailableColumns"
+                @onChange="(evt) => onColumnChange(evt , sectionsToManage.TO_SHOW)">
                 <template v-slot:search>
                     <div class="w-4/6 mx-2">
                         <el-input :placeholder="$t('datatable.manage.columns.search')"
@@ -37,6 +39,9 @@
 </template>
 <script>
     import xor from 'lodash/xor'
+    import get from 'lodash/get'
+    import {sectionsToManage} from '@/enum/dataTable'
+    import draggableEvents from '@/enum/draggableEvents'
     import ManageColumnsSection from './ManageColumnsSection'
 
     export default {
@@ -63,6 +68,7 @@
                 unselectedColumns: [],
                 filteredColumns: [],
                 isIndeterminate: false,
+                sectionsToManage,
             }
         },
         computed: {
@@ -91,7 +97,6 @@
                 this.valueToAdd = [];
 
                 let newColumns = this.activeColumns.map(c => c.prop);
-
                 this.$emit('on-change-visibility', newColumns)
             },
             removeColumns(columns) {
@@ -104,6 +109,20 @@
 
                 let newColumns = this.activeColumns.map(c => c.prop);
                 this.$emit('on-change-visibility', newColumns)
+            },
+            onColumnChange(evt, section) {
+                // DOCS: This event is called with one argument containing one of the following properties: added/removed/moved
+                let action = get(Object.keys(evt), 0)
+                if (action === draggableEvents.REMOVED) return;
+
+                let eventData = evt[action]
+                let column = get(eventData, 'element')
+
+                if (action === draggableEvents.MOVED && section === sectionsToManage.TO_HIDE) {
+                    this.$emit('on-reorder-column', eventData)
+                } else {
+                    this[section]([column])
+                }
             },
             initData() {
                 this.activeColumns = this.availableColumns.filter(c => this.visibleColumns.includes(c.prop));

@@ -1,4 +1,4 @@
-export default {
+export const sdkEventTypes = {
     LOGIN: 'loginStatus',
     LOGIN_RESPONSE: 'loginResponse',
     QUEUE_EVENT: 'QueueEvent',
@@ -16,4 +16,10 @@ export default {
     KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
     CLOSE: 'closeme',
     ERROR: 'error'
+}
+
+export const sdkEventReasons = {
+    NEWCALL: 'NEWCALL',
+    ANSWER: 'ANSWER',
+    HANGUP: 'HANGUP'
 }

@@ -2,6 +2,14 @@ import $axios from './apiConnection'
 import parseCatch from '@/helpers/handleErrors'
 
 export const WidgetApi = {
+    async find(id) {
+        try {
+            let res = await $axios.get(`/Widgets/Get/${id}`)
+            return res
+        } catch (e) {
+            parseCatch(e, true, 'Find Widget')
+        }
+    },
     async update(data) {
         try {
             if (!data.WidgetTime) {

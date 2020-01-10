@@ -797,7 +797,7 @@ export const gaugeCharts = [{
     }]
 }]
 
-
+// FOR TEST
 export const queueExample = [
     {
         "QueueID": 10031,
@@ -822,3 +822,86 @@ export const queueExample = [
         "QueueName": "VC Support"
     }
 ]
+
+// FOR TEST
+export const eventTypes = {
+    HANGUP: {
+        "name": "ExtensionEvent",
+        "data": {
+            "data": {
+                "calls": [],
+                "userID": 108510,
+                "userName": "Cristi Jora",
+                "number": 71793,
+                "extenUser": "WPGrStO1",
+                "summery": {
+                    "representative": "Cristi Jora"
+                },
+                "onlineUserID": 108510,
+                "representative": 108510,
+                "representativeStatus": 7,
+                "lastCallEventEpoch": 1578671207,
+                "lastAnsweredCallEventEpoch": 1578671207,
+                "lastHangupCallEpoch": 1578671207,
+                "representativeUpdated": 1578668094000
+            },
+            "eventName": "extension",
+            "reason": "HANGUP",
+            "servertime": 1578671207,
+            "callerID": "40376300329",
+            "ivruniqueid": "202001101546330136qsdc3evdjfirh1",
+            "dialStatus": "",
+            "cause": "Normal hangup"
+        }
+    },
+    NEWCALL: {
+        "name": "ExtensionEvent",
+        "data": {
+            "data": {
+                "calls": [
+                    {
+                        "callStarted": 1578671193,
+                        "calldurationinterval": 1578671193,
+                        "callAnswered": 0,
+                        "answered": 0,
+                        "callername": "40376300329",
+                        "callerphone": "40376300329",
+                        "callstatus": "Dialing",
+                        "customdata": {},
+                        "direction": "Click2Call",
+                        "ivrid": "202001101546330136qsdc3evdjfirh1",
+                        "recording": {
+                            "Filename": "202001101546330136qsdc3evdjfirh1-aws-WPGrStO1-40376300329.wav",
+                            "Options": "",
+                            "ApproximateURL": "",
+                            "IsMuted": 0
+                        },
+                        "did": "",
+                        "c2cdirection": 1,
+                        "channel": "SIP/WPGrStO1-00000186",
+                        "channel2": "Local/0500000000@dialer_dummy-00000144;1"
+                    }
+                ],
+                "userID": 108510,
+                "userName": "Cristi Jora",
+                "number": 71793,
+                "extenUser": "WPGrStO1",
+                "summery": {
+                    "representative": "Cristi Jora"
+                },
+                "onlineUserID": 108510,
+                "representative": 108510,
+                "representativeStatus": 7,
+                "lastCallEventEpoch": 1578671193,
+                "lastAnsweredCallEventEpoch": 1578671124,
+                "lastHangupCallEpoch": 1578671124,
+                "representativeUpdated": 1578668094000
+            },
+            "eventName": "extension",
+            "reason": "NEWCALL",
+            "servertime": 1578671193
+        }
+    }
+}
+
+// 106576
