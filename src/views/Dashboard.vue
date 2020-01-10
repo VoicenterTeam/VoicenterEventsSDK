@@ -95,7 +95,7 @@
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
     import AddButton from '@/components/AddButton'
-    import sdkEventTypes from '@/enum/sdkEventTypes'
+    import {sdkEventTypes} from '@/enum/sdkEvents'
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
@@ -392,6 +392,11 @@
                         break;
                     case sdkEventTypes.EXTENSION_EVENT:
                         let extension = data.data
+                        // Event reason: NEWCALL/ANSWER/HANGUP
+                        extension['lastEvent'] = {
+                            reason: data.reason,
+                            ivrid: data.ivruniqueid
+                        }
                         let index = this.extensions.findIndex(e => e.userID === extension.userID)
                         if (index !== -1) {
                             this.$store.dispatch('extensions/updateExtension', {index, extension})

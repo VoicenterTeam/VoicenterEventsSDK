@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 export default class Timer {
     constructor(options = {interval: 1000, initialTimeInSeconds: 0}) {
         this.state = {
@@ -45,5 +43,4 @@ export default class Timer {
     destroy() {
         clearInterval(this.interval)
     }
-
 }

@@ -5,6 +5,7 @@
             :editable="editable"
             :columns="availableColumns"
             :showColumns="visibleColumns"
+            :widgetTitle="data.Title"
             :stripe="stripe"
             @sort-change="sortChange"
             @on-update-layout="onUpdateLayout"

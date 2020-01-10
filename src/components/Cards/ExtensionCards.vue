@@ -106,7 +106,7 @@
                     },
                     {
                         label: this.$t('extensions.sort.activeTime'),
-                        value: 'representativeUpdated'
+                        value: 'lastAnsweredCallEventEpoch'
                     }
                 ],
                 showGridMenu: false,

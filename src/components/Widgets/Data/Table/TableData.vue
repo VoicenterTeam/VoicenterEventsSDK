@@ -2,8 +2,9 @@
     <div>
         <data-table
             :tableData="fetchTableData"
-            :editable="editable"
             :columns="columns"
+            :widgetTitle="data.Title"
+            :editable="editable"
             :stripe="stripe"
             :border="border"
             :cell-style="getCellStyle"

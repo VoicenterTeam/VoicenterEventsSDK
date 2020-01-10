@@ -5,7 +5,8 @@ export const realTimeSettings = {
     generalThresholdHeightValue: 0,
     callThreshold: false,
     callThresholdLowValue: 10,
-    callThresholdHeightValue: 0
+    callThresholdHeightValue: 0,
+    resetIdleTime: true
 }
 export const defaultColors = {
     background: "#edf2f7",

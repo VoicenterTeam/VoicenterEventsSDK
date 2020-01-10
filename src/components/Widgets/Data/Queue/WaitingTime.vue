@@ -5,7 +5,7 @@
 </template>
 <script>
     import Timer from '@/util/Timer'
-    import {getTimezoneTimestamp} from '@/util/TimezoneUtils'
+    import {getInitialTime} from '@/util/timeUtils'
 
     export default {
         props: {
@@ -19,8 +19,7 @@
             }
         },
         data() {
-            let initialTime = new Date().getTime() - getTimezoneTimestamp(this.call.JoinTimeStamp)
-            let initialTimeInSeconds = Math.floor(initialTime / 1000)
+            let initialTimeInSeconds = getInitialTime(this.call.JoinTimeStamp)
             return {
                 timer: new Timer({
                     initialTimeInSeconds
