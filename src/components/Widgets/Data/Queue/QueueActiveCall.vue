@@ -3,6 +3,7 @@
         <data-table
             :tableData="fetchTableData"
             :editable="editable"
+            :widgetTitle="data.Title"
             :columns="columns"
             :stripe="stripe"
             @sort-change="sortChange"

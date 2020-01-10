@@ -24,6 +24,7 @@
         </div>
         <div class="bg-white rounded-lg my-4 data-table w-full">
             <el-table ref="table"
+                      id="table"
                       row-key="id"
                       class="rounded-lg"
                       v-if="drawTable"
@@ -74,42 +75,44 @@
                 </slot>
             </el-table>
         </div>
-        <div class="flex items-center justify-between -mx-1">
+        <div class="flex items-center justify-between -mx-1" v-if="tableData.length">
             <div class="flex">
-                <download-data class="mx-2 cursor-pointer export-button"
-                               :data="tableData"
-                               :fields="jsonFields">
+                <div class="mx-2 cursor-pointer export-button" @click="exportTableData(EXPORT_TO.XLSX)">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.excel')}}</p>
-                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
+                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
                     </div>
-                </download-data>
-                <download-data class="mx-2 cursor-pointer export-button"
-                               :data="tableData"
-                               :fields="jsonFields"
-                               type="csv">
+                </div>
+                <div class="mx-2 cursor-pointer export-button" @click="exportTableData(EXPORT_TO.CSV)">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.csv')}}</p>
-                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"></DownloadIcon>
+                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
                     </div>
-                </download-data>
+                </div>
             </div>
             <div class="flex">
-                <slot name="pagination"></slot>
+                <slot name="pagination"/>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import get from 'lodash/get';
-    import Sortable from 'sortablejs';
+
+    import XLSX from 'xlsx'
+    import get from 'lodash/get'
+    import {format} from 'date-fns'
+    import Sortable from 'sortablejs'
     import bus from '@/event-bus/EventBus'
-    import JsonExcel from 'vue-json-excel'
     import cloneDeep from 'lodash/cloneDeep'
     import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
-    import HeaderActions from "./Header/HeaderActions"
     import ManageColumns from './ManageColumns'
+    import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
+
+    const EXPORT_TO = {
+        'XLSX': '.xlsx',
+        'CSV': '.csv'
+    }
 
     export default {
         inheritAttrs: false,
@@ -117,7 +120,6 @@
             DownloadIcon,
             ManageColumns,
             HeaderActions,
-            DownloadData: JsonExcel,
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
             [Dropdown.name]: Dropdown,
@@ -137,6 +139,10 @@
                 type: Boolean,
                 default: false
             },
+            widgetTitle: {
+                type: String,
+                default: '- -'
+            }
         },
         data() {
             return {
@@ -145,7 +151,8 @@
                 tableKey: 'table-key',
                 active: false,
                 fitWidth: true,
-                drawTable: true
+                drawTable: true,
+                EXPORT_TO
             }
         },
         computed: {
@@ -160,19 +167,13 @@
             rowsData() {
                 return this.tableData
             },
-            jsonFields() {
-                return this.availableColumns.reduce((obj, item) => {
-                    obj[item.label] = item.prop
-                    return obj
-                }, {});
-            },
             margins() {
                 if (this.$rtl.isRTL) {
                     return this.editable ? 'ml-24' : 'ml-12'
                 } else {
                     return this.editable ? 'mr-24' : 'mr-12'
                 }
-            }
+            },
         },
         methods: {
             tryInitSortable() {
@@ -211,6 +212,19 @@
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
             },
+            getFileName(type) {
+                let widgetTitle = this.widgetTitle || this.$t('widget.title')
+                let currentDate = format(new Date(), 'MM-dd-yyyy')
+
+                return widgetTitle + ' ' + currentDate + type
+            },
+            exportTableData(exportTo) {
+                let fileName = this.getFileName(exportTo)
+                // export Excel file
+                let tableElement = document.getElementById('table');
+                let excelWorkBook = XLSX.utils.table_to_book(tableElement);
+                XLSX.writeFile(excelWorkBook, fileName)
+            }
         },
         watch: {
             'columns'(value) {
