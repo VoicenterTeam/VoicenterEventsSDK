@@ -2,11 +2,13 @@
     <div>
         <data-table
             :tableData="fetchTableData"
-            :columns="columns"
+            :columns="availableColumns"
+            :showColumns="visibleColumns"
             :widgetTitle="data.Title"
             :editable="editable"
             :stripe="stripe"
             :border="border"
+            @on-update-layout="onUpdateLayout"
             :cell-style="getCellStyle"
             :cell-class-name="getCellClassName">
             <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
@@ -60,13 +62,15 @@
     import startCase from 'lodash/startCase'
     import {Pagination, Select, Option} from 'element-ui'
     import UserStatus from './UserStatus'
+    import {WidgetApi} from '@/api/widgetApi'
     import StatusDuration from './StatusDuration'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
+    import {getWidgetData} from '@/services/widgetService'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
-    import {getWidgetData} from '@/services/widgetService'
+    import get from "lodash/get";
 
     export default {
         components: {
@@ -140,6 +144,12 @@
             },
             getSettings() {
                 return this.data.WidgetLayout.settings || realTimeSettings
+            },
+            availableColumns() {
+                return get(this.data.WidgetLayout, 'Columns.availableColumns') || this.columns
+            },
+            visibleColumns() {
+                return get(this.data.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
             }
         },
         methods: {
@@ -184,6 +194,7 @@
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
                     }
+
                     this.tableData = data
                     this.columns = columns
                 } catch (e) {
@@ -194,6 +205,11 @@
             handlePageChange(val) {
                 this.currentPage = val
             },
+            async onUpdateLayout(data) {
+                this.data.WidgetLayout['Columns'] = data
+                await WidgetApi.update(this.data)
+                this.data = await WidgetApi.find(this.data.WidgetID)
+            }
         },
         beforeDestroy() {
             clearInterval(this.fetchDataInterval)
