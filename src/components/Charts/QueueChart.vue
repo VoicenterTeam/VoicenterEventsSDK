@@ -8,7 +8,7 @@
                 </p>
             </div>
             <div v-if="queues.length" class="flex cursor-pointer outline-none pr-12" :class="responsiveClass"
-                 @click="showConfigDialog()">
+                 @click="showManageQueuesDialog = true">
                 <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
                             placement="bottom">
                     <IconSettings class="text-primary"/>
@@ -30,6 +30,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import colors from '@/enum/colors'
     import {Chart} from 'highcharts-vue'
     import {Dialog, Tooltip} from 'element-ui'
@@ -128,7 +129,7 @@
                 width: '50%',
                 initialConfig: true,
                 showQueues: [],
-                showSeries: [0, 1, 2, 3, 4, 5],
+                showSeries: [],
             };
         },
         computed: {
@@ -176,6 +177,10 @@
                 this.chartData.series.forEach((serie, index) => {
                     this.chartData.series[index].visible = this.showSeries.includes(index);
                 })
+                this.data.WidgetLayout['showQueues'] = queues
+                this.data.WidgetLayout['showSeries'] = series
+
+                this.$emit('on-update', this.data)
             },
             updateChartData() {
                 let queues = this.filteredQueues
@@ -225,12 +230,6 @@
                     });
                 })
             },
-            showConfigDialog() {
-                if (this.initialConfig) {
-                    this.showQueues = this.queues.map((el) => el.QueueID)
-                }
-                this.showManageQueuesDialog = true
-            }
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {
@@ -239,6 +238,8 @@
         },
         mounted() {
             this.$nextTick(this.updateChartData)
+            this.showQueues = get(this.data.WidgetLayout, 'showQueues') || this.queues.map((el) => el.QueueID)
+            this.showSeries = get(this.data.WidgetLayout, 'showSeries') || [0, 1, 2, 3, 4, 5]
         }
     }
 </script>
