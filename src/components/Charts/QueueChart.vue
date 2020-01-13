@@ -127,7 +127,6 @@
                 },
                 showManageQueuesDialog: false,
                 width: '50%',
-                initialConfig: true,
                 showQueues: [],
                 showSeries: [],
             };
@@ -137,10 +136,7 @@
                 return this.$store.state.queues.all
             },
             filteredQueues() {
-                if (this.showQueues && !this.initialConfig) {
-                    return this.queues.filter(e => this.showQueues.includes(e.QueueID))
-                }
-                return this.queues
+                return this.queues.filter(e => this.showQueues.includes(e.QueueID))
             },
             agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
@@ -170,7 +166,6 @@
         },
         methods: {
             updateChart(queues, series) {
-                this.initialConfig = false
                 this.showQueues = queues
                 this.showSeries = series
 

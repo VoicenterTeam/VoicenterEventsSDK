@@ -15,7 +15,7 @@
             </template>
             <template v-slot:additional-data>
                 <div class="flex cursor-pointer outline-none"
-                     @click="showDialog">
+                     @click="showConfigDialog = true">
                     <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
                                 placement="bottom">
                         <IconSettings class="text-primary"/>
@@ -69,7 +69,6 @@
                 showConfigDialog: false,
                 width: '30%',
                 showQueues: [],
-                initialConfig: true,
                 drawRow: true,
                 widget: cloneDeep(this.data)
             }
@@ -79,10 +78,7 @@
                 return this.$store.state.queues.all.filter((el) => el.Calls.length)
             },
             filteredQueues() {
-                if (this.showQueues && !this.initialConfig) {
-                    return this.queueWithActiveCalls.filter(e => this.showQueues.includes(e.QueueID))
-                }
-                return this.queueWithActiveCalls
+                return this.queueWithActiveCalls.filter(e => this.showQueues.includes(e.QueueID))
             },
             fetchTableData() {
                 let data = []
@@ -109,14 +105,9 @@
         },
         methods: {
             updateTable(queues) {
-                this.initialConfig = false
                 this.showQueues = queues
-            },
-            showDialog() {
-                if (this.initialConfig) {
-                    this.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
-                }
-                this.showConfigDialog = true
+                this.data.WidgetLayout['showQueues'] = queues
+                this.$emit('on-update', this.data)
             },
             sortChange() {
                 this.drawRow = false
@@ -129,6 +120,9 @@
                 await WidgetApi.update(this.widget)
                 this.widget = await WidgetApi.find(this.widget.WidgetID)
             }
+        },
+        mounted() {
+            this.showQueues = get(this.data.WidgetLayout, 'showQueues') || this.queueWithActiveCalls.map((el) => el.QueueID)
         }
     }
 </script>
