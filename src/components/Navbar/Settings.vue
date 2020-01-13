@@ -12,7 +12,8 @@
                         {{$t('dashboards.new.form.logo')}}
                         <div class="image-upload upload-button flex">
                             <label for="file-input" class="cursor-pointer flex items-center">
-                                <img class="px-2" src="https://cdn.shopify.com/s/files/1/2065/6315/t/46/assets/UploadIcon.svg"/>
+                                <img class="px-2"
+                                     src="https://cdn.shopify.com/s/files/1/2065/6315/t/46/assets/UploadIcon.svg"/>
                                 {{$t('Upload Logo')}}
                             </label>
                             <input
@@ -36,6 +37,23 @@
                         <el-checkbox v-model="settings.showWidgetAsTabs">
                             {{$t('settings.widget.tabbed.view')}}
                         </el-checkbox>
+                    </el-form-item>
+                    <el-form-item>
+                        <div class="flex flex-col md:flex-row justify-between items-center">
+                            <el-slider
+                                class="w-1/2"
+                                :min="fontSize.min"
+                                :max="fontSize.max"
+                                v-model="settings.fontSize"
+                                show-input>
+                            </el-slider>
+                            <el-checkbox v-model="settings.applyFontInsideWidgets.info">
+                                {{$t('settings.applyFontInsideWidgets')}}
+                                <el-tooltip class="item" effect="dark" :content="$t('settings.applyFontInsideWidgets')" placement="top-start">
+                                    <icon class="el-icon-info"/>
+                                </el-tooltip>
+                            </el-checkbox>
+                        </div>
                     </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
@@ -79,7 +97,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber} from 'element-ui'
+    import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber, Slider, Tooltip} from 'element-ui'
     import ColorPicker from '../Common/ColorPicker'
     import convertHex from '@/helpers/convertHex'
     import parseCatch from '@/helpers/handleErrors'
@@ -96,6 +114,8 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            [Tooltip.name]: Tooltip,
+            [Slider.name]: Slider,
             ColorPicker,
             TrashIcon,
         },
@@ -106,7 +126,11 @@
                 predefinedColors,
                 storingData: false,
                 settingsColors,
-                DashboardTitle: this.activeDashboard.DashboardTitle
+                DashboardTitle: this.activeDashboard.DashboardTitle,
+                fontSize: {
+                    min: 1,
+                    max: 64
+                }
             }
         },
         props: {

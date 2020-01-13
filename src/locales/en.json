@@ -177,5 +177,7 @@
     "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…",
     "refresh.filter.data": "Refresh filter data",
     "widget.font.size": "Widget font size",
-    "settings.extension.resetIdleTime": "Reset Idle time after a call with duration."
+    "settings.extension.resetIdleTime": "Reset Idle time after a call with duration.",
+    "settings.applyFontInsideWidgets": "Apply font size inside widgets",
+    "settings.applyFontInsideWidgets.info": "Apply font size inside tables (headers, cells..), charts (labels, legends...)"
 }

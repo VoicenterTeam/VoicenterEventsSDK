@@ -16,9 +16,6 @@
                     <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
-                    <el-form-item>
-                        <widget-font-size :model="model"/>
-                    </el-form-item>
                     <widget-colors :model="model"/>
                 </el-collapse-item>
             </el-collapse>
@@ -94,7 +91,6 @@
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
-    import WidgetFontSize from "./WidgetUpdateForm/WidgetLayout/WidgetFontSize";
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
 
@@ -114,7 +110,6 @@
             OtherFilters,
             WidgetColors,
             WidgetPadding,
-            WidgetFontSize,
             RefreshButton,
             [Tooltip.name]: Tooltip,
         },
@@ -178,7 +173,6 @@
                         ...{settings: this.model.settings},
                         ...{colors: this.model.colors},
                         ...{width: this.model.WidgetLayout.width},
-                        ...{fontSize: this.model.WidgetLayout.fontSize},
                     }
 
                     try {
