@@ -10,7 +10,7 @@
                          v-click-outside="onMenuClickOutside"
                          class="bg-white rounded mt-1 absolute flex flex-col border-2">
                         <div class="bg-gray-200 rounded-t border-b-2">
-                            <p class="p-2 text-sm font-medium">{{layoutColumns}} {{$t('columns.layout')}}</p>
+                            <p class="p-2 text-main-sm font-medium">{{layoutColumns}} {{$t('columns.layout')}}</p>
                         </div>
                         <div class="w-full flex p-2 justify-between">
                             <i v-for="index in maxLayoutColumns"
@@ -43,7 +43,7 @@
                     <div key="no-data"
                          class="flex flex-col w-full items-center"
                          v-if="sortedExtensions.length === 0">
-                        <h3 class="text-xl">{{$t('extensions.noData')}}</h3>
+                        <h3 class="text-main-xl">{{$t('extensions.noData')}}</h3>
                         <icon-no-data class="w-64"/>
                     </div>
                 </fade-transition>

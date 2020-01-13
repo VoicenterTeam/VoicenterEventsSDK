@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" :append-to-body="true">
-        <h3 slot="title" class="text-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
+        <h3 slot="title" class="text-main-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
         <el-form @submit.native.prevent="updateSettings" :rules="rules" ref="settings" :model="settings">
             <el-collapse v-model="activeCollapses">
                 <el-collapse-item :title="$t('settings.layout')" name="layout">
@@ -38,22 +38,15 @@
                             {{$t('settings.widget.tabbed.view')}}
                         </el-checkbox>
                     </el-form-item>
-                    <el-form-item>
-                        <div class="flex flex-col md:flex-row justify-between items-center">
+                    <el-form-item class="pb-4">
+                        <label>{{$t('font.size')}}</label>
                             <el-slider
-                                class="w-1/2"
                                 :min="fontSize.min"
                                 :max="fontSize.max"
+                                :marks="bestOptions"
                                 v-model="settings.fontSize"
                                 show-input>
                             </el-slider>
-                            <el-checkbox v-model="settings.applyFontInsideWidgets.info">
-                                {{$t('settings.applyFontInsideWidgets')}}
-                                <el-tooltip class="item" effect="dark" :content="$t('settings.applyFontInsideWidgets')" placement="top-start">
-                                    <icon class="el-icon-info"/>
-                                </el-tooltip>
-                            </el-checkbox>
-                        </div>
                     </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
@@ -78,7 +71,7 @@
                             <color-picker
                                 v-model="settings.colors[option]"
                                 :predefine="predefinedColors"/>
-                            <span class="p-2">{{$t('settings.color.'+option)}}</span>
+                            <span class="p-2 text-main-sm">{{$t('settings.color.'+option)}}</span>
                         </div>
                     </div>
                 </el-collapse-item>
@@ -128,8 +121,13 @@
                 settingsColors,
                 DashboardTitle: this.activeDashboard.DashboardTitle,
                 fontSize: {
-                    min: 1,
-                    max: 64
+                    min: 8,
+                    max: 24
+                },
+                bestOptions: {
+                    14: '14',
+                    16: '16',
+                    20: '20'
                 }
             }
         },

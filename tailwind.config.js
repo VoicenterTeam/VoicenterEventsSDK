@@ -36,6 +36,14 @@ module.exports = {
             },
             spacing: {
                 '14': '3.5rem'
+            },
+            fontSize: {
+                'main-xs': 'var(--font-size-xs)',
+                'main-sm': 'var(--font-size-sm)',
+                'main-base': 'var(--font-size-base)',
+                'main-lg': 'var(--font-size-lg)',
+                'main-xl': 'var(--font-size-xl)',
+                'main-2xl': 'var(--font-size-2xl)'
             }
         }
     },

@@ -7,7 +7,7 @@
                 </el-checkbox>
                 <div class="flex with-border__b mx-3">
                     <input
-                        class="text-sm font-medium appearance-none w-34 bg-transparent border-none focus:outline-none"
+                        class="text-main-sm font-medium appearance-none w-34 bg-transparent border-none focus:outline-none"
                         type="text"
                         :placeholder="$t('datatable.filter')"
                         v-model="columnSearchQuery">

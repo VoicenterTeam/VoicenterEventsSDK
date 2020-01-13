@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex items-center sidebar-tabs__container">
-        <div class="tab-name px-16 text-lg cursor-pointer" v-for="group in widgetGroupList">
+        <div class="tab-name px-16 text-main-lg cursor-pointer" v-for="group in widgetGroupList">
             <p @click="switchTab(group.WidgetGroupID.toString())"
                class="whitespace-no-wrap"
                :class="{'active': group.WidgetGroupID.toString() === activeTab.toString()}">

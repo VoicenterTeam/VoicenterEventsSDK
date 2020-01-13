@@ -1,12 +1,12 @@
 <template>
     <div class="pt-2">
-        <label class="text-sm">{{$t('Widget colors')}}</label>
+        <label class="text-main-sm">{{$t('Widget colors')}}</label>
         <div class="flex pt-4">
             <div class="flex" v-for="option of getWidgetColors">
                 <color-picker
                     v-model="model.colors[option]"
                     :predefine="predefinedColors"/>
-                <span class="p-2">{{$t('widget.settings.color.'+option)}}</span>
+                <span class="p-2 text-main-sm">{{$t('widget.settings.color.'+option)}}</span>
             </div>
         </div>
     </div>

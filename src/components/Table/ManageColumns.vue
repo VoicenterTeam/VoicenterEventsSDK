@@ -160,7 +160,7 @@
         padding: 10px 20px;
         box-shadow: 0 1px 0 0 var(--silver);
         background-color: var(--bg-grey-modal);
-        font-size: 14px;
+        font-size: var(--text-main-sm);
         color: var(--greyish-brown);
     }
 </style>

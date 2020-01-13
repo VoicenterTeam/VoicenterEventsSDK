@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" :width="setWidth">
-        <h5 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('extensionCard.update')}}</h5>
+        <h5 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('extensionCard.update')}}</h5>
         <div class="flex items-center my-4">
             <slot name="header"/>
         </div>
@@ -14,7 +14,7 @@
             <el-collapse-item :title="$t('widget.layout')" name="layout">
                 <div class="flex flex-col">
                     <label class="pt-3 pb-2">{{$t('Widget width')}}</label>
-                    <el-input type="number"/>
+                    <slot name="width"/>
                 </div>
                 <widget-colors :model="model" :onlyBackground="true"/>
             </el-collapse-item>

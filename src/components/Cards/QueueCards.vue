@@ -1,13 +1,13 @@
 <template>
     <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card"
-         :style="borderColor">
+         :style="getStyles">
         <div class="w-full flex items-center">
             <slot name="icon">
                 <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
             </slot>
             <slot name="text">
                 <el-tooltip v-if="showText" class="item" effect="dark" :content="queueText" placement="top">
-                    <h5 class="text-xl font-bold mx-3 status-text" :style="textColor">
+                    <h5 class="text-main-xl font-bold mx-3 status-text" :style="textColor">
                         {{queueText}}
                     </h5>
                 </el-tooltip>
@@ -92,6 +92,9 @@
                     </el-form-item>
                 </el-form>
             </template>
+            <template v-slot:width>
+                <el-input type="number" v-model="layoutWidth"/>
+            </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
                 <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
@@ -156,7 +159,8 @@
                 displayItemBorder: this.displayBorder,
                 timeout: null,
                 dataCount: 0,
-                colors: {}
+                model: {},
+                layoutWidth: '',
             }
         },
         computed: {
@@ -205,11 +209,12 @@
                     color: `${color}`
                 }
             },
-            borderColor() {
+            getStyles() {
                 if (!this.displayBorder) return;
                 let color = types[this.queueType].color
                 return {
-                    border: `2px solid ${color}`
+                    border: `2px solid ${color}`,
+                    width: this.data.WidgetLayout['layoutWidth'] + 'px' || '250px'
                 }
             },
         },
@@ -225,13 +230,16 @@
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
-                    ...this.model
+                    ...this.model,
+                    ...{'layoutWidth': this.layoutWidth}
                 }
 
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },
-
+        },
+        mounted() {
+            this.layoutWidth = this.data.WidgetLayout['layoutWidth'] || '250'
         },
         beforeDestroy() {
             clearInterval(this.timeout)
@@ -240,7 +248,7 @@
             data: {
                 immediate: true,
                 handler: function (widget) {
-                    this.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
                 }
             }
         }

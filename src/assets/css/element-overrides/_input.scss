@@ -1,14 +1,18 @@
 input.el-input.is-active input.el-input__inner, input.el-input__inner:focus {
-  border-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 div.el-input-number {
-  .el-input-number__decrease:hover,
-  .el-input-number__increase:hover {
-    color: var(--primary-color);
+    .el-input-number__decrease:hover,
+    .el-input-number__increase:hover {
+        color: var(--primary-color);
 
-    ~ .el-input.el-input--small .el-input__inner, ~ .el-input.el-input--mini .el-input__inner {
-      border-color: var(--primary-color);
+        ~ .el-input.el-input--small .el-input__inner, ~ .el-input.el-input--mini .el-input__inner {
+            border-color: var(--primary-color);
+        }
     }
-  }
+}
+
+input.el-input__inner {
+    font-size: var(--font-size-sm);
 }

@@ -1,13 +1,13 @@
 <template>
     <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card"
-         :style="borderColor">
+         :style="getStyles">
         <div class="w-full flex items-center">
             <slot name="icon">
                 <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
             </slot>
             <slot name="text">
                 <el-tooltip v-if="showText" class="item" effect="dark" :content="statusText" placement="top">
-                    <h5 class="text-xl font-bold mx-3 status-text" :style="textColor">
+                    <h5 class="text-main-xl font-bold mx-3 status-text" :style="textColor">
                         {{statusText}}
                     </h5>
                 </el-tooltip>
@@ -45,7 +45,7 @@
             @on-change="onChange">
             <template v-slot:header>
                 <component class="w-8 mx-1" :is="selectedIcon"/>
-                <p slot="title" class="text-lg font-semibold text-gray-700">{{$t(selectedOption.text)}}</p>
+                <p slot="title" class="text-main-lg font-semibold text-gray-700">{{$t(selectedOption.text)}}</p>
             </template>
             <template v-slot:content>
                 <el-select :placeholder="$t('common.selectStatus')"
@@ -69,6 +69,9 @@
                 <el-checkbox v-model="displayItemBorder" class="pt-4">
                     {{$t('status.display.border')}}
                 </el-checkbox>
+            </template>
+            <template v-slot:width>
+                <el-input type="number" v-model="layoutWidth"/>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -127,6 +130,7 @@
                 showStatusText: this.showText,
                 displayItemBorder: this.displayBorder,
                 model: {},
+                layoutWidth: '',
             }
         },
         computed: {
@@ -151,11 +155,12 @@
                     color: `${color}`
                 }
             },
-            borderColor() {
+            getStyles() {
                 if (!this.displayBorder) return;
                 let color = statusTypes[this.status].color
                 return {
-                    border: `2px solid ${color}`
+                    border: `2px solid ${color}`,
+                    width: this.data.WidgetLayout['layoutWidth'] + 'px' || '250px'
                 }
             },
             isMobileOrTablet() {
@@ -173,7 +178,8 @@
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
-                    ...this.model
+                    ...this.model,
+                    ...{'layoutWidth': this.layoutWidth}
                 };
 
                 this.$emit('on-update', this.data);
@@ -190,6 +196,7 @@
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
+            this.layoutWidth = this.data.WidgetLayout['layoutWidth'] || '250'
         },
         watch: {
             data: {

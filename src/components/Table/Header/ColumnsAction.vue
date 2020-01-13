@@ -55,7 +55,7 @@
 <style lang="scss" scoped>
     .column_actions--container {
         color: var(--greyish-brown);
-        @apply text-sm;
+        @apply text-main-sm;
         > div {
             &.with-border__b {
                 border-bottom: solid 1px var(--silver-color);

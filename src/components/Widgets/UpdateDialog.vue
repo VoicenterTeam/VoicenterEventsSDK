@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" v-if="model.WidgetLayout">
-        <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
+        <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
         <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model">
             <el-form-item>
                 <div>
@@ -46,7 +46,7 @@
                 :model="model">
             </real-time-settings>
             <div v-if="model.WidgetConfig">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between text-main-base">
                     {{$t('tooltip.refresh.entities.list')}}
                     <RefreshButton
                         :disabled="loadEntitiesList"

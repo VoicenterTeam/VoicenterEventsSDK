@@ -2,7 +2,7 @@
     <div>
         <div class="flex flex-row md:items-center justify-between">
             <div class="flex">
-                <p class="text-2xl font-semibold"
+                <p class="text-main-2xl"
                    :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
                     {{data.Title}}
                 </p>

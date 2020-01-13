@@ -2,7 +2,7 @@
     <div>
         <div class="flex items-center mb-4">
             <div class="flex flex-col md:flex-row md:items-center">
-                <p v-if="data.Title" class="text-2xl font-semibold">
+                <p v-if="data.Title" class="text-main-2xl font-semibold">
                     {{data.Title}}
                 </p>
             </div>

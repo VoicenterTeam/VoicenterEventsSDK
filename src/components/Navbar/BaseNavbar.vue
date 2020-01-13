@@ -13,13 +13,13 @@
                     <language-select :value="$i18n.locale" @change="onLocaleChange"/>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                        <span class="mx-1 text-sm md:text-lg text-gray-700" v-if="activeDashboard">{{activeDashboard.DashboardTitle}}</span>
+                        <span class="mx-1 text-main-sm md:text-main-lg text-gray-700" v-if="activeDashboard">{{activeDashboard.DashboardTitle}}</span>
                         <IconArrowDown/>
                     </button>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
                         <span
-                            class="mx-1 text-sm md:text-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
+                            class="mx-1 text-main-sm md:text-main-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
                         <IconArrowDown/>
                     </button>
                 </div>
@@ -72,7 +72,7 @@
             </div>
             <el-dialog :visible.sync="showCreateDashboardDialog"
                        :append-to-body="true" :width="dialogWidth">
-                <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
+                <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('dashboards.new.title')}}</h3>
                 <el-form @submit.native.prevent="confirmNewDashboard">
                     <el-form-item :label="$t('dashboards.new.form.title')">
                         <el-input v-model="newDashboard.DashboardTitle"/>

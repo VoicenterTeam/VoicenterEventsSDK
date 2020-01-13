@@ -5,7 +5,7 @@ export default {
     },
     pane: {
         center: ['50%', '85%'],
-        size: '160%',
+        size: '140%',
         startAngle: -90,
         endAngle: 90,
         background: {

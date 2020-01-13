@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
-        <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('chart.update')}}</h3>
+        <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('chart.update')}}</h3>
         <el-form @submit.native.prevent="onUpdate" :label-position="labelPosition">
             <div class="flex w-full flex-col lg:flex-row">
                 <div class="flex lg:w-1/2">

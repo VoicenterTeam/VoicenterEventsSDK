@@ -26,5 +26,8 @@ export default {
             min: 0,
             max: 20
         }
+    },
+    fonts: {
+        base: 'var(--font-size-base)',
     }
 }

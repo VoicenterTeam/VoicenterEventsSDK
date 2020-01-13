@@ -11,7 +11,7 @@
                             :widgetGroup="widgetGroup">
                     </edit-group-buttons>
                 </div>
-                <h3 v-else class="font-semibold text-2xl text-gray-800">{{widgetGroup.WidgetGroupTitle}}</h3>
+                <h3 v-else class="font-semibold text-main-2xl text-gray-800">{{widgetGroup.WidgetGroupTitle}}</h3>
                 <widget-list
                         :widgets="widgetGroup.WidgetList"
                         :widgetTemplates="widgetTemplates"

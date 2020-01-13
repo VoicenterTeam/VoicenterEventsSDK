@@ -12,11 +12,11 @@
                     </component>
                 </el-tooltip>
             </fade-transition>
-            <span class="text-xl font-medium leading-tight mx-2">{{extension.userName}}</span>
+            <span class="text-main-xl font-medium leading-tight mx-2">{{extension.userName}}</span>
         </div>
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
-                <span class="text-center text-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
+                <span class="text-center text-main-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
                 <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"/>
             </div>
             <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :settings="settings"/>

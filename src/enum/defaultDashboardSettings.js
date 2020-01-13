@@ -15,7 +15,6 @@ export const settings = {
     showGeneralWidgetSearch: true,
     showWidgetAsTabs: false,
     fontSize: defaultFontSize,
-    applyFontInsideWidgets: false,
 }
 
 export const defaultFontSize = '16px';

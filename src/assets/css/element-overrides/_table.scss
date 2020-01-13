@@ -1,4 +1,10 @@
+.el-table__empty-text, .el-table td {
+    font-size: var(--font-size-sm);
+}
+
 .el-table th {
+    font-size: var(--font-size-sm);
+
     .header-handle, .caret-wrapper {
         display: none;
     }
