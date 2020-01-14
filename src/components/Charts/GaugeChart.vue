@@ -7,7 +7,7 @@
                 </p>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4">
+        <div class="bg-white p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
             <highcharts :options="chartData"/>
         </div>
     </div>
@@ -45,7 +45,8 @@
         },
         data() {
             return {
-                chartData: {}
+                chartVisibility: true,
+                chartData: {},
             }
         },
         computed: {
@@ -73,6 +74,12 @@
                     max: agentsOnline.length
                 }
 
+                let stops = [
+                    [0, '#55BF3B'],
+                    [agentsOnline.length / 2 + 0.1, '#DDDF0D'],
+                    [agentsOnline.length, '#DF5353']
+                ]
+
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
@@ -80,13 +87,12 @@
                     stops,
                 }
 
-                let stops = [
-                    [0, '#55BF3B'],
-                    [agentsOnline.length / 2 + 0.1, '#DDDF0D'],
-                    [agentsOnline.length, '#DF5353']
-                ]
-
                 this.data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
+
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             }

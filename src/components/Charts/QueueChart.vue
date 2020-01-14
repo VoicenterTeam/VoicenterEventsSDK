@@ -15,7 +15,7 @@
                 </el-tooltip>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4">
+        <div class="bg-white p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
             <highcharts :options="chartOptions"/>
         </div>
         <queue-config-dialog
@@ -57,6 +57,7 @@
         },
         data() {
             return {
+                chartVisibility: true,
                 fetchDataInterval: null,
                 chartTitle: this.$t('queue.chart.title'),
                 chartData: {
@@ -153,6 +154,12 @@
                 this.fetchDataInterval = setInterval(() => {
                     this.updateChartData()
                 }, 5000)
+
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
+
                 return this.chartData
             },
             responsiveClass() {
