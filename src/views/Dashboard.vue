@@ -1,5 +1,5 @@
 <template>
-    <div v-loading="loading" class="dashboard">
+    <div v-loading="loading" class="dashboard" element-loading-background="rgba(255,255,255,.5)">
         <div v-if="activeDashboardData" class="dashboard-container">
             <sidebar v-if="showSidebar"
                      :activeTab="activeTab"
