@@ -1,7 +1,6 @@
 <template>
     <div class="bg-white px-6 p-4 mb-4 rounded-lg shadow w-64 flex flex-col extension-card" :style="cardStyles">
         <div class="flex items-center mb-2">
-
             <fade-transition mode="out-in">
                 <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top"
                             :open-delay="300">

@@ -22,6 +22,11 @@
                     </el-tooltip>
                 </div>
             </template>
+            <template v-slot:title>
+                <p class="text-main-2xl font-semibold">
+                    {{data.Title}}
+                </p>
+            </template>
         </data-table>
         <config-dialog
             v-if="showConfigDialog"

@@ -1,34 +1,40 @@
 <template>
     <div>
-        <div class="flex w-full justify-end pr-12" :class="responsiveClass">
-            <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
-                <div>
-                    <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"/>
-                </div>
-                <fade-transition :duration="250">
-                    <div v-if="showGridMenu"
-                         v-click-outside="onMenuClickOutside"
-                         class="bg-white rounded mt-1 absolute flex flex-col border-2">
-                        <div class="bg-gray-200 rounded-t border-b-2">
-                            <p class="p-2 text-main-sm font-medium">{{layoutColumns}} {{$t('columns.layout')}}</p>
-                        </div>
-                        <div class="w-full flex p-2 justify-between">
-                            <i v-for="index in maxLayoutColumns"
-                               class="icon-square mx-margin--1"
-                               :class="{'bg-primary-100': index <= layoutColumns}"
-                               @click="updateGrid(index)"/>
-                        </div>
+
+        <div class="flex w-full justify-between pr-12" :class="responsiveClass">
+            <p class="flex text-main-2xl font-semibold">
+                {{data.Title}}
+            </p>
+            <div class="flex">
+                <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
+                    <div>
+                        <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"/>
                     </div>
-                </fade-transition>
-            </div>
-            <el-select placeholder="Sort by" v-model="sortBy">
-                <template v-slot:prefix>
+                    <fade-transition :duration="250">
+                        <div v-if="showGridMenu"
+                             v-click-outside="onMenuClickOutside"
+                             class="bg-white rounded mt-1 absolute flex flex-col border-2">
+                            <div class="bg-gray-200 rounded-t border-b-2">
+                                <p class="p-2 text-main-sm font-medium">{{layoutColumns}} {{$t('columns.layout')}}</p>
+                            </div>
+                            <div class="w-full flex p-2 justify-between">
+                                <i v-for="index in maxLayoutColumns"
+                                   class="icon-square mx-margin--1"
+                                   :class="{'bg-primary-100': index <= layoutColumns}"
+                                   @click="updateGrid(index)"/>
+                            </div>
+                        </div>
+                    </fade-transition>
+                </div>
+                <el-select placeholder="Sort by" v-model="sortBy">
+                    <template v-slot:prefix>
                     <span class="h-full flex items-center">
                         <i class="el-icon-d-caret"/>
                     </span>
-                </template>
-                <el-option v-for="option in sortByOptions" v-bind="option" :key="option.label"/>
-            </el-select>
+                    </template>
+                    <el-option v-for="option in sortByOptions" v-bind="option" :key="option.label"/>
+                </el-select>
+            </div>
         </div>
         <div>
             <div class="flex py-6 extension-cards justify-center">

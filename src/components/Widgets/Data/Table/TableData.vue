@@ -46,6 +46,11 @@
                     :total="filteredDataLength">
                 </el-pagination>
             </template>
+            <template v-slot:title>
+                <p class="text-main-2xl font-semibold">
+                    {{data.Title}}
+                </p>
+            </template>
             <template v-slot:search-input>
                 <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"
                           clearable/>
