@@ -31,7 +31,7 @@ export async function runDashboardOperations(operations, dashboard) {
                             await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID)
                             break;
                         case types.ADD:
-                            await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.ID)
+                            await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID)
                             break;
                         case types.MOVED:
                         case types.UPDATE:

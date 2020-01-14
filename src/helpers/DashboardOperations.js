@@ -43,10 +43,7 @@ export default class DashboardOperations {
     }
 
     checkIfEntityAlreadyAdded(operation) {
-        if (operation.payload.temporaryID) {
-            return this.operations.findIndex(op => op.meta.temporaryID === operation.payload.temporaryID)
-        } else {
-            return this.operations.findIndex(op => op.payload[operation.target + 'ID'] === operation.payload[operation.target + 'ID'])
-        }
+        if (!operation.payload.temporaryID) return -1;
+        return this.operations.findIndex(op => op.meta.temporaryID === operation.payload.temporaryID)
     }
 }
