@@ -155,11 +155,6 @@
                     this.updateChartData()
                 }, 5000)
 
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
-
                 return this.chartData
             },
             responsiveClass() {
@@ -246,6 +241,14 @@
         },
         mounted() {
             this.$nextTick(this.updateChartData)
-        }
+        },
+        watch: {
+            data() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
+            }
+        },
     }
 </script>
