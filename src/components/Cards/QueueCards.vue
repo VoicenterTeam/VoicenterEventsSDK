@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card"
+    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4"
          :style="getStyles">
         <div class="w-full flex items-center">
             <slot name="icon">
@@ -214,7 +214,7 @@
                 let color = types[this.queueType].color
                 return {
                     border: `2px solid ${color}`,
-                    width: this.data.WidgetLayout['layoutWidth'] + 'px' || '250px'
+                    'max-width': this.data.WidgetLayout['layoutWidth'] + 'px' || '250px'
                 }
             },
         },

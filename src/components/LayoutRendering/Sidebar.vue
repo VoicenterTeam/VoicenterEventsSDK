@@ -1,14 +1,16 @@
 <template>
     <div class="w-full flex items-center sidebar-tabs__container">
         <div class="tab-name px-16 text-main-lg cursor-pointer" v-for="group in widgetGroupList">
+            <div></div>
             <p @click="switchTab(group.WidgetGroupID.toString())"
                class="whitespace-no-wrap"
                :class="{'active': group.WidgetGroupID.toString() === activeTab.toString()}">
                 {{group.WidgetGroupTitle}}
             </p>
             <div v-if="group.WidgetGroupID.toString() === activeTab.toString()"
-                 class="self-border mt-4">
+                 class="self-border">
             </div>
+            <div v-else></div>
         </div>
     </div>
 </template>
@@ -48,10 +50,10 @@
     }
 
     .tab-name {
-        height: 22px;
         line-height: normal;
         color: var(--steel);
-
+        height: 100%;
+        @apply flex justify-between flex-col;
         :hover, .active {
             color: var(--greyish-brown);
         }

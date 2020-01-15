@@ -21,22 +21,28 @@ export const widths = [
     },
     {
         label: '3/4 width (75%)',
-        value: 'lg:w-3/4'
+        value: 'w-3/4'
     },
     {
         label: '2/3 width (66.6%)',
-        value: 'lg:w-2/3'
+        value: 'w-2/3'
     },
     {
         label: '1/2 width (50%)',
-        value: 'lg:w-1/2'
+        value: 'w-1/2'
     },
     {
         label: '1/3 width (33.3%)',
-        value: 'lg:w-1/3'
+        value: 'w-1/3'
     },
     {
         label: '1/4 width (25%)',
-        value: 'lg:w-1/4'
+        value: 'w-1/4'
     },
 ]
+
+export const defaultWidths = {
+    desktop: 'w-full',
+    tablet: 'w-full',
+    mobile: 'w-full'
+}

@@ -2,10 +2,11 @@
     <div>
         <label>{{$t('Widget padding')}}</label>
         <el-slider
-        class="px-1"
-        v-model="model.WidgetLayout.padding"
-        show-input>
-    </el-slider>
+            class="px-1"
+            :step="step"
+            v-model="model.WidgetLayout.padding"
+            show-input>
+        </el-slider>
     </div>
 </template>
 
@@ -21,6 +22,10 @@
                 type: Object,
                 default: () => ({})
             },
+            step: {
+                type: Number,
+                default: 2
+            }
         },
     }
 </script>

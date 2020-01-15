@@ -45,7 +45,7 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
-            <div v-if="model.WidgetConfig">
+            <div v-if="autoCompletes.length ||otherFilters.length ">
                 <div class="flex items-center justify-between text-main-base">
                     {{$t('tooltip.refresh.entities.list')}}
                     <RefreshButton
@@ -79,7 +79,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Collapse, CollapseItem, Dialog, Radio, RadioGroup, Checkbox, Tooltip} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, Dialog, Radio, RadioGroup, Tooltip} from 'element-ui'
     import RefreshButton from '@/components/RefreshButton'
     import {filterIDs} from '@/enum/widgetTemplateConfigs'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
@@ -87,12 +87,12 @@
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
-    import {isRealtimeWidget, isPieWidget} from '@/helpers/widgetUtils'
+    import {isPieWidget, isRealtimeWidget} from '@/helpers/widgetUtils'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
-    import {realTimeSettings, defaultColors} from '@/enum/defaultWidgetSettings'
+    import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
 
     export default {
         inheritAttrs: false,
@@ -126,7 +126,6 @@
                 model: {
                     settings: realTimeSettings,
                     colors: defaultColors,
-                    timeInterval: {},
                 },
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
@@ -172,7 +171,6 @@
                         ...this.model.WidgetLayout,
                         ...{settings: this.model.settings},
                         ...{colors: this.model.colors},
-                        ...{width: this.model.WidgetLayout.width},
                     }
 
                     try {
