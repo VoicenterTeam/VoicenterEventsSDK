@@ -7,44 +7,26 @@
                     {{data.Title}}
                 </p>
             </div>
-            <div v-if="queues.length" class="flex cursor-pointer outline-none pr-12" :class="responsiveClass"
-                 @click="showManageQueuesDialog = true">
-                <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
-                            placement="bottom">
-                    <IconSettings class="text-primary"/>
-                </el-tooltip>
-            </div>
         </div>
         <div class="bg-white p-4 rounded-lg py-4 mt-4">
             <highcharts :options="chartOptions"/>
         </div>
-        <queue-config-dialog
-            v-if="showManageQueuesDialog"
-            :queues="queues"
-            :showQueues=showQueues
-            :showSeries=showSeries
-            :width="width"
-            @on-update="((config)=>updateChart(config.queues, config.series))"
-            :visible.sync="showManageQueuesDialog">
-        </queue-config-dialog>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
     import colors from '@/enum/colors'
     import {Chart} from 'highcharts-vue'
-    import {Dialog, Tooltip} from 'element-ui'
+    import {Dialog} from 'element-ui'
     import chartConfig from './Configs/TimeLine'
+    import queueMixin from '@/mixins/queueMixin'
     import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
-    import QueueConfigDialog from './Configs/QueueConfigDialog'
-    import {administrativeStatuses, breakStatuses, LOGOUT_STATUS, LOGIN_STATUS} from '@/enum/extensionStatuses'
+    import {administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS} from '@/enum/extensionStatuses'
 
     export default {
+        mixins: [queueMixin],
         components: {
             highcharts: Chart,
             [Dialog.name]: Dialog,
-            [Tooltip.name]: Tooltip,
-            QueueConfigDialog,
         },
         props: {
             editable: {
@@ -127,29 +109,25 @@
                 },
                 showManageQueuesDialog: false,
                 width: '50%',
-                showQueues: [],
-                showSeries: [],
             };
         },
         computed: {
-            queues() {
-                return this.$store.state.queues.all
-            },
-            filteredQueues() {
-                return this.queues.filter(e => this.showQueues.includes(e.QueueID))
-            },
             agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
             },
 
             chartOptions() {
-
                 if (this.fetchDataInterval) {
                     clearInterval(this.fetchDataInterval)
                 }
                 this.fetchDataInterval = setInterval(() => {
                     this.updateChartData()
                 }, 5000)
+
+                this.chartData.series.forEach((serie, index) => {
+                    this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
+                })
+
                 return this.chartData
             },
             responsiveClass() {
@@ -165,18 +143,6 @@
             },
         },
         methods: {
-            updateChart(queues, series) {
-                this.showQueues = queues
-                this.showSeries = series
-
-                this.chartData.series.forEach((serie, index) => {
-                    this.chartData.series[index].visible = this.showSeries.includes(index);
-                })
-                this.data.WidgetLayout['showQueues'] = queues
-                this.data.WidgetLayout['showSeries'] = series
-
-                this.$emit('on-update', this.data)
-            },
             updateChartData() {
                 let queues = this.filteredQueues
 
@@ -233,8 +199,6 @@
         },
         mounted() {
             this.$nextTick(this.updateChartData)
-            this.showQueues = get(this.data.WidgetLayout, 'showQueues') || this.queues.map((el) => el.QueueID)
-            this.showSeries = get(this.data.WidgetLayout, 'showSeries') || [0, 1, 2, 3, 4, 5]
         }
     }
 </script>

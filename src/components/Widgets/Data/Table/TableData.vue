@@ -54,7 +54,7 @@
                           clearable/>
             </template>
             <template v-slot:additional-data>
-                <p class="text-sm">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
+                <p class="text-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
             </template>
         </data-table>
     </div>

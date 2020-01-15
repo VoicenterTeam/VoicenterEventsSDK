@@ -13,43 +13,24 @@
             <template v-slot:WaitingTime="{row}">
                 <waiting-time v-if="drawRow" :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
             </template>
-            <template v-slot:additional-data>
-                <div class="flex cursor-pointer outline-none"
-                     @click="showConfigDialog = true">
-                    <el-tooltip class="item" effect="dark" :content="$t('queue.config.dialog')"
-                                placement="bottom">
-                        <IconSettings class="text-primary"/>
-                    </el-tooltip>
-                </div>
-            </template>
         </data-table>
-        <config-dialog
-            v-if="showConfigDialog"
-            :queues="queueWithActiveCalls"
-            :showQueues=showQueues
-            @on-update="updateTable"
-            :width="width"
-            :visible.sync="showConfigDialog">
-        </config-dialog>
     </div>
 </template>
 <script>
     import get from 'lodash/get'
-    import {Tooltip} from 'element-ui'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
     import WaitingTime from './WaitingTime'
-    import ConfigDialog from './ConfigDialog'
     import {WidgetApi} from '@/api/widgetApi'
+    import queueMixin from '@/mixins/queueMixin'
     import DataTable from '@/components/Table/DataTable'
     import {activeCallColumns} from '@/enum/queueConfigs'
 
     export default {
+        mixins: [queueMixin],
         components: {
             DataTable,
             WaitingTime,
-            ConfigDialog,
-            [Tooltip.name]: Tooltip,
         },
         props: {
             data: {
@@ -66,23 +47,15 @@
                 activeCallColumns,
                 border: true,
                 stripe: true,
-                showConfigDialog: false,
                 width: '30%',
-                showQueues: [],
                 drawRow: true,
                 widget: cloneDeep(this.data)
             }
         },
         computed: {
-            queueWithActiveCalls() {
-                return this.$store.state.queues.all.filter((el) => el.Calls.length)
-            },
-            filteredQueues() {
-                return this.queueWithActiveCalls.filter(e => this.showQueues.includes(e.QueueID))
-            },
             fetchTableData() {
                 let data = []
-                this.filteredQueues.forEach((queue) => {
+                this.filteredQueuesWithActiveCalls.forEach((queue) => {
                     queue.Calls.forEach((call) => {
                         data.push({
                             QueueName: queue.QueueName,
@@ -92,6 +65,7 @@
                         })
                     })
                 })
+
                 return orderBy(data, function (q) {
                     return q.Call.JoinTimeStamp
                 }, ['asc']);
@@ -104,11 +78,6 @@
             }
         },
         methods: {
-            updateTable(queues) {
-                this.showQueues = queues
-                this.data.WidgetLayout['showQueues'] = queues
-                this.$emit('on-update', this.data)
-            },
             sortChange() {
                 this.drawRow = false
                 this.$nextTick(() => {
@@ -122,7 +91,9 @@
             }
         },
         mounted() {
-            this.showQueues = get(this.data.WidgetLayout, 'showQueues') || this.queueWithActiveCalls.map((el) => el.QueueID)
-        }
+            if (!this.data.WidgetLayout.showQueues) {
+                this.$set(this.data.WidgetLayout, 'showQueues', this.queueWithActiveCalls.map((el) => el.QueueID))
+            }
+        },
     }
 </script>
