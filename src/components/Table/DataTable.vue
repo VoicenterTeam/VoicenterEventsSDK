@@ -9,8 +9,7 @@
             </div>
             <div class="flex items-center table-row__count"
                  :class="margins">
-                <el-dropdown size="mini" trigger="click"
-                             :class="$rtl.isRTL ? 'ml-4' : 'mr-4'">
+                <el-dropdown size="mini" trigger="click">
                     <el-button type="primary">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"/>

@@ -8,6 +8,37 @@
                     <el-input v-model="model.Title"/>
                 </div>
             </el-form-item>
+            <el-form-item v-if="isQueueTable(widget)">
+                <label>{{$t('queues.to.display')}}</label>
+                <base-select
+                    v-model="model.WidgetLayout.showQueues"
+                    :data="queueWithActiveCalls"
+                    :labelKey="'QueueName'"
+                    :valueKey="'QueueID'"/>
+            </el-form-item>
+            <el-form-item v-if="isQueueChart(widget)">
+                <div class="flex w-full flex-col lg:flex-row">
+                    <div class="flex lg:w-1/2">
+                        <el-form-item :label="$t('queues.to.display')">
+                            <base-select
+                                v-model="model.WidgetLayout.showQueues"
+                                :data="queueWithActiveCalls"
+                                :labelKey="'QueueName'"
+                                :valueKey="'QueueID'"/>
+                        </el-form-item>
+                    </div>
+                    <div class="flex lg:w-1/2">
+                        <el-form-item :label="$t('blocks.to.display')">
+                            <base-select
+                                :class="$rtl.isRTL ? 'lg:pr-2' : 'lg:pl-2'"
+                                v-model="model.WidgetLayout.showSeries"
+                                :data="allSeries"
+                                :labelKey="'label'"
+                                :valueKey="'value'"/>
+                        </el-form-item>
+                    </div>
+                </div>
+            </el-form-item>
             <el-collapse v-model="activeCollapse" class="pt-4">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
@@ -80,6 +111,8 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import {Checkbox, Collapse, CollapseItem, Dialog, Radio, RadioGroup, Tooltip} from 'element-ui'
+    import queueMixin from '@/mixins/queueMixin'
+    import {allSeries} from '@/enum/queueConfigs'
     import RefreshButton from '@/components/RefreshButton'
     import {filterIDs} from '@/enum/widgetTemplateConfigs'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
@@ -87,7 +120,7 @@
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
-    import {isPieWidget, isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget} from '@/helpers/widgetUtils'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
@@ -96,6 +129,7 @@
 
     export default {
         inheritAttrs: false,
+        mixins: [queueMixin],
         components: {
             WidgetWidth,
             RealTimeSettings,
@@ -129,6 +163,7 @@
                 },
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
+                allSeries
             }
         },
         computed: {
@@ -148,6 +183,8 @@
         methods: {
             isRealtimeWidget,
             isPieWidget,
+            isQueueTable,
+            isQueueChart,
             isAutoComplete(WidgetConfig) {
                 return filterIDs.includes(WidgetConfig.ParameterID);
             },
@@ -195,13 +232,32 @@
         },
         mounted() {
             this.model = cloneDeep(this.widget)
+            this.model.colors = this.model.WidgetLayout.colors || defaultColors
+
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
-            this.model.colors = cloneDeep(this.model.WidgetLayout.colors || defaultColors)
             if (isPieWidget(this.widget)) {
                 this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
+            }
+
+            if (isQueueTable(this.widget) && !this.widget.WidgetLayout.showQueues) {
+                this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
+            }
+
+            if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {
+                this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
+                this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5]
             }
         },
     }
 </script>
+
+<style lang="scss">
+    .el-form-item {
+        @apply w-full;
+        .el-select {
+            @apply w-full;
+        }
+    }
+</style>

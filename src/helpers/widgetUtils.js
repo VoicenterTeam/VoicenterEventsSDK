@@ -60,6 +60,14 @@ export function isExternalDataWidget(widget) {
     return widget.DataTypeID === widgetDataTypes.EXTERNAL_DATA_TYPE_ID;
 }
 
+export function isQueueTable(widget) {
+    return widget.DataTypeID === widgetDataTypes.QUEUE_ACTIVE_CALL;
+}
+
+export function isQueueChart(widget) {
+    return widget.DataTypeID === widgetDataTypes.CHART_QUEUE;
+}
+
 export const groupedWidgets = [
     widgetDataTypes.COUNTER_TYPE_ID,
     widgetDataTypes.CHART_SPEEDOMETER,

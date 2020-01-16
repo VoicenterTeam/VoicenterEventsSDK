@@ -25,7 +25,7 @@
         </component>
         <component
             :is="getDialogComponent"
-            width="35%"
+            width="45%"
             v-if="showUpdateDialog"
             :widget="widget"
             @on-update="(data) => onUpdate(data)"

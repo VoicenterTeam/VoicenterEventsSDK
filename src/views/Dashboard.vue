@@ -100,7 +100,7 @@
     import parseCatch from '@/helpers/handleErrors'
     import {types, targets} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
-    import pageSizeMixin from '@/util/mixins/pageSizeMixin'
+    import pageSizeMixin from '@/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
     import WidgetMenu from '@/components/Widgets/WidgetMenu'
     import Sidebar from '@/components/LayoutRendering/Sidebar'

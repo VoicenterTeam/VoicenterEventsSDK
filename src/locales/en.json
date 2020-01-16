@@ -181,7 +181,7 @@
     "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…",
     "refresh.filter.data": "Refresh filter data",
     "font.size": "Dashboard base font size(recommended - 16px)",
-    "settings.extension.resetIdleTime": "Reset Idle time after a call with duration.",
     "settings.applyFontInsideWidgets": "Apply font size inside widgets",
-    "settings.applyFontInsideWidgets.info": "Apply font size inside tables (headers, cells..), charts (labels, legends...)..."
+    "settings.applyFontInsideWidgets.info": "Apply font size inside tables (headers, cells..), charts (labels, legends...)...",
+    "settings.extension.resetIdleTime": "Reset Idle time after a call with duration."
 }

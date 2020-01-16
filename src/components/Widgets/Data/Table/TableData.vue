@@ -1,12 +1,15 @@
 <template>
     <div>
         <data-table
+            v-if="drawTable"
             :tableData="fetchTableData"
-            :columns="columns"
+            :columns="availableColumns"
+            :showColumns="visibleColumns"
             :widgetTitle="data.Title"
             :editable="editable"
             :stripe="stripe"
             :border="border"
+            @on-update-layout="onUpdateLayout"
             :cell-style="getCellStyle"
             :cell-class-name="getCellClassName">
             <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
@@ -56,22 +59,25 @@
                           clearable/>
             </template>
             <template v-slot:additional-data>
-                <p class="text-main-sm">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
+                <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
             </template>
         </data-table>
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
+    import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import {Pagination, Select, Option} from 'element-ui'
+    import {Option, Pagination, Select} from 'element-ui'
     import UserStatus from './UserStatus'
+    import {WidgetApi} from '@/api/widgetApi'
     import StatusDuration from './StatusDuration'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
+    import {getWidgetData} from '@/services/widgetService'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {dynamicRows, dynamicColumns} from '@/enum/realTimeTableConfigs'
-    import {getWidgetData} from '@/services/widgetService'
+    import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
 
     export default {
         components: {
@@ -106,7 +112,9 @@
                 filteredDataLength: null,
                 hideOnSinglePage: true,
                 border: true,
-                stripe: true
+                stripe: true,
+                drawTable: true,
+                widget: cloneDeep(this.data)
             }
         },
         computed: {
@@ -141,10 +149,16 @@
                 return 0 + ' - ' + 0
             },
             isRealTimeTable() {
-                return isRealtimeWidget(this.data)
+                return isRealtimeWidget(this.widget)
             },
             getSettings() {
-                return this.data.WidgetLayout.settings || realTimeSettings
+                return this.widget.WidgetLayout.settings || realTimeSettings
+            },
+            availableColumns() {
+                return get(this.widget.WidgetLayout, 'Columns.availableColumns') || this.columns
+            },
+            visibleColumns() {
+                return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
             }
         },
         methods: {
@@ -171,7 +185,7 @@
             async getTableData() {
                 try {
 
-                    let data = await getWidgetData(this.data)
+                    let data = await getWidgetData(this.widget)
                     let columns = [];
 
                     if (data.length) {
@@ -189,8 +203,14 @@
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
                     }
+
                     this.tableData = data
                     this.columns = columns
+
+                    this.drawTable = false
+                    this.$nextTick(() => {
+                        this.drawTable = true
+                    })
                 } catch (e) {
                     console.warn(e)
                 } finally {
@@ -199,6 +219,15 @@
             handlePageChange(val) {
                 this.currentPage = val
             },
+            async onUpdateLayout(data) {
+                this.widget.WidgetLayout['Columns'] = data
+                await WidgetApi.update(this.widget)
+                let updatedWidget = await WidgetApi.find(this.widget.WidgetID)
+                this.widget = {
+                    ...this.widget,
+                    ...updatedWidget
+                }
+            }
         },
         beforeDestroy() {
             clearInterval(this.fetchDataInterval)
