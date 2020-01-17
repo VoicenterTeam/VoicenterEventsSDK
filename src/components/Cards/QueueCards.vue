@@ -93,7 +93,10 @@
                 </el-form>
             </template>
             <template v-slot:width>
-                <el-input type="number" v-model="layoutWidth"/>
+                <label class="pt-3 pb-2">{{$t('Widget max width')}}</label>
+                <el-input type="number" v-model="layoutWidth.maxWidth"/>
+                <label class="pt-3 pb-2">{{$t('Widget min width')}}</label>
+                <el-input type="number" v-model="layoutWidth.minWidth"/>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -214,7 +217,6 @@
                 let color = types[this.queueType].color
                 return {
                     border: `2px solid ${color}`,
-                    'max-width': this.data.WidgetLayout['layoutWidth'] + 'px' || '250px'
                 }
             },
         },
@@ -231,7 +233,7 @@
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.model,
-                    ...{'layoutWidth': this.layoutWidth}
+                    ...this.layoutWidth
                 }
 
                 this.$emit('on-update', this.data);
@@ -239,7 +241,10 @@
             },
         },
         mounted() {
-            this.layoutWidth = this.data.WidgetLayout['layoutWidth'] || '250'
+            this.layoutWidth = {
+                maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
+                minWidth: this.data.WidgetLayout['minWidth'] || '250'
+            }
         },
         beforeDestroy() {
             clearInterval(this.timeout)

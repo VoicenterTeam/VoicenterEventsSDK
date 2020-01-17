@@ -6,7 +6,8 @@
         <div v-for="widget in filteredWidgets"
              :key="widget.WidgetID"
              class="px-2"
-             :class="getWidgetClass(widget)">
+             :class="getWidgetClass(widget)"
+             :style="getStyles(widget)">
             <WidgetErrorBoundary>
                 <Widget :widget="widget"
                         :editable="editable"
@@ -74,7 +75,7 @@
                     let title = get(widget, 'Title', '').toLowerCase()
                     return title.includes(this.widgetsFilter.toLowerCase())
                 })
-            }
+            },
         },
         methods: {
             onListChange(ev) {
@@ -95,7 +96,7 @@
             },
             getWidgetClass(widget) {
                 if (widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID || widget.DataTypeID === widgetDataTypes.QUEUE_COUNTER_TYPE_ID) {
-                    return 'lg:w-auto'
+                    return 'lg:w-auto flex-1'
                 }
 
                 if (!widget.WidgetLayout.widths) {
@@ -104,6 +105,14 @@
                 let widths = widget.WidgetLayout.widths
 
                 return `${widths.mobile} lg:${widths.desktop} md:${widths.tablet}`
+            },
+            getStyles(widget) {
+                if (widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID || widget.DataTypeID === widgetDataTypes.QUEUE_COUNTER_TYPE_ID) {
+                    return {
+                        'max-width': widget.WidgetLayout['maxWidth'] ? widget.WidgetLayout['maxWidth'] + 'px' : '400px',
+                        'min-width': widget.WidgetLayout['minWidth'] ? widget.WidgetLayout['minWidth'] + 'px' : '250px',
+                    }
+                }
             },
         },
     }

@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4"
+    <div class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4"
          :style="getStyles">
         <div class="w-full flex items-center">
             <slot name="icon">
@@ -71,7 +71,10 @@
                 </el-checkbox>
             </template>
             <template v-slot:width>
-                <el-input type="number" v-model="layoutWidth"/>
+                <label class="pt-3 pb-2">{{$t('Widget max width')}}</label>
+                <el-input type="number" v-model="layoutWidth.maxWidth"/>
+                <label class="pt-3 pb-2">{{$t('Widget min width')}}</label>
+                <el-input type="number" v-model="layoutWidth.minWidth"/>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -82,11 +85,11 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Tooltip, Select, Option, Checkbox} from 'element-ui'
+    import {Checkbox, Option, Select, Tooltip} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
     import statusTypes from '@/enum/statusTypes'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
-    import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
+    import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
 
     export default {
         props: {
@@ -160,7 +163,6 @@
                 let color = statusTypes[this.status].color
                 return {
                     border: `2px solid ${color}`,
-                    'max-width': this.data.WidgetLayout['layoutWidth'] + 'px' || '250px'
                 }
             },
             isMobileOrTablet() {
@@ -179,7 +181,7 @@
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.model,
-                    ...{'layoutWidth': this.layoutWidth}
+                    ...this.layoutWidth
                 };
 
                 this.$emit('on-update', this.data);
@@ -196,7 +198,10 @@
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
-            this.layoutWidth = this.data.WidgetLayout['layoutWidth'] || '250'
+            this.layoutWidth = {
+                maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
+                minWidth: this.data.WidgetLayout['minWidth'] || '250'
+            }
         },
         watch: {
             data: {
