@@ -1,8 +1,8 @@
 <template>
     <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col">
-            <span class="text-xs mr-2" :class="textColor">+{{call.callerphone}}</span>
-            <span v-if="call.callerphone !== call.callername" class="text-xs font-medium">{{call.callername}}</span>
+            <span class="text-main-xs mr-2" :class="textColor">+{{call.callerphone}}</span>
+            <span v-if="call.callerphone !== call.callername" class="text-main-xs font-medium">{{call.callername}}</span>
         </div>
         <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
         <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"/>

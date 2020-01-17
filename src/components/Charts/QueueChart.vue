@@ -2,13 +2,13 @@
     <div>
         <div class="flex flex-row md:items-center justify-between">
             <div class="flex">
-                <p class="text-2xl font-semibold"
+                <p class="text-main-2xl"
                    :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
                     {{data.Title}}
                 </p>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4">
+        <div class="bg-white p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
             <highcharts :options="chartOptions"/>
         </div>
     </div>
@@ -40,6 +40,7 @@
         },
         data() {
             return {
+                chartVisibility: true,
                 fetchDataInterval: null,
                 chartTitle: this.$t('queue.chart.title'),
                 chartData: {
@@ -127,7 +128,7 @@
                 this.chartData.series.forEach((serie, index) => {
                     this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
                 })
-
+                
                 return this.chartData
             },
             responsiveClass() {
@@ -199,6 +200,14 @@
         },
         mounted() {
             this.$nextTick(this.updateChartData)
-        }
+        },
+        watch: {
+            data() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
+            }
+        },
     }
 </script>

@@ -5,7 +5,7 @@
                 <component class="w-7 mx-1 text-primary" :is="getCategoryImage"/>
             </slot>
             <slot name="title">
-                <p class="text-sm mx-2 caption">
+                <p class="text-main-sm mx-2 caption">
                     {{CategoryName}}
                 </p>
             </slot>

@@ -1,8 +1,8 @@
 <template>
-    <div class="w-full bg-white px-6 py-4 my-4 flex items-center justify-between rounded-lg shadow">
+    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card px-4">
         <div class="w-full flex flex-col items-center">
             <slot name="title">
-                <h5 class="text-2xl font-bold mx-3" v-if="caption">
+                <h5 class="text-main-2xl font-bold mx-3" v-if="caption">
                     {{caption}}
                 </h5>
             </slot>

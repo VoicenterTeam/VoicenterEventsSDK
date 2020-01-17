@@ -1,21 +1,19 @@
 <template>
-    <el-collapse v-model="activeCollapse" class="pt-4">
-        <el-collapse-item :title="$t('widget.layout.colors')" name="colors">
-            <div class="flex">
-                <div class="flex" v-for="option of getWidgetColors">
-                    <color-picker
-                        v-model="model.colors[option]"
-                        :predefine="predefinedColors"/>
-                    <span class="p-2">{{$t('widget.settings.color.'+option)}}</span>
-                </div>
+    <div class="pt-2">
+        <label class="text-main-sm">{{$t('Widget colors')}}</label>
+        <div class="flex pt-4">
+            <div class="flex" v-for="option of getWidgetColors">
+                <color-picker
+                    v-model="model.colors[option]"
+                    :predefine="predefinedColors"/>
+                <span class="p-2 text-main-sm">{{$t('widget.settings.color.'+option)}}</span>
             </div>
-        </el-collapse-item>
-    </el-collapse>
+        </div>
+    </div>
 </template>
 <script>
     import uniq from 'lodash/uniq'
     import values from 'lodash/values'
-    import {Collapse, CollapseItem} from 'element-ui'
     import ColorPicker from '@/components/Common/ColorPicker'
     import {widgetColors} from '@/enum/layout'
 
@@ -23,8 +21,6 @@
 
     export default {
         components: {
-            [Collapse.name]: Collapse,
-            [CollapseItem.name]: CollapseItem,
             ColorPicker
         },
         props: {
@@ -35,11 +31,6 @@
             onlyBackground: {
                 type: Boolean,
                 default: false
-            }
-        },
-        data() {
-            return {
-                activeCollapse: 'colors',
             }
         },
         computed: {

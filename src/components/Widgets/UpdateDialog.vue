@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" v-if="model.WidgetLayout">
-        <h3 slot="title" class="text-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
+        <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
         <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model">
             <el-form-item>
                 <div>
@@ -39,9 +39,17 @@
                     </div>
                 </div>
             </el-form-item>
-            <el-form-item>
-                <widget-colors :model="model"/>
-            </el-form-item>
+            <el-collapse v-model="activeCollapse" class="pt-4">
+                <el-collapse-item :title="$t('widget.layout')" name="layout">
+                    <el-form-item>
+                        <widget-width :model="model"/>
+                    </el-form-item>
+                    <el-form-item>
+                        <widget-padding :model="model"/>
+                    </el-form-item>
+                    <widget-colors :model="model"/>
+                </el-collapse-item>
+            </el-collapse>
             <el-form-item v-if="isPieWidget(widget)">
                 <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-4">
                     {{$t('Don`t count logged out agents')}}
@@ -68,8 +76,8 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
-            <div v-if="model.WidgetConfig">
-                <div class="flex items-center justify-between">
+            <div v-if="autoCompletes.length ||otherFilters.length ">
+                <div class="flex items-center justify-between text-main-base">
                     {{$t('tooltip.refresh.entities.list')}}
                     <RefreshButton
                         :disabled="loadEntitiesList"
@@ -114,6 +122,8 @@
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
     import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget} from '@/helpers/widgetUtils'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
+    import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
+    import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
 
@@ -121,6 +131,7 @@
         inheritAttrs: false,
         mixins: [queueMixin],
         components: {
+            WidgetWidth,
             RealTimeSettings,
             TimeFrame,
             [Radio.name]: Radio,
@@ -132,6 +143,7 @@
             AutoComplete,
             OtherFilters,
             WidgetColors,
+            WidgetPadding,
             RefreshButton,
             [Tooltip.name]: Tooltip,
         },
@@ -148,7 +160,6 @@
                 model: {
                     settings: realTimeSettings,
                     colors: defaultColors,
-                    timeInterval: {},
                 },
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
@@ -226,7 +237,6 @@
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
-
             if (isPieWidget(this.widget)) {
                 this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
             }

@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
-        <h3 slot="title" class="text-xl font-medium text-gray-700">{{$t('tooltip.reorder.dashboard.layout')}}</h3>
+        <h3 slot="title" class="text-main-xl font-medium text-gray-700">{{$t('tooltip.reorder.dashboard.layout')}}</h3>
         <el-collapse v-model="activeCollapses" class="w-full reorder-layout">
             <DraggableList group="widgetGroups"
                            :value="widgetGroups"

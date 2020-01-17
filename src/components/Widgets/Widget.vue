@@ -1,13 +1,13 @@
 <template>
-    <div class="relative my-3" :class="{'mt-6 mb-0': editable}">
-        <div class="absolute top-0 right-0 mt-5 mr-16 widget-delete__button"
-             v-if="editable && showDeleteButton">
+    <div class="relative my-3" :class="{'mt-2 mb-0': editable}">
+        <div class="absolute top-0 right-0 mt-1 mr-12 widget-delete__button"
+             v-if="editable && showDeleteButton" :style="getPadding">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
                 <delete-button @click="removeWidget(widget)"/>
             </el-tooltip>
         </div>
-        <div class="absolute top-0 right-0 widget-edit__button mr-4 mt-5"
-             v-if="showDeleteButton">
+        <div class="absolute top-0 right-0 widget-edit__button mt-1"
+             v-if="showDeleteButton" :style="getPadding">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                 <edit-button @click="showUpdateDialog = true"
                              :class="{'border border-primary': editable}">
@@ -87,6 +87,10 @@
             widget: {
                 type: Object,
                 default: () => ({})
+            },
+            layoutType: {
+                type: String,
+                default: () => ""
             }
         },
         data() {
@@ -121,18 +125,23 @@
 
                 styles = {
                     'background': colors.background,
-                    'color': colors.fonts
+                    'color': colors.fonts,
                 }
 
                 if (this.showDeleteButton) {
                     let border = {'border': '2px solid' + colors.frames}
                     styles = {
                         ...styles,
-                        ...border
+                        ...border,
+                        ...this.getPadding
                     }
                 }
                 return styles;
-            }
+            },
+            getPadding() {
+                let padding = get(this.widget.WidgetLayout, 'padding') || 0;
+                return {'padding': padding + 'px'};
+            },
         },
         methods: {
             removeWidget(widget) {
@@ -174,6 +183,6 @@
     }
 
     .widget {
-        @apply p-4 rounded-lg;
+        @apply rounded-lg;
     }
 </style>

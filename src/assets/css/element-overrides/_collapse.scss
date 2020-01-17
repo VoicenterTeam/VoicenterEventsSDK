@@ -7,7 +7,7 @@ div.el-collapse {
     margin-top: 5px;
   }
   .el-collapse-item__header {
-    @apply bg-gray-200 text-sm px-4 py-0 rounded-t text-gray-700;
+    @apply bg-gray-200 text-main-sm px-4 py-0 rounded-t text-gray-700;
     height: 40px;
   }
   .el-collapse-item__content {

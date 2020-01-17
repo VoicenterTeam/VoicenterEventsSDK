@@ -5,7 +5,7 @@
                 <component class="w-7 mx-1 text-primary" :is="Icon"></component>
             </slot>
             <slot name="title">
-                <p class="text-sm mx-2 caption" @click="$emit('add-widget')">
+                <p class="text-main-sm mx-2 caption" @click="$emit('add-widget')">
                     {{TemplateName}}
                 </p>
             </slot>

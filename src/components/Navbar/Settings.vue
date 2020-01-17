@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" :append-to-body="true">
-        <h3 slot="title" class="text-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
+        <h3 slot="title" class="text-main-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
         <el-form @submit.native.prevent="updateSettings" :rules="rules" ref="settings" :model="settings">
             <el-collapse v-model="activeCollapses">
                 <el-collapse-item :title="$t('settings.layout')" name="layout">
@@ -12,7 +12,8 @@
                         {{$t('dashboards.new.form.logo')}}
                         <div class="image-upload upload-button flex">
                             <label for="file-input" class="cursor-pointer flex items-center">
-                                <img class="px-2" src="https://cdn.shopify.com/s/files/1/2065/6315/t/46/assets/UploadIcon.svg"/>
+                                <img class="px-2"
+                                     src="https://cdn.shopify.com/s/files/1/2065/6315/t/46/assets/UploadIcon.svg"/>
                                 {{$t('Upload Logo')}}
                             </label>
                             <input
@@ -37,6 +38,16 @@
                             {{$t('settings.widget.tabbed.view')}}
                         </el-checkbox>
                     </el-form-item>
+                    <el-form-item class="pb-4">
+                        <label>{{$t('font.size')}}</label>
+                            <el-slider
+                                :min="fontSize.min"
+                                :max="fontSize.max"
+                                :marks="bestOptions"
+                                v-model="settings.fontSize"
+                                show-input>
+                            </el-slider>
+                    </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
                     <el-form-item prop="report.interval">
@@ -60,7 +71,7 @@
                             <color-picker
                                 v-model="settings.colors[option]"
                                 :predefine="predefinedColors"/>
-                            <span class="p-2">{{$t('settings.color.'+option)}}</span>
+                            <span class="p-2 text-main-sm">{{$t('settings.color.'+option)}}</span>
                         </div>
                     </div>
                 </el-collapse-item>
@@ -79,7 +90,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber} from 'element-ui'
+    import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber, Slider, Tooltip} from 'element-ui'
     import ColorPicker from '../Common/ColorPicker'
     import convertHex from '@/helpers/convertHex'
     import parseCatch from '@/helpers/handleErrors'
@@ -96,6 +107,8 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            [Tooltip.name]: Tooltip,
+            [Slider.name]: Slider,
             ColorPicker,
             TrashIcon,
         },
@@ -106,7 +119,16 @@
                 predefinedColors,
                 storingData: false,
                 settingsColors,
-                DashboardTitle: this.activeDashboard.DashboardTitle
+                DashboardTitle: this.activeDashboard.DashboardTitle,
+                fontSize: {
+                    min: 8,
+                    max: 24
+                },
+                bestOptions: {
+                    14: '14',
+                    16: '16',
+                    20: '20'
+                }
             }
         },
         props: {

@@ -2,7 +2,7 @@
     <div :key="dashboardKey">
         <transition-group name="flip-list">
             <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.WidgetGroupID"
-                 class="my-10"
+                 class=""
                  :class="{'editable-widgets px-2 sm:px-8':editMode}">
                 <div v-if="editMode" class="flex items-center justify-between">
                     <base-input v-model="widgetGroup.WidgetGroupTitle"/>
@@ -11,7 +11,7 @@
                             :widgetGroup="widgetGroup">
                     </edit-group-buttons>
                 </div>
-                <h3 v-else class="font-semibold text-2xl text-gray-800">{{widgetGroup.WidgetGroupTitle}}</h3>
+                <h3 v-else class="font-semibold text-main-2xl text-gray-800">{{widgetGroup.WidgetGroupTitle}}</h3>
                 <widget-list
                         :widgets="widgetGroup.WidgetList"
                         :widgetTemplates="widgetTemplates"

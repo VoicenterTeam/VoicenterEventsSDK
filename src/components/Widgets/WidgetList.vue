@@ -5,8 +5,9 @@
                    @change="(ev) => onListChange(ev)">
         <div v-for="widget in filteredWidgets"
              :key="widget.WidgetID"
-             class="w-full px-2"
-             :class="getWidgetDataTypeClass(widget)">
+             class="px-2"
+             :class="getWidgetClass(widget)"
+             :style="getStyles(widget)">
             <WidgetErrorBoundary>
                 <Widget :widget="widget"
                         :editable="editable"
@@ -33,10 +34,11 @@
 <script>
     import get from 'lodash/get'
     import Widget from './Widget'
-    import WidgetEmptyCard from './WidgetEmptyCard'
-    import {getDataTypeClass} from '@/helpers/widgetUtils'
     import DraggableList from './DraggableList'
-    import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
+    import WidgetEmptyCard from './WidgetEmptyCard'
+    import widgetDataTypes from '@/enum/widgetDataTypes'
+    import {defaultWidths} from '@/enum/defaultWidgetSettings'
+    import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
 
     export default {
         name: "widget-list",
@@ -73,7 +75,7 @@
                     let title = get(widget, 'Title', '').toLowerCase()
                     return title.includes(this.widgetsFilter.toLowerCase())
                 })
-            }
+            },
         },
         methods: {
             onListChange(ev) {
@@ -92,9 +94,26 @@
             updateWidget(val) {
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
-            getWidgetDataTypeClass(widget) {
-                return getDataTypeClass(widget)
-            }
+            getWidgetClass(widget) {
+                if (widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID || widget.DataTypeID === widgetDataTypes.QUEUE_COUNTER_TYPE_ID) {
+                    return 'lg:w-auto flex-1'
+                }
+
+                if (!widget.WidgetLayout.widths) {
+                    this.$set(widget.WidgetLayout, 'widths', defaultWidths)
+                }
+                let widths = widget.WidgetLayout.widths
+
+                return `${widths.mobile} lg:${widths.desktop} md:${widths.tablet}`
+            },
+            getStyles(widget) {
+                if (widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID || widget.DataTypeID === widgetDataTypes.QUEUE_COUNTER_TYPE_ID) {
+                    return {
+                        'max-width': widget.WidgetLayout['maxWidth'] ? widget.WidgetLayout['maxWidth'] + 'px' : '400px',
+                        'min-width': widget.WidgetLayout['minWidth'] ? widget.WidgetLayout['minWidth'] + 'px' : '250px',
+                    }
+                }
+            },
         },
     }
 </script>

@@ -27,9 +27,9 @@ export function getWidgetTemplate(widget) {
 }
 
 export const componentWidth = {
-    [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-1/3',
-    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'lg:w-1/3',
-    [widgetDataTypes.INFO_TYPE_ID]: 'lg:w-1/3',
+    [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-auto',
+    [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'lg:w-auto',
+    [widgetDataTypes.PIE_TYPE_ID]: 'lg:w-1/3',
     default: 'lg:w-3/3'
 }
 
@@ -71,5 +71,6 @@ export function isQueueChart(widget) {
 export const groupedWidgets = [
     widgetDataTypes.COUNTER_TYPE_ID,
     widgetDataTypes.CHART_SPEEDOMETER,
-    widgetDataTypes.QUEUE_COUNTER_TYPE_ID
+    widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
+    widgetDataTypes.PIE_TYPE_ID,
 ]

@@ -4,6 +4,8 @@ import config from '@/config'
 import Exporting from 'highcharts/modules/exporting'
 import noDataModule from 'highcharts/modules/no-data-to-display'
 
+// var('--font-size-base')
+
 Exporting(Highcharts)
 noDataModule(Highcharts)
 
@@ -14,7 +16,7 @@ const yLineConfig = {
     labels: {
         style: {
             color: config.colors.warm_grey,
-            fontSize: "16px",
+            fontSize: config.fonts.base,
             format: "{value} s"
         }
     }
@@ -52,9 +54,9 @@ Highcharts.setOptions({
         formatter: function () {
             if (this.point.stackTotal) {
                 let percentage = (this.point.y * 100 / this.point.stackTotal).toFixed(2)
-                return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px;">${this.series.name}</p> <br><p style="text-align: center;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
+                return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px;">${this.series.name}</p> <br><p style="text-align: center;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
             } else {
-                return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
+                return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
             }
         },
         backgroundColor: "#ffffff",
@@ -136,7 +138,7 @@ Highcharts.setOptions({
         labels: {
             style: {
                 color: config.colors.warm_grey,
-                fontSize: "16px",
+                fontSize: config.fonts.base,
             }
         },
     },
@@ -151,7 +153,11 @@ Highcharts.setOptions({
         },
     },
     title: {
-        text: ''
+        text: '',
+        style: {
+            color: config.colors.warm_grey,
+            fontSize: config.fonts.base,
+        }
     }
 })
 

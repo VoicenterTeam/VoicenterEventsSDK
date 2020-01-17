@@ -19,3 +19,7 @@
     border-color: var(--primary-color);
   }
 }
+
+.el-checkbox .el-checkbox__label {
+    font-size: var(--font-size-sm);
+}

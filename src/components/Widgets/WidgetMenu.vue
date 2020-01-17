@@ -29,7 +29,7 @@
             </h3>
         </div>
         <div class="flex items-center justify-between widget-menu-footer py-2">
-            <p class="text-xs">{{$t('save.to.add')}}</p>
+            <p class="text-main-xs">{{$t('save.to.add')}}</p>
             <el-button type="primary" size="small" @click="addWidgets" :disabled="!validForSubmit">
                 {{$t('common.save')}}
             </el-button>
@@ -110,7 +110,7 @@
         border-top: solid 1px var(--silver-color);
     }
 
-    .text-xs {
+    .text-main-xs {
         font-size: 11px;
         color: var(--cool-grey);
     }
