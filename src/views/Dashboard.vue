@@ -6,15 +6,7 @@
                      :widgetGroupList="activeDashboardData.WidgetGroupList"
                      @switch-tab="(tab) => switchTab(tab)"/>
             <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
-                    <div class="flex items-center">
-                        <div class="w-48 sm:w-64">
-                            <el-input v-if="showGeneralWidgetSearch" :placeholder="$t('search.existing.elements')"
-                                      v-model="widgetsFilter"
-                                      prefix-icon="el-icon-search"/>
-                        </div>
-                    </div>
-                    <div class="flex justify-end -mx-1">
+                <div class="flex justify-end">
                         <div class="my-4 flex items-center">
                             <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
@@ -52,7 +44,6 @@
                             @switch-layout="(type) => switchDashboardLayout(type)">
                         </layout-switcher>
                     </div>
-                </div>
                 <fade-transition mode="out-in" :duration="250">
                     <keep-alive>
                         <component
@@ -60,7 +51,6 @@
                             :layoutType="layoutType"
                             :activeDashboardData="activeDashboardData"
                             :editMode="editMode"
-                            :widgetsFilter="widgetsFilter"
                             :activeTab="activeTab"
                             :widgetTemplates="allWidgetTemplates"
                             @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
@@ -143,7 +133,6 @@
                 layoutType: 'tabbed',
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
-                widgetsFilter: '',
                 activeTab: '',
                 showReorderDataDialog: false,
             }
@@ -179,9 +168,6 @@
             },
             firstWidgetGroup() {
                 return this.activeDashboardData.WidgetGroupList[0]
-            },
-            showGeneralWidgetSearch() {
-                return this.$store.state.dashboards.settings.showGeneralWidgetSearch
             },
             activeWidgetGroupID() {
                 return get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')

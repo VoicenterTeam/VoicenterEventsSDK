@@ -12,7 +12,6 @@ export const settings = {
         widgetGroupBackground: "#edf2f7",
         widgetGroupFrames: "#ff000000",
     },
-    showGeneralWidgetSearch: true,
     showWidgetAsTabs: false,
     fontSize: defaultFontSize,
 }

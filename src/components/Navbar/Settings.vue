@@ -28,11 +28,6 @@
                             </div>
                         </div>
                     </el-form-item>
-                    <el-form-item prop="showGeneralWidgetSearch">
-                        <el-checkbox v-model="settings.showGeneralWidgetSearch">
-                            {{$t('settings.widget.search')}}
-                        </el-checkbox>
-                    </el-form-item>
                     <el-form-item prop="showWidgetAsTabs">
                         <el-checkbox v-model="settings.showWidgetAsTabs">
                             {{$t('settings.widget.tabbed.view')}}
