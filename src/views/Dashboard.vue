@@ -464,9 +464,17 @@
         },
         async created() {
             try {
-                this.sdk = new EventsSDK({
-                    token: this.token
-                })
+                const config = {
+                    token: this.token,
+                }
+                if (process.env.VUE_APP_EVENTS_SDK_URL) {
+                    config.url = process.env.VUE_APP_EVENTS_SDK_URL
+                }
+                if (process.env.VUE_APP_EVENTS_SDK_SERVERS) {
+                    config.servers = process.env.VUE_APP_EVENTS_SDK_SERVERS
+                }
+                console.log(config, 'SDk')
+                this.sdk = new EventsSDK(config)
                 await this.sdk.init()
                 this.sdk.on('*', this.onNewEvent)
                 await this.sdk.login()
