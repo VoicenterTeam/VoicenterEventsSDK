@@ -35,13 +35,13 @@ const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '')
     }
 };
 
-EventBus.on(sdkEventTypes.CONNECT_ERROR, () => {
+EventBus.$on(sdkEventTypes.CONNECT_ERROR, () => {
     Notification.error({
         title: i18n.t('errors.realtime.connection.title'),
         message: i18n.t('errors.realtime.connection.message2')
     });
 })
-EventBus.on(sdkEventTypes.CONNECT_TIMEOUT, () => {
+EventBus.$on(sdkEventTypes.CONNECT_TIMEOUT, () => {
     Notification.error({
         title: i18n.t('errors.realtime.timeout.title'),
         message: i18n.t('errors.realtime.timeout.description')
