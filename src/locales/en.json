@@ -11,6 +11,8 @@
     "common.selectColumn": "Select Column",
     "common.setGroupTitle": "Set Group Title",
     "common.selectStatus": "Select Status",
+    "common.offline": "It seems that you are offline. For better navigation experience, please make sure you have a good internet connection",
+    "common.online": "You're back online!. Refreshing the page shortly...",
     "general.export.csv": "CSV",
     "general.export.excel": "Excel",
     "dashboards.main": "Main Dashboard",
@@ -180,9 +182,15 @@
     "Widget padding": "Widget padding",
     "Widget colors": "Widget colors",
     "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…",
+    "invalid.token.title": "Invalid Token",
     "refresh.filter.data": "Refresh filter data",
     "font.size": "Dashboard base font size(recommended - 16px)",
     "settings.applyFontInsideWidgets": "Apply font size inside widgets",
     "settings.applyFontInsideWidgets.info": "Apply font size inside tables (headers, cells..), charts (labels, legends...)...",
-    "settings.extension.resetIdleTime": "Reset Idle time after a call with duration."
+    "settings.extension.resetIdleTime": "Reset Idle time after a call with duration.",
+    "errors.realtime.connection.title": "Real time server error",
+    "errors.realtime.connection.message": "Could not establish connection with real time server. Please make sure your token is valid.",
+    "errors.realtime.connection.message2": "Could not establish connection with real time server. Try to refresh the page",
+    "errors.realtime.timeout.title": "Real time server timeout",
+    "errors.realtime.timeout.description": "Connection to real time server timed out. Please refresh the page to try again"
 }

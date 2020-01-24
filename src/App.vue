@@ -1,13 +1,18 @@
 <template>
     <div id="app">
+        <network-status-alert/>
         <base-navbar/>
         <router-view/>
     </div>
 </template>
 <script>
+    import NetworkStatusAlert from "@/components/Common/NetworkStatusAlert";
     import {defaultFontSize} from '@/enum/defaultDashboardSettings'
 
     export default {
+        components: {
+            NetworkStatusAlert
+        },
         async created() {
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
             await this.$store.dispatch('dashboards/getDashboards')

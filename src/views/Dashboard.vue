@@ -114,6 +114,7 @@
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
+    import EventBus from "@/event-bus/EventBus";
 
     export default {
         components: {
@@ -412,6 +413,12 @@
                         if (_index !== -1) {
                             this.$store.dispatch('queues/updateQueue', {_index, queue})
                         }
+                        break;
+                    case sdkEventTypes.CONNECT_ERROR:
+                        EventBus.$emit(sdkEventTypes.CONNECT_ERROR)
+                        break;
+                    case sdkEventTypes.CONNECT_TIMEOUT:
+                        EventBus.$emit(sdkEventTypes.CONNECT_TIMEOUT)
                         break;
                     default:
                         break;
