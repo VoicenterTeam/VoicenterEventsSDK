@@ -7,6 +7,7 @@ import { getServerWithHighestPriority } from './utils';
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
+  servers: defaultServers,
   token: null,
   forceNew: false,
   reconnectionDelay: 10000,
@@ -243,7 +244,7 @@ class EventsSDK {
       let res = await fetch(`${this.options.url}/${this.options.token}`, params);
       this.servers = await res.json();
     } catch (e) {
-      this.servers = defaultServers;
+      this.servers = this.options.servers || defaultServers;
     }
   }
 

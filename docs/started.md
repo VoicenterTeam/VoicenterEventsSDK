@@ -87,3 +87,16 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **transports**  | Array  | ['websocket'] |  Available transports. It's desired to leave this setting as it is. |
 | **upgrade**  | Boolean  | false |  Available transports. It's desired to leave this setting as it is. |
 | **serverType**  | Number  | null |  Optional parameter to be passed to api call that retrieves available servers. Can be 1 or 2. 2 should be used for chrome extension |
+| **url**  | string  | https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls |  Url from which to get monitor urls |
+| **servers**  | Array  | contains 5 default servers | Contains a list of real time servers with priorities and versions. Please check `src/config.js` file to see the exact format |
+
+Servers array format
+
+```js
+const servers = [{
+  'URLID': 59,
+  'Priority': 5,
+  'Version': 2,
+  'Domain': 'monitor1.voicenter.co'
+}]
+```
