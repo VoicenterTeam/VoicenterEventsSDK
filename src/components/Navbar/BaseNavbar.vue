@@ -54,15 +54,10 @@
                          v-click-outside="onMenuClickOutside"
                          class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col users-menu">
                         <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
-                              @click="chooseUser(user)"
-                              v-for="user in allUsers"
-                              :class="{ 'text-primary': currentUser.id === user.id}">
-                            {{user.name || $t('navbar.default.username') }}
-                            <IconMinus v-if="user.id !== currentUser.id"
-                                       class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
-                                       :class="$rtl.isRTL ? 'float-left' : 'float-right'"
-                                       v-on:click.stop.prevent="removeUser(user)">
-                            </IconMinus>
+                              @click="chooseAccount(account)"
+                              v-for="account in allAccounts"
+                              :class="{ 'text-primary': currentAccountId === account.ID}">
+                            {{account.name || $t('navbar.default.accountname') }}
                         </span>
                         <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
                               @click="logout">{{$t('navbar.logout')}}
@@ -126,8 +121,11 @@
             currentUser() {
                 return this.$store.state.users.currentUser
             },
-            allUsers() {
-                return this.$store.state.users.allUsers
+            currentAccountId() {
+                return this.$store.state.entities.selectedAccountID
+            },
+            allAccounts() {
+                return this.$store.getters['entities/accountsList']
             },
             getLogo() {
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
@@ -153,12 +151,9 @@
                 this.showDashboardsMenu = false
                 this.showUsersMenu = false
             },
-            chooseUser(user) {
-                this.$store.dispatch('users/selectCurrentUser', user)
+            chooseAccount(account) {
+                this.$store.commit('entities/SET_SELECTED_ACCOUNT_ID', account.ID)
                 this.showUsersMenu = false
-            },
-            removeUser(user) {
-                this.$store.dispatch('users/removeUser', user)
             },
             deleteDashboard(dashboard) {
                 this.$confirm(
