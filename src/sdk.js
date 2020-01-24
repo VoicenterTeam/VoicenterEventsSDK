@@ -20,8 +20,8 @@ const defaultOptions = {
   serverType: null, // can be 1 or 2. 2 is used for chrome extension
 };
 
-let allConnections = []
-let listenersMap = new Map()
+let allConnections = [];
+let listenersMap = new Map();
 class EventsSDK {
   constructor(options = {}) {
     this.options = {
@@ -35,12 +35,12 @@ class EventsSDK {
     this.servers = [];
     this.server = null;
     this.socket = null;
-    this.connected = false
-    this.connections = allConnections
+    this.connected = false;
+    //this.connections = allConnections;
     this.connectionEstablished = false;
-    this.shouldReconnect = true
+    this.shouldReconnect = true;
     this._initReconnectOptions();
-    this._listenersMap = listenersMap
+    this._listenersMap = listenersMap;
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
   }
 
@@ -52,10 +52,12 @@ class EventsSDK {
       maxReconnectionDelay: 60000 * 5 // 5 minutes
     }
   }
+
   _onConnect() {
-    this._initReconnectDelays()
-    this.connected = true
-    this.Logger.log(eventTypes.CONNECT, this.reconnectOptions)
+    if(this.onConnect) this.onConnect(0,"OK");
+    this._initReconnectDelays();
+    this.connected = true;
+    this.Logger.log(eventTypes.CONNECT, this.reconnectOptions);
   }
 
   _initReconnectDelays() {
@@ -67,25 +69,34 @@ class EventsSDK {
   }
 
   _onConnectError(data) {
-    this._retryConnection('next')
-    this.connected = false
+    if(this.onConnectError) this.onConnectError(data);
+    this._retryConnection('next');
+    this.connected = false;
     this.Logger.log(eventTypes.CONNECT_ERROR, data)
   }
 
+  _onError(err) {
+    if(this.onError) this.onError(data);
+    this.Logger.log(eventTypes.ERROR, data);
+  }
+
   _onReconnectFailed() {
-    this._retryConnection('next')
-    this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions)
+    if(this.onReconnectFailed) this.onReconnectFailed();
+    this._retryConnection('next');
+    this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
   }
 
   _onConnectTimeout() {
-    this._retryConnection('next')
+    if(this.onConnectTimeout) this.onConnectTimeout();
+    this._retryConnection('next');
     this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
   _onReconnectAttempt(attempts) {
+    if(this.onReconnectAttempt) this.onReconnectAttempt(attempts);
     if (attempts > 2) {
-      this._retryConnection('next')
-      return
+      this._retryConnection('next');
+      return;
     }
     if (this.reconnectOptions.reconnectionDelay < this.reconnectOptions.maxReconnectionDelay) {
       let newDelay = this.reconnectOptions.minReconnectionDelay * this.reconnectOptions.retryCount;
@@ -97,18 +108,20 @@ class EventsSDK {
     this.Logger.log(eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
   }
 
-  _onDisconnect() {
+  _onDisconnect(reason) {
+    if(this.onDisconnect) this.onDisconnect(reason);
     if (this.shouldReconnect) {
       this._connect('next')
     }
-    this.connected = false
-    this.Logger.log(eventTypes.DISCONNECT, this.reconnectOptions)
+    this.connected = false;
+    this.Logger.log(eventTypes.DISCONNECT, this.reconnectOptions);
   }
 
   _onKeepAlive(data) {
+    if(this.onKeepAlive) this.onKeepAlive(data);
     if(data === false && this.connected) {
-      this._initSocketConnection()
-      this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE, this.reconnectOptions)
+      this._initSocketConnection();
+      this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE, this.reconnectOptions);
     }
   }
 
@@ -125,8 +138,8 @@ class EventsSDK {
   }
 
   _connect(server = 'default') {
-    this.shouldReconnect = true
-    let serverToConnect = null
+    this.shouldReconnect = true;
+    let serverToConnect = null;
     if (server === 'default') {
       serverToConnect = this._findCurrentServer();
     } else if (server === 'next') {
@@ -149,22 +162,22 @@ class EventsSDK {
   }
 
   _checkInit() {
-     if (!this.connectionEstablished) {
-       throw new Error('Make sure you call "sdk.init()" before doing other operations.')
-     }
+    if (!this.connectionEstablished) {
+      throw new Error('Make sure you call "sdk.init()" before doing other operations.')
+    }
   }
 
   _initSocketConnection() {
     let domain = this.server.Domain;
     let protocol = this.options.protocol;
     let url = `${protocol}://${domain}`;
-    this.Logger.log('Connecting to..', url)
-    this.closeAllConnections()
+    this.Logger.log('Connecting to..', url);
+    this.closeAllConnections();
     this.socket = io(url, {
       ...this.options,
       debug: false
     });
-    allConnections.push(this.socket)
+    allConnections.push(this.socket);
     this.connectionEstablished = true;
   }
 
@@ -173,6 +186,7 @@ class EventsSDK {
     this.socket.on(eventTypes.RECONNECT_FAILED, this._onReconnectFailed.bind(this));
     this.socket.on(eventTypes.CONNECT, this._onConnect.bind(this));
     this.socket.on(eventTypes.DISCONNECT, this._onDisconnect.bind(this));
+    this.socket.on(eventTypes.ERROR, this._onError.bind(this));
     this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
     this.socket.on(eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout.bind(this));
     this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
@@ -183,10 +197,10 @@ class EventsSDK {
     setTimeout(()=>{
       if(this.socket) {
         this.emit(eventTypes.KEEP_ALIVE, this.options.token);
-        this._connect('prev')
+        this._connect('prev');
       }
       else {
-        this._initSocketConnection()
+        this._initSocketConnection();
       }
     }, this.options.keepAliveTimeout);
   }
@@ -200,17 +214,17 @@ class EventsSDK {
     if (!this.server) {
       throw new Error('Could not find any server to establish connection with');
     }
-    return this.server
+    return this.server;
   }
 
   _findNextAvailableServer() {
     let currentServerPriority = this.server.Priority;
-    this.Logger.log(`Failover -> Trying to find another server`)
+    this.Logger.log(`Failover -> Trying to find another server`);
     if (currentServerPriority > 0) {
       let nextServerPriority = currentServerPriority - 1;
       let nextServer = this.servers.find(server => server.Priority === nextServerPriority);
       if (!nextServer) {
-        nextServer = this._findMaxPriorityServer()
+        nextServer = this._findMaxPriorityServer();
         if (!nextServer) {
           return
         }
@@ -219,17 +233,17 @@ class EventsSDK {
         this.server = nextServer;
         return this.server
       }
-      this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server)
+      this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server);
     }
     return null
   }
 
   _findMaxPriorityServer() {
-    this.Logger.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer')
-    let maxPriorityServer = getServerWithHighestPriority(this.servers)
+    this.Logger.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer');
+    let maxPriorityServer = getServerWithHighestPriority(this.servers);
     if(this.server && maxPriorityServer.Domain !== this.server.Domain) {
       this.server = maxPriorityServer;
-      this.Logger.log(`Fallback -> Trying to find previous server`, this.server)
+      this.Logger.log(`Fallback -> Trying to find previous server`, this.server);
       return this.server
     }
     return null
@@ -237,7 +251,7 @@ class EventsSDK {
 
   async _getServers() {
     try {
-      let params = {}
+      let params = {};
       if (this.options.serverType) {
         params.type = this.options.serverType
       }
@@ -275,8 +289,8 @@ class EventsSDK {
       this.emit(eventTypes.CLOSE)
     }
     await this._getServers();
-    this._connect()
-    this._initReconnectDelays()
+    this._connect();
+    this._initReconnectDelays();
     return true
   }
 
@@ -300,8 +314,8 @@ class EventsSDK {
    * Disconnects the socket instance from the servers
    */
   disconnect() {
-    this.shouldReconnect = false
-    this._listenersMap = new Map()
+    this.shouldReconnect = false;
+    this._listenersMap = new Map();
     this.closeAllConnections()
   }
 
@@ -311,7 +325,7 @@ class EventsSDK {
    * @param {function} callback (callback function when even with the specified name is received)
    */
   on(eventName, callback) {
-    this._listenersMap.set(eventName, callback)
+    this._listenersMap.set(eventName, callback);
     this._checkInit()
   }
 
@@ -322,8 +336,8 @@ class EventsSDK {
    */
 
   emit(eventName, data = {}) {
-    this._checkInit()
-    this.Logger.log(`EMIT -> ${eventName}`, data)
+    this._checkInit();
+    this.Logger.log(`EMIT -> ${eventName}`, data);
     this.socket.emit(eventName, data);
   }
 
@@ -331,19 +345,22 @@ class EventsSDK {
    * Login (logs in based on the token/credentials provided)
    */
   login() {
-    this._checkInit()
-    let resolved = false
+    let _self = this;
+    this._checkInit();
+    let resolved = false;
     return new Promise((resolve, reject) => {
       this.on(eventTypes.LOGIN, data => {
-        resolved = true
+        if(_self.onLogin) _self.onLogin(data);
+        resolved = true;
         resolve(data)
-      })
+      });
+      // this.socket.on(eventTypes.ERROR, err => {
+      //   if(_self.onError) _self.onError(err);
+      //   if(resolved === false) {
+      //     reject(err);
+      //   }
+      // })
       this.emit('login', { token: this.options.token });
-      this.socket.on(eventTypes.ERROR, err => {
-        if(!resolved) {
-          reject(err);
-        }
-      })
     });
   }
 
