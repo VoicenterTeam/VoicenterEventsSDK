@@ -166,6 +166,7 @@ function getServerWithHighestPriority(servers) {
 
 var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
+  servers: defaultServers,
   token: null,
   forceNew: false,
   reconnectionDelay: 10000,
@@ -199,8 +200,8 @@ function () {
     this.servers = [];
     this.server = null;
     this.socket = null;
-    this.connected = false;
-    this.connections = allConnections;
+    this.connected = false; //this.connections = allConnections;
+
     this.connectionEstablished = false;
     this.shouldReconnect = true;
 
@@ -229,6 +230,8 @@ function () {
   }, {
     key: "_onConnect",
     value: function _onConnect() {
+      if (this.onConnect) this.onConnect(0, "OK");
+
       this._initReconnectDelays();
 
       this.connected = true;
@@ -246,14 +249,24 @@ function () {
   }, {
     key: "_onConnectError",
     value: function _onConnectError(data) {
+      if (this.onConnectError) this.onConnectError(data);
+
       this._retryConnection('next');
 
       this.connected = false;
       this.Logger.log(eventTypes.CONNECT_ERROR, data);
     }
   }, {
+    key: "_onError",
+    value: function _onError(err) {
+      if (this.onError) this.onError(data);
+      this.Logger.log(eventTypes.ERROR, data);
+    }
+  }, {
     key: "_onReconnectFailed",
     value: function _onReconnectFailed() {
+      if (this.onReconnectFailed) this.onReconnectFailed();
+
       this._retryConnection('next');
 
       this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
@@ -261,6 +274,8 @@ function () {
   }, {
     key: "_onConnectTimeout",
     value: function _onConnectTimeout() {
+      if (this.onConnectTimeout) this.onConnectTimeout();
+
       this._retryConnection('next');
 
       this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions);
@@ -268,6 +283,8 @@ function () {
   }, {
     key: "_onReconnectAttempt",
     value: function _onReconnectAttempt(attempts) {
+      if (this.onReconnectAttempt) this.onReconnectAttempt(attempts);
+
       if (attempts > 2) {
         this._retryConnection('next');
 
@@ -286,7 +303,9 @@ function () {
     }
   }, {
     key: "_onDisconnect",
-    value: function _onDisconnect() {
+    value: function _onDisconnect(reason) {
+      if (this.onDisconnect) this.onDisconnect(reason);
+
       if (this.shouldReconnect) {
         this._connect('next');
       }
@@ -297,6 +316,8 @@ function () {
   }, {
     key: "_onKeepAlive",
     value: function _onKeepAlive(data) {
+      if (this.onKeepAlive) this.onKeepAlive(data);
+
       if (data === false && this.connected) {
         this._initSocketConnection();
 
@@ -377,6 +398,7 @@ function () {
       this.socket.on(eventTypes.RECONNECT_FAILED, this._onReconnectFailed.bind(this));
       this.socket.on(eventTypes.CONNECT, this._onConnect.bind(this));
       this.socket.on(eventTypes.DISCONNECT, this._onDisconnect.bind(this));
+      this.socket.on(eventTypes.ERROR, this._onError.bind(this));
       this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
       this.socket.on(eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout.bind(this));
       this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
@@ -471,7 +493,7 @@ function () {
         var res = await fetch("".concat(this.options.url, "/").concat(this.options.token), params);
         this.servers = await res.json();
       } catch (e) {
-        this.servers = defaultServers;
+        this.servers = this.options.servers || defaultServers;
       }
     }
   }, {
@@ -588,23 +610,23 @@ function () {
     value: function login() {
       var _this2 = this;
 
-      this._checkInit();
+      var _self = this;
 
-      var resolved = false;
+      this._checkInit();
       return new Promise(function (resolve, reject) {
         _this2.on(eventTypes.LOGIN, function (data) {
-          resolved = true;
+          if (_self.onLogin) _self.onLogin(data);
           resolve(data);
-        });
+        }); // this.socket.on(eventTypes.ERROR, err => {
+        //   if(_self.onError) _self.onError(err);
+        //   if(resolved === false) {
+        //     reject(err);
+        //   }
+        // })
+
 
         _this2.emit('login', {
           token: _this2.options.token
-        });
-
-        _this2.socket.on(eventTypes.ERROR, function (err) {
-          if (!resolved) {
-            reject(err);
-          }
         });
       });
     }
