@@ -1,78 +1,84 @@
 <template>
-    <div v-loading="loading" class="dashboard" element-loading-background="rgba(255,255,255,.5)">
-        <div v-if="activeDashboardData" class="dashboard-container">
-            <sidebar v-if="showSidebar"
-                     :activeTab="activeTab"
-                     :widgetGroupList="activeDashboardData.WidgetGroupList"
-                     @switch-tab="(tab) => switchTab(tab)"/>
-            <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
-                <div class="flex justify-end">
-                        <div class="my-4 flex items-center">
-                            <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
-                                <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
-                                            placement="bottom">
-                                    <IconSettings class="text-primary"/>
-                                </el-tooltip>
-                            </div>
-                            <new-group-button
-                                @click.native="addNewGroup"
-                                v-if="editMode">
-                            </new-group-button>
-                            <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
-                                       @click.stop="showWidgetMenu = !showWidgetMenu">
-                            </AddButton>
-                            <manage-dashboard-buttons
-                                @click.stop="editMode = !editMode"
-                                @reset-dashboard="resetDashboard"
-                                @save-dashboard="saveDashboard"
-                                :edit-mode="editMode">
-                            </manage-dashboard-buttons>
+    <div>
+        <base-navbar>
+            <template v-slot:dashboard-operations>
+                <div class="flex mx-2 px-2 border">
+                    <div class="my-4 flex items-center">
+                        <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
+                            <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
+                                        placement="bottom">
+                                <ListIcon class="text-primary"/>
+                            </el-tooltip>
                         </div>
-                        <fade-transition>
-                            <templates-category
-                                class="mt-16"
-                                v-if="showWidgetMenu"
-                                :widgetGroup=firstWidgetGroup
-                                @addWidgetsToGroup="addWidgetsToGroup"
-                                v-click-outside="onWidgetMenuClickOutside"
-                                :widgetTemplates="allWidgetTemplates">
-                            </templates-category>
-                        </fade-transition>
-                        <layout-switcher
-                            v-if="!editMode"
-                            :activeType="layoutType"
-                            @switch-layout="(type) => switchDashboardLayout(type)">
-                        </layout-switcher>
+                        <new-group-button
+                            @click.native="addNewGroup"
+                            v-if="editMode">
+                        </new-group-button>
+                        <AddButton class="mx-1" v-if="editMode && firstWidgetGroup"
+                                   @click.stop="showWidgetMenu = !showWidgetMenu">
+                        </AddButton>
+                        <manage-dashboard-buttons
+                            @click.stop="editMode = !editMode"
+                            @reset-dashboard="resetDashboard"
+                            @save-dashboard="saveDashboard"
+                            :edit-mode="editMode">
+                        </manage-dashboard-buttons>
                     </div>
-                <fade-transition mode="out-in" :duration="250">
-                    <keep-alive>
-                        <component
-                            :is="layoutTypes[layoutType]"
-                            :layoutType="layoutType"
-                            :activeDashboardData="activeDashboardData"
-                            :editMode="editMode"
-                            :activeTab="activeTab"
-                            :widgetTemplates="allWidgetTemplates"
-                            @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                            @moveGroups="(data) => moveWidgetGroup(data.widgetGroup, data.direction)"
-                            @onListChange="(data) => onListChange(data.event, data.group)"
+                    <fade-transition>
+                        <templates-category
+                            class="mt-16"
+                            v-if="showWidgetMenu"
+                            :widgetGroup=firstWidgetGroup
                             @addWidgetsToGroup="addWidgetsToGroup"
-                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                            @updateWidget="(data) => updateWidget(data.widget, data.group)"
-                            @switch-tab="(tab) => switchTab(tab)">
-                        </component>
-                    </keep-alive>
-                </fade-transition>
+                            v-click-outside="onWidgetMenuClickOutside"
+                            :widgetTemplates="allWidgetTemplates">
+                        </templates-category>
+                    </fade-transition>
+                    <layout-switcher
+                        v-if="!editMode"
+                        :activeType="layoutType"
+                        @switch-layout="(type) => switchDashboardLayout(type)">
+                    </layout-switcher>
+                </div>
+            </template>
+        </base-navbar>
+        <div v-loading="loading" class="dashboard" element-loading-background="rgba(255,255,255,.5)">
+            <div v-if="activeDashboardData" class="dashboard-container">
+                <sidebar v-if="showSidebar"
+                         :activeTab="activeTab"
+                         :widgetGroupList="activeDashboardData.WidgetGroupList"
+                         @switch-tab="(tab) => switchTab(tab)"/>
+                <div class="pt-24" :class="getClass" :key="activeDashboardData.DashboardID">
+                    <fade-transition mode="out-in" :duration="250">
+                        <keep-alive>
+                            <component
+                                :is="layoutTypes[layoutType]"
+                                :layoutType="layoutType"
+                                :activeDashboardData="activeDashboardData"
+                                :editMode="editMode"
+                                :activeTab="activeTab"
+                                :widgetTemplates="allWidgetTemplates"
+                                @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                                @moveGroups="(data) => moveWidgetGroup(data.widgetGroup, data.direction)"
+                                @onListChange="(data) => onListChange(data.event, data.group)"
+                                @addWidgetsToGroup="addWidgetsToGroup"
+                                @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                                @updateWidget="(data) => updateWidget(data.widget, data.group)"
+                                @switch-tab="(tab) => switchTab(tab)">
+                            </component>
+                        </keep-alive>
+                    </fade-transition>
+                </div>
             </div>
+            <reorder-layout-dialog
+                :width="'50%'"
+                v-if="showReorderDataDialog"
+                :widgetGroupList="activeDashboardData.WidgetGroupList"
+                :visible.sync="showReorderDataDialog"
+                @on-submit="reorderWidgetGroup"
+                @on-cancel="showReorderDataDialog = false"
+            />
         </div>
-        <reorder-layout-dialog
-            :width="'50%'"
-            v-if="showReorderDataDialog"
-            :widgetGroupList="activeDashboardData.WidgetGroupList"
-            :visible.sync="showReorderDataDialog"
-            @on-submit="reorderWidgetGroup"
-            @on-cancel="showReorderDataDialog = false"
-        />
     </div>
 </template>
 <script>
@@ -88,7 +94,7 @@
     import AddButton from '@/components/AddButton'
     import {sdkEventTypes} from '@/enum/sdkEvents'
     import parseCatch from '@/helpers/handleErrors'
-    import {types, targets} from '@/enum/operations'
+    import {targets, types} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
     import pageSizeMixin from '@/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
@@ -100,11 +106,12 @@
     import NormalView from '@/components/LayoutRendering/Types/NormalView'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
-    import {widgetGroupModel, dashboardOperation} from '@/models/instances'
+    import {dashboardOperation, widgetGroupModel} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
     import EventBus from "@/event-bus/EventBus";
+    import {ListIcon} from 'vue-feather-icons'
 
     export default {
         components: {
@@ -120,6 +127,7 @@
             TemplatesCategory,
             ReorderLayoutDialog,
             [Tooltip.name]: Tooltip,
+            ListIcon,
         },
         mixins: [pageSizeMixin],
         data() {
