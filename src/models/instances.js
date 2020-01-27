@@ -1,7 +1,8 @@
 import {settings} from '@/enum/defaultDashboardSettings'
+import store from '../store/store'
 
 export const dashboardModel = () => ({
-    "AccountID": 1,
+    "AccountID": store.state.entities.selectedAccountID,
     "DashboardTitle": '',
     "WidgetGroupList": [],
     "DashboardLayout": {

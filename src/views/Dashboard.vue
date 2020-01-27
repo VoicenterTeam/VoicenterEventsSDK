@@ -104,6 +104,7 @@
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
+    import EventBus from "@/event-bus/EventBus";
 
     export default {
         components: {
@@ -399,6 +400,12 @@
                             this.$store.dispatch('queues/updateQueue', {_index, queue})
                         }
                         break;
+                    case sdkEventTypes.CONNECT_ERROR:
+                        EventBus.$emit(sdkEventTypes.CONNECT_ERROR)
+                        break;
+                    case sdkEventTypes.CONNECT_TIMEOUT:
+                        EventBus.$emit(sdkEventTypes.CONNECT_TIMEOUT)
+                        break;
                     default:
                         break;
                 }
@@ -443,9 +450,16 @@
         },
         async created() {
             try {
-                this.sdk = new EventsSDK({
-                    token: this.token
-                })
+                const config = {
+                    token: this.token,
+                }
+                if (process.env.VUE_APP_EVENTS_SDK_URL) {
+                    config.url = process.env.VUE_APP_EVENTS_SDK_URL
+                }
+                if (process.env.VUE_APP_EVENTS_SDK_SERVERS) {
+                    config.servers = process.env.VUE_APP_EVENTS_SDK_SERVERS
+                }
+                this.sdk = new EventsSDK(config)
                 await this.sdk.init()
                 this.sdk.on('*', this.onNewEvent)
                 await this.sdk.login()

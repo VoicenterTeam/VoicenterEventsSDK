@@ -9,10 +9,7 @@ export const DashboardApi = {
             return res.DashBoards
         } catch (e) {
             //TODO: redirect to login when status code = 401 (sync with back)
-            let message = {
-                message: i18n.t('invalid.token')
-            }
-            parseCatch(message, true)
+            parseCatch(e, true)
             //Show error for user
             setTimeout(() => {
                 window.location.href = process.env.VUE_APP_FALLBACK_URL
