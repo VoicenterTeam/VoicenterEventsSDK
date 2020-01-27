@@ -8,7 +8,7 @@
                     <el-input v-model="model.Title"/>
                 </div>
             </el-form-item>
-            <el-form-item v-if="isQueueTable(widget)">
+            <el-form-item v-if="isQueueTable(widget) || isQueueGauge(widget)">
                 <label>{{$t('queues.to.display')}}</label>
                 <base-select
                     v-model="model.WidgetLayout.showQueues"
@@ -120,7 +120,7 @@
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
-    import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {isPieWidget, isQueueChart, isQueueGauge, isQueueTable, isRealtimeWidget} from '@/helpers/widgetUtils'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
@@ -185,6 +185,7 @@
             isPieWidget,
             isQueueTable,
             isQueueChart,
+            isQueueGauge,
             isAutoComplete(WidgetConfig) {
                 return filterIDs.includes(WidgetConfig.ParameterID);
             },
@@ -241,7 +242,7 @@
                 this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
             }
 
-            if (isQueueTable(this.widget) && !this.widget.WidgetLayout.showQueues) {
+            if ((isQueueTable(this.widget) || isQueueGauge(this.widget)) && !this.widget.WidgetLayout.showQueues) {
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
             }
 
