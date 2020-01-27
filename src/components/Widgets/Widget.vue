@@ -56,6 +56,7 @@
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
+    import EditableContentWidget from './ExternalData/EditableContentWidget'
     import {getWidgetDataType, getWidgetEndpoint} from '@/helpers/widgetUtils'
 
     export default {
@@ -78,6 +79,7 @@
             ExternalDataWidget,
             ConfigDialog,
             PieChart,
+            EditableContentWidget,
         },
         props: {
             editable: {

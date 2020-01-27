@@ -20,6 +20,8 @@
     "register-service-worker": "^1.6.2",
     "sortablejs": "^1.10.0-rc3",
     "tailwindcss": "^1.0.4",
+    "tiptap": "^1.26.6",
+    "tiptap-extensions": "^1.28.6",
     "voicenter-events-sdk": "VoicenterTeam/VoicenterEventsSDK",
     "vue": "^2.6.10",
     "vue-feather-icons": "^4.22.0",

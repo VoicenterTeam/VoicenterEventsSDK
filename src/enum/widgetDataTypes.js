@@ -1,4 +1,4 @@
-export default  {
+export default {
     LINES_TYPE_ID: 1,
     BARS_WITH_LINES_TYPE_ID: 2,
     TIMELINE_TYPE_ID: 3,
@@ -13,6 +13,7 @@ export default  {
     EXTERNAL_DATA_TYPE_ID: 13,
     QUEUE_COUNTER_TYPE_ID: 14,
     PIE_TYPE_ID: 15,
+    RICH_TEXT_EDITOR_ID: 16,
 
     INFO_TYPE_ID: 222,
 }
