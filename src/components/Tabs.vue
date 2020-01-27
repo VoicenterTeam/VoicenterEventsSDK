@@ -2,7 +2,7 @@
     <div class="tabs-container">
         <el-tabs v-model="activeTab" v-bind="$attrs" class="widget--group_section">
             <el-tab-pane v-for="(tab, index) in tabs" :label="tab.WidgetGroupTitle" :name="tab.WidgetGroupID.toString()"
-                         :key="index">
+                         :key="tab.WidgetGroupID.toString()">
                 <slot :tab="tab" :activeTab="activeTab" :index="index"/>
             </el-tab-pane>
         </el-tabs>

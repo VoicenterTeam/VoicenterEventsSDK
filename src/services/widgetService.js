@@ -1,7 +1,6 @@
 import {WidgetApi} from '@/api/widgetApi'
 import {widgetModel} from '@/models/instances'
 import {WidgetDataApi} from '@/api/widgetDataApi'
-import {WidgetGroupsApi} from '@/api/widgetGroupApi'
 import {isExternalDataWidget} from '@/helpers/widgetUtils'
 import {getOptionsValues} from '@/helpers/entitiesList'
 
@@ -32,10 +31,6 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
 
         newWidget = await WidgetApi.store(newWidget)
         widgets.push(newWidget)
-
-        if (!widgetGroup.IsNew) {
-            await WidgetGroupsApi.addWidget(widgetGroup.WidgetGroupID, newWidget.WidgetID)
-        }
     }
     return widgets;
 }
