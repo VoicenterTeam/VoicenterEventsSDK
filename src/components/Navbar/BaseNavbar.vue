@@ -1,10 +1,9 @@
 <template>
     <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
-        <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-16 flex">
-        <!--        <MenuIcon class="hidden text-primary cursor-pointer"/>-->
+        <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-4 flex xl:mx-16">
         <div class="hidden sm:flex">
             <div class="relative">
-                <div class="flex items-center py-3 mx-1 sm:mx-16">
+                <div class="flex items-center py-3 mx-4 xl:mx-16">
                     <slot name="dashboard-operations"/>
                     <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
                         <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
@@ -92,7 +91,6 @@
 <script>
     import get from 'lodash/get'
     import {Dialog, Tooltip} from 'element-ui'
-    import {MenuIcon} from 'vue-feather-icons'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
@@ -103,7 +101,6 @@
             [Tooltip.name]: Tooltip,
             Settings,
             LanguageSelect,
-            MenuIcon
         },
         data() {
             return {

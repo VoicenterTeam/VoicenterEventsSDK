@@ -3,7 +3,7 @@
         <base-navbar>
             <template v-slot:dashboard-operations>
                 <div class="flex mx-2 px-2 border">
-                    <div class="my-4 flex items-center">
+                    <div class="my-2 flex items-center">
                         <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                             <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                         placement="bottom">
