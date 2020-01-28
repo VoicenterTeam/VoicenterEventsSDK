@@ -35,7 +35,8 @@ module.exports = {
                 16: '4rem'
             },
             spacing: {
-                '14': '3.5rem'
+                '14': '3.5rem',
+                '18': '4.5rem'
             },
             fontSize: {
                 'main-xs': 'var(--font-size-xs)',
@@ -44,7 +45,14 @@ module.exports = {
                 'main-lg': 'var(--font-size-lg)',
                 'main-xl': 'var(--font-size-xl)',
                 'main-2xl': 'var(--font-size-2xl)'
-            }
+            },
+            screens: {
+                xs: 0,
+                sm: '640px',
+                md: '769px',
+                lg: '1024px',
+                xl: '1280px',
+            },
         }
     },
     variants: {},
