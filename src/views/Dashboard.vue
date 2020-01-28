@@ -188,6 +188,13 @@
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
+
+                if (!widgetGroup.IsNew) {
+                    for (let widget of createdWidgets) {
+                        this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+                    }
+                }
+
                 this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
                 this.showWidgetMenu = false
             },
@@ -323,17 +330,11 @@
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
-                    if (widgetIndex !== -1) {
-                        if (!widgetGroup.IsNew) {
-                            //Check if widget is new or already is stored in group
-                            let oldWidgetIndex = this.$store.state.dashboards.activeDashboard.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
-                            if (oldWidgetIndex !== -1) {
-                                this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
-                            } else {
-                                this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
-                            }
-                        }
+                    if (widgetIndex !== -1 && !widgetGroup.IsNew) {
+                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
+
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, widget)
+
                         if (!this.editMode) {
                             this.saveDashboard()
                         }
