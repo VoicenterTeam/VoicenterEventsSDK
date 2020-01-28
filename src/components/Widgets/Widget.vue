@@ -41,6 +41,7 @@
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
+    import TrixWidget from './ExternalData/TrixWidget'
     import PieChart from '@/components/Charts/PieChart'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
@@ -56,7 +57,6 @@
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
-    import EditableContentWidget from './ExternalData/EditableContentWidget'
     import {getWidgetDataType, getWidgetEndpoint} from '@/helpers/widgetUtils'
 
     export default {
@@ -79,7 +79,7 @@
             ExternalDataWidget,
             ConfigDialog,
             PieChart,
-            EditableContentWidget,
+            TrixWidget,
         },
         props: {
             editable: {
