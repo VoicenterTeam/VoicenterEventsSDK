@@ -124,11 +124,13 @@
                 this.fetchDataInterval = setInterval(() => {
                     this.updateChartData()
                 }, 5000)
-
-                this.chartData.series.forEach((serie, index) => {
-                    this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
-                })
                 
+                if (this.data.WidgetLayout.showSeries) {
+                    this.chartData.series.forEach((serie, index) => {
+                        this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
+                    })
+                }
+
                 return this.chartData
             },
             responsiveClass() {
