@@ -56,9 +56,9 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Select, Option, Alert, Checkbox, Collapse, CollapseItem} from 'element-ui'
+    import {Alert, Checkbox, Collapse, CollapseItem, Dialog, Option, Select} from 'element-ui'
     import {isPieWidget} from '@/helpers/widgetUtils'
-    import {options, dictionary} from '@/enum/externalDataWidgetConfig'
+    import {dictionary, options} from '@/enum/externalDataWidgetConfig'
     import WidgetWidth from '../WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetColors from '../WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
@@ -98,21 +98,28 @@
         methods: {
             isPieWidget,
             onChange() {
-                this.$confirm(
-                    this.$t('common.confirm.question', {
-                        action: 'to update widget',
-                    }), this.$t('widget.update'), {
-                        cancelButtonText: this.$t('common.cancel'),
-                        confirmButtonText: this.$t('common.confirm'),
-                    }).then(() => {
-
-                    this.model.WidgetLayout = {
-                        ...this.model.WidgetLayout,
-                        ...{colors: this.model.colors},
-                    }
-                    this.$emit('on-update', this.model)
-                    this.toggleVisibility(false);
-                })
+                if (this.widget.WidgetLayout.Endpoint !== this.model.WidgetLayout.Endpoint ||
+                    this.widget.WidgetLayout.ComponentTypeID !== this.model.WidgetLayout.ComponentTypeID) {
+                    this.$confirm(
+                        this.$t('common.confirm.question', {
+                            action: 'to update widget',
+                        }), this.$t('widget.update'), {
+                            cancelButtonText: this.$t('common.cancel'),
+                            confirmButtonText: this.$t('common.confirm'),
+                        }).then(() => {
+                        this.storeData()
+                    })
+                } else {
+                    this.storeData()
+                }
+            },
+            storeData() {
+                this.model.WidgetLayout = {
+                    ...this.model.WidgetLayout,
+                    ...{colors: this.model.colors},
+                }
+                this.$emit('on-update', this.model)
+                this.toggleVisibility(false);
             },
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
