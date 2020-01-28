@@ -69,10 +69,6 @@
             getAgentsData() {
                 let agentsOnline = this.agentsOnline
 
-                this.chartData.series.forEach((serie, index) => {
-                    this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
-                })
-
                 let agentsInACall = this.agentsInACall ? this.agentsInACall.length : 0
                 let showQueues = this.data.WidgetLayout.showQueues
 
