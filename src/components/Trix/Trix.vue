@@ -193,6 +193,7 @@
         HardBreak,
         Heading,
         History,
+        Image,
         Italic,
         Link,
         ListItem,
@@ -235,7 +236,6 @@
         methods: {
             initEditor() {
                 this.destroyEditor()
-
                 this.editor = new Editor({
                     extensions: [
                         new Blockquote(),
@@ -257,11 +257,11 @@
                         new Table({
                             resizable: true,
                         }),
+                        new Image(),
                         new TableHeader(),
                         new TableCell(),
                         new TableRow(),
                     ],
-                    // editable: this.editMode,
                     editable: this.editMode,
                     content: this.data,
                     onUpdate: ({getJSON}) => {
