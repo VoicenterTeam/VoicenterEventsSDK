@@ -1,22 +1,21 @@
 <template>
-    <div class="flex items-center layout-types__switcher"
-         :class="this.$rtl ? 'm-margin__left-15' : 'm-margin__right-15'">
-        <div class="flex mr-4">
+    <div class="flex items-center">
+        <div class="flex">
             <p class="text-main-sm">{{$t('switcher.title')}}</p>
         </div>
-        <div>
+        <div class="flex">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.select.tabbed.view')" placement="top">
                 <button class="btn shadow rounded bg-white mx-1 text-gray-300 hover:bg-primary-100 hover:text-primary"
                         @click="switching('tabbed')"
                         :class="{'text-primary': activeType === 'tabbed'}">
-                    <IconTabbedView></IconTabbedView>
+                    <IconTabbedView/>
                 </button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.select.list.view')" placement="top">
                 <button class="btn shadow rounded bg-white mx-1 text-gray-300 hover:bg-primary-100 hover:text-primary"
                         @click="switching('normal')"
                         :class="{'text-primary': activeType === 'normal'}">
-                    <IconNormalView></IconNormalView>
+                    <IconNormalView/>
                 </button>
             </el-tooltip>
         </div>
@@ -44,24 +43,3 @@
         }
     }
 </script>
-<style lang="scss" scoped>
-    .layout-types__switcher {
-        color: var(--greyish-brown);
-        font-size: 12px;
-    }
-
-    .rtl .layout-types__switcher div:first-child {
-        margin-right: 0;
-        @apply ml-4;
-    }
-
-    .m-margin__right-15 {
-        margin-right: 0.875rem;
-    }
-
-    .m-margin__left-15 {
-        margin-left: 0.875rem;
-    }
-
-</style>
-

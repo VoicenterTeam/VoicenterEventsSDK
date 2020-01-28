@@ -4,14 +4,18 @@
         <div class="hidden sm:flex">
             <div class="relative">
                 <div class="flex items-center py-3 mx-4 xl:mx-16">
-                    <slot name="dashboard-operations"/>
-                    <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
-                        <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
-                                    placement="bottom">
-                            <IconSettings class="text-primary"/>
-                        </el-tooltip>
+                    <div class="flex items-center border rounded px-2">
+                        <slot name="dashboard-operations"/>
+                        <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
+                            <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
+                                        placement="bottom">
+                                <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
+                                    <IconSettings class="text-primary"/>
+                                </button>
+                            </el-tooltip>
+                        </div>
+                        <language-select :value="$i18n.locale" @change="onLocaleChange"/>
                     </div>
-                    <language-select :value="$i18n.locale" @change="onLocaleChange"/>
                     <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                             @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
                         <span class="mx-1 text-main-sm md:text-main-lg text-gray-700" v-if="activeDashboard">{{activeDashboard.DashboardTitle}}</span>

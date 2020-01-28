@@ -2,12 +2,14 @@
     <div>
         <base-navbar>
             <template v-slot:dashboard-operations>
-                <div class="flex mx-2 px-2 border rounded">
+                <div class="flex">
                     <div class="my-3 flex items-center">
                         <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                             <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                         placement="bottom">
-                                <ListIcon class="text-primary"/>
+                                <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
+                                    <ListIcon class="w-5 h-5 text-primary"/>
+                                </button>
                             </el-tooltip>
                         </div>
                         <new-group-button
