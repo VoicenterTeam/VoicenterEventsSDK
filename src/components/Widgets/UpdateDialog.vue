@@ -44,6 +44,9 @@
                     <el-form-item>
                         <widget-width :model="model"/>
                     </el-form-item>
+                    <el-form-item v-if="isTrixWidget(widget)">
+                        <widget-height :model="model"/>
+                    </el-form-item>
                     <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
@@ -120,12 +123,13 @@
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
-    import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget} from '@/helpers/widgetUtils'
-    import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
+    import WidgetHeight from './WidgetUpdateForm/WidgetLayout/WidgetHeight'
+    import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
+    import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget, isTrixWidget} from '@/helpers/widgetUtils'
 
     export default {
         inheritAttrs: false,
@@ -144,6 +148,7 @@
             OtherFilters,
             WidgetColors,
             WidgetPadding,
+            WidgetHeight,
             RefreshButton,
             [Tooltip.name]: Tooltip,
         },
@@ -163,7 +168,8 @@
                 },
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
-                allSeries
+                allSeries,
+                isTrixWidget,
             }
         },
         computed: {

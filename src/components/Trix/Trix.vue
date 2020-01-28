@@ -1,8 +1,8 @@
 <template>
-    <div class="widget-container">
-        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+    <div class="editor-wrapper">
+        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }" v-if="editMode">
             <div class="menubar flex justify-between px-2 items-center border rounded">
-                <div class="flex w-full">
+                <div class="flex w-full p-1">
                     <button
                         class="menubar__button"
                         @click="commands.undo"
@@ -164,8 +164,12 @@
                     </div>
                 </div>
                 <div class="flex">
-                    <XIcon class="w-5 h-5 text-red cursor-pointer mx-2"/>
-                    <CheckIcon class="w-5 h-5 text-green cursor-pointer" @click="onUpdate()"/>
+                    <el-tooltip class="item" effect="dark" :content="$t('common.revert.changes')" placement="top">
+                        <XIcon class="w-5 h-5 text-red cursor-pointer mx-2" @click="onRevert()"/>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" :content="$t('common.save.changes')" placement="top">
+                        <CheckIcon class="w-5 h-5 text-green cursor-pointer" @click="onUpdate()"/>
+                    </el-tooltip>
                 </div>
             </div>
         </editor-menu-bar>
@@ -176,6 +180,7 @@
 </template>
 
 <script>
+    import {Tooltip} from 'element-ui'
     import {CheckIcon, XIcon} from 'vue-feather-icons'
     import TrixIcon from './TrixIcon'
     import {Editor, EditorContent, EditorMenuBar} from 'tiptap'
@@ -207,6 +212,7 @@
             EditorContent,
             EditorMenuBar,
             [TrixIcon.name]: TrixIcon,
+            [Tooltip.name]: Tooltip,
             CheckIcon,
             XIcon,
         },
@@ -215,15 +221,22 @@
                 type: Object,
                 default: ``
             },
-            editable: {
+            editMode: {
                 type: Boolean,
-                default: true
+                default: false
             }
         },
         data() {
             return {
                 trixState: '',
-                editor: new Editor({
+                editor: null
+            }
+        },
+        methods: {
+            initEditor() {
+                this.destroyEditor()
+
+                this.editor = new Editor({
                     extensions: [
                         new Blockquote(),
                         new BulletList(),
@@ -248,34 +261,47 @@
                         new TableCell(),
                         new TableRow(),
                     ],
-                    editable: this.editable,
+                    // editable: this.editMode,
+                    editable: this.editMode,
+                    content: this.data,
                     onUpdate: ({getJSON}) => {
                         this.trixState = getJSON()
                     }
-                }),
-            }
-        },
-        methods: {
+                })
+            },
+            destroyEditor() {
+                if (this.editor) {
+                    this.editor.destroy()
+
+                }
+            },
             onUpdate() {
                 this.$emit('on-update', this.trixState)
-            }
+            },
+            onRevert() {
+                this.editor.setContent(this.data)
+            },
         },
         beforeDestroy() {
-            this.editor.destroy()
+            this.destroyEditor()
+        },
+        mounted() {
+            this.initEditor()
         },
         watch: {
             data: {
-                immediate: true,
                 handler(data) {
                     this.editor.setContent(data)
                 }
+            },
+            editMode() {
+                this.initEditor()
             }
         }
     }
 </script>
 <style lang="scss" scoped>
-    .widget-container /deep/ {
-
+    .editor-wrapper /deep/ {
         @import "../../assets/css/widgets/trix";
 
         ol {
@@ -299,7 +325,7 @@
         }
 
         .editor__content {
-            @apply border rounded p-2 outline-none;
+            @apply p-2 outline-none;
         }
     }
 </style>
