@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full py-1">
             <div class="flex">
                 <p v-if="data.Title" class="text-main-2xl font-semibold">
-                    {{data.Title}}
+                    {{getInfo}}
                 </p>
             </div>
             <div class="flex items-center" :class="margins" v-if="!editable">
@@ -66,13 +66,19 @@
                 if (!height || height === fullHeightIdentifier) {
                     height = 'auto'
                 } else {
-                    height = height+'px'
+                    height = height + 'px'
                 }
 
                 return {
                     height: height,
                     overflow: 'auto'
                 }
+            },
+            getInfo() {
+                if (!this.data.LastUpdate) {
+                    return this.data.Title
+                }
+                return this.data.Title + ' / ' + this.data.LastUpdate;
             }
         },
         methods: {
@@ -92,6 +98,7 @@
         font-size: unset;
         font-weight: initial;
     }
+
     .el-switch.is-checked .el-switch__core {
         @apply border-primary bg-primary;
     }
