@@ -65,9 +65,23 @@
                 } else {
                     this.chartData = this.getAgentsData()
                 }
+
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             },
             getAgentsData() {
                 let agentsOnline = this.agentsOnline
+
+                let agentsInACall = this.agentsInACall ? this.agentsInACall.length : 0
+                let showQueues = this.data.WidgetLayout.showQueues
+
+                if (agentsInACall && showQueues) {
+                    this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
+                    let filteredQueues = agentsOnline.filter((el) => showQueues.includes(el.QueueID))
+                    agentsInACall = filteredQueues.length
+                }
 
                 let range = {
                     min: 0,
@@ -87,12 +101,7 @@
                     stops,
                 }
 
-                this.data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
-
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
+                this.data.series = [{data: [agentsInACall]}]
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             }

@@ -92,6 +92,11 @@
                         data: data
                     }]
                 };
+
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             },
             getExtensionsData() {
                 let data = []
@@ -118,11 +123,6 @@
 
                     data.push(sliceObject);
                 }
-
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
 
                 return data
             }
