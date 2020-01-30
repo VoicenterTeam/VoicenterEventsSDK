@@ -1,167 +1,17 @@
 <template>
-    <div class="editor-wrapper">
-        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }" v-if="editMode">
-            <div class="menubar flex justify-between px-2 items-center border rounded">
-                <div class="flex w-full p-1">
-                    <button
-                        class="menubar__button"
-                        @click="commands.undo"
-                    >
-                        <icon name="undo"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        @click="commands.redo"
-                    >
-                        <icon name="redo"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.bold() }"
-                        @click="commands.bold"
-                    >
-                        <icon name="bold"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.italic() }"
-                        @click="commands.italic"
-                    >
-                        <icon name="italic"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.strike() }"
-                        @click="commands.strike"
-                    >
-                        <icon name="strike"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.underline() }"
-                        @click="commands.underline"
-                    >
-                        <icon name="underline"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.code() }"
-                        @click="commands.code"
-                    >
-                        <icon name="code"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.paragraph() }"
-                        @click="commands.paragraph"
-                    >
-                        <icon name="paragraph"/>
-                    </button>
-                    <button
-                        class="menubar__button text-xs"
-                        :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-                        @click="commands.heading({ level: 1 })"
-                    >
-                        H1
-                    </button>
-                    <button
-                        class="menubar__button text-xs"
-                        :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-                        @click="commands.heading({ level: 2 })"
-                    >
-                        H2
-                    </button>
-                    <button
-                        class="menubar__button text-xs"
-                        :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-                        @click="commands.heading({ level: 3 })"
-                    >
-                        H3
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.bullet_list() }"
-                        @click="commands.bullet_list"
-                    >
-                        <icon name="ul"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.ordered_list() }"
-                        @click="commands.ordered_list"
-                    >
-                        <icon name="ol"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.blockquote() }"
-                        @click="commands.blockquote"
-                    >
-                        <icon name="quote"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        :class="{ 'is-active': isActive.code_block() }"
-                        @click="commands.code_block"
-                    >
-                        <icon name="code"/>
-                    </button>
-                    <button
-                        class="menubar__button"
-                        @click="commands.createTable({rowsCount: 3, colsCount: 3, withHeaderRow: false })"
-                    >
-                        <icon name="table"/>
-                    </button>
-                    <div class="flex" v-if="isActive.table()">
-                        <button
-                            class="menubar__button"
-                            @click="commands.deleteTable"
-                        >
-                            <icon name="delete_table"/>
-                        </button>
-                        <button
-                            class="menubar__button"
-                            @click="commands.addColumnBefore"
-                        >
-                            <icon name="add_col_before"/>
-                        </button>
-                        <button
-                            class="menubar__button"
-                            @click="commands.addColumnAfter"
-                        >
-                            <icon name="add_col_after"/>
-                        </button>
-                        <button
-                            class="menubar__button"
-                            @click="commands.deleteColumn"
-                        >
-                            <icon name="delete_col"/>
-                        </button>
-                        <button
-                            class="menubar__button"
-                            @click="commands.addRowBefore"
-                        >
-                            <icon name="add_row_before"/>
-                        </button>
-                        <button
-                            class="menubar__button"
-                            @click="commands.addRowAfter"
-                        >
-                            <icon name="add_row_after"/>
-                        </button>
-                        <button
-                            class="menubar__button"
-                            @click="commands.deleteRow"
-                        >
-                            <icon name="delete_row"/>
-                        </button>
-                        <button
-                            class="menubar__button"
-                            @click="commands.toggleCellMerge"
-                        >
-                            <icon name="combine_cells"/>
-                        </button>
-                    </div>
+    <div class="editor__wrapper" :disabled="!editMode">
+        <div :id="toolbarId">
+            <div class="flex w-full justify-between items-center">
+                <div class="flex ql-formats w-auto">
+                    <select class="ql-header"></select>
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-link"></button>
+                    <button class="ql-image"></button>
+                    <button type="button" class="ql-list" value="ordered"></button>
+                    <button type="button" class="ql-list" value="bullet"></button>
+                    <button type="button" class="ql-clean"></button>
                 </div>
                 <div class="flex">
                     <el-tooltip class="item" effect="dark" :content="$t('common.revert.changes')" placement="top">
@@ -172,160 +22,153 @@
                     </el-tooltip>
                 </div>
             </div>
-        </editor-menu-bar>
-        <editor-content
-            class="editor__content"
-            :editor="editor"/>
+        </div>
+        <div :id="editorId" :name="name" class="" ref="editor">
+        </div>
     </div>
 </template>
-
 <script>
+    import Quill from 'quill'
+    import 'quill/dist/quill.snow.css'
     import {Tooltip} from 'element-ui'
     import {CheckIcon, XIcon} from 'vue-feather-icons'
-    import TrixIcon from './TrixIcon'
-    import {Editor, EditorContent, EditorMenuBar} from 'tiptap'
-    import {
-        Blockquote,
-        Bold,
-        BulletList,
-        Code,
-        CodeBlock,
-        HardBreak,
-        Heading,
-        History,
-        Image,
-        Italic,
-        Link,
-        ListItem,
-        OrderedList,
-        Strike,
-        Table,
-        TableCell,
-        TableHeader,
-        TableRow,
-        TodoItem,
-        TodoList,
-        Underline,
-    } from 'tiptap-extensions'
 
     export default {
         components: {
-            EditorContent,
-            EditorMenuBar,
-            [TrixIcon.name]: TrixIcon,
-            [Tooltip.name]: Tooltip,
             CheckIcon,
             XIcon,
+            [Tooltip.name]: Tooltip,
         },
         props: {
-            data: {
-                type: Object,
-                default: ``
+            value: {
+                type: [String, Object],
+                default: ''
             },
+            name: String,
             editMode: {
                 type: Boolean,
                 default: false
-            }
+            },
         },
         data() {
             return {
-                trixState: '',
-                editor: null
+                editor: null,
+                content: null,
+                lastHtmlValue: '',
+                editorId: null,
+                toolbarId: null
             }
         },
         methods: {
-            initEditor() {
-                this.destroyEditor()
-                this.editor = new Editor({
-                    extensions: [
-                        new Blockquote(),
-                        new BulletList(),
-                        new CodeBlock(),
-                        new HardBreak(),
-                        new Heading({levels: [1, 2, 3]}),
-                        new ListItem(),
-                        new OrderedList(),
-                        new TodoItem(),
-                        new TodoList(),
-                        new Link(),
-                        new Bold(),
-                        new Code(),
-                        new Italic(),
-                        new Strike(),
-                        new Underline(),
-                        new History(),
-                        new Table({
-                            resizable: true,
-                        }),
-                        new Image(),
-                        new TableHeader(),
-                        new TableCell(),
-                        new TableRow(),
-                    ],
-                    editable: this.editMode,
-                    content: this.data,
-                    onUpdate: ({getJSON}) => {
-                        this.trixState = getJSON()
+            initialize() {
+                this.editor = new Quill(`#${this.editorId}`, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: `#${this.toolbarId}`
                     }
                 })
-            },
-            destroyEditor() {
-                if (this.editor) {
-                    this.editor.destroy()
 
+                if (this.value.length > 0) {
+                    this.editor.pasteHTML(this.value)
                 }
+
+                let editorRef = this.$refs.editor;
+                let node = editorRef.children[0];
+                this.editor.on('text-change', () => {
+                    let html = node.innerHTML
+                    if (html === '<p><br></p>') {
+                        html = '';
+                    }
+                    this.content = html
+                })
             },
-            onUpdate() {
-                this.$emit('on-update', this.trixState)
+            pasteHTML() {
+                this.editor.pasteHTML(this.value)
+            },
+            randomString() {
+                let text = "";
+                let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+                for (let i = 0; i < 5; i++)
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+                return text;
             },
             onRevert() {
-                this.editor.setContent(this.data)
+                this.$nextTick(this.initialize);
             },
-        },
-        beforeDestroy() {
-            this.destroyEditor()
+            onUpdate() {
+                console.log(this.content)
+                this.$emit('on-update', this.content);
+            },
         },
         mounted() {
-            this.initEditor()
+            this.editorId = this.randomString();
+            this.toolbarId = this.randomString();
+            this.$nextTick(this.initialize);
         },
         watch: {
-            data: {
-                handler(data) {
-                    this.editor.setContent(data)
+            value(newVal) {
+                if (newVal !== this.content) {
+                    this.editor.pasteHTML(newVal);
                 }
-            },
-            editMode() {
-                this.initEditor()
             }
         }
     }
 </script>
-<style lang="scss" scoped>
-    .editor-wrapper /deep/ {
-        @import "../../assets/css/widgets/trix";
+<style lang="scss">
+    .ql-toolbar {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        min-height: 45px;
+        @apply border text-gray-200 bg-gray-200;
+        display: flex;
+    }
 
-        ol {
-            list-style: decimal;
-        }
+    .ql-toolbar .ql-formats {
+        @apply bg-white;
+        margin-right: 0;
+        padding-right: 15px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
 
-        ul {
-            list-style: disc;
-        }
+    .ql-container {
+        border-bottom-left-radius: 4px;
+        @apply border text-black bg-white rounded;
+        height: 280px;
+    }
 
-        h1 {
-            font-size: 2em;
-        }
+    .ql-editor {
+        padding: 20px;
+    }
 
-        h2 {
-            font-size: 1.5em;
-        }
+    .ql-editor p {
+        margin: 5px 0;
+    }
 
-        h3 {
-            font-size: 1.17em;
-        }
+    .ql-clipboard {
+        white-space: normal;
+    }
 
-        .editor__content {
-            @apply p-2 outline-none;
-        }
+    .editor-tag {
+        display: inline-flex;
+        padding: 7px 10px;
+        min-width: 100px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px;
+    }
+
+    .editor__extra-tools {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 30px;
+        flex: 1;
+        justify-content: flex-end;
+    }
+
+    .editor__wrapper[disabled="disabled"] {
+        @apply cursor-not-allowed pointer-events-none;
     }
 </style>

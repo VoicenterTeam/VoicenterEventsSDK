@@ -15,7 +15,7 @@
         </div>
         <div class="bg-white p-4 rounded-lg py-4 mt-4" :style="getStyles">
             <trix
-                :data="fetchData"
+                :value="fetchData"
                 :editMode="editable || editMode"
                 @on-update="onUpdate"/>
         </div>
