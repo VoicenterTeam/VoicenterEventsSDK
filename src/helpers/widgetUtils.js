@@ -64,6 +64,10 @@ export function isQueueTable(widget) {
     return widget.DataTypeID === widgetDataTypes.QUEUE_ACTIVE_CALL;
 }
 
+export function isQueueGauge(widget) {
+    return widget.DataTypeID === widgetDataTypes.CHART_SPEEDOMETER;
+}
+
 export function isQueueChart(widget) {
     return widget.DataTypeID === widgetDataTypes.CHART_QUEUE;
 }
