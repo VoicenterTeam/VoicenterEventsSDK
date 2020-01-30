@@ -1,5 +1,5 @@
 <template>
-    <div class="editor__wrapper" :disabled="!editMode">
+    <div class="editor__wrapper" :class="{'pointer-events-none' : !editMode}">
         <div :id="toolbarId">
             <div class="flex w-full justify-between items-center">
                 <div class="flex ql-formats w-auto">
@@ -98,7 +98,6 @@
                 this.$nextTick(this.initialize);
             },
             onUpdate() {
-                console.log(this.content)
                 this.$emit('on-update', this.content);
             },
         },
@@ -112,7 +111,10 @@
                 if (newVal !== this.content) {
                     this.editor.pasteHTML(newVal);
                 }
-            }
+            },
+            editMode() {
+                this.$nextTick(this.initialize);
+            },
         }
     }
 </script>
@@ -166,9 +168,5 @@
         margin-left: 30px;
         flex: 1;
         justify-content: flex-end;
-    }
-
-    .editor__wrapper[disabled="disabled"] {
-        @apply cursor-not-allowed pointer-events-none;
     }
 </style>

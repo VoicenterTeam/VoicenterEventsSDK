@@ -13,10 +13,10 @@
                 </el-tooltip>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4" :style="getStyles">
+        <div class="bg-white p-4 rounded-lg py-4 mt-4 trix__wrapper" :style="getStyles" :disabled="!editMode">
             <trix
                 :value="fetchData"
-                :editMode="editable || editMode"
+                :editMode="editMode"
                 @on-update="onUpdate"/>
         </div>
     </div>
@@ -46,7 +46,7 @@
         },
         data() {
             return {
-                editMode: false,
+                editMode: this.editable,
             }
         },
         computed: {
@@ -88,18 +88,36 @@
                     ...{trixData: val}
                 }
                 this.$emit('on-update', this.data)
-                this.editMode = false
+                this.editMode = this.editable
             },
         },
+        watch: {
+            editable: {
+                handler: function (state) {
+                    this.editMode = state
+                }
+            },
+        }
     }
 </script>
 <style lang="scss">
     .trix-widget {
         font-size: unset;
         font-weight: initial;
+
+        .trix__wrapper[disabled="disabled"] {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .trix__wrapper {
+            opacity: 1;
+        }
     }
 
     .el-switch.is-checked .el-switch__core {
         @apply border-primary bg-primary;
     }
+
+
 </style>
