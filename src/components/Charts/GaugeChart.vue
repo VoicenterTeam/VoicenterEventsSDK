@@ -65,6 +65,11 @@
                 } else {
                     this.chartData = this.getAgentsData()
                 }
+
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             },
             getAgentsData() {
                 let agentsOnline = this.agentsOnline
@@ -88,11 +93,6 @@
                 }
 
                 this.data.series = [{data: [this.agentsInACall ? this.agentsInACall.length : 0]}]
-
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             }
