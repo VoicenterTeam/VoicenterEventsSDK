@@ -4,14 +4,23 @@
             <div class="flex w-full justify-between items-center">
                 <div class="flex ql-formats w-auto">
                     <select class="ql-header"></select>
+                    <select class="ql-font"></select>
                     <button class="ql-bold"></button>
                     <button class="ql-italic"></button>
                     <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
                     <button class="ql-link"></button>
-                    <button class="ql-image"></button>
+                    <button class="ql-blockquote"></button>
+                    <button class="ql-code-block"></button>
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
                     <button type="button" class="ql-list" value="ordered"></button>
                     <button type="button" class="ql-list" value="bullet"></button>
+                    <select class="ql-align"></select>
+                    <button class="ql-image"></button>
                     <button type="button" class="ql-clean"></button>
+                    <button class="ql-script" value="sub"></button>
+                    <button class="ql-script" value="super"></button>
                 </div>
                 <div class="flex">
                     <el-tooltip class="item" effect="dark" :content="$t('common.revert.changes')" placement="top">
@@ -62,10 +71,10 @@
         methods: {
             initialize() {
                 this.editor = new Quill(`#${this.editorId}`, {
-                    theme: 'snow',
                     modules: {
                         toolbar: `#${this.toolbarId}`
-                    }
+                    },
+                    theme: 'snow',
                 })
 
                 if (this.value.length > 0) {
@@ -75,7 +84,7 @@
                 let editorRef = this.$refs.editor;
                 let node = editorRef.children[0];
                 this.editor.on('text-change', () => {
-                    let html = node.innerHTML
+                    let html = node ? node.innerHTML : ''
                     if (html === '<p><br></p>') {
                         html = '';
                     }
@@ -111,9 +120,6 @@
                 if (newVal !== this.content) {
                     this.editor.pasteHTML(newVal);
                 }
-            },
-            editMode() {
-                this.$nextTick(this.initialize);
             },
         }
     }
@@ -169,4 +175,10 @@
         flex: 1;
         justify-content: flex-end;
     }
+
+    span:focus {
+        outline: none;
+    }
+
+    @import '../../assets/css/widgets/trix';
 </style>
