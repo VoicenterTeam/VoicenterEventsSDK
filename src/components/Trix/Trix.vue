@@ -1,6 +1,6 @@
 <template>
-    <div class="editor__wrapper" :class="{'pointer-events-none' : !editMode}">
-        <div :id="toolbarId">
+    <div class="editor__wrapper" :class="{'pointer-events-none default_border' : !editMode}">
+        <div :id="toolbarId" v-show="editMode">
             <div class="flex w-full justify-between items-center">
                 <div class="flex ql-formats w-auto">
                     <select class="ql-header"></select>
@@ -126,11 +126,10 @@
 </script>
 <style lang="scss">
     .ql-toolbar {
+        min-height: 45px;
+        @apply text-gray-200 bg-gray-200 flex;
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
-        min-height: 45px;
-        @apply border text-gray-200 bg-gray-200;
-        display: flex;
     }
 
     .ql-toolbar .ql-formats {
@@ -139,11 +138,13 @@
         padding-right: 15px;
         padding-top: 2px;
         padding-bottom: 2px;
+
     }
 
     .ql-container {
         border-bottom-left-radius: 4px;
-        @apply border text-black bg-white rounded;
+        border-bottom-right-radius: 4px;
+        @apply text-black bg-white;
         height: 280px;
     }
 
@@ -178,6 +179,11 @@
 
     span:focus {
         outline: none;
+    }
+
+    .default_border {
+        border-top: 2px solid #dfe3e6;
+        border-radius: 4px;
     }
 
     @import '../../assets/css/widgets/trix';
