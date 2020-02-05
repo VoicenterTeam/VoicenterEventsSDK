@@ -13,6 +13,11 @@
             <template v-slot:WaitingTime="{row}">
                 <waiting-time v-if="drawRow" :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
             </template>
+            <template v-slot:title>
+                <p class="text-main-2xl font-semibold">
+                    {{data.Title}}
+                </p>
+            </template>
         </data-table>
     </div>
 </template>

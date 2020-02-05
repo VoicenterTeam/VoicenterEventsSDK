@@ -1,13 +1,12 @@
 <template>
     <div id="app">
         <network-status-alert/>
-        <base-navbar/>
         <router-view/>
     </div>
 </template>
 <script>
-    import NetworkStatusAlert from "@/components/Common/NetworkStatusAlert";
     import {defaultFontSize} from '@/enum/defaultDashboardSettings'
+    import NetworkStatusAlert from '@/components/Common/NetworkStatusAlert'
 
     export default {
         components: {

@@ -1,6 +1,5 @@
 body {
     .dashboard-container {
-        @apply px-6;
         min-height: 100vh;
         padding-bottom: 2rem;
     }
@@ -9,17 +8,6 @@ body {
 
     @apply font-montserrat font-semibold;
     font-size: var(--font-size-base);
-}
-
-@media (min-width: 768px) {
-    body {
-        .dashboard-container {
-            @apply px-12;
-        }
-    }
-}
-
-body {
     background: var(--background-color);
     border: 1px solid var(--frames-color);
     border-bottom: none;

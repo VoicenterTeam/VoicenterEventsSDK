@@ -1,6 +1,6 @@
 <template>
     <div class="data-table__container">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
             <div class="flex">
                 <slot name="title"/>
                 <div class="flex w-48 sm:w-64 px-2">

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex items-center sidebar-tabs__container">
-        <div class="tab-name px-16 text-main-lg cursor-pointer" v-for="group in widgetGroupList">
+        <div class="tab-name px-8 md:px-16 text-main-lg cursor-pointer" v-for="group in widgetGroupList">
             <div></div>
             <p @click="switchTab(group.WidgetGroupID.toString())"
                class="whitespace-no-wrap"
@@ -43,10 +43,10 @@
         overflow-x: auto;
         min-width: 320px;
         width: 100vw;
-        @apply -ml-12;
-        @screen md {
-            @apply -ml-12;
-        }
+        /*@apply -ml-12;*/
+        /*@screen md {*/
+        /*    @apply -ml-12;*/
+        /*}*/
     }
 
     .tab-name {
@@ -76,8 +76,8 @@
             margin-right: -22%;
         }
 
-        .sidebar-tabs__container {
-            @apply -mr-12;
-        }
+        /*.sidebar-tabs__container {*/
+        /*    @apply -mr-12;*/
+        /*}*/
     }
 </style>

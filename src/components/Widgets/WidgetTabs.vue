@@ -23,10 +23,9 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {Tabs, TabPane} from 'element-ui'
+    import {TabPane, Tabs} from 'element-ui'
     import Widget from './Widget'
-    import {getDataTypeClass} from '@/helpers/widgetUtils'
-    import {getWidgetDataType, groupedWidgets} from '@/helpers/widgetUtils'
+    import {getDataTypeClass, getWidgetDataType, groupedWidgets} from '@/helpers/widgetUtils'
     import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
 
     export default {
@@ -46,10 +45,6 @@
                 type: Array,
                 default: () => []
             },
-            widgetsFilter: {
-                type: String,
-                default: ''
-            },
             editable: {
                 type: Boolean,
                 default: false
@@ -62,15 +57,9 @@
             };
         },
         computed: {
-            filteredWidgets() {
-                return this.widgets.filter((widget) => {
-                    let title = get(widget, 'Title', '').toLowerCase()
-                    return title.includes(this.widgetsFilter.toLowerCase())
-                })
-            },
             // Grouping Widgets
             tabsData() {
-                let widgets = this.filteredWidgets
+                let widgets = this.widgets
                 let tabs = []
                 let groupedData = {}
 
