@@ -169,15 +169,15 @@
     .rtl {
         .widget-edit__button {
             right: auto;
-            @apply left-0 ml-4;
+            @apply left-0;
         }
 
         .widget-delete__button {
             right: auto;
-            @apply left-0 ml-4;
+            @apply left-0;
             + .widget-edit__button {
                 right: auto;
-                @apply left-0 ml-14;
+                @apply left-0 ml-10;
             }
         }
     }

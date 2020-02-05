@@ -3,7 +3,7 @@
                    :value="widgets"
                    :disabled="!editable"
                    @change="(ev) => onListChange(ev)">
-        <div v-for="widget in filteredWidgets"
+        <div v-for="widget in widgets"
              :key="widget.WidgetID"
              class="px-2"
              :class="getWidgetClass(widget)"
@@ -32,7 +32,6 @@
     </DraggableList>
 </template>
 <script>
-    import get from 'lodash/get'
     import Widget from './Widget'
     import DraggableList from './DraggableList'
     import WidgetEmptyCard from './WidgetEmptyCard'
@@ -63,18 +62,6 @@
             widgets: {
                 type: Array,
                 default: () => []
-            },
-            widgetsFilter: {
-                type: String,
-                default: ''
-            }
-        },
-        computed: {
-            filteredWidgets() {
-                return this.widgets.filter((widget) => {
-                    let title = get(widget, 'Title', '').toLowerCase()
-                    return title.includes(this.widgetsFilter.toLowerCase())
-                })
             },
         },
         methods: {
