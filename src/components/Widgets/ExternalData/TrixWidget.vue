@@ -13,8 +13,14 @@
                 </el-tooltip>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4 trix__wrapper" :style="getStyles" :disabled="!editMode">
+        <div class="bg-white p-4 rounded-lg py-4 mt-4 trix__wrapper" :style="getStyles">
+            <div
+                class="border rounded p-2"
+                v-if="!editMode"
+                v-html="fetchData">
+            </div>
             <trix
+                v-else
                 :value="fetchData"
                 :editMode="editMode"
                 @on-update="onUpdate"/>
@@ -118,6 +124,4 @@
     .el-switch.is-checked .el-switch__core {
         @apply border-primary bg-primary;
     }
-
-
 </style>

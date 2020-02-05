@@ -1,6 +1,6 @@
 <template>
-    <div class="editor__wrapper" :class="{'pointer-events-none default_border' : !editMode}">
-        <div :id="toolbarId" v-show="editMode">
+    <div class="editor__wrapper">
+        <div :id="toolbarId">
             <div class="flex w-full justify-between items-center">
                 <div class="flex ql-formats w-auto">
                     <select class="ql-header"></select>
@@ -54,10 +54,6 @@
                 default: ''
             },
             name: String,
-            editMode: {
-                type: Boolean,
-                default: false
-            },
         },
         data() {
             return {
