@@ -8,7 +8,7 @@
             <div class="hidden md:flex">
                 <div class="relative">
                     <div class="flex items-center py-3 mx-4 xl:mx-16">
-                        <div class="flex items-center border rounded px-2">
+                        <div class="flex items-center px-2">
                             <slot name="dashboard-operations"/>
                             <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
                                 <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
