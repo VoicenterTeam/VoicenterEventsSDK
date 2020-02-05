@@ -13,9 +13,9 @@
                 </el-tooltip>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4 trix__wrapper" :style="getStyles">
+        <div class="bg-white rounded ql-container ql-snow" :style="getStyles">
             <div
-                class="border rounded p-2"
+                class="ql-editor"
                 v-if="!editMode"
                 v-html="fetchData">
             </div>
@@ -77,7 +77,9 @@
 
                 return {
                     height: height,
-                    overflow: 'auto'
+                    overflow: 'auto',
+                    border: 0,
+                    'margin-top': '10px'
                 }
             },
             getInfo() {
@@ -110,15 +112,6 @@
     .trix-widget {
         font-size: unset;
         font-weight: initial;
-
-        .trix__wrapper[disabled="disabled"] {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .trix__wrapper {
-            opacity: 1;
-        }
     }
 
     .el-switch.is-checked .el-switch__core {

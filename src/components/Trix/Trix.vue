@@ -1,5 +1,5 @@
 <template>
-    <div class="editor__wrapper">
+    <div class="editor__wrapper p-4">
         <div :id="toolbarId">
             <div class="flex w-full justify-between items-center">
                 <div class="flex ql-formats w-auto">
