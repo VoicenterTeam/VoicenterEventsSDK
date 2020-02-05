@@ -41,6 +41,7 @@
     import UpdateDialog from './UpdateDialog'
     import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
+    import TrixWidget from './ExternalData/TrixWidget'
     import PieChart from '@/components/Charts/PieChart'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
@@ -78,6 +79,7 @@
             ExternalDataWidget,
             ConfigDialog,
             PieChart,
+            TrixWidget,
         },
         props: {
             editable: {

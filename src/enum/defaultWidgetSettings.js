@@ -46,3 +46,5 @@ export const defaultWidths = {
     tablet: 'w-full',
     mobile: 'w-full'
 }
+
+export const fullHeightIdentifier = 1300;
