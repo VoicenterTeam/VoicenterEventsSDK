@@ -16,7 +16,7 @@ for (let i = 0; i < languages.length; i += 1) {
     languages[i] = {
         name: c[0],
         locale: c[1].toLowerCase(),
-        icon: `https://raw.githubusercontent.com/behdad/region-flags/gh-pages/png/${c[2].toUpperCase()}.png`
+        icon: `/img/flags/${c[2].toUpperCase()}.png`
     }
 }
 
