@@ -66,7 +66,7 @@
                         :widgetTimeOptions="widgetTimeOptions">
                         <template v-slot:frame-types>
                             <el-radio-group v-model="model.WidgetTime.type" class="pb-4">
-                                <el-radio v-for="widgetTimeType in widgetTimeTypes" v-bind="widgetTimeType">
+                                <el-radio v-for="widgetTimeType in widgetTimeTypes" v-bind="widgetTimeType" :key="widgetTimeType.text">
                                     {{widgetTimeType.text}}
                                 </el-radio>
                             </el-radio-group>
@@ -91,6 +91,7 @@
                     <el-collapse-item :title="$t('settings.filters')" name="filters">
                         <auto-complete
                             v-for="(filter, index) in model.WidgetConfig"
+                            :key="index"
                             v-if="isAutoComplete(filter)"
                             :model="model.WidgetConfig[index]"/>
                     </el-collapse-item>
@@ -99,6 +100,7 @@
                     <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
                         <other-filters
                             v-for="(filter, index) in model.WidgetConfig"
+                            :key="index"
                             v-if="isOtherFilters(filter)"
                             :model="model.WidgetConfig[index]"/>
                     </el-collapse-item>

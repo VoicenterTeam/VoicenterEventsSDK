@@ -201,7 +201,8 @@
             },
             confirmNewDashboard() {
                 this.$store.dispatch('dashboards/createDashboard', {
-                    ...this.newDashboard
+                    ...this.newDashboard,
+                    AccountID: this.$store.state.entities.selectedAccountID,
                 })
                 this.newDashboard = dashboardModel()
                 this.showCreateDashboardDialog = false

@@ -1,14 +1,16 @@
 import {settings} from '@/enum/defaultDashboardSettings'
 import store from '../store/store'
 
-export const dashboardModel = () => ({
-    "AccountID": store.state.entities.selectedAccountID,
-    "DashboardTitle": '',
-    "WidgetGroupList": [],
-    "DashboardLayout": {
-        settings: settings
+export const dashboardModel = () => {
+    return {
+        "AccountID": store.state.entities.selectedAccountID,
+        "DashboardTitle": '',
+        "WidgetGroupList": [],
+        "DashboardLayout": {
+            settings: settings
+        }
     }
-})
+}
 
 export const widgetGroupModel = () => ({
     "Order": 0,
