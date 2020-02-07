@@ -29,6 +29,8 @@
 
 <script>
     import get from 'lodash/get'
+    import format from 'date-fns/format'
+    import parseISO from 'date-fns/parseISO'
     import HtmlEditor from '../../Html/HtmlEditor'
     import {Switch, Tooltip} from 'element-ui'
     import { defaultColors, fullHeightIdentifier } from '@/enum/defaultWidgetSettings'
@@ -56,7 +58,7 @@
         },
         computed: {
             fetchData() {
-                return this.data.WidgetLayout.htmlData || {}
+                return this.data.WidgetLayout.htmlData || '<p>Click the switch to enable edit mode for this html</p>'
             },
             margins() {
                 if (this.$rtl.isRTL) {
@@ -87,7 +89,13 @@
                 if (!this.data.LastUpdate) {
                     return this.data.Title
                 }
-                return this.data.Title + ' / ' + this.data.LastUpdate;
+                let date = this.data.LastUpdate
+                try {
+                    date = format(parseISO(this.data.LastUpdate), 'MMM dd HH:mm')
+                } catch (e) {
+
+                }
+                return this.data.Title + ' / ' + date;
             }
         },
         methods: {
