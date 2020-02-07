@@ -196,5 +196,7 @@
     "errors.realtime.connection.message": "Could not establish connection with real time server. Please make sure your token is valid.",
     "errors.realtime.connection.message2": "Could not establish connection with real time server. Try to refresh the page",
     "errors.realtime.timeout.title": "Real time server timeout",
-    "errors.realtime.timeout.description": "Connection to real time server timed out. Please refresh the page to try again"
+    "errors.realtime.timeout.description": "Connection to real time server timed out. Please refresh the page to try again",
+    "select.all": "Select All",
+    "select.clear": "Clear All"
 }

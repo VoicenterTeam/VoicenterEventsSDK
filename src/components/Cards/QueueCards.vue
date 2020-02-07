@@ -48,19 +48,16 @@
                     <div class="flex w-full flex-col lg:flex-row">
                         <div class="flex lg:w-1/2">
                             <el-form-item class="font-bold" :label="$t('queues.to.display')">
-                                <el-select
+                                <base-select
                                     :class="$rtl.isRTL ? 'lg:pl-2' : 'lg:pr-2'"
                                     v-model="selectedQueues"
                                     collapse-tags
                                     multiple
-                                    filterable>
-                                    <el-option
-                                        v-for="(queue, index) in allQueues"
-                                        :key="index"
-                                        :label="queue.QueueName"
-                                        :value="queue.QueueID">
-                                    </el-option>
-                                </el-select>
+                                    filterable
+                                    :data="allQueues"
+                                    label-key="QueueName"
+                                    value-key="QueueID">
+                                </base-select>
                             </el-form-item>
                         </div>
                         <div class="flex lg:w-1/2">

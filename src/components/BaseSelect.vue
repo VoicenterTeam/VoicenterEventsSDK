@@ -3,16 +3,21 @@
                collapse-tags
                :clearable="multiple"
                :multiple="multiple"
+               :value="value"
                :loading="loading"
                v-bind="$attrs"
                v-on="listeners">
         <template v-slot:prefix>
             <slot name="prefix"/>
         </template>
-        <el-option v-for="(option, key) in data"
-                   :key="key"
-                   :label="option[labelKey]"
-                   :value="option[valueKey]"/>
+        <slot>
+            <el-option v-if="multiple && data.length" :label="$t('select.all')" :disabled="allValuesSelected" value="all"/>
+            <el-option v-if="multiple && data.length" :label="$t('select.clear')" :disabled="noValueSelected" value="none"/>
+            <el-option v-for="(option, key) in data"
+                       :key="key"
+                       :label="option[labelKey]"
+                       :value="option[valueKey]"/>
+        </slot>
     </el-select>
 </template>
 
@@ -25,6 +30,10 @@
             [Option.name]: Option
         },
         props: {
+            value: {
+                type: [Array, Object, String, Number],
+                default: () => []
+            },
             data: {
                 type: Array,
                 default: () => []
@@ -53,11 +62,36 @@
                     change: this.onChange
                 }
             },
+            allValuesSelected() {
+                return Array.isArray(this.value) && this.value.length === this.data.length
+            },
+            noValueSelected() {
+                return Array.isArray(this.value) && this.value.length === 0
+            }
         },
         methods: {
             onChange(value) {
+                if (this.multiple && Array.isArray(value)) {
+                    if (value.includes('all')) {
+                        return this.selectAll()
+                    }
+                    if (value.includes('none')) {
+                        return this.selectNone()
+                    }
+                }
                 this.$emit('change', value);
             },
+            selectAll() {
+                let value = this.data.map(d => d[this.valueKey])
+                this.$nextTick(() => {
+                    this.$emit('input', value);
+                })
+            },
+            selectNone() {
+                this.$nextTick(() => {
+                    this.$emit('input', []);
+                })
+            }
         },
     }
 </script>
