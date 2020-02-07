@@ -3,7 +3,6 @@
 </template>
 
 <script>
-    import statusTypes from "@/enum/statusTypes";
 
     export default {
         props: {
@@ -18,8 +17,7 @@
         },
         computed: {
             statusText() {
-                let data = statusTypes[this.extension.representativeStatus] || {text: ''}
-                let text = data.text
+                let text = this.$store.getters['entities/getStatusTextById'](this.status)
 
                 if (this.extension.calls && this.isTalking) {
                     text = 'status.talking'

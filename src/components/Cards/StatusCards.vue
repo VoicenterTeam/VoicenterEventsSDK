@@ -138,7 +138,24 @@
         },
         computed: {
             statuses() {
-                return Object.values(statusTypes)
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                if (storeStatuses.length) {
+                    return storeStatuses.map(status => {
+                        const otherData = localStatuses.find(s => s.value === status.StatusID) || {}
+                        return {
+                            ...status,
+                            ...otherData,
+                        }
+                    })
+                }
+                return localStatuses.map(status => {
+                    const statusText = this.$store.getters['entities/getStatusTextById'](status.value)
+                    return {
+                        ...status,
+                        text: statusText
+                    }
+                })
             },
             extensions() {
                 return this.$store.state.extensions.extensions
@@ -150,7 +167,7 @@
                 return statusTypes[this.status].icon
             },
             statusText() {
-                return this.$t(statusTypes[this.status].text)
+                return this.$t(this.$store.getters['entities/getStatusTextById'](this.status))
             },
             textColor() {
                 let color = statusTypes[this.status].color

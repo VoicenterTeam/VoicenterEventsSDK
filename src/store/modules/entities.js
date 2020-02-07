@@ -1,5 +1,6 @@
 import get from 'lodash/get'
 import {entitiesApi} from '@/api/entitiesApi'
+import statusTypes from "@/enum/statusTypes";
 const types = {
     SET_ENTITIES_LIST: 'SET_ENTITIES_LIST',
     SET_SELECTED_ACCOUNT_ID: 'SET_SELECTED_ACCOUNT_ID'
@@ -46,6 +47,21 @@ const getters = {
                 ID: a.distributor_id
             }
         })
+    },
+    accountStatuses: state => {
+        const accountID = state.selectedAccountID
+        const accounts = get(state, 'entitiesList.Accounts', [])
+        const account = accounts.find(a => a.distributor_id === accountID)
+        if (!account) {
+            return []
+        }
+        return get(account, 'AccountBreaks', [])
+    },
+    getStatusById: (state, getters) => id => {
+        return getters.accountStatuses.find(a => a.StatusID === id) || { Name: '' }
+    },
+    getStatusTextById: (state, getters) => id => {
+        return getters.getStatusById(id).Name || statusTypes[id].text || 'other'
     }
 }
 

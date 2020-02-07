@@ -84,8 +84,7 @@
                 }
             },
             statusText() {
-                let data = this.statusMappings[this.extension.representativeStatus] || {text: 'other'}
-                let text = data.text
+                let text = this.$store.getters['entities/getStatusTextById'](this.extension.representativeStatus)
                 if (this.isTalking) {
                     text = 'status.talking'
                 }

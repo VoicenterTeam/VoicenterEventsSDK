@@ -16,7 +16,6 @@
     import get from 'lodash/get'
     import groupBy from 'lodash/groupBy'
     import {Tooltip} from 'element-ui'
-    import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import {TrashIcon} from 'vue-feather-icons'
     import statusTypes from '@/enum/statusTypes'
@@ -112,7 +111,7 @@
 
                     let sliceObject = {
                         color: statusType.color,
-                        name: this.$t(statusType.text),
+                        name: this.$t(this.$store.getters['entities/getStatusTextById'](this.status)),
                         y: statusData[status].length,
                     }
 
