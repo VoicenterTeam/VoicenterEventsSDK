@@ -111,7 +111,7 @@
 
                     let sliceObject = {
                         color: statusType.color,
-                        name: this.$t(this.$store.getters['entities/getStatusTextById'](this.status)),
+                        name: this.$t(this.$store.getters['entities/getStatusTextById'](status)),
                         y: statusData[status].length,
                     }
 
