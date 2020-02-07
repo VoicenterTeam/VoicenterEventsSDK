@@ -1,0 +1,16 @@
+ul.redactor-linkButton-list,
+ul.redactor-linkButton-list li,
+ul.redactor-linkButton-list ul li {
+  margin:0;
+  padding: 0;
+  text-indent: 0;
+  list-style-type: none;
+}
+ul.redactor-linkButton-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+ul.redactor-linkButton-list li {
+  margin-bottom: 5px;
+  margin-right: 5px;
+}

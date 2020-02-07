@@ -44,7 +44,7 @@
                     <el-form-item>
                         <widget-width :model="model"/>
                     </el-form-item>
-                    <el-form-item v-if="isTrixWidget(widget)">
+                    <el-form-item v-if="isHtmlWidget(widget)">
                         <widget-height :model="model"/>
                     </el-form-item>
                     <el-form-item>
@@ -131,7 +131,7 @@
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget, isTrixWidget, isQueueGauge} from '@/helpers/widgetUtils'
+    import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget, isHtmlWidget, isQueueGauge} from '@/helpers/widgetUtils'
 
     export default {
         inheritAttrs: false,
@@ -171,7 +171,7 @@
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
                 allSeries,
-                isTrixWidget,
+                isHtmlWidget: isHtmlWidget,
             }
         },
         computed: {

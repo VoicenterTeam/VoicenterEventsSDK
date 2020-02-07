@@ -18,7 +18,6 @@
             await this.$store.dispatch('entities/getEntitiesList')
             this.$store.dispatch('dashboards/selectDashboard')
             this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
-            this.$store.dispatch('lang/setLanguage', process.env.VUE_APP_I18N_LOCALE)
         },
         computed: {
             colors() {

@@ -6,20 +6,19 @@
                     {{getInfo}}
                 </p>
             </div>
-            <div class="flex items-center" :class="margins" v-if="!editable">
+            <div class="flex items-center" :class="margins">
                 <el-tooltip class="item" effect="dark" :content="$t('Set edit mode')" placement="top">
-                    <el-switch
-                        v-model="editMode"/>
+                    <el-switch v-model="editMode"/>
                 </el-tooltip>
             </div>
         </div>
-        <div class="bg-white rounded ql-container ql-snow" :style="getStyles">
+        <div class="bg-white rounded" :style="getStyles">
             <div
-                class="ql-editor"
+                :style="getStyles"
                 v-if="!editMode"
                 v-html="fetchData">
             </div>
-            <trix
+            <html-editor
                 v-else
                 :value="fetchData"
                 :editMode="editMode"
@@ -30,13 +29,15 @@
 
 <script>
     import get from 'lodash/get'
-    import Trix from '../../Trix/Trix'
+    import format from 'date-fns/format'
+    import parseISO from 'date-fns/parseISO'
+    import HtmlEditor from '../../Html/HtmlEditor'
     import {Switch, Tooltip} from 'element-ui'
-    import {fullHeightIdentifier} from '@/enum/defaultWidgetSettings'
+    import { defaultColors, fullHeightIdentifier } from '@/enum/defaultWidgetSettings'
 
     export default {
         components: {
-            Trix,
+            HtmlEditor,
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
         },
@@ -57,7 +58,7 @@
         },
         computed: {
             fetchData() {
-                return this.data.WidgetLayout.trixData || {}
+                return this.data.WidgetLayout.htmlData || '<p>Click the switch to enable edit mode for this html</p>'
             },
             margins() {
                 if (this.$rtl.isRTL) {
@@ -74,11 +75,13 @@
                 } else {
                     height = height + 'px'
                 }
-
+                let colors = get(this.data.WidgetLayout, 'colors') || defaultColors;
                 return {
                     height: height,
                     overflow: 'auto',
                     border: 0,
+                    backgroundColor: colors.background,
+                    color: colors.fonts,
                     'margin-top': '10px'
                 }
             },
@@ -86,17 +89,23 @@
                 if (!this.data.LastUpdate) {
                     return this.data.Title
                 }
-                return this.data.Title + ' / ' + this.data.LastUpdate;
+                let date = this.data.LastUpdate
+                try {
+                    date = format(parseISO(this.data.LastUpdate), 'MMM dd HH:mm')
+                } catch (e) {
+
+                }
+                return this.data.Title + ' / ' + date;
             }
         },
         methods: {
             onUpdate(val) {
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
-                    ...{trixData: val}
+                    ...{htmlData: val}
                 }
                 this.$emit('on-update', this.data)
-                this.editMode = this.editable
+                this.editMode = false
             },
         },
         watch: {

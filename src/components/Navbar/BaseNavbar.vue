@@ -18,7 +18,7 @@
                                     </button>
                                 </el-tooltip>
                             </div>
-                            <language-select :value="$i18n.locale" @change="onLocaleChange"/>
+                            <language-select :value="activeLanguage" @change="onLocaleChange"/>
                         </div>
                         <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                                 @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
@@ -189,6 +189,9 @@
             getLogo() {
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
+            activeLanguage() {
+                return localStorage.getItem('locale') || this.$i18n.locale
+            }
         },
         methods: {
             chooseDashboard(dashboard) {
