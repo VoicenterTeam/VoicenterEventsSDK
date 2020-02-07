@@ -6,7 +6,7 @@
                     {{getInfo}}
                 </p>
             </div>
-            <div class="flex items-center" :class="margins" v-if="!editable">
+            <div class="flex items-center" :class="margins">
                 <el-tooltip class="item" effect="dark" :content="$t('Set edit mode')" placement="top">
                     <el-switch v-model="editMode"/>
                 </el-tooltip>
@@ -105,7 +105,7 @@
                     ...{htmlData: val}
                 }
                 this.$emit('on-update', this.data)
-                this.editMode = this.editable
+                this.editMode = false
             },
         },
         watch: {
