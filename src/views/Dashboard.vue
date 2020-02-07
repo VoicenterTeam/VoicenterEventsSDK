@@ -470,6 +470,9 @@
                 if (process.env.VUE_APP_EVENTS_SDK_SERVERS) {
                     config.servers = process.env.VUE_APP_EVENTS_SDK_SERVERS
                 }
+                if (typeof config.servers === 'string') {
+                    config.servers = JSON.parse(config.servers)
+                }
                 this.sdk = new EventsSDK(config)
                 await this.sdk.init()
                 this.sdk.on('*', this.onNewEvent)
