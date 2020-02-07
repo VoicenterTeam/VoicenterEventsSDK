@@ -1,0 +1,19 @@
+ul.redactor-icons-list,
+ul.redactor-icons-list li,
+ul.redactor-icons-list ul li {
+  margin:0;
+  padding: 0;
+  text-indent: 0;
+  list-style-type: none;
+}
+ul.redactor-icons-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+ul.redactor-icons-list li {
+  margin: 8px 8px 8px 0;
+  i {
+    cursor: pointer;
+    font-size: 24px
+  }
+}

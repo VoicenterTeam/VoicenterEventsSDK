@@ -72,7 +72,7 @@ export function isQueueChart(widget) {
     return widget.DataTypeID === widgetDataTypes.CHART_QUEUE;
 }
 
-export function isTrixWidget(widget) {
+export function isHtmlWidget(widget) {
     return widget.DataTypeID === widgetDataTypes.RICH_TEXT_EDITOR_ID;
 }
 
