@@ -3,18 +3,17 @@
         <label>
             {{model.ParameterPrettyName}}
         </label>
-        <el-select class="w-full py-2"
+        <base-select class="w-full py-2"
                    filterable
                    :loading="loading"
                    :v-on="$listeners"
                    :collapse-tags="collapseTags"
                    multiple
-                   v-model="model.WidgetParameterValue">
-            <el-option v-for="(option, key) in options"
-                       :label="option[templateConfig.label]"
-                       :value="option[templateConfig.value]"
-                       :key="key"/>
-        </el-select>
+                   v-model="model.WidgetParameterValue"
+                   :data="options"
+                   :label-key="templateConfig.label"
+                   :value-key="templateConfig.value">
+        </base-select>
     </div>
 </template>
 <script>
