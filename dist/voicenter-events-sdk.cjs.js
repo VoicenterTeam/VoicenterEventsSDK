@@ -485,6 +485,7 @@ function () {
     value: async function _getServers() {
       // Ignore server fetch if we have a list of servers passed via options
       if (this.options.servers && Array.isArray(this.options.servers) && this.options.servers.length > 1) {
+        this.servers = this.options.servers;
         return;
       }
 
