@@ -26,6 +26,10 @@
             settings: {
                 type: Object,
                 default: () => ({})
+            },
+            statusThreshold: {
+                type: Object,
+                default: () => ({})
             }
         },
         data() {
@@ -47,6 +51,7 @@
 
                 if (!this.settings.callThreshold) {
                     show = false;
+                    return { show, icon }
                 }
                 let seconds = this.timer.state.seconds;
                 let minThreshold = this.settings.callThresholdLowValue
@@ -57,8 +62,16 @@
                 } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
                     icon = 'IconRedBulb'
                 }
+                if (this.statusThreshold.show && this.statusThreshold.icon === 'IconRedBulb' && icon === 'IconYellowBulb') {
+                    show = false
+                }
                 return {show, icon}
             },
+        },
+        watch: {
+          'threshold'(value) {
+              this.$emit('threshold-change', value)
+          }
         },
         mounted() {
             this.timer.start()

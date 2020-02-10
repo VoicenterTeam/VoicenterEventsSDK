@@ -17,7 +17,7 @@
         },
         computed: {
             statusText() {
-                let text = this.$store.getters['entities/getStatusTextById'](this.status)
+                let text = this.$store.getters['entities/getStatusTextById'](this.extension.representativeStatus)
 
                 if (this.extension.calls && this.isTalking) {
                     text = 'status.talking'
