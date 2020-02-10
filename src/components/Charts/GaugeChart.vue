@@ -17,6 +17,7 @@
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import {TrashIcon} from 'vue-feather-icons'
+    import queueMixin from '@/mixins/queueMixin'
     import gaugeChartConfig from './Configs/Gauge'
     import {WidgetDataApi} from '@/api/widgetDataApi'
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
@@ -28,6 +29,7 @@
     solidGaugeInit(Highcharts)
 
     export default {
+        mixins: [queueMixin],
         components: {
             TrashIcon,
             highcharts: Chart,
@@ -78,7 +80,7 @@
                 let showQueues = this.data.WidgetLayout.showQueues
 
                 if (agentsInACall && showQueues) {
-                    this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
+                    this.data.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                     let filteredQueues = agentsOnline.filter((el) => showQueues.includes(el.QueueID))
                     agentsInACall = filteredQueues.length
                 }
