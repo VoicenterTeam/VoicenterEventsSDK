@@ -2,7 +2,7 @@
     <el-dialog v-bind="$attrs" v-on="$listeners" :width="setWidth">
         <div class="flex flex-row items-center">
             <h5 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('extensionCard.update')}}</h5>
-            <static-widget-info class="px-2" :widget="widget"/>
+            <static-widget-info class="px-2" :widget="model"/>
         </div>
         <div class="flex items-center my-4">
             <slot name="header"/>
