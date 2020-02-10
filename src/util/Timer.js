@@ -1,3 +1,4 @@
+import store from '@/store/store'
 export default class Timer {
     constructor(options = {interval: 1000, initialTimeInSeconds: 0}) {
         this.state = {
@@ -34,7 +35,17 @@ export default class Timer {
         this.state.seconds = 0
     }
 
+    setValue(value) {
+        this.state.seconds = value
+    }
+
+    addServerDelta() {
+        const delta = store.state.extensions.serverDelta
+        this.setValue(this.state.seconds + delta/1000)
+    }
+
     start() {
+        this.addServerDelta()
         this.interval = setInterval(() => {
             this.state.seconds++
         }, this.options.interval || 1000)
