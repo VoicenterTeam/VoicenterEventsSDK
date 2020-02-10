@@ -198,5 +198,8 @@
     "errors.realtime.timeout.title": "Real time server timeout",
     "errors.realtime.timeout.description": "Connection to real time server timed out. Please refresh the page to try again",
     "select.all": "Select All",
-    "select.clear": "Clear All"
+    "select.clear": "Clear All",
+    "template.name": "Template Name: ",
+    "widget.id": "Widget ID: ",
+    "widget.info": "Widget Info"
 }

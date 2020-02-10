@@ -112,9 +112,6 @@
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
             },
-            getWidgetTemplate() {
-                return this.$store.getters['widgetTemplate/getWidgetTemplate']
-            },
             getDialogComponent() {
                 if (this.widget.DataTypeID === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
                     return 'ConfigDialog'

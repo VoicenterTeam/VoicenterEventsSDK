@@ -1,6 +1,9 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" :width="setWidth">
-        <h5 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('extensionCard.update')}}</h5>
+        <div class="flex flex-row items-center">
+            <h5 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('extensionCard.update')}}</h5>
+            <static-widget-info class="px-2" :widget="widget"/>
+        </div>
         <div class="flex items-center my-4">
             <slot name="header"/>
         </div>
@@ -22,6 +25,7 @@
 </template>
 <script>
     import {Collapse, CollapseItem, Dialog} from 'element-ui'
+    import StaticWidgetInfo from '../Widgets/WidgetUpdateForm/StaticWidgetInfo'
     import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
     export default {
@@ -31,6 +35,7 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             WidgetColors,
+            StaticWidgetInfo,
         },
         props: {
             model: {

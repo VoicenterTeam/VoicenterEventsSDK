@@ -1,6 +1,9 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners" v-if="model.WidgetLayout">
-        <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
+        <div class="flex flex-row items-center">
+            <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
+            <static-widget-info class="px-2" :widget="widget"/>
+        </div>
         <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model">
             <el-form-item>
                 <div>
@@ -66,7 +69,8 @@
                         :widgetTimeOptions="widgetTimeOptions">
                         <template v-slot:frame-types>
                             <el-radio-group v-model="model.WidgetTime.type" class="pb-4">
-                                <el-radio v-for="widgetTimeType in widgetTimeTypes" v-bind="widgetTimeType" :key="widgetTimeType.text">
+                                <el-radio v-for="widgetTimeType in widgetTimeTypes" v-bind="widgetTimeType"
+                                          :key="widgetTimeType.text">
                                     {{widgetTimeType.text}}
                                 </el-radio>
                             </el-radio-group>
@@ -124,6 +128,7 @@
     import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
+    import StaticWidgetInfo from './WidgetUpdateForm/StaticWidgetInfo'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
     import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetHeight from './WidgetUpdateForm/WidgetLayout/WidgetHeight'
@@ -131,7 +136,14 @@
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {isPieWidget, isQueueChart, isQueueTable, isRealtimeWidget, isHtmlWidget, isQueueGauge} from '@/helpers/widgetUtils'
+    import {
+        isHtmlWidget,
+        isPieWidget,
+        isQueueChart,
+        isQueueGauge,
+        isQueueTable,
+        isRealtimeWidget
+    } from '@/helpers/widgetUtils'
 
     export default {
         inheritAttrs: false,
@@ -153,6 +165,7 @@
             WidgetHeight,
             RefreshButton,
             [Tooltip.name]: Tooltip,
+            StaticWidgetInfo,
         },
         props: {
             widget: {
