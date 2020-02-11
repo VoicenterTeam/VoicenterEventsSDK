@@ -6,3 +6,7 @@ export const TIME_LINE_TIMESTAMP = {
     WEEK: 1000 * 24 * 3600 * 7,
     MONTH: 1000 * 24 * 3600 * 30,
 }
+
+export const DAY = TIME_LINE_TIMESTAMP.DAY
+export const HOUR = TIME_LINE_TIMESTAMP.DAY / 24
+export const MINUTE = HOUR / 60
