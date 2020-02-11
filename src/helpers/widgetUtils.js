@@ -3,6 +3,15 @@ import store from '@/store/store'
 import widgetDataTypes from '@/enum/widgetDataTypes'
 import {realTimeTableKey} from '@/enum/realTimeTableConfigs'
 
+export function getWidgetRefreshInterval(widget) {
+    let refreshInterval = get(widget, 'WidgetLayout.DefaultRefreshInterval')
+    if (!refreshInterval) {
+        let widgetTemplate = getWidgetTemplate(widget)
+        refreshInterval = get(widgetTemplate, 'DefaultRefreshInterval', '')
+    }
+    return refreshInterval * 1000
+}
+
 export function getWidgetEndpoint(widget) {
     let endpoint = get(widget, 'WidgetLayout.Endpoint')
     if (!endpoint) {

@@ -182,7 +182,7 @@
                 }
                 return ''
             },
-            async getTableData() {
+            async getWidgetData() {
                 try {
 
                     let data = await getWidgetData(this.widget)
@@ -229,9 +229,6 @@
                 }
             }
         },
-        beforeDestroy() {
-            clearInterval(this.fetchDataInterval)
-        },
         watch: {
             filter() {
                 this.currentPage = 1
@@ -239,7 +236,7 @@
             data: {
                 immediate: true,
                 handler: function () {
-                    this.getTableData()
+                    this.getWidgetData()
                 }
             }
         },

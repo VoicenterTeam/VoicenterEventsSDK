@@ -51,12 +51,9 @@
                 }
                 return 'chart'
             },
-            refreshInterval() {
-                return get(this.data.WidgetLayout, 'refreshInterval')
-            }
         },
         methods: {
-            async getChartData() {
+            async getWidgetData() {
                 let widgetDataType = this.data.DataTypeID
                 let Data = await getWidgetData(this.data)
                 let chartData = get(Data, '0', {series: []})
@@ -104,17 +101,19 @@
             }
         },
         mounted() {
-            this.getChartData()
-            if (this.refreshInterval) {
+            if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
-                    this.getChartData()
-                }, this.refreshInterval)
+                    this.getWidgetData()
+                }, this.data.DefaultRefreshInterval)
             }
         },
         watch: {
-            data() {
-                this.getChartData()
-            },
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.getWidgetData()
+                }
+            }
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {
