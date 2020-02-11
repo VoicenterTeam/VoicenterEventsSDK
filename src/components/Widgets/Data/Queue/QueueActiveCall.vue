@@ -97,7 +97,7 @@
         },
         mounted() {
             if (!this.data.WidgetLayout.showQueues) {
-                this.$set(this.data.WidgetLayout, 'showQueues', this.queueWithActiveCalls.map((el) => el.QueueID))
+                this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
         },
     }
