@@ -12,7 +12,7 @@
                 <label>{{$t('queues.to.display')}}</label>
                 <base-select
                     v-model="model.WidgetLayout.showQueues"
-                    :data="queueWithActiveCalls"
+                    :data="allQueues"
                     :labelKey="'QueueName'"
                     :valueKey="'QueueID'"/>
             </el-form-item>
