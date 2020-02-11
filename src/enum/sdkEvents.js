@@ -23,3 +23,19 @@ export const sdkEventReasons = {
     ANSWER: 'ANSWER',
     HANGUP: 'HANGUP'
 }
+
+const offlineEvents = [
+    sdkEventTypes.CONNECT_ERROR,
+    sdkEventTypes.CONNECT_TIMEOUT,
+    sdkEventTypes.DISCONNECT,
+    sdkEventTypes.RECONNECT_ATTEMPT,
+    sdkEventTypes.RECONNECTING,
+    sdkEventTypes.RECONNECT_ERROR,
+    sdkEventTypes.RECONNECT_FAILED,
+    sdkEventReasons.CLOSE
+]
+
+export function isSocketOffline(event) {
+    let { name } = event
+    return offlineEvents.includes(name)
+}
