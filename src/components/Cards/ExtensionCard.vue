@@ -18,12 +18,17 @@
                 <span class="text-center text-main-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
                 <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"/>
             </div>
-            <call-info v-for="(call, index) in extension.calls" :key="index"
-                       :status-threshold="threshold"
-                       :call="call"
-                       :settings="settings"
-                       @threshold-change="onCallThresholdChange"
-            />
+            <call-info
+                v-for="(call, index) in extension.calls"
+                :key="index"
+                :status-threshold="threshold"
+                :call="call"
+                :settings="settings"
+            >
+                <template v-slot:threshold="{statusThreshold}">
+                    <component v-if="statusThreshold.show" :is="statusThreshold.icon" class="w-6 mb-1 mx-2"/>
+                </template>
+            </call-info>
         </div>
     </div>
 </template>
@@ -59,7 +64,6 @@
                     initialTimeInSeconds
                 }),
                 statusMappings: statusTypes,
-                isCallThresholdPriority: false
             }
         },
         computed: {
@@ -69,7 +73,8 @@
                 let seconds = this.timer.state.seconds;
                 let minThreshold = this.statusInfo.WarningSecLimit
                 let maxThreshold = this.statusInfo.AlertSecLimit
-                if (!minThreshold && !maxThreshold || this.isCallThresholdPriority) {
+
+                if (!minThreshold && !maxThreshold || (this.extension.calls.length && this.settings.callThreshold)) {
                     return {
                         show: false,
                         icon
@@ -137,18 +142,6 @@
                     }
                 }
             },
-            threshold(value) {
-                this.$emit('threshold-change', value)
-            }
-        },
-        methods: {
-            onCallThresholdChange(callThreshold) {
-                if (callThreshold.show && callThreshold.icon === 'IconRedBulb' && this.threshold.icon === 'IconYellowBulb') {
-                    this.isCallThresholdPriority = true
-                } else {
-                    this.isCallThresholdPriority = false
-                }
-            }
         },
         mounted() {
             this.timer.start()
