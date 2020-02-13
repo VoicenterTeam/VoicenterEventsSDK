@@ -18,7 +18,17 @@
                 <span class="text-center text-main-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
                 <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"/>
             </div>
-            <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :settings="settings"/>
+            <call-info
+                v-for="(call, index) in extension.calls"
+                :key="index"
+                :status-threshold="threshold"
+                :call="call"
+                :settings="settings"
+            >
+                <template v-slot:threshold="{statusThreshold}">
+                    <component v-if="statusThreshold.show" :is="statusThreshold.icon" class="w-6 mb-1 mx-2"/>
+                </template>
+            </call-info>
         </div>
     </div>
 </template>
@@ -60,16 +70,16 @@
             threshold() {
                 let show = true;
                 let icon = 'IconYellowBulb';
-                if ((Array.isArray(this.extension.calls) &&
-                    this.extension.calls.length > 0) ||
-                    !this.settings.generalThreshold) {
-                    show = false;
-                }
-
                 let seconds = this.timer.state.seconds;
-                let minThreshold = this.settings.generalThresholdLowValue
-                let maxThreshold = this.settings.generalThresholdHeightValue
+                let minThreshold = this.statusInfo.WarningSecLimit
+                let maxThreshold = this.statusInfo.AlertSecLimit
 
+                if (!minThreshold && !maxThreshold || (this.extension.calls.length && this.settings.callThreshold)) {
+                    return {
+                        show: false,
+                        icon
+                    }
+                }
                 if (minThreshold > seconds) {
                     show = false
                 } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
@@ -111,6 +121,9 @@
                     return false
                 }
                 return this.extension.calls.every(c => c.callAnswered !== 0)
+            },
+            statusInfo() {
+                return this.$store.getters['entities/getStatusById'](this.extension.representativeStatus) || {}
             }
         },
         watch: {
@@ -128,7 +141,7 @@
                         this.timer.reset()
                     }
                 }
-            }
+            },
         },
         mounted() {
             this.timer.start()
