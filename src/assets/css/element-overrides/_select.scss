@@ -24,3 +24,7 @@ li.el-select-dropdown__item.hover, li.el-select-dropdown__item:hover {
 .el-select .el-input__inner:focus {
     border-color: var(--primary-color);
 }
+
+.rtl .el-select-dropdown .el-select-dropdown__item {
+    @apply flex flex-row-reverse;
+}

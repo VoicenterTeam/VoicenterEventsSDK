@@ -17,9 +17,9 @@
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
     import {TrashIcon} from 'vue-feather-icons'
+    import queueMixin from '@/mixins/queueMixin'
     import gaugeChartConfig from './Configs/Gauge'
     import {WidgetDataApi} from '@/api/widgetDataApi'
-    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import highchartsMoreInit from 'highcharts/highcharts-more'
     import solidGaugeInit from 'highcharts/modules/solid-gauge'
     import {isExternalDataWidget} from '@/helpers/widgetUtils'
@@ -28,6 +28,7 @@
     solidGaugeInit(Highcharts)
 
     export default {
+        mixins: [queueMixin],
         components: {
             TrashIcon,
             highcharts: Chart,
@@ -49,14 +50,6 @@
                 chartData: {},
             }
         },
-        computed: {
-            agentsOnline() {
-                return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
-            },
-            agentsInACall() {
-                return this.agentsOnline.filter(agent => agent.calls.length)
-            },
-        },
         methods: {
             async chartOptions() {
                 if (isExternalDataWidget(this.data)) {
@@ -72,26 +65,18 @@
                 })
             },
             getAgentsData() {
-                let agentsOnline = this.agentsOnline
 
-                let agentsInACall = this.agentsInACall ? this.agentsInACall.length : 0
-                let showQueues = this.data.WidgetLayout.showQueues
-
-                if (agentsInACall && showQueues) {
-                    this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
-                    let filteredQueues = agentsOnline.filter((el) => showQueues.includes(el.QueueID))
-                    agentsInACall = filteredQueues.length
-                }
+                let queuesCount = this.allQueues.length
 
                 let range = {
                     min: 0,
-                    max: agentsOnline.length
+                    max: queuesCount
                 }
 
                 let stops = [
                     [0, '#55BF3B'],
-                    [agentsOnline.length / 2 + 0.1, '#DDDF0D'],
-                    [agentsOnline.length, '#DF5353']
+                    [queuesCount / 2 + 0.1, '#DDDF0D'],
+                    [queuesCount, '#DF5353']
                 ]
 
                 let yAxisConfig = {
@@ -101,6 +86,7 @@
                     stops,
                 }
 
+                let agentsInACall = this.filteredQueuesWithActiveCalls.length
                 this.data.series = [{data: [agentsInACall]}]
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
@@ -112,6 +98,14 @@
                 handler: function () {
                     this.chartOptions()
                 }
+            },
+            allQueues() {
+                this.chartOptions()
+            }
+        },
+        mounted() {
+            if (!this.data.WidgetLayout.showQueues) {
+                this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
         },
     }

@@ -1,5 +1,5 @@
 <template>
-    <el-tooltip class="item" effect="dark" :content="$t('refresh.filter.data')" placement="top">
+    <el-tooltip class="item" effect="dark" :content="$t(tooltipText)" placement="top">
         <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100 mx-1 border border-primary"
                 v-bind="$attrs"
                 v-on="$listeners">
@@ -15,7 +15,11 @@
         inheritAttrs: false,
         props: {
             loading: Boolean,
-            default: false
+            default: false,
+            tooltipText: {
+                type: String,
+                default: 'refresh.filter.data'
+            }
         },
         components: {
             RefreshCwIcon,

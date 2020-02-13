@@ -152,7 +152,7 @@
                 return isRealtimeWidget(this.widget)
             },
             getSettings() {
-                return this.widget.WidgetLayout.settings || realTimeSettings
+                return this.data.WidgetLayout.settings || realTimeSettings
             },
             availableColumns() {
                 return get(this.widget.WidgetLayout, 'Columns.availableColumns') || this.columns

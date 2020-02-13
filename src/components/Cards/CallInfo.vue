@@ -5,7 +5,7 @@
             <span v-if="call.callerphone !== call.callername" class="text-main-xs font-medium">{{call.callername}}</span>
         </div>
         <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
-        <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"/>
+        <slot name="threshold" :statusThreshold="threshold"/>
         <span class="font-medium tracking-wide call-time font-mono">{{timer.displayTime}}</span>
     </div>
 </template>
@@ -26,7 +26,7 @@
             settings: {
                 type: Object,
                 default: () => ({})
-            }
+            },
         },
         data() {
             let initialTimeInSeconds = getInitialTime(this.call.callStarted)
@@ -37,6 +37,7 @@
                 directionMappings: {
                     "Outgoing": "IconDirectionOutgoing",
                     "Incoming": "IconDirectionIncoming",
+                    "Click2Call": "IconDirectionIncoming",
                 },
             }
         },
@@ -47,6 +48,7 @@
 
                 if (!this.settings.callThreshold) {
                     show = false;
+                    return { show, icon }
                 }
                 let seconds = this.timer.state.seconds;
                 let minThreshold = this.settings.callThresholdLowValue
@@ -68,11 +70,11 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
     .call-time {
         min-width: 48px;
     }
     .rtl .direction-icon{
-        trnsform: rotate(180deg);
+        transform: rotate(180deg);
     }
 </style>

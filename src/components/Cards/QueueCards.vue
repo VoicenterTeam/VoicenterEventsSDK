@@ -250,6 +250,7 @@
             data: {
                 immediate: true,
                 handler: function (widget) {
+                    this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
                 }
             }
