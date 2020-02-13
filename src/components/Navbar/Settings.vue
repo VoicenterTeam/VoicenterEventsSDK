@@ -138,7 +138,7 @@
                 refreshInterval: {
                     min: 10,
                     max: 1000,
-                    step: 60,
+                    step: 10,
                     bestOptions: {
                         100: '100s',
                         200: '200s',
