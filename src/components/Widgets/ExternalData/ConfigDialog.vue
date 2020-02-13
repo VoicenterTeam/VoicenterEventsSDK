@@ -1,5 +1,9 @@
 <template>
     <el-dialog v-bind="$attrs" v-on="$listeners">
+        <div class="flex flex-row items-center">
+            <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
+            <static-widget-info class="px-2" :widget="widget"/>
+        </div>
         <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model"
                  v-if="model.WidgetLayout">
             <el-form-item>
@@ -62,6 +66,7 @@
     import WidgetWidth from '../WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetColors from '../WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
+    import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
 
     export default {
         components: {
@@ -74,7 +79,8 @@
             [CollapseItem.name]: CollapseItem,
             WidgetColors,
             WidgetWidth,
-            WidgetPadding
+            WidgetPadding,
+            StaticWidgetInfo
         },
         props: {
             widget: {
