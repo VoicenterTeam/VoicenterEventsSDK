@@ -229,6 +229,13 @@
                 }
             }
         },
+        mounted() {
+            if (this.data.DefaultRefreshInterval) {
+                this.fetchDataInterval = setInterval(() => {
+                    this.getWidgetData()
+                }, this.data.DefaultRefreshInterval)
+            }
+        },
         watch: {
             filter() {
                 this.currentPage = 1
@@ -238,6 +245,11 @@
                 handler: function () {
                     this.getWidgetData()
                 }
+            }
+        },
+        beforeDestroy() {
+            if (this.fetchDataInterval) {
+                clearInterval(this.fetchDataInterval)
             }
         },
     }

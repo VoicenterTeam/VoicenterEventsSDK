@@ -9,7 +9,7 @@ export function getWidgetRefreshInterval(widget) {
         let widgetTemplate = getWidgetTemplate(widget)
         refreshInterval = get(widgetTemplate, 'DefaultRefreshInterval', '')
     }
-    return refreshInterval * 1000
+    return Number(refreshInterval) * 1000
 }
 
 export function getWidgetEndpoint(widget) {
