@@ -4,11 +4,14 @@ const types = {
     SET_EXTENSIONS: 'SET_EXTENSIONS',
     UPDATE_EXTENSIONS: 'UPDATE_EXTENSIONS',
     SET_SERVER_TIME: 'SET_SERVER_TIME',
+    SET_IS_SOCKET_OFFLINE: 'SET_IS_SOCKET_OFFLINE',
 };
 const state = {
     extensions: [],
     serverTime: null,
     serverDelta: 0,
+    isSocketOffline: false,
+    offlineSocketTimestamp: null
 };
 
 const mutations = {
@@ -21,6 +24,14 @@ const mutations = {
     [types.SET_SERVER_TIME]: (state, value) => {
         state.serverTime = value * 1000 - ISRAEL_TIMEZONE_OFFSET
         state.serverDelta = state.serverTime - new Date().getTime()
+    },
+    [types.SET_IS_SOCKET_OFFLINE]: (state, value) => {
+        state.isSocketOffline = value
+        if (value) {
+            state.offlineSocketTimestamp = new Date().getTime()
+        } else {
+            state.offlineSocketTimestamp = null
+        }
     }
 };
 

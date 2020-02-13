@@ -4,7 +4,17 @@
             <span class="font-mono">{{timer.displayTime}}</span>
             <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"/>
         </div>
-        <call-info v-for="(call, index) in extension.calls" :key="index" :call="call" :textColor="'text-white'"/>
+        <call-info
+            v-for="(call, index) in extension.calls"
+            :key="index"
+            :text-color="'text-white'"
+            :call="call"
+            :settings="settings"
+        >
+            <template v-slot:threshold="{statusThreshold}">
+                <component v-if="statusThreshold.show" :is="statusThreshold.icon" class="w-6 mb-1 mx-2"/>
+            </template>
+        </call-info>
     </div>
 </template>
 <script>
@@ -27,19 +37,28 @@
                 default: () => ({})
             }
         },
+        data() {
+            let initialTimeInSeconds = getInitialTime(this.extension.lastAnsweredCallEventEpoch)
+            return {
+                timer: new Timer({
+                    initialTimeInSeconds
+                })
+            }
+        },
         computed: {
             threshold() {
                 let show = true;
                 let icon = 'IconYellowBulb';
-                if ((Array.isArray(this.extension.calls) &&
-                    this.extension.calls.length > 0) ||
-                    !this.settings.generalThreshold) {
-                    show = false;
-                }
                 let seconds = this.timer.state.seconds;
-                let minThreshold = this.settings.generalThresholdLowValue
-                let maxThreshold = this.settings.generalThresholdHeightValue
+                let minThreshold = this.statusInfo.WarningSecLimit
+                let maxThreshold = this.statusInfo.AlertSecLimit
 
+                if (!minThreshold && !maxThreshold || (this.extension.calls.length && this.settings.callThreshold)) {
+                    return {
+                        show: false,
+                        icon
+                    }
+                }
                 if (minThreshold > seconds) {
                     show = false
                 } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
@@ -47,14 +66,8 @@
                 }
                 return {show, icon}
             },
-        },
-        data() {
-            let initialTimeInSeconds = getInitialTime(this.extension.lastAnsweredCallEventEpoch)
-
-            return {
-                timer: new Timer({
-                    initialTimeInSeconds
-                })
+            statusInfo() {
+                return this.$store.getters['entities/getStatusById'](this.extension.representativeStatus) || {}
             }
         },
         watch: {

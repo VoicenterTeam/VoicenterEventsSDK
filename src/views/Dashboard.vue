@@ -1,9 +1,16 @@
 <template>
     <div>
+        <socket-status-alert @retry="retrySocketConnection"></socket-status-alert>
         <base-navbar>
             <template v-slot:dashboard-operations>
                 <div class="flex">
                     <div class="my-3 flex items-center">
+                        <el-tooltip class="item" effect="dark" :content="$t('tooltip.socket.reconnect')"
+                                    placement="bottom">
+                            <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100" @click="retrySocketConnection">
+                                <ZapIcon class="w-5 h-5 text-primary"/>
+                            </button>
+                        </el-tooltip>
                         <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                             <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                         placement="bottom">
@@ -86,7 +93,7 @@
 <script>
     import map from 'lodash/map'
     import get from 'lodash/get'
-    import {Tooltip} from 'element-ui'
+    import { Notification, Tooltip } from 'element-ui'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
@@ -94,7 +101,7 @@
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
     import AddButton from '@/components/AddButton'
-    import {sdkEventTypes} from '@/enum/sdkEvents'
+    import { isSocketOffline, sdkEventTypes, } from '@/enum/sdkEvents'
     import parseCatch from '@/helpers/handleErrors'
     import {targets, types} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
@@ -111,9 +118,10 @@
     import {dashboardOperation, widgetGroupModel} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
+    import SocketStatusAlert from "@/components/Common/SocketStatusAlert";
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
     import EventBus from "@/event-bus/EventBus";
-    import {ListIcon} from 'vue-feather-icons'
+    import {ListIcon, ZapIcon} from 'vue-feather-icons'
 
     export default {
         components: {
@@ -127,9 +135,11 @@
             TabbedView,
             Sidebar,
             TemplatesCategory,
+            SocketStatusAlert,
             ReorderLayoutDialog,
             [Tooltip.name]: Tooltip,
             ListIcon,
+            ZapIcon,
         },
         mixins: [pageSizeMixin],
         data() {
@@ -383,8 +393,13 @@
             switchTab(tab) {
                 this.activeTab = tab
             },
+            async retrySocketConnection() {
+                Notification.info(this.$t('common.socketReconnect'));
+                await this.initRealtimeSdk()
+            },
             onNewEvent(eventData) {
                 let {name, data} = eventData
+                this.$store.commit('extensions/SET_IS_SOCKET_OFFLINE', isSocketOffline(eventData))
                 switch (name) {
                     case sdkEventTypes.ALL_EXTENSION_STATUS:
                         this.$store.dispatch('extensions/setExtensions', data.extensions)
@@ -436,6 +451,33 @@
                 } catch (e) {
                 }
             },
+            async initRealtimeSdk() {
+                try {
+                    if (this.sdk) {
+                        this.sdk.emit(sdkEventTypes.CLOSE)
+                        this.sdk = null
+                    }
+                    const config = {
+                        token: this.token,
+                    }
+                    if (process.env.VUE_APP_EVENTS_SDK_URL) {
+                        config.url = process.env.VUE_APP_EVENTS_SDK_URL
+                    }
+                    if (process.env.VUE_APP_EVENTS_SDK_SERVERS) {
+                        config.servers = process.env.VUE_APP_EVENTS_SDK_SERVERS
+                    }
+                    if (typeof config.servers === 'string') {
+                        config.servers = JSON.parse(config.servers)
+                    }
+                    this.sdk = new EventsSDK(config)
+                    await this.sdk.init()
+                    this.sdk.on('*', this.onNewEvent)
+                    await this.sdk.login()
+                } catch (e) {
+                    parseCatch(e, true)
+                }
+
+            }
         },
         watch: {
             dashboard: {
@@ -461,26 +503,7 @@
             }
         },
         async created() {
-            try {
-                const config = {
-                    token: this.token,
-                }
-                if (process.env.VUE_APP_EVENTS_SDK_URL) {
-                    config.url = process.env.VUE_APP_EVENTS_SDK_URL
-                }
-                if (process.env.VUE_APP_EVENTS_SDK_SERVERS) {
-                    config.servers = process.env.VUE_APP_EVENTS_SDK_SERVERS
-                }
-                if (typeof config.servers === 'string') {
-                    config.servers = JSON.parse(config.servers)
-                }
-                this.sdk = new EventsSDK(config)
-                await this.sdk.init()
-                this.sdk.on('*', this.onNewEvent)
-                await this.sdk.login()
-            } catch (e) {
-                parseCatch(e, true)
-            }
+            await this.initRealtimeSdk()
         }
     }
 </script>
