@@ -35,13 +35,24 @@
                     </el-form-item>
                     <el-form-item class="pb-4">
                         <label>{{$t('font.size')}}</label>
-                            <el-slider
-                                :min="fontSize.min"
-                                :max="fontSize.max"
-                                :marks="bestOptions"
-                                v-model="settings.fontSize"
-                                show-input>
-                            </el-slider>
+                        <el-slider
+                            :min="fontSize.min"
+                            :max="fontSize.max"
+                            :marks="bestOptions"
+                            v-model="settings.fontSize"
+                            show-input>
+                        </el-slider>
+                    </el-form-item>
+                    <el-form-item class="pb-4">
+                        <label>{{$t('settings.minRefreshInterval')}}</label>
+                        <el-slider
+                            :min="refreshInterval.min"
+                            :max="refreshInterval.max"
+                            :step="refreshInterval.step"
+                            :marks="refreshInterval.bestOptions"
+                            v-model="settings.minRefreshInterval"
+                            show-input>
+                        </el-slider>
                     </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
@@ -85,12 +96,12 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dialog, Checkbox, Collapse, CollapseItem, InputNumber, Slider, Tooltip} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, Dialog, InputNumber, Slider, Tooltip} from 'element-ui'
     import ColorPicker from '../Common/ColorPicker'
     import convertHex from '@/helpers/convertHex'
     import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
-    import {settingsColors, predefinedColors} from '@/enum/layout'
+    import {predefinedColors, settingsColors} from '@/enum/layout'
     import {getBase64} from '@/helpers/util'
     import {TrashIcon} from 'vue-feather-icons'
 
@@ -120,10 +131,22 @@
                     max: 24
                 },
                 bestOptions: {
-                    14: '14',
-                    16: '16',
-                    20: '20'
-                }
+                    14: '14px',
+                    16: '16px',
+                    20: '20px'
+                },
+                refreshInterval: {
+                    min: 10,
+                    max: 1000,
+                    step: 60,
+                    bestOptions: {
+                        100: '100s',
+                        200: '200s',
+                        400: '400s',
+                        600: '600s',
+                        800: '800s',
+                    }
+                },
             }
         },
         props: {
