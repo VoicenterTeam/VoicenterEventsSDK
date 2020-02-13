@@ -3,6 +3,26 @@ import store from '@/store/store'
 import widgetDataTypes from '@/enum/widgetDataTypes'
 import {realTimeTableKey} from '@/enum/realTimeTableConfigs'
 
+// minimum refresh interval for real-time widgets - 10 seconds
+const MIN_REFRESH_INTERVAL = 10
+
+const minRefreshInterval = () => {
+    return store.state.dashboards.settings.minRefreshInterval || MIN_REFRESH_INTERVAL
+}
+
+export function getWidgetRefreshInterval(widget) {
+    let refreshInterval = get(widget, 'WidgetLayout.DefaultRefreshInterval')
+    if (!refreshInterval) {
+        let widgetTemplate = getWidgetTemplate(widget)
+        refreshInterval = get(widgetTemplate, 'DefaultRefreshInterval', '')
+    }
+
+    let minInterval = minRefreshInterval()
+    refreshInterval = Number(refreshInterval) <= minInterval ? Number(refreshInterval) : minInterval
+
+    return Number(refreshInterval) * 1000
+}
+
 export function getWidgetEndpoint(widget) {
     let endpoint = get(widget, 'WidgetLayout.Endpoint')
     if (!endpoint) {

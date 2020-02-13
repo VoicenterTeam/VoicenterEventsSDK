@@ -182,7 +182,7 @@
                 }
                 return ''
             },
-            async getTableData() {
+            async getWidgetData() {
                 try {
 
                     let data = await getWidgetData(this.widget)
@@ -229,8 +229,12 @@
                 }
             }
         },
-        beforeDestroy() {
-            clearInterval(this.fetchDataInterval)
+        mounted() {
+            if (this.data.DefaultRefreshInterval) {
+                this.fetchDataInterval = setInterval(() => {
+                    this.getWidgetData()
+                }, this.data.DefaultRefreshInterval)
+            }
         },
         watch: {
             filter() {
@@ -239,8 +243,13 @@
             data: {
                 immediate: true,
                 handler: function () {
-                    this.getTableData()
+                    this.getWidgetData()
                 }
+            }
+        },
+        beforeDestroy() {
+            if (this.fetchDataInterval) {
+                clearInterval(this.fetchDataInterval)
             }
         },
     }

@@ -57,7 +57,7 @@
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
-    import {getWidgetDataType, getWidgetEndpoint} from '@/helpers/widgetUtils'
+    import {getWidgetDataType, getWidgetEndpoint, getWidgetRefreshInterval} from '@/helpers/widgetUtils'
 
     export default {
         name: "widget",
@@ -151,11 +151,14 @@
             },
             getComponentTypeAndSetData(widget) {
                 let dataTypeId = getWidgetDataType(widget)
+                let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
+
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)
                 this.$set(widget, 'EndPoint', endPoint)
+                this.$set(widget, 'DefaultRefreshInterval', refreshInterval)
                 return componentType
             },
             setComponentEndPoint(widget) {
