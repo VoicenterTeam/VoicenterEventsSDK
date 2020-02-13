@@ -25,7 +25,7 @@
                         <el-form-item :label="$t('queues.to.display')">
                             <base-select
                                 v-model="model.WidgetLayout.showQueues"
-                                :data="queueWithActiveCalls"
+                                :data="allQueues"
                                 :labelKey="'QueueName'"
                                 :valueKey="'QueueID'"/>
                         </el-form-item>
@@ -261,10 +261,6 @@
             }
             if (isPieWidget(this.widget)) {
                 this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
-            }
-
-            if ((isQueueTable(this.widget) || isQueueGauge(this.widget)) && !this.widget.WidgetLayout.showQueues) {
-                this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
             }
 
             if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {
