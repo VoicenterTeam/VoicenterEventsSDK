@@ -73,7 +73,7 @@ const accountListConfig = {
     EntitiesListKey: 'Accounts'
 }
 
-export const filterIDs = [1, 4, 5, 7, 18, 19, 21, 25, 26, 32, 33]
+export const filterIDs = [1, 4, 5, 7, 18, 19, 21, 25, 26, 32, 33, 38, 40]
 
 export const filters = {
     1: userListConfig,
@@ -87,6 +87,8 @@ export const filters = {
     26: campaignListConfig,
     32: userListConfig,
     33: userListConfig,
+    38: queueListConfig,
+    40: queueListConfig,
 }
 
 export const otherFilters = {
