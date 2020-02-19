@@ -186,7 +186,6 @@
     "Mobile width": "Mobile width",
     "Widget padding": "Widget padding",
     "Widget height": "Widget height",
-    "Set edit mode": "Set edit mode",
     "Widget colors": "Widget colors",
     "invalid.token": "The provided token is either expired or invalid. Redirecting you to login…",
     "invalid.token.title": "Invalid Token",
@@ -205,5 +204,6 @@
     "settings.minRefreshInterval": "Minimum refresh interval for real time widgets (seconds)",
     "template.name": "Template Name: ",
     "widget.id": "Widget ID: ",
-    "widget.info": "Widget Info"
+    "widget.info": "Widget Info",
+    "html.editor.image.upload.error": "Could not upload the image."
 }

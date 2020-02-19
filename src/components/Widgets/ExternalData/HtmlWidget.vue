@@ -7,7 +7,7 @@
                 </p>
             </div>
             <div class="flex items-center" :class="margins">
-                <el-tooltip class="item" effect="dark" :content="$t('Set edit mode')" placement="top">
+                <el-tooltip class="item" effect="dark" :content="$t('tooltip.set.edit.mode')" placement="top">
                     <el-switch v-model="editMode"/>
                 </el-tooltip>
             </div>
