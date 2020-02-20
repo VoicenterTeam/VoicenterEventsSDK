@@ -79,7 +79,8 @@
                     <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">
                         {{$t('dashboards.new.title')}}</h3>
                     <el-form @submit.native.prevent="confirmNewDashboard">
-                        <el-form-item :label="$t('dashboards.new.form.title')">
+                        <el-form-item>
+                            <label>{{$t('dashboards.new.form.title')}}</label>
                             <el-input v-model="newDashboard.DashboardTitle"/>
                         </el-form-item>
                     </el-form>
