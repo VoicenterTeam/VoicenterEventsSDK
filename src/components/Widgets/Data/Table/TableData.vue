@@ -103,7 +103,7 @@
                 tableData: [],
                 columns: [],
                 searchableFields: [],
-                pageSizes: [5, 10, 25, 50],
+                pageSizes: [5, 10, 25, 50, 100, 500],
                 pageSize: 5,
                 pagerCount: 5,
                 currentPage: 1,
