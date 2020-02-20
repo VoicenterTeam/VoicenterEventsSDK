@@ -1,24 +1,32 @@
 div.el-collapse {
-  border-top: 0;
-  border-bottom: 0;
-
-  .el-form-item__label {
-    line-height: 25px;
-    margin-top: 5px;
-  }
-  .el-collapse-item__header {
-    @apply bg-gray-200 text-main-sm px-4 py-0 rounded-t text-gray-700;
-    height: 40px;
-  }
-  .el-collapse-item__content {
-    @apply border-2 border-gray-200 p-4;
-  }
-
-  .el-collapse-item__wrap {
+    border-top: 0;
     border-bottom: 0;
-  }
 
-  .el-collapse-item {
-    @apply mb-4;
-  }
+    .el-form-item__label {
+        line-height: 25px;
+        margin-top: 5px;
+    }
+
+    .el-collapse-item__header {
+        @apply bg-gray-200 text-main-sm px-4 py-0 rounded-t text-gray-700;
+        height: 40px;
+    }
+
+    .el-collapse-item__content {
+        @apply border-2 border-gray-200 p-4;
+    }
+
+    .el-collapse-item__wrap {
+        border-bottom: 0;
+    }
+
+    .el-collapse-item {
+        @apply mb-4;
+    }
+}
+
+.rtl {
+    .el-icon-arrow-right {
+        margin: 0 auto 0 8px;
+    }
 }
