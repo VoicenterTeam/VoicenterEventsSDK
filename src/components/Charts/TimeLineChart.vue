@@ -7,7 +7,7 @@
                 </p>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4" v-if="data.WidgetID && chartVisibility">
+        <div class="p-4 rounded-lg py-4 mt-4" v-if="data.WidgetID && chartVisibility">
             <highcharts :contstructor-chart="chartConstructorType" :options="chartOptions"/>
         </div>
     </div>
