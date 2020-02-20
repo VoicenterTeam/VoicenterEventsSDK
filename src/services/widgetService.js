@@ -46,6 +46,9 @@ export async function getWidgetData(widget) {
     if (isExternalDataWidget(widget)) {
         return await WidgetDataApi.getExternalData(widget.EndPoint)
     } else {
+        const bodyElement = document.querySelector("body");
+        if (bodyElement.classList.contains("el-popup-parent--hidden")) return;
+
         return await WidgetDataApi.getData(widget.EndPoint);
     }
 }
