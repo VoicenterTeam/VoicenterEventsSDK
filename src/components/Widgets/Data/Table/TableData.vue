@@ -9,23 +9,24 @@
             :editable="editable"
             :stripe="stripe"
             :border="border"
-            @on-update-layout="onUpdateLayout"
             :cell-style="getCellStyle"
+            @sort-change="sortChange"
+            @on-update-layout="onUpdateLayout"
             :cell-class-name="getCellClassName">
             <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
-                <status-duration v-if="userExtension(row.user_id)"
+                <status-duration v-if="userExtension(row.user_id) && drawRow"
                                  :extension="userExtension(row.user_id)"
                                  :settings="getSettings">
                 </status-duration>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
             <template v-if="isRealTimeTable" v-slot:status="{row}">
-                <user-status v-if="userExtension(row.user_id)" :userId="row.user_id"
+                <user-status v-if="userExtension(row.user_id) && drawRow" :userId="row.user_id"
                              :extension="userExtension(row.user_id)"/>
                 <span v-else>{{$t('N/A')}}</span>
             </template>
             <template v-if="isRealTimeTable" v-slot:user_name="{row}">
-                        <span v-if="userExtension(row.user_id)">
+                        <span v-if="userExtension(row.user_id) && drawRow">
                             {{userExtension(row.user_id).userName}}
                         </span>
                 <span v-else>---</span>
@@ -114,7 +115,8 @@
                 border: true,
                 stripe: true,
                 drawTable: true,
-                widget: cloneDeep(this.data)
+                widget: cloneDeep(this.data),
+                drawRow: true,
             }
         },
         computed: {
@@ -227,7 +229,13 @@
                     ...this.widget,
                     ...updatedWidget
                 }
-            }
+            },
+            sortChange() {
+                this.drawRow = false
+                this.$nextTick(() => {
+                    this.drawRow = true
+                })
+            },
         },
         mounted() {
             if (this.data.DefaultRefreshInterval) {
