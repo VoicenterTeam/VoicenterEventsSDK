@@ -1,12 +1,10 @@
-import i18n from '@/i18n'
 export default {
     chart: {
         type: 'solidgauge',
         backgroundColor: 'transparent',
     },
     pane: {
-        center: ['50%', '85%'],
-        size: '140%',
+        size: '100%',
         startAngle: -90,
         endAngle: 90,
         background: {
