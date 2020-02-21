@@ -38,15 +38,11 @@
         position: absolute;
         box-shadow: 0 0 1px 0 var(--silver-two), 0 1px 4px 0 var(--silver-two);
         background-color: #ffffff;
-        height: 58px;
-        margin-top: 90px;
+        height: 40px;
+        margin-top: 50px;
         overflow-x: auto;
         min-width: 320px;
         width: 100vw;
-        /*@apply -ml-12;*/
-        /*@screen md {*/
-        /*    @apply -ml-12;*/
-        /*}*/
     }
 
     .tab-name {
@@ -75,9 +71,5 @@
         .self-border {
             margin-right: -22%;
         }
-
-        /*.sidebar-tabs__container {*/
-        /*    @apply -mr-12;*/
-        /*}*/
     }
 </style>
