@@ -40,6 +40,7 @@
                 <slot name="">
                     <el-table-column
                         v-for="(column, index) in renderedColumns"
+                        :sortable="true"
                         :key="column.prop"
                         v-bind="column"
                         :column-key="column.prop"
@@ -214,7 +215,7 @@
 
                 this.availableColumns.splice(oldIndex, 1);
                 this.availableColumns.splice(newIndex, 0, column);
-                
+
                 this.drawTable = false
                 this.$nextTick(() => {
                     this.drawTable = true
