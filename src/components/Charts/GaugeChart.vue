@@ -7,7 +7,7 @@
                 </p>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
+        <div class="bg-transparent p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
             <highcharts :options="chartData"/>
         </div>
     </div>

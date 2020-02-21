@@ -48,7 +48,8 @@ Highcharts.setOptions({
         marginTop: 45,
         zoomType: 'x',
         panning: true,
-        panKey: 'shift'
+        panKey: 'shift',
+        backgroundColor: 'transparent'
     },
     tooltip: {
         formatter: function () {
@@ -94,7 +95,7 @@ Highcharts.setOptions({
             exportButton: {
                 text: '...',
                 align: 'right',
-                y: -12,
+                y: -8,
                 menuItems: [
                     "printChart",
                     "separator",

@@ -2,6 +2,7 @@ import i18n from '@/i18n'
 export default {
     chart: {
         type: 'solidgauge',
+        backgroundColor: 'transparent',
     },
     pane: {
         center: ['50%', '85%'],

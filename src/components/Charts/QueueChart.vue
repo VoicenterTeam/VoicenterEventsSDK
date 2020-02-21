@@ -8,7 +8,7 @@
                 </p>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
+        <div class="p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
             <highcharts :options="chartOptions"/>
         </div>
     </div>
