@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
-            <highcharts :options="chartOptions"/>
+            <highcharts class="chart-content_wrapper" :options="chartOptions"/>
         </div>
     </div>
 </template>
@@ -216,3 +216,8 @@
         },
     }
 </script>
+<style scoped lang="scss">
+    .chart-content_wrapper {
+        max-height: 400px;
+    }
+</style>

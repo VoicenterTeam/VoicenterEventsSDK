@@ -8,7 +8,8 @@
             </div>
         </div>
         <div class="p-4 rounded-lg py-4 mt-4" v-if="data.WidgetID && chartVisibility">
-            <highcharts :contstructor-chart="chartConstructorType" :options="chartOptions"/>
+            <highcharts class="chart-content_wrapper" :contstructor-chart="chartConstructorType"
+                        :options="chartOptions"/>
         </div>
     </div>
 </template>
@@ -122,3 +123,8 @@
         },
     }
 </script>
+<style scoped lang="scss">
+    .chart-content_wrapper {
+        max-height: 400px;
+    }
+</style>
