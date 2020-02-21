@@ -45,7 +45,14 @@ export function removeDummyWidgets(widgetIds) {
 export async function getWidgetData(widget) {
     if (isExternalDataWidget(widget)) {
         return await WidgetDataApi.getExternalData(widget.EndPoint)
-    } else {
-        return await WidgetDataApi.getData(widget.EndPoint);
     }
+
+    if (isWidgetModalOpen()) return;
+
+    return await WidgetDataApi.getData(widget.EndPoint);
+}
+
+export function isWidgetModalOpen() {
+    let bodyElement = document.body;
+    return bodyElement.classList.contains("el-popup-parent--hidden")
 }
