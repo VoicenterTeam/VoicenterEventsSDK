@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-bind="$attrs" v-on="$listeners">
+    <modal v-bind="$attrs" v-on="$listeners">
         <h3 slot="title" class="text-main-xl font-medium text-gray-700">{{$t('tooltip.reorder.dashboard.layout')}}</h3>
         <el-collapse v-model="activeCollapses" class="w-full reorder-layout">
             <DraggableList group="widgetGroups"
@@ -25,19 +25,20 @@
             <el-button @click="$emit('on-cancel')">{{$t('common.cancel')}}</el-button>
             <el-button @click="onSubmit()" type="primary">{{$t('common.save')}}</el-button>
         </template>
-    </el-dialog>
+    </modal>
 </template>
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import differenceBy from 'lodash/differenceBy'
-    import {Dialog, Collapse, CollapseItem} from 'element-ui'
+    import { Collapse, CollapseItem} from 'element-ui'
+    import Modal from "@/components/Common/Modal";
     import DraggableList from '../Widgets/DraggableList'
     import draggableEvents from '@/enum/draggableEvents'
 
     export default {
         components: {
-            [Dialog.name]: Dialog,
+            Modal,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             DraggableList

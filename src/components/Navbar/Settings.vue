@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-bind="$attrs" v-on="$listeners" :append-to-body="true">
+    <modal v-bind="$attrs" v-on="$listeners" :append-to-body="true">
         <h3 slot="title" class="text-main-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
         <el-form @submit.native.prevent="updateSettings" :rules="rules" ref="settings" :model="settings">
             <el-collapse v-model="activeCollapses">
@@ -92,11 +92,12 @@
                 @click="updateSettings">{{$t('common.save')}}
             </el-button>
         </template>
-    </el-dialog>
+    </modal>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, Dialog, InputNumber, Slider, Tooltip} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, InputNumber, Slider, Tooltip} from 'element-ui'
+    import Modal from "@/components/Common/Modal";
     import ColorPicker from '../Common/ColorPicker'
     import convertHex from '@/helpers/convertHex'
     import parseCatch from '@/helpers/handleErrors'
@@ -108,7 +109,7 @@
     export default {
         inheritAttrs: false,
         components: {
-            [Dialog.name]: Dialog,
+            Modal,
             [InputNumber.name]: InputNumber,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,

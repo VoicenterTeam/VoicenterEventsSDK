@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-bind="$attrs" v-on="$listeners" :width="setWidth">
+    <modal v-bind="$attrs" v-on="$listeners" :width="setWidth">
         <div class="flex flex-row items-center">
             <h5 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('extensionCard.update')}}</h5>
             <static-widget-info class="px-2" :widget="model"/>
@@ -21,17 +21,18 @@
                 <widget-colors :model="model" :onlyBackground="true"/>
             </el-collapse-item>
         </el-collapse>
-    </el-dialog>
+    </modal>
 </template>
 <script>
-    import {Collapse, CollapseItem, Dialog} from 'element-ui'
+    import { Collapse, CollapseItem } from 'element-ui'
+    import Modal from "@/components/Common/Modal";
     import StaticWidgetInfo from '../Widgets/WidgetUpdateForm/StaticWidgetInfo'
     import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
     export default {
         inheritAttrs: false,
         components: {
-            [Dialog.name]: Dialog,
+            Modal,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             WidgetColors,

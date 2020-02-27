@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-bind="$attrs" v-on="$listeners">
+    <modal v-bind="$attrs" v-on="$listeners">
         <div class="flex flex-row items-center">
             <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
             <static-widget-info class="px-2" :widget="widget"/>
@@ -56,11 +56,12 @@
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
             <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
         </template>
-    </el-dialog>
+    </modal>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Alert, Checkbox, Collapse, CollapseItem, Dialog, Option, Select} from 'element-ui'
+    import {Alert, Checkbox, Collapse, CollapseItem, Option, Select} from 'element-ui'
+    import Modal from "@/components/Common/Modal";
     import {isPieWidget} from '@/helpers/widgetUtils'
     import {dictionary, options} from '@/enum/externalDataWidgetConfig'
     import WidgetWidth from '../WidgetUpdateForm/WidgetLayout/WidgetWidth'
@@ -71,12 +72,12 @@
     export default {
         components: {
             [Checkbox.name]: Checkbox,
-            [Dialog.name]: Dialog,
             [Select.name]: Select,
             [Option.name]: Option,
             [Alert.name]: Alert,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            Modal,
             WidgetColors,
             WidgetWidth,
             WidgetPadding,

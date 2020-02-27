@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="confirm-dialog" v-bind="$attrs" v-on="$listeners" :append-to-body="appendToBody">
+    <modal class="confirm-dialog" v-bind="$attrs" v-on="$listeners" :append-to-body="appendToBody">
         <slot name="title"></slot>
         <div class="w-full flex py-2">
             <slot name="content"></slot>
@@ -7,15 +7,14 @@
         <template slot="footer">
             <slot name="footer"></slot>
         </template>
-    </el-dialog>
+    </modal>
 </template>
 <script>
-    import {Dialog} from 'element-ui'
-
+    import Modal from "@/components/Common/Modal";
     export default {
         inheritAttrs: false,
         components: {
-            [Dialog.name]: Dialog
+            Modal,
         },
         data() {
             return {
