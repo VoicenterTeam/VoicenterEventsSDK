@@ -1,23 +1,29 @@
 .el-button {
-  &.el-button--primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    &.el-button--primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
 
-    &:hover, &:focus{
-      background-color: rgba(var(--primary_rgba-color), 0.50);
-      border-color: var(--primary-color);
-    }
-    &.is-disabled,
-    &.is-disabled:hover,
-    &.is-disabled:focus{
-      background-color: rgba(var(--primary_rgba-color), 0.40);
-      border-color: rgba(var(--primary_rgba-color), 0.20);
-    }
-  }
+        &:hover, &:focus {
+            background-color: rgba(var(--primary_rgba-color), 0.50);
+            border-color: var(--primary-color);
+        }
 
-  &.el-button--default:hover {
-    background-color: rgba(var(--primary_rgba-color), 0.15);
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-  }
+        &.is-disabled,
+        &.is-disabled:hover,
+        &.is-disabled:focus {
+            background-color: rgba(var(--primary_rgba-color), 0.40);
+            border-color: rgba(var(--primary_rgba-color), 0.20);
+        }
+    }
+
+    &.el-button--default:hover {
+        background-color: rgba(var(--primary_rgba-color), 0.15);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    &.el-button--small {
+        @apply h-9;
+    }
+
 }
