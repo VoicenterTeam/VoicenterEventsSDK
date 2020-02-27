@@ -32,7 +32,7 @@
         },
         methods: {
             onClick() {
-                if (this.isSocketOffline) {
+                if (!this.isSocketOffline) {
                     return
                 }
                 this.$emit('click')
