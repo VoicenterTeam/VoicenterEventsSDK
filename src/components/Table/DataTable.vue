@@ -26,7 +26,7 @@
                 <slot name="additional-data"/>
             </div>
         </div>
-        <div class="bg-white rounded-lg my-4 data-table w-full">
+        <div class="bg-white rounded-lg mt-1 data-table w-full">
             <el-table ref="table"
                       id="table"
                       row-key="id"
