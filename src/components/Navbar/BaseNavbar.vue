@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="navbar__wrapper">
         <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
             <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-4 flex xl:mx-16">
             <menu-icon
