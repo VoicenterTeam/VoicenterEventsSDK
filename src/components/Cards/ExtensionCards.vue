@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div class="flex w-full justify-between pr-12" :class="responsiveClass">
             <p class="flex text-main-2xl font-semibold">
                 {{data.Title}}
@@ -37,13 +36,13 @@
             </div>
         </div>
         <div>
-            <div class="flex py-6 extension-cards justify-center">
+            <div class="flex pt-1 extension-cards justify-center">
                 <fade-transition class="flex flex-wrap" group
                                  :style="renderColumns"
                                  :class="{'grid-container overflow-x-auto': sortedExtensions.length, 'w-full': sortedExtensions.length === 0}">
                     <div v-for="(extension, index) in sortedExtensions"
                          :key="index"
-                         class="pr-4">
+                         class="px-1">
                         <extension-card :extension="extension" :settings="getSettings"/>
                     </div>
                     <div key="no-data"
@@ -185,10 +184,6 @@
     }
 </script>
 <style scoped lang="scss">
-    .extension-cards {
-        min-height: 280px;
-    }
-
     .icon-square {
         width: 20px;
         height: 20px;

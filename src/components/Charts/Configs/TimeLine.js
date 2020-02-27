@@ -96,6 +96,9 @@ Highcharts.setOptions({
                 text: '...',
                 align: 'right',
                 y: -8,
+                x: 7,
+                symbolX: 10,
+                symbolY: 10,
                 menuItems: [
                     "printChart",
                     "separator",
@@ -121,6 +124,7 @@ Highcharts.setOptions({
             viewFullscreen: {
                 symbol: 'url(/img/IconFullScreen.svg)',
                 y: -7,
+                x: -18,
                 symbolX: 19,
                 symbolY: 19,
                 onclick: function () {

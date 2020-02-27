@@ -1,7 +1,7 @@
 <template>
     <div>
-        <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
-            <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-4 flex xl:mx-16">
+        <nav class="navbar w-full bg-white flex items-center justify-between z-10">
+            <img :src="getLogo" alt="Logo" class="h-10 my-1 mx-4 flex xl:mx-16">
             <menu-icon
                 class="w-8 h-8 p-2 text-primary shadow rounded bg-white hover:bg-primary-100 flex md:hidden mx-4 cursor-pointer"
                 @click="triggerMobileMenu"/>
@@ -256,7 +256,7 @@
 
 <style scoped>
     .navbar {
-        height: 90px;
+        height: 50px;
         min-width: 320px;
         position: absolute;
         left: 0;
