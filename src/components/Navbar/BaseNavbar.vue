@@ -74,7 +74,7 @@
                         </div>
                     </fade-transition>
                 </div>
-                <el-dialog :visible.sync="showCreateDashboardDialog"
+                <modal :visible.sync="showCreateDashboardDialog"
                            :append-to-body="true" :width="dialogWidth">
                     <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">
                         {{$t('dashboards.new.title')}}</h3>
@@ -88,7 +88,7 @@
                         <el-button @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
                         <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
                     </template>
-                </el-dialog>
+                </modal>
                 <settings
                     v-if="showEditSettingsDialog"
                     :activeDashboard="activeDashboard"
@@ -143,15 +143,16 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {Dialog, Option, Select, Tooltip} from 'element-ui'
+    import { Option, Select, Tooltip} from 'element-ui'
     import {MenuIcon} from 'vue-feather-icons'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
+    import Modal from "@/components/Common/Modal";
 
     export default {
         components: {
-            [Dialog.name]: Dialog,
+            Modal,
             [Tooltip.name]: Tooltip,
             [Select.name]: Select,
             [Option.name]: Option,
