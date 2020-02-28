@@ -52,7 +52,7 @@
                          :activeTab="activeTab"
                          :widgetGroupList="activeDashboardData.WidgetGroupList"
                          @switch-tab="(tab) => switchTab(tab)"/>
-                <div class="pt-24 px-6 md:px-12" :class="getClass" :key="activeDashboardData.DashboardID">
+                <div class="pt-12 px-6 md:px-12" :class="getClass" :key="activeDashboardData.DashboardID">
                     <fade-transition mode="out-in" :duration="250">
                         <keep-alive>
                             <component
@@ -166,7 +166,7 @@
             },
             getClass() {
                 if (this.layoutType === layoutTypes.TABBED) {
-                    return 'pt-40'
+                    return 'pt-24'
                 }
             },
             showSidebar() {

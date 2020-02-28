@@ -257,7 +257,7 @@
 
 <style scoped>
     .navbar {
-        height: 90px;
+        height: 50px;
         min-width: 320px;
         position: absolute;
         left: 0;

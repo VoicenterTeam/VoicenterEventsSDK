@@ -13,8 +13,8 @@
     </el-tooltip>
 </template>
 <script>
-    import { Tooltip } from 'element-ui'
-    import { ZapIcon } from 'vue-feather-icons'
+    import {Tooltip} from 'element-ui'
+    import {ZapIcon} from 'vue-feather-icons'
 
     export default {
         name: 'socket-status-button',
@@ -32,7 +32,7 @@
         },
         methods: {
             onClick() {
-                if (!this.isSocketOffline) {
+                if (this.isSocketOffline) {
                     return
                 }
                 this.$emit('click')

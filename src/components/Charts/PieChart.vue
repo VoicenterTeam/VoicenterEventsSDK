@@ -1,13 +1,11 @@
 <template>
     <div>
-        <div class="flex items-center mb-4">
-            <div class="flex flex-col md:flex-row md:items-center">
-                <p v-if="data.Title" class="text-main-2xl font-semibold">
-                    {{data.Title}}
-                </p>
-            </div>
+        <div class="flex flex-row md:items-center justify-between">
+            <p v-if="data.Title" class="text-main-2xl font-semibold">
+                {{data.Title}}
+            </p>
         </div>
-        <div class="bg-transparent p-4 rounded-lg py-4 mt-4" v-if="chartVisibility">
+        <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
             <highcharts class="chart-content_wrapper" :options="chartData"/>
         </div>
     </div>
@@ -138,6 +136,6 @@
 </script>
 <style scoped lang="scss">
     .chart-content_wrapper {
-        max-height: 400px;
+        max-height: 390px;
     }
 </style>

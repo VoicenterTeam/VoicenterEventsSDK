@@ -1,16 +1,16 @@
 <template>
     <div class="data-table__container">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
-            <div class="flex">
+            <div class="flex items-center">
                 <slot name="title"/>
-                <div class="flex w-48 sm:w-64 px-2">
+                <div class="flex w-48 sm:w-64 px-1">
                     <slot name="search-input"/>
                 </div>
             </div>
             <div class="flex items-center table-row__count"
                  :class="margins">
                 <el-dropdown size="mini" trigger="click">
-                    <el-button type="primary">
+                    <el-button type="primary" size="small">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
@@ -26,7 +26,7 @@
                 <slot name="additional-data"/>
             </div>
         </div>
-        <div class="bg-white rounded-lg my-4 data-table w-full">
+        <div class="bg-white rounded-lg mt-1 data-table w-full">
             <el-table ref="table"
                       id="table"
                       row-key="id"

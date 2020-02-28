@@ -32,32 +32,38 @@
                 <span v-else>---</span>
             </template>
             <template v-slot:pagination>
-                <el-select
-                    v-model="pageSize"
-                    @change="handlePageChange(1)"
-                    :size="'small'"
-                    class="w-16 mx-1">
-                    <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"/>
-                </el-select>
-                <el-pagination
-                    @current-change="handlePageChange"
-                    :page-sizes="pageSizes"
-                    :pager-count="pagerCount"
-                    :page-size="pageSize"
-                    :current-page="currentPage"
-                    layout="prev, pager, next"
-                    :hide-on-single-page="hideOnSinglePage"
-                    :total="filteredDataLength">
-                </el-pagination>
+                <div class="flex items-center">
+                    <el-select
+                        v-model="pageSize"
+                        @change="handlePageChange(1)"
+                        size="mini"
+                        class="w-16 mx-1 py-1">
+                        <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"/>
+                    </el-select>
+                    <el-pagination
+                        @current-change="handlePageChange"
+                        :page-sizes="pageSizes"
+                        :pager-count="pagerCount"
+                        :page-size="pageSize"
+                        :current-page="currentPage"
+                        layout="prev, pager, next"
+                        :hide-on-single-page="hideOnSinglePage"
+                        :total="filteredDataLength">
+                    </el-pagination>
+                </div>
             </template>
             <template v-slot:title>
-                <p class="text-main-2xl font-semibold">
+                <p class="text-main-2xl font-semibold px-1">
                     {{data.Title}}
                 </p>
             </template>
             <template v-slot:search-input>
-                <el-input placeholder="Type text to filter" v-model="filter" suffix-icon="el-icon-search"
-                          clearable/>
+                <el-input
+                    size="medium"
+                    placeholder="Type text to filter"
+                    v-model="filter"
+                    suffix-icon="el-icon-search"
+                    clearable/>
             </template>
             <template v-slot:additional-data>
                 <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
