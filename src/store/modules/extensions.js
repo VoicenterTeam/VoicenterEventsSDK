@@ -1,4 +1,4 @@
-import { ISRAEL_TIMEZONE_OFFSET } from "@/enum/generic";
+import { ISRAEL_TIMEZONE_OFFSET, MINUTE } from "@/enum/generic";
 
 const types = {
     SET_EXTENSIONS: 'SET_EXTENSIONS',
@@ -44,9 +44,21 @@ const actions = {
     },
 };
 
+const getters = {
+    isSocketOffline: state => {
+        if (!state.offlineSocketTimestamp || isNaN(state.offlineSocketTimestamp)) {
+            return false
+        }
+        const now = new Date().getTime()
+        // show after 1 minute of disconnect
+        return state.isSocketOffline && now - state.offlineSocketTimestamp > MINUTE
+    }
+}
+
 export default {
     namespaced: true,
     state,
     mutations,
     actions,
+    getters,
 };

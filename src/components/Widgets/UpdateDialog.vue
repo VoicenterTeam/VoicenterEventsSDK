@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-bind="$attrs" v-on="$listeners" v-if="model.WidgetLayout">
+    <modal v-bind="$attrs" v-on="$listeners" v-if="model.WidgetLayout">
         <div class="flex flex-row items-center">
             <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
             <static-widget-info class="px-2" :widget="widget"/>
@@ -115,11 +115,12 @@
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
             <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
         </template>
-    </el-dialog>
+    </modal>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, Dialog, Radio, RadioGroup, Tooltip} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip} from 'element-ui'
+    import Modal from "@/components/Common/Modal";
     import queueMixin from '@/mixins/queueMixin'
     import {allSeries} from '@/enum/queueConfigs'
     import RefreshButton from '@/components/RefreshButton'
@@ -152,8 +153,8 @@
             WidgetWidth,
             RealTimeSettings,
             TimeFrame,
+            Modal,
             [Radio.name]: Radio,
-            [Dialog.name]: Dialog,
             [RadioGroup.name]: RadioGroup,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
