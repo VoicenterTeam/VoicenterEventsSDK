@@ -5,12 +5,7 @@
             <template v-slot:dashboard-operations>
                 <div class="flex">
                     <div class="my-3 flex items-center">
-                        <el-tooltip class="item" effect="dark" :content="$t('tooltip.socket.reconnect')"
-                                    placement="bottom">
-                            <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100" @click="retrySocketConnection">
-                                <ZapIcon class="w-5 h-5 text-primary"/>
-                            </button>
-                        </el-tooltip>
+                        <socket-status-button @click="retrySocketConnection"/>
                         <div v-if="!editMode" class="mx-1 cursor-pointer" @click="showReorderDataDialog = true">
                             <el-tooltip class="item" effect="dark" :content="$t('tooltip.reorder.dashboard.layout')"
                                         placement="bottom">
@@ -119,9 +114,10 @@
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import SocketStatusAlert from "@/components/Common/SocketStatusAlert";
+    import SocketStatusButton from "@/components/Common/SocketStatusButton";
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
     import EventBus from "@/event-bus/EventBus";
-    import {ListIcon, ZapIcon} from 'vue-feather-icons'
+    import {ListIcon} from 'vue-feather-icons'
 
     export default {
         components: {
@@ -139,7 +135,7 @@
             ReorderLayoutDialog,
             [Tooltip.name]: Tooltip,
             ListIcon,
-            ZapIcon,
+            SocketStatusButton,
         },
         mixins: [pageSizeMixin],
         data() {
