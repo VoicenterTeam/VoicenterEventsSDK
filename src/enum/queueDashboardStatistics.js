@@ -5,10 +5,11 @@ export const PERCENTAGE_TYPE = 'percentage'
 export const PRIMARY_TYPE = 'primary'
 export const OTHER_STATISTIC_LABEL = '% of Other'
 
-export const PERCENTAGES = {
+export const PERCENTAGE_COUNTERS = () => ({
     1: {
         label: 'Answer',
-        value: 1,
+        key: 1,
+        value: null,
         icon: '',
         style: {
             'color': 'red'
@@ -16,7 +17,8 @@ export const PERCENTAGES = {
     },
     2: {
         label: 'Abandoned',
-        value: 2,
+        key: 2,
+        value: null,
         icon: '',
         style: {
             color: 'green'
@@ -24,82 +26,95 @@ export const PERCENTAGES = {
     },
     3: {
         label: 'IVRExit',
-        value: 3,
+        key: 3,
+        value: null,
         icon: '',
         style: ''
     },
     4: {
         label: 'PickUp',
-        value: 4,
+        key: 4,
+        value: null,
         icon: '',
         style: ''
     },
     5: {
         label: 'TimeOutExit',
-        value: 5,
+        key: 5,
+        value: null,
         icon: '',
         style: ''
     },
     6: {
         label: 'JoinEmpty',
-        value: 6,
+        key: 6,
+        value: null,
         icon: '',
         style: ''
     },
     7: {
         label: 'LeavEempty',
-        value: 7,
+        key: 7,
+        value: null,
         icon: '',
         style: ''
     },
     8: {
         label: 'JoinUnavail',
-        value: 8,
+        key: 8,
+        value: null,
         icon: '',
         style: ''
     },
     9: {
         label: 'LeaveUnavail',
-        value: 9,
+        key: 9,
+        value: null,
         icon: '',
         style: ''
     },
     10: {
         label: 'Full',
-        value: 10,
+        key: 10,
+        value: null,
         icon: '',
         style: ''
     },
     11: {
         label: 'NextDestination',
-        value: 11,
+        key: 11,
+        value: null,
         icon: '',
         style: ''
     },
-}
+})
 
-export const BASE_COUNTERS = {
+export const PRIMARY_COUNTERS = () => ({
     [TOTAL_CALLS_KEY]: {
         label: TOTAL_CALLS_KEY,
-        value: 'CallCount',
+        key: TOTAL_CALLS_KEY,
+        value: null,
         icon: 'IconIncoming',
         style: '',
     },
     MaxRingTime: {
         label: 'MaxRingTime',
-        value: 'MaxRingTime',
+        key: 'MaxRingTime',
+        value: null,
         icon: '',
         style: '',
     },
     NotInSLACount: {
         label: 'NotInSLACount',
-        value: 'NotInSLACount',
+        key: 'NotInSLACount',
+        value: null,
         icon: '',
         style: '',
     },
     InSLACount: {
         label: 'InSLACount',
-        value: 'InSLACount',
+        key: 'InSLACount',
+        value: null,
         icon: '',
         style: {
             color: "blue",
@@ -107,21 +122,19 @@ export const BASE_COUNTERS = {
     },
     AvgRingTime: {
         label: 'AvgRingTime',
-        value: 'AvgRingTime',
+        key: 'AvgRingTime',
+        value: null,
         icon: '',
         style: {
             border: '1px solid #8B008B'
         },
     },
-    [ADDITIONAL_DATA_KEY]: [],
-}
+})
 
 let allStatistics = {
-    ...BASE_COUNTERS,
-    ...PERCENTAGES
+    ...PRIMARY_COUNTERS(),
+    ...PERCENTAGE_COUNTERS()
 }
-
-delete allStatistics[ADDITIONAL_DATA_KEY]
 
 export const statistics = Object.values(allStatistics)
 

@@ -7,27 +7,23 @@
                 </p>
             </div>
         </div>
-        <div class="mt-2 flex flex-col">
-            <div v-for="queueStatistic in queueStatistics"
-                 class="flex w-full flex-col overflow-auto p-1 border rounded-lg mb-2 bg-primary-200">
-                <div class="flex p-3 text-main-base">{{$t('Queue ID') +': '+ queueStatistic.queueID}}</div>
-                <div class="flex">
-                    <div v-for="item in queueStatistic[PRIMARY_TYPE]"
-                         class="statistic-card" :style="item.style" v-if="displayCounter(item)">
-                        <component :is="item.icon" class="text-primary w-5 h-5"></component>
-                        <div class="px-2">{{startCase(item.label)}}</div>
-                        <div class="text-sm">{{item.value}}</div>
-                    </div>
+        <div class="flex flex-col">
+            <div class="flex mb-1">
+                <div v-for="item in queueStatistics[PRIMARY_TYPE]"
+                     class="statistic-card" :style="item.style" v-if="displayCounter(item)">
+                    <component :is="item.icon" class="text-primary w-5 h-5"></component>
+                    <div class="px-2">{{startCase(item.label)}}</div>
+                    <div class="text-sm">{{item.value}}</div>
                 </div>
-                <div class="flex pt-2">
-                    <div v-for="item in queueStatistic[PERCENTAGE_TYPE]"
-                         class="statistic-card" :style="item.style" v-if="displayCounter(item)">
-                        <div>{{item.label}}</div>
-                        <div class="px-2 text-sm">{{valueToDisplay(item.value, queueStatistic[TOTAL_CALLS_KEY])}}</div>
-                    </div>
-                    <div v-if="showSumOfOthers" class="statistic-card"
-                         v-html="getSumOfOtherStatistics(queueStatistic[PERCENTAGE_TYPE], queueStatistic[TOTAL_CALLS_KEY])">
-                    </div>
+            </div>
+            <div class="flex flex-wrap">
+                <div v-for="item in queueStatistics[PERCENTAGE_TYPE]"
+                     class="statistic-card mb-1" :style="item.style" v-if="displayCounter(item)">
+                    <div>{{item.label}}</div>
+                    <div class="px-2 text-sm">{{valueToDisplay(item.value, queueStatistics[TOTAL_CALLS_KEY])}}</div>
+                </div>
+                <div v-if="showSumOfOthers" class="statistic-card"
+                     v-html="getSumOfOtherStatistics()">
                 </div>
             </div>
         </div>
@@ -39,10 +35,10 @@
     import startCase from 'lodash/startCase'
     import {
         ADDITIONAL_DATA_KEY,
-        BASE_COUNTERS,
         OTHER_STATISTIC_LABEL,
+        PERCENTAGE_COUNTERS,
+        PRIMARY_COUNTERS,
         PERCENTAGE_TYPE,
-        PERCENTAGES,
         PRIMARY_TYPE,
         statistics,
         TOTAL_CALLS_KEY
@@ -57,12 +53,11 @@
         data() {
             return {
                 fetchDataInterval: null,
-                queueStatistics: null,
+                queueStatistics: {},
                 ADDITIONAL_DATA_KEY,
-                TOTAL_CALLS_KEY,
                 PERCENTAGE_TYPE,
-                BASE_COUNTERS,
                 PRIMARY_TYPE,
+                TOTAL_CALLS_KEY,
             }
         },
         computed: {
@@ -77,10 +72,22 @@
             },
         },
         methods: {
+            initStatistics() {
+                this.queueStatistics = {
+                    [TOTAL_CALLS_KEY]: 0,
+                    [PRIMARY_TYPE]: PRIMARY_COUNTERS(),
+                    [PERCENTAGE_TYPE]: PERCENTAGE_COUNTERS(),
+                }
+            },
             startCase,
-            getSumOfOtherStatistics(queueData, totalCalls) {
+            getSumOfOtherStatistics() {
+                let queueData = this.queueStatistics[PERCENTAGE_TYPE]
+                console.log(queueData)
+                return
+                let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY]
                 let countersToShow = this.countersToShow
                 let hiddenStatistics = queueData.filter((el) => !countersToShow.includes(el.key))
+                console.log(hiddenStatistics)
                 let sum = sumBy(hiddenStatistics, 'value')
                 let percentage = `${((sum * 100) / totalCalls).toFixed(2)} %`
 
@@ -93,59 +100,32 @@
             },
             async getWidgetData() {
                 try {
+                    this.initStatistics()
                     let data = await getWidgetData(this.data)
-                    this.responseTransformer(data)
+                    this.composeStatistics(data)
                 } catch (e) {
                     console.warn(e)
                 } finally {
                 }
             },
-            responseTransformer(data) {
-                let allCounters = []
-
+            composeStatistics(data) {
                 data.forEach((queue) => {
+                    delete queue.queue_id;
 
-                    let counters = {
-                        queueID: queue.queue_id,
-                        [TOTAL_CALLS_KEY]: queue[TOTAL_CALLS_KEY],
-                        [PRIMARY_TYPE]: [],
-                        [PERCENTAGE_TYPE]: [],
-                    }
-
+                    this.queueStatistics[TOTAL_CALLS_KEY] += queue[TOTAL_CALLS_KEY]
                     Object.keys(queue).forEach((key) => {
-                        if (!BASE_COUNTERS[key]) return;
-                        let counter;
 
                         if (key === ADDITIONAL_DATA_KEY) {
-                            counters.percentage = this.fetchAdditionalCounts(queue[ADDITIONAL_DATA_KEY])
+                            this.fetchAdditionalCounts(queue[ADDITIONAL_DATA_KEY])
                         } else {
-                            let pair = {
-                                value: queue[key],
-                                key: key,
-                            }
-                            counter = {
-                                ...BASE_COUNTERS[key],
-                                ...pair,
-                            }
-                            counters.primary.push(counter)
+                            this.queueStatistics[PRIMARY_TYPE][key]['value'] += queue[key]
                         }
                     })
-
-                    allCounters.push(counters)
-                    this.queueStatistics = allCounters.values()
                 })
             },
-            fetchAdditionalCounts(data) {
-                return data.map((op) => {
-                    let counter = PERCENTAGES[op['billing_cdr_queue_type']]
-                    let pair = {
-                        value: op['ExitTypeCount'],
-                        key: op['billing_cdr_queue_type'],
-                    }
-                    return {
-                        ...counter,
-                        ...pair,
-                    }
+            fetchAdditionalCounts(queueData) {
+                queueData.forEach((option) => {
+                    this.queueStatistics[PERCENTAGE_TYPE][option['billing_cdr_queue_type']]['value'] += option['ExitTypeCount']
                 })
             },
             displayCounter(item) {
@@ -180,7 +160,7 @@
 </script>
 <style lang="scss" scoped>
     .statistic-card {
-        @apply flex bg-white flex-wrap  px-6 py-4 mx-1 items-center justify-center rounded-lg shadow;
+        @apply flex bg-white flex-wrap px-6 py-4 mx-1 items-center justify-center rounded-lg shadow;
         min-width: 200px;
     }
 </style>

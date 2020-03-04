@@ -46,6 +46,7 @@
                 <label>{{$t('statistics.to.display')}}</label>
                 <base-select
                     v-model="model.WidgetLayout.ShowStatistics"
+                    valueKey="key"
                     :data="statistics"/>
                 <div class="flex w-full flex-col lg:flex-row pt-4">
                     <div class="flex lg:w-1/2">
