@@ -212,5 +212,8 @@
     "Display % of of Others value": "Display % of of Others value",
     "Display absolute numbers": "Display absolute numbers",
     "Include the selected": "Include the selected",
-    "Exclude the selected": "Exclude the selected"
+    "Exclude the selected": "Exclude the selected",
+    "tooltip.edit.styles": "tooltip.edit.styles",
+    "Card max width": "Card max width",
+    "Card min width": "Card min width"
 }

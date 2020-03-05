@@ -7,21 +7,26 @@
                 </p>
             </div>
         </div>
-        <div class="flex flex-wrap -mx-1">
-                <div v-for="item in queueStatistics[PRIMARY_TYPE]"
-                     class="statistic-card" :style="item.style" v-if="displayCounter(item)">
-                    <component :is="item.icon" class="text-primary w-5 h-5"></component>
-                    <div class="px-2">{{startCase(item.label)}}</div>
-                    <div class="text-sm">{{item.value}}</div>
-                </div>
-                <div v-for="item in queueStatistics[PERCENTAGE_TYPE]"
-                     class="statistic-card mb-1" :style="item.style" v-if="displayCounter(item)">
-                    <div>{{item.label}}</div>
-                    <div class="px-2 text-sm">{{valueToDisplay(item.value, queueStatistics[TOTAL_CALLS_KEY])}}</div>
-                </div>
-                <div v-if="showSumOfOthers" class="statistic-card"
-                     v-html="getSumOfOtherStatistics()">
-                </div>
+        <div class="flex flex-wrap -mx-1 pt-2" v-if="queueStatistics">
+            <div v-for="item in queueStatistics[PRIMARY_TYPE]">
+                <statistic-card
+                    v-if="displayCounter(item)"
+                    @on-change="(data) => onChange(data, item)"
+                    :item="item"
+                />
+            </div>
+            <div v-for="item in queueStatistics[PERCENTAGE_TYPE]">
+                <statistic-card
+                    v-if="displayCounter(item)"
+                    @on-change="(data) => onChange(data, item)"
+                    :item="getItem(item)"
+                />
+            </div>
+            <div v-if="showSumOfOthers" class="statistic-card"
+                 v-html="getSumOfOtherStatistics()">
+                <statistic-card showSumOfOthers
+                                v-html="getSumOfOtherStatistics()"
+                />
             </div>
         </div>
     </div>
@@ -32,17 +37,23 @@
     import startCase from 'lodash/startCase'
     import {
         ADDITIONAL_DATA_KEY,
+        allStatistics,
         OTHER_STATISTIC_LABEL,
         PERCENTAGE_COUNTERS,
-        PRIMARY_COUNTERS,
         PERCENTAGE_TYPE,
+        PRIMARY_COUNTERS,
         PRIMARY_TYPE,
         statistics,
-        TOTAL_CALLS_KEY
+        TOTAL_CALLS_KEY,
     } from '@/enum/queueDashboardStatistics'
     import {getWidgetData} from '@/services/widgetService'
+    import StatisticCard from "./StatisticCard";
+    import {QueueDashboardData} from "@/store/mockData";
 
     export default {
+        components: {
+            StatisticCard,
+        },
         props: {
             data: Object,
             default: () => ({})
@@ -69,13 +80,6 @@
             },
         },
         methods: {
-            initStatistics() {
-                this.queueStatistics = {
-                    [TOTAL_CALLS_KEY]: 0,
-                    [PRIMARY_TYPE]: PRIMARY_COUNTERS(),
-                    [PERCENTAGE_TYPE]: PERCENTAGE_COUNTERS(),
-                }
-            },
             startCase,
             getSumOfOtherStatistics() {
                 let queueData = this.queueStatistics[PERCENTAGE_TYPE]
@@ -86,7 +90,7 @@
 
                 Object.keys(queueData).forEach((key) => {
                     if (!countersToShow.includes(key)) {
-                        hiddenStatistics.push( queueData[key])
+                        hiddenStatistics.push(queueData[key])
 
                     }
                 })
@@ -96,14 +100,23 @@
 
                 return `<div class="px-2">${OTHER_STATISTIC_LABEL}</div><div>${percentage}</div>`
             },
-            valueToDisplay(value, totalCalls) {
+            getItem(item) {
+                let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY]
+                let value = item.value || 0
                 let percentage = `${((value * 100) / totalCalls).toFixed(2)} %`
-                if (!this.showAbsoluteNumbers) return percentage;
-                return `(${value}) ${percentage}`
+                if (this.showAbsoluteNumbers) {
+                    percentage = `(${value}) ${percentage}`
+                }
+
+                let result = {
+                    ...item,
+                    ...{value: percentage}
+                }
+
+                return result
             },
             async getWidgetData() {
                 try {
-                    this.initStatistics()
                     let data = await getWidgetData(this.data)
                     this.composeStatistics(data)
                 } catch (e) {
@@ -112,6 +125,7 @@
                 }
             },
             composeStatistics(data) {
+                data = QueueDashboardData
                 data.forEach((queue) => {
                     delete queue.queue_id;
 
@@ -133,23 +147,43 @@
             },
             displayCounter(item) {
                 return this.countersToShow.length === statistics.length || this.countersToShow.includes(item.key)
-            }
+            },
+            onChange(styles, item) {
+                this.data.WidgetLayout.allStatistics[item.key] = {
+                    ...item,
+                    ...styles
+                }
+                this.$emit('on-update', this.data)
+            },
+            initStatistics() {
+                return {
+                    [TOTAL_CALLS_KEY]: 0,
+                    [PRIMARY_TYPE]: PRIMARY_COUNTERS(),
+                    [PERCENTAGE_TYPE]: PERCENTAGE_COUNTERS(),
+                }
+            },
         },
         mounted() {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
+            }
 
-                if (!this.data.WidgetLayout.ShowStatistics) {
-                    this.$set(this.data.WidgetLayout, 'ShowStatistics', statistics)
-                }
+            if (!this.data.WidgetLayout.ShowStatistics) {
+                this.$set(this.data.WidgetLayout, 'ShowStatistics', statistics)
+            }
+
+            if (!this.data.WidgetLayout.allStatistics) {
+                this.$set(this.data.WidgetLayout, 'allStatistics', this.initStatistics())
+                this.queueStatistics = this.initStatistics()
             }
         },
         watch: {
             data: {
                 immediate: true,
-                handler: function () {
+                handler: function (value) {
+                    this.queueStatistics = get(value, 'WidgetLayout.allStatistics')
                     this.getWidgetData()
                 }
             }
@@ -163,7 +197,7 @@
 </script>
 <style lang="scss" scoped>
     .statistic-card {
-        @apply flex bg-white flex-wrap px-6 py-4 mx-0-5 items-center justify-center rounded-lg shadow;
+        @apply flex bg-white flex-wrap px-6 py-4 mt-1 mx-0-5 items-center justify-center rounded-lg shadow;
         min-width: 200px;
     }
 </style>

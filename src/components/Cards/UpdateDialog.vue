@@ -2,7 +2,6 @@
     <modal v-bind="$attrs" v-on="$listeners" :width="setWidth">
         <div class="flex flex-row items-center">
             <h5 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('extensionCard.update')}}</h5>
-            <static-widget-info class="px-2" :widget="model"/>
         </div>
         <div class="flex items-center my-4">
             <slot name="header"/>
@@ -18,13 +17,13 @@
                 <div class="flex flex-col">
                     <slot name="width"/>
                 </div>
-                <widget-colors :model="model" :onlyBackground="true"/>
+                <widget-colors :model="model" :onlyBackground="onlyBackground"/>
             </el-collapse-item>
         </el-collapse>
     </modal>
 </template>
 <script>
-    import { Collapse, CollapseItem } from 'element-ui'
+    import {Collapse, CollapseItem} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import StaticWidgetInfo from '../Widgets/WidgetUpdateForm/StaticWidgetInfo'
     import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
@@ -43,6 +42,10 @@
                 type: Object,
                 default: () => ({})
             },
+            onlyBackground: {
+                type: Boolean,
+                default: false
+            }
         },
         computed: {
             setWidth() {
@@ -51,7 +54,7 @@
                 } else {
                     return '40%'
                 }
-            }
+            },
         },
         data() {
             return {

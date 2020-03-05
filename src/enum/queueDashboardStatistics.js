@@ -5,87 +5,174 @@ export const PERCENTAGE_TYPE = 'percentage'
 export const PRIMARY_TYPE = 'primary'
 export const OTHER_STATISTIC_LABEL = '% of Other'
 
+
 export const PERCENTAGE_COUNTERS = () => ({
     1: {
         label: 'Answer',
         key: '1',
-        value: null,
+        value: 0,
         icon: '',
-        style: {
-            'color': 'red'
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
         }
     },
     2: {
         label: 'Abandoned',
         key: '2',
-        value: null,
+        value: 0,
         icon: '',
-        style: {
-            color: 'green'
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
         }
     },
     3: {
         label: 'IVRExit',
         key: '3',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     4: {
         label: 'PickUp',
         key: '4',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     5: {
         label: 'TimeOutExit',
         key: '5',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        color: ''
     },
     6: {
         label: 'JoinEmpty',
         key: '6',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     7: {
         label: 'LeavEempty',
         key: '7',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        color: ''
     },
     8: {
         label: 'JoinUnavail',
         key: '8',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     9: {
         label: 'LeaveUnavail',
         key: '9',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     10: {
         label: 'Full',
         key: '10',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     11: {
         label: 'NextDestination',
         key: '11',
-        value: null,
+        value: 0,
         icon: '',
-        style: ''
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
 })
 
@@ -93,45 +180,91 @@ export const PRIMARY_COUNTERS = () => ({
     [TOTAL_CALLS_KEY]: {
         label: TOTAL_CALLS_KEY,
         key: TOTAL_CALLS_KEY,
-        value: null,
+        value: 0,
         icon: 'IconIncoming',
-        style: '',
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     MaxRingTime: {
         label: 'MaxRingTime',
         key: 'MaxRingTime',
-        value: null,
+        value: 0,
         icon: '',
-        style: '',
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     NotInSLACount: {
         label: 'NotInSLACount',
         key: 'NotInSLACount',
-        value: null,
+        value: 0,
         icon: '',
-        style: '',
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     InSLACount: {
         label: 'InSLACount',
         key: 'InSLACount',
-        value: null,
+        value: 0,
         icon: '',
-        style: {
-            color: "blue",
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
         },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
     AvgRingTime: {
         label: 'AvgRingTime',
         key: 'AvgRingTime',
-        value: null,
+        value: 0,
         icon: '',
-        style: {
-            border: '1px solid #8B008B'
+        layout: {
+            minWidth: '200',
+            maxWidth: '200',
+            showText: true,
+            showBorder: true,
         },
+        colors: {
+            background: "#ffffff",
+            frames: "#ff000000",
+            fonts: '#000000'
+        }
     },
 })
 
-let allStatistics = {
+export let allStatistics = {
     ...PRIMARY_COUNTERS(),
     ...PERCENTAGE_COUNTERS()
 }
