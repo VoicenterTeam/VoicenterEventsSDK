@@ -7,16 +7,16 @@
                 </p>
             </div>
         </div>
-        <div class="flex flex-col">
-            <div class="flex mb-1">
+        <div class="flex flex-wrap -mx-1">
+<!--            <div class="flex mb-1">-->
                 <div v-for="item in queueStatistics[PRIMARY_TYPE]"
                      class="statistic-card" :style="item.style" v-if="displayCounter(item)">
                     <component :is="item.icon" class="text-primary w-5 h-5"></component>
                     <div class="px-2">{{startCase(item.label)}}</div>
                     <div class="text-sm">{{item.value}}</div>
                 </div>
-            </div>
-            <div class="flex flex-wrap">
+<!--            </div>-->
+<!--            <div class="flex ">-->
                 <div v-for="item in queueStatistics[PERCENTAGE_TYPE]"
                      class="statistic-card mb-1" :style="item.style" v-if="displayCounter(item)">
                     <div>{{item.label}}</div>
@@ -82,12 +82,18 @@
             startCase,
             getSumOfOtherStatistics() {
                 let queueData = this.queueStatistics[PERCENTAGE_TYPE]
-                console.log(queueData)
-                return
+
                 let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY]
                 let countersToShow = this.countersToShow
-                let hiddenStatistics = queueData.filter((el) => !countersToShow.includes(el.key))
-                console.log(hiddenStatistics)
+                let hiddenStatistics = []
+
+                Object.keys(queueData).forEach((key) => {
+                    if (!countersToShow.includes(key)) {
+                        hiddenStatistics.push( queueData[key])
+
+                    }
+                })
+
                 let sum = sumBy(hiddenStatistics, 'value')
                 let percentage = `${((sum * 100) / totalCalls).toFixed(2)} %`
 
@@ -160,7 +166,7 @@
 </script>
 <style lang="scss" scoped>
     .statistic-card {
-        @apply flex bg-white flex-wrap px-6 py-4 mx-1 items-center justify-center rounded-lg shadow;
+        @apply flex bg-white flex-wrap px-6 py-4 mx-0-5 items-center justify-center rounded-lg shadow;
         min-width: 200px;
     }
 </style>

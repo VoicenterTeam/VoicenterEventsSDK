@@ -8,7 +8,7 @@ export const OTHER_STATISTIC_LABEL = '% of Other'
 export const PERCENTAGE_COUNTERS = () => ({
     1: {
         label: 'Answer',
-        key: 1,
+        key: '1',
         value: null,
         icon: '',
         style: {
@@ -17,7 +17,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     2: {
         label: 'Abandoned',
-        key: 2,
+        key: '2',
         value: null,
         icon: '',
         style: {
@@ -26,63 +26,63 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     3: {
         label: 'IVRExit',
-        key: 3,
+        key: '3',
         value: null,
         icon: '',
         style: ''
     },
     4: {
         label: 'PickUp',
-        key: 4,
+        key: '4',
         value: null,
         icon: '',
         style: ''
     },
     5: {
         label: 'TimeOutExit',
-        key: 5,
+        key: '5',
         value: null,
         icon: '',
         style: ''
     },
     6: {
         label: 'JoinEmpty',
-        key: 6,
+        key: '6',
         value: null,
         icon: '',
         style: ''
     },
     7: {
         label: 'LeavEempty',
-        key: 7,
+        key: '7',
         value: null,
         icon: '',
         style: ''
     },
     8: {
         label: 'JoinUnavail',
-        key: 8,
+        key: '8',
         value: null,
         icon: '',
         style: ''
     },
     9: {
         label: 'LeaveUnavail',
-        key: 9,
+        key: '9',
         value: null,
         icon: '',
         style: ''
     },
     10: {
         label: 'Full',
-        key: 10,
+        key: '10',
         value: null,
         icon: '',
         style: ''
     },
     11: {
         label: 'NextDestination',
-        key: 11,
+        key: '11',
         value: null,
         icon: '',
         style: ''
