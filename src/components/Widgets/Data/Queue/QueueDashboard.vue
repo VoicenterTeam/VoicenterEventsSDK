@@ -8,15 +8,12 @@
             </div>
         </div>
         <div class="flex flex-wrap -mx-1">
-<!--            <div class="flex mb-1">-->
                 <div v-for="item in queueStatistics[PRIMARY_TYPE]"
                      class="statistic-card" :style="item.style" v-if="displayCounter(item)">
                     <component :is="item.icon" class="text-primary w-5 h-5"></component>
                     <div class="px-2">{{startCase(item.label)}}</div>
                     <div class="text-sm">{{item.value}}</div>
                 </div>
-<!--            </div>-->
-<!--            <div class="flex ">-->
                 <div v-for="item in queueStatistics[PERCENTAGE_TYPE]"
                      class="statistic-card mb-1" :style="item.style" v-if="displayCounter(item)">
                     <div>{{item.label}}</div>

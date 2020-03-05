@@ -258,12 +258,10 @@
 
                     try {
                         this.model.WidgetConfig.forEach((config) => {
-                            config.WidgetParameterValue = config.WidgetParameterValue.toString()
+                            config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
                         })
                     } catch (e) {
                     }
-
-                    //
                     this.$emit('on-update', this.model)
                     this.toggleVisibility(false);
                 })
