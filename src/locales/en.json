@@ -207,5 +207,7 @@
     "template.name": "Template Name: ",
     "widget.id": "Widget ID: ",
     "widget.info": "Widget Info",
-    "html.editor.image.upload.error": "Could not upload the image."
+    "html.editor.image.upload.error": "Could not upload the image.",
+    "Include the selected": "Include the selected",
+    "Exclude the selected": "Exclude the selected"
 }
