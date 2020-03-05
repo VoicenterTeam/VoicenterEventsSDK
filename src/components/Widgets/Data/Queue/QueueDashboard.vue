@@ -46,9 +46,8 @@
         statistics,
         TOTAL_CALLS_KEY,
     } from '@/enum/queueDashboardStatistics'
+    import StatisticCard from './StatisticCard'
     import {getWidgetData} from '@/services/widgetService'
-    import StatisticCard from "./StatisticCard";
-    import {QueueDashboardData} from "@/store/mockData";
 
     export default {
         components: {
@@ -125,7 +124,6 @@
                 }
             },
             composeStatistics(data) {
-                data = QueueDashboardData
                 data.forEach((queue) => {
                     delete queue.queue_id;
 
