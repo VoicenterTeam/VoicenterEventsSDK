@@ -30,17 +30,6 @@
     import {Option, Radio, RadioGroup, Select} from 'element-ui'
     import {getOptionsList, getTemplateConfig} from '@/helpers/entitiesList'
 
-    const SELECTIONS = [
-        {
-            label: 'EntityPositive',
-            text: 'Include the selected',
-        },
-        {
-            label: 'EntityNegative',
-            text: 'Exclude the selected',
-        },
-    ];
-
     export default {
         components: {
             [Select.name]: Select,
@@ -60,8 +49,17 @@
                 loading: true,
                 collapseTags: true,
                 templateConfig: getTemplateConfig(this.model.ParameterID),
-                SELECTIONS,
-                entityType: get(SELECTIONS, '[0].label')
+                SELECTIONS: [
+                    {
+                        label: 'EntityPositive',
+                        text: this.$t('Include the selected'),
+                    },
+                    {
+                        label: 'EntityNegative',
+                        text: this.$t('Exclude the selected'),
+                    },
+                ],
+                entityType: 'EntityPositive',
             }
         },
         methods: {
@@ -69,7 +67,9 @@
             getData() {
                 try {
                     this.options = getOptionsList(this.model.ParameterID)
-                    this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
+                    if (typeof this.model.WidgetParameterValue === 'string') {
+                        this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
+                    }
                 } catch (e) {
                     console.warn(e)
                 } finally {
