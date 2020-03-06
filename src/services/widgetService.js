@@ -4,6 +4,8 @@ import {WidgetDataApi} from '@/api/widgetDataApi'
 import {isExternalDataWidget} from '@/helpers/widgetUtils'
 import {getOptionsValues} from '@/helpers/entitiesList'
 
+const AUTO_COMPLETE_TYPE_KEY = 6
+
 // Create new widgets from Widget Templates
 export async function createNewWidgets(templates, widgetGroup, Order = false) {
 
@@ -21,8 +23,10 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
         let WidgetConfig = []
         if (template.DefaultWidgetConfig.length) {
             for (let config of template.DefaultWidgetConfig) {
-                let options = getOptionsValues(config.ParameterID)
-                config.WidgetParameterValue = options ? options.toString() : ''
+                if (config.ParameterType === AUTO_COMPLETE_TYPE_KEY) {
+                    let options = getOptionsValues(config.ParameterID)
+                    config.WidgetParameterValue = options ? options.toString() : ''
+                }
                 WidgetConfig.push(config)
             }
         }

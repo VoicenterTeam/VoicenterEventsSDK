@@ -3,6 +3,7 @@ import {DashboardApi} from '@/api/dashboardApi'
 
 const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
+    SET_EDIT_MODE: 'SET_EDIT_MODE',
     SET_ACTIVE_DASHBOARD: 'SET_ACTIVE_DASHBOARD',
     ADD_DASHBOARD: 'ADD_DASHBOARD',
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD',
@@ -13,6 +14,7 @@ const state = {
     allDashboards: [],
     activeDashboard: null,
     loadingData: false,
+    editMode: false,
     settings: {}
 };
 
@@ -38,6 +40,9 @@ const mutations = {
     },
     [types.SET_LOADING]: (state, loading) => {
         state.loadingData = loading
+    },
+    [types.SET_EDIT_MODE]: (state, value) => {
+      state.editMode = value
     },
     [types.DELETE_DASHBOARD]: (state, dashboard) => {
         let index = state.allDashboards.findIndex((d) => d.DashboardID === dashboard.DashboardID)
