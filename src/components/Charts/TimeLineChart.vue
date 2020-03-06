@@ -53,6 +53,9 @@
         },
         methods: {
             async getWidgetData() {
+                if (this.$store.state.dashboards.editMode) {
+                    return
+                }
                 let widgetDataType = this.data.DataTypeID
                 let Data = await getWidgetData(this.data)
                 let chartData = get(Data, '0', {series: []})

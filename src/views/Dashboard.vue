@@ -46,7 +46,7 @@
                 </div>
             </template>
         </base-navbar>
-        <div v-loading="loading" class="dashboard" element-loading-background="rgba(255,255,255,.5)">
+        <div v-loading="loading" class="dashboard" element-loading-background="transparent">
             <div v-if="activeDashboardData" class="dashboard-container">
                 <sidebar v-if="showSidebar"
                          :activeTab="activeTab"
@@ -484,6 +484,7 @@
                 }
             },
             editMode(val) {
+                this.$store.commit('dashboards/SET_EDIT_MODE', val)
                 if (val) {
                     this.previousLayoutType = this.layoutType
                     this.layoutType = layoutTypes.NORMAL
