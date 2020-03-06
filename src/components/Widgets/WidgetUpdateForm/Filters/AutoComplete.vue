@@ -32,7 +32,6 @@
 
     const ENTITY_POSITIVE_KEY = 'EntityPositive'
     const ENTITY_NEGATIVE_KEY = 'EntityNegative'
-    const ACCOUNT_LIST_KEY = 'AccountList'
 
     export default {
         components: {
@@ -91,7 +90,6 @@
                 return {
                     [ENTITY_POSITIVE_KEY]: [],
                     [ENTITY_NEGATIVE_KEY]: [],
-                    [ACCOUNT_LIST_KEY]: [this.$store.state.entities.selectedAccountID]
                 }
             }
         },

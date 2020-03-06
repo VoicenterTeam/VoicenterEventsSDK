@@ -121,10 +121,6 @@
                 type: Object,
                 default: () => ({})
             },
-            isStatisticCard: {
-                type: Boolean,
-                default: false
-            }
         },
         components: {
             TrashIcon,
@@ -180,7 +176,7 @@
                 return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
             },
             cardIcon() {
-                return this.isStatisticCard ? null : statusTypes[this.status].icon
+                return statusTypes[this.status].icon
             },
             statusText() {
                 return this.$t(this.$store.getters['entities/getStatusTextById'](this.status))
@@ -235,7 +231,6 @@
             }
         },
         mounted() {
-            if (this.isStatisticCard) return;
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
@@ -251,7 +246,6 @@
             data: {
                 immediate: true,
                 handler: function (widget) {
-                    if (this.isStatisticCard) return;
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
                 }
