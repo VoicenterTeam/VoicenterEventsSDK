@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-top" mode="out-in">
-    <div v-if="showNotification" class="notification-handler offline__notification-handler">
+    <div v-if="isSocketOffline" class="socket-notification notification-handler offline__notification-handler">
       <CloudOffIcon class="icon"></CloudOffIcon>
       {{$t('common.socketOffline')}}
       <button class="btn ml-2 p-2 shadow rounded bg-white text-primary hover:bg-primary hover:text-white mx-1 border hover:border-primary" @click="$emit('retry')">
@@ -20,27 +20,16 @@
       ZapIcon,
     },
     computed: {
-      offlineSocketTimestamp() {
-        return this.$store.state.extensions.offlineSocketTimestamp
-      },
       isSocketOffline() {
-        return this.$store.state.extensions.isSocketOffline
+        return this.$store.getters['extensions/isSocketOffline']
       },
-      showNotification() {
-        if (!this.offlineSocketTimestamp || isNaN(this.offlineSocketTimestamp)) {
-          return false
-        }
-        const now = new Date().getTime()
-        // show after 1 minute of disconnect
-        return this.isSocketOffline && now - this.offlineSocketTimestamp > MINUTE
-      }
     },
     watch: {
       isSocketOffline(value) {
         if (!value) {
           setTimeout(() => {
             window.location.reload()
-          }, MINUTE * 5)
+          }, MINUTE * 3)
         }
       }
     }
