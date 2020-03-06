@@ -1,9 +1,11 @@
 <template>
     <div class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4"
+         :class="{'is-vertical': isVertical}"
          :style="getStyles">
-        <div class="w-full flex items-center">
+        <div class="w-full flex items-center justify-center"
+             :class="{'flex-col': isVertical}">
             <slot name="icon">
-                <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
+                <component class="min-w-16 status-icon mx-1 text-primary" :is="cardIcon"/>
             </slot>
             <slot name="text">
                 <el-tooltip v-if="showText" class="item" effect="dark" :content="statusText" placement="top">
@@ -12,30 +14,36 @@
                     </h5>
                 </el-tooltip>
             </slot>
-            <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
+            <div :class="{[$rtl.isRTL ? 'mr-auto' : 'ml-auto']: !isVertical}">
                 <slot name="value">
-                    <h5 class="text-6xl font-bold -mr-3" v-if="cardValue" :style="textColor">
+                    <h5 class="text-6xl font-bold -my-5"
+                        :class="{'-my-6': isVertical}"
+                        v-if="cardValue" :style="textColor">
                         {{cardValue}}
                     </h5>
                 </slot>
             </div>
-            <div class="flex editable-content" v-if="editable">
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
-                    <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
-                                @click="$emit('remove-item')"/>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-primary"
-                               @click="()=>{this.showModal = true}"/>
-                </el-tooltip>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
-            </div>
-            <div v-else class="flex">
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
-                               @click="()=>{this.showModal = true}"/>
-                </el-tooltip>
+            <div class="absolute flex action-icons" :class="{'edit-mode': editable}">
+                <template v-if="editable">
+                    <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
+                        <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
+                                    @click="$emit('remove-item')"/>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
+                        <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-primary"
+                                   @click="showModal = true"/>
+                    </el-tooltip>
+                    <div class="flex">
+                        <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
+                        <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
+                    </div>
+                </template>
+                <template v-else>
+                    <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
+                        <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
+                                   @click="showModal = true"/>
+                    </el-tooltip>
+                </template>
             </div>
         </div>
         <update-dialog
@@ -127,6 +135,7 @@
         data() {
             return {
                 showModal: false,
+                isVertical: false,
                 selectedStatus: '',
                 selectedIcon: '',
                 selectedOption: {},
@@ -137,6 +146,9 @@
             }
         },
         computed: {
+            pageWidth() {
+                return this.$store.state.utils.page.width
+            },
             statuses() {
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
@@ -210,6 +222,13 @@
                 this.selectedStatus = option.value;
                 this.selectedIcon = option.icon;
             },
+            checkIfCardIsVertical() {
+                if (this.$el && this.$el.clientWidth < 280) {
+                    this.isVertical = true
+                } else {
+                    this.isVertical = false
+                }
+            }
         },
         mounted() {
             this.selectedStatus = this.status;
@@ -219,6 +238,9 @@
                 maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
                 minWidth: this.data.WidgetLayout['minWidth'] || '250'
             }
+            setTimeout(() => {
+                this.checkIfCardIsVertical()
+            }, 50)
         },
         watch: {
             data: {
@@ -227,7 +249,27 @@
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
                 }
+            },
+            pageWidth: {
+                immediate: true,
+                handler() {
+                    this.checkIfCardIsVertical()
+                }
             }
         }
     }
 </script>
+<style scoped lang="scss">
+    .status-icon {
+        max-width: 64px;
+    }
+
+    .action-icons {
+        top: 40px;
+        right: 20px;
+
+        &.edit-mode {
+            top: 0;
+        }
+    }
+</style>
