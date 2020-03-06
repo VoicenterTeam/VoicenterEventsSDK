@@ -30,6 +30,9 @@
     import {Option, Radio, RadioGroup, Select} from 'element-ui'
     import {getOptionsList, getTemplateConfig} from '@/helpers/entitiesList'
 
+    const ENTITY_POSITIVE_KEY = 'EntityPositive'
+    const ENTITY_NEGATIVE_KEY = 'EntityNegative'
+
     export default {
         components: {
             [Select.name]: Select,
@@ -51,15 +54,15 @@
                 templateConfig: getTemplateConfig(this.model.ParameterID),
                 SELECTIONS: [
                     {
-                        label: 'EntityPositive',
+                        label: ENTITY_POSITIVE_KEY,
                         text: this.$t('Include the selected'),
                     },
                     {
-                        label: 'EntityNegative',
+                        label: ENTITY_NEGATIVE_KEY,
                         text: this.$t('Exclude the selected'),
                     },
                 ],
-                entityType: 'EntityPositive',
+                entityType: ENTITY_POSITIVE_KEY,
             }
         },
         methods: {
@@ -71,11 +74,24 @@
                         this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
                     }
                 } catch (e) {
+                    if (!this.model.WidgetParameterValue.EntityPositive) {
+                        let options = this.model.WidgetParameterValue.split(',').map(el => {
+                            return Number(el);
+                        });
+                        this.model.WidgetParameterValue = this.initObject()
+                        this.model.WidgetParameterValue[ENTITY_POSITIVE_KEY] = options
+                    }
                     console.warn(e)
                 } finally {
                     this.loading = false
                 }
             },
+            initObject(){
+                return {
+                    [ENTITY_POSITIVE_KEY]: [],
+                    [ENTITY_NEGATIVE_KEY]: []
+                }
+            }
         },
         mounted() {
             this.getData()

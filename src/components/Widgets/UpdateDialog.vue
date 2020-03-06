@@ -235,7 +235,9 @@
 
                     try {
                         this.model.WidgetConfig.forEach((config) => {
-                            config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
+                            if (typeof config.WidgetParameterValue === 'object') {
+                                config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
+                            }
                         })
                     } catch (e) {
                     }
