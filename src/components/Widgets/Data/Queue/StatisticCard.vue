@@ -1,17 +1,21 @@
 <template>
     <div class="mx-0-5" v-if="item.layout">
-        <div class="w-full bg-white p-5 mt-1 flex items-center justify-between rounded-lg shadow"
-             :style="getWrapperStyles">
-            <div class="w-full flex flex-row items-center justify-between" :style="getLayoutStyles">
+        <div class="bg-white px-4 py-8 mt-1 flex items-center justify-between rounded-lg shadow"
+             :style="getCardStyles">
+            <div class="flex w-full items-center justify-between">
                 <slot name="label">
-                    <h5 class="text-main-base font-bold mx-1" v-if="item.layout.showText">
-                        {{item.label}}
-                    </h5>
+                    <div class="flex">
+                        <h5 class="text-2xl font-bold mx-1" v-if="item.layout.showText">
+                            {{item.label}}
+                        </h5>
+                    </div>
                 </slot>
                 <slot name="value">
-                    <h2 class="text-main-xl font-bold mx-1">
-                        {{item.value}}
-                    </h2>
+                    <div class="flex">
+                        <h2 class="text-3xl font-bold mx-1">
+                            {{item.value}}
+                        </h2>
+                    </div>
                 </slot>
             </div>
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.styles')" placement="top">
@@ -66,12 +70,14 @@
             },
         },
         computed: {
-            getWrapperStyles() {
+            getCardStyles() {
                 let item = this.item
 
                 let styles = {
                     'color': item.colors.fonts,
                     'background': item.colors.background,
+                    'min-width': `${item.layout.minWidth}px`,
+                    'max-width': `${item.layout.maxWidth}px`,
                 }
 
                 if (item.layout.showBorder) {
@@ -84,14 +90,6 @@
                 }
                 return styles
             },
-            getLayoutStyles() {
-                let item = this.item
-                let styles = {
-                    'min-width': `${item.layout.minWidth}px`,
-                    'max-width': `${item.layout.maxWidth}px`,
-                };
-                return styles
-            }
         },
         methods: {
             onChange() {
@@ -113,12 +111,12 @@
 <style lang="scss" scoped>
     .edit-card-icon {
         @apply relative cursor-pointer;
-        top: -20px;
-        right: -25px;
+        top: -40px;
+        right: -20px;
     }
 
     .rtl .edit-card-icon {
-        left: -25px;
+        left: -20px;
         right: auto;
     }
 </style>

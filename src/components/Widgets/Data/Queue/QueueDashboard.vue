@@ -24,9 +24,6 @@
             </div>
             <div v-if="showSumOfOthers" class="statistic-card"
                  v-html="getSumOfOtherStatistics()">
-                <statistic-card showSumOfOthers
-                                v-html="getSumOfOtherStatistics()"
-                />
             </div>
         </div>
     </div>
@@ -95,13 +92,19 @@
                 })
 
                 let sum = sumBy(hiddenStatistics, 'value')
-                let percentage = `${((sum * 100) / totalCalls).toFixed(2)} %`
 
-                return `<div class="px-2">${OTHER_STATISTIC_LABEL}</div><div>${percentage}</div>`
+                let percentage = `${((sum * 100) / totalCalls).toFixed(2)}`
+
+                if (percentage === 'NaN') {
+                    percentage = '--'
+                }
+
+                return `<div class="text-2xl px-2">${OTHER_STATISTIC_LABEL}</div><div class="text-3xl">${percentage} %</div>`
             },
             getItem(item) {
-                let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY]
+                let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY] || 1
                 let value = item.value || 0
+
                 let percentage = `${((value * 100) / totalCalls).toFixed(2)} %`
                 if (this.showAbsoluteNumbers) {
                     percentage = `(${value}) ${percentage}`
@@ -195,7 +198,7 @@
 </script>
 <style lang="scss" scoped>
     .statistic-card {
-        @apply flex bg-white flex-wrap px-6 py-4 mt-1 mx-0-5 items-center justify-center rounded-lg shadow;
-        min-width: 200px;
+        @apply flex bg-white flex-wrap px-2 py-8 mt-1 mx-0-5 items-center justify-center rounded-lg shadow border border-primary text-primary;
+        min-width: 320px;
     }
 </style>

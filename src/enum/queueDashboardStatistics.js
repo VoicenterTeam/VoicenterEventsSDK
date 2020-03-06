@@ -1,3 +1,5 @@
+import i18n from "@/i18n";
+
 export const ADDITIONAL_DATA_KEY = 'ExitCounts'
 export const TOTAL_CALLS_KEY = 'CallCount'
 
@@ -8,13 +10,13 @@ export const OTHER_STATISTIC_LABEL = '% of Other'
 
 export const PERCENTAGE_COUNTERS = () => ({
     1: {
-        label: 'Answer',
+        label: i18n.t('Answer'),
         key: '1',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -25,13 +27,13 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     2: {
-        label: 'Abandoned',
+        label: i18n.t('Abandoned'),
         key: '2',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -42,13 +44,13 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     3: {
-        label: 'IVRExit',
+        label: i18n.t('IVRExit'),
         key: '3',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -59,13 +61,13 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     4: {
-        label: 'PickUp',
+        label: i18n.t('PickUp'),
         key: '4',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -76,20 +78,20 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     5: {
-        label: 'TimeOutExit',
+        label: i18n.t('TimeOutExit'),
         key: '5',
         value: 0,
         icon: '',
         color: ''
     },
     6: {
-        label: 'JoinEmpty',
+        label: i18n.t('JoinEmpty'),
         key: '6',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -100,20 +102,20 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     7: {
-        label: 'LeavEempty',
+        label: i18n.t('LeavEempty'),
         key: '7',
         value: 0,
         icon: '',
         color: ''
     },
     8: {
-        label: 'JoinUnavail',
+        label: i18n.t('JoinUnavail'),
         key: '8',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -124,13 +126,13 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     9: {
-        label: 'LeaveUnavail',
+        label: i18n.t('LeaveUnavail'),
         key: '9',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -141,13 +143,13 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     10: {
-        label: 'Full',
+        label: i18n.t('Full'),
         key: '10',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -158,13 +160,13 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     11: {
-        label: 'NextDestination',
+        label: i18n.t('NextDestination'),
         key: '11',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -178,13 +180,13 @@ export const PERCENTAGE_COUNTERS = () => ({
 
 export const PRIMARY_COUNTERS = () => ({
     [TOTAL_CALLS_KEY]: {
-        label: TOTAL_CALLS_KEY,
+        label: i18n.t('CallCount'),
         key: TOTAL_CALLS_KEY,
         value: 0,
         icon: 'IconIncoming',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -195,13 +197,13 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     MaxRingTime: {
-        label: 'MaxRingTime',
+        label: i18n.t('MaxRingTime'),
         key: 'MaxRingTime',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -212,13 +214,13 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     NotInSLACount: {
-        label: 'NotInSLACount',
+        label: i18n.t('NotInSLACount'),
         key: 'NotInSLACount',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -229,13 +231,13 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     InSLACount: {
-        label: 'InSLACount',
+        label: i18n.t('InSLACount'),
         key: 'InSLACount',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },
@@ -246,13 +248,13 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     AvgRingTime: {
-        label: 'AvgRingTime',
+        label: i18n.t('AvgRingTime'),
         key: 'AvgRingTime',
         value: 0,
         icon: '',
         layout: {
-            minWidth: '250',
-            maxWidth: '250',
+            minWidth: '320',
+            maxWidth: '320',
             showText: true,
             showBorder: true,
         },

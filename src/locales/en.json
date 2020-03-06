@@ -215,5 +215,21 @@
     "Exclude the selected": "Exclude the selected",
     "tooltip.edit.styles": "tooltip.edit.styles",
     "Card max width": "Card max width",
-    "Card min width": "Card min width"
+    "Card min width": "Card min width",
+    "Answer":  "Answer",
+    "Abandoned": "Abandoned",
+    "IVRExit":  "IVR Exit",
+    "PickUp": "PickUp",
+    "TimeOutExit":  "TimeOut Exit",
+    "JoinEmpty": "Join Empty",
+    "LeavEempty":  "Leave Empty",
+    "JoinUnavail": "Join Unavailable",
+    "LeaveUnavail":  "Leave Unavailable",
+    "Full": "Full",
+    "NextDestination":  "Next Destination",
+    "MaxRingTime":  "Max Ring Time",
+    "NotInSLACount": "Not in SLA Count",
+    "InSLACount":  "In SLA Count",
+    "AvgRingTime": "Avg Ring Time",
+    "CallCount": "Call Count"
 }
