@@ -1,4 +1,5 @@
 import i18n from "@/i18n";
+import colors from "@/enum/colors";
 
 export const ADDITIONAL_DATA_KEY = 'ExitCounts'
 export const TOTAL_CALLS_KEY = 'CallCount'
@@ -7,7 +8,6 @@ export const PERCENTAGE_TYPE = 'percentage'
 export const PRIMARY_TYPE = 'primary'
 export const OTHER_STATISTIC_LABEL = '% of Other'
 
-
 export const PERCENTAGE_COUNTERS = () => ({
     1: {
         label: i18n.t('Answer'),
@@ -15,15 +15,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LIGHT_GREEN,
+            fonts: colors.LIGHT_GREEN
         }
     },
     2: {
@@ -32,15 +32,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.PRIVATE_COLOR,
+            fonts: colors.PRIVATE_COLOR
         }
     },
     3: {
@@ -49,15 +49,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.PRIVATE_COLOR,
+            fonts: colors.PRIVATE_COLOR
         }
     },
     4: {
@@ -66,15 +66,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LOGIN_COLOR,
+            fonts: colors.LOGIN_COLOR
         }
     },
     5: {
@@ -82,7 +82,17 @@ export const PERCENTAGE_COUNTERS = () => ({
         key: '5',
         value: 0,
         icon: '',
-        color: ''
+        layout: {
+            minWidth: '340',
+            maxWidth: '340',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: colors.ADMINISTRATIVE_COLOR,
+            fonts: colors.ADMINISTRATIVE_COLOR
+        }
     },
     6: {
         label: i18n.t('JoinEmpty'),
@@ -90,15 +100,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LUNCH_COLOR,
+            fonts: colors.LUNCH_COLOR
         }
     },
     7: {
@@ -106,7 +116,17 @@ export const PERCENTAGE_COUNTERS = () => ({
         key: '7',
         value: 0,
         icon: '',
-        color: ''
+        layout: {
+            minWidth: '340',
+            maxWidth: '340',
+            showText: true,
+            showBorder: true,
+        },
+        colors: {
+            background: "#ffffff",
+            frames: colors.PRIVATE_COLOR,
+            fonts: colors.PRIVATE_COLOR
+        }
     },
     8: {
         label: i18n.t('JoinUnavail'),
@@ -114,15 +134,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LOGOUT_COLOR,
+            fonts: colors.LOGOUT_COLOR
         }
     },
     9: {
@@ -131,15 +151,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.PRIVATE_COLOR,
+            fonts: colors.PRIVATE_COLOR
         }
     },
     10: {
@@ -148,15 +168,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.OTHER_COLOR,
+            fonts: colors.OTHER_COLOR
         }
     },
     11: {
@@ -165,15 +185,15 @@ export const PERCENTAGE_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LOGOUT_COLOR,
+            fonts: colors.LOGOUT_COLOR
         }
     },
 })
@@ -185,15 +205,15 @@ export const PRIMARY_COUNTERS = () => ({
         value: 0,
         icon: 'IconIncoming',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LIGHT_GREEN,
+            fonts: colors.LIGHT_GREEN,
         }
     },
     MaxRingTime: {
@@ -202,15 +222,15 @@ export const PRIMARY_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.PRIVATE_COLOR,
+            fonts: colors.PRIVATE_COLOR,
         }
     },
     NotInSLACount: {
@@ -219,15 +239,15 @@ export const PRIMARY_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LOGOUT_COLOR,
+            fonts: colors.LOGOUT_COLOR,
         }
     },
     InSLACount: {
@@ -236,15 +256,15 @@ export const PRIMARY_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.LUNCH_COLOR,
+            fonts: colors.LUNCH_COLOR,
         }
     },
     AvgRingTime: {
@@ -253,15 +273,15 @@ export const PRIMARY_COUNTERS = () => ({
         value: 0,
         icon: '',
         layout: {
-            minWidth: '320',
-            maxWidth: '320',
+            minWidth: '340',
+            maxWidth: '340',
             showText: true,
             showBorder: true,
         },
         colors: {
             background: "#ffffff",
-            frames: "#ff000000",
-            fonts: '#000000'
+            frames: colors.ADMINISTRATIVE_COLOR,
+            fonts: colors.ADMINISTRATIVE_COLOR,
         }
     },
 })

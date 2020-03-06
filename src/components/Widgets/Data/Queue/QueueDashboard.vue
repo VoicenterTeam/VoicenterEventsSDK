@@ -30,6 +30,7 @@
 </template>
 <script>
     import get from 'lodash/get'
+    import cloneDeep from 'lodash/cloneDeep'
     import sumBy from 'lodash/sumBy'
     import startCase from 'lodash/startCase'
     import {
@@ -93,26 +94,26 @@
 
                 let sum = sumBy(hiddenStatistics, 'value')
 
-                let percentage = `${((sum * 100) / totalCalls).toFixed(2)}`
+                let percentage = (sum * 100) / totalCalls
+                let percentageText = percentage.toFixed(2)
 
-                if (percentage === 'NaN') {
-                    percentage = '--'
+                if (isNaN(percentage)) {
+                    percentageText = '--'
                 }
 
-                return `<div class="text-2xl px-2">${OTHER_STATISTIC_LABEL}</div><div class="text-3xl">${percentage} %</div>`
+                return `<div class="text-2xl px-2">${OTHER_STATISTIC_LABEL}</div><div class="text-3xl">${percentageText} %</div>`
             },
             getItem(item) {
                 let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY] || 1
-                let value = item.value || 0
+                let count = item.value || 0
 
-                let percentage = `${((value * 100) / totalCalls).toFixed(2)} %`
-                if (this.showAbsoluteNumbers) {
-                    percentage = `(${value}) ${percentage}`
-                }
+                let percentage = `${((count * 100) / totalCalls).toFixed(2)} %`
 
                 let result = {
                     ...item,
-                    ...{value: percentage}
+                    value: percentage,
+                    showAbsoluteNumbers: this.showAbsoluteNumbers,
+                    count
                 }
 
                 return result
@@ -120,6 +121,7 @@
             async getWidgetData() {
                 try {
                     let data = await getWidgetData(this.data)
+                    this.queueStatistics = cloneDeep(this.data.WidgetLayout.allStatistics)
                     this.composeStatistics(data)
                 } catch (e) {
                     console.warn(e)
@@ -150,6 +152,7 @@
                 return this.countersToShow.length === statistics.length || this.countersToShow.includes(item.key)
             },
             onChange(styles, item) {
+                item.value = 0;
                 this.data.WidgetLayout.allStatistics[item.key] = {
                     ...item,
                     ...styles
@@ -177,7 +180,7 @@
 
             if (!this.data.WidgetLayout.allStatistics) {
                 this.$set(this.data.WidgetLayout, 'allStatistics', this.initStatistics())
-                this.queueStatistics = this.initStatistics()
+                this.queueStatistics = cloneDeep(this.initStatistics())
             }
         },
         watch: {
@@ -199,6 +202,6 @@
 <style lang="scss" scoped>
     .statistic-card {
         @apply flex bg-white flex-wrap px-2 py-8 mt-1 mx-0-5 items-center justify-center rounded-lg shadow border border-primary text-primary;
-        min-width: 320px;
+        min-width: 340px;
     }
 </style>

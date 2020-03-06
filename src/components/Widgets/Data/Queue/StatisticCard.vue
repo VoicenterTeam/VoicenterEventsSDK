@@ -1,8 +1,8 @@
 <template>
-    <div class="mx-0-5" v-if="item.layout">
-        <div class="bg-white px-4 py-8 mt-1 flex items-center justify-between rounded-lg shadow"
+    <div class="mx-1 py-1" v-if="item.layout">
+        <div class="bg-white px-4 py-4 flex items-center justify-between rounded-lg shadow"
              :style="getCardStyles">
-            <div class="flex w-full items-center justify-between">
+            <div class="flex flex-col w-full items-center justify-between">
                 <slot name="label">
                     <div class="flex">
                         <h5 class="text-2xl font-bold mx-1" v-if="item.layout.showText">
@@ -11,8 +11,9 @@
                     </div>
                 </slot>
                 <slot name="value">
-                    <div class="flex">
-                        <h2 class="text-3xl font-bold mx-1">
+                    <div class="flex items-center">
+                        <span class="text-xl px-1" v-if="item.showAbsoluteNumbers">({{item.count}})</span>
+                        <h2 class="text-4xl font-bold -my-2">
                             {{item.value}}
                         </h2>
                     </div>
@@ -21,7 +22,7 @@
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.styles')" placement="top">
                 <edit-icon
                     class="align-center w-10 h-8 p-2 edit-card-icon text-primary"
-                    @click="()=>{this.showModal = true}"/>
+                    @click="showModal = true"/>
             </el-tooltip>
         </div>
         <update-dialog
