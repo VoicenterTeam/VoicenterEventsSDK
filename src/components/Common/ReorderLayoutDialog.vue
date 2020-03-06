@@ -105,10 +105,12 @@
                 }
 
                 if (action !== draggableEvents.MOVED) {
+                    widget = cloneDeep(widget)
                     widget['operation'] = {
                         type: action,
                         parentID: group.WidgetGroupID
                     }
+
                     this.widgetsToUpdate.push(widget)
                 }
             },
