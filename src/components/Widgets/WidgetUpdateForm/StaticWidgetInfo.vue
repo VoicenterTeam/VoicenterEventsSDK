@@ -2,7 +2,7 @@
     <el-popover
         placement="bottom-start"
         trigger="hover">
-        <div>
+        <div v-if="widget.WidgetID">
             <p>{{$t('widget.id') + widget.WidgetID}}</p>
             <p>{{$t('template.name') + widgetTemplate.TemplateName + ', ' + widgetTemplate.TemplateID}}</p>
         </div>

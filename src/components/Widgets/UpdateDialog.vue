@@ -42,6 +42,25 @@
                     </div>
                 </div>
             </el-form-item>
+            <el-form-item v-if="isQueueDashboardWidget(widget)">
+                <label>{{$t('statistics.to.display')}}</label>
+                <base-select
+                    v-model="model.WidgetLayout.ShowStatistics"
+                    valueKey="key"
+                    :data="statistics"/>
+                <div class="flex w-full flex-col lg:flex-row pt-4">
+                    <div class="flex lg:w-1/2">
+                        <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
+                            {{$t('Display % of of Others value')}}
+                        </el-checkbox>
+                    </div>
+                    <div class="flex lg:w-1/2">
+                        <el-checkbox v-model="model.WidgetLayout.AbsoluteNumbers">
+                            {{$t('Display absolute numbers')}}
+                        </el-checkbox>
+                    </div>
+                </div>
+            </el-form-item>
             <el-collapse v-model="activeCollapse" class="pt-4">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
@@ -137,13 +156,15 @@
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
+    import {statistics} from '@/enum/queueDashboardStatistics'
     import {
         isHtmlWidget,
         isPieWidget,
         isQueueChart,
+        isQueueDashboardWidget,
         isQueueGauge,
         isQueueTable,
-        isRealtimeWidget
+        isRealtimeWidget,
     } from '@/helpers/widgetUtils'
 
     export default {
@@ -184,8 +205,8 @@
                 },
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
+                statistics,
                 allSeries,
-                isHtmlWidget: isHtmlWidget,
             }
         },
         computed: {
@@ -208,6 +229,8 @@
             isQueueTable,
             isQueueChart,
             isQueueGauge,
+            isHtmlWidget,
+            isQueueDashboardWidget,
             isAutoComplete(WidgetConfig) {
                 return filterIDs.includes(WidgetConfig.ParameterID);
             },
@@ -236,12 +259,12 @@
                     try {
                         this.model.WidgetConfig.forEach((config) => {
                             if (typeof config.WidgetParameterValue === 'object') {
+                                config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
                                 config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
                             }
                         })
                     } catch (e) {
                     }
-
                     this.$emit('on-update', this.model)
                     this.toggleVisibility(false);
                 })

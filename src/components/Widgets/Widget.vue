@@ -50,6 +50,7 @@
     import GaugeChart from '@/components/Charts/GaugeChart'
     import QueueChart from '@/components/Charts/QueueChart'
     import StatusCards from '@/components/Cards/StatusCards'
+    import QueueDashboard from './Data/Queue/QueueDashboard'
     import QueueActiveCall from './Data/Queue/QueueActiveCall'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
@@ -80,6 +81,7 @@
             ConfigDialog,
             PieChart,
             HtmlWidget,
+            QueueDashboard,
         },
         props: {
             editable: {

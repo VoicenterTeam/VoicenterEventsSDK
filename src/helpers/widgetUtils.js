@@ -96,6 +96,10 @@ export function isHtmlWidget(widget) {
     return widget.DataTypeID === widgetDataTypes.RICH_TEXT_EDITOR_ID;
 }
 
+export function isQueueDashboardWidget(widget) {
+    return widget.DataTypeID === widgetDataTypes.QUEUE_DASHBOARD;
+}
+
 export const groupedWidgets = [
     widgetDataTypes.COUNTER_TYPE_ID,
     widgetDataTypes.CHART_SPEEDOMETER,

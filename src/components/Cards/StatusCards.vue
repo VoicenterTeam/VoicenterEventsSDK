@@ -120,7 +120,7 @@
             data: {
                 type: Object,
                 default: () => ({})
-            }
+            },
         },
         components: {
             TrashIcon,

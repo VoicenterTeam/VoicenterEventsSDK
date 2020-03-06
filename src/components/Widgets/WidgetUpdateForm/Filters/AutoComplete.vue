@@ -86,10 +86,10 @@
                     this.loading = false
                 }
             },
-            initObject(){
+            initObject() {
                 return {
                     [ENTITY_POSITIVE_KEY]: [],
-                    [ENTITY_NEGATIVE_KEY]: []
+                    [ENTITY_NEGATIVE_KEY]: [],
                 }
             }
         },

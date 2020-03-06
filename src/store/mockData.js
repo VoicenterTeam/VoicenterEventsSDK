@@ -904,4 +904,61 @@ export const eventTypes = {
     }
 }
 
-// 106576
+export const QueueDashboardData = [
+    {
+        "queue_id": 11351,
+        "CallCount": 382,
+        "MaxRingTime": 250,
+        "NotInSLACount": 61,
+        "InSLACount": 319,
+        "AvgRingTime": 23,
+        "ExitCounts": [
+            {
+                "billing_cdr_queue_type": 1,
+                "ExitTypeCount": 369
+            },
+            {
+                "billing_cdr_queue_type": 2,
+                "ExitTypeCount": 13
+            }
+        ]
+    },
+    {
+        "queue_id": 11405,
+        "CallCount": 25,
+        "MaxRingTime": 191,
+        "NotInSLACount": 7,
+        "InSLACount": 18,
+        "AvgRingTime": 38,
+        "ExitCounts": [
+            {
+                "billing_cdr_queue_type": 1,
+                "ExitTypeCount": 23
+            },
+            {
+                "billing_cdr_queue_type": 2,
+                "ExitTypeCount": 2
+            }
+        ]
+    },
+    {
+        "queue_id": 12591,
+        "CallCount": 188,
+        "MaxRingTime": 321,
+        "NotInSLACount": 22,
+        "InSLACount": 166,
+        "AvgRingTime": 20,
+        "ExitCounts": [
+            {
+                "billing_cdr_queue_type": 1,
+                "ExitTypeCount": 183
+            },
+            {
+                "billing_cdr_queue_type": 2,
+                "ExitTypeCount": 5
+            }
+        ]
+    }
+]
+
+
