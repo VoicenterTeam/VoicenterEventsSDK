@@ -73,6 +73,7 @@
 </template>
 <script>
     import get from 'lodash/get'
+    import {format} from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
     import {Option, Pagination, Select} from 'element-ui'
@@ -197,6 +198,8 @@
                 try {
                     let data = await getWidgetData(this.widget)
                     let columns = [];
+                    let containsDate = false
+                    let dateFieldToFormatting = 'Date & time'
 
                     if (data.length) {
                         for (let column in data[0]) {
@@ -207,11 +210,20 @@
                                 label: startCase(column)
                             })
                             this.searchableFields.push(column)
+                            if (column === dateFieldToFormatting) {
+                                containsDate = true
+                            }
                         }
 
                         if (this.isRealTimeTable) {
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
+                    }
+                    if (containsDate) {
+                        data = data.map((row) => {
+                            row[dateFieldToFormatting] = format(new Date(row[dateFieldToFormatting]), 'HH:mm:ss dd-MM-yyyy')
+                            return row
+                        })
                     }
 
                     this.tableData = data
