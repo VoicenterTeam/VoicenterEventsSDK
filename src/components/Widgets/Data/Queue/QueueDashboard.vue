@@ -121,8 +121,10 @@
             async getWidgetData() {
                 try {
                     let data = await getWidgetData(this.data)
-                    this.queueStatistics = cloneDeep(this.data.WidgetLayout.allStatistics)
-                    this.composeStatistics(data)
+                    if (data) {
+                        this.queueStatistics = cloneDeep(this.data.WidgetLayout.allStatistics)
+                        this.composeStatistics(data)
+                    }
                 } catch (e) {
                     console.warn(e)
                 } finally {

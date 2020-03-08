@@ -51,7 +51,7 @@ export async function getWidgetData(widget) {
         return await WidgetDataApi.getExternalData(widget.EndPoint)
     }
 
-    if (isWidgetModalOpen()) return;
+    if (isWidgetModalOpen()) return 0;
 
     return await WidgetDataApi.getData(widget.EndPoint);
 }
