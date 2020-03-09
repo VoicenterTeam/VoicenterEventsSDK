@@ -84,6 +84,7 @@
     import {extensionColor} from '@/util/extensionStyles'
     import {getWidgetData} from '@/services/widgetService'
     import {isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
 
@@ -130,8 +131,15 @@
             fetchTableData() {
                 let tableData = this.tableData
 
+                let showLoggedOutUsers = get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
+                if (!showLoggedOutUsers) {
+                    let userIds = this.loggedOutUserIds
+
+                    tableData = tableData.filter((user) => !userIds.includes(user.user_id))
+                }
+
                 if (this.filter && this.searchableFields.length > 0) {
-                    tableData = this.tableData.filter(c => {
+                    tableData = tableData.filter(c => {
                         return this.searchableFields.some(field => {
                             if (c[field]) {
                                 return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
@@ -139,15 +147,16 @@
                             return false;
                         })
                     })
-                    this.filteredDataLength = tableData.length
-                } else {
-                    this.filteredDataLength = this.tableData.length
                 }
 
+                this.filteredDataLength = tableData.length
                 return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             },
             extensions() {
                 return this.$store.state.extensions.extensions
+            },
+            loggedOutUserIds() {
+                return this.extensions.filter(e => e.representativeStatus === LOGOUT_STATUS).map((el) => el.userID)
             },
             dataCounts() {
                 if (this.filteredDataLength) {
@@ -267,6 +276,7 @@
             },
             data: {
                 immediate: true,
+                deep: true,
                 handler: function () {
                     this.getWidgetData()
                 }
