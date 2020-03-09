@@ -191,9 +191,6 @@
                 return ''
             },
             async getWidgetData() {
-                if (this.$store.state.dashboards.editMode) {
-                    return
-                }
                 try {
                     let data = await getWidgetData(this.widget)
                     let columns = [];

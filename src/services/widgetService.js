@@ -51,7 +51,7 @@ export async function getWidgetData(widget) {
         return await WidgetDataApi.getExternalData(widget.EndPoint)
     }
 
-    if (isWidgetModalOpen()) return 0;
+    if (isWidgetModalOpen() || isInEditMode) return 0;
 
     return await WidgetDataApi.getData(widget.EndPoint);
 }
@@ -59,4 +59,8 @@ export async function getWidgetData(widget) {
 export function isWidgetModalOpen() {
     let bodyElement = document.body;
     return bodyElement.classList.contains("el-popup-parent--hidden")
+}
+
+export function isInEditMode() {
+    return this.$store.state.dashboards.editMode
 }
