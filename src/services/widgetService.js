@@ -51,7 +51,7 @@ export async function getWidgetData(widget) {
         return await WidgetDataApi.getExternalData(widget.EndPoint)
     }
 
-    if (isWidgetModalOpen() || isInEditMode) return 0;
+    if (isWidgetModalOpen() || isInEditMode()) return null;
 
     return await WidgetDataApi.getData(widget.EndPoint);
 }

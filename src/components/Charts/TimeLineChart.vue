@@ -55,6 +55,9 @@
             async getWidgetData() {
                 let widgetDataType = this.data.DataTypeID
                 let Data = await getWidgetData(this.data)
+                if (!Data) {
+                    return
+                }
                 let chartData = get(Data, '0', {series: []})
                 if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
                     chartData = {series: Data}

@@ -203,6 +203,9 @@
             async getWidgetData() {
                 try {
                     let data = await getWidgetData(this.widget)
+                    if (!data) {
+                        return
+                    }
                     let columns = [];
                     let containsDate = false
                     let dateFieldToFormatting = 'Date & time'
