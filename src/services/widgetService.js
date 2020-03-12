@@ -3,7 +3,7 @@ import {widgetModel} from '@/models/instances'
 import {WidgetDataApi} from '@/api/widgetDataApi'
 import {isExternalDataWidget} from '@/helpers/widgetUtils'
 import {getOptionsValues} from '@/helpers/entitiesList'
-
+import store from '../store/store'
 const AUTO_COMPLETE_TYPE_KEY = 6
 
 // Create new widgets from Widget Templates
@@ -62,5 +62,5 @@ export function isWidgetModalOpen() {
 }
 
 export function isInEditMode() {
-    return this.$store.state.dashboards.editMode
+    return store.state.dashboards.editMode
 }
