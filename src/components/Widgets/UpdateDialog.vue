@@ -258,9 +258,8 @@
 
                     try {
                         this.model.WidgetConfig.forEach((config) => {
-                            if (typeof config.WidgetParameterValue === 'object') {
-                                config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
-                                config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
+                            if (typeof config.WidgetParameterValueJson === 'object') {
+                                config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
                             }
                         })
                     } catch (e) {

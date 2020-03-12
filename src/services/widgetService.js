@@ -25,7 +25,12 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
             for (let config of template.DefaultWidgetConfig) {
                 if (config.ParameterType === AUTO_COMPLETE_TYPE_KEY) {
                     let options = getOptionsValues(config.ParameterID)
-                    config.WidgetParameterValue = options ? options.toString() : ''
+                    config.WidgetParameterValueJson = {
+                        EntityPositive: options,
+                        EntityNegative: [],
+                        AccountList: [store.state.entities.selectedAccountID]
+                    }
+                    config.WidgetParameterValue = ''
                 }
                 WidgetConfig.push(config)
             }

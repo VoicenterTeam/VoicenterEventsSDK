@@ -73,13 +73,16 @@
                     if (typeof this.model.WidgetParameterValue === 'string') {
                         this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
                     }
+                    if (typeof this.model.WidgetParameterValueJson === 'string') {
+                        this.model.WidgetParameterValueJson = JSON.parse(this.model.WidgetParameterValueJson) || {}
+                    }
                 } catch (e) {
-                    if (!this.model.WidgetParameterValue.EntityPositive) {
+                    if (!this.model.WidgetParameterValueJson.EntityPositive) {
                         let options = this.model.WidgetParameterValue.split(',').map(el => {
                             return Number(el);
                         });
-                        this.model.WidgetParameterValue = this.initObject()
-                        this.model.WidgetParameterValue[ENTITY_POSITIVE_KEY] = options
+                        this.model.WidgetParameterValueJson = this.initObject()
+                        this.model.WidgetParameterValueJson[ENTITY_POSITIVE_KEY] = options
                     }
                     console.warn(e)
                 } finally {
