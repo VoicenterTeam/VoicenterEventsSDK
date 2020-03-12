@@ -17,7 +17,7 @@
                          :v-on="$listeners"
                          :collapse-tags="collapseTags"
                          multiple
-                         v-model="model.WidgetParameterValue[entityType]"
+                         v-model="model.WidgetParameterValueJson[entityType]"
                          :data="options"
                          :label-key="templateConfig.label"
                          :value-key="templateConfig.value">
