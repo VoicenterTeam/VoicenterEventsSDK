@@ -4,12 +4,13 @@
         trigger="hover">
         <div v-if="widget.WidgetID">
             <p>{{$t('widget.id') + widget.WidgetID}}</p>
-            <p>{{$t('template.name') + widgetTemplate.TemplateName + ', ' + widgetTemplate.TemplateID}}</p>
+            <p>{{$t('template.name') + get(widgetTemplate, 'TemplateName') + ', ' + get(widgetTemplate, 'TemplateID')}}</p>
         </div>
         <InfoIcon slot="reference" class="text-primary cursor-help"></InfoIcon>
     </el-popover>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Popover} from 'element-ui'
     import {InfoIcon} from 'vue-feather-icons'
     import {getWidgetTemplate} from '@/helpers/widgetUtils'
@@ -30,5 +31,8 @@
                 widgetTemplate: getWidgetTemplate(this.widget)
             }
         },
+        methods: {
+            get,
+        }
     }
 </script>

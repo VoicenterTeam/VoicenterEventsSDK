@@ -26,7 +26,7 @@ export const componentTypes = {
 };
 
 const userListConfig = {
-    ParameterName: '{|User_ID_id_list|}',
+    ParameterName: '{|user_id_id_list|}',
     EndPoint: '/User/List/',
     label: 'user_name',
     value: 'user_id',
@@ -34,7 +34,7 @@ const userListConfig = {
 }
 
 const campaignListConfig = {
-    ParameterName: '{|Campaign_list|}',
+    ParameterName: '{|campaign_list|}',
     EndPoint: '/User/List/',
     label: 'camp_name',
     value: 'camp_id',
@@ -44,7 +44,7 @@ const campaignListConfig = {
 const extensionListConfig = {
     ParameterName: '{|extension_list|}',
     EndPoint: '/Extension/List/',
-    label: 'extension_name',
+    label: 'ext_name',
     value: 'extension_id',
     EntitiesListKey: 'Extension'
 }
@@ -66,29 +66,20 @@ const queueListConfig = {
 }
 
 const accountListConfig = {
-    ParameterName: '{|Distributor_ID_id_list|}',
+    ParameterName: '{|distributor_id_id_list|}',
     EndPoint: '​/AccountIp/List/',
     label: 'dist_name',
     value: 'distributor_id',
     EntitiesListKey: 'Accounts'
 }
 
-export const filterIDs = [1, 4, 5, 7, 18, 19, 21, 25, 26, 32, 33, 38, 40]
-
 export const filters = {
-    1: userListConfig,
-    4: userListConfig,
-    5: extensionListConfig,
-    7: didListConfig,
-    18: queueListConfig,
-    19: accountListConfig,
-    21: accountListConfig,
-    25: campaignListConfig,
-    26: campaignListConfig,
-    32: userListConfig,
-    33: userListConfig,
-    38: queueListConfig,
-    40: queueListConfig,
+    '{|user_id_id_list|}': userListConfig,
+    '{|extension_list|}': extensionListConfig,
+    '{|did_list|}': didListConfig,
+    '{|queue_list|}': queueListConfig,
+    '{|distributor_id_id_list|}': accountListConfig,
+    '{|campaign_list|}': campaignListConfig,
 }
 
 export const otherFilters = {

@@ -17,7 +17,8 @@
                          :v-on="$listeners"
                          :collapse-tags="collapseTags"
                          multiple
-                         v-model="model.WidgetParameterValueJson[entityType]"
+                         :value="autocompleteValue"
+                         @change="onAutocompleteChange"
                          :data="options"
                          :label-key="templateConfig.label"
                          :value-key="templateConfig.value">
@@ -27,12 +28,17 @@
 </template>
 <script>
     import get from 'lodash/get'
+    import cloneDeep from 'lodash/cloneDeep'
     import {Option, Radio, RadioGroup, Select} from 'element-ui'
     import {getOptionsList, getTemplateConfig} from '@/helpers/entitiesList'
 
     const ENTITY_POSITIVE_KEY = 'EntityPositive'
     const ENTITY_NEGATIVE_KEY = 'EntityNegative'
-
+    const defaultParameterJson = {
+        EntityPositive: [],
+        EntityNegative: [],
+        AccountList: []
+    }
     export default {
         components: {
             [Select.name]: Select,
@@ -51,7 +57,7 @@
                 options: [],
                 loading: true,
                 collapseTags: true,
-                templateConfig: getTemplateConfig(this.model.ParameterID),
+                templateConfig: getTemplateConfig(this.model.ParameterName),
                 SELECTIONS: [
                     {
                         label: ENTITY_POSITIVE_KEY,
@@ -65,35 +71,39 @@
                 entityType: ENTITY_POSITIVE_KEY,
             }
         },
+        computed: {
+            autocompleteValue() {
+                if (this.model.WidgetParameterValueJson) {
+                    return this.model.WidgetParameterValueJson[this.entityType]
+                }
+                return get(this.model.WidgetParameterValue, this.entityType, [])
+            }
+        },
         methods: {
             get,
             getData() {
                 try {
-                    this.options = getOptionsList(this.model.ParameterID)
+                    this.options = getOptionsList(this.model.ParameterName)
                     if (typeof this.model.WidgetParameterValue === 'string') {
                         this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
                     }
-                    if (typeof this.model.WidgetParameterValueJson === 'string') {
-                        this.model.WidgetParameterValueJson = JSON.parse(this.model.WidgetParameterValueJson) || {}
+                    if (!this.model.WidgetParameterValueJson) {
+                        this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
                     }
                 } catch (e) {
-                    if (!this.model.WidgetParameterValueJson.EntityPositive) {
-                        let options = this.model.WidgetParameterValue.split(',').map(el => {
-                            return Number(el);
-                        });
-                        this.model.WidgetParameterValueJson = this.initObject()
-                        this.model.WidgetParameterValueJson[ENTITY_POSITIVE_KEY] = options
+                    if (!this.model.WidgetParameterValueJson) {
+                        this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
                     }
                     console.warn(e)
                 } finally {
                     this.loading = false
                 }
             },
-            initObject() {
-                return {
-                    [ENTITY_POSITIVE_KEY]: [],
-                    [ENTITY_NEGATIVE_KEY]: [],
+            onAutocompleteChange(value) {
+                if (!this.model.WidgetParameterValueJson) {
+                    this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
                 }
+                this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
             }
         },
         mounted() {
