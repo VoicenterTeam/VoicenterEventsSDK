@@ -44,7 +44,7 @@ const campaignListConfig = {
 const extensionListConfig = {
     ParameterName: '{|extension_list|}',
     EndPoint: '/Extension/List/',
-    label: 'extension_name',
+    label: 'ext_name',
     value: 'extension_id',
     EntitiesListKey: 'Extension'
 }
