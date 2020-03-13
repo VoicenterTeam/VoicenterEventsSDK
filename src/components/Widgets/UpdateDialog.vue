@@ -143,7 +143,6 @@
     import queueMixin from '@/mixins/queueMixin'
     import {allSeries} from '@/enum/queueConfigs'
     import RefreshButton from '@/components/RefreshButton'
-    import {filterIDs} from '@/enum/widgetTemplateConfigs'
     import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
     import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
@@ -166,6 +165,8 @@
         isQueueTable,
         isRealtimeWidget,
     } from '@/helpers/widgetUtils'
+
+    const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
     export default {
         inheritAttrs: false,
@@ -207,6 +208,7 @@
                 loadEntitiesList: false,
                 statistics,
                 allSeries,
+                AUTO_COMPLETE_PARAMETER_TYPE,
             }
         },
         computed: {
@@ -217,10 +219,10 @@
                 return {}
             },
             autoCompletes() {
-                return this.widget.WidgetConfig.filter(c => c.ParameterID && filterIDs.includes(c.ParameterID))
+                return this.widget.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
             otherFilters() {
-                return this.widget.WidgetConfig.filter(c => c.ParameterID && !filterIDs.includes(c.ParameterID))
+                return this.widget.WidgetConfig.filter(c => c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
         },
         methods: {
@@ -232,10 +234,10 @@
             isHtmlWidget,
             isQueueDashboardWidget,
             isAutoComplete(WidgetConfig) {
-                return filterIDs.includes(WidgetConfig.ParameterID);
+                return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
             isOtherFilters(WidgetConfig) {
-                return !filterIDs.includes(WidgetConfig.ParameterID);
+                return WidgetConfig.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE
             },
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {
