@@ -217,10 +217,10 @@
                 return {}
             },
             autoCompletes() {
-                return this.widget.WidgetConfig.filter(c => c.ParameterID && filterIDs.includes(c.ParameterID))
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && filterIDs.includes(c.ParameterName))
             },
             otherFilters() {
-                return this.widget.WidgetConfig.filter(c => c.ParameterID && !filterIDs.includes(c.ParameterID))
+                return this.widget.WidgetConfig.filter(c => c.ParameterID && !filterIDs.includes(c.ParameterName))
             },
         },
         methods: {
@@ -232,10 +232,10 @@
             isHtmlWidget,
             isQueueDashboardWidget,
             isAutoComplete(WidgetConfig) {
-                return filterIDs.includes(WidgetConfig.ParameterID);
+                return filterIDs.includes(WidgetConfig.ParameterName);
             },
             isOtherFilters(WidgetConfig) {
-                return !filterIDs.includes(WidgetConfig.ParameterID);
+                return !filterIDs.includes(WidgetConfig.ParameterName);
             },
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {

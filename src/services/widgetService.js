@@ -24,7 +24,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
         if (template.DefaultWidgetConfig.length) {
             for (let config of template.DefaultWidgetConfig) {
                 if (config.ParameterType === AUTO_COMPLETE_TYPE_KEY) {
-                    let options = getOptionsValues(config.ParameterID)
+                    let options = getOptionsValues(config.ParameterName)
                     config.WidgetParameterValue = options ? options.toString() : ''
                 }
                 WidgetConfig.push(config)

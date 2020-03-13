@@ -51,7 +51,7 @@
                 options: [],
                 loading: true,
                 collapseTags: true,
-                templateConfig: getTemplateConfig(this.model.ParameterID),
+                templateConfig: getTemplateConfig(this.model.ParameterName),
                 SELECTIONS: [
                     {
                         label: ENTITY_POSITIVE_KEY,
@@ -69,7 +69,7 @@
             get,
             getData() {
                 try {
-                    this.options = getOptionsList(this.model.ParameterID)
+                    this.options = getOptionsList(this.model.ParameterName)
                     if (typeof this.model.WidgetParameterValue === 'string') {
                         this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
                     }
