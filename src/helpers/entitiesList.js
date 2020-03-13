@@ -9,7 +9,7 @@ export function getOptionsList(ParameterName) {
 }
 
 export function getTemplateConfig(ParameterName) {
-    return filters[ParameterName]
+    return filters[ParameterName.toLowerCase()]
 }
 
 export function getOptionsValues(ParameterName) {
