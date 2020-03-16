@@ -55,6 +55,10 @@
                 default: 'value'
             }
         },
+        model: {
+            prop: 'value',
+            event: 'change'
+        },
         computed: {
             listeners() {
                 return {
@@ -84,12 +88,12 @@
             selectAll() {
                 let value = this.data.map(d => d[this.valueKey])
                 this.$nextTick(() => {
-                    this.$emit('input', value);
+                    this.$emit('change', value);
                 })
             },
             selectNone() {
                 this.$nextTick(() => {
-                    this.$emit('input', []);
+                    this.$emit('change', []);
                 })
             }
         },
