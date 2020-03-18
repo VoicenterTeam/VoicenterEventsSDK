@@ -20,6 +20,7 @@
     import {LOGOUT_STATUS} from "@/enum/extensionStatuses";
     import {isExternalDataWidget} from '@/helpers/widgetUtils'
     import {WidgetDataApi} from "../../api/widgetDataApi";
+    import Highcharts from 'highcharts'
 
     export default {
         components: {
@@ -58,6 +59,7 @@
         },
         methods: {
             async chartOptions() {
+
                 let data = []
 
                 if (isExternalDataWidget(this.data)) {
@@ -66,6 +68,14 @@
                     data = this.getExtensionsData()
                 }
 
+                let colors = []
+
+                data.map((el) => {
+                    colors.push(el.color)
+                    delete el.color
+                    return el
+                });
+                
                 this.chartData = {
                     chart: {
                         plotBackgroundColor: null,
@@ -91,7 +101,21 @@
                         name: this.$t('Agents'),
                         colorByPoint: true,
                         data: data
-                    }]
+                    }],
+
+                    colors: Highcharts.map(colors, function (color) {
+                        return {
+                            radialGradient: {
+                                cx: 0.5,
+                                cy: 0.3,
+                                r: 0.7
+                            },
+                            stops: [
+                                [0, color],
+                                [1, Highcharts.color(color).brighten(-0.3).get('rgb')] // darken
+                            ]
+                        };
+                    }),
                 };
 
                 this.chartVisibility = false
