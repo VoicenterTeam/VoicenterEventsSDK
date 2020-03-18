@@ -30,7 +30,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
                         EntityNegative: [],
                         AccountList: [store.state.entities.selectedAccountID]
                     }
-                    config.WidgetParameterValue = ''
+                    config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValueJson)
                 }
                 WidgetConfig.push(config)
             }
