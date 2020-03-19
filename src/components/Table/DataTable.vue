@@ -44,7 +44,7 @@
                         :key="column.prop"
                         v-bind="column"
                         :column-key="column.prop"
-                        :min-width="column.minWidth || '150px'"
+                        :min-width="column.minWidth || '170px'"
                         :fixed="column.fixed || false"
                         :align="column.align"
                         :type="column.type">
