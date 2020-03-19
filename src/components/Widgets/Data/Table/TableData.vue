@@ -87,6 +87,7 @@
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
+    import {getDefaultTimeDelay} from "@/enum/generic";
 
     export default {
         components: {
@@ -243,7 +244,11 @@
                         this.drawTable = true
                     })
                 } catch (e) {
-                    console.warn(e)
+                    let status = get(e, 'response.status')
+                    if (status === 400) {
+                        let refreshDelay = getDefaultTimeDelay()
+                        this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
+                    }
                 } finally {
                 }
             },

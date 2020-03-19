@@ -46,6 +46,7 @@
     } from '@/enum/queueDashboardStatistics'
     import StatisticCard from './StatisticCard'
     import {getWidgetData} from '@/services/widgetService'
+    import {getDefaultTimeDelay} from "@/enum/generic";
 
     export default {
         components: {
@@ -127,6 +128,11 @@
                     }
                 } catch (e) {
                     console.warn(e)
+                    let status = get(e, 'response.status')
+                    if (status === 400) {
+                        let refreshDelay = getDefaultTimeDelay()
+                        this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
+                    }
                 } finally {
                 }
             },

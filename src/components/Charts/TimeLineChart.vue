@@ -18,6 +18,7 @@
     import chartConfig from './Configs/TimeLine'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import {getWidgetData} from '@/services/widgetService'
+    import {getDefaultTimeDelay} from "@/enum/generic";
 
     export default {
         name: 'TimeLineChart',
@@ -53,53 +54,62 @@
         },
         methods: {
             async getWidgetData() {
-                let widgetDataType = this.data.DataTypeID
-                let Data = await getWidgetData(this.data)
-                if (!Data) {
-                    return
-                }
-                let chartData = get(Data, '0', {series: []})
-                if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
-                    chartData = {series: Data}
-                } else {
-                    chartData = get(Data, '0', {series: []})
-                }
-                let chartType = ''
-                if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
-                    chartType = 'line'
-                } else if (widgetDataType === widgetDataTypes.BARS_WITH_LINES_TYPE_ID) {
-                    chartType = 'column'
-                } else if (widgetDataType === widgetDataType.CHART_QUEUE) {
-                    chartData = {
+                try {
+                    let widgetDataType = this.data.DataTypeID
+                    let Data = await getWidgetData(this.data)
+                    if (!Data) {
+                        return
+                    }
+                    let chartData = get(Data, '0', {series: []})
+                    if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
+                        chartData = {series: Data}
+                    } else {
+                        chartData = get(Data, '0', {series: []})
+                    }
+                    let chartType = ''
+                    if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
+                        chartType = 'line'
+                    } else if (widgetDataType === widgetDataTypes.BARS_WITH_LINES_TYPE_ID) {
+                        chartType = 'column'
+                    } else if (widgetDataType === widgetDataType.CHART_QUEUE) {
+                        chartData = {
+                            ...chartData,
+                            ...chartConfig.yAxisConfig
+                        }
+                    }
+
+                    let data = {
+                        "Order": 6,
+                        "chart": {
+                            "type": chartType,
+                            "marginTop": 45
+                        },
+                        "tooltip": {
+                            "formatter": function () {
+                                return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
+                            },
+                            "backgroundColor": "#ffffff",
+                            "borderColor": "#ffffff",
+                            "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+                            "borderRadius": 10,
+                        },
                         ...chartData,
-                        ...chartConfig.yAxisConfig
+                    }
+
+                    this.chartVisibility = false
+                    this.$nextTick(() => {
+                        this.chartVisibility = true
+                    })
+
+                    this.chartOptions = data
+                } catch (e) {
+                    console.warn(e)
+                    let status = get(e, 'response.status')
+                    if (status === 400) {
+                        let refreshDelay = getDefaultTimeDelay()
+                        this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
                     }
                 }
-
-                let data = {
-                    "Order": 6,
-                    "chart": {
-                        "type": chartType,
-                        "marginTop": 45
-                    },
-                    "tooltip": {
-                        "formatter": function () {
-                            return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
-                        },
-                        "backgroundColor": "#ffffff",
-                        "borderColor": "#ffffff",
-                        "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
-                        "borderRadius": 10,
-                    },
-                    ...chartData,
-                }
-
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
-
-                this.chartOptions = data
             }
         },
         mounted() {

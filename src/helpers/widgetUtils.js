@@ -18,7 +18,7 @@ export function getWidgetRefreshInterval(widget) {
     }
 
     let minInterval = minRefreshInterval()
-    refreshInterval = Number(refreshInterval) <= minInterval ? Number(refreshInterval) : minInterval
+    refreshInterval = Number(refreshInterval) <= minInterval ? minInterval : Number(refreshInterval)
 
     return Number(refreshInterval) * 1000
 }

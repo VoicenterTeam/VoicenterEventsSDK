@@ -9,6 +9,7 @@ export const WidgetDataApi = {
             return res.Data
         } catch (e) {
             parseCatch(e, true)
+            return Promise.reject(e)
         }
     },
 

@@ -42,7 +42,7 @@ const mutations = {
         state.loadingData = loading
     },
     [types.SET_EDIT_MODE]: (state, value) => {
-      state.editMode = value
+        state.editMode = value
     },
     [types.DELETE_DASHBOARD]: (state, dashboard) => {
         let index = state.allDashboards.findIndex((d) => d.DashboardID === dashboard.DashboardID)
@@ -90,7 +90,10 @@ const actions = {
 const getters = {
     baseColors: state => {
         return state.settings.colors
-    }
+    },
+    refreshDelay: state => {
+        return state.settings.refreshRealTimeDataDelay
+    },
 }
 
 export default {

@@ -54,6 +54,16 @@
                             show-input>
                         </el-slider>
                     </el-form-item>
+                    <el-form-item class="pb-4">
+                        <label>{{$t('settings.refreshRealTimeDataDelay')}}</label>
+                        <el-slider
+                            :min="refreshRealTimeDataDelay.min"
+                            :max="refreshRealTimeDataDelay.max"
+                            :marks="refreshRealTimeDataDelay.bestOptions"
+                            v-model="settings.refreshRealTimeDataDelay"
+                            show-input>
+                        </el-slider>
+                    </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
                     <el-form-item prop="report.interval">
@@ -148,6 +158,17 @@
                         800: '800s',
                     }
                 },
+                refreshRealTimeDataDelay: {
+                    min: 3,
+                    max: 90,
+                    bestOptions: {
+                        5: '5min',
+                        15: '15min',
+                        30: '30min',
+                        45: '45min',
+                        60: '60min',
+                    }
+                }
             }
         },
         props: {

@@ -15,6 +15,7 @@ export const settings = {
     showWidgetAsTabs: false,
     fontSize: defaultFontSize,
     minRefreshInterval: 10,
+    refreshRealTimeDataDelay: 30
 }
 
 export const defaultFontSize = '16px';
