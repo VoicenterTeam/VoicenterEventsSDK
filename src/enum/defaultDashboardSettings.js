@@ -1,3 +1,13 @@
+let storageColors = localStorage.getItem('colors')
+if (storageColors) {
+    try {
+        storageColors = JSON.parse(storageColors)
+    } catch (e) {
+        storageColors = {}
+    }
+} else {
+    storageColors = {}
+}
 export const settings = {
     report: {
         interval: 5,
@@ -5,12 +15,12 @@ export const settings = {
         refresh: false
     },
     colors: {
-        primary: "#2575FF",
-        primary_rgba: "37, 117, 255",
-        background: "#edf2f7",
-        frames: "#ff000000",
-        widgetGroupBackground: "#edf2f7",
-        widgetGroupFrames: "#ff000000",
+        primary: storageColors.primary || "#2575FF",
+        primary_rgba: storageColors.primary_rgba ||  "37, 117, 255",
+        background: storageColors.background ||  "#edf2f7",
+        frames: storageColors.frames || "#ff000000",
+        widgetGroupBackground: storageColors.widgetGroupBackground || "#edf2f7",
+        widgetGroupFrames: storageColors.widgetGroupFrames || "#ff000000",
     },
     showWidgetAsTabs: false,
     fontSize: defaultFontSize,

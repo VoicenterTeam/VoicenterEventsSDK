@@ -5,12 +5,6 @@ import {FadeTransition} from 'vue2-transitions'
 import globalDirectives from './globalDirectives'
 import RTLPlugin from './RTLPlugin'
 
-// element ui language configuration
-import lang from 'element-ui/lib/locale/lang/en'
-import locale from 'element-ui/lib/locale'
-
-locale.use(lang)
-
 export default {
     install(Vue) {
         // Install any plugins/components here related to the dashboard

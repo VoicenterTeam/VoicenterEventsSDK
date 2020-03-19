@@ -217,6 +217,7 @@
                         updateDashboard(dashboard).then((dashboard) => {
                             this.$store.dispatch('dashboards/updateDashboard', dashboard)
                             this.toggleVisibility(false)
+                            localStorage.setItem('colors', JSON.stringify(this.settings.colors))
                         }).catch((e) => {
                             parseCatch(e, true)
                         }).finally((e) => {

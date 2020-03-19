@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-white px-8 py-4 -mt-2 flex items-center justify-between rounded-lg shadow">
+    <div class="w-full bg-white px-8 py-4 flex items-center justify-between rounded-lg shadow">
         <div class="w-full flex flex-row items-center justify-between">
             <slot name="title">
                 <h5 class="text-main-2xl font-bold mx-3">

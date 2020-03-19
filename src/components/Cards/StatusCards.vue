@@ -31,6 +31,7 @@
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                         <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-primary"
+                                   :style="{ color: textColor.color }"
                                    @click="showModal = true"/>
                     </el-tooltip>
                     <div class="flex">
@@ -41,6 +42,7 @@
                 <template v-else>
                     <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                         <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
+                                   :style="{ color: textColor.color }"
                                    @click="showModal = true"/>
                     </el-tooltip>
                 </template>

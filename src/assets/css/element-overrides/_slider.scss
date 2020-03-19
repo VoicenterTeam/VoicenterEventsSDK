@@ -1,0 +1,8 @@
+.el-slider {
+  .el-slider__bar {
+   @apply bg-primary;
+  }
+  .el-slider__button {
+   @apply border-primary;
+  }
+}

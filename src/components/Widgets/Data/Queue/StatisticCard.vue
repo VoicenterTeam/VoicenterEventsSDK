@@ -22,6 +22,7 @@
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.styles')" placement="top">
                 <edit-icon
                     class="align-center w-10 h-8 p-2 edit-card-icon text-primary"
+                    :style="{ color: getCardStyles.color }"
                     @click="showModal = true"/>
             </el-tooltip>
         </div>

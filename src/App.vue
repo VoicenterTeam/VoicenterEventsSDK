@@ -5,7 +5,7 @@
     </div>
 </template>
 <script>
-    import {defaultFontSize} from '@/enum/defaultDashboardSettings'
+    import {defaultFontSize, settings} from '@/enum/defaultDashboardSettings'
     import NetworkStatusAlert from '@/components/Common/NetworkStatusAlert'
 
     export default {
@@ -51,6 +51,7 @@
             },
         },
         mounted() {
+            this.initMainColorsVars(settings.colors)
             this.initializeLayout(this.$store.state.lang.language)
         },
         watch: {
