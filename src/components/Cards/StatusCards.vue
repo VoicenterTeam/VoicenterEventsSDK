@@ -155,6 +155,9 @@
                 if (storeStatuses.length) {
                     return storeStatuses.map(status => {
                         const otherData = localStatuses.find(s => s.value === status.StatusID) || {}
+                        if (otherData) {
+                            otherData['text'] = this.$store.getters['entities/getStatusTextById'](otherData.value)
+                        }
                         return {
                             ...status,
                             ...otherData,
