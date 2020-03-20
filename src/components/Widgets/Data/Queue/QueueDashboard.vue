@@ -1,29 +1,37 @@
 <template>
     <div>
-        <div class="flex items-center">
-            <div class="flex flex-col md:flex-row md:items-center">
-                <p v-if="data.Title" class="text-main-2xl font-semibold">
-                    {{data.Title}}
-                </p>
-            </div>
+        <div v-if="isQueueActivityGauge">
+            <queue-activity
+                :data="data"
+                :queueStatistics="queueStatistics"
+            />
         </div>
-        <div class="flex flex-wrap -mx-1 pt-2" v-if="queueStatistics">
-            <div v-for="item in queueStatistics[PRIMARY_TYPE]">
-                <statistic-card
-                    v-if="displayCounter(item)"
-                    @on-change="(data) => onChange(data, item)"
-                    :item="item"
-                />
+        <div v-else>
+            <div class="flex items-center">
+                <div class="flex flex-col md:flex-row md:items-center">
+                    <p v-if="data.Title" class="text-main-2xl font-semibold">
+                        {{data.Title}}
+                    </p>
+                </div>
             </div>
-            <div v-for="item in queueStatistics[PERCENTAGE_TYPE]">
-                <statistic-card
-                    v-if="displayCounter(item)"
-                    @on-change="(data) => onChange(data, item)"
-                    :item="getItem(item)"
-                />
-            </div>
-            <div v-if="showSumOfOthers" class="statistic-card"
-                 v-html="getSumOfOtherStatistics()">
+            <div class="flex flex-wrap -mx-1 pt-2" v-if="queueStatistics">
+                <div v-for="item in queueStatistics[PRIMARY_TYPE]">
+                    <statistic-card
+                        v-if="displayCounter(item)"
+                        @on-change="(data) => onChange(data, item)"
+                        :item="item"
+                    />
+                </div>
+                <div v-for="item in queueStatistics[PERCENTAGE_TYPE]">
+                    <statistic-card
+                        v-if="displayCounter(item)"
+                        @on-change="(data) => onChange(data, item)"
+                        :item="getItem(item)"
+                    />
+                </div>
+                <div v-if="showSumOfOthers" class="statistic-card"
+                     v-html="getSumOfOtherStatistics()">
+                </div>
             </div>
         </div>
     </div>
@@ -45,12 +53,15 @@
         TOTAL_CALLS_KEY,
     } from '@/enum/queueDashboardStatistics'
     import StatisticCard from './StatisticCard'
+    import {getDefaultTimeDelay} from '@/enum/generic'
     import {getWidgetData} from '@/services/widgetService'
-    import {getDefaultTimeDelay} from "@/enum/generic";
+    import {isQueueActivityGauge} from '@/helpers/widgetUtils'
+    import QueueActivity from '@/components/Charts/QueueActivity'
 
     export default {
         components: {
             StatisticCard,
+            QueueActivity,
         },
         props: {
             data: Object,
@@ -79,6 +90,7 @@
         },
         methods: {
             startCase,
+            isQueueActivityGauge,
             getSumOfOtherStatistics() {
                 let queueData = this.queueStatistics[PERCENTAGE_TYPE]
 

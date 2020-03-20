@@ -116,7 +116,6 @@
             agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
             },
-
             chartOptions() {
                 if (this.fetchDataInterval) {
                     clearInterval(this.fetchDataInterval)
