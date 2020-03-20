@@ -1,69 +1,51 @@
-import Highcharts from "highcharts";
+function renderIcons() {
+    try {
+        let appendToGroup = this.series.length ? this.series.length - 1 : 0
+        if (!this.series[0].icon) {
+            this.series[0].icon = this.renderer.path(['M', -8, 0, 'L', 8, 0, 'M', 0, -8, 'L', 8, 0, 0, 8])
+                .attr({
+                    stroke: '#303030',
+                    'stroke-linecap': 'round',
+                    'stroke-linejoin': 'round',
+                    'stroke-width': 2,
+                    zIndex: 10
+                }).add(this.series[0].group);
+        }
+        this.series[0].icon.translate(
+            this.chartWidth / 2 - 10,
+            this.plotHeight / 2 - this.series[0].points[0].shapeArgs.innerR -
+            (this.series[0].points[0].shapeArgs.r - this.series[0].points[0].shapeArgs.innerR) / 2
+        );
+        if (!this.series[1].icon) {
+            this.series[1].icon = this.renderer.path(
+                ['M', -8, 0, 'L', 8, 0, 'M', 0, -8, 'L', 8, 0, 0, 8,
+                    'M', 8, -8, 'L', 16, 0, 8, 8]
+            )
+                .attr({
+                    stroke: '#ffffff',
+                    'stroke-linecap': 'round',
+                    'stroke-linejoin': 'round',
+                    'stroke-width': 2,
+                    zIndex: 10
+                }).add(this.series[appendToGroup].group);
+        }
+        this.series[1].icon.translate(
+            this.chartWidth / 2 - 10,
+            this.plotHeight / 2 - this.series[1].points[0].shapeArgs.innerR -
+            (this.series[1].points[0].shapeArgs.r - this.series[1].points[0].shapeArgs.innerR) / 2
+        );
+    } catch (e) {
 
-export function renderIcons(series) {
-    // Move icon
-    if (!series[0].icon) {
-        series[0].icon = this.renderer.path(['M', -8, 0, 'L', 8, 0, 'M', 0, -8, 'L', 8, 0, 0, 8])
-            .attr({
-                stroke: '#303030',
-                'stroke-linecap': 'round',
-                'stroke-linejoin': 'round',
-                'stroke-width': 2,
-                zIndex: 10
-            })
-            .add(series[2].group);
     }
-    series[0].icon.translate(
-        this.chartWidth / 2 - 10,
-        this.plotHeight / 2 - series[0].points[0].shapeArgs.innerR -
-        (series[0].points[0].shapeArgs.r - series[0].points[0].shapeArgs.innerR) / 2
-    );
-
-    // Exercise icon
-    if (!series[1].icon) {
-        series[1].icon = this.renderer.path(
-            ['M', -8, 0, 'L', 8, 0, 'M', 0, -8, 'L', 8, 0, 0, 8,
-                'M', 8, -8, 'L', 16, 0, 8, 8]
-        )
-            .attr({
-                stroke: '#ffffff',
-                'stroke-linecap': 'round',
-                'stroke-linejoin': 'round',
-                'stroke-width': 2,
-                zIndex: 10
-            })
-            .add(series[2].group);
-    }
-    series[1].icon.translate(
-        this.chartWidth / 2 - 10,
-        this.plotHeight / 2 - series[1].points[0].shapeArgs.innerR -
-        (series[1].points[0].shapeArgs.r - series[1].points[0].shapeArgs.innerR) / 2
-    );
-
-    // Stand icon
-    if (!series[2].icon) {
-        series[2].icon = this.renderer.path(['M', 0, 8, 'L', 0, -8, 'M', -8, 0, 'L', 0, -8, 8, 0])
-            .attr({
-                stroke: '#303030',
-                'stroke-linecap': 'round',
-                'stroke-linejoin': 'round',
-                'stroke-width': 2,
-                zIndex: 10
-            })
-            .add(series[2].group);
-    }
-
-    series[2].icon.translate(
-        this.chartWidth / 2 - 10,
-        this.plotHeight / 2 - series[2].points[0].shapeArgs.innerR -
-        (series[2].points[0].shapeArgs.r - series[2].points[0].shapeArgs.innerR) / 2
-    );
 }
 
 export default {
     chart: {
         type: 'solidgauge',
         backgroundColor: 'transparent',
+        events: {
+            render: renderIcons
+        }
     },
     tooltip: {
         borderWidth: 0,

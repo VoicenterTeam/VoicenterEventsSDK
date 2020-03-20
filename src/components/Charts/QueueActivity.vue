@@ -119,7 +119,6 @@
                 } catch (e) {
                     console.log(e)
                 }
-
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
