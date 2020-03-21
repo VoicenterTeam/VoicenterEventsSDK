@@ -455,6 +455,7 @@
                     }
                     const config = {
                         token: this.token,
+                        serverFetchStrategy: process.env.VUE_APP_EVENTS_SERVER_FETCH_STRATEGY,
                     }
                     if (process.env.VUE_APP_EVENTS_SDK_URL) {
                         config.url = process.env.VUE_APP_EVENTS_SDK_URL
