@@ -89,6 +89,7 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **serverType**  | Number  | null |  Optional parameter to be passed to api call that retrieves available servers. Can be 1 or 2. 2 should be used for chrome extension |
 | **url**  | string  | https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls |  Url from which to get monitor urls |
 | **servers**  | Array  | contains 5 default servers | Contains a list of real time servers with priorities and versions. Please check `src/config.js` file to see the exact format |
+| **serverFetchStrategy**  | string  | determines the strategy how monitor servers are initiated. Can be **remote** (server urls are retrieved from a remote url) or **static** where server urls are specified directly through config. In case remote call fails, it will fallback to the default list of servers or the ones passed through config |
 
 Servers array format
 

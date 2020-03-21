@@ -17,6 +17,7 @@ const defaultOptions = {
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
+  serverFetchStrategy: 'remote', // get servers from external url options: remote | static
   serverType: null, // can be 1 or 2. 2 is used for chrome extension
 };
 
@@ -28,6 +29,9 @@ class EventsSDK {
       ...defaultOptions,
       ...options,
     };
+    this.argumentOptions = {
+      ...options
+    }
     if (!this.options.token) {
       throw new Error('A token property should be provided');
     }
@@ -251,8 +255,8 @@ class EventsSDK {
 
   async _getServers() {
     // Ignore server fetch if we have a list of servers passed via options
-    if (this.options.servers && Array.isArray(this.options.servers) && this.options.servers.length > 1) {
-      this.servers = this.options.servers
+    if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
+      this.servers = this.argumentOptions.servers
       return
     }
     try {
@@ -263,7 +267,7 @@ class EventsSDK {
       let res = await fetch(`${this.options.url}/${this.options.token}`, params);
       this.servers = await res.json();
     } catch (e) {
-      this.servers = this.options.servers || defaultServers;
+      this.servers = this.argumentOptions.servers || defaultServers;
       this.emit(eventTypes.SERVER_FETCH_ERROR)
     }
   }
