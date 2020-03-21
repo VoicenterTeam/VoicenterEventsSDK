@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="isQueueActivityGauge">
+        <div v-if="isQueueActivityGauge(data)">
             <queue-activity
                 :data="data"
                 :queueStatistics="queueStatistics"
