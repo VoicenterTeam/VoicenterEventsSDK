@@ -10,7 +10,7 @@ export const OTHER_STATISTIC_LABEL = '% of Other'
 
 export const PERCENTAGE_COUNTERS = () => ({
     1: {
-        label: i18n.t('Answer'),
+        label: 'Answer',
         key: '1',
         value: 0,
         icon: '',
@@ -27,7 +27,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     2: {
-        label: i18n.t('Abandoned'),
+        label: 'Abandoned',
         key: '2',
         value: 0,
         icon: '',
@@ -44,7 +44,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     3: {
-        label: i18n.t('IVRExit'),
+        label: 'IVRExit',
         key: '3',
         value: 0,
         icon: '',
@@ -61,7 +61,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     4: {
-        label: i18n.t('PickUp'),
+        label: 'PickUp',
         key: '4',
         value: 0,
         icon: '',
@@ -78,7 +78,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     5: {
-        label: i18n.t('TimeOutExit'),
+        label: 'TimeOutExit',
         key: '5',
         value: 0,
         icon: '',
@@ -95,7 +95,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     6: {
-        label: i18n.t('JoinEmpty'),
+        label: 'JoinEmpty',
         key: '6',
         value: 0,
         icon: '',
@@ -112,7 +112,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     7: {
-        label: i18n.t('LeavEempty'),
+        label: 'LeavEempty',
         key: '7',
         value: 0,
         icon: '',
@@ -129,7 +129,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     8: {
-        label: i18n.t('JoinUnavail'),
+        label: 'JoinUnavail',
         key: '8',
         value: 0,
         icon: '',
@@ -146,7 +146,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     9: {
-        label: i18n.t('LeaveUnavail'),
+        label: 'LeaveUnavail',
         key: '9',
         value: 0,
         icon: '',
@@ -163,7 +163,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     10: {
-        label: i18n.t('Full'),
+        label: 'Full',
         key: '10',
         value: 0,
         icon: '',
@@ -180,7 +180,7 @@ export const PERCENTAGE_COUNTERS = () => ({
         }
     },
     11: {
-        label: i18n.t('NextDestination'),
+        label: 'NextDestination',
         key: '11',
         value: 0,
         icon: '',
@@ -200,7 +200,7 @@ export const PERCENTAGE_COUNTERS = () => ({
 
 export const PRIMARY_COUNTERS = () => ({
     [TOTAL_CALLS_KEY]: {
-        label: i18n.t('CallCount'),
+        label: 'CallCount',
         key: TOTAL_CALLS_KEY,
         value: 0,
         icon: 'IconIncoming',
@@ -217,7 +217,7 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     MaxRingTime: {
-        label: i18n.t('MaxRingTime'),
+        label: 'MaxRingTime',
         key: 'MaxRingTime',
         value: 0,
         icon: '',
@@ -234,7 +234,7 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     NotInSLACount: {
-        label: i18n.t('NotInSLACount'),
+        label: 'NotInSLACount',
         key: 'NotInSLACount',
         value: 0,
         icon: '',
@@ -251,7 +251,7 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     InSLACount: {
-        label: i18n.t('InSLACount'),
+        label: 'InSLACount',
         key: 'InSLACount',
         value: 0,
         icon: '',
@@ -268,7 +268,7 @@ export const PRIMARY_COUNTERS = () => ({
         }
     },
     AvgRingTime: {
-        label: i18n.t('AvgRingTime'),
+        label: 'AvgRingTime',
         key: 'AvgRingTime',
         value: 0,
         icon: '',
