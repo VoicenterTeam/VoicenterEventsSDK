@@ -42,6 +42,7 @@
                         v-for="(column, index) in renderedColumns"
                         :sortable="true"
                         :key="column.prop"
+                        :class-name="column.className"
                         v-bind="column"
                         :column-key="column.prop"
                         :min-width="column.minWidth || '170px'"
@@ -73,7 +74,7 @@
                             <slot :name="column.prop || column.type || column.label"
                                   :row="row"
                                   :index="$index">
-                                {{row[column.prop]}}
+                                {{formatCell(row, column)}}
                             </slot>
                         </template>
                     </el-table-column>
@@ -105,11 +106,11 @@
 
     import XLSX from 'xlsx'
     import get from 'lodash/get'
-    import {format} from 'date-fns'
+    import format from 'date-fns/format'
     import Sortable from 'sortablejs'
     import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
+    import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import ManageColumns from './ManageColumns'
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
@@ -185,6 +186,10 @@
             },
         },
         methods: {
+            formatCell(row, column) {
+              // can be used to format cells for all tables
+              return row[column.prop]
+            },
             tryInitSortable() {
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
                 const self = this
@@ -282,9 +287,12 @@
 
 </style>
 
-<style>
+<style scoped>
     .data-table /deep/ .sortable-ghost {
         opacity: 0.3;
         @apply bg-gray-300 rounded text-primary;
+    }
+    .data-table /deep/ .el-table td.direction-ltr {
+        direction: ltr;
     }
 </style>
