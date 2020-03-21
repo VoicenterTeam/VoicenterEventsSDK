@@ -1,4 +1,5 @@
-.el-loading-mask {
+body .el-loading-mask {
+    @apply relative;
     .el-loading-spinner {
         .circular {
             height: 60px;
