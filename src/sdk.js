@@ -264,6 +264,7 @@ class EventsSDK {
       this.servers = await res.json();
     } catch (e) {
       this.servers = this.options.servers || defaultServers;
+      this.emit(eventTypes.SERVER_FETCH_ERROR)
     }
   }
 
