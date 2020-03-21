@@ -19,3 +19,6 @@ export const getDefaultTimeDelay = () => {
     let miliSeconds = minutes * 60 * 100;
     return miliSeconds
 }
+
+//Queue Activity Gauge suggestive word/key
+export const queueActivityGaugeKey = 'GetQueuesGaugeById'

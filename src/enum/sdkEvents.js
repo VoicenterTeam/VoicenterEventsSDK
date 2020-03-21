@@ -14,6 +14,7 @@ export const sdkEventTypes = {
     RECONNECT_FAILED: 'reconnect_failed',
     KEEP_ALIVE: 'keepalive',
     KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
+    SERVER_FETCH_ERROR: 'server_fetch_error',
     CLOSE: 'closeme',
     ERROR: 'error'
 }

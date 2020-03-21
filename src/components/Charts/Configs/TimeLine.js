@@ -56,18 +56,21 @@ Highcharts.setOptions({
                 let percentage = (this.point.y * 100 / this.point.stackTotal).toFixed(2)
                 return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px;">${this.series.name}</p> <br><p style="text-align: center;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
             }
+            if (this.point.innerRadius) {
+                return `${this.series.name}<br><span style="font-size:2em; color: ${this.point.color}; font-weight: bold">${this.point.y} %</span>`
+            }
+
             if (this.point.start && this.point.start) {
-                let date = format(this.point.start*1000, 'MM-dd-yyyy HH:mm:ss')
+                let date = format(this.point.start * 1000, 'MM-dd-yyyy HH:mm:ss')
                 return `<p>${date}</p><br><p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
             }
 
             return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
-
         },
         backgroundColor: "#ffffff",
         borderColor: "#ffffff",
         boxShadow: "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
-        borderRadius: 10
+        borderRadius: 10,
     },
     colors: [
         '#2575FF',

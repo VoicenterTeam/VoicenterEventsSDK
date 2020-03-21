@@ -61,6 +61,12 @@
                     </div>
                 </div>
             </el-form-item>
+            <el-form-item v-if="isQueueActivityGauge(widget)">
+                <label>{{$t('queue.activity.to.display')}}</label>
+                <base-select
+                    v-model="model.WidgetLayout.ShowActivities"
+                    :data="activitiesToDisplay"/>
+            </el-form-item>
             <el-collapse v-model="activeCollapse" class="pt-4">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
@@ -155,10 +161,11 @@
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {statistics} from '@/enum/queueDashboardStatistics'
+    import {activitiesToDisplay, statistics} from '@/enum/queueDashboardStatistics'
     import {
         isHtmlWidget,
         isPieWidget,
+        isQueueActivityGauge,
         isQueueChart,
         isQueueDashboardWidget,
         isQueueGauge,
@@ -207,6 +214,7 @@
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
                 statistics,
+                activitiesToDisplay,
                 allSeries,
                 AUTO_COMPLETE_PARAMETER_TYPE,
             }
@@ -233,6 +241,7 @@
             isQueueGauge,
             isHtmlWidget,
             isQueueDashboardWidget,
+            isQueueActivityGauge,
             isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
