@@ -26,7 +26,7 @@
         <div v-else>
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                 <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
-                           @click="()=>{this.showModal = true}"/>
+                           @click="this.showModal = true"/>
             </el-tooltip>
         </div>
     </div>

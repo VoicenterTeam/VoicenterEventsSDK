@@ -107,7 +107,6 @@
             getItem(item) {
                 let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY] || 1
                 let count = item.value || 0
-
                 let percentage = `${((count * 100) / totalCalls).toFixed(2)} %`
 
                 let result = {

@@ -11,7 +11,7 @@ export const OTHER_STATISTIC_LABEL = '% of Other'
 export const PERCENTAGE_COUNTERS = () => ({
     1: {
         label: i18n.t('Answer'),
-        key: '1',
+        key: 'Answer',
         value: 0,
         icon: '',
         layout: {
@@ -28,7 +28,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     2: {
         label: i18n.t('Abandoned'),
-        key: '2',
+        key: 'Abandoned',
         value: 0,
         icon: '',
         layout: {
@@ -45,7 +45,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     3: {
         label: i18n.t('IVRExit'),
-        key: '3',
+        key: 'IVRExit',
         value: 0,
         icon: '',
         layout: {
@@ -62,7 +62,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     4: {
         label: i18n.t('PickUp'),
-        key: '4',
+        key: 'PickUp',
         value: 0,
         icon: '',
         layout: {
@@ -79,7 +79,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     5: {
         label: i18n.t('TimeOutExit'),
-        key: '5',
+        key: 'TimeOutExit',
         value: 0,
         icon: '',
         layout: {
@@ -96,7 +96,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     6: {
         label: i18n.t('JoinEmpty'),
-        key: '6',
+        key: 'JoinEmpty',
         value: 0,
         icon: '',
         layout: {
@@ -113,7 +113,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     7: {
         label: i18n.t('LeavEempty'),
-        key: '7',
+        key: 'LeavEempty',
         value: 0,
         icon: '',
         layout: {
@@ -130,7 +130,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     8: {
         label: i18n.t('JoinUnavail'),
-        key: '8',
+        key: 'JoinUnavail',
         value: 0,
         icon: '',
         layout: {
@@ -147,7 +147,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     9: {
         label: i18n.t('LeaveUnavail'),
-        key: '9',
+        key: 'LeaveUnavail',
         value: 0,
         icon: '',
         layout: {
@@ -164,7 +164,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     10: {
         label: i18n.t('Full'),
-        key: '10',
+        key: 'Full',
         value: 0,
         icon: '',
         layout: {
@@ -181,7 +181,7 @@ export const PERCENTAGE_COUNTERS = () => ({
     },
     11: {
         label: i18n.t('NextDestination'),
-        key: '11',
+        key: 'NextDestination',
         value: 0,
         icon: '',
         layout: {
