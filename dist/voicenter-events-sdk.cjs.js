@@ -44,7 +44,7 @@ var eventTypes = {
   KEEP_ALIVE: 'keepalive',
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
   CLOSE: 'closeme',
-  SERVER_FETCH_ERROR: 'server_fetch_error',
+  SERVER_FETCH_ERROR: 'serverFetchError',
   ERROR: 'error'
 };
 
@@ -177,6 +177,8 @@ var defaultOptions = {
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
+  serverFetchStrategy: 'remote',
+  // get servers from external url options: remote | static
   serverType: null // can be 1 or 2. 2 is used for chrome extension
 
 };
@@ -192,6 +194,7 @@ function () {
     _classCallCheck(this, EventsSDK);
 
     this.options = Object.assign({}, defaultOptions, {}, options);
+    this.argumentOptions = Object.assign({}, options);
 
     if (!this.options.token) {
       throw new Error('A token property should be provided');
@@ -485,8 +488,8 @@ function () {
     key: "_getServers",
     value: async function _getServers() {
       // Ignore server fetch if we have a list of servers passed via options
-      if (this.options.servers && Array.isArray(this.options.servers) && this.options.servers.length > 1) {
-        this.servers = this.options.servers;
+      if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
+        this.servers = this.argumentOptions.servers;
         return;
       }
 
@@ -500,7 +503,7 @@ function () {
         var res = await fetch("".concat(this.options.url, "/").concat(this.options.token), params);
         this.servers = await res.json();
       } catch (e) {
-        this.servers = this.options.servers || defaultServers;
+        this.servers = this.argumentOptions.servers || defaultServers;
         this.emit(eventTypes.SERVER_FETCH_ERROR);
       }
     }
