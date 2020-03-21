@@ -15,6 +15,5 @@ export default {
   KEEP_ALIVE: 'keepalive',
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
   CLOSE: 'closeme',
-  SERVER_FETCH_ERROR: 'serverFetchError',
   ERROR: 'error',
 }
