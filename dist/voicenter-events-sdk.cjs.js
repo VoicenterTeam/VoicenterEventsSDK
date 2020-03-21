@@ -44,7 +44,6 @@ var eventTypes = {
   KEEP_ALIVE: 'keepalive',
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
   CLOSE: 'closeme',
-  SERVER_FETCH_ERROR: 'serverFetchError',
   ERROR: 'error'
 };
 
@@ -504,7 +503,6 @@ function () {
         this.servers = await res.json();
       } catch (e) {
         this.servers = this.argumentOptions.servers || defaultServers;
-        this.emit(eventTypes.SERVER_FETCH_ERROR);
       }
     }
   }, {
