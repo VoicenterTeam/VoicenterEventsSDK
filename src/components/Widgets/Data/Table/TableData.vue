@@ -209,31 +209,27 @@
                     }
                     let columns = [];
                     let containsDate = false
-                    let dateFieldToFormatting = 'Date & time'
-
+                    let dateColumns = ['date & time', 'date', 'call time', 'contacted time']
                     if (data.length) {
                         for (let column in data[0]) {
+                            if (dateColumns.includes(column.toLowerCase())) {
+                                containsDate = true
+                                this.formatDateColumn(data, column)
+                            }
                             columns.push({
                                 prop: column,
                                 fixed: false,
                                 align: 'center',
-                                label: startCase(column)
+                                label: startCase(column),
+                                className: containsDate ? 'direction-ltr' : ''
                             })
                             this.searchableFields.push(column)
-                            if (column === dateFieldToFormatting) {
-                                containsDate = true
-                            }
+
                         }
 
                         if (this.isRealTimeTable) {
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
-                    }
-                    if (containsDate) {
-                        data = data.map((row) => {
-                            row[dateFieldToFormatting] = format(new Date(row[dateFieldToFormatting]), 'HH:mm:ss dd-MM-yyyy')
-                            return row
-                        })
                     }
 
                     this.tableData = data
@@ -251,6 +247,14 @@
                     }
                 } finally {
                 }
+            },
+            formatDateColumn(data, column) {
+                data.forEach(row => {
+                    if (row[column]) {
+                        row[column] = format(new Date(row[column]), 'HH:mm:ss dd-MM-yyyy')
+                    }
+                })
+                return data
             },
             handlePageChange(val) {
                 this.currentPage = val
