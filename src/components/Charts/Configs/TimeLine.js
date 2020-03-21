@@ -56,6 +56,8 @@ Highcharts.setOptions({
             if (this.point.stackTotal) {
                 let percentage = (this.point.y * 100 / this.point.stackTotal).toFixed(2)
                 return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px;">${this.series.name}</p> <br><p style="text-align: center;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
+            } else if(this.point.innerRadius) {
+                return `${this.series.name}<br><span style="font-size:2em; color: ${this.point.color}; font-weight: bold">${this.point.y} %</span>`
             } else {
                 return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
             }
@@ -63,7 +65,7 @@ Highcharts.setOptions({
         backgroundColor: "#ffffff",
         borderColor: "#ffffff",
         boxShadow: "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
-        borderRadius: 10
+        borderRadius: 10,
     },
     colors: [
         '#2575FF',

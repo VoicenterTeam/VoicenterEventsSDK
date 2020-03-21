@@ -238,5 +238,6 @@
     "InSLACount": "In SLA Count",
     "AvgRingTime": "Avg Ring Time",
     "CallCount": "Call Count",
-    "settings.refreshRealTimeDataDelay": "Refresh real-time data delay on server error"
+    "settings.refreshRealTimeDataDelay": "Refresh real-time data delay on server error",
+    "queue.activity.to.display": "Queue activity to display"
 }

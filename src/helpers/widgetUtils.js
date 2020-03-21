@@ -2,6 +2,7 @@ import get from 'lodash/get'
 import store from '@/store/store'
 import widgetDataTypes from '@/enum/widgetDataTypes'
 import {realTimeTableKey} from '@/enum/realTimeTableConfigs'
+import {queueActivityGaugeKey} from "@/enum/generic";
 
 // minimum refresh interval for real-time widgets - 10 seconds
 const MIN_REFRESH_INTERVAL = 10
@@ -97,7 +98,11 @@ export function isHtmlWidget(widget) {
 }
 
 export function isQueueDashboardWidget(widget) {
-    return widget.DataTypeID === widgetDataTypes.QUEUE_DASHBOARD;
+    return widget.DataTypeID === widgetDataTypes.QUEUE_DASHBOARD && !isQueueActivityGauge(widget)
+}
+
+export function isQueueActivityGauge(widget) {
+    return widget.EndPoint.includes(queueActivityGaugeKey);
 }
 
 export const groupedWidgets = [

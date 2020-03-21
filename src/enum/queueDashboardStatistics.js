@@ -293,3 +293,13 @@ export let allStatistics = {
 
 export const statistics = Object.values(allStatistics)
 
+export const activitiesToDisplay = [
+    {
+        key: 'InSLACount',
+        value: 'InSLACount',
+    },
+    {
+        key: 'AnswerCount',
+        value: 'AnswerCount',
+    }
+]
