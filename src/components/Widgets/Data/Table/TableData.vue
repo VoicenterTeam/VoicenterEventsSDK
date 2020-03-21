@@ -135,8 +135,7 @@
                 let showLoggedOutUsers = get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
                 if (!showLoggedOutUsers) {
                     let userIds = this.loggedOutUserIds
-
-                    tableData = tableData.filter((user) => !userIds.includes(user.user_id))
+                    tableData = tableData.filter((user) => !userIds.includes(user.user_id) && this.userExtension(user.user_id))
                 }
 
                 if (this.filter && this.searchableFields.length > 0) {
