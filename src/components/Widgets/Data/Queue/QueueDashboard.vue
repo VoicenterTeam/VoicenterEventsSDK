@@ -9,9 +9,7 @@
         <div v-else>
             <div class="flex items-center">
                 <div class="flex flex-col md:flex-row md:items-center">
-                    <p v-if="data.Title" class="text-main-2xl font-semibold">
-                        {{data.Title}}
-                    </p>
+                    <base-widget-title :title="data.Title"/>
                 </div>
             </div>
             <div class="flex flex-wrap -mx-1 pt-2" v-if="queueStatistics">

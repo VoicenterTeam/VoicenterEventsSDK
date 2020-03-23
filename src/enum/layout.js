@@ -8,7 +8,8 @@ export const settingsColors = [
     "background",
     "frames",
     "widgetGroupBackground",
-    "widgetGroupFrames"
+    "widgetGroupFrames",
+    'widgetGroupTitles'
 ];
 
 export const widgetColors = [

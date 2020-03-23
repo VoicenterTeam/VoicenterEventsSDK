@@ -1,5 +1,5 @@
 <template>
-    <el-tabs v-model="activeTab" v-bind="$attrs">
+    <el-tabs v-model="activeTab" v-bind="$attrs" class="widget-tabs">
         <el-tab-pane v-for="(tab, index) in tabsData" :label="tab.title"
                      :name="tab.key"
                      :key="index">

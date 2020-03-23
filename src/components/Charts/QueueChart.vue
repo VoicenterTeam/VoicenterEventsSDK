@@ -2,10 +2,7 @@
     <div>
         <div class="flex flex-row md:items-center justify-between">
             <div class="flex">
-                <p class="text-main-2xl"
-                   :class="$rtl.isRTL ? 'ml-5' : 'mr-5'">
-                    {{data.Title}}
-                </p>
+                <base-widget-title :title="data.Title" :class="$rtl.isRTL ? 'ml-5' : 'mr-5'"/>
             </div>
         </div>
         <div class="rounded-lg pt-2" v-if="chartVisibility">

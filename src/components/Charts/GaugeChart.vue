@@ -1,9 +1,7 @@
 <template>
     <div class="gouge-wrapper">
         <div class="flex flex-row md:items-center justify-between">
-            <p v-if="data.Title" class="text-main-2xl font-semibold">
-                {{data.Title}}
-            </p>
+            <base-widget-title :title="data.Title"/>
         </div>
         <div class="bg-transparent pt-2 rounded-lg" v-if="chartVisibility">
             <highcharts :options="chartData"/>

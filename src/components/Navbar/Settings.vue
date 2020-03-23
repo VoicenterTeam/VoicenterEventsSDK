@@ -33,6 +33,11 @@
                             {{$t('settings.widget.tabbed.view')}}
                         </el-checkbox>
                     </el-form-item>
+                    <el-form-item prop="showWidgetTitles">
+                        <el-checkbox v-model="settings.showWidgetTitles">
+                            {{$t('settings.widget.show.titles')}}
+                        </el-checkbox>
+                    </el-form-item>
                     <el-form-item class="pb-4">
                         <label>{{$t('font.size')}}</label>
                         <el-slider
@@ -41,6 +46,16 @@
                             :marks="bestOptions"
                             v-model="settings.fontSize"
                             show-input>
+                        </el-slider>
+                    </el-form-item>
+                    <el-form-item class="pb-4">
+                        <label>{{$t('widgetTitles.font.size')}}</label>
+                        <el-slider
+                                :min="titleFontSizes.min"
+                                :max="titleFontSizes.max"
+                                :marks="titleBestOptions"
+                                v-model="settings.widgetTitlesFontSize"
+                                show-input>
                         </el-slider>
                     </el-form-item>
                     <el-form-item class="pb-4">
@@ -113,6 +128,7 @@
     import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
     import {predefinedColors, settingsColors} from '@/enum/layout'
+    import { settings as defaultSettings } from '@/enum/defaultDashboardSettings'
     import {getBase64} from '@/helpers/util'
     import {TrashIcon} from 'vue-feather-icons'
 
@@ -140,6 +156,16 @@
                 fontSize: {
                     min: 8,
                     max: 24
+                },
+                titleFontSizes: {
+                    min: 12,
+                    max: 48
+                },
+                titleBestOptions: {
+                    16: '16px',
+                    22: '22px',
+                    26: '26px',
+                    32: '32px',
                 },
                 bestOptions: {
                     14: '14px',
@@ -201,9 +227,34 @@
         watch: {
             storeSettings(newVal) {
                 this.settings = cloneDeep(newVal)
+                this.addDefaultValues()
             }
         },
+        mounted() {
+          this.addDefaultValues()
+        },
         methods: {
+            /**
+             * Ensure newly added colors are backwards compatible with old ones
+             */
+            addDefaultValues() {
+                if (!this.settings.colors) {
+                    this.settings.colors = {
+                        ...defaultSettings.colors
+                    }
+                }
+                for (let key in defaultSettings.colors) {
+                    if (!this.settings.colors[key]) {
+                        this.$set(this.settings.colors, key, defaultSettings.colors[key])
+                    }
+                }
+                if (!this.settings.widgetTitlesFontSize) {
+                    this.$set(this.settings, 'widgetTitlesFontSize', defaultSettings.widgetTitlesFontSize)
+                }
+                if (this.settings.showWidgetTitles === undefined) {
+                    this.$set(this.settings, 'showWidgetTitles', defaultSettings.showWidgetTitles)
+                }
+            },
             updateSettings() {
                 this.$refs.settings.validate((valid) => {
                     if (valid) {

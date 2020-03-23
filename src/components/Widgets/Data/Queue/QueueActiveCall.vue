@@ -14,9 +14,7 @@
                 <waiting-time v-if="drawRow" :key="row.IvrUniqueID" :call="row.Call" :textColor="'text-white'"/>
             </template>
             <template v-slot:title>
-                <p class="text-main-2xl font-semibold">
-                    {{data.Title}}
-                </p>
+                <base-widget-title :title="data.Title"/>
             </template>
         </data-table>
     </div>

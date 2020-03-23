@@ -53,9 +53,7 @@
                 </div>
             </template>
             <template v-slot:title>
-                <p class="text-main-2xl font-semibold px-1">
-                    {{data.Title}}
-                </p>
+                <base-widget-title :title="data.Title"/>
             </template>
             <template v-slot:search-input>
                 <el-input
