@@ -58,11 +58,9 @@
                     let activitiesToDisplay = this.activitiesToDisplay
                     let CallCount = get(this.statisticCounts, 'CallCount');
                     activitiesToDisplay.forEach((el) => {
-
-                        let AnswerCount = 0
                         if (el === 'AnswerCount') {
                             let answerPercentage = 0
-                            AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
+                            let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
                             if (CallCount) {
                                 answerPercentage = AnswerCount ? (AnswerCount / CallCount * 100).toFixed(2) : 0
                             }
@@ -86,8 +84,9 @@
                         }
                         if (el === 'InSLACount') {
                             let InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value');
-
                             let inSLAPercentage = 0
+
+                            let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
                             if (AnswerCount) {
                                 inSLAPercentage = InSLACount ? (InSLACount / AnswerCount * 100).toFixed(2) : 0
                             }
