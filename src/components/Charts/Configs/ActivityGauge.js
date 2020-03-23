@@ -49,7 +49,7 @@ export default {
     },
     tooltip: {
         borderWidth: 0,
-        backgroundColor: 'none',
+        backgroundColor: 'white',
         shadow: false,
         style: {
             fontSize: '16px'
@@ -71,16 +71,5 @@ export default {
         max: 100,
         lineWidth: 0,
         tickPositions: []
-    },
-
-    plotOptions: {
-        solidgauge: {
-            dataLabels: {
-                enabled: false
-            },
-            linecap: 'round',
-            stickyTracking: false,
-            rounded: true
-        }
     },
 }
