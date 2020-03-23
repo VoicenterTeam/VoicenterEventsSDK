@@ -61,8 +61,8 @@ Highcharts.setOptions({
             }
 
             if (this.point.start && this.point.start) {
-                let date = format(this.point.start * 1000, 'MM-dd-yyyy HH:mm:ss')
-                return `<p>${date}</p><br><p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
+                // let date = format(this.point.start * 1000, 'MM-dd-yyyy HH:mm:ss')
+                return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.point.name}<br> ${this.series.name} (${this.point.y})</p>`
             }
 
             return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
