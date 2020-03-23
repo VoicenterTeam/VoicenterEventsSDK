@@ -1,10 +1,12 @@
 <template>
-    <p v-if="title && showWidgetTitle" class="text-main-2xl font-semibold"
-       :style="$store.getters['dashboards/widgetTitleStyles']">
-        <slot>
-            {{title}}
-        </slot>
-    </p>
+    <div class="h-8">
+        <p v-if="title && showWidgetTitle" class="text-main-2xl font-semibold"
+           :style="$store.getters['dashboards/widgetTitleStyles']">
+            <slot>
+                {{title}}
+            </slot>
+        </p>
+    </div>
 </template>
 <script>
     export default {
