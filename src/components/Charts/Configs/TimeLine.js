@@ -3,8 +3,7 @@ import i18n from '@/i18n'
 import config from '@/config'
 import Exporting from 'highcharts/modules/exporting'
 import noDataModule from 'highcharts/modules/no-data-to-display'
-
-// var('--font-size-base')
+import {format} from "date-fns";
 
 Exporting(Highcharts)
 noDataModule(Highcharts)
@@ -56,11 +55,17 @@ Highcharts.setOptions({
             if (this.point.stackTotal) {
                 let percentage = (this.point.y * 100 / this.point.stackTotal).toFixed(2)
                 return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px;">${this.series.name}</p> <br><p style="text-align: center;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
-            } else if(this.point.innerRadius) {
-                return `${this.series.name}<br><span style="font-size:2em; color: ${this.point.color}; font-weight: bold">${this.point.y} %</span>`
-            } else {
-                return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
             }
+            if (this.point.innerRadius) {
+                return `${this.series.name}<br><span style="font-size:2em; color: ${this.point.color}; font-weight: bold">${this.point.y} %</span>`
+            }
+
+            if (this.point.start && this.point.start) {
+                // let date = format(this.point.start * 1000, 'MM-dd-yyyy HH:mm:ss')
+                return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.point.name}<br> ${this.series.name} (${this.point.y})</p>`
+            }
+
+            return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
         },
         backgroundColor: "#ffffff",
         borderColor: "#ffffff",

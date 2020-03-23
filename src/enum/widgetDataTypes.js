@@ -1,7 +1,7 @@
 export default {
     LINES_TYPE_ID: 1,
     BARS_WITH_LINES_TYPE_ID: 2,
-    TIMELINE_TYPE_ID: 3,
+    GANTT_TYPE_ID: 3,
     TABLE_TYPE_ID: 4,
     COUNTER_TYPE_ID: 5,
     CHART_SPEEDOMETER: 6,
