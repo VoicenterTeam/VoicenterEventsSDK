@@ -3,7 +3,7 @@ import widgetDataTypes from "./widgetDataTypes";
 export default {
     [widgetDataTypes.LINES_TYPE_ID]: 'TimeLineChart',
     [widgetDataTypes.BARS_WITH_LINES_TYPE_ID]: 'TimeLineChart',
-    [widgetDataTypes.TIMELINE_TYPE_ID]: 'GanttChart',
+    [widgetDataTypes.GANTT_TYPE_ID]: 'GanttChart',
     [widgetDataTypes.TABLE_TYPE_ID]: 'TableData',
     [widgetDataTypes.COUNTER_TYPE_ID]: 'StatusCards',
     [widgetDataTypes.CHART_SPEEDOMETER]: 'GaugeChart',

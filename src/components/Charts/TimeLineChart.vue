@@ -6,7 +6,7 @@
             </p>
         </div>
         <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility">
-            <highcharts class="chart-content_wrapper" :contstructor-chart="chartConstructorType"
+            <highcharts class="chart-content_wrapper"
                         :options="chartOptions"/>
         </div>
     </div>
@@ -42,15 +42,6 @@
                 chartOptions: {},
                 fetchDataInterval: null
             }
-        },
-        computed: {
-            chartConstructorType() {
-                let widgetDataType = this.data.DataTypeID
-                if (widgetDataType === widgetDataTypes.TIMELINE_TYPE_ID) {
-                    return 'ganttChart'
-                }
-                return 'chart'
-            },
         },
         methods: {
             async getWidgetData() {
