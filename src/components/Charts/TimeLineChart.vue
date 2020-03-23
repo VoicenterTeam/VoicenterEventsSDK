@@ -1,9 +1,7 @@
 <template>
     <div>
         <div class="flex flex-row md:items-center justify-between">
-            <p v-if="data.Title" class="text-main-2xl font-semibold">
-                {{data.Title}}
-            </p>
+            <base-widget-title :title="data.Title"/>
         </div>
         <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility">
             <highcharts class="chart-content_wrapper" :contstructor-chart="chartConstructorType"

@@ -94,6 +94,18 @@ const getters = {
     refreshDelay: state => {
         return state.settings.refreshRealTimeDataDelay
     },
+    widgetTitleStyles: state => {
+        const { widgetGroupTitles } = state.settings.colors
+        const { widgetTitlesFontSize } = state.settings
+        const styles = {}
+        if (widgetGroupTitles) {
+            styles.color = widgetGroupTitles
+        }
+        if (widgetTitlesFontSize) {
+            styles.fontSize = `${widgetTitlesFontSize}px`
+        }
+        return styles
+    }
 }
 
 export default {

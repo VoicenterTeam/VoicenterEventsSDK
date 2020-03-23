@@ -2,9 +2,7 @@
     <div class="w-full bg-white px-8 py-4 flex items-center justify-between rounded-lg shadow">
         <div class="w-full flex flex-row items-center justify-between">
             <slot name="title">
-                <h5 class="text-main-2xl font-bold mx-3">
-                    {{data.Title}}
-                </h5>
+                <base-widget-title :title="data.Title"/>
             </slot>
             <slot name="content">
                 <h2 class="text-6xl font-bold mx-3 text-green">
@@ -16,8 +14,10 @@
 </template>
 <script>
     import {WidgetDataApi} from '@/api/widgetDataApi'
+    import BaseWidgetTitle from "@/components/BaseWidgetTitle";
 
     export default {
+        components: { BaseWidgetTitle },
         props: {
             data: {
                 type: Object,

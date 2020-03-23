@@ -13,7 +13,7 @@
                                    :value="widgetGroup.WidgetList"
                                    @change="(ev) => onWidgetListChange(ev, widgetGroup, groupIndex)">
                         <div v-for="widget in widgetGroup.WidgetList" class="w-full p-2 items" :key="widget.WidgetID">
-                            <div class="widget-item">
+                            <div class="widget-item" :style="$store.getters['dashboards/widgetTitleStyles']">
                                 {{widget.Title}}
                             </div>
                         </div>

@@ -1,9 +1,7 @@
 <template>
     <div>
         <div class="flex w-full justify-between pr-12" :class="responsiveClass">
-            <p class="flex text-main-2xl font-semibold">
-                {{data.Title}}
-            </p>
+            <base-widget-title :title="data.Title"/>
             <div class="flex">
                 <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
                     <div>

@@ -16,3 +16,13 @@ div.el-tabs__active-bar {
 div.el-tabs__item {
     @apply font-semibold;
 }
+
+.widget-tabs {
+    div.el-tabs__item.is-active {
+        color: var(--widgetGroupTitles-color);
+    }
+
+    div.el-tabs__active-bar {
+        background-color: var(--widgetGroupTitles-color);
+    }
+}

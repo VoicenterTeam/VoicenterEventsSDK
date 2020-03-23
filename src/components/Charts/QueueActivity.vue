@@ -1,9 +1,7 @@
 <template>
     <div class="queue-activity__wrapper">
         <div class="flex flex-row md:items-center justify-between">
-            <p v-if="data.Title" class="text-main-2xl font-semibold">
-                {{data.Title}}
-            </p>
+            <base-widget-title :title="data.Title"/>
         </div>
         <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
             <highcharts class="chart-content_wrapper" :options="chartData"/>

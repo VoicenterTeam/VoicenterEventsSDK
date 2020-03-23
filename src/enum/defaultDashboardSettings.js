@@ -21,9 +21,12 @@ export const settings = {
         frames: storageColors.frames || "#ff000000",
         widgetGroupBackground: storageColors.widgetGroupBackground || "#edf2f7",
         widgetGroupFrames: storageColors.widgetGroupFrames || "#ff000000",
+        widgetGroupTitles: storageColors.widgetGroupTitles || '#000000'
     },
     showWidgetAsTabs: false,
+    showWidgetTitles: true,
     fontSize: defaultFontSize,
+    widgetTitlesFontSize: 22,
     minRefreshInterval: 10,
     refreshRealTimeDataDelay: 30
 }
