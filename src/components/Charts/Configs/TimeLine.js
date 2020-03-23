@@ -150,7 +150,7 @@ Highcharts.setOptions({
         },
     },
     legend: {
-        enabled: false
+        enabled: true
     },
     plotOptions: {
         spline: {

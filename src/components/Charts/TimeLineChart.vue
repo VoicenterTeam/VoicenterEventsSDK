@@ -95,6 +95,7 @@
                         },
                         ...chartData,
                     }
+                    this.addLegendToChart(data)
 
                     this.chartVisibility = false
                     this.$nextTick(() => {
@@ -110,6 +111,16 @@
                         this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
                     }
                 }
+            },
+            addLegendToChart(chart) {
+                if (!chart.legend) {
+                    chart.legend = {
+                        enabled: true
+                    }
+                } else {
+                    chart.legend.enabled = true
+                }
+                return chart
             }
         },
         mounted() {

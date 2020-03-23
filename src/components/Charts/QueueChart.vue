@@ -129,7 +129,9 @@
                         this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
                     })
                 }
-
+                this.chartData.legend = {
+                    enabled: true
+                }
                 return this.chartData
             },
             responsiveClass() {

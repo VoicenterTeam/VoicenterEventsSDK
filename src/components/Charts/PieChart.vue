@@ -75,7 +75,7 @@
                     delete el.color
                     return el
                 });
-                
+
                 this.chartData = {
                     chart: {
                         plotBackgroundColor: null,
