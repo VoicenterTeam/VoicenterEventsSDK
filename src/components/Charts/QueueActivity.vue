@@ -113,8 +113,11 @@
                     })
                     this.chartData = {
                         ...activityChartConfig,
-                        ...{series: data},
-                        ...{pane: pane},
+                        series: data,
+                        pane,
+                        legend: {
+                            enabled: true
+                        }
                     }
                 } catch (e) {
                     console.log(e)

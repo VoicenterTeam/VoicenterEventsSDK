@@ -63,6 +63,9 @@ export default {
             };
         }
     },
+    legend: {
+        enabled: true,
+    },
     yAxis: {
         min: 0,
         max: 100,

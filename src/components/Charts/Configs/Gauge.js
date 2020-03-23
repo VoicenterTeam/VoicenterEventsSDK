@@ -17,6 +17,9 @@ export default {
     tooltip: {
         enabled: false
     },
+    legend: {
+        enabled: false
+    },
     yAxis: {
         tickInterval: false,
         startOnTick: true,
