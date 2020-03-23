@@ -17,7 +17,7 @@
         props: {
             url: {
                 type: String,
-                default: 'https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav'
+                default: ''
             }
         },
         errorCaptured(err, vm, info) {
