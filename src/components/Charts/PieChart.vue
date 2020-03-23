@@ -89,7 +89,7 @@
                             cursor: 'pointer',
                             dataLabels: {
                                 enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                format: this.$rtl.isRTL ? '{point.percentage:.1f}% : <b>{point.name}</b>' : '<b>{point.name}</b>: {point.percentage:.1f} %',
                                 style: {
                                     color: 'black',
                                     textOutline: 'none'
