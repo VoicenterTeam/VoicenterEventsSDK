@@ -42,7 +42,6 @@
         margin-top: 50px;
         overflow-x: auto;
         min-width: 320px;
-        width: 100vw;
     }
 
     .tab-name {

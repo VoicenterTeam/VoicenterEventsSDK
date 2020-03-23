@@ -26,5 +26,10 @@ li.el-select-dropdown__item.hover, li.el-select-dropdown__item:hover {
 }
 
 .rtl .el-select-dropdown .el-select-dropdown__item {
-    @apply flex flex-row-reverse;
+    @apply flex flex-row-reverse justify-end;
+}
+
+.rtl .el-select-dropdown.is-multiple .el-select-dropdown__item.selected::after {
+    right: auto;
+    left: 20px;
 }
