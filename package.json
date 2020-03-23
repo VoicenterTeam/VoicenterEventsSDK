@@ -24,6 +24,7 @@
     "tailwindcss": "^1.0.4",
     "voicenter-events-sdk": "VoicenterTeam/VoicenterEventsSDK",
     "vue": "^2.6.10",
+    "vue-audio": "^0.0.12",
     "vue-feather-icons": "^4.22.0",
     "vue-i18n": "^8.0.0",
     "vue-router": "^3.0.3",

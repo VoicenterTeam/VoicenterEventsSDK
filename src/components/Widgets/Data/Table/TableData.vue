@@ -31,6 +31,10 @@
                         </span>
                 <span v-else>---</span>
             </template>
+            <template v-slot:Recording="{row}">
+                <audio-player v-if="row.Recording" :url="getRecordingUrl(row.Recording)"/>
+                <div v-else>{{$t('N/A')}}</div>
+            </template>
             <template v-slot:pagination>
                 <div class="flex items-center">
                     <el-select
@@ -76,6 +80,7 @@
     import startCase from 'lodash/startCase'
     import {Option, Pagination, Select} from 'element-ui'
     import UserStatus from './UserStatus'
+    import AudioPlayer from "@/components/Audio/AudioPlayer";
     import {WidgetApi} from '@/api/widgetApi'
     import StatusDuration from './StatusDuration'
     import DataTable from '@/components/Table/DataTable'
@@ -89,6 +94,7 @@
 
     export default {
         components: {
+            AudioPlayer,
             DataTable,
             UserStatus,
             StatusDuration,
@@ -131,9 +137,9 @@
                 let tableData = this.tableData
 
                 let showLoggedOutUsers = get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
-                if (!showLoggedOutUsers) {
+                if (!showLoggedOutUsers && this.isRealTimeTable) {
                     let userIds = this.loggedOutUserIds
-                    tableData = tableData.filter((user) => !userIds.includes(user.user_id) && this.userExtension(user.user_id))
+                    tableData = tableData.filter((user) => user.user_id !== undefined && !userIds.includes(user.user_id) && this.userExtension(user.user_id))
                 }
 
                 if (this.filter && this.searchableFields.length > 0) {
@@ -213,14 +219,18 @@
                                 containsDate = true
                                 this.formatDateColumn(data, column)
                             }
-                            columns.push({
+                            const columnData = {
                                 prop: column,
                                 fixed: false,
                                 align: 'center',
                                 label: startCase(column),
                                 className: containsDate ? 'direction-ltr' : ''
-                            })
-                            this.searchableFields.push(column)
+                            }
+                            columns.push(columnData)
+                            if (column === 'Recording') {
+                                columnData.minWidth = '320px'
+                            }
+                            this.searchableFields.push(columnData)
 
                         }
 
@@ -252,6 +262,15 @@
                     }
                 })
                 return data
+            },
+            getRecordingUrl(recordingLink) {
+              const div = document.createElement('div')
+              div.innerHTML = recordingLink
+              const anchor = div.querySelector('a')
+              if (anchor && anchor.href) {
+                  return anchor.href
+              }
+              return ''
             },
             handlePageChange(val) {
                 this.currentPage = val
