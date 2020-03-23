@@ -57,9 +57,11 @@
                 try {
                     let activitiesToDisplay = this.activitiesToDisplay
                     let CallCount = get(this.statisticCounts, 'CallCount');
+                    let answerPercentage = 0
+                    let inSLAPercentage = 0
+
                     activitiesToDisplay.forEach((el) => {
                         if (el === 'AnswerCount') {
-                            let answerPercentage = 0
                             let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
                             if (CallCount) {
                                 answerPercentage = AnswerCount ? (AnswerCount / CallCount * 100).toFixed(2) : 0
@@ -84,8 +86,6 @@
                         }
                         if (el === 'InSLACount') {
                             let InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value');
-                            let inSLAPercentage = 0
-
                             let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
                             if (AnswerCount) {
                                 inSLAPercentage = InSLACount ? (InSLACount / AnswerCount * 100).toFixed(2) : 0
@@ -110,13 +110,22 @@
                             pane['background'].push(InSLAPane)
                         }
                     })
+                    let dataLabels = `<span style="font-size:14px; color: #5EB300">${this.$t('Answer')}: ${answerPercentage}%</span><br><span style="font-size:14px; color: #61B5FF">${this.$t('In SLA')}: ${inSLAPercentage}%</span>`
                     this.chartData = {
                         ...activityChartConfig,
                         series: data,
                         pane,
-                        legend: {
-                            enabled: true
-                        }
+                        plotOptions: {
+                            solidgauge: {
+                                dataLabels: {
+                                    enabled: true,
+                                    format: dataLabels,
+                                },
+                                linecap: 'round',
+                                stickyTracking: false,
+                                rounded: true
+                            }
+                        },
                     }
                 } catch (e) {
                     console.log(e)
