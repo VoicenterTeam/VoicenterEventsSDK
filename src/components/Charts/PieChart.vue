@@ -146,10 +146,10 @@
 
                 for (let status in statusData) {
                     let statusType = statusTypes[status]
-
+                    const statusText = this.$store.getters['entities/getStatusTextById'](status)
                     let sliceObject = {
                         color: statusType.color,
-                        name: this.$t(this.$store.getters['entities/getStatusTextById'](status)),
+                        name: this.$t(statusText),
                         y: statusData[status].length,
                     }
 
