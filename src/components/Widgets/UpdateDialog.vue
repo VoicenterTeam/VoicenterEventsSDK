@@ -62,10 +62,11 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueActivityGauge(widget)">
-                <label>{{$t('queue.activity.to.display')}}</label>
-                <base-select
-                    v-model="model.WidgetLayout.ShowActivities"
-                    :data="activitiesToDisplay"/>
+                <el-collapse v-model="activeCollapse" class="pt-4">
+                    <el-collapse-item :title="$t('widget.config')" name="queueActivity">
+                        <ActivityGaugeConfig :model="model"></ActivityGaugeConfig>
+                    </el-collapse-item>
+                </el-collapse>
             </el-form-item>
             <el-collapse v-model="activeCollapse" class="pt-4">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
@@ -108,7 +109,7 @@
                 :data="widget"
                 :model="model">
             </real-time-settings>
-            <div v-if="autoCompletes.length ||otherFilters.length ">
+            <div v-if="autoCompletes.length || otherFilters.length">
                 <div class="flex items-center justify-between text-main-base">
                     {{$t('tooltip.refresh.entities.list')}}
                     <RefreshButton
@@ -161,7 +162,7 @@
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {activitiesToDisplay, statistics} from '@/enum/queueDashboardStatistics'
+    import {statistics} from '@/enum/queueDashboardStatistics'
     import {
         isHtmlWidget,
         isPieWidget,
@@ -172,6 +173,7 @@
         isQueueTable,
         isRealtimeWidget,
     } from '@/helpers/widgetUtils'
+    import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -196,6 +198,7 @@
             RefreshButton,
             [Tooltip.name]: Tooltip,
             StaticWidgetInfo,
+            ActivityGaugeConfig,
         },
         props: {
             widget: {
@@ -214,7 +217,6 @@
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
                 statistics,
-                activitiesToDisplay,
                 allSeries,
                 AUTO_COMPLETE_PARAMETER_TYPE,
             }
