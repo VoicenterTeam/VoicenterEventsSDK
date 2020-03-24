@@ -258,19 +258,23 @@
             formatDateColumn(data, column) {
                 data.forEach(row => {
                     if (row[column]) {
-                        row[column] = format(new Date(row[column]), 'HH:mm:ss dd-MM-yyyy')
+                        try {
+                            // To prevent date-fns errors like: Invalid time value
+                            row[column] = format(new Date(row[column]), 'HH:mm:ss dd-MM-yyyy')
+                        } catch (e) {
+                        }
                     }
                 })
                 return data
             },
             getRecordingUrl(recordingLink) {
-              const div = document.createElement('div')
-              div.innerHTML = recordingLink
-              const anchor = div.querySelector('a')
-              if (anchor && anchor.href) {
-                  return anchor.href
-              }
-              return ''
+                const div = document.createElement('div')
+                div.innerHTML = recordingLink
+                const anchor = div.querySelector('a')
+                if (anchor && anchor.href) {
+                    return anchor.href
+                }
+                return ''
             },
             handlePageChange(val) {
                 this.currentPage = val
