@@ -20,7 +20,7 @@
             </div>
             <call-info
                 v-for="(call, index) in extension.calls"
-                :key="index"
+                :key="call.ivrid"
                 :status-threshold="threshold"
                 :call="call"
                 :settings="settings"
@@ -37,7 +37,7 @@
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
-    import {getInitialTime} from '@/util/timeUtils'
+    import { getInitialExtensionTime, getInitialTime } from '@/util/timeUtils'
     import {sdkEventReasons} from '@/enum/sdkEvents'
     import {extensionColor} from '@/util/extensionStyles'
 
@@ -57,7 +57,7 @@
             }
         },
         data() {
-            let initialTimeInSeconds = getInitialTime(this.extension.lastAnsweredCallEventEpoch)
+            let initialTimeInSeconds = getInitialExtensionTime(this.extension, this.settings)
 
             return {
                 timer: new Timer({
@@ -127,21 +127,29 @@
             }
         },
         watch: {
-            'extension.representativeStatus'() {
-                this.timer.reset()
+            'extension.representativeStatus'(newStatus, oldStatus) {
+                if (newStatus !== oldStatus) {
+                    this.timer.reset()
+                }
             },
             'extension.calls'(newVal, oldVal) {
                 if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
                     return
                 }
 
-                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.HANGUP) {
+                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.ANSWER) {
                     let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
                     if (call) {
                         this.timer.reset()
                     }
                 }
             },
+            'extension.userID'(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    const timerValue = getInitialExtensionTime(this.extension, this.settings)
+                    this.timer.setValue(timerValue)
+                }
+            }
         },
         mounted() {
             this.timer.start()

@@ -23,7 +23,7 @@ const mutations = {
     },
     [types.SET_SERVER_TIME]: (state, value) => {
         state.serverTime = value * 1000 - ISRAEL_TIMEZONE_OFFSET
-        state.serverDelta = state.serverTime - new Date().getTime()
+        state.serverDelta = new Date().getTime() - state.serverTime
     },
     [types.SET_IS_SOCKET_OFFLINE]: (state, value) => {
         state.isSocketOffline = value

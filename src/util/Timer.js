@@ -39,13 +39,7 @@ export default class Timer {
         this.state.seconds = value
     }
 
-    addServerDelta() {
-        const delta = store.state.extensions.serverDelta
-        this.setValue(this.state.seconds + delta/1000)
-    }
-
     start() {
-        this.addServerDelta()
         this.interval = setInterval(() => {
             this.state.seconds++
         }, this.options.interval || 1000)

@@ -6,7 +6,7 @@
         </div>
         <call-info
             v-for="(call, index) in extension.calls"
-            :key="index"
+            :key="call.ivrid"
             :text-color="'text-white'"
             :call="call"
             :settings="settings"
@@ -19,7 +19,7 @@
 </template>
 <script>
     import Timer from '@/util/Timer'
-    import {getInitialTime} from '@/util/timeUtils'
+    import { getInitialExtensionTime } from '@/util/timeUtils'
     import {sdkEventReasons} from '@/enum/sdkEvents'
     import CallInfo from '@/components/Cards/CallInfo'
 
@@ -38,7 +38,7 @@
             }
         },
         data() {
-            let initialTimeInSeconds = getInitialTime(this.extension.lastAnsweredCallEventEpoch)
+            let initialTimeInSeconds = getInitialExtensionTime(this.extension, this.settings)
             return {
                 timer: new Timer({
                     initialTimeInSeconds
@@ -71,19 +71,27 @@
             }
         },
         watch: {
-            'extension.representativeStatus'() {
-                this.timer.reset()
+            'extension.representativeStatus'(newStatus, oldStatus) {
+                if (newStatus !== oldStatus) {
+                    this.timer.reset()
+                }
             },
             'extension.calls'(newVal, oldVal) {
                 if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
                     return
                 }
 
-                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.HANGUP) {
+                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.ANSWER) {
                     let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
                     if (call) {
                         this.timer.reset()
                     }
+                }
+            },
+            'extension.userID'(newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    const timerValue = getInitialExtensionTime(this.extension, this.settings)
+                    this.timer.setValue(timerValue)
                 }
             }
         },

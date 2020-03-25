@@ -30,6 +30,7 @@
         },
         data() {
             let initialTimeInSeconds = getInitialTime(this.call.callStarted)
+
             return {
                 timer: new Timer({
                     initialTimeInSeconds
@@ -61,6 +62,14 @@
                 }
                 return {show, icon}
             },
+        },
+        watch: {
+            'call.ivrid'(newId, oldId) {
+                if (newId !== oldId) {
+                    const timerValue = getInitialTime(this.call.callStarted)
+                    this.timer.setValue(timerValue)
+                }
+            }
         },
         mounted() {
             this.timer.start()
