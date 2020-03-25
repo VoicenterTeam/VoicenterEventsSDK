@@ -124,7 +124,7 @@
     import {Checkbox, Collapse, CollapseItem, InputNumber, Slider, Tooltip} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import ColorPicker from '../Common/ColorPicker'
-    import convertHex from '@/helpers/convertHex'
+    import {convertHex} from '@/helpers/convertHex'
     import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
     import {predefinedColors, settingsColors} from '@/enum/layout'
