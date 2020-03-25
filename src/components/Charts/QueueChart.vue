@@ -16,7 +16,7 @@
     import {Dialog} from 'element-ui'
     import chartConfig from './Configs/TimeLine'
     import queueMixin from '@/mixins/queueMixin'
-    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+    import {getServerTimeOffset} from '@/enum/generic'
     import {administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS} from '@/enum/extensionStatuses'
 
     export default {
@@ -147,7 +147,7 @@
             updateChartData() {
                 let queues = this.filteredQueues
 
-                let minJoinTimeStamp = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET / 1000
+                let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
                 let queueCalls = 0
 
                 queues.forEach((queue) => {
@@ -160,15 +160,15 @@
                 })
 
                 let agentsOnline = this.agentsOnline
-                let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + ISRAEL_TIMEZONE_OFFSET / 1000 - minJoinTimeStamp) : 0
-                let currentTime = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET;
+                let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
+                let currentTime = (new Date()).getTime() + getServerTimeOffset();
 
                 if (this.chartData.series[0].data.length > 11) {
                     this.chartData.xAxis = {
                         ...this.chartData.xAxis,
                         ...{
-                            min: new Date().setMinutes(new Date().getMinutes() - 1) + ISRAEL_TIMEZONE_OFFSET,
-                            max: new Date().getTime() + ISRAEL_TIMEZONE_OFFSET,
+                            min: new Date().setMinutes(new Date().getMinutes() - 1) + getServerTimeOffset(),
+                            max: new Date().getTime() + getServerTimeOffset(),
                         }
                     }
                 }

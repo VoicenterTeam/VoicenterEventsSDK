@@ -108,7 +108,7 @@
     import UpdateDialog from './UpdateDialog'
     import {types, typeNames, typeKeys} from '@/enum/queueCounters'
     import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
-    import {ISRAEL_TIMEZONE_OFFSET} from '@/enum/generic'
+    import {getServerTimeOffset} from '@/enum/generic'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
 
     export default {
@@ -178,7 +178,7 @@
                         this.dataCount += el.Calls.length
                     })
                 } else if (this.selectedType === typeKeys.MAXIMUM_WAITING_ID) {
-                    let minJoinTimeStamp = (new Date()).getTime() + ISRAEL_TIMEZONE_OFFSET / 1000
+                    let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
                     let queueCalls = 0
                     this.filteredQueue.forEach((queue) => {
                         queue.Calls.forEach((call) => {
@@ -189,7 +189,7 @@
                         })
                     })
                     if (queueCalls > 0) {
-                        this.dataCount = parseInt((new Date()).getTime() / 1000) + ISRAEL_TIMEZONE_OFFSET / 1000 - minJoinTimeStamp
+                        this.dataCount = parseInt((new Date()).getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp
                         setInterval(() => {
                             this.dataCount++
                         }, 1000)

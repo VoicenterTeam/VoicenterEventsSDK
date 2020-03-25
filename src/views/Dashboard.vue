@@ -413,7 +413,7 @@
                         }
                         break;
                     case sdkEventTypes.LOGIN:
-                        this.$store.commit('extensions/SET_SERVER_TIME', data.servertime)
+                        this.$store.commit('extensions/SET_SERVER_TIME', data)
                         this.$store.dispatch('queues/setQueues', data.queues)
                         break;
                     case sdkEventTypes.QUEUE_EVENT:

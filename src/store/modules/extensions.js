@@ -10,6 +10,7 @@ const state = {
     extensions: [],
     serverTime: null,
     serverDelta: 0,
+    serverOffset: 0,
     isSocketOffline: false,
     offlineSocketTimestamp: null
 };
@@ -22,7 +23,8 @@ const mutations = {
         state.extensions.splice(index, 1, extension)
     },
     [types.SET_SERVER_TIME]: (state, value) => {
-        state.serverTime = value * 1000 - ISRAEL_TIMEZONE_OFFSET
+        state.serverOffset = value.servertimeoffset * 60 * 1000 || ISRAEL_TIMEZONE_OFFSET
+        state.serverTime = value.servertime * 1000 - state.serverOffset
         state.serverDelta = new Date().getTime() - state.serverTime
     },
     [types.SET_IS_SOCKET_OFFLINE]: (state, value) => {
