@@ -37,7 +37,6 @@
             async getData() {
                 try {
                     this.result = await WidgetDataApi.getExternalData(this.data.EndPoint)
-                    console.log( await WidgetDataApi.getExternalData(this.data.EndPoint))
                 } catch (e) {
                     console.warn(e)
                 }

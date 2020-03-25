@@ -33,7 +33,7 @@ export const options = [
 ];
 
 export const dictionary = {
-    [`${types.COUNTER}`]: 'The response must be a value (a html page)',
+    [`${types.COUNTER}`]: 'The response must be a value',
     [`${types.SPEEDOMETER}`]: "<a href='https://www.highcharts.com/demo/gauge-solid' target='_blank'>Click to see the documentation</a>",
     [`${types.TABLE}`]: 'The response must be an array of objects: [{key: value...},{...}]',
     [`${types.LINES}`]: "<a href='https://www.highcharts.com/demo/line-basic' target='_blank'>Click to see the documentation</a>",
