@@ -13,6 +13,7 @@
     import {Chart} from 'highcharts-vue'
     import {activitiesToDisplay} from '@/enum/queueDashboardStatistics'
     import activityChartConfig from '@/components/Charts/Configs/ActivityGauge'
+    import {convertHex} from "@/helpers/convertHex";
 
     export default {
         components: {
@@ -40,6 +41,16 @@
             return {
                 chartData: {},
                 chartVisibility: true,
+                DEFAULT_STYLES: {
+                    AnswerCount: {
+                        color: '#5EB300',
+                        fontSize: 32
+                    },
+                    InSLACount: {
+                        color: '#61B5FF',
+                        fontSize: 32 // 32px
+                    }
+                },
             }
         },
         methods: {
@@ -58,6 +69,9 @@
                     let answerPercentage = 0
                     let inSLAPercentage = 0
 
+                    let AnswerCountStyles = this.data.WidgetLayout['AnswerCount']
+                    let InSLACountStyles = this.data.WidgetLayout['InSLACount']
+
                     activitiesToDisplay.forEach((el) => {
                         if (el === 'AnswerCount') {
                             let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
@@ -67,16 +81,17 @@
                             let answerData = {
                                 name: this.$t('Answer'),
                                 data: [{
-                                    color: '#5EB300',
+                                    color: AnswerCountStyles['color'],
                                     radius: '112%',
                                     innerRadius: '88%',
                                     y: Number(answerPercentage)
                                 }]
                             }
+                            let rgb = convertHex(AnswerCountStyles['color'])
                             let answerPane = {
                                 outerRadius: '112%',
                                 innerRadius: '88%',
-                                backgroundColor: "rgba(72,187,120,0.3)",
+                                backgroundColor: `rgba(${rgb},0.3)`,
                                 borderWidth: 0
                             }
                             data.push(answerData)
@@ -85,30 +100,31 @@
                         if (el === 'InSLACount') {
                             let InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value');
                             let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
+
                             if (AnswerCount) {
                                 inSLAPercentage = InSLACount ? (InSLACount / AnswerCount * 100).toFixed(2) : 0
                             }
-
                             let InSLAData = {
                                 name: this.$t('In SLA'),
                                 data: [{
-                                    color: '#61B5FF',
+                                    color: InSLACountStyles['color'],
                                     radius: '87%',
                                     innerRadius: '63%',
                                     y: Number(inSLAPercentage)
                                 }]
                             }
+                            let rgb = convertHex(InSLACountStyles['color'])
                             let InSLAPane = {
                                 outerRadius: '87%',
                                 innerRadius: '63%',
-                                backgroundColor: "rgba(97,181,255,0.3)",
+                                backgroundColor: `rgba(${rgb},0.3)`,
                                 borderWidth: 0
                             }
                             data.push(InSLAData)
                             pane['background'].push(InSLAPane)
                         }
                     })
-                    let dataLabels = `<span style="font-size:14px; color: #5EB300">${this.$t('Answer')}: ${answerPercentage}%</span><br><span style="font-size:14px; color: #61B5FF">${this.$t('In SLA')}: ${inSLAPercentage}%</span>`
+                    let dataLabels = `<span style="font-size: ${AnswerCountStyles['fontSize']+'px'}; color: ${AnswerCountStyles['color']}">${this.$t('Answer')}: ${answerPercentage}%</span><br><span style="font-size: ${InSLACountStyles['fontSize']+'px'}; color: ${InSLACountStyles['color']}">${this.$t('In SLA')}: ${inSLAPercentage}%</span>`
                     this.chartData = {
                         ...activityChartConfig,
                         series: data,
@@ -118,6 +134,10 @@
                                 dataLabels: {
                                     enabled: true,
                                     format: dataLabels,
+                                    y: -25,
+                                    borderWidth: 0,
+                                    useHTML: false,
+                                    padding: 10,
                                 },
                                 linecap: 'round',
                                 stickyTracking: false,
@@ -145,6 +165,11 @@
         mounted() {
             if (!this.data.WidgetLayout.ShowActivities) {
                 this.$set(this.data.WidgetLayout, 'ShowActivities', activitiesToDisplay)
+            }
+            if (!this.data.WidgetLayout['AnswerCount']) {
+                for (let key in this.DEFAULT_STYLES) {
+                    this.$set(this.data.WidgetLayout, key, this.DEFAULT_STYLES[key])
+                }
             }
         }
     }
