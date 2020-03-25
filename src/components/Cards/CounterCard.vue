@@ -6,7 +6,7 @@
             </slot>
             <slot name="content">
                 <h2 class="text-6xl font-bold mx-3 text-green">
-                    {{CounterValue}}
+                    <div v-html="result"/>
                 </h2>
             </slot>
         </div>
@@ -30,14 +30,13 @@
         },
         data() {
             return {
-                CounterValue: 0,
+                result: '',
             }
         },
         methods: {
             async getData() {
                 try {
-                    let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
-                    this.CounterValue = data.CounterValue || '--'
+                    this.result = await WidgetDataApi.getExternalData(this.data.EndPoint)
                 } catch (e) {
                     console.warn(e)
                 }
