@@ -11,13 +11,13 @@
 <script>
     import get from 'lodash/get'
     import groupBy from 'lodash/groupBy'
-    import {Tooltip} from 'element-ui'
-    import {Chart} from 'highcharts-vue'
-    import {TrashIcon} from 'vue-feather-icons'
+    import { Tooltip } from 'element-ui'
+    import { Chart } from 'highcharts-vue'
+    import { TrashIcon } from 'vue-feather-icons'
     import statusTypes from '@/enum/statusTypes'
-    import {LOGOUT_STATUS} from "@/enum/extensionStatuses";
-    import {isExternalDataWidget} from '@/helpers/widgetUtils'
-    import {WidgetDataApi} from "../../api/widgetDataApi";
+    import { LOGOUT_STATUS } from "@/enum/extensionStatuses";
+    import { isExternalDataWidget } from '@/helpers/widgetUtils'
+    import { WidgetDataApi } from "../../api/widgetDataApi";
     import Highcharts from 'highcharts'
 
     export default {
@@ -58,21 +58,7 @@
         methods: {
             async chartOptions() {
 
-                let data = []
-
-                if (isExternalDataWidget(this.data)) {
-                    data = await WidgetDataApi.getExternalData(this.data.EndPoint)
-                } else {
-                    data = this.getExtensionsData()
-                }
-
-                let colors = []
-
-                data.map((el) => {
-                    colors.push(el.color)
-                    delete el.color
-                    return el
-                });
+                let { series, colors } = await this.getChartSeriesData()
 
                 this.chartData = {
                     chart: {
@@ -95,30 +81,58 @@
                             }
                         }
                     },
-                    series: [{
-                        name: this.$t('Agents'),
-                        colorByPoint: true,
-                        data: data
-                    }],
-
-                    colors: Highcharts.map(colors, function (color) {
-                        return {
-                            radialGradient: {
-                                cx: 0.5,
-                                cy: 0.3,
-                                r: 0.7
-                            },
-                            stops: [
-                                [0, color],
-                                [1, Highcharts.color(color).brighten(-0.3).get('rgb')] // darken
-                            ]
-                        };
-                    }),
+                    series,
+                    colors,
                 };
 
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
+                })
+            },
+            async getChartSeriesData() {
+                let data = []
+                const initialColors = []
+                if (isExternalDataWidget(this.data)) {
+                    data = await WidgetDataApi.getExternalData(this.data.EndPoint)
+                } else {
+                    data = this.getExtensionsData()
+                }
+                data.forEach((el) => {
+                    initialColors.push(el.color)
+                    delete el.color
+                    return el
+                });
+                const series = [{
+                    name: this.$t('Agents'),
+                    colorByPoint: true,
+                    data: data
+                }]
+                const colors = this.getColorOptions(initialColors)
+                return {
+                    data,
+                    series,
+                    colors
+                }
+            },
+            async updateChartSeries() {
+                const { colors, series } = await this.getChartSeriesData()
+                this.$set(this.chartData, 'colors', colors)
+                this.$set(this.chartData, 'series', series)
+            },
+            getColorOptions(colors) {
+                return Highcharts.map(colors, function (color) {
+                    return {
+                        radialGradient: {
+                            cx: 0.5,
+                            cy: 0.3,
+                            r: 0.7
+                        },
+                        stops: [
+                            [0, color],
+                            [1, Highcharts.color(color).brighten(-0.3).get('rgb')] // darken
+                        ]
+                    };
                 })
             },
             getExtensionsData() {
@@ -132,10 +146,10 @@
 
                 for (let status in statusData) {
                     let statusType = statusTypes[status]
-
+                    const statusText = this.$store.getters['entities/getStatusTextById'](status)
                     let sliceObject = {
                         color: statusType.color,
-                        name: this.$t(this.$store.getters['entities/getStatusTextById'](status)),
+                        name: this.$t(statusText),
                         y: statusData[status].length,
                     }
 
@@ -155,6 +169,15 @@
                 immediate: true,
                 handler: function () {
                     this.chartOptions()
+                }
+            },
+            filteredExtensions: {
+                deep: true,
+                handler() {
+                    if (isExternalDataWidget(this.data)) {
+                        return
+                    }
+                    this.$nextTick(this.updateChartSeries)
                 }
             }
         },

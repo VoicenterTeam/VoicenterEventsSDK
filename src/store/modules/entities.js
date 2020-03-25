@@ -58,7 +58,7 @@ const getters = {
         return get(account, 'AccountBreaks', [])
     },
     getStatusById: (state, getters) => id => {
-        return getters.accountStatuses.find(a => a.StatusID === id) || { Name: '' }
+        return getters.accountStatuses.find(a => a.StatusID.toString() === id.toString()) || { Name: '' }
     },
     getStatusTextById: (state, getters) => id => {
         return getters.getStatusById(id).Name || statusTypes[id].text || 'other'
