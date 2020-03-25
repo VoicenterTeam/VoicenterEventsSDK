@@ -287,8 +287,10 @@
                 let updatedWidget = await WidgetApi.find(this.widget.WidgetID)
                 this.widget = {
                     ...this.widget,
-                    ...updatedWidget
+                    ...updatedWidget,
+                    WidgetConfig: this.widget.WidgetConfig
                 }
+                this.data.WidgetLayout = updatedWidget.WidgetLayout || this.widget.WidgetLayout
             },
             sortChange() {
                 this.drawRow = false
