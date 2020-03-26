@@ -32,7 +32,7 @@
                         <templates-category
                             class="mt-16"
                             v-if="showWidgetMenu"
-                            :widgetGroup=firstWidgetGroup
+                            :widgetGroup="firstWidgetGroup"
                             @addWidgetsToGroup="addWidgetsToGroup"
                             v-click-outside="onWidgetMenuClickOutside"
                             :widgetTemplates="allWidgetTemplates">
@@ -92,7 +92,7 @@
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
-    import {layoutTypes} from '@/enum/layout'
+    import { layoutTypes, LAYOUT_TYPE_KEY, ACTIVE_WIDGET_GROUP_KEY } from '@/enum/layout'
     import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
     import AddButton from '@/components/AddButton'
@@ -147,10 +147,10 @@
                     [layoutTypes.NORMAL]: 'NormalView',
                     [layoutTypes.TABBED]: 'TabbedView',
                 },
-                layoutType: 'tabbed',
+                layoutType: localStorage.getItem(LAYOUT_TYPE_KEY) || 'tabbed',
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
-                activeTab: '',
+                activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
                 showReorderDataDialog: false,
             }
         },
@@ -187,7 +187,7 @@
                 return this.activeDashboardData.WidgetGroupList[0]
             },
             activeWidgetGroupID() {
-                return get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
+                return this.activeTab || get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             }
         },
         methods: {
@@ -385,9 +385,17 @@
             switchDashboardLayout(type) {
                 // TODO: update dashboard generalSettings
                 this.layoutType = type
+                this.saveLayoutType(type)
+            },
+            saveLayoutType(type) {
+                localStorage.setItem(LAYOUT_TYPE_KEY, type)
+            },
+            saveActiveTab(tab) {
+                localStorage.setItem(ACTIVE_WIDGET_GROUP_KEY, tab)
             },
             switchTab(tab) {
                 this.activeTab = tab
+                this.saveActiveTab(tab)
             },
             async retrySocketConnection() {
                 Notification.info(this.$t('common.socketReconnect'));
@@ -492,11 +500,12 @@
                 } else {
                     this.layoutType = this.previousLayoutType
                 }
+                this.saveLayoutType(this.layoutType)
             },
             activeWidgetGroupID: {
                 immediate: true,
                 handler(newVal) {
-                    this.activeTab = newVal
+                    this.switchTab(newVal)
                 }
             }
         },

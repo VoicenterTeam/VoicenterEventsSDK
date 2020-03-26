@@ -3,6 +3,9 @@ export const layoutTypes = {
     TABBED: 'tabbed',
 };
 
+export const LAYOUT_TYPE_KEY = 'layout-type'
+export const ACTIVE_WIDGET_GROUP_KEY = 'active-widget-group'
+
 export const settingsColors = [
     "primary",
     "background",

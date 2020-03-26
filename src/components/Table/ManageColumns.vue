@@ -150,6 +150,9 @@
                 handler: function () {
                     this.initData()
                 }
+            },
+            availableColumns() {
+                this.initData()
             }
         }
     }
