@@ -55,7 +55,7 @@
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import GanttChart from '@/components/Charts/GanttChart'
-    import TotalOutgoingCall from '@/components/Charts/TotalOutgoingCall'
+    import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
