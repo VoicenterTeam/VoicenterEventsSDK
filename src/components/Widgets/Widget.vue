@@ -54,8 +54,8 @@
     import QueueActiveCall from './Data/Queue/QueueActiveCall'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
-    import GanttChart from '@/components/Charts/GanttChart'
     import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
+    import XaxisChart from '@/components/Charts/XaxisChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
@@ -84,8 +84,8 @@
             PieChart,
             HtmlWidget,
             QueueDashboard,
-            GanttChart,
             TotalOutgoingCall,
+            XaxisChart,
         },
         props: {
             editable: {

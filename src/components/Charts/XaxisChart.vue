@@ -7,7 +7,6 @@
         </div>
         <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility && chartOptions.series">
             <highcharts class="chart-content_wrapper"
-                        :constructor-type="constructorType"
                         :options="chartOptions"/>
         </div>
     </div>
@@ -18,10 +17,9 @@
     import Highcharts from "highcharts";
     import {getWidgetData} from "@/services/widgetService";
     import {getDefaultTimeDelay} from "@/enum/generic";
-    import Gantt from "highcharts/modules/gantt";
-    import {buttonConfigs} from './Configs/Gantt'
+    import Xrange from "highcharts/modules/xrange";
 
-    Gantt(Highcharts);
+    Xrange(Highcharts);
 
     export default {
         components: {
@@ -40,7 +38,6 @@
         },
         data() {
             return {
-                constructorType: 'ganttChart',
                 chartVisibility: true,
                 fetchDataInterval: null,
                 chartOptions: {},
@@ -50,10 +47,35 @@
             async getWidgetData() {
                 try {
                     let Data = await getWidgetData(this.data)
-                    this.chartOptions = get(Data, '0')
-                    this.chartOptions['title'] = false
-                    this.chartOptions['exporting'] = buttonConfigs
+                    let chartData = get(Data, '0')
 
+                    let series = chartData['series']
+                    series.forEach((serie) => {
+                        serie['pointWidth'] = 10
+                        serie['data'].map((el) => el['x2'] = el['end'])
+                    })
+
+                    chartData['series'] = series
+
+                    this.chartOptions = chartData
+
+                    this.chartOptions['chart'] = {
+                        type: 'xrange'
+                    }
+                    this.chartOptions['yAxis'] = {
+                        ...this.chartOptions['yAxis'],
+                        ...{
+                            title: {
+                                text: ''
+                            },
+                            reversed: true
+                        }
+                    }
+                    this.chartOptions['plotOptions']= {
+                        series: {
+                            pointPadding: 0.25
+                        }
+                    },
                     this.chartVisibility = false
                     this.$nextTick(() => {
                         this.chartVisibility = true
