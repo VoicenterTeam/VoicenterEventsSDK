@@ -105,6 +105,10 @@ export function isQueueActivityGauge(widget) {
     return widget.EndPoint.includes(queueActivityGaugeKey);
 }
 
+export function isTotalOutgoingCall(widget) {
+    return widget.DataTypeID === widgetDataTypes.TOTAL_OUTGOING_CALLS;
+}
+
 export const groupedWidgets = [
     widgetDataTypes.COUNTER_TYPE_ID,
     widgetDataTypes.CHART_SPEEDOMETER,

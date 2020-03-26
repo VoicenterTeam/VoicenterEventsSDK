@@ -68,6 +68,13 @@
                     </el-collapse-item>
                 </el-collapse>
             </el-form-item>
+            <el-form-item v-if="isTotalOutgoingCall(widget)">
+                <el-collapse v-model="activeCollapse" class="pt-4">
+                    <el-collapse-item :title="$t('widget.counter.styles')" name="totalOutgoing">
+                        <TotalOutgoingConfig :model="model"></TotalOutgoingConfig>
+                    </el-collapse-item>
+                </el-collapse>
+            </el-form-item>
             <el-collapse v-model="activeCollapse" class="pt-4">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
@@ -172,8 +179,10 @@
         isQueueGauge,
         isQueueTable,
         isRealtimeWidget,
+        isTotalOutgoingCall,
     } from '@/helpers/widgetUtils'
     import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
+    import TotalOutgoingConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/TotalOutgoingConfig";
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -199,6 +208,7 @@
             [Tooltip.name]: Tooltip,
             StaticWidgetInfo,
             ActivityGaugeConfig,
+            TotalOutgoingConfig,
         },
         props: {
             widget: {
@@ -244,6 +254,7 @@
             isHtmlWidget,
             isQueueDashboardWidget,
             isQueueActivityGauge,
+            isTotalOutgoingCall,
             isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },

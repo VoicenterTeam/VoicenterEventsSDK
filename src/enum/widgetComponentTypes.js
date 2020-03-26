@@ -17,4 +17,5 @@ export default {
     [widgetDataTypes.INFO_TYPE_ID]: 'CounterCard',
     [widgetDataTypes.PIE_TYPE_ID]: 'PieChart',
     [widgetDataTypes.RICH_TEXT_EDITOR_ID]: 'HtmlWidget',
+    [widgetDataTypes.TOTAL_OUTGOING_CALLS]: 'TotalOutgoingCall'
 }
