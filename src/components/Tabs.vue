@@ -52,6 +52,19 @@
                     this.timeout = setInterval(this.changeActiveTab, this.circularTimeout * 1000);
                 }
             },
+            setActiveTab(value) {
+                if (!value) {
+                    return
+                }
+                if (this.isTabValid(value)) {
+                    this.activeTab = value.toString()
+                }
+            },
+            isTabValid(value) {
+                const tabValues = this.tabs.map(t => t.WidgetGroupID.toString())
+                return tabValues.includes(value.toString())
+            }
+
         },
         watch: {
             circularTimeout: {
@@ -60,11 +73,27 @@
                     this.triggerCircularTimeout()
                 }
             },
-            newActiveTab(val) {
-                this.activeTab = val.toString()
+            newActiveTab: {
+                immediate: true,
+                handler(val) {
+                    this.setActiveTab(val)
+                }
             },
-            activeTab(val) {
-                this.$emit('switch-tab', val)
+            tabs: {
+                deep: true,
+                handler(val) {
+                    if (!this.isTabValid(this.activeTab)) {
+                        this.activeTab = get(val, '[0].WidgetGroupID').toString()
+                    }
+                }
+            },
+            activeTab: {
+                immediate: true,
+                handler(val) {
+                    if (val) {
+                        this.$emit('switch-tab', val)
+                    }
+                }
             }
         },
         beforeDestroy() {

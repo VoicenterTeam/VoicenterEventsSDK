@@ -1,6 +1,13 @@
 import Vue from 'vue'
-import {DashboardApi} from '@/api/dashboardApi'
+import { DashboardApi } from '@/api/dashboardApi'
 
+const ACTIVE_DASHBOARD = 'active-dashboard'
+let previousActiveDashboard = localStorage.getItem(ACTIVE_DASHBOARD)
+try {
+    previousActiveDashboard = JSON.parse(previousActiveDashboard)
+} catch (e) {
+    console.log(e)
+}
 const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
     SET_EDIT_MODE: 'SET_EDIT_MODE',
@@ -32,11 +39,13 @@ const mutations = {
             }
         })
         state.activeDashboard = dashboard
+        localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
         state.settings = dashboard.DashboardLayout.settings
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
         state.settings = dashboard.DashboardLayout.settings
+        localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
     },
     [types.SET_LOADING]: (state, loading) => {
         state.loadingData = loading
@@ -53,15 +62,15 @@ const mutations = {
 };
 
 const actions = {
-    async getDashboards({commit}) {
+    async getDashboards({ commit }) {
         commit(types.SET_LOADING, true)
         let dashboards = await DashboardApi.getAll()
         commit(types.SET_LOADING, false)
         commit(types.SET_ALL_DASHBOARDS, dashboards)
 
     },
-    async selectDashboard({commit, state}, dashboard) {
-        dashboard = dashboard || state.allDashboards[0]
+    async selectDashboard({ commit, state }, dashboard) {
+        dashboard = dashboard || previousActiveDashboard || state.allDashboards[0]
         if (dashboard) {
             commit(types.SET_LOADING, true)
             dashboard = await DashboardApi.find(dashboard.DashboardID)
@@ -69,19 +78,19 @@ const actions = {
             commit(types.SET_LOADING, false)
         }
     },
-    async createDashboard({commit}, dashboard) {
+    async createDashboard({ commit }, dashboard) {
         dashboard = await DashboardApi.store(dashboard)
         commit(types.ADD_DASHBOARD, dashboard)
         commit(types.SET_ACTIVE_DASHBOARD, dashboard)
     },
-    async updateDashboard({commit}, dashboard) {
+    async updateDashboard({ commit }, dashboard) {
         commit(types.UPDATE_DASHBOARD, dashboard)
         commit(types.SET_LOADING, false)
     },
-    setLoadingData({commit}, value) {
+    setLoadingData({ commit }, value) {
         commit(types.SET_LOADING, value)
     },
-    async deleteDashboard({commit}, dashboard) {
+    async deleteDashboard({ commit }, dashboard) {
         await DashboardApi.destroy(dashboard.DashboardID)
         commit(types.DELETE_DASHBOARD, dashboard)
     }
