@@ -57,10 +57,3 @@
         },
     }
 </script>
-<style lang="scss" scoped>
-    .queue-activity__wrapper {
-        .chart-content_wrapper {
-            max-height: 400px;
-        }
-    }
-</style>
