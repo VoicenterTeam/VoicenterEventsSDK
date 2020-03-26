@@ -205,6 +205,7 @@
                         const targetRow = get(self.availableColumns.splice(oldIndex, 1), '[0]')
                         self.availableColumns.splice(newIndex, 0, targetRow)
                         self.tableKey = self.availableColumns.map(c => c.prop).join('_')
+                        self.updateLayout()
                         self.$nextTick(self.tryInitSortable)
                     }
                 })
@@ -247,6 +248,7 @@
             resetColumnsProps() {
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
+                this.updateLayout()
             },
             getFileName(type) {
                 let widgetTitle = this.widgetTitle || this.$t('widget.title')
