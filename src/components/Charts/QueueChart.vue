@@ -173,10 +173,21 @@
                     }
                 }
 
-                let agentsAvailable = agentsOnline.filter((e) => e.representativeStatus === LOGIN_STATUS).length
-                let agentsInCall = agentsOnline.filter((e) => e.calls.length > 0).length
-                let agentsInAdministrativeBreak = agentsOnline.filter((e) => e.calls.length === 0 && administrativeStatuses.includes(e.representativeStatus)).length
-                let agentsInBreak = agentsOnline.filter((e) => e.calls.length === 0 && breakStatuses.includes(e.representativeStatus)).length;
+                let agentsInCall = 0
+                let agentIdsInACall = []
+                
+                agentsOnline.forEach((agent) => {
+                    if (agent.calls.length > 0) {
+                        if (agent.calls.filter((call) => call.answered).length) {
+                            agentsInCall++
+                            agentIdsInACall.push(agent.userID)
+                        }
+                    }
+                })
+
+                let agentsAvailable = agentsOnline.filter((agent) => agent.representativeStatus === LOGIN_STATUS).length
+                let agentsInAdministrativeBreak = agentsOnline.filter((agent) => !agentIdsInACall.includes(agent.userID) && administrativeStatuses.includes(agent.representativeStatus)).length
+                let agentsInBreak = agentsOnline.filter((agent) => !agentIdsInACall.includes(agent.userID) && breakStatuses.includes(agent.representativeStatus)).length;
 
                 [
                     maxWaitingTime,
