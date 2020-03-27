@@ -293,7 +293,8 @@
                 await this.$store.dispatch('entities/getEntitiesList')
                 this.loadEntitiesList = false
             }
-        },
+        }
+        ,
         mounted() {
             this.model = cloneDeep(this.widget)
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
@@ -309,7 +310,8 @@
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                 this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5]
             }
-        },
+        }
+        ,
     }
 </script>
 

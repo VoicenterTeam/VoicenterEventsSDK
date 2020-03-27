@@ -54,6 +54,7 @@
     import QueueActiveCall from './Data/Queue/QueueActiveCall'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
+    import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
     import XaxisChart from '@/components/Charts/XaxisChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
@@ -83,6 +84,7 @@
             PieChart,
             HtmlWidget,
             QueueDashboard,
+            TotalOutgoingCall,
             XaxisChart,
         },
         props: {

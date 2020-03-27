@@ -247,5 +247,6 @@
     "answer.activity.styles": "Answer activity styles",
     "inSLA.activity.styles": "In SLA activity styles",
     "settings.color": "Color",
-    "settings.fonSize": "Font size"
+    "settings.fonSize": "Font size",
+    "widget.counter.styles": "Widget counter styles"
 }

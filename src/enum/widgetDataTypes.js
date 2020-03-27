@@ -14,6 +14,7 @@ export default {
     QUEUE_COUNTER_TYPE_ID: 14,
     PIE_TYPE_ID: 15,
     RICH_TEXT_EDITOR_ID: 16,
+    TOTAL_OUTGOING_CALLS: 17,
 
     INFO_TYPE_ID: 222,
 }
