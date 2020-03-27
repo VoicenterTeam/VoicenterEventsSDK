@@ -49,5 +49,9 @@ export const allSeries = [
     {
         label: i18n.t('queue.agents.on.break'),
         value: 5
+    },
+    {
+        label: i18n.t('queue.agents.calls.on.hold'),
+        value: 6
     }
 ]

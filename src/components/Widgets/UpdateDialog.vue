@@ -308,7 +308,7 @@
 
             if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
-                this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5]
+                this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]
             }
         }
         ,
