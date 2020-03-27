@@ -40,6 +40,7 @@
                 chartVisibility: true,
                 fetchDataInterval: null,
                 chartTitle: this.$t('queue.chart.title'),
+                HOLD_STATUS: "Hold",
                 chartData: {
                     title: {
                         text: this.$t('queue.chart.title'),
@@ -99,7 +100,16 @@
                             stack: 0,
                             yAxis: 1,
                             data: [],
-                        }
+                        },
+                        {
+                            name: 'Agent with calls in Hold',
+                            type: 'column',
+                            color: colors.TEAM_MEETING_COLOR,
+                            yAxis: 1,
+                            pointWidth: 20,
+                            stack: 0,
+                            data: [],
+                        },
                     ],
                     legend: {
                         enabled: false,
@@ -175,19 +185,24 @@
 
                 let agentsInCall = 0
                 let agentIdsInACall = []
-                
+                let agentIdsInACallButInHold = 0
+
                 agentsOnline.forEach((agent) => {
                     if (agent.calls.length > 0) {
-                        if (agent.calls.filter((call) => call.answered).length) {
+                        if (agent.calls.filter((call) => call.answered && call.callstatus !== this.HOLD_STATUS).length) {
                             agentsInCall++
+                            agentIdsInACall.push(agent.userID)
+                        }
+                        if (agent.calls.filter((call) => call.answered && call.callstatus === this.HOLD_STATUS).length) {
+                            agentIdsInACallButInHold++
                             agentIdsInACall.push(agent.userID)
                         }
                     }
                 })
 
                 let agentsAvailable = agentsOnline.filter((agent) => agent.representativeStatus === LOGIN_STATUS).length
-                let agentsInAdministrativeBreak = agentsOnline.filter((agent) => !agentIdsInACall.includes(agent.userID) && administrativeStatuses.includes(agent.representativeStatus)).length
-                let agentsInBreak = agentsOnline.filter((agent) => !agentIdsInACall.includes(agent.userID) && breakStatuses.includes(agent.representativeStatus)).length;
+                let agentsInAdministrativeBreak = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && administrativeStatuses.includes(agent.representativeStatus)).length
+                let agentsInBreak = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && breakStatuses.includes(agent.representativeStatus)).length;
 
                 [
                     maxWaitingTime,
@@ -196,6 +211,7 @@
                     agentsInCall,
                     agentsInAdministrativeBreak,
                     agentsInBreak,
+                    agentIdsInACallButInHold,
                 ].forEach((el, index) => {
                     this.chartData.series[index].data.push({
                         x: currentTime,
@@ -203,6 +219,7 @@
                     });
                 })
             },
+
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {

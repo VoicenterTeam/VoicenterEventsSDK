@@ -248,5 +248,6 @@
     "inSLA.activity.styles": "In SLA activity styles",
     "settings.color": "Color",
     "settings.fonSize": "Font size",
-    "widget.counter.styles": "Widget counter styles"
+    "widget.counter.styles": "Widget counter styles",
+    "queue.agents.calls.on.hold": "Agents with calls on hold"
 }
