@@ -102,7 +102,7 @@
                             data: [],
                         },
                         {
-                            name: 'Agent with Calls in Hold',
+                            name: 'Agent with calls in Hold',
                             type: 'column',
                             color: colors.TEAM_MEETING_COLOR,
                             yAxis: 1,
