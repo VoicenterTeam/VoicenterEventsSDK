@@ -200,7 +200,7 @@
                     }
                 })
 
-                let agentsAvailable = agentsOnline.filter((agent) => agent.representativeStatus === LOGIN_STATUS).length
+                let agentsAvailable = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && agent.representativeStatus === LOGIN_STATUS).length
                 let agentsInAdministrativeBreak = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && administrativeStatuses.includes(agent.representativeStatus)).length
                 let agentsInBreak = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && breakStatuses.includes(agent.representativeStatus)).length;
 
