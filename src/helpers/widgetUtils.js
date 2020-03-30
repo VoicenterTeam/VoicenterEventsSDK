@@ -110,4 +110,5 @@ export const groupedWidgets = [
     widgetDataTypes.CHART_SPEEDOMETER,
     widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
     widgetDataTypes.PIE_TYPE_ID,
+    widgetDataTypes.TOTAL_OUTGOING_CALLS,
 ]
