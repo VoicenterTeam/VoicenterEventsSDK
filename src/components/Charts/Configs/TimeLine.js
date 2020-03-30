@@ -3,7 +3,6 @@ import i18n from '@/i18n'
 import config from '@/config'
 import Exporting from 'highcharts/modules/exporting'
 import noDataModule from 'highcharts/modules/no-data-to-display'
-import {format} from "date-fns";
 
 Exporting(Highcharts)
 noDataModule(Highcharts)
@@ -51,21 +50,34 @@ Highcharts.setOptions({
         backgroundColor: 'transparent'
     },
     tooltip: {
+        useHTML: true,
         formatter: function () {
             if (this.point.stackTotal) {
+
                 let percentage = (this.point.y * 100 / this.point.stackTotal).toFixed(2)
-                return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px;">${this.series.name}</p> <br><p style="text-align: center;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
+                let result = `<p style="text-align: center; font-size: config.fonts.base; color: ${this.point.color};">${this.series.name}</p><p style="text-align: center; margin: 5px auto;"><b>${this.point.y} Of ${this.point.stackTotal} - ${percentage} %<b></p>`
+
+                let agents = this.point['agents']
+
+                if (agents) {
+                    result += '<div style="border-top: 1px solid;"></div>'
+                    agents.forEach((agent) => {
+                        result += `<p style="margin: 5px auto;"> - ${agent.userName}</p>`
+                    })
+                }
+
+                return result
             }
+
             if (this.point.innerRadius) {
                 return `${this.series.name}<br><span style="font-size:2em; color: ${this.point.color}; font-weight: bold">${this.point.y} %</span>`
             }
 
             if (this.point.start && this.point.start) {
-                // let date = format(this.point.start * 1000, 'MM-dd-yyyy HH:mm:ss')
-                return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.point.name}<br> ${this.series.name} (${this.point.y})</p>`
+                return `<p style="font-size: config.fonts.base; color: ${this.point.color};">${this.point.name}<br> ${this.series.name} (${this.point.y})</p>`
             }
 
-            return `<p style="font-size: config.fonts.base; color: ${this.point.color}; margin-top: 10px">${this.series.name}: ${this.point.y}</p>`
+            return `<p style="font-size: config.fonts.base; color: ${this.point.color};">${this.series.name}: ${this.point.y}</p>`
         },
         backgroundColor: "#ffffff",
         borderColor: "#ffffff",

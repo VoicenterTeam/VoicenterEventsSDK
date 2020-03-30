@@ -183,26 +183,34 @@
                     }
                 }
 
-                let agentsInCall = 0
-                let agentIdsInACall = []
-                let agentIdsInACallButInHold = 0
+                let agentsInCall = []
+                let agentsWithACallInHold = []
+
+                let agentsAvailable = []
+                let agentsInAdministrativeBreak = []
+                let agentsInBreak = []
 
                 agentsOnline.forEach((agent) => {
+
                     if (agent.calls.length > 0) {
                         if (agent.calls.filter((call) => call.answered && call.callstatus !== this.HOLD_STATUS).length) {
-                            agentsInCall++
-                            agentIdsInACall.push(agent.userID)
+                            agentsInCall.push(agent)
                         }
                         if (agent.calls.filter((call) => call.answered && call.callstatus === this.HOLD_STATUS).length) {
-                            agentIdsInACallButInHold++
-                            agentIdsInACall.push(agent.userID)
+                            agentsWithACallInHold.push(agent)
+                        }
+                    } else {
+                        if (agent.representativeStatus === LOGIN_STATUS) {
+                            agentsAvailable.push(agent)
+                        }
+                        if (administrativeStatuses.includes(agent.representativeStatus)) {
+                            agentsInAdministrativeBreak.push(agent)
+                        }
+                        if (breakStatuses.includes(agent.representativeStatus)) {
+                            breakStatuses.push(agent)
                         }
                     }
-                })
-
-                let agentsAvailable = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && agent.representativeStatus === LOGIN_STATUS).length
-                let agentsInAdministrativeBreak = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && administrativeStatuses.includes(agent.representativeStatus)).length
-                let agentsInBreak = agentsOnline.filter((agent) => !(agentIdsInACall.length && agentIdsInACall.includes(agent.userID)) && breakStatuses.includes(agent.representativeStatus)).length;
+                });
 
                 [
                     maxWaitingTime,
@@ -211,11 +219,12 @@
                     agentsInCall,
                     agentsInAdministrativeBreak,
                     agentsInBreak,
-                    agentIdsInACallButInHold,
-                ].forEach((el, index) => {
+                    agentsWithACallInHold
+                ].forEach((agents, index) => {
                     this.chartData.series[index].data.push({
                         x: currentTime,
-                        y: el
+                        y: agents.length,
+                        agents: agents,
                     });
                 })
             },
