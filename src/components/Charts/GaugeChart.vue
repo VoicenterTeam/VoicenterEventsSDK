@@ -61,7 +61,6 @@
                 })
             },
             getAgentsData() {
-
                 let queuesCount = this.allQueues.length
 
                 let range = {
@@ -82,8 +81,9 @@
                     stops,
                 }
 
-                let agentsInACall = this.filteredQueuesWithActiveCalls.length
-                this.data.series = [{data: [agentsInACall]}]
+
+                let allQueueCalls = this.allQueueCalls.length
+                this.data.series = [{data: [allQueueCalls]}]
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             }
