@@ -5,6 +5,20 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var io = _interopDefault(require('socket.io-client/socket.io'));
 var debounce = _interopDefault(require('lodash/debounce'));
 
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -27,17 +41,40 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
 var eventTypes = {
-  LOGIN: 'loginStatus',
+  LOGIN_STATUS: 'loginStatus',
+  LOGIN: 'login',
+  LOGIN_USER: 'loginUser',
+  LOGIN_CODE: 'loginUserCode',
+  LOGIN_ACCOUNT: 'loginAccount',
   LOGIN_RESPONSE: 'loginResponse',
   QUEUE_EVENT: 'QueueEvent',
+  QUEUES_UPDATED: 'QueuesUpdated',
+  DIALERS_UPDATED: 'DialersUpdated',
   EXTENSION_EVENT: 'ExtensionEvent',
+  EXTENSION_UPDATED: 'ExtensionsUpdated',
   ALL_EXTENSION_STATUS: 'AllExtensionsStatus',
   CONNECT_ERROR: 'connect_error',
   CONNECT_TIMEOUT: 'connect_timeout',
   DISCONNECT: 'disconnect',
   RECONNECT: 'reconnect',
   RECONNECT_ATTEMPT: 'reconnect_attempt',
+  RESYNC: 'resync',
   RECONNECTING: 'reconnecting',
   RECONNECT_ERROR: 'reconnect_error',
   RECONNECT_FAILED: 'reconnect_failed',
@@ -203,10 +240,10 @@ function () {
     this.servers = [];
     this.server = null;
     this.socket = null;
-    this.connected = false; //this.connections = allConnections;
-
+    this.connected = false;
     this.connectionEstablished = false;
     this.shouldReconnect = true;
+    this.lastKeepAliveTimestamp = new Date().getTime();
 
     this._initReconnectOptions();
 
@@ -233,8 +270,6 @@ function () {
   }, {
     key: "_onConnect",
     value: function _onConnect() {
-      if (this.onConnect) this.onConnect(0, "OK");
-
       this._initReconnectDelays();
 
       this.connected = true;
@@ -252,8 +287,6 @@ function () {
   }, {
     key: "_onConnectError",
     value: function _onConnectError(data) {
-      if (this.onConnectError) this.onConnectError(data);
-
       this._retryConnection('next');
 
       this.connected = false;
@@ -262,14 +295,11 @@ function () {
   }, {
     key: "_onError",
     value: function _onError(err) {
-      if (this.onError) this.onError(data);
-      this.Logger.log(eventTypes.ERROR, data);
+      this.Logger.log(eventTypes.ERROR, err);
     }
   }, {
     key: "_onReconnectFailed",
     value: function _onReconnectFailed() {
-      if (this.onReconnectFailed) this.onReconnectFailed();
-
       this._retryConnection('next');
 
       this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
@@ -277,8 +307,6 @@ function () {
   }, {
     key: "_onConnectTimeout",
     value: function _onConnectTimeout() {
-      if (this.onConnectTimeout) this.onConnectTimeout();
-
       this._retryConnection('next');
 
       this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions);
@@ -286,8 +314,6 @@ function () {
   }, {
     key: "_onReconnectAttempt",
     value: function _onReconnectAttempt(attempts) {
-      if (this.onReconnectAttempt) this.onReconnectAttempt(attempts);
-
       if (attempts > 2) {
         this._retryConnection('next');
 
@@ -307,24 +333,34 @@ function () {
   }, {
     key: "_onDisconnect",
     value: function _onDisconnect(reason) {
-      if (this.onDisconnect) this.onDisconnect(reason);
-
       if (this.shouldReconnect) {
         this._connect('next');
       }
 
       this.connected = false;
-      this.Logger.log(eventTypes.DISCONNECT, this.reconnectOptions);
+      this.Logger.log(eventTypes.DISCONNECT, reason);
     }
   }, {
     key: "_onKeepAlive",
     value: function _onKeepAlive(data) {
-      if (this.onKeepAlive) this.onKeepAlive(data);
-
-      if (data === false && this.connected) {
+      if (_typeof(data) === 'object' && data.errorCode !== 0) {
         this._initSocketConnection();
 
-        this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE, this.reconnectOptions);
+        return;
+      }
+
+      if (data && this.connected) {
+        this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
+        this.lastKeepAliveTimestamp = new Date().getTime();
+      } else {
+        this._initSocketConnection();
+      }
+    }
+  }, {
+    key: "_onLoginResponse",
+    value: function _onLoginResponse(data) {
+      if (data.ErrorCode === 0 && data.Token && !this.options.token) {
+        this.options.token = data.Token;
       }
     }
   }, {
@@ -397,14 +433,6 @@ function () {
   }, {
     key: "_initSocketEvents",
     value: function _initSocketEvents() {
-      this.socket.on(eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt.bind(this));
-      this.socket.on(eventTypes.RECONNECT_FAILED, this._onReconnectFailed.bind(this));
-      this.socket.on(eventTypes.CONNECT, this._onConnect.bind(this));
-      this.socket.on(eventTypes.DISCONNECT, this._onDisconnect.bind(this));
-      this.socket.on(eventTypes.ERROR, this._onError.bind(this));
-      this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
-      this.socket.on(eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout.bind(this));
-      this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
       this.socket.onevent = this._onEvent.bind(this);
     }
   }, {
@@ -412,14 +440,25 @@ function () {
     value: function _initKeepAlive() {
       var _this = this;
 
-      setTimeout(function () {
-        if (_this.socket) {
-          _this.emit(eventTypes.KEEP_ALIVE, _this.options.token);
+      if (this.keepAliveInterval) {
+        clearInterval(this.keepAliveInterval);
+      }
 
-          _this._connect('prev');
-        } else {
-          _this._initSocketConnection();
+      this.keepAliveInterval = setInterval(function () {
+        var now = new Date().getTime();
+        var maxDelay = _this.options.keepAliveTimeout * 3; // If keep alive timeout is 1 minute and we still don't get a response after 3 minutes, find another server
+
+        if (now > _this.lastKeepAliveTimestamp + maxDelay) {
+          _this._connect('next');
         }
+
+        if (!_this.socket) {
+          _this._initSocketConnection();
+
+          return;
+        }
+
+        _this.emit(eventTypes.KEEP_ALIVE, _this.options.token);
       }, this.options.keepAliveTimeout);
     }
   }, {
@@ -508,6 +547,9 @@ function () {
   }, {
     key: "_onEvent",
     value: function _onEvent(packet) {
+      var _this2 = this,
+          _eventMappings;
+
       if (!packet.data) {
         return;
       }
@@ -523,6 +565,17 @@ function () {
           callback(evt);
         }
       });
+
+      var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
+        if (!_this2.connected) {
+          _this2._onConnect();
+        }
+      }), _eventMappings);
+      var eventHandler = eventMappings[evt.name];
+
+      if (eventHandler && typeof eventHandler === 'function') {
+        eventHandler.call(this, evt.data);
+      }
     }
     /**
      * Initializes socket connection. Should be called before any other action
@@ -555,8 +608,10 @@ function () {
 
   }, {
     key: "setToken",
-    value: function setToken(token) {
+    value: async function setToken(token) {
       this.options.token = token;
+      this.disconnect();
+      await this.init();
     }
     /**
      * Closes all existing connections
@@ -567,6 +622,7 @@ function () {
     value: function closeAllConnections() {
       allConnections.forEach(function (connection) {
         connection.close();
+        connection.disconnect();
       });
       allConnections = [];
     }
@@ -611,32 +667,93 @@ function () {
       this.socket.emit(eventName, data);
     }
     /**
+     * Calls resync event to resync socket data
+     * @param cache
+     */
+
+  }, {
+    key: "reSync",
+    value: function reSync() {
+      var cache = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      this.emit(eventTypes.RESYNC, {
+        cache: cache
+      });
+    }
+  }, {
+    key: "setMonitorUrl",
+    value: async function setMonitorUrl(url) {
+      var oldUrl = this.options.url;
+      var oldStrategy = this.options.serverFetchStrategy;
+
+      try {
+        if (!url) {
+          return;
+        }
+
+        this.options.url = url;
+        this.options.serverFetchStrategy = 'remote';
+        await this.init();
+      } catch (err) {
+        this._onError(err);
+
+        this.options.url = oldUrl;
+        this.options.serverFetchStrategy = oldStrategy;
+        await this.init();
+      }
+    }
+    /**
      * Login (logs in based on the token/credentials provided)
+     * @param type (login type. Can be token/user/code/account)
+     * @return {Promise<unknown>}
      */
 
   }, {
     key: "login",
     value: function login() {
-      var _this2 = this;
+      var _this3 = this;
+
+      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'login';
 
       var _self = this;
 
       this._checkInit();
+
+      var resolved = false;
       return new Promise(function (resolve, reject) {
-        _this2.on(eventTypes.LOGIN, function (data) {
+        _this3.on(eventTypes.LOGIN_STATUS, function (data) {
           if (_self.onLogin) _self.onLogin(data);
+          resolved = true;
           resolve(data);
-        }); // this.socket.on(eventTypes.ERROR, err => {
-        //   if(_self.onError) _self.onError(err);
-        //   if(resolved === false) {
-        //     reject(err);
-        //   }
-        // })
-
-
-        _this2.emit('login', {
-          token: _this2.options.token
         });
+
+        _this3.socket.on(eventTypes.ERROR, function (err) {
+          if (_self.onError) _self.onError(err);
+
+          if (resolved === false) {
+            reject(err);
+          }
+        });
+
+        if (type === 'login') {
+          _this3.emit(eventTypes.LOGIN, {
+            token: _this3.options.token
+          });
+        } else if (type === 'user') {
+          _this3.emit(eventTypes.LOGIN_USER, {
+            user: _this3.options.user,
+            password: _this3.options.password
+          });
+        } else if (type === 'code') {
+          _this3.emit(eventTypes.LOGIN_CODE, {
+            code: _this3.options.code,
+            orgCode: _this3.options.organizationCode
+          });
+        } else if (type === 'account') {
+          _this3.emit(eventTypes.LOGIN_USER, {
+            user: _this3.options.user,
+            password: _this3.options.password
+          });
+        }
       });
     }
   }]);
