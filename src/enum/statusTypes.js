@@ -54,5 +54,17 @@ export default {
         color: colors.BRIEF_COLOR,
         text: 'status.brief',
         value: 13
+    },
+    100: {
+        icon: 'IconIncomingCall',
+        color: colors.LIGHT_GREEN,
+        text: 'status.incall',
+        value: 100
+    },
+    101: {
+        icon: 'IconHold',
+        color: colors.HOLD_COLOR,
+        text: 'status.hold',
+        value: 101
     }
 }

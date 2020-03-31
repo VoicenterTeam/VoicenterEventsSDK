@@ -249,5 +249,7 @@
     "settings.color": "Color",
     "settings.fonSize": "Font size",
     "widget.counter.styles": "Widget counter styles",
-    "queue.agents.calls.on.hold": "Agents with calls on hold"
+    "queue.agents.calls.on.hold": "Agents with calls on hold",
+    "status.incall": "In Call",
+    "status.hold": "On Hold"
 }
