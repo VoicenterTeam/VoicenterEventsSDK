@@ -303,3 +303,7 @@ export const activitiesToDisplay = [
         value: 'AnswerCount',
     }
 ]
+
+export const queueActivities = [
+    'InSLACount', 'AnswerCount'
+]
