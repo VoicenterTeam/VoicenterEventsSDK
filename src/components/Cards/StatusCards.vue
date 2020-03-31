@@ -100,7 +100,10 @@
     import statusTypes from '@/enum/statusTypes'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
-
+    const callStatuses = {
+        CALLING: 100,
+        HOLD: 101,
+    }
     export default {
         props: {
             status: {
@@ -154,31 +157,34 @@
             statuses() {
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
+                let finalStatuses = []
                 if (storeStatuses.length) {
-                    return storeStatuses.map(status => {
-                        const otherData = localStatuses.find(s => s.value === status.StatusID) || {}
-                        if (otherData) {
-                            otherData['text'] = this.$store.getters['entities/getStatusTextById'](otherData.value)
-                        }
+                   finalStatuses = this.getStoreStatuses()
+                } else {
+                    finalStatuses = localStatuses.map(status => {
+                        const statusText = this.$store.getters['entities/getStatusTextById'](status.value)
                         return {
                             ...status,
-                            ...otherData,
+                            text: statusText
                         }
                     })
                 }
-                return localStatuses.map(status => {
-                    const statusText = this.$store.getters['entities/getStatusTextById'](status.value)
-                    return {
-                        ...status,
-                        text: statusText
-                    }
-                })
+                finalStatuses.push(statusTypes[callStatuses.CALLING])
+                finalStatuses.push(statusTypes[callStatuses.HOLD])
+                return finalStatuses
             },
             extensions() {
                 return this.$store.state.extensions.extensions
             },
             cardValue() {
-                return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
+                let value = this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
+                if (this.status === callStatuses.CALLING) {
+                    value = this.countTotalCalls() - this.countCallsByStatus('Hold')
+                }
+                if (this.status === callStatuses.HOLD) {
+                    value = this.countCallsByStatus('Hold')
+                }
+                return value
             },
             cardIcon() {
                 return statusTypes[this.status].icon
@@ -204,6 +210,36 @@
             },
         },
         methods: {
+            countCallsByStatus(status) {
+                if (!this.extensions.length) {
+                    return '0'
+                }
+                const callsByStatus = this.extensions.filter(el => {
+                    return el.calls.filter(c => c.callstatus === status).length > 0
+                })
+                return callsByStatus.length || '0'
+            },
+            countTotalCalls() {
+                if (!this.extensions.length) {
+                    return '0'
+                }
+                const callsByStatus = this.extensions.filter(el => el.calls.length > 0)
+                return callsByStatus.length || '0'
+            },
+            getStoreStatuses() {
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                return storeStatuses.map(status => {
+                    const otherData = localStatuses.find(s => s.value === status.StatusID) || {}
+                    if (otherData) {
+                        otherData['text'] = this.$store.getters['entities/getStatusTextById'](otherData.value)
+                    }
+                    return {
+                        ...status,
+                        ...otherData,
+                    }
+                })
+            },
             onChange() {
                 let data = {
                     status: this.selectedStatus,
@@ -228,7 +264,7 @@
                 this.selectedIcon = option.icon;
             },
             checkIfCardIsVertical() {
-                if (this.$el && this.$el.clientWidth < 280) {
+                if (this.layoutWidth.minWidth < 280) {
                     this.isVertical = true
                 } else {
                     this.isVertical = false
@@ -260,6 +296,9 @@
                 handler() {
                     this.checkIfCardIsVertical()
                 }
+            },
+            'layoutWidth.minWidth'() {
+                this.$nextTick(this.checkIfCardIsVertical)
             }
         }
     }

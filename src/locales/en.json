@@ -334,5 +334,7 @@
     "Queue Name": "Queue Name",
     "Caller Number": "Caller Number",
     "Caller Name": "Caller Name",
-    "Waiting Time": "Waiting Time"
+    "Waiting Time": "Waiting Time",
+    "status.incall": "In Call",
+    "status.hold": "On Hold"
 }

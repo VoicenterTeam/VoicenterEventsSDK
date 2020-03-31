@@ -5,6 +5,13 @@
             <span v-if="call.callerphone !== call.callername" class="text-main-xs font-medium">{{call.callername}}</span>
         </div>
         <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
+        <el-tooltip v-if="call.callstatus === 'Hold'"
+                    placement="top"
+                    :open-delay="300"
+                    :content="$t('status.hold')"
+        >
+            <icon-hold class="w-4 h-4"></icon-hold>
+        </el-tooltip>
         <slot name="threshold" :statusThreshold="threshold"/>
         <span class="font-medium tracking-wide call-time font-mono">{{timer.displayTime}}</span>
     </div>
@@ -12,8 +19,11 @@
 <script>
     import Timer from '@/util/Timer'
     import {getInitialTime} from '@/util/timeUtils'
-
+    import { Tooltip } from 'element-ui'
     export default {
+        components: {
+            [Tooltip.name]: Tooltip
+        },
         props: {
             call: {
                 type: Object,
