@@ -52,6 +52,9 @@ Highcharts.setOptions({
     tooltip: {
         useHTML: true,
         formatter: function () {
+            if (this.point.radius) {
+                return false
+            }
             if (this.point.stackTotal) {
 
                 let percentage = (this.point.y * 100 / this.point.stackTotal).toFixed(2)
