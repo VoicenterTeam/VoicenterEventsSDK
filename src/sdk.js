@@ -40,9 +40,9 @@ class EventsSDK {
     this.server = null;
     this.socket = null;
     this.connected = false;
-    //this.connections = allConnections;
     this.connectionEstablished = false;
     this.shouldReconnect = true;
+    this.lastKeepAliveTimestamp = new Date().getTime()
     this._initReconnectOptions();
     this._listenersMap = listenersMap;
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
@@ -58,7 +58,6 @@ class EventsSDK {
   }
 
   _onConnect() {
-    if(this.onConnect) this.onConnect(0,"OK");
     this._initReconnectDelays();
     this.connected = true;
     this.Logger.log(eventTypes.CONNECT, this.reconnectOptions);
@@ -73,31 +72,26 @@ class EventsSDK {
   }
 
   _onConnectError(data) {
-    if(this.onConnectError) this.onConnectError(data);
     this._retryConnection('next');
     this.connected = false;
     this.Logger.log(eventTypes.CONNECT_ERROR, data)
   }
 
   _onError(err) {
-    if(this.onError) this.onError(data);
-    this.Logger.log(eventTypes.ERROR, data);
+    this.Logger.log(eventTypes.ERROR, err);
   }
 
   _onReconnectFailed() {
-    if(this.onReconnectFailed) this.onReconnectFailed();
     this._retryConnection('next');
     this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
   }
 
   _onConnectTimeout() {
-    if(this.onConnectTimeout) this.onConnectTimeout();
     this._retryConnection('next');
     this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
   _onReconnectAttempt(attempts) {
-    if(this.onReconnectAttempt) this.onReconnectAttempt(attempts);
     if (attempts > 2) {
       this._retryConnection('next');
       return;
@@ -113,19 +107,29 @@ class EventsSDK {
   }
 
   _onDisconnect(reason) {
-    if(this.onDisconnect) this.onDisconnect(reason);
     if (this.shouldReconnect) {
       this._connect('next')
     }
     this.connected = false;
-    this.Logger.log(eventTypes.DISCONNECT, this.reconnectOptions);
+    this.Logger.log(eventTypes.DISCONNECT, reason);
   }
 
   _onKeepAlive(data) {
-    if(this.onKeepAlive) this.onKeepAlive(data);
-    if(data === false && this.connected) {
+    if (typeof data === 'object' && data.errorCode !== 0) {
       this._initSocketConnection();
-      this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE, this.reconnectOptions);
+      return
+    }
+    if (data && this.connected) {
+      this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
+      this.lastKeepAliveTimestamp = new Date().getTime()
+    } else {
+      this._initSocketConnection();
+    }
+  }
+
+  _onLoginResponse(data) {
+    if (data.ErrorCode === 0 && data.Token && !this.options.token) {
+      this.options.token = data.Token
     }
   }
 
@@ -186,26 +190,25 @@ class EventsSDK {
   }
 
   _initSocketEvents() {
-    this.socket.on(eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt.bind(this));
-    this.socket.on(eventTypes.RECONNECT_FAILED, this._onReconnectFailed.bind(this));
-    this.socket.on(eventTypes.CONNECT, this._onConnect.bind(this));
-    this.socket.on(eventTypes.DISCONNECT, this._onDisconnect.bind(this));
-    this.socket.on(eventTypes.ERROR, this._onError.bind(this));
-    this.socket.on(eventTypes.CONNECT_ERROR, this._onConnectError.bind(this));
-    this.socket.on(eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout.bind(this));
-    this.socket.on(eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive.bind(this));
     this.socket.onevent = this._onEvent.bind(this)
   }
 
   _initKeepAlive() {
-    setTimeout(()=>{
-      if(this.socket) {
-        this.emit(eventTypes.KEEP_ALIVE, this.options.token);
-        this._connect('prev');
+    if (this.keepAliveInterval) {
+      clearInterval(this.keepAliveInterval)
+    }
+    this.keepAliveInterval = setInterval(()=>{
+      const now = new Date().getTime()
+      const maxDelay = this.options.keepAliveTimeout * 3
+      // If keep alive timeout is 1 minute and we still don't get a response after 3 minutes, find another server
+      if (now > this.lastKeepAliveTimestamp + maxDelay) {
+        this._connect('next')
       }
-      else {
+      if (!this.socket) {
         this._initSocketConnection();
+        return
       }
+      this.emit(eventTypes.KEEP_ALIVE, this.options.token);
     }, this.options.keepAliveTimeout);
   }
 
@@ -284,6 +287,29 @@ class EventsSDK {
         callback(evt);
       }
     })
+    const eventMappings = {
+      [eventTypes.RECONNECT_ATTEMPT]: this._onReconnectAttempt,
+      [eventTypes.RECONNECT_FAILED]: this._onReconnectFailed,
+      [eventTypes.CONNECT]: this._onConnect,
+      [eventTypes.DISCONNECT]: this._onDisconnect,
+      [eventTypes.ERROR]: this._onError,
+      [eventTypes.CONNECT_ERROR]: this._onConnectError,
+      [eventTypes.CONNECT_TIMEOUT]: this._onConnectTimeout,
+      [eventTypes.KEEP_ALIVE_RESPONSE]: this._onKeepAlive,
+      [eventTypes.LOGIN_RESPONSE]: this._onLoginResponse,
+      [eventTypes.EXTENSION_UPDATED]: this._retryConnection,
+      [eventTypes.QUEUES_UPDATED]: this._retryConnection,
+      [eventTypes.DIALERS_UPDATED]: this._retryConnection,
+      [eventTypes.LOGIN_STATUS]: () => {
+        if (!this.connected) {
+          this._onConnect()
+        }
+      }
+    }
+    const eventHandler = eventMappings[evt.name]
+    if (eventHandler && typeof eventHandler === 'function') {
+      eventHandler.call(this, evt.data)
+    }
   }
 
   /**
@@ -307,8 +333,10 @@ class EventsSDK {
    * Sets the monitor code token
    * @param token
    */
-  setToken(token) {
+  async setToken(token) {
     this.options.token = token
+    this.disconnect()
+    await this.init()
   }
   /**
    * Closes all existing connections
@@ -316,6 +344,7 @@ class EventsSDK {
   closeAllConnections() {
     allConnections.forEach(connection => {
       connection.close()
+      connection.disconnect()
     })
     allConnections = []
   }
@@ -351,25 +380,61 @@ class EventsSDK {
   }
 
   /**
-   * Login (logs in based on the token/credentials provided)
+   * Calls resync event to resync socket data
+   * @param cache
    */
-  login() {
+  reSync(cache = true) {
+    this.emit(eventTypes.RESYNC, { cache })
+  }
+
+  async setMonitorUrl(url) {
+    const oldUrl = this.options.url
+    const oldStrategy = this.options.serverFetchStrategy
+    try {
+      if (!url) {
+        return
+      }
+      this.options.url = url
+      this.options.serverFetchStrategy = 'remote'
+      await this.init()
+    } catch (err) {
+      this._onError(err)
+      this.options.url = oldUrl
+      this.options.serverFetchStrategy = oldStrategy
+      await this.init()
+    }
+  }
+
+  /**
+   * Login (logs in based on the token/credentials provided)
+   * @param type (login type. Can be token/user/code/account)
+   * @return {Promise<unknown>}
+   */
+  login(type = 'login') {
     let _self = this;
     this._checkInit();
     let resolved = false;
     return new Promise((resolve, reject) => {
-      this.on(eventTypes.LOGIN, data => {
+      this.on(eventTypes.LOGIN_STATUS, data => {
         if(_self.onLogin) _self.onLogin(data);
         resolved = true;
         resolve(data)
       });
-      // this.socket.on(eventTypes.ERROR, err => {
-      //   if(_self.onError) _self.onError(err);
-      //   if(resolved === false) {
-      //     reject(err);
-      //   }
-      // })
-      this.emit('login', { token: this.options.token });
+      this.socket.on(eventTypes.ERROR, err => {
+        if(_self.onError) _self.onError(err);
+        if(resolved === false) {
+          reject(err);
+        }
+      })
+      if (type === 'login') {
+        this.emit(eventTypes.LOGIN, { token: this.options.token });
+      } else if (type === 'user') {
+        this.emit(eventTypes.LOGIN_USER, { user: this.options.user, password: this.options.password });
+      } else if (type === 'code') {
+        this.emit(eventTypes.LOGIN_CODE, { code: this.options.code, orgCode: this.options.organizationCode });
+      } else if (type === 'account') {
+        this.emit(eventTypes.LOGIN_USER, { user: this.options.user, password: this.options.password });
+      }
     });
   }
 

@@ -79,6 +79,10 @@ The SDK constructor accepts multiple options when initializing which can be used
 | Option | Type  | Default | Description   |
 |:---|---|---|---|
 | **token**  | String  | null |  Monitor code token to use for login  |
+| **user**  | string  | Can be used to login with "user" or "account" login type |
+| **password**  | string  | Used for login with "user" or "account" login type. Must be used together with user property |
+| **code**  | string  | Code to be used for login with "code" type. Should be used with "organizationCode" code |
+| **organizationCode**  | string  | Organization code to be used for login with "code" type. Should be used with "organizationCode" code |
 | **debug**  | Boolean  | false |  When set to true, it will print debug information to console  |
 | **reconnectionDelay**  | Number  | 10000 |  First reconnection delay in milliseconds. Defaults to 10 seconds and increases with each retry (retryCount * reconnectionDelay)  |
 | **timeout**  | Number  | 10000 |  Login timeout. Will throw an error if no event is sent back based on the emitted login event  |
@@ -101,3 +105,81 @@ const servers = [{
   'Domain': 'monitor1.voicenter.co'
 }]
 ```
+
+## Other Methods
+
+#### Set token
+Sets new token to be used. This also triggers a disconnect and reconnect with new token
+
+```javascript
+sdk.setToken('some new token here')
+```
+
+#### Resync 
+Emits resync event to resync data
+
+```javascript
+sdk.resync()
+```
+
+#### Set monitor url 
+Sets new monitor url. This will trigger an http call to get the socket servers based on the monitor url.
+Please not that providing an invalid url, will try to revert to the old values.
+In case that fails, you will have to init the sdk again.
+
+```javascript
+sdk.setMonitorUrl(newMonitorUrl)
+```
+
+#### Login with user
+Log in based on user credentials
+
+```javascript
+async function initSdk() {
+    let sdk = new EventsSDK({
+        user: 'my user',
+        password: 'my password',
+        // other options here
+    });
+    await sdk.init()
+    await sdk.login('user')
+}
+```
+
+#### Login with account
+Log in based on user account credentials
+
+```javascript
+async function initSdk() {
+    let sdk = new EventsSDK({
+        user: 'my user',
+        password: 'my password',
+        // other options here
+    });
+    await sdk.init()
+    await sdk.login('account')
+}
+```
+
+#### Login with code
+Log in based on code and organization code
+
+```javascript
+async function initSdk() {
+    let sdk = new EventsSDK({
+        code: 'my code',
+        organizationCode: 'my organization code',
+        // other options here
+    });
+    await sdk.init()
+    await sdk.login('code')
+}
+```
+
+#### Disconnect
+Forcefully disconnects from the socket. This should be handled by the sdk most of the times.
+
+```javascript
+sdk.disconnect()
+```
+ 
