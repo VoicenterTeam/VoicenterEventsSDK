@@ -36,9 +36,10 @@ You will have to clone directly from GitHub and build `voicenter-events-sdk` you
 you want to use the latest dev build.
 
 ```sh
-$ git clone https://github.com//voicenter-events-sdk.git node_modules/voicenter-events-sdk
-$ cd node_modules/voicenter-events-sdk
+$ git clone https://github.com//voicenter-events-sdk.git voicenter-events-sdk
+$ cd voicenter-events-sdk
 $ npm install
 $ npm run build
+$ npm run docs (to run the documentation locally)
 ```
 

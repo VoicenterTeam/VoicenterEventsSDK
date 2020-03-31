@@ -5,8 +5,8 @@ module.exports = {
   locales: {
     '/': {
       lang: 'en-US',
-      title: 'VoicenterEventsSdk',
-      description: 'VoicenterEventsSdk for Vue.js'
+      title: 'Voicenter Real time Events SDK',
+      description: 'Real time javascript events sdk. Can be used in conjuction with voicenter servers to get real time events (via sockets) about calls, extensions, agent statuses and more.'
     }
   },
   head: [
