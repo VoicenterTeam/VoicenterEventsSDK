@@ -4,24 +4,24 @@ export const activeCallColumns = [{
     prop: 'QueueName',
     fixed: false,
     align: 'center',
-    label: 'Queue Name',
+    label: i18n.t('Queue Name'),
     sortable: true
 }, {
     prop: 'CallerNumber',
     fixed: false,
     align: 'center',
-    label: 'Caller Number'
+    label: i18n.t('Caller Number'),
 }, {
     prop: 'CallerName',
     fixed: false,
     align: 'center',
-    label: 'Caller Name',
+    label: i18n.t('Caller Name'),
     sortable: true
 }, {
     prop: 'WaitingTime',
     fixed: false,
     align: 'center',
-    label: 'Waiting Time',
+    label: i18n.t('Waiting Time'),
     sortable: true
 }]
 
