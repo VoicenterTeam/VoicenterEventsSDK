@@ -44,6 +44,7 @@
                         :key="column.prop"
                         :class-name="column.className"
                         v-bind="column"
+                        :label="$t(column.prop) || column.label"
                         :column-key="column.prop"
                         :min-width="column.minWidth || '170px'"
                         :fixed="column.fixed || false"
@@ -51,9 +52,9 @@
                         :type="column.type">
                         <template slot="header">
                             <div class="truncate">
-                                <el-tooltip :content="column.label" :open-delay="300" placement="top">
+                                <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300" placement="top">
                                 <span class="font-medium uppercase">
-                                    {{column.label}}
+                                    {{$t(column.prop) || column.label}}
                                 </span>
                                 </el-tooltip>
                             </div>
@@ -262,6 +263,12 @@
                 let tableElement = document.getElementById('table');
                 let excelWorkBook = XLSX.utils.table_to_book(tableElement);
                 XLSX.writeFile(excelWorkBook, fileName)
+            }
+        },
+        watch: {
+            columns(newColumns) {
+                this.visibleColumns = cloneDeep(this.showColumns)
+                this.availableColumns = cloneDeep(newColumns)
             }
         },
         mounted() {

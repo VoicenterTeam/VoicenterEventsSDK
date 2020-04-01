@@ -1,7 +1,6 @@
 <template>
     <div>
         <data-table
-            v-if="drawTable"
             :tableData="fetchTableData"
             :columns="availableColumns"
             :showColumns="visibleColumns"
@@ -129,7 +128,6 @@
                 hideOnSinglePage: true,
                 border: true,
                 stripe: true,
-                drawTable: true,
                 widget: cloneDeep(this.data),
                 drawRow: true,
             }
@@ -225,7 +223,7 @@
                                 prop: column,
                                 fixed: false,
                                 align: 'center',
-                                label: startCase(column),
+                                label: this.$t(column) || startCase(column),
                                 className: containsDate ? 'direction-ltr' : ''
                             }
                             columns.push(columnData)
@@ -244,10 +242,6 @@
                     this.tableData = data
                     this.columns = columns
 
-                    this.drawTable = false
-                    this.$nextTick(() => {
-                        this.drawTable = true
-                    })
                 } catch (e) {
                     let status = get(e, 'response.status')
                     if (status === 400) {

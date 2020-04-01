@@ -11,7 +11,7 @@
 <script>
     import get from 'lodash/get'
     import {Chart} from 'highcharts-vue'
-    import {activitiesToDisplay} from '@/enum/queueDashboardStatistics'
+    import {queueActivities} from '@/enum/queueDashboardStatistics'
     import activityChartConfig from '@/components/Charts/Configs/ActivityGauge'
     import {convertHex} from "@/helpers/convertHex";
 
@@ -99,10 +99,9 @@
                         }
                         if (el === 'InSLACount') {
                             let InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value');
-                            let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
 
-                            if (AnswerCount) {
-                                inSLAPercentage = InSLACount ? (InSLACount / AnswerCount * 100).toFixed(2) : 0
+                            if (CallCount) {
+                                inSLAPercentage = InSLACount ? (InSLACount / CallCount * 100).toFixed(2) : 0
                             }
                             let InSLAData = {
                                 name: this.$t('In SLA'),
@@ -118,7 +117,7 @@
                                 outerRadius: '87%',
                                 innerRadius: '63%',
                                 backgroundColor: `rgba(${rgb},0.3)`,
-                                borderWidth: 0
+                                borderWidth: 0,
                             }
                             data.push(InSLAData)
                             pane['background'].push(InSLAPane)
@@ -134,10 +133,11 @@
                                 dataLabels: {
                                     enabled: true,
                                     format: dataLabels,
-                                    y: -25,
+                                    y: -40,
                                     borderWidth: 0,
-                                    useHTML: false,
-                                    padding: 10,
+                                    useHTML: true,
+                                    backgroundColor: 'rgba(255, 255,255, 0.5)',
+                                    zIndex: 100
                                 },
                                 linecap: 'round',
                                 stickyTracking: false,
@@ -164,7 +164,7 @@
         },
         mounted() {
             if (!this.data.WidgetLayout.ShowActivities) {
-                this.$set(this.data.WidgetLayout, 'ShowActivities', activitiesToDisplay)
+                this.$set(this.data.WidgetLayout, 'ShowActivities', queueActivities)
             }
             if (!this.data.WidgetLayout['AnswerCount']) {
                 for (let key in this.DEFAULT_STYLES) {
