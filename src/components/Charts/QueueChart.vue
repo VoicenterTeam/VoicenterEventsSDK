@@ -64,6 +64,7 @@
                             name: 'Queue Calls',
                             data: [],
                             yAxis: 0,
+                            color: colors.OTHER_COLOR,
                         },
                         {
                             name: 'Agents available',
