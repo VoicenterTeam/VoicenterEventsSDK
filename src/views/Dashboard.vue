@@ -152,6 +152,7 @@
                 operations: new DashboardOperations(),
                 activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
                 showReorderDataDialog: false,
+                socketResync: false
             }
         },
         computed: {
@@ -398,8 +399,9 @@
                 this.saveActiveTab(tab)
             },
             async retrySocketConnection() {
-                Notification.info(this.$t('common.socketReconnect'));
-                await this.initRealtimeSdk()
+                this.socketResync = true
+                Notification.info(this.$t('common.socketAttemptSync'));
+                this.sdk.reSync(false)
             },
             onNewEvent(eventData) {
                 let {name, data} = eventData
@@ -423,6 +425,10 @@
                     case sdkEventTypes.LOGIN:
                         this.$store.commit('extensions/SET_SERVER_TIME', data)
                         this.$store.dispatch('queues/setQueues', data.queues)
+                        if (this.socketResync) {
+                            Notification.success(this.$t('common.socketSynced'))
+                            this.socketResync = false
+                        }
                         break;
                     case sdkEventTypes.QUEUE_EVENT:
                         let queue = data.data
