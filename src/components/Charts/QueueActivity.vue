@@ -99,10 +99,9 @@
                         }
                         if (el === 'InSLACount') {
                             let InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value');
-                            let AnswerCount = get(this.statisticCounts['percentage'], '[1].value');
 
-                            if (AnswerCount) {
-                                inSLAPercentage = InSLACount ? (InSLACount / AnswerCount * 100).toFixed(2) : 0
+                            if (CallCount) {
+                                inSLAPercentage = InSLACount ? (InSLACount / CallCount * 100).toFixed(2) : 0
                             }
                             let InSLAData = {
                                 name: this.$t('In SLA'),
