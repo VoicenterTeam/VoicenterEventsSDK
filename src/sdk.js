@@ -9,7 +9,7 @@ const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
   servers: defaultServers,
   token: null,
-  forceNew: false,
+  forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
   timeout: 10000,
@@ -41,7 +41,6 @@ class EventsSDK {
     this.socket = null;
     this.connected = false;
     this.connectionEstablished = false;
-    this.shouldReconnect = true;
     this.lastKeepAliveTimestamp = new Date().getTime()
     this._initReconnectOptions();
     this._listenersMap = listenersMap;
@@ -107,11 +106,9 @@ class EventsSDK {
   }
 
   _onDisconnect(reason) {
-    if (this.shouldReconnect) {
-      this._connect('next')
-    }
     this.connected = false;
     this.Logger.log(eventTypes.DISCONNECT, reason);
+    this._connect('next')
   }
 
   _onKeepAlive(data) {
@@ -146,7 +143,6 @@ class EventsSDK {
   }
 
   _connect(server = 'default') {
-    this.shouldReconnect = true;
     let serverToConnect = null;
     if (server === 'default') {
       serverToConnect = this._findCurrentServer();
@@ -158,14 +154,16 @@ class EventsSDK {
       throw new Error(`Incorrect 'server' parameter passed to connect function ${server}. Should be 'default' or 'next'`)
     }
     if (!serverToConnect) {
-      // skip the connect because we didn't find a new server to connect to.
-      return
+      this.server = this._findCurrentServer();
     }
     this._initSocketConnection();
     this._initSocketEvents();
     this._initKeepAlive();
+    this._initReconnectDelays();
     if (server !== 'default'){
       this.login()
+    } else {
+      this.reSync(false)
     }
   }
 
@@ -347,12 +345,15 @@ class EventsSDK {
       connection.disconnect()
     })
     allConnections = []
+    if (this.socket) {
+      this.socket.disconnect()
+      this.socket = null
+    }
   }
   /**
    * Disconnects the socket instance from the servers
    */
   disconnect() {
-    this.shouldReconnect = false;
     this._listenersMap = new Map();
     this.closeAllConnections()
   }
