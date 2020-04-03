@@ -6,7 +6,7 @@
             </slot>
             <slot name="title">
                 <p class="text-main-sm mx-2 caption" @click="$emit('add-widget')">
-                    {{TemplateName}}
+                    {{$t(TemplateName)}}
                 </p>
             </slot>
         </div>
