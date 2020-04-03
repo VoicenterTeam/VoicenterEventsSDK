@@ -14,7 +14,7 @@
                     <div class="flex items-center">
                         <span class="text-xl px-1" v-if="item.showAbsoluteNumbers">({{item.count}})</span>
                         <h2 class="text-4xl font-bold -my-2">
-                            {{item.value}}
+                            {{formatItemValue}}
                         </h2>
                     </div>
                 </slot>
@@ -54,9 +54,11 @@
     </div>
 </template>
 <script>
-    import {Checkbox, Tooltip} from 'element-ui'
     import {EditIcon} from 'vue-feather-icons'
+    import {Checkbox, Tooltip} from 'element-ui'
+    import {timeFormatter} from "@/helpers/timeFormatter";
     import UpdateDialog from '@/components/Cards/UpdateDialog'
+    import {MAX_RING_TIME_KEY, AVG_RING_TIME_KEY} from "@/enum/queueDashboardStatistics";
 
     export default {
         components: {
@@ -92,6 +94,12 @@
                 }
                 return styles
             },
+            formatItemValue() {
+                if ([MAX_RING_TIME_KEY, AVG_RING_TIME_KEY].includes(this.item.key)) {
+                    return timeFormatter(this.item.value)
+                }
+                return this.item.value
+            }
         },
         methods: {
             onChange() {
