@@ -179,10 +179,10 @@
             cardValue() {
                 let value = this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
                 if (this.status === callStatuses.CALLING) {
-                    value = this.countTotalCalls() - this.countCallsByStatus('Hold')
+                    value = this.countTotalCalls() - this.countCallsByStatus('Hold') || '0'
                 }
                 if (this.status === callStatuses.HOLD) {
-                    value = this.countCallsByStatus('Hold')
+                    value = this.countCallsByStatus('Hold') || '0'
                 }
                 return value
             },
