@@ -6,7 +6,7 @@
             </slot>
             <slot name="title">
                 <p class="text-main-sm mx-2 caption">
-                    {{CategoryName}}
+                    {{$t(CategoryName)}}
                 </p>
             </slot>
             <slot name="state-icon"/>

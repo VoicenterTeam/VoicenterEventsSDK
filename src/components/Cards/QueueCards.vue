@@ -15,7 +15,7 @@
             <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
                 <slot name="value">
                     <h5 :style="textColor" class="text-6xl font-bold -mr-3">
-                        {{cardValue}}
+                        {{timeFormatter(cardValue)}}
                     </h5>
                 </slot>
             </div>
@@ -111,6 +111,7 @@
     import {getServerTimeOffset} from '@/enum/generic'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import queueMixin from '@/mixins/queueMixin'
+    import {timeFormatter} from "@/helpers/timeFormatter";
 
     export default {
         mixins: [queueMixin],
@@ -129,11 +130,11 @@
             },
             showText: {
                 type: Boolean,
-                default: () => false
+                default: () => true
             },
             displayBorder: {
                 type: Boolean,
-                default: false
+                default: true
             },
             data: {
                 type: Object,
@@ -215,6 +216,7 @@
             },
         },
         methods: {
+            timeFormatter,
             onChange () {
                 let data = {
                     queues: this.selectedQueues,
