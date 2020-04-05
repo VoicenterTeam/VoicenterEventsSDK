@@ -1,77 +1,77 @@
 <template>
-    <div class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4"
-         :style="getStyles">
+    <div :style="getStyles"
+         class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4">
         <div class="w-full flex items-center">
             <slot name="icon">
-                <component class="min-w-16 mx-1 text-primary" :is="cardIcon"/>
+                <component :is="cardIcon" class="min-w-16 mx-1 text-primary"/>
             </slot>
             <slot name="text">
-                <el-tooltip v-if="showText" class="item" effect="dark" :content="queueText" placement="top">
-                    <h5 class="text-main-xl font-bold mx-3 status-text" :style="textColor">
+                <el-tooltip :content="queueText" class="item" effect="dark" placement="top" v-if="showText">
+                    <h5 :style="textColor" class="text-main-xl font-bold mx-3 status-text">
                         {{queueText}}
                     </h5>
                 </el-tooltip>
             </slot>
             <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
                 <slot name="value">
-                    <h5 class="text-6xl font-bold -mr-3" :style="textColor">
+                    <h5 :style="textColor" class="text-6xl font-bold -mr-3">
                         {{cardValue}}
                     </h5>
                 </slot>
             </div>
             <div class="flex editable-content" v-if="editable">
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
-                    <trash-icon class="flex align-center w-8 h-8 p-2 text-red trash-icon"
-                                @click="$emit('remove-item')"/>
+                <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
+                    <trash-icon @click="$emit('remove-item')"
+                                class="flex align-center w-8 h-8 p-2 text-red trash-icon"/>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-icon class="flex align-center w-10 h-8 p-2 edit-icon text-primary"
-                               @click="()=>{this.showModal = true}"/>
+                <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
+                    <edit-icon @click="()=>{this.showModal = true}"
+                               class="flex align-center w-10 h-8 p-2 edit-icon text-primary"/>
                 </el-tooltip>
                 <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
                 <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
             </div>
-            <div v-else class="flex">
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                    <edit-icon class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"
-                               @click="()=>{this.showModal = true}"/>
+            <div class="flex" v-else>
+                <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
+                    <edit-icon @click="()=>{this.showModal = true}"
+                               class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"/>
                 </el-tooltip>
             </div>
         </div>
         <update-dialog
-            v-if="showModal"
-            :visible.sync="showModal"
             :model="model"
-            @on-change="onChange">
+            :visible.sync="showModal"
+            @on-change="onChange"
+            v-if="showModal">
             <template v-slot:content>
-                <el-form @submit.native.prevent="onChange" :label-position="labelPosition">
+                <el-form :label-position="labelPosition" @submit.native.prevent="onChange">
                     <div class="flex w-full flex-col lg:flex-row">
                         <div class="flex lg:w-1/2">
-                            <el-form-item class="font-bold" :label="$t('queues.to.display')">
+                            <el-form-item :label="$t('queues.to.display')" class="font-bold">
                                 <base-select
                                     :class="$rtl.isRTL ? 'lg:pl-2' : 'lg:pr-2'"
-                                    v-model="selectedQueues"
-                                    collapse-tags
-                                    multiple
-                                    filterable
                                     :data="allQueues"
+                                    collapse-tags
+                                    filterable
                                     label-key="QueueName"
+                                    multiple
+                                    v-model="selectedQueues"
                                     value-key="QueueID">
                                 </base-select>
                             </el-form-item>
                         </div>
                         <div class="flex lg:w-1/2">
-                            <el-form-item class="font-bold" :label="$t('queue.counter.type')">
+                            <el-form-item :label="$t('queue.counter.type')" class="font-bold">
                                 <el-select
                                     :class="$rtl.isRTL ? 'lg:pr-2' : 'lg:pl-2'"
-                                    v-model="selectedType"
-                                    filterable>
+                                    filterable
+                                    v-model="selectedType">
                                     <el-option
-                                        class="queue-type"
-                                        v-for="(type, index) in availableTypes"
                                         :key="index"
                                         :label="$t(type)"
-                                        :value="index">
+                                        :value="index"
+                                        class="queue-type"
+                                        v-for="(type, index) in availableTypes">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
@@ -97,21 +97,23 @@
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
-                <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
+                <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
             </template>
         </update-dialog>
     </div>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Tooltip, Select, Option, Checkbox} from 'element-ui'
+    import {Checkbox, Option, Select, Tooltip} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
-    import {types, typeNames, typeKeys} from '@/enum/queueCounters'
-    import {TrashIcon, EditIcon, MoreVerticalIcon} from 'vue-feather-icons'
+    import {typeKeys, typeNames, types} from '@/enum/queueCounters'
+    import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
     import {getServerTimeOffset} from '@/enum/generic'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
+    import queueMixin from '@/mixins/queueMixin'
 
     export default {
+        mixins: [queueMixin],
         props: {
             queues: {
                 type: Array,
@@ -148,7 +150,7 @@
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
         },
-        data() {
+        data () {
             return {
                 showModal: false,
                 labelPosition: 'top',
@@ -164,19 +166,14 @@
             }
         },
         computed: {
-            allQueues() {
-                return this.$store.state.queues.all
-            },
-            filteredQueue() {
+            filteredQueue () {
                 return this.allQueues.filter(e => this.selectedQueues.includes(e.QueueID))
             },
-            cardValue() {
+            cardValue () {
                 clearInterval(this.timeout)
                 this.dataCount = 0
                 if (this.selectedType === typeKeys.CALLERS_ID) {
-                    this.filteredQueue.forEach((el) => {
-                        this.dataCount += el.Calls.length
-                    })
+                    this.dataCount = this.allQueueCalls.length
                 } else if (this.selectedType === typeKeys.MAXIMUM_WAITING_ID) {
                     let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
                     let queueCalls = 0
@@ -197,19 +194,19 @@
                 }
                 return this.dataCount
             },
-            cardIcon() {
+            cardIcon () {
                 return types[this.queueType].icon
             },
-            queueText() {
+            queueText () {
                 return this.$t(types[this.queueType].text)
             },
-            textColor() {
+            textColor () {
                 let color = types[this.queueType].color
                 return {
                     color: `${color}`
                 }
             },
-            getStyles() {
+            getStyles () {
                 if (!this.displayBorder) return;
                 let color = types[this.queueType].color
                 return {
@@ -218,7 +215,7 @@
             },
         },
         methods: {
-            onChange() {
+            onChange () {
                 let data = {
                     queues: this.selectedQueues,
                     queueType: this.selectedType,
@@ -237,13 +234,13 @@
                 this.showModal = false;
             },
         },
-        mounted() {
+        mounted () {
             this.layoutWidth = {
                 maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
                 minWidth: this.data.WidgetLayout['minWidth'] || '250'
             }
         },
-        beforeDestroy() {
+        beforeDestroy () {
             clearInterval(this.timeout)
         },
         watch: {
