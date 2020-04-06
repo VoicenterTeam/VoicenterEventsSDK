@@ -12,8 +12,10 @@ const defaultOptions = {
   forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
+  maxReconnectAttempts: 2,
   timeout: 10000,
   keepAliveTimeout: 60000,
+  idleTimeout: 60000 * 15, // 15 minutes
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
@@ -50,6 +52,7 @@ class EventsSDK {
   _initReconnectOptions() {
     this.reconnectOptions = {
       retryCount: 1,
+      maxReconnectAttempts: this.options.maxReconnectAttempts,
       reconnectionDelay: this.options.reconnectionDelay, // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
       minReconnectionDelay: this.options.reconnectionDelay, // 10 seconds
       maxReconnectionDelay: 60000 * 5 // 5 minutes
@@ -90,8 +93,8 @@ class EventsSDK {
     this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
-  _onReconnectAttempt(attempts) {
-    if (attempts > 2) {
+  _onReconnectAttempt() {
+    if (this.reconnectOptions.retryCount >= this.reconnectOptions.maxReconnectAttempts) {
       this._retryConnection('next');
       return;
     }
@@ -127,6 +130,15 @@ class EventsSDK {
   _onLoginResponse(data) {
     if (data.ErrorCode === 0 && data.Token && !this.options.token) {
       this.options.token = data.Token
+    }
+  }
+
+  _onPong(timeSinceLastPing) {
+    if (!timeSinceLastPing) {
+      return
+    }
+    if (timeSinceLastPing > this.options.idleTimeout) {
+      this._retryConnection('next');
     }
   }
 
@@ -295,6 +307,7 @@ class EventsSDK {
       [eventTypes.CONNECT_TIMEOUT]: this._onConnectTimeout,
       [eventTypes.KEEP_ALIVE_RESPONSE]: this._onKeepAlive,
       [eventTypes.LOGIN_RESPONSE]: this._onLoginResponse,
+      [eventTypes.PONG]: this._onPong,
       [eventTypes.EXTENSION_UPDATED]: this._retryConnection,
       [eventTypes.QUEUES_UPDATED]: this._retryConnection,
       [eventTypes.DIALERS_UPDATED]: this._retryConnection,

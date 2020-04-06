@@ -14,6 +14,7 @@ export default {
   CONNECT_ERROR: 'connect_error',
   CONNECT_TIMEOUT: 'connect_timeout',
   DISCONNECT: 'disconnect',
+  PONG: 'pong',
   RECONNECT: 'reconnect',
   RECONNECT_ATTEMPT: 'reconnect_attempt',
   RESYNC: 'resync',
