@@ -68,6 +68,7 @@ var eventTypes = {
   CONNECT_ERROR: 'connect_error',
   CONNECT_TIMEOUT: 'connect_timeout',
   DISCONNECT: 'disconnect',
+  PONG: 'pong',
   RECONNECT: 'reconnect',
   RECONNECT_ATTEMPT: 'reconnect_attempt',
   RESYNC: 'resync',
@@ -204,8 +205,11 @@ var defaultOptions = {
   forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
+  maxReconnectAttempts: 2,
   timeout: 10000,
   keepAliveTimeout: 60000,
+  idleTimeout: 60000 * 15,
+  // 15 minutes
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
@@ -254,6 +258,7 @@ function () {
     value: function _initReconnectOptions() {
       this.reconnectOptions = {
         retryCount: 1,
+        maxReconnectAttempts: this.options.maxReconnectAttempts,
         reconnectionDelay: this.options.reconnectionDelay,
         // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
         minReconnectionDelay: this.options.reconnectionDelay,
@@ -308,8 +313,8 @@ function () {
     }
   }, {
     key: "_onReconnectAttempt",
-    value: function _onReconnectAttempt(attempts) {
-      if (attempts > 2) {
+    value: function _onReconnectAttempt() {
+      if (this.reconnectOptions.retryCount >= this.reconnectOptions.maxReconnectAttempts) {
         this._retryConnection('next');
 
         return;
@@ -354,6 +359,17 @@ function () {
     value: function _onLoginResponse(data) {
       if (data.ErrorCode === 0 && data.Token && !this.options.token) {
         this.options.token = data.Token;
+      }
+    }
+  }, {
+    key: "_onPong",
+    value: function _onPong(timeSinceLastPing) {
+      if (!timeSinceLastPing) {
+        return;
+      }
+
+      if (timeSinceLastPing > this.options.idleTimeout) {
+        this._retryConnection('next');
       }
     }
   }, {
@@ -561,7 +577,7 @@ function () {
         }
       });
 
-      var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
+      var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.PONG, this._onPong), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
         if (!_this2.connected) {
           _this2._onConnect();
         }
