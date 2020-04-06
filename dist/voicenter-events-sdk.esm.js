@@ -201,7 +201,7 @@ var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
   servers: defaultServers,
   token: null,
-  forceNew: false,
+  forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
   timeout: 10000,
@@ -238,7 +238,6 @@ function () {
     this.socket = null;
     this.connected = false;
     this.connectionEstablished = false;
-    this.shouldReconnect = true;
     this.lastKeepAliveTimestamp = new Date().getTime();
 
     this._initReconnectOptions();
@@ -329,12 +328,10 @@ function () {
   }, {
     key: "_onDisconnect",
     value: function _onDisconnect(reason) {
-      if (this.shouldReconnect) {
-        this._connect('next');
-      }
-
       this.connected = false;
       this.Logger.log(eventTypes.DISCONNECT, reason);
+
+      this._connect('next');
     }
   }, {
     key: "_onKeepAlive",
@@ -377,7 +374,6 @@ function () {
     key: "_connect",
     value: function _connect() {
       var server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
-      this.shouldReconnect = true;
       var serverToConnect = null;
 
       if (server === 'default') {
@@ -391,8 +387,7 @@ function () {
       }
 
       if (!serverToConnect) {
-        // skip the connect because we didn't find a new server to connect to.
-        return;
+        this.server = this._findCurrentServer();
       }
 
       this._initSocketConnection();
@@ -401,8 +396,12 @@ function () {
 
       this._initKeepAlive();
 
+      this._initReconnectDelays();
+
       if (server !== 'default') {
         this.login();
+      } else {
+        this.reSync(false);
       }
     }
   }, {
@@ -621,6 +620,11 @@ function () {
         connection.disconnect();
       });
       allConnections = [];
+
+      if (this.socket) {
+        this.socket.disconnect();
+        this.socket = null;
+      }
     }
     /**
      * Disconnects the socket instance from the servers
@@ -629,7 +633,6 @@ function () {
   }, {
     key: "disconnect",
     value: function disconnect() {
-      this.shouldReconnect = false;
       this._listenersMap = new Map();
       this.closeAllConnections();
     }
