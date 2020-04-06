@@ -97,15 +97,13 @@
     import cloneDeep from 'lodash/cloneDeep'
     import {Checkbox, Option, Select, Tooltip} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
-    import statusTypes from '@/enum/statusTypes'
+    import statusTypes, {callStatuses} from '@/enum/statusTypes'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
+    import extensionMixin from "@/mixins/extensionMixin";
 
-    const callStatuses = {
-        CALLING: 100,
-        HOLD: 101,
-    }
     export default {
+        mixins: [extensionMixin],
         props: {
             status: {
                 type: Number,
@@ -117,11 +115,11 @@
             },
             showText: {
                 type: Boolean,
-                default: false
+                default: true
             },
             displayBorder: {
                 type: Boolean,
-                default: false
+                default: true
             },
             data: {
                 type: Object,
@@ -174,18 +172,8 @@
                 finalStatuses.push(statusTypes[callStatuses.HOLD])
                 return finalStatuses
             },
-            extensions () {
-                return this.$store.state.extensions.extensions
-            },
             cardValue () {
-                let value = this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
-                if (this.status === callStatuses.CALLING) {
-                    value = this.countTotalCalls() - this.countCallsByStatus('Hold')
-                }
-                if (this.status === callStatuses.HOLD) {
-                    value = this.countCallsByStatus('Hold')
-                }
-                return value
+                return this.extensionWithCalls.filter(el => el.representativeStatus === this.status).length || '0'
             },
             cardIcon () {
                 return statusTypes[this.status].icon
@@ -211,22 +199,6 @@
             },
         },
         methods: {
-            countCallsByStatus (status) {
-                if (!this.extensions.length) {
-                    return '0'
-                }
-                const callsByStatus = this.extensions.filter(el => {
-                    return el.calls.filter(c => c.callstatus === status).length > 0
-                })
-                return callsByStatus.length || '0'
-            },
-            countTotalCalls () {
-                if (!this.extensions.length) {
-                    return '0'
-                }
-                const callsByStatus = this.extensions.filter(el => el.calls.length > 0)
-                return callsByStatus.length || '0'
-            },
             getStoreStatuses () {
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)

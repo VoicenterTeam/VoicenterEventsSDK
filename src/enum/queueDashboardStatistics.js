@@ -3,6 +3,8 @@ import colors from "@/enum/colors";
 
 export const ADDITIONAL_DATA_KEY = 'ExitCounts'
 export const TOTAL_CALLS_KEY = 'CallCount'
+export const MAX_RING_TIME_KEY = 'MaxRingTime'
+export const AVG_RING_TIME_KEY = 'AvgRingTime'
 
 export const PERCENTAGE_TYPE = 'percentage'
 export const PRIMARY_TYPE = 'primary'
@@ -216,7 +218,7 @@ export const PRIMARY_COUNTERS = () => ({
             fonts: colors.LIGHT_GREEN,
         }
     },
-    MaxRingTime: {
+    [MAX_RING_TIME_KEY]: {
         label: 'MaxRingTime',
         key: 'MaxRingTime',
         value: 0,
@@ -267,7 +269,7 @@ export const PRIMARY_COUNTERS = () => ({
             fonts: colors.LUNCH_COLOR,
         }
     },
-    AvgRingTime: {
+    [AVG_RING_TIME_KEY]: {
         label: 'AvgRingTime',
         key: 'AvgRingTime',
         value: 0,

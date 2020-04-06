@@ -4,23 +4,23 @@
             <base-widget-title :title="data.Title"/>
         </div>
         <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
-            <highcharts class="chart-content_wrapper" :options="chartData"/>
+            <highcharts :options="chartData" class="chart-content_wrapper"/>
         </div>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
-    import groupBy from 'lodash/groupBy'
-    import { Tooltip } from 'element-ui'
-    import { Chart } from 'highcharts-vue'
-    import { TrashIcon } from 'vue-feather-icons'
-    import statusTypes from '@/enum/statusTypes'
-    import { LOGOUT_STATUS } from "@/enum/extensionStatuses";
-    import { isExternalDataWidget } from '@/helpers/widgetUtils'
-    import { WidgetDataApi } from "../../api/widgetDataApi";
+    import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
+    import {Chart} from 'highcharts-vue'
+    import groupBy from 'lodash/groupBy'
+    import {TrashIcon} from 'vue-feather-icons'
+    import {WidgetDataApi} from '@/api/widgetDataApi'
+    import statusTypes from '@/enum/statusTypes'
+    import {isExternalDataWidget} from '@/helpers/widgetUtils'
+    import extensionMixin from '@/mixins/extensionMixin'
 
     export default {
+        mixins: [extensionMixin],
         components: {
             TrashIcon,
             highcharts: Chart,
@@ -36,29 +36,17 @@
                 default: true
             },
         },
-        data() {
+        data () {
             return {
                 chartVisibility: true,
                 chartData: {},
+                HOLD_STATUS: "Hold",
             }
         },
-        computed: {
-            extensions() {
-                return this.$store.state.extensions.extensions
-            },
-            filteredExtensions() {
-                let hideLoggedOutUsers = get(this.data.WidgetLayout, 'hideLoggedOutUsers')
-
-                if (hideLoggedOutUsers) {
-                    return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
-                }
-                return this.extensions
-            },
-        },
         methods: {
-            async chartOptions() {
+            async chartOptions () {
 
-                let { series, colors } = await this.getChartSeriesData()
+                let {series, colors} = await this.getChartSeriesData()
 
                 this.chartData = {
                     chart: {
@@ -90,7 +78,7 @@
                     this.chartVisibility = true
                 })
             },
-            async getChartSeriesData() {
+            async getChartSeriesData () {
                 let data = []
                 const initialColors = []
                 if (isExternalDataWidget(this.data)) {
@@ -115,12 +103,12 @@
                     colors
                 }
             },
-            async updateChartSeries() {
-                const { colors, series } = await this.getChartSeriesData()
+            async updateChartSeries () {
+                const {colors, series} = await this.getChartSeriesData()
                 this.$set(this.chartData, 'colors', colors)
                 this.$set(this.chartData, 'series', series)
             },
-            getColorOptions(colors) {
+            getColorOptions (colors) {
                 return Highcharts.map(colors, function (color) {
                     return {
                         radialGradient: {
@@ -135,10 +123,10 @@
                     };
                 })
             },
-            getExtensionsData() {
+            getExtensionsData () {
                 let data = []
                 let statusData = []
-                let extensions = this.filteredExtensions
+                let extensions = this.extensionWithCalls
 
                 if (extensions) {
                     statusData = groupBy(extensions, 'representativeStatus')
@@ -171,9 +159,9 @@
                     this.chartOptions()
                 }
             },
-            filteredExtensions: {
+            extensionWithCalls: {
                 deep: true,
-                handler() {
+                handler () {
                     if (isExternalDataWidget(this.data)) {
                         return
                     }
@@ -183,7 +171,7 @@
         },
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .chart-content_wrapper {
         max-height: 390px;
     }

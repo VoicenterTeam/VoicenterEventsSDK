@@ -1,5 +1,10 @@
 import colors from "@/enum/colors";
 
+export const callStatuses = {
+    CALLING: 100,
+    HOLD: 101,
+}
+
 export default {
     1: {
         icon: "IconLogin",
