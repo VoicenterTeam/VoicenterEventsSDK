@@ -110,9 +110,11 @@
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
     import {getServerTimeOffset} from '@/enum/generic'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
+    import queueMixin from '@/mixins/queueMixin'
     import {timeFormatter} from "@/helpers/timeFormatter";
 
     export default {
+        mixins: [queueMixin],
         props: {
             queues: {
                 type: Array,
@@ -165,9 +167,6 @@
             }
         },
         computed: {
-            allQueues () {
-                return this.$store.state.queues.all
-            },
             filteredQueue () {
                 return this.allQueues.filter(e => this.selectedQueues.includes(e.QueueID))
             },
@@ -175,9 +174,7 @@
                 clearInterval(this.timeout)
                 this.dataCount = 0
                 if (this.selectedType === typeKeys.CALLERS_ID) {
-                    this.filteredQueue.forEach((el) => {
-                        this.dataCount += el.Calls.length
-                    })
+                    this.dataCount = this.allQueueCalls.length
                 } else if (this.selectedType === typeKeys.MAXIMUM_WAITING_ID) {
                     let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
                     let queueCalls = 0
