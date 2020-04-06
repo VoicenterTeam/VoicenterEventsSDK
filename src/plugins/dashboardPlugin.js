@@ -1,3 +1,4 @@
+import '../assets/css/fonts.scss'
 import '../assets/css/main.scss'
 import '../util/globalComponentsRequire'
 import {Button, Input, Form, FormItem} from 'element-ui'
