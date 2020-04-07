@@ -1,32 +1,32 @@
 <template>
-    <DraggableList group="widgetTemplates"
+    <DraggableList :disabled="!editable"
                    :value="widgets"
-                   :disabled="!editable"
-                   @change="(ev) => onListChange(ev)">
-        <div v-for="widget in widgets"
+                   @change="(ev) => onListChange(ev)"
+                   group="widgetTemplates">
+        <div :class="getWidgetClass(widget)"
              :key="widget.WidgetID"
+             :style="getStyles(widget)"
              class="px-2"
-             :class="getWidgetClass(widget)"
-             :style="getStyles(widget)">
+             v-for="widget in widgets">
             <WidgetErrorBoundary>
-                <Widget :widget="widget"
-                        :editable="editable"
-                        v-on="$listeners"
+                <Widget :editable="editable"
+                        :widget="widget"
                         @remove-item="removeWidget(widget)"
-                        @update-item="(data) => updateWidget(data)">
+                        @update-item="(data) => updateWidget(data)"
+                        v-on="$listeners">
                 </Widget>
             </WidgetErrorBoundary>
         </div>
-        <widget-empty-card v-if="editable" key="-1"
-                           :widgetGroup="widgetGroup"
+        <widget-empty-card :widgetGroup="widgetGroup" @add-widget="(value) => addWidgetsToGroup(value)"
+                           key="-1"
                            v-bind="$attrs"
-                           v-on="$listeners"
-                           @add-widget="(value) => addWidgetsToGroup(value)">
+                           v-if="editable"
+                           v-on="$listeners">
         </widget-empty-card>
-        <div v-if="widgets.length === 0"
-             class="w-full flex flex-col items-center mt-20"
-             key="no-data">
-            <IconNoData v-if="!editable" class="h-56 w-56"/>
+        <div class="w-full flex flex-col items-center mt-20"
+             key="no-data"
+             v-if="widgets.length === 0">
+            <IconNoData class="h-56 w-56" v-if="!editable"/>
             <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
         </div>
     </DraggableList>
@@ -47,7 +47,7 @@
             DraggableList,
             WidgetErrorBoundary,
         },
-        data() {
+        data () {
             return {}
         },
         props: {
@@ -65,24 +65,24 @@
             },
         },
         methods: {
-            onListChange(ev) {
+            onListChange (ev) {
                 this.$emit('onListChange', {'event': ev, 'group': this.widgetGroup})
             },
-            addWidgetsToGroup(val) {
+            addWidgetsToGroup (val) {
                 let objectToEmit = {
                     widgets: [val],
                     group: this.widgetGroup
                 }
                 this.$emit('addWidgetsToGroup', objectToEmit)
             },
-            removeWidget(val) {
+            removeWidget (val) {
                 this.$emit('removeWidget', {'widget': val, 'group': this.widgetGroup})
             },
-            updateWidget(val) {
+            updateWidget (val) {
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
-            getWidgetClass(widget) {
-                if (widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID || widget.DataTypeID === widgetDataTypes.QUEUE_COUNTER_TYPE_ID) {
+            getWidgetClass (widget) {
+                if ([widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.QUEUE_COUNTER_TYPE_ID, widgetDataTypes.TOTAL_OUTGOING_CALLS].includes(widget.DataTypeID)) {
                     return 'lg:w-auto flex-1'
                 }
 
@@ -93,8 +93,8 @@
 
                 return `${widths.mobile} lg:${widths.desktop} md:${widths.tablet}`
             },
-            getStyles(widget) {
-                if (widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID || widget.DataTypeID === widgetDataTypes.QUEUE_COUNTER_TYPE_ID) {
+            getStyles (widget) {
+                if ([widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.QUEUE_COUNTER_TYPE_ID, widgetDataTypes.TOTAL_OUTGOING_CALLS].includes(widget.DataTypeID)) {
                     return {
                         'max-width': widget.WidgetLayout['maxWidth'] ? widget.WidgetLayout['maxWidth'] + 'px' : '400px',
                         'min-width': widget.WidgetLayout['minWidth'] ? widget.WidgetLayout['minWidth'] + 'px' : '250px',

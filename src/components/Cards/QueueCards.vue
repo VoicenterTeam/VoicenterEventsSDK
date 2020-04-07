@@ -1,43 +1,16 @@
 <template>
-    <div :style="getStyles"
-         class="w-full bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4">
-        <div class="w-full flex items-center">
-            <slot name="icon">
-                <component :is="cardIcon" class="min-w-16 mx-1 text-primary"/>
-            </slot>
-            <slot name="text">
-                <el-tooltip :content="queueText" class="item" effect="dark" placement="top" v-if="showText">
-                    <h5 :style="textColor" class="text-main-xl font-bold mx-3 status-text">
-                        {{queueText}}
-                    </h5>
-                </el-tooltip>
-            </slot>
-            <div :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
-                <slot name="value">
-                    <h5 :style="textColor" class="text-6xl font-bold -mr-3">
-                        {{timeFormatter(cardValue)}}
-                    </h5>
-                </slot>
-            </div>
-            <div class="flex editable-content" v-if="editable">
-                <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
-                    <trash-icon @click="$emit('remove-item')"
-                                class="flex align-center w-8 h-8 p-2 text-red trash-icon"/>
-                </el-tooltip>
-                <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
-                    <edit-icon @click="()=>{this.showModal = true}"
-                               class="flex align-center w-10 h-8 p-2 edit-icon text-primary"/>
-                </el-tooltip>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
-                <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
-            </div>
-            <div class="flex" v-else>
-                <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
-                    <edit-icon @click="()=>{this.showModal = true}"
-                               class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"/>
-                </el-tooltip>
-            </div>
-        </div>
+    <div>
+        <base-wrapper
+            :cardIcon="cardIcon"
+            :cardText="cardText"
+            :cardValue="cardValue"
+            :layoutWidth="layoutWidth"
+            :showText="showStatusText"
+            :styles="getStyles"
+            @show-modal="onShowModal"
+            v-bind="$attrs"
+            v-on="$listeners"
+        />
         <update-dialog
             :model="model"
             :visible.sync="showModal"
@@ -124,10 +97,6 @@
                 type: Number,
                 default: () => 0
             },
-            editable: {
-                type: Boolean,
-                default: () => true
-            },
             showText: {
                 type: Boolean,
                 default: () => true
@@ -163,7 +132,7 @@
                 timeout: null,
                 dataCount: 0,
                 model: {},
-                layoutWidth: '',
+                layoutWidth: {},
             }
         },
         computed: {
@@ -191,6 +160,7 @@
                         setInterval(() => {
                             this.dataCount++
                         }, 1000)
+                        this.dataCount = timeFormatter(this.dataCount)
                     }
                 }
                 return this.dataCount
@@ -198,25 +168,30 @@
             cardIcon () {
                 return types[this.queueType].icon
             },
-            queueText () {
+            cardText () {
                 return this.$t(types[this.queueType].text)
             },
-            textColor () {
-                let color = types[this.queueType].color
-                return {
-                    color: `${color}`
-                }
-            },
             getStyles () {
-                if (!this.displayBorder) return;
+                let styles = {}
                 let color = types[this.queueType].color
-                return {
-                    border: `2px solid ${color}`,
+
+                styles = {
+                    color: {
+                        'color': color,
+                    }
+                };
+
+                if (this.displayBorder) {
+                    let border = {'border': `2px solid ${color}`}
+                    styles = {
+                        ...styles,
+                        ...border,
+                    }
                 }
+                return styles;
             },
         },
         methods: {
-            timeFormatter,
             onChange () {
                 let data = {
                     queues: this.selectedQueues,
@@ -234,6 +209,9 @@
 
                 this.$emit('on-update', this.data);
                 this.showModal = false;
+            },
+            onShowModal () {
+                this.showModal = true
             },
         },
         mounted () {

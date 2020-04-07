@@ -50,6 +50,7 @@ export function getWidgetTemplate(widget) {
 export const componentWidth = {
     [widgetDataTypes.COUNTER_TYPE_ID]: 'lg:w-auto',
     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'lg:w-auto',
+    [widgetDataTypes.TOTAL_OUTGOING_CALLS]: 'lg:w-auto',
     [widgetDataTypes.PIE_TYPE_ID]: '',
     default: 'lg:w-3/3'
 }
