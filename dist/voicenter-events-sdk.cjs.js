@@ -212,8 +212,8 @@ var defaultOptions = {
   maxReconnectAttempts: 2,
   timeout: 10000,
   keepAliveTimeout: 60000,
-  idleTimeout: 60000 * 15,
-  // 15 minutes
+  idleTimeout: 60000 * 5,
+  // 5 minutes
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
@@ -255,6 +255,9 @@ function () {
       leading: true,
       trailing: false
     });
+    this._loginEventTriggered = false;
+    this._lastLoginTimestamp = null;
+    this._lastPong = null;
   }
 
   _createClass(EventsSDK, [{
@@ -367,14 +370,8 @@ function () {
     }
   }, {
     key: "_onPong",
-    value: function _onPong(timeSinceLastPing) {
-      if (!timeSinceLastPing) {
-        return;
-      }
-
-      if (timeSinceLastPing > this.options.idleTimeout) {
-        this._retryConnection('next');
-      }
+    value: function _onPong() {
+      this._lastPong = new Date().getTime();
     }
   }, {
     key: "_parsePacket",
@@ -418,11 +415,7 @@ function () {
 
       this._initReconnectDelays();
 
-      if (server !== 'default') {
-        this.login();
-      } else {
-        this.reSync(false);
-      }
+      this.login();
     }
   }, {
     key: "_checkInit",
@@ -440,10 +433,14 @@ function () {
       this.Logger.log('Connecting to..', url);
       this.closeAllConnections();
       this.socket = io(url, Object.assign({}, this.options, {
+        query: {
+          token: this.options.token
+        },
         debug: false
       }));
       allConnections.push(this.socket);
       this.connectionEstablished = true;
+      this._loginEventTriggered = false;
     }
   }, {
     key: "_initSocketEvents",
@@ -457,6 +454,10 @@ function () {
 
       if (this.keepAliveInterval) {
         clearInterval(this.keepAliveInterval);
+      }
+
+      if (this.idleInterval) {
+        clearInterval(this.idleInterval);
       }
 
       this.keepAliveInterval = setInterval(function () {
@@ -475,6 +476,14 @@ function () {
 
         _this.emit(eventTypes.KEEP_ALIVE, _this.options.token);
       }, this.options.keepAliveTimeout);
+      this.idleInterval = setInterval(function () {
+        _this.reSync(false); // if we are idle for more time, try reconnecting
+
+
+        if (_this._lastPong + _this.options.idleTimeout * 3 > new Date().getTime()) {
+          _this._connect('next');
+        }
+      }, this.options.idleTimeout);
     }
   }, {
     key: "_findCurrentServer",
@@ -723,7 +732,7 @@ function () {
     /**
      * Login (logs in based on the token/credentials provided)
      * @param type (login type. Can be token/user/code/account)
-     * @return {Promise<unknown>}
+     * @return {Promise<void>}
      */
 
   }, {
@@ -732,12 +741,19 @@ function () {
       var _this3 = this;
 
       var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'login';
+      // throttle login for 1 second
+      var delay = 1000;
+
+      if (this._lastLoginTimestamp + delay > new Date().getTime()) {
+        return Promise.resolve();
+      }
 
       var _self = this;
 
       this._checkInit();
 
       var resolved = false;
+      this._lastLoginTimestamp = new Date().getTime();
       return new Promise(function (resolve, reject) {
         _this3.on(eventTypes.LOGIN_STATUS, function (data) {
           if (_self.onLogin) _self.onLogin(data);
