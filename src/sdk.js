@@ -15,7 +15,7 @@ const defaultOptions = {
   maxReconnectAttempts: 2,
   timeout: 10000,
   keepAliveTimeout: 60000,
-  idleTimeout: 60000 * 15, // 15 minutes
+  idleTimeout: 60000 * 5, // 5 minutes
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
@@ -47,6 +47,9 @@ class EventsSDK {
     this._initReconnectOptions();
     this._listenersMap = listenersMap;
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
+    this._loginEventTriggered = false
+    this._lastLoginTimestamp = null
+    this._lastPong = null
   }
 
   _initReconnectOptions() {
@@ -133,13 +136,8 @@ class EventsSDK {
     }
   }
 
-  _onPong(timeSinceLastPing) {
-    if (!timeSinceLastPing) {
-      return
-    }
-    if (timeSinceLastPing > this.options.idleTimeout) {
-      this._retryConnection('next');
-    }
+  _onPong() {
+    this._lastPong = new Date().getTime()
   }
 
   _parsePacket(packet) {
@@ -172,11 +170,7 @@ class EventsSDK {
     this._initSocketEvents();
     this._initKeepAlive();
     this._initReconnectDelays();
-    if (server !== 'default'){
-      this.login()
-    } else {
-      this.reSync(false)
-    }
+    this.login()
   }
 
   _checkInit() {
@@ -193,10 +187,14 @@ class EventsSDK {
     this.closeAllConnections();
     this.socket = io(url, {
       ...this.options,
+      query: {
+        token: this.options.token
+      },
       debug: false
     });
     allConnections.push(this.socket);
     this.connectionEstablished = true;
+    this._loginEventTriggered = false
   }
 
   _initSocketEvents() {
@@ -206,6 +204,10 @@ class EventsSDK {
   _initKeepAlive() {
     if (this.keepAliveInterval) {
       clearInterval(this.keepAliveInterval)
+    }
+
+    if (this.idleInterval) {
+      clearInterval((this.idleInterval))
     }
     this.keepAliveInterval = setInterval(()=>{
       const now = new Date().getTime()
@@ -220,6 +222,14 @@ class EventsSDK {
       }
       this.emit(eventTypes.KEEP_ALIVE, this.options.token);
     }, this.options.keepAliveTimeout);
+
+    this.idleInterval = setInterval(() => {
+      this.reSync(false)
+      // if we are idle for more time, try reconnecting
+      if (this._lastPong + this.options.idleTimeout * 3 > new Date().getTime()) {
+        this._connect('next')
+      }
+    }, this.options.idleTimeout)
   }
 
   _findCurrentServer() {
@@ -422,12 +432,18 @@ class EventsSDK {
   /**
    * Login (logs in based on the token/credentials provided)
    * @param type (login type. Can be token/user/code/account)
-   * @return {Promise<unknown>}
+   * @return {Promise<void>}
    */
   login(type = 'login') {
+    // throttle login for 1 second
+    const delay = 1000
+    if (this._lastLoginTimestamp + delay > new Date().getTime()) {
+      return Promise.resolve()
+    }
     let _self = this;
     this._checkInit();
     let resolved = false;
+    this._lastLoginTimestamp = new Date().getTime()
     return new Promise((resolve, reject) => {
       this.on(eventTypes.LOGIN_STATUS, data => {
         if(_self.onLogin) _self.onLogin(data);

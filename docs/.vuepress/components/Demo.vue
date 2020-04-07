@@ -73,9 +73,6 @@
         window.sdk = sdk
         this.sdk = sdk
         await sdk.init();
-        if (this.monitorCode) {
-          await this.sdk.login()
-        }
       }
     },
     async mounted() {
