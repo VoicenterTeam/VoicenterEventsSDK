@@ -1,9 +1,19 @@
 <template>
-    <div class="bg-white px-4 py-4 flex justify-between rounded-lg shadow">
-        <h2 class="text-4xl font-bold -my-2">
-            {{counter || '--'}}
-        </h2>
-    </div>
+<!--    <div class="bg-white px-4 py-4 flex justify-between rounded-lg shadow">-->
+<!--        <h2 class="text-4xl font-bold -my-2">-->
+<!--            {{counter || '&#45;&#45;'}}-->
+<!--        </h2>-->
+<!--    </div>-->
+    <base-wrapper
+        v-bind="$attrs"
+        v-on="$listeners"
+        :cardValue="cardValue"
+        :showText="false"
+        :cardIcon="null"
+        :cardText="null"
+        :styles="{}"
+        @show-modal="onShowModal"
+    />
 </template>
 <script>
     import get from 'lodash/get'
@@ -20,7 +30,7 @@
         data() {
             return {
                 fetchDataInterval: null,
-                counter: null
+                cardValue: null
             }
         },
         methods: {
@@ -29,10 +39,13 @@
 
                 try {
                     let Data = await getWidgetData(this.data)
-                    this.counter = get(Data, "[0]['Total Outgoing Calls']")
+                    this.cardValue = get(Data, "[0]['Total Outgoing Calls']")
                 } catch (e) {
                     console.log(e)
                 }
+            },
+            onShowModal() {
+                console.log('onShowModal')
             }
         },
         mounted() {

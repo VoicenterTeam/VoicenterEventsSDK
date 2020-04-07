@@ -139,13 +139,3 @@
         }
     }
 </style>
-<!--<base-wrapper-->
-<!--    v-bind="$attrs"-->
-<!--    v-on="$listeners"-->
-<!--    :cardValue="cardValue"-->
-<!--    :showText="showStatusText"-->
-<!--    :cardIcon="cardIcon"-->
-<!--    :cardText="cardText"-->
-<!--    :styles="cardStyles"-->
-<!--    @show-modal="onShowModal"-->
-<!--/>-->
