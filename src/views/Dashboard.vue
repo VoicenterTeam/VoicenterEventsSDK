@@ -483,7 +483,6 @@
                     this.sdk = new EventsSDK(config)
                     await this.sdk.init()
                     this.sdk.on('*', this.onNewEvent)
-                    await this.sdk.login()
                 } catch (e) {
                     parseCatch(e, true)
                 }
