@@ -82,7 +82,7 @@
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
             getWidgetClass (widget) {
-                if ([widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.QUEUE_COUNTER_TYPE_ID, widgetDataTypes.TOTAL_OUTGOING_CALLS].includes(widget.DataTypeID)) {
+                if (this.isCardWidget(widget)) {
                     return 'lg:w-auto flex-1'
                 }
 
@@ -94,12 +94,15 @@
                 return `${widths.mobile} lg:${widths.desktop} md:${widths.tablet}`
             },
             getStyles (widget) {
-                if ([widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.QUEUE_COUNTER_TYPE_ID, widgetDataTypes.TOTAL_OUTGOING_CALLS].includes(widget.DataTypeID)) {
+                if (this.isCardWidget(widget)) {
                     return {
                         'max-width': widget.WidgetLayout['maxWidth'] ? widget.WidgetLayout['maxWidth'] + 'px' : '400px',
                         'min-width': widget.WidgetLayout['minWidth'] ? widget.WidgetLayout['minWidth'] + 'px' : '250px',
                     }
                 }
+            },
+            isCardWidget(widget) {
+                return [widgetDataTypes.COUNTER_TYPE_ID, widgetDataTypes.QUEUE_COUNTER_TYPE_ID, widgetDataTypes.TOTAL_OUTGOING_CALLS].includes(widget.DataTypeID)
             },
         },
     }
