@@ -18,6 +18,12 @@ export const activeCallColumns = [{
     label: i18n.t('Caller Name'),
     sortable: true
 }, {
+    prop: 'CallerID',
+    fixed: false,
+    align: 'center',
+    label: i18n.t('Caller ID'),
+    sortable: true
+}, {
     prop: 'WaitingTime',
     fixed: false,
     align: 'center',
