@@ -99,6 +99,7 @@
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
+            this.$set(this.data.WidgetLayout, 'showQueues', [14193])
         },
     }
 </script>

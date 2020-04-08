@@ -108,10 +108,10 @@
     import UpdateDialog from './UpdateDialog'
     import {typeKeys, typeNames, types} from '@/enum/queueCounters'
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
-    import {getServerTimeOffset} from '@/enum/generic'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import queueMixin from '@/mixins/queueMixin'
     import {timeFormatter} from "@/helpers/timeFormatter";
+    import {getInitialTime} from '@/util/timeUtils'
 
     export default {
         mixins: [queueMixin],
@@ -176,7 +176,7 @@
                 if (this.selectedType === typeKeys.CALLERS_ID) {
                     this.dataCount = this.allQueueCalls.length
                 } else if (this.selectedType === typeKeys.MAXIMUM_WAITING_ID) {
-                    let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
+                    let minJoinTimeStamp = new Date().getTime() * 10000
                     let queueCalls = 0
                     this.filteredQueue.forEach((queue) => {
                         queue.Calls.forEach((call) => {
@@ -186,8 +186,9 @@
                             }
                         })
                     })
+
                     if (queueCalls > 0) {
-                        this.dataCount = parseInt((new Date()).getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp
+                        this.dataCount = getInitialTime(minJoinTimeStamp)
                         setInterval(() => {
                             this.dataCount++
                         }, 1000)
