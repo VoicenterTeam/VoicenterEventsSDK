@@ -60,10 +60,12 @@
                 let data = []
                 this.filteredQueuesWithActiveCalls.forEach((queue) => {
                     queue.Calls.forEach((call) => {
+
                         data.push({
                             QueueName: queue.QueueName,
                             CallerNumber: queue.CallerPhone || ' - ',
                             CallerName: call.CallerName,
+                            CallerID: call.CallerID,
                             Call: call
                         })
                     })
