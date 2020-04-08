@@ -1,53 +1,16 @@
 <template>
-    <div :class="{'is-vertical': isVertical}"
-         :style="getStyles"
-         class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4">
-        <div :class="{'flex-col': isVertical}"
-             class="w-full flex items-center justify-center">
-            <slot name="icon">
-                <component :is="cardIcon" class="min-w-16 status-icon mx-1 text-primary"/>
-            </slot>
-            <slot name="text">
-                <el-tooltip :content="statusText" class="item" effect="dark" placement="top" v-if="showText">
-                    <h5 :style="textColor" class="text-main-xl font-bold mx-3 status-text">
-                        {{statusText}}
-                    </h5>
-                </el-tooltip>
-            </slot>
-            <div :class="{[$rtl.isRTL ? 'mr-auto' : 'ml-auto']: !isVertical}">
-                <slot name="value">
-                    <h5 :class="{'-my-6': isVertical}"
-                        :style="textColor"
-                        class="text-6xl font-bold -my-5" v-if="cardValue">
-                        {{cardValue}}
-                    </h5>
-                </slot>
-            </div>
-            <div :class="{'edit-mode': editable}" class="absolute flex action-icons">
-                <template v-if="editable">
-                    <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
-                        <trash-icon @click="$emit('remove-item')"
-                                    class="flex align-center w-8 h-8 p-2 text-red trash-icon"/>
-                    </el-tooltip>
-                    <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
-                        <edit-icon :style="{ color: textColor.color }"
-                                   @click="showModal = true"
-                                   class="flex align-center w-10 h-8 p-2 edit-icon text-primary"/>
-                    </el-tooltip>
-                    <div class="flex">
-                        <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
-                        <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
-                    </div>
-                </template>
-                <template v-else>
-                    <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
-                        <edit-icon :style="{ color: textColor.color }"
-                                   @click="showModal = true"
-                                   class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"/>
-                    </el-tooltip>
-                </template>
-            </div>
-        </div>
+    <div>
+        <base-wrapper
+            :cardIcon="cardIcon"
+            :cardText="cardText"
+            :cardValue="cardValue"
+            :layoutWidth="layoutWidth"
+            :showText="showStatusText"
+            :styles="getStyles"
+            @show-modal="onShowModal"
+            v-bind="$attrs"
+            v-on="$listeners"
+        />
         <update-dialog
             :model="model"
             :visible.sync="showModal"
@@ -95,12 +58,11 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Option, Select, Tooltip} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
-    import statusTypes, {callStatuses} from '@/enum/statusTypes'
+    import extensionMixin from '@/mixins/extensionMixin'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
-    import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
-    import extensionMixin from "@/mixins/extensionMixin";
+    import statusTypes, {callStatuses} from '@/enum/statusTypes'
+    import {Checkbox, Option, Select, Tooltip} from 'element-ui'
 
     export default {
         mixins: [extensionMixin],
@@ -108,10 +70,6 @@
             status: {
                 type: Number,
                 default: 3
-            },
-            editable: {
-                type: Boolean,
-                default: true
             },
             showText: {
                 type: Boolean,
@@ -127,10 +85,7 @@
             },
         },
         components: {
-            TrashIcon,
-            EditIcon,
             UpdateDialog,
-            MoreVerticalIcon,
             [Option.name]: Option,
             [Select.name]: Select,
             [Tooltip.name]: Tooltip,
@@ -139,20 +94,16 @@
         data () {
             return {
                 showModal: false,
-                isVertical: false,
                 selectedStatus: '',
                 selectedIcon: '',
                 selectedOption: {},
                 showStatusText: this.showText,
                 displayItemBorder: this.displayBorder,
                 model: {},
-                layoutWidth: '',
+                layoutWidth: {},
             }
         },
         computed: {
-            pageWidth () {
-                return this.$store.state.utils.page.width
-            },
             statuses () {
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
@@ -178,7 +129,7 @@
             cardIcon () {
                 return statusTypes[this.status].icon
             },
-            statusText () {
+            cardText () {
                 return this.$t(this.$store.getters['entities/getStatusTextById'](this.status))
             },
             textColor () {
@@ -188,11 +139,21 @@
                 }
             },
             getStyles () {
-                if (!this.displayBorder) return;
+                let styles = {}
                 let color = statusTypes[this.status].color
-                return {
-                    border: `2px solid ${color}`,
+
+                styles = {
+                    color: {
+                        'color': color,
+                    }
+                };
+
+                if (!this.displayBorder) {
+                    return styles;
                 }
+
+                styles['border'] = `2px solid ${color}`
+                return styles;
             },
             isMobileOrTablet () {
                 return this.$store.getters['utils/isMobileOrTablet']
@@ -236,13 +197,9 @@
                 this.selectedStatus = option.value;
                 this.selectedIcon = option.icon;
             },
-            checkIfCardIsVertical () {
-                if (this.layoutWidth.minWidth < 280) {
-                    this.isVertical = true
-                } else {
-                    this.isVertical = false
-                }
-            }
+            onShowModal () {
+                this.showModal = true
+            },
         },
         mounted () {
             this.selectedStatus = this.status;
@@ -252,9 +209,6 @@
                 maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
                 minWidth: this.data.WidgetLayout['minWidth'] || '250'
             }
-            setTimeout(() => {
-                this.checkIfCardIsVertical()
-            }, 50)
         },
         watch: {
             data: {
@@ -264,29 +218,7 @@
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
                 }
             },
-            pageWidth: {
-                immediate: true,
-                handler () {
-                    this.checkIfCardIsVertical()
-                }
-            },
-            'layoutWidth.minWidth' () {
-                this.$nextTick(this.checkIfCardIsVertical)
-            }
+
         }
     }
 </script>
-<style lang="scss" scoped>
-    .status-icon {
-        max-width: 64px;
-    }
-
-    .action-icons {
-        top: 40px;
-        right: 20px;
-
-        &.edit-mode {
-            top: 0;
-        }
-    }
-</style>

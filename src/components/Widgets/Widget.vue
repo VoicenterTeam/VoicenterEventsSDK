@@ -114,6 +114,7 @@
                     widgetDataTypes.HISTORY_COUNTERS,
                     widgetDataTypes.INFO_TYPE_ID,
                     widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
+                    widgetDataTypes.TOTAL_OUTGOING_CALLS,
                 ]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
