@@ -1,7 +1,5 @@
 export function timeFormatter (time) {
-
-    if (time < 60) return time;
-
+    
     let days = Math.floor(time / 86400);
     time -= days * 86400;
 
@@ -14,9 +12,9 @@ export function timeFormatter (time) {
     let seconds = time % 60;
 
     let data = {
-        days: days ? `${days}d:`:'',
-        hours: hours ? `${addPrefix(hours)}:`:'',
-        minutes: minutes ? `${addPrefix(minutes)}:`:'',
+        days: days ? `${days}d:` : '',
+        hours: hours ? `${addPrefix(hours)}:` : '',
+        minutes: `${addPrefix(minutes)}:`,
         seconds: addPrefix(seconds)
     }
 
