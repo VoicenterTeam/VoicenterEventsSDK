@@ -4,6 +4,7 @@
             :cardIcon="null"
             :cardText="model.Title"
             :cardValue="cardValue"
+            :layoutWidth="layoutWidth"
             :showText="showText"
             :styles="getCardStyles"
             @show-modal="onShowModal"
