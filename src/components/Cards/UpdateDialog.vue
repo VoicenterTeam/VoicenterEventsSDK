@@ -20,6 +20,7 @@
                 <widget-colors :model="model" :onlyBackground="onlyBackground"/>
             </el-collapse-item>
         </el-collapse>
+        <slot name="additional-data"/>
     </modal>
 </template>
 <script>
