@@ -195,9 +195,7 @@
                     ...this.model.WidgetLayout,
                     ...data,
                     ...this.layoutWidth,
-                    ...{
-                        colors: this.model.colors
-                    }
+                    colors: this.model.colors
                 }
 
                 delete this.model.colors

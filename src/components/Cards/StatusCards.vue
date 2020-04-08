@@ -148,13 +148,11 @@
                     }
                 };
 
-                if (this.displayBorder) {
-                    let border = {'border': `2px solid ${color}`}
-                    styles = {
-                        ...styles,
-                        ...border,
-                    }
+                if (!this.displayBorder) {
+                    return styles;
                 }
+
+                styles['border'] = `2px solid ${color}`
                 return styles;
             },
             isMobileOrTablet () {
