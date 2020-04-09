@@ -43,6 +43,7 @@
     import EditButton from '@/components/EditButton'
     import HtmlWidget from './ExternalData/HtmlWidget'
     import PieChart from '@/components/Charts/PieChart'
+    import AreaChart from '@/components/Charts/AreaChart'
     import DeleteButton from '@/components/DeleteButton'
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import ConfigDialog from './ExternalData/ConfigDialog'
@@ -86,6 +87,7 @@
             QueueDashboard,
             TotalOutgoingCall,
             XaxisChart,
+            AreaChart,
         },
         props: {
             editable: {
