@@ -60,6 +60,9 @@
             <template v-slot:title>
                 <base-widget-title :title="data.Title"/>
             </template>
+            <template v-slot:time-frame>
+                <time-frame :widget="data"/>
+            </template>
             <template v-slot:search-input>
                 <el-input
                     size="medium"
@@ -75,6 +78,7 @@
     </div>
 </template>
 <script>
+    import TimeFrame from "./TimeFrame";
     import get from 'lodash/get'
     import {format} from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
@@ -95,9 +99,10 @@
 
     export default {
         components: {
-            AudioPlayer,
             DataTable,
+            TimeFrame,
             UserStatus,
+            AudioPlayer,
             StatusDuration,
             [Select.name]: Select,
             [Option.name]: Option,
