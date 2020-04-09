@@ -235,10 +235,8 @@
                             if (column === 'Recording') {
                                 columnData.minWidth = '320px'
                             }
-                            this.searchableFields.push(columnData)
-
+                            this.searchableFields.push(column)
                         }
-
                         if (this.isRealTimeTable) {
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
