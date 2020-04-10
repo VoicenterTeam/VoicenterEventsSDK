@@ -1,5 +1,7 @@
-import i18n from "@/i18n";
-import colors from "@/enum/colors";
+import get from 'lodash/get'
+import store from '@/store/store'
+import colors from '@/enum/colors'
+import {timeFormatter} from "@/helpers/timeFormatter";
 
 export const ADDITIONAL_DATA_KEY = 'ExitCounts'
 export const TOTAL_CALLS_KEY = 'CallCount'
@@ -309,3 +311,102 @@ export const activitiesToDisplay = [
 export const queueActivities = [
     'InSLACount', 'AnswerCount'
 ]
+
+const additionalColumns = {
+    'Answer': '0',
+    'Abandoned': '0',
+    'IVRExit': '0',
+    'PickUp': '0',
+    'TimeOutExit': '0',
+    'JoinEmpty': '0',
+    'LeavEempty': '0',
+    'JoinUnavail': '0',
+    'LeaveUnavail': '0',
+    'Full': '0',
+    'NextDestination': '0',
+}
+
+const tableColumns = {
+    'QueueName': '',
+    ...additionalColumns,
+    'CallCount': '',
+    'MaxRingTime': '',
+    'NotInSLACount': '',
+    'InSLACount': '',
+    'AvgRingTime': '',
+}
+
+export const queueDashboardColumnStyles = {
+    'Answer': {
+        color: colors.LIGHT_GREEN,
+    },
+    'Abandoned': {
+        color: colors.PRIVATE_COLOR,
+    },
+    'IVRExit': {
+        color: colors.PRIVATE_COLOR,
+    },
+    'PickUp': {
+        color: colors.LOGIN_COLOR,
+    },
+    'TimeOutExit': {
+        color: colors.ADMINISTRATIVE_COLOR,
+    },
+    'JoinEmpty': {
+        color: colors.LUNCH_COLOR,
+    },
+    'LeavEempty': {
+        color: colors.PRIVATE_COLOR,
+    },
+    'JoinUnavail': {
+        color: colors.LOGOUT_COLOR,
+    },
+    'LeaveUnavail': {
+        color: colors.PRIVATE_COLOR,
+    },
+    'Full': {
+        color: colors.OTHER_COLOR,
+    },
+    'NextDestination': {
+        color: colors.LOGOUT_COLOR,
+    },
+}
+
+export function formatQueueDashboardsData (records) {
+    let data = []
+
+    records.forEach((column) => {
+        let rowData = {
+            ...tableColumns,
+            ...column
+        }
+        rowData.QueueName = getQueueName(column['queue_id'])
+        rowData.MaxRingTime = timeFormatter(rowData.MaxRingTime)
+        rowData.AvgRingTime = timeFormatter(rowData.AvgRingTime)
+
+        const additionalData = column[ADDITIONAL_DATA_KEY]
+        const additionalRows = Object.keys(additionalColumns)
+        let totalCalls = column[TOTAL_CALLS_KEY] || 1
+
+        for (let statistic of additionalData) {
+            const columnName = additionalRows[statistic['billing_cdr_queue_type']]
+            rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / totalCalls).toFixed(2)} %`
+        }
+
+        data.push(rowData)
+    })
+
+    return {
+        columns: tableColumns,
+        data: data
+    }
+}
+
+function allQueues () {
+    return store.state.queues.all
+}
+
+function getQueueName (queueID) {
+    let queue = allQueues().filter((queue) => queue.QueueID === queueID)
+    return get(queue, '[0].QueueName', '- -')
+}
