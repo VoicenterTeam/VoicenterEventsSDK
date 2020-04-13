@@ -18,8 +18,8 @@
                 <slot name="value">
                     <h5 :class="{'-my-6': isVertical}"
                         :style="mainColor"
-                        class="text-6xl font-bold -my-5" v-if="cardValue">
-                        {{cardValue || '--'}}
+                        class="text-6xl font-bold -my-5">
+                        {{cardValue}}
                     </h5>
                 </slot>
             </div>
