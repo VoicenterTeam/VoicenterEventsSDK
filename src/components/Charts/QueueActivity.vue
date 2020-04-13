@@ -4,7 +4,7 @@
             <base-widget-title :title="data.Title"/>
         </div>
         <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
-            <highcharts class="chart-content_wrapper" :options="chartData"/>
+            <highcharts :options="chartData" class="chart-content_wrapper"/>
         </div>
     </div>
 </template>
@@ -30,32 +30,32 @@
             }
         },
         computed: {
-            statisticCounts() {
+            statisticCounts () {
                 return this.queueStatistics;
             },
-            activitiesToDisplay() {
-                return get(this.data.WidgetLayout, 'ShowActivities')
+            activitiesToDisplay () {
+                return get(this.data.WidgetLayout, 'ShowActivities', [])
             }
         },
-        data() {
+        data () {
             return {
                 chartData: {},
                 chartVisibility: true,
                 DEFAULT_STYLES: {
                     AnswerCount: {
                         color: '#5EB300',
-                        fontSize: 32
+                        fontSize: 24
                     },
                     InSLACount: {
                         color: '#61B5FF',
-                        fontSize: 32 // 32px
+                        fontSize: 24 // 24px
                     }
                 },
             }
         },
         methods: {
             get,
-            chartOptions() {
+            chartOptions () {
                 let data = []
                 let pane = {
                     startAngle: 0,
@@ -123,7 +123,8 @@
                             pane['background'].push(InSLAPane)
                         }
                     })
-                    let dataLabels = `<span style="font-size: ${AnswerCountStyles['fontSize']+'px'}; color: ${AnswerCountStyles['color']}">${this.$t('Answer')}: ${answerPercentage}%</span><br><span style="font-size: ${InSLACountStyles['fontSize']+'px'}; color: ${InSLACountStyles['color']}">${this.$t('In SLA')}: ${inSLAPercentage}%</span>`
+                    let dataLabels = `<p style="text-align: center;"><span style="font-size: ${AnswerCountStyles['fontSize'] + 'px'}; color: ${AnswerCountStyles['color']}">${answerPercentage}%<br>${this.$t('Answer')}</span><br><span style="font-size: ${InSLACountStyles['fontSize'] + 'px'}; color: ${InSLACountStyles['color']}">${inSLAPercentage}%<br>${this.$t('In SLA')}</span></p>`
+                    let yMargin = ((AnswerCountStyles['fontSize'] + InSLACountStyles['fontSize']) * 1.5 - 10)
                     this.chartData = {
                         ...activityChartConfig,
                         series: data,
@@ -133,10 +134,9 @@
                                 dataLabels: {
                                     enabled: true,
                                     format: dataLabels,
-                                    y: -40,
+                                    y: -yMargin,
                                     borderWidth: 0,
                                     useHTML: true,
-                                    backgroundColor: 'rgba(255, 255,255, 0.5)',
                                     zIndex: 100
                                 },
                                 linecap: 'round',
@@ -162,7 +162,7 @@
                 }
             }
         },
-        mounted() {
+        mounted () {
             if (!this.data.WidgetLayout.ShowActivities) {
                 this.$set(this.data.WidgetLayout, 'ShowActivities', queueActivities)
             }
