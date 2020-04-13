@@ -103,7 +103,6 @@
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from "@/enum/generic";
     import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
-    import {getWidgetData} from "@/services/widgetService";
 
     export default {
         components: {
@@ -242,11 +241,18 @@
                 return {'background-color': color}
             },
             getCellClassName ({column, row}) {
+                let className = ''
+
                 let extension = this.userExtension(row.user_id)
                 if (queueDashboardColumnStyles[column.property] || (dynamicRows.includes(column.property) && extension)) {
-                    return 'text-white'
+                    className = 'text-white'
                 }
-                return ''
+
+                if (queueDashboardColumnStyles[row['Stat type']]) {
+                    className = 'text-white'
+                }
+
+                return className
             },
             async getWidgetData () {
                 try {
