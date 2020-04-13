@@ -162,8 +162,11 @@
                             this.dataCount++
                         }, 1000)
                         this.dataCount = timeFormatter(this.dataCount)
+                    } else {
+                        this.dataCount = timeFormatter(this.dataCount)
                     }
                 }
+                
                 return this.dataCount
             },
             cardIcon () {
