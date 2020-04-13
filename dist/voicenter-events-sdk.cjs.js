@@ -190,6 +190,167 @@ function () {
   return Logger;
 }();
 
+var sdkEventReasons = {
+  NEWCALL: 'NEWCALL',
+  ANSWER: 'ANSWER',
+  HANGUP: 'HANGUP'
+};
+var offlineEvents = [eventTypes.CONNECT_ERROR, eventTypes.CONNECT_TIMEOUT, eventTypes.DISCONNECT, eventTypes.RECONNECT_ATTEMPT, eventTypes.RECONNECTING, eventTypes.RECONNECT_ERROR, eventTypes.RECONNECT_FAILED, sdkEventReasons.CLOSE];
+
+function isSocketOffline(event) {
+  var name = event.name;
+  return offlineEvents.includes(name);
+}
+
+function onNewEvent(_ref) {
+  var eventData = _ref.eventData,
+      store = _ref.store,
+      extensionsModuleName = _ref.extensionsModuleName;
+  debugger;
+  var name = eventData.name,
+      data = eventData.data;
+  store.commit('extensions/SET_IS_SOCKET_OFFLINE', isSocketOffline(eventData));
+
+  switch (name) {
+    case eventTypes.ALL_EXTENSION_STATUS:
+      store.dispatch('extensions/setExtensions', data.extensions);
+      break;
+
+    case eventTypes.EXTENSION_EVENT:
+      var extension = data.data; // Event reason: NEWCALL/ANSWER/HANGUP
+
+      extension['lastEvent'] = {
+        reason: data.reason,
+        ivrid: data.ivruniqueid
+      };
+      var extensions = store.state[extensionsModuleName].extensions;
+      var index = extensions.findIndex(function (e) {
+        return e.userID === extension.userID;
+      });
+
+      if (index !== -1) {
+        store.dispatch('extensions/updateExtension', {
+          index: index,
+          extension: extension
+        });
+      }
+
+      break;
+
+    case eventTypes.LOGIN:
+      store.commit('extensions/SET_SERVER_TIME', data);
+      break;
+
+    default:
+      break;
+  }
+}
+
+var callStatuses = {
+  CALLING: 100,
+  HOLD: 101
+};
+
+var _mutations;
+var ISRAEL_TIMEZONE_OFFSET = 180 * 60 * 1000;
+var MINUTE = 60 * 1000;
+var LOGOUT_STATUS = 2;
+var HOLD_STATUS = 'hold';
+var types = {
+  SET_EXTENSIONS: 'SET_EXTENSIONS',
+  UPDATE_EXTENSIONS: 'UPDATE_EXTENSIONS',
+  SET_SERVER_TIME: 'SET_SERVER_TIME',
+  SET_IS_SOCKET_OFFLINE: 'SET_IS_SOCKET_OFFLINE'
+};
+var state = {
+  extensions: [],
+  serverTime: null,
+  serverDelta: 0,
+  serverOffset: 0,
+  isSocketOffline: false,
+  offlineSocketTimestamp: null
+};
+var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_EXTENSIONS, function (state, value) {
+  state.extensions = value;
+}), _defineProperty(_mutations, types.UPDATE_EXTENSIONS, function (state, _ref) {
+  var index = _ref.index,
+      extension = _ref.extension;
+  state.extensions.splice(index, 1, extension);
+}), _defineProperty(_mutations, types.SET_SERVER_TIME, function (state, value) {
+  state.serverOffset = value.servertimeoffset * 60 * 1000 || ISRAEL_TIMEZONE_OFFSET;
+  state.serverTime = value.servertime * 1000 - state.serverOffset;
+  state.serverDelta = new Date().getTime() - state.serverTime;
+}), _defineProperty(_mutations, types.SET_IS_SOCKET_OFFLINE, function (state, value) {
+  state.isSocketOffline = value;
+
+  if (value) {
+    state.offlineSocketTimestamp = new Date().getTime();
+  } else {
+    state.offlineSocketTimestamp = null;
+  }
+}), _mutations);
+var actions = {
+  setExtensions: async function setExtensions(_ref2, value) {
+    var commit = _ref2.commit;
+    commit(types.SET_EXTENSIONS, value);
+  },
+  updateExtension: async function updateExtension(_ref3, value) {
+    var commit = _ref3.commit;
+    commit(types.UPDATE_EXTENSIONS, value);
+  }
+};
+var getters = {
+  isSocketOffline: function isSocketOffline(state) {
+    if (!state.offlineSocketTimestamp || isNaN(state.offlineSocketTimestamp)) {
+      return false;
+    }
+
+    var now = new Date().getTime(); // show after 1 minute of disconnect
+
+    return state.isSocketOffline && now - state.offlineSocketTimestamp > MINUTE;
+  },
+  extensionsWithCalls: function extensionsWithCalls(state) {
+    return function (hideLoggedOutUsers) {
+      var groupedExtensions = [];
+      state.extensions.forEach(function (extension) {
+        if (extension.calls.length > 0) {
+          if (extension.calls.filter(function (call) {
+            return call.answered && call.callstatus === HOLD_STATUS;
+          }).length) {
+            extension['representativeStatus'] = callStatuses.HOLD;
+          } else {
+            extension['representativeStatus'] = callStatuses.CALLING;
+          }
+        }
+
+        groupedExtensions.push(extension);
+      });
+
+      if (hideLoggedOutUsers) {
+        return groupedExtensions.filter(function (e) {
+          return e.representativeStatus !== LOGOUT_STATUS;
+        });
+      }
+
+      return groupedExtensions;
+    };
+  },
+  extensionCountByStatus: function extensionCountByStatus(state, getters) {
+    return function (status) {
+      return getters.extensionWithCalls.filter(function (el) {
+        return el.representativeStatus === status;
+      }).length || 0;
+    };
+  }
+};
+var extensionsModule = {
+  namespaced: true,
+  state: state,
+  mutations: mutations,
+  actions: actions,
+  getters: getters
+};
+
 function getServerWithHighestPriority(servers) {
   var chosenServer = null;
   var maxPriority = -1;
@@ -217,6 +378,8 @@ var defaultOptions = {
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
+  store: null,
+  extensionsModuleName: 'sdkExtensions',
   serverFetchStrategy: 'remote',
   // get servers from external url options: remote | static
   serverType: null // can be 1 or 2. 2 is used for chrome extension
@@ -258,9 +421,25 @@ function () {
     this._loginEventTriggered = false;
     this._lastLoginTimestamp = null;
     this._lastPong = null;
+    this._handleLocalEvents = false;
+
+    this._registerExtensionsModule();
   }
 
   _createClass(EventsSDK, [{
+    key: "_registerExtensionsModule",
+    value: function _registerExtensionsModule() {
+      var store = this.options.store;
+
+      if (!store) {
+        return;
+      }
+
+      var moduleName = this.options.extensionsModuleName || 'sdkExtensions';
+      store.registerModule(moduleName, extensionsModule);
+      this._handleLocalEvents = true;
+    }
+  }, {
     key: "_initReconnectOptions",
     value: function _initReconnectOptions() {
       this.reconnectOptions = {
@@ -599,6 +778,12 @@ function () {
 
       if (eventHandler && typeof eventHandler === 'function') {
         eventHandler.call(this, evt.data);
+      }
+
+      if (this._handleLocalEvents) {
+        onNewEvent(Object.assign({
+          eventData: evt
+        }, this));
       }
     }
     /**
