@@ -53,7 +53,10 @@ const actions = {
 const getters = {
     currentUser: state =>  {
         return state.currentUser
-    }
+    },
+    activeTokens: state =>  {
+        return state.tokenString
+    },
 }
 
 export default {
