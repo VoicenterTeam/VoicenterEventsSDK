@@ -409,5 +409,7 @@
     "Performance": "Performance",
     "External data": "External data",
     "Display the row with totals": "Display the row with totals",
-    "Display queue as column": "Display queue as column"
+    "Display queue as column": "Display queue as column",
+    "Stat type": "Stat type",
+    "All": "All"
 }

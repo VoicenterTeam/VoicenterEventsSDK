@@ -12,8 +12,11 @@
             :widgetTitle="data.Title"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
+            <template v-if="isMultiQueuesDashboard(data) && !displayQueueAsColumn" v-slot:header_title="{column}">
+                {{getQueueName(column.prop)}}
+            </template>
             <template v-if="isMultiQueuesDashboard(data)" v-slot:QueueName="{row}">
-                {{getQueueName(row.queue_id)}}
+                {{getQueueName(row.QueueID)}}
             </template>
             <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
                 <status-duration :extension="userExtension(row.user_id)"
@@ -98,7 +101,7 @@
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from "@/enum/generic";
-    import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/enum/queueDashboardStatistics";
+    import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
     import {getWidgetData} from "@/services/widgetService";
 
     export default {
@@ -194,11 +197,14 @@
             allQueues () {
                 return this.$store.state.queues.all
             },
+            displayQueueAsColumn() {
+               return  get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
+            }
         },
         methods: {
             isMultiQueuesDashboard,
             getQueueName (queueID) {
-                if(typeof queueID === 'string') {
+                if(queueID === 'All' || queueID === 'Stat type') {
                     return queueID
                 }
 
@@ -209,6 +215,8 @@
                 return this.extensions.find(e => e.userID === userId)
             },
             getCellStyle ({row, column}) {
+                console.log(row)
+                console.log(column)
                 let color = 'transparent'
 
                 if (dynamicRows.includes(column.property)) {
@@ -416,11 +424,11 @@
                         let minWidth = 0
 
                         if (isMultiQueuesDashboard(this.data)) {
-                            let displayRowWithTotals = this.data.WidgetLayout.displayRowWithTotals
-                            let result = formatQueueDashboardsData(data, displayRowWithTotals)
-                            console.log()
-                            availableColumns = result.columns
+                            let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
+                            let displayQueueAsColumn = this.displayQueueAsColumn
+                            let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn)
 
+                            availableColumns = result.columns
                             data = result.data
                             minWidth = 130
                         }
@@ -511,7 +519,6 @@
             }
             if (isMultiQueuesDashboard(this.data) && !this.data.WidgetLayout.displayRowWithTotals) {
                 this.$set(this.data.WidgetLayout, 'displayRowWithTotals', true)
-                this.$set(this.data.WidgetLayout, 'displayQueueAsColumn', true)
             }
         },
         watch: {
