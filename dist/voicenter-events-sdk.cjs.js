@@ -206,14 +206,13 @@ function onNewEvent(_ref) {
   var eventData = _ref.eventData,
       store = _ref.store,
       extensionsModuleName = _ref.extensionsModuleName;
-  debugger;
   var name = eventData.name,
       data = eventData.data;
-  store.commit('extensions/SET_IS_SOCKET_OFFLINE', isSocketOffline(eventData));
+  store.commit("".concat(extensionsModuleName, "/SET_IS_SOCKET_OFFLINE"), isSocketOffline(eventData));
 
   switch (name) {
     case eventTypes.ALL_EXTENSION_STATUS:
-      store.dispatch('extensions/setExtensions', data.extensions);
+      store.dispatch("".concat(extensionsModuleName, "/setExtensions"), data.extensions);
       break;
 
     case eventTypes.EXTENSION_EVENT:
@@ -229,7 +228,7 @@ function onNewEvent(_ref) {
       });
 
       if (index !== -1) {
-        store.dispatch('extensions/updateExtension', {
+        store.dispatch("".concat(extensionsModuleName, "/updateExtension"), {
           index: index,
           extension: extension
         });
@@ -237,8 +236,8 @@ function onNewEvent(_ref) {
 
       break;
 
-    case eventTypes.LOGIN:
-      store.commit('extensions/SET_SERVER_TIME', data);
+    case eventTypes.LOGIN_STATUS:
+      store.commit("".concat(extensionsModuleName, "/SET_SERVER_TIME"), data);
       break;
 
     default:
@@ -429,13 +428,20 @@ function () {
   _createClass(EventsSDK, [{
     key: "_registerExtensionsModule",
     value: function _registerExtensionsModule() {
-      var store = this.options.store;
+      var _this$options = this.options,
+          store = _this$options.store,
+          extensionsModuleName = _this$options.extensionsModuleName;
 
       if (!store) {
         return;
       }
 
-      var moduleName = this.options.extensionsModuleName || 'sdkExtensions';
+      var moduleName = extensionsModuleName || 'sdkExtensions';
+
+      if (store.state[extensionsModuleName]) {
+        store.unregisterModule(moduleName);
+      }
+
       store.registerModule(moduleName, extensionsModule);
       this._handleLocalEvents = true;
     }
@@ -783,7 +789,7 @@ function () {
       if (this._handleLocalEvents) {
         onNewEvent(Object.assign({
           eventData: evt
-        }, this));
+        }, this.options));
       }
     }
     /**
