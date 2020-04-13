@@ -68,6 +68,7 @@
       async initSdk() {
         let sdk = new EventsSdk({
           token: this.monitorCode,
+          store: this.$store,
           debug: true
         });
         window.sdk = sdk

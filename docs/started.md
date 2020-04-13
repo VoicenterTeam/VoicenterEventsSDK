@@ -70,7 +70,13 @@ sdk.on('ExtensionEvent', data => {
 
 ```javascript
 sdk.emit('event name', { key: 'value' });
-``` 
+```
+ 
+## Pass vuex store
+Passing a vuex store will automatically register a vuex module and save extensions in it.
+This is useful if you use vuex and don't want to handle all the extension events yourself but rather use the sdk vuex module.
+Open [Vue Devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd?hl=en) and see the `sdkExtensions`
+vuex module and its state/getters.
 
 ## Options
 
@@ -94,6 +100,8 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **url**  | string  | https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls |  Url from which to get monitor urls |
 | **servers**  | Array  | contains 5 default servers | Contains a list of real time servers with priorities and versions. Please check `src/config.js` file to see the exact format |
 | **serverFetchStrategy**  | string  | determines the strategy how monitor servers are initiated. Can be **remote** (server urls are retrieved from a remote url) or **static** where server urls are specified directly through config. In case remote call fails, it will fallback to the default list of servers or the ones passed through config |
+| **store**  | object  | Vuex store to use in order to register an extensions module. This should simplify the end usage of the sdk |
+| **extensionsModuleName**  | string  | Vuex store extension module name. Defaults to `sdkExtensions` |
 
 Servers array format
 

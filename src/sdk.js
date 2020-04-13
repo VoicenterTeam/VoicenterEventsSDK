@@ -3,6 +3,8 @@ import eventTypes from './eventTypes';
 import { defaultServers } from './config';
 import Logger from './Logger';
 import debounce from 'lodash/debounce'
+import handleStoreEvents from './store/handleStoreEvents'
+import extensionsModule from './store/extensions'
 import { getServerWithHighestPriority } from './utils';
 
 const defaultOptions = {
@@ -19,6 +21,8 @@ const defaultOptions = {
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
+  store: null,
+  extensionsModuleName: 'sdkExtensions',
   serverFetchStrategy: 'remote', // get servers from external url options: remote | static
   serverType: null, // can be 1 or 2. 2 is used for chrome extension
 };
@@ -50,6 +54,21 @@ class EventsSDK {
     this._loginEventTriggered = false
     this._lastLoginTimestamp = null
     this._lastPong = null
+    this._handleLocalEvents = false
+    this._registerExtensionsModule()
+  }
+
+  _registerExtensionsModule() {
+    const { store, extensionsModuleName } = this.options
+    if (!store) {
+      return
+    }
+    const moduleName = extensionsModuleName || 'sdkExtensions'
+    if (store.state[extensionsModuleName]) {
+      store.unregisterModule(moduleName)
+    }
+    store.registerModule(moduleName, extensionsModule)
+    this._handleLocalEvents = true
   }
 
   _initReconnectOptions() {
@@ -330,6 +349,12 @@ class EventsSDK {
     const eventHandler = eventMappings[evt.name]
     if (eventHandler && typeof eventHandler === 'function') {
       eventHandler.call(this, evt.data)
+    }
+    if (this._handleLocalEvents) {
+      handleStoreEvents({
+        eventData: evt,
+        ...this.options
+      })
     }
   }
 
