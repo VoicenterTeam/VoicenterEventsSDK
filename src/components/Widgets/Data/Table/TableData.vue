@@ -6,8 +6,9 @@
             :cell-style="getCellStyle"
             :columns="availableColumns"
             :editable="editable"
+            :row-style="getRowStyle"
             :showColumns="visibleColumns"
-            :stripe="stripe"
+            :stripe="isStripeTable"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
             @on-update-layout="onUpdateLayout"
@@ -102,7 +103,6 @@
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from "@/enum/generic";
     import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
-    import {getWidgetData} from "@/services/widgetService";
 
     export default {
         components: {
@@ -139,12 +139,14 @@
                 filteredDataLength: null,
                 hideOnSinglePage: true,
                 border: true,
-                stripe: true,
                 widget: cloneDeep(this.data),
                 drawRow: true,
             }
         },
         computed: {
+            isStripeTable() {
+                return !this.isMultiQueuesDashboard(this.widget);
+            },
             fetchTableData () {
                 let tableData = this.tableData
 
@@ -197,14 +199,14 @@
             allQueues () {
                 return this.$store.state.queues.all
             },
-            displayQueueAsColumn() {
-               return  get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
+            displayQueueAsColumn () {
+                return get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
             }
         },
         methods: {
             isMultiQueuesDashboard,
             getQueueName (queueID) {
-                if(queueID === 'All' || queueID === 'Stat type') {
+                if (queueID === 'All' || queueID === 'Stat type') {
                     return queueID
                 }
 
@@ -215,8 +217,6 @@
                 return this.extensions.find(e => e.userID === userId)
             },
             getCellStyle ({row, column}) {
-                console.log(row)
-                console.log(column)
                 let color = 'transparent'
 
                 if (dynamicRows.includes(column.property)) {
@@ -230,6 +230,14 @@
                     color = get(queueDashboardColumnStyles[column.property], 'color')
                 }
 
+                return {'background-color': color}
+            },
+            getRowStyle ({row}) {
+                if (!isMultiQueuesDashboard(this.widget)) {
+                    return
+                }
+
+                let color = get(queueDashboardColumnStyles[row['Stat type']], 'color')
                 return {'background-color': color}
             },
             getCellClassName ({column, row}) {
