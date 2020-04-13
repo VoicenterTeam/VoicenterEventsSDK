@@ -3,11 +3,13 @@ import { DashboardApi } from '@/api/dashboardApi'
 
 const ACTIVE_DASHBOARD = 'active-dashboard'
 let previousActiveDashboard = localStorage.getItem(ACTIVE_DASHBOARD)
+
 try {
     previousActiveDashboard = JSON.parse(previousActiveDashboard)
 } catch (e) {
     console.log(e)
 }
+
 const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
     SET_EDIT_MODE: 'SET_EDIT_MODE',
