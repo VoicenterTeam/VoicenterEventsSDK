@@ -55,7 +55,9 @@
                             <div class="truncate">
                                 <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300" placement="top">
                                 <span class="font-medium uppercase">
+                                    <slot name="header_title" :column="column">
                                     {{$t(column.prop) || column.label}}
+                                    </slot>
                                 </span>
                                 </el-tooltip>
                             </div>

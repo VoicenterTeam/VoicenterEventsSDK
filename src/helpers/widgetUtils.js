@@ -6,6 +6,7 @@ import {queueActivityGaugeKey} from "@/enum/generic";
 
 // minimum refresh interval for real-time widgets - 10 seconds
 const MIN_REFRESH_INTERVAL = 10
+const MULTI_QUEUES_DASHBOARD_KEY = 'GetMultiQueuesDashboard'
 
 const minRefreshInterval = () => {
     return store.state.dashboards.settings.minRefreshInterval || MIN_REFRESH_INTERVAL
@@ -72,6 +73,10 @@ export function isRealtimeWidget(widget) {
         return true
     }
     return false
+}
+
+export function isMultiQueuesDashboard(widget) {
+    return widget.EndPoint.includes(MULTI_QUEUES_DASHBOARD_KEY);
 }
 
 export function isPieWidget(widget) {

@@ -1,5 +1,4 @@
-import i18n from "@/i18n";
-import colors from "@/enum/colors";
+import colors from '@/enum/colors'
 
 export const ADDITIONAL_DATA_KEY = 'ExitCounts'
 export const TOTAL_CALLS_KEY = 'CallCount'
