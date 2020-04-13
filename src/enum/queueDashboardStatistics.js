@@ -312,28 +312,28 @@ export const queueActivities = [
     'InSLACount', 'AnswerCount'
 ]
 
-const additionalColumns = {
-    'Answer': '0',
-    'Abandoned': '0',
-    'IVRExit': '0',
-    'PickUp': '0',
-    'TimeOutExit': '0',
-    'JoinEmpty': '0',
-    'LeavEempty': '0',
-    'JoinUnavail': '0',
-    'LeaveUnavail': '0',
-    'Full': '0',
-    'NextDestination': '0',
+let additionalColumns = {
+    'Answer': 0,
+    'Abandoned': 0,
+    'IVRExit': 0,
+    'PickUp': 0,
+    'TimeOutExit': 0,
+    'JoinEmpty': 0,
+    'LeavEempty': 0,
+    'JoinUnavail': 0,
+    'LeaveUnavail': 0,
+    'Full': 0,
+    'NextDestination': 0,
 }
 
-const tableColumns = {
+let tableColumns = {
     'QueueName': '',
     ...additionalColumns,
-    'CallCount': '',
-    'MaxRingTime': '',
-    'NotInSLACount': '',
-    'InSLACount': '',
-    'AvgRingTime': '',
+    'CallCount': 0,
+    'MaxRingTime': 0,
+    'NotInSLACount': 0,
+    'InSLACount': 0,
+    'AvgRingTime': 0,
 }
 
 export const queueDashboardColumnStyles = {
@@ -372,29 +372,59 @@ export const queueDashboardColumnStyles = {
     },
 }
 
-export function formatQueueDashboardsData (records) {
-    let data = []
+export function formatQueueDashboardsData (records, displayRowWithTotals) {
 
-    records.forEach((column) => {
+    let data = []
+    let queueTotals = tableColumns
+
+    let recordsCount = records.length
+    let allQueueCalls = 1
+
+    records.forEach((column, index) => {
         let rowData = {
             ...tableColumns,
             ...column
         }
+
         rowData.QueueName = getQueueName(column['queue_id'])
+
         rowData.MaxRingTime = timeFormatter(rowData.MaxRingTime)
         rowData.AvgRingTime = timeFormatter(rowData.AvgRingTime)
 
         const additionalData = column[ADDITIONAL_DATA_KEY]
         const additionalRows = Object.keys(additionalColumns)
-        let totalCalls = column[TOTAL_CALLS_KEY] || 1
+        let qTotalCalls = column[TOTAL_CALLS_KEY] || 1
+
+        allQueueCalls += Number(qTotalCalls)
 
         for (let statistic of additionalData) {
             const columnName = additionalRows[statistic['billing_cdr_queue_type']]
-            rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / totalCalls).toFixed(2)} %`
+            rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)} %`
+            if (displayRowWithTotals) {
+                queueTotals[columnName] += Number(statistic['ExitTypeCount'])
+                if (index === recordsCount - 1) {
+                    queueTotals[columnName] = `${((Number(queueTotals[columnName]) * 100) / allQueueCalls).toFixed(2)} %`
+                }
+            }
+        }
+
+        delete rowData[ADDITIONAL_DATA_KEY]
+
+        if (displayRowWithTotals) {
+            queueTotals.CallCount += column.CallCount
+            queueTotals.MaxRingTime += column.MaxRingTime
+            queueTotals.NotInSLACount += column.NotInSLACount
+            queueTotals.InSLACount += column.InSLACount
+            queueTotals.AvgRingTime += column.AvgRingTime
         }
 
         data.push(rowData)
     })
+
+    if (displayRowWithTotals) {
+        queueTotals['QueueName'] = 'ALL'
+        data.splice(0, 1, queueTotals)
+    }
 
     return {
         columns: tableColumns,
@@ -408,5 +438,5 @@ function allQueues () {
 
 function getQueueName (queueID) {
     let queue = allQueues().filter((queue) => queue.QueueID === queueID)
-    return get(queue, '[0].QueueName', '- -')
+    return get(queue, '[0].QueueName', '--')
 }

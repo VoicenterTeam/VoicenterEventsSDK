@@ -95,7 +95,7 @@
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from "@/enum/generic";
-    import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/enum/queueDashboardStatistics";
+    import {formatQueueDashboardsData, queueDashboardColumnStyles, statistics} from "@/enum/queueDashboardStatistics";
     import {getWidgetData} from "@/services/widgetService";
 
     export default {
@@ -218,7 +218,177 @@
             },
             async getWidgetData () {
                 try {
-                    let data = await getWidgetData(this.widget)
+                    // let data = await getWidgetData(this.widget)
+                    let data = [
+                        {
+                            "queue_id": 11407,
+                            "CallCount": 1,
+                            "MaxRingTime": 2,
+                            "NotInSLACount": 0,
+                            "InSLACount": 1,
+                            "AvgRingTime": 2,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 1
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 11405,
+                            "CallCount": 45,
+                            "MaxRingTime": 474,
+                            "NotInSLACount": 12,
+                            "InSLACount": 33,
+                            "AvgRingTime": 69,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 38
+                                },
+                                {
+                                    "billing_cdr_queue_type": 2,
+                                    "ExitTypeCount": 7
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 14840,
+                            "CallCount": 233,
+                            "MaxRingTime": 1201,
+                            "NotInSLACount": 115,
+                            "InSLACount": 94,
+                            "AvgRingTime": 134,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 206
+                                },
+                                {
+                                    "billing_cdr_queue_type": 2,
+                                    "ExitTypeCount": 27
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 14949,
+                            "CallCount": 64,
+                            "MaxRingTime": 730,
+                            "NotInSLACount": 22,
+                            "InSLACount": 33,
+                            "AvgRingTime": 104,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 50
+                                },
+                                {
+                                    "billing_cdr_queue_type": 2,
+                                    "ExitTypeCount": 14
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 11351,
+                            "CallCount": 164,
+                            "MaxRingTime": 989,
+                            "NotInSLACount": 52,
+                            "InSLACount": 109,
+                            "AvgRingTime": 95,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 147
+                                },
+                                {
+                                    "billing_cdr_queue_type": 2,
+                                    "ExitTypeCount": 17
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 12590,
+                            "CallCount": 5,
+                            "MaxRingTime": 64,
+                            "NotInSLACount": 1,
+                            "InSLACount": 4,
+                            "AvgRingTime": 14,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 5
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 14952,
+                            "CallCount": 84,
+                            "MaxRingTime": 627,
+                            "NotInSLACount": 46,
+                            "InSLACount": 25,
+                            "AvgRingTime": 151,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 58
+                                },
+                                {
+                                    "billing_cdr_queue_type": 2,
+                                    "ExitTypeCount": 26
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 14752,
+                            "CallCount": 1,
+                            "MaxRingTime": 1,
+                            "NotInSLACount": 0,
+                            "InSLACount": 1,
+                            "AvgRingTime": 1,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 1
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 12591,
+                            "CallCount": 175,
+                            "MaxRingTime": 767,
+                            "NotInSLACount": 44,
+                            "InSLACount": 129,
+                            "AvgRingTime": 72,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 168
+                                },
+                                {
+                                    "billing_cdr_queue_type": 2,
+                                    "ExitTypeCount": 7
+                                }
+                            ]
+                        },
+                        {
+                            "queue_id": 14129,
+                            "CallCount": 199,
+                            "MaxRingTime": 768,
+                            "NotInSLACount": 74,
+                            "InSLACount": 125,
+                            "AvgRingTime": 82,
+                            "ExitCounts": [
+                                {
+                                    "billing_cdr_queue_type": 1,
+                                    "ExitTypeCount": 181
+                                },
+                                {
+                                    "billing_cdr_queue_type": 2,
+                                    "ExitTypeCount": 18
+                                }
+                            ]
+                        }
+                    ]
                     if (!data) {
                         return
                     }
@@ -231,8 +401,11 @@
                         let minWidth = 0
 
                         if (isMultiQueuesDashboard(this.widget)) {
-                            let result = formatQueueDashboardsData(data)
+                            let displayRowWithTotals = this.widget.WidgetLayout.displayRowWithTotals
+                            let result = formatQueueDashboardsData(data, displayRowWithTotals)
+
                             availableColumns = result.columns
+
                             data = result.data
                             minWidth = 130
                         }
@@ -320,6 +493,10 @@
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
+            }
+            if (isMultiQueuesDashboard(this.widget) && !this.widget.WidgetLayout.displayRowWithTotals) {
+                this.$set(this.widget.WidgetLayout, 'displayRowWithTotals', true)
+                // console.log(this.widget.WidgetLayout)
             }
         },
         watch: {
