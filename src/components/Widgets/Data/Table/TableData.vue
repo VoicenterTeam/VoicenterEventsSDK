@@ -12,6 +12,9 @@
             :widgetTitle="data.Title"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
+            <template v-if="isMultiQueuesDashboard(data)" v-slot:QueueName="{row}">
+                {{getQueueName(row.queue_id)}}
+            </template>
             <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
                 <status-duration :extension="userExtension(row.user_id)"
                                  :key="row.user_id"
@@ -95,7 +98,7 @@
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from "@/enum/generic";
-    import {formatQueueDashboardsData, queueDashboardColumnStyles, statistics} from "@/enum/queueDashboardStatistics";
+    import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/enum/queueDashboardStatistics";
     import {getWidgetData} from "@/services/widgetService";
 
     export default {
@@ -187,9 +190,21 @@
             },
             visibleColumns () {
                 return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
-            }
+            },
+            allQueues () {
+                return this.$store.state.queues.all
+            },
         },
         methods: {
+            isMultiQueuesDashboard,
+            getQueueName (queueID) {
+                if(typeof queueID === 'string') {
+                    return queueID
+                }
+
+                let queue = this.allQueues.filter((queue) => queue.QueueID === queueID)
+                return get(queue, '[0].QueueName', '--')
+            },
             userExtension (userId) {
                 return this.extensions.find(e => e.userID === userId)
             },
@@ -400,10 +415,10 @@
                         let availableColumns = data[0]
                         let minWidth = 0
 
-                        if (isMultiQueuesDashboard(this.widget)) {
-                            let displayRowWithTotals = this.widget.WidgetLayout.displayRowWithTotals
+                        if (isMultiQueuesDashboard(this.data)) {
+                            let displayRowWithTotals = this.data.WidgetLayout.displayRowWithTotals
                             let result = formatQueueDashboardsData(data, displayRowWithTotals)
-
+                            console.log()
                             availableColumns = result.columns
 
                             data = result.data
@@ -494,9 +509,9 @@
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
             }
-            if (isMultiQueuesDashboard(this.widget) && !this.widget.WidgetLayout.displayRowWithTotals) {
-                this.$set(this.widget.WidgetLayout, 'displayRowWithTotals', true)
-                // console.log(this.widget.WidgetLayout)
+            if (isMultiQueuesDashboard(this.data) && !this.data.WidgetLayout.displayRowWithTotals) {
+                this.$set(this.data.WidgetLayout, 'displayRowWithTotals', true)
+                this.$set(this.data.WidgetLayout, 'displayQueueAsColumn', true)
             }
         },
         watch: {

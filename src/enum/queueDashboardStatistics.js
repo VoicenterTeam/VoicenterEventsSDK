@@ -1,5 +1,3 @@
-import get from 'lodash/get'
-import store from '@/store/store'
 import colors from '@/enum/colors'
 import {timeFormatter} from "@/helpers/timeFormatter";
 
@@ -312,30 +310,6 @@ export const queueActivities = [
     'InSLACount', 'AnswerCount'
 ]
 
-let additionalColumns = {
-    'Answer': 0,
-    'Abandoned': 0,
-    'IVRExit': 0,
-    'PickUp': 0,
-    'TimeOutExit': 0,
-    'JoinEmpty': 0,
-    'LeavEempty': 0,
-    'JoinUnavail': 0,
-    'LeaveUnavail': 0,
-    'Full': 0,
-    'NextDestination': 0,
-}
-
-let tableColumns = {
-    'QueueName': '',
-    ...additionalColumns,
-    'CallCount': 0,
-    'MaxRingTime': 0,
-    'NotInSLACount': 0,
-    'InSLACount': 0,
-    'AvgRingTime': 0,
-}
-
 export const queueDashboardColumnStyles = {
     'Answer': {
         color: colors.LIGHT_GREEN,
@@ -374,10 +348,34 @@ export const queueDashboardColumnStyles = {
 
 export function formatQueueDashboardsData (records, displayRowWithTotals) {
 
+    const additionalColumns = {
+        'Answer': 0,
+        'Abandoned': 0,
+        'IVRExit': 0,
+        'PickUp': 0,
+        'TimeOutExit': 0,
+        'JoinEmpty': 0,
+        'LeavEempty': 0,
+        'JoinUnavail': 0,
+        'LeaveUnavail': 0,
+        'Full': 0,
+        'NextDestination': 0,
+    }
+
+    const tableColumns = {
+        'QueueName': '',
+        ...additionalColumns,
+        'CallCount': 0,
+        'MaxRingTime': 0,
+        'NotInSLACount': 0,
+        'InSLACount': 0,
+        'AvgRingTime': 0,
+    }
+
     let data = []
     let queueTotals = tableColumns
 
-    let recordsCount = records.length
+    const recordsCount = records.length
     let allQueueCalls = 1
 
     records.forEach((column, index) => {
@@ -386,7 +384,7 @@ export function formatQueueDashboardsData (records, displayRowWithTotals) {
             ...column
         }
 
-        rowData.QueueName = getQueueName(column['queue_id'])
+        rowData['queue_id'] = column['queue_id']
 
         rowData.MaxRingTime = timeFormatter(rowData.MaxRingTime)
         rowData.AvgRingTime = timeFormatter(rowData.AvgRingTime)
@@ -408,7 +406,7 @@ export function formatQueueDashboardsData (records, displayRowWithTotals) {
             }
         }
 
-        delete rowData[ADDITIONAL_DATA_KEY]
+        // delete rowData[ADDITIONAL_DATA_KEY]
 
         if (displayRowWithTotals) {
             queueTotals.CallCount += column.CallCount
@@ -422,7 +420,7 @@ export function formatQueueDashboardsData (records, displayRowWithTotals) {
     })
 
     if (displayRowWithTotals) {
-        queueTotals['QueueName'] = 'ALL'
+        queueTotals['queue_id'] = 'ALL'
         data.splice(0, 1, queueTotals)
     }
 
@@ -430,13 +428,4 @@ export function formatQueueDashboardsData (records, displayRowWithTotals) {
         columns: tableColumns,
         data: data
     }
-}
-
-function allQueues () {
-    return store.state.queues.all
-}
-
-function getQueueName (queueID) {
-    let queue = allQueues().filter((queue) => queue.QueueID === queueID)
-    return get(queue, '[0].QueueName', '--')
 }

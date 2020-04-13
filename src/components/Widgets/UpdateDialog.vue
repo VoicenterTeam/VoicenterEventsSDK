@@ -12,9 +12,20 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
-                <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
-                    {{$t('Display the row with totals')}}
-                </el-checkbox>
+                <div class="flex w-full flex-col lg:flex-row">
+                    <div class="flex lg:w-1/2">
+                        <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
+                            {{$t('Display the row with totals')}}
+                        </el-checkbox>
+                    </div>
+                    <div class="flex lg:w-1/2">
+                        <div class="flex lg:w-1/2">
+                            <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueueAsColumn">
+                                {{$t('Display queue as column')}}
+                            </el-checkbox>
+                        </div>
+                    </div>
+                </div>
             </el-form-item>
             <el-form-item v-if="isQueueTable(widget) || isQueueGauge(widget)">
                 <label>{{$t('queues.to.display')}}</label>
@@ -310,6 +321,7 @@
         },
         mounted () {
             this.model = cloneDeep(this.widget)
+
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
 
             if (isRealtimeWidget(this.widget)) {
