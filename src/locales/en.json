@@ -5,6 +5,8 @@
     "common.cancel": "Cancel",
     "common.confirm": "Confirm",
     "common.confirm.question": "Are you sure you want {action}?",
+    "to update widget": "to update widget",
+    "to delete this dashboard": "to delete this dashboard",
     "common.save": "Save",
     "common.save.changes": "Save changes",
     "common.revert.changes": "Revert changes",
@@ -405,11 +407,12 @@
     "All widgets": "All widgets",
     "Incoming Calls": "Incoming Calls",
     "Outgoing Calls": "Outgoing Calls",
-    "Autodialer": "Autodialer",
+    "Autodialer ": "Autodialer",
     "Performance": "Performance",
     "External data": "External data",
     "Display the row with totals": "Display the row with totals",
     "Display queue as column": "Display queue as column",
     "Stat type": "Stat type",
-    "All": "All"
+    "All": "All",
+    "Click the switch to enable edit mode for this html": "Click the switch to enable edit mode for this html"
 }
