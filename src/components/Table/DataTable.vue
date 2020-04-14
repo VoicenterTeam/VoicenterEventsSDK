@@ -53,13 +53,13 @@
                         :type="column.type">
                         <template slot="header">
                             <div class="truncate">
-                                <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300" placement="top">
-                                <span class="font-medium uppercase">
-                                    <slot name="header_title" :column="column">
-                                    {{$t(column.prop) || column.label}}
-                                    </slot>
-                                </span>
-                                </el-tooltip>
+                                <slot name="header_title" :column="column">
+                                    <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300" placement="top">
+                                    <span class="font-medium uppercase">
+                                        {{$t(column.prop) || column.label}}
+                                    </span>
+                                    </el-tooltip>
+                                </slot>
                             </div>
                             <!-- This part is bulky from UI perspective. Has to be refined-->
                             <header-actions
