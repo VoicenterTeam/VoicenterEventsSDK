@@ -1,6 +1,6 @@
 {
   "name": "voicenter-events-sdk",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "scripts": {
     "serve": "npm run docs",
     "build": "bili",
