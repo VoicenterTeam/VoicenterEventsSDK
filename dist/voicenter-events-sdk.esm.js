@@ -201,7 +201,8 @@ function isSocketOffline(event) {
 function onNewEvent(_ref) {
   var eventData = _ref.eventData,
       store = _ref.store,
-      extensionsModuleName = _ref.extensionsModuleName;
+      extensionsModuleName = _ref.extensionsModuleName,
+      queuesModuleName = _ref.queuesModuleName;
   var name = eventData.name,
       data = eventData.data;
   store.commit("".concat(extensionsModuleName, "/SET_IS_SOCKET_OFFLINE"), isSocketOffline(eventData));
@@ -219,13 +220,13 @@ function onNewEvent(_ref) {
         ivrid: data.ivruniqueid
       };
       var extensions = store.state[extensionsModuleName].extensions;
-      var index = extensions.findIndex(function (e) {
+      var extensionIndex = extensions.findIndex(function (e) {
         return e.userID === extension.userID;
       });
 
-      if (index !== -1) {
+      if (extensionIndex !== -1) {
         store.dispatch("".concat(extensionsModuleName, "/updateExtension"), {
-          index: index,
+          index: extensionIndex,
           extension: extension
         });
       }
@@ -234,6 +235,23 @@ function onNewEvent(_ref) {
 
     case eventTypes.LOGIN_STATUS:
       store.commit("".concat(extensionsModuleName, "/SET_SERVER_TIME"), data);
+      store.dispatch("".concat(queuesModuleName, "/setQueues"), data.queues);
+      break;
+
+    case eventTypes.QUEUE_EVENT:
+      var queue = data.data;
+      var allQueues = get(store.state, "[".concat(queuesModuleName, "].all"), []);
+      var queueIndex = allQueues.findIndex(function (e) {
+        return e.QueueID === queue.QueueID;
+      });
+
+      if (queueIndex !== -1) {
+        store.dispatch("".concat(queuesModuleName, "/updateQueue"), {
+          index: queueIndex,
+          queue: queue
+        });
+      }
+
       break;
 
     default:
@@ -346,6 +364,39 @@ var extensionsModule = {
   getters: getters
 };
 
+var _mutations$1;
+
+var types$1 = {
+  SET_QUEUES: 'SET_QUEUES',
+  UPDATE_QUEUES: 'UPDATE_QUEUES'
+};
+var state$1 = {
+  all: []
+};
+var mutations$1 = (_mutations$1 = {}, _defineProperty(_mutations$1, types$1.SET_QUEUES, function (state, value) {
+  state.all = value;
+}), _defineProperty(_mutations$1, types$1.UPDATE_QUEUES, function (state, _ref) {
+  var index = _ref.index,
+      queue = _ref.queue;
+  state.all.splice(index, 1, queue);
+}), _mutations$1);
+var actions$1 = {
+  setQueues: async function setQueues(_ref2, value) {
+    var commit = _ref2.commit;
+    commit(types$1.SET_QUEUES, value);
+  },
+  updateQueue: async function updateQueue(_ref3, value) {
+    var commit = _ref3.commit;
+    commit(types$1.UPDATE_QUEUES, value);
+  }
+};
+var queuesModule = {
+  namespaced: true,
+  state: state$1,
+  mutations: mutations$1,
+  actions: actions$1
+};
+
 function getServerWithHighestPriority(servers) {
   var chosenServer = null;
   var maxPriority = -1;
@@ -375,6 +426,7 @@ var defaultOptions = {
   upgrade: false,
   store: null,
   extensionsModuleName: 'sdkExtensions',
+  queuesModuleName: 'sdkQueues',
   serverFetchStrategy: 'remote',
   // get servers from external url options: remote | static
   serverType: null // can be 1 or 2. 2 is used for chrome extension
@@ -413,33 +465,54 @@ function () {
       leading: true,
       trailing: false
     });
-    this._loginEventTriggered = false;
     this._lastLoginTimestamp = null;
     this._lastPong = null;
     this._handleLocalEvents = false;
 
     this._registerExtensionsModule();
+
+    this._registerQueueModule();
   }
 
   _createClass(EventsSDK, [{
     key: "_registerExtensionsModule",
     value: function _registerExtensionsModule() {
-      var _this$options = this.options,
-          store = _this$options.store,
-          extensionsModuleName = _this$options.extensionsModuleName;
+      var moduleName = this.options.extensionsModuleName || 'sdkExtensions';
 
-      if (!store) {
+      if (!this._validateStoreModule(moduleName)) {
         return;
       }
 
-      var moduleName = extensionsModuleName || 'sdkExtensions';
+      store.registerModule('extensions');
+      this.options.store.registerModule(moduleName, extensionsModule);
+      this._handleLocalEvents = true;
+    }
+  }, {
+    key: "_registerQueueModule",
+    value: function _registerQueueModule() {
+      var moduleName = this.options.queuesModuleName || 'sdkQueues';
 
-      if (store.state[extensionsModuleName]) {
+      if (!this._validateStoreModule(moduleName)) {
+        return;
+      }
+
+      this.options.store.registerModule(moduleName, queuesModule);
+      this._handleLocalEvents = true;
+    }
+  }, {
+    key: "_validateStoreModule",
+    value: function _validateStoreModule(moduleName) {
+      var store = this.options.store;
+
+      if (!store) {
+        return false;
+      }
+
+      if (store.state[moduleName]) {
         store.unregisterModule(moduleName);
       }
 
-      store.registerModule(moduleName, extensionsModule);
-      this._handleLocalEvents = true;
+      return true;
     }
   }, {
     key: "_initReconnectOptions",
@@ -621,7 +694,6 @@ function () {
       }));
       allConnections.push(this.socket);
       this.connectionEstablished = true;
-      this._loginEventTriggered = false;
     }
   }, {
     key: "_initSocketEvents",

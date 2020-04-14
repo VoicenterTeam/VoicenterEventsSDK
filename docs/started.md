@@ -102,6 +102,7 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **serverFetchStrategy**  | string  | determines the strategy how monitor servers are initiated. Can be **remote** (server urls are retrieved from a remote url) or **static** where server urls are specified directly through config. In case remote call fails, it will fallback to the default list of servers or the ones passed through config |
 | **store**  | object  | Vuex store to use in order to register an extensions module. This should simplify the end usage of the sdk |
 | **extensionsModuleName**  | string  | Vuex store extension module name. Defaults to `sdkExtensions` |
+| **queuesModuleName**  | string  | Vuex store queue module name. Defaults to `sdkQueues` |
 
 Servers array format
 
