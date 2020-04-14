@@ -312,6 +312,14 @@ var actions = {
     commit(types.UPDATE_EXTENSIONS, value);
   }
 };
+
+function isCallOnHold() {
+  var call = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var status = call.callstatus || '';
+  status = status.toLowerCase();
+  return call.answered && status === HOLD_STATUS;
+}
+
 var getters = {
   isSocketOffline: function isSocketOffline(state) {
     if (!state.offlineSocketTimestamp || isNaN(state.offlineSocketTimestamp)) {
@@ -327,9 +335,7 @@ var getters = {
       var groupedExtensions = [];
       state.extensions.forEach(function (extension) {
         if (extension.calls.length > 0) {
-          if (extension.calls.filter(function (call) {
-            return call.answered && call.callstatus === HOLD_STATUS;
-          }).length) {
+          if (extension.calls.filter(isCallOnHold).length) {
             extension['representativeStatus'] = callStatuses.HOLD;
           } else {
             extension['representativeStatus'] = callStatuses.CALLING;
