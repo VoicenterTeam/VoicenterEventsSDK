@@ -2,6 +2,7 @@
     <div class="relative">
         <textarea ref="redactor" :name="name" :placeholder="placeholder" :value="value"/>
         <div class="flex save-buttons">
+            <slot name="additional_actions"/>
             <el-tooltip class="item" effect="dark" :content="$t('common.revert.changes')" placement="top">
                 <XIcon class="w-6 h-6 text-red cursor-pointer mx-2" @click="onRevert()"/>
             </el-tooltip>
