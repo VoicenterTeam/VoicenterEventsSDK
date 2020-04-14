@@ -103,6 +103,7 @@
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from "@/enum/generic";
     import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
+    import {getWidgetData} from "@/services/widgetService";
 
     export default {
         components: {
