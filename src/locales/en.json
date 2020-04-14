@@ -607,5 +607,7 @@
     "Ringing duration":"Ringing duration",
     "call status": "call status",
     "Call source":"Call source",
+    "CallerID": "Caller ID",
+    "Autodialer ": "Autodialer",
     "Date": "Date"
 }
