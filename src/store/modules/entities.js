@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 import {entitiesApi} from '@/api/entitiesApi'
 import statusTypes from "@/enum/statusTypes";
+
 const types = {
     SET_ENTITIES_LIST: 'SET_ENTITIES_LIST',
     SET_SELECTED_ACCOUNT_ID: 'SET_SELECTED_ACCOUNT_ID'
@@ -20,7 +21,7 @@ const mutations = {
 };
 
 const actions = {
-    async getEntitiesList({commit, getters}) {
+    async getEntitiesList ({commit, getters}) {
         let entities = await entitiesApi.getList()
         commit(types.SET_ENTITIES_LIST, entities)
         commit(types.SET_SELECTED_ACCOUNT_ID, get(getters.accountsList, '[0].ID', 1))
@@ -58,10 +59,13 @@ const getters = {
         return get(account, 'AccountBreaks', [])
     },
     getStatusById: (state, getters) => id => {
-        return getters.accountStatuses.find(a => a.StatusID.toString() === id.toString()) || { Name: '' }
+        return getters.accountStatuses.find(a => a.StatusID.toString() === id.toString()) || {Name: ''}
     },
     getStatusTextById: (state, getters) => id => {
         return getters.getStatusById(id).Name || statusTypes[id].text || 'other'
+    },
+    getCurrentAccount: (state, getters) => {
+        return getters.accountsList.find(a => a.ID === state.selectedAccountID) || {name: '--'}
     }
 }
 

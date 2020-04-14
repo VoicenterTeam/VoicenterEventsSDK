@@ -5,8 +5,8 @@
                 <base-widget-title :title="data.Title"/>
             </div>
             <div :class="getClass" class="flex items-center" v-if="!creationMode">
-                <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">
-                    <el-switch class="mx-2" v-model="editMode"/>
+                <el-tooltip :content="$t('Display hidden notes')" class="item" effect="dark" placement="top">
+                    <el-switch class="mx-2" v-model="displayAllNotes"/>
                 </el-tooltip>
                 <el-tooltip :content="$t('Add New Note')" class="item" effect="dark" placement="top">
                     <AddButton @click="onAddNote"/>
@@ -18,41 +18,40 @@
                 @on-update="addNote"/>
         </div>
         <div class="mt-2 border-t-2">
-            <div class="note-container" v-for="(note, index) in fetchNotes">
-                <div :key="index" class="flex flex-col">
+            <div @click="onEditNote(note)" class="note-container" v-for="(note, index) in fetchNotes">
+                <div :key="index" class="flex flex-col p-3" :class="$rtl.isRTL ? 'right-border' : 'left-border'">
                     <div class="pb-2 flex flex-row justify-between">
-                        {{getCreationDetails(note)}}
-                        <div class="actions cursor-pointer hidden" v-if="!editMode">
-                            <el-tooltip :content="$t('Hide note from list')" class="item" effect="dark"
+                        <div class="flex items-center-mx-1">
+                            <IconFace class="mx-1"/>
+                            <div class="flex items-center" v-html="getCreationDetails(note)"/>
+                        </div>
+                        <div @click.prevent.stop class="actions cursor-pointer flex">
+                            <el-tooltip :content="$t('Display note on the list')" class="item" effect="dark"
                                         placement="top">
-                                <eye-off-icon @click="displayNoteInList(false, note)" class="w-4"></eye-off-icon>
+                                <eye-icon @click="displayNoteInList(true, note)"
+                                          class="text-primary w-5 mx-2 cursor-pointer"
+                                          v-if="!note.displayed"></eye-icon>
+                            </el-tooltip>
+                            <el-tooltip :content="$t('Hide note from list')" class="item" effect="dark" placement="top">
+                                <eye-off-icon @click="displayNoteInList(false, note)"
+                                              class="text-primary w-5 mx-2 cursor-pointer"
+                                              v-if="note.displayed"></eye-off-icon>
                             </el-tooltip>
                             <el-tooltip :content="$t('Open edit mode for this note')" class="item" effect="dark"
                                         placement="top">
-                                <edit-3-icon @click="onEditNote(note)" class="w-4 mx-2"></edit-3-icon>
+                                <edit-3-icon @click="onEditNote(note)" class="text-green w-5 mx-2"></edit-3-icon>
                             </el-tooltip>
                             <el-tooltip :content="$t('Remove note')" class="item" effect="dark"
                                         placement="top">
-                                <trash-2-icon @click="removeNote(note)" class="w-4"></trash-2-icon>
+                                <trash-2-icon @click="removeNote(note)" class="text-red w-5"></trash-2-icon>
                             </el-tooltip>
                         </div>
                     </div>
-                    <div class="text-main-sm">
+                    <div @click.prevent.stop class="text-main-sm">
                         <html-editor
                             :value="note.text"
                             @on-update="(data) => updateNote(data, note)"
-                            v-if="editMode || noteToUpdate === note.date">
-                            <template v-slot:additional_actions>
-                                <el-tooltip :content="$t('Display note on the list')" class="item" effect="dark" placement="top">
-                                    <eye-icon @click="displayNoteInList(true, note)" class="w-4 mx-2 cursor-pointer"
-                                              v-if="!note.displayed"></eye-icon>
-                                </el-tooltip>
-                                <el-tooltip :content="$t('Hide note from list')" class="item" effect="dark" placement="top">
-                                    <eye-off-icon @click="displayNoteInList(false, note)"
-                                                  class="w-4 mx-2 cursor-pointer"
-                                                  v-if="note.displayed"></eye-off-icon>
-                                </el-tooltip>
-                            </template>
+                            v-if="noteToUpdate === note.date">
                         </html-editor>
                         <div v-else v-html="note.text"></div>
                     </div>
@@ -64,8 +63,9 @@
 <script>
     import get from 'lodash/get'
     import {Switch, Tooltip} from 'element-ui'
-    import HtmlEditor from '@/components/Html/HtmlEditor'
     import AddButton from '@/components/AddButton'
+    import HtmlEditor from '@/components/Html/HtmlEditor'
+    import formatDistance from 'date-fns/formatDistance'
     import {Edit3Icon, EyeIcon, EyeOffIcon, Trash2Icon} from 'vue-feather-icons'
 
     export default {
@@ -84,22 +84,18 @@
                 type: Object,
                 default: () => ({}),
             },
-            editable: {
-                type: Boolean,
-                default: false,
-            }
         },
         data () {
             return {
                 creationMode: false,
-                editMode: this.editable,
+                displayAllNotes: false,
                 noteToUpdate: null,
             }
         },
         computed: {
             fetchNotes () {
                 let allNotes = get(this.data.WidgetLayout, 'Notes', [])
-                if (this.editMode) {
+                if (this.displayAllNotes) {
                     return allNotes
                 }
                 return allNotes.filter((note) => note.displayed)
@@ -111,22 +107,27 @@
                     return this.editable ? 'mr-24' : 'mr-12'
                 }
             },
-            currentUser() {
-
-            }
+            currentAccount () {
+                return this.$store.getters['entities/getCurrentAccount']
+            },
         },
         methods: {
-            getCreationDetails(note) {
-                // return User Test note.date
-                return'User Test  added a note  - 3 seconds ago'
+            getCreationDetails (note) {
+                let userName = get(note.user, 'name', this.$t('A user'))
+                let time = this.timeAgo(note.date)
+                return `<p class="">${userName}<span class="mx-2 text-main-sm text-grey-400 opacity-50">${this.$t('added a note', {time: time})}</span></p>`
+            },
+            timeAgo(time) {
+                return formatDistance(
+                    time,
+                    new Date().getTime(),
+                )
             },
             onAddNote () {
                 this.creationMode = !this.creationMode
-                this.editMode = false
             },
             onEditNote (note) {
                 this.noteToUpdate = note.date
-                this.editMode = false
             },
             addNote (val) {
                 this.creationMode = false
@@ -140,9 +141,17 @@
                 }
             },
             removeNote (note) {
-                let noteIndex = this.getNoteIndex(note)
-                this.data.WidgetLayout['Notes'].splice(noteIndex, 1)
-                this.emmitUpdate()
+                this.$confirm(
+                    this.$t('common.confirm.question', {
+                        action: this.$t('to remove this note'),
+                    }), this.$t('Remove note'), {
+                        cancelButtonText: this.$t('common.cancel'),
+                        confirmButtonText: this.$t('common.confirm'),
+                    }).then(() => {
+                    let noteIndex = this.getNoteIndex(note)
+                    this.data.WidgetLayout['Notes'].splice(noteIndex, 1)
+                    this.emmitUpdate()
+                })
             },
             displayNoteInList (state, note) {
                 note.displayed = state
@@ -162,6 +171,7 @@
                     date: new Date().getTime(),
                     text: '',
                     displayed: true,
+                    user: this.currentAccount
                 }
             },
             getNoteIndex (note) {
@@ -182,12 +192,12 @@
 <style lang="scss" scoped>
     .note-list-editor {
         .note-container {
-            @apply p-3 rounded border-b-2;
-            &:hover {
-                @apply bg-primary-200;
-                .actions {
-                    @apply flex;
-                }
+            @apply border-b-2 cursor-pointer;
+            .right-border:hover{
+                @apply border-primary border-r-4;
+            }
+            .left-border:hover{
+                @apply border-primary border-l-4;
             }
         }
     }
