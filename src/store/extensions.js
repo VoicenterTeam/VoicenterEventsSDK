@@ -52,6 +52,12 @@ const actions = {
     },
 };
 
+function isCallOnHold(call = {}) {
+  let status = call.callstatus || ''
+  status = status.toLowerCase()
+  return call.answered && status === HOLD_STATUS
+}
+
 const getters = {
   isSocketOffline: state => {
     if (!state.offlineSocketTimestamp || isNaN(state.offlineSocketTimestamp)) {
@@ -67,7 +73,7 @@ const getters = {
     state.extensions.forEach((extension) => {
 
       if (extension.calls.length > 0) {
-        if (extension.calls.filter((call) => call.answered && call.callstatus === HOLD_STATUS).length) {
+        if (extension.calls.filter(isCallOnHold).length) {
           extension['representativeStatus'] = callStatuses.HOLD;
         } else {
           extension['representativeStatus'] = callStatuses.CALLING;
