@@ -15,13 +15,14 @@ const offlineEvents = [
   eventTypes.RECONNECT_FAILED,
   sdkEventReasons.CLOSE
 ]
+
 function isSocketOffline(event) {
   let { name } = event
   return offlineEvents.includes(name)
 }
 
-export default function onNewEvent({ eventData, store, extensionsModuleName }) {
-  let {name, data} = eventData
+export default function onNewEvent({ eventData, store, extensionsModuleName, queuesModuleName }) {
+  let { name, data } = eventData
   store.commit(`${extensionsModuleName}/SET_IS_SOCKET_OFFLINE`, isSocketOffline(eventData))
   switch (name) {
     case eventTypes.ALL_EXTENSION_STATUS:
@@ -35,13 +36,28 @@ export default function onNewEvent({ eventData, store, extensionsModuleName }) {
         ivrid: data.ivruniqueid
       }
       const extensions = store.state[extensionsModuleName].extensions
-      let index = extensions.findIndex(e => e.userID === extension.userID)
-      if (index !== -1) {
-        store.dispatch(`${extensionsModuleName}/updateExtension`, {index, extension})
+      let extensionIndex = extensions.findIndex(e => e.userID === extension.userID)
+      if (extensionIndex !== -1) {
+        store.dispatch(`${extensionsModuleName}/updateExtension`, {
+          index: extensionIndex,
+          extension
+        })
       }
       break;
     case eventTypes.LOGIN_STATUS:
       store.commit(`${extensionsModuleName}/SET_SERVER_TIME`, data)
+      store.dispatch(`${queuesModuleName}/setQueues`, data.queues)
+      break;
+    case eventTypes.QUEUE_EVENT:
+      let queue = data.data;
+      const allQueues = get(store.state, `[${queuesModuleName}].all`, [])
+      let queueIndex = allQueues.findIndex(e => e.QueueID === queue.QueueID)
+      if (queueIndex !== -1) {
+        store.dispatch(`${queuesModuleName}/updateQueue`, {
+          index: queueIndex,
+          queue
+        })
+      }
       break;
     default:
       break;

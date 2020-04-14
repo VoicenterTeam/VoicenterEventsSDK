@@ -5,6 +5,7 @@ import Logger from './Logger';
 import debounce from 'lodash/debounce'
 import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
+import queuesModule from './store/queues'
 import { getServerWithHighestPriority } from './utils';
 
 const defaultOptions = {
@@ -23,6 +24,7 @@ const defaultOptions = {
   upgrade: false,
   store: null,
   extensionsModuleName: 'sdkExtensions',
+  queuesModuleName: 'sdkQueues',
   serverFetchStrategy: 'remote', // get servers from external url options: remote | static
   serverType: null, // can be 1 or 2. 2 is used for chrome extension
 };
@@ -51,24 +53,41 @@ class EventsSDK {
     this._initReconnectOptions();
     this._listenersMap = listenersMap;
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
-    this._loginEventTriggered = false
     this._lastLoginTimestamp = null
     this._lastPong = null
     this._handleLocalEvents = false
     this._registerExtensionsModule()
+    this._registerQueueModule()
   }
 
   _registerExtensionsModule() {
-    const { store, extensionsModuleName } = this.options
-    if (!store) {
+    const moduleName = this.options.extensionsModuleName || 'sdkExtensions'
+    if (!this._validateStoreModule(moduleName)) {
       return
     }
-    const moduleName = extensionsModuleName || 'sdkExtensions'
-    if (store.state[extensionsModuleName]) {
+    store.registerModule('extensions')
+    this.options.store.registerModule(moduleName, extensionsModule)
+    this._handleLocalEvents = true
+  }
+
+  _registerQueueModule() {
+    const moduleName = this.options.queuesModuleName || 'sdkQueues'
+    if (!this._validateStoreModule(moduleName)) {
+      return
+    }
+    this.options.store.registerModule(moduleName, queuesModule)
+    this._handleLocalEvents = true
+  }
+
+  _validateStoreModule(moduleName) {
+    const { store } = this.options
+    if (!store) {
+      return false
+    }
+    if (store.state[moduleName]) {
       store.unregisterModule(moduleName)
     }
-    store.registerModule(moduleName, extensionsModule)
-    this._handleLocalEvents = true
+    return true
   }
 
   _initReconnectOptions() {
@@ -213,7 +232,6 @@ class EventsSDK {
     });
     allConnections.push(this.socket);
     this.connectionEstablished = true;
-    this._loginEventTriggered = false
   }
 
   _initSocketEvents() {
