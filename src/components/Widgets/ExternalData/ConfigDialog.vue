@@ -109,7 +109,7 @@
                     this.widget.WidgetLayout.ComponentTypeID !== this.model.WidgetLayout.ComponentTypeID) {
                     this.$confirm(
                         this.$t('common.confirm.question', {
-                            action: 'to update widget',
+                            action: this.$t('to update widget'),
                         }), this.$t('widget.update'), {
                             cancelButtonText: this.$t('common.cancel'),
                             confirmButtonText: this.$t('common.confirm'),
