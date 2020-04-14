@@ -52,6 +52,26 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+}
+
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
+}
+
 var eventTypes = {
   LOGIN_STATUS: 'loginStatus',
   LOGIN: 'login',
@@ -370,7 +390,8 @@ var extensionsModule = {
   getters: getters
 };
 
-var _mutations$1;
+var _mutations$1,
+    _this = undefined;
 
 var types$1 = {
   SET_QUEUES: 'SET_QUEUES',
@@ -396,11 +417,38 @@ var actions$1 = {
     commit(types$1.UPDATE_QUEUES, value);
   }
 };
+var getters$1 = {
+  queueWithActiveCalls: function queueWithActiveCalls(state) {
+    return state.all.filter(function (el) {
+      return el.Calls.length;
+    });
+  },
+  allQueueCalls: function allQueueCalls(state, getters) {
+    var allCalls = [];
+    getters.queueWithActiveCalls.forEach(function (queue) {
+      var calls = queue.Calls || [];
+      allCalls.push.apply(allCalls, _toConsumableArray(calls));
+    });
+    return allCalls;
+  },
+  filterQueuesByIds: function filterQueuesByIds(state) {
+    return function (queueIds) {
+      if (!queueIds || !Array.isArray(queueIds)) {
+        return state.all;
+      }
+
+      _this.state.all.filter(function (e) {
+        return queueIds.includes(e.QueueID);
+      });
+    };
+  }
+};
 var queuesModule = {
   namespaced: true,
   state: state$1,
   mutations: mutations$1,
-  actions: actions$1
+  actions: actions$1,
+  getters: getters$1
 };
 
 function getServerWithHighestPriority(servers) {
