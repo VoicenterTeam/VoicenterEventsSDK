@@ -8294,8 +8294,8 @@ vm-browserify@^1.0.1:
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
 
 voicenter-events-sdk@VoicenterTeam/VoicenterEventsSDK:
-  version "0.7.3"
-  resolved "https://codeload.github.com/VoicenterTeam/VoicenterEventsSDK/tar.gz/624725a7bae5e734466d03210fc55d3a7ea63cd9"
+  version "0.7.4"
+  resolved "https://codeload.github.com/VoicenterTeam/VoicenterEventsSDK/tar.gz/d68cb1e1d041b31fc3f45e8372d6b062c1855f2b"
   dependencies:
     core-js "^2.6.5"
     socket.io-client "1.3.6"
