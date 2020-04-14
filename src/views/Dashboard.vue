@@ -93,11 +93,8 @@
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
     import { layoutTypes, LAYOUT_TYPE_KEY, ACTIVE_WIDGET_GROUP_KEY } from '@/enum/layout'
-    import EventsSDK from 'voicenter-events-sdk'
     import differenceBy from 'lodash/differenceBy'
     import AddButton from '@/components/AddButton'
-    import { isSocketOffline, sdkEventTypes, } from '@/enum/sdkEvents'
-    import parseCatch from '@/helpers/handleErrors'
     import {targets, types} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
     import pageSizeMixin from '@/mixins/pageSizeMixin'
@@ -116,8 +113,8 @@
     import SocketStatusAlert from "@/components/Common/SocketStatusAlert";
     import SocketStatusButton from "@/components/Common/SocketStatusButton";
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
-    import EventBus from "@/event-bus/EventBus";
     import {ListIcon} from 'vue-feather-icons'
+    import { reSyncSdk } from "@/plugins/initRealTimeSdk";
 
     export default {
         components: {
@@ -126,7 +123,6 @@
             NewGroupButton,
             AddButton,
             WidgetMenu,
-            EventsSDK,
             NormalView,
             TabbedView,
             Sidebar,
@@ -401,51 +397,7 @@
             async retrySocketConnection() {
                 this.socketResync = true
                 Notification.info(this.$t('common.socketAttemptSync'));
-                this.sdk.reSync(false)
-            },
-            onNewEvent(eventData) {
-                let {name, data} = eventData
-                this.$store.commit('extensions/SET_IS_SOCKET_OFFLINE', isSocketOffline(eventData))
-                switch (name) {
-                    case sdkEventTypes.ALL_EXTENSION_STATUS:
-                        this.$store.dispatch('extensions/setExtensions', data.extensions)
-                        break;
-                    case sdkEventTypes.EXTENSION_EVENT:
-                        let extension = data.data
-                        // Event reason: NEWCALL/ANSWER/HANGUP
-                        extension['lastEvent'] = {
-                            reason: data.reason,
-                            ivrid: data.ivruniqueid
-                        }
-                        let index = this.extensions.findIndex(e => e.userID === extension.userID)
-                        if (index !== -1) {
-                            this.$store.dispatch('extensions/updateExtension', {index, extension})
-                        }
-                        break;
-                    case sdkEventTypes.LOGIN:
-                        this.$store.commit('extensions/SET_SERVER_TIME', data)
-                        this.$store.dispatch('queues/setQueues', data.queues)
-                        if (this.socketResync) {
-                            Notification.success(this.$t('common.socketSynced'))
-                            this.socketResync = false
-                        }
-                        break;
-                    case sdkEventTypes.QUEUE_EVENT:
-                        let queue = data.data
-                        let _index = this.queues.findIndex(e => e.QueueID === queue.QueueID)
-                        if (_index !== -1) {
-                            this.$store.dispatch('queues/updateQueue', {_index, queue})
-                        }
-                        break;
-                    case sdkEventTypes.CONNECT_ERROR:
-                        EventBus.$emit(sdkEventTypes.CONNECT_ERROR)
-                        break;
-                    case sdkEventTypes.CONNECT_TIMEOUT:
-                        EventBus.$emit(sdkEventTypes.CONNECT_TIMEOUT)
-                        break;
-                    default:
-                        break;
-                }
+                reSyncSdk()
             },
             sortDashboardEntities(dashboard) {
                 try {
@@ -461,33 +413,6 @@
                 } catch (e) {
                 }
             },
-            async initRealtimeSdk() {
-                try {
-                    if (this.sdk) {
-                        this.sdk.emit(sdkEventTypes.CLOSE)
-                        this.sdk = null
-                    }
-                    const config = {
-                        token: this.token,
-                        serverFetchStrategy: process.env.VUE_APP_EVENTS_SERVER_FETCH_STRATEGY,
-                    }
-                    if (process.env.VUE_APP_EVENTS_SDK_URL) {
-                        config.url = process.env.VUE_APP_EVENTS_SDK_URL
-                    }
-                    if (process.env.VUE_APP_EVENTS_SDK_SERVERS) {
-                        config.servers = process.env.VUE_APP_EVENTS_SDK_SERVERS
-                    }
-                    if (typeof config.servers === 'string') {
-                        config.servers = JSON.parse(config.servers)
-                    }
-                    this.sdk = new EventsSDK(config)
-                    await this.sdk.init()
-                    this.sdk.on('*', this.onNewEvent)
-                } catch (e) {
-                    parseCatch(e, true)
-                }
-
-            }
         },
         watch: {
             dashboard: {
@@ -514,9 +439,6 @@
                 }
             }
         },
-        async created() {
-            await this.initRealtimeSdk()
-        }
     }
 </script>
 <style lang="scss">
