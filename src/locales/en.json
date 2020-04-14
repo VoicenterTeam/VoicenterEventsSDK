@@ -606,13 +606,15 @@
     "Call time": "Call time",
     "Ringing duration": "Ringing duration",
     "call status": "call status",
-    "Call source": "Call source",
-    "Date": "Date",
     "Display hidden notes": "Display hidden notes",
     "Hide note from list": "Hide note from list",
     "Open edit mode for this note": "Open edit mode for this note",
     "Remove note": "Remove note",
     "Display note on the list": "Display note on the list",
     "to remove this note": "to remove this note",
-    "added a note": "added a note - {time} ago"
+    "added a note": "added a note - {time} ago",
+    "Call source":"Call source",
+    "CallerID": "Caller ID",
+    "Autodialer ": "Autodialer",
+    "Date": "Date"
 }

@@ -25,7 +25,7 @@
                 start.setDate(start.getDate() - startDate)
                 end.setDate(end.getDate() - (startDate - dateInterval))
 
-                return `(${format(start, 'MM-dd-yyyy')}  -  ${format(end, 'MM-dd-yyyy')})`
+                return `${format(start, 'MM/dd/yyyy')}  -  ${format(end, 'MM/dd/yyyy')}`
             }
         }
     }

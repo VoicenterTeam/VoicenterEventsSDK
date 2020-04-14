@@ -3,11 +3,11 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
             <div class="flex items-center">
                 <slot name="title"/>
-                <slot name="time-frame"/>
                 <div class="flex w-48 sm:w-64 px-1">
                     <slot name="search-input"/>
                 </div>
             </div>
+                <slot name="time-frame"/>
             <div class="flex items-center table-row__count"
                  :class="margins">
                 <el-dropdown size="mini" trigger="click">
@@ -53,13 +53,13 @@
                         :type="column.type">
                         <template slot="header">
                             <div class="truncate">
-                                <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300" placement="top">
-                                <span class="font-medium uppercase">
-                                    <slot name="header_title" :column="column">
-                                    {{$t(column.prop) || column.label}}
-                                    </slot>
-                                </span>
-                                </el-tooltip>
+                                <slot name="header_title" :column="column">
+                                    <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300" placement="top">
+                                    <span class="font-medium uppercase">
+                                        {{$t(column.prop) || column.label}}
+                                    </span>
+                                    </el-tooltip>
+                                </slot>
                             </div>
                             <!-- This part is bulky from UI perspective. Has to be refined-->
                             <header-actions

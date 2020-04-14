@@ -5,10 +5,12 @@
                 <base-widget-title :title="data.Title"/>
             </div>
             <div :class="getClass" class="flex items-center" v-if="!creationMode">
-                <el-tooltip :content="$t('Display hidden notes')" class="item" effect="dark" placement="top">
+                <el-tooltip :content="$t('Display hidden notes')" :open-delay="openDelay" class="item" effect="dark"
+                            placement="top">
                     <el-switch class="mx-2" v-model="displayAllNotes"/>
                 </el-tooltip>
-                <el-tooltip :content="$t('Add New Note')" class="item" effect="dark" placement="top">
+                <el-tooltip :content="$t('Add New Note')" :open-delay="openDelay" class="item" effect="dark"
+                            placement="top">
                     <AddButton @click="onAddNote"/>
                 </el-tooltip>
             </div>
@@ -19,29 +21,32 @@
         </div>
         <div class="mt-2 border-t-2">
             <div @click="onEditNote(note)" class="note-container" v-for="(note, index) in fetchNotes">
-                <div :key="index" class="flex flex-col p-3" :class="$rtl.isRTL ? 'right-border' : 'left-border'">
+                <div :class="$rtl.isRTL ? 'right-border' : 'left-border'" :key="index" class="flex flex-col p-3">
                     <div class="pb-2 flex flex-row justify-between">
                         <div class="flex items-center-mx-1">
                             <IconFace class="mx-1"/>
                             <div class="flex items-center" v-html="getCreationDetails(note)"/>
                         </div>
                         <div @click.prevent.stop class="actions cursor-pointer flex">
-                            <el-tooltip :content="$t('Display note on the list')" class="item" effect="dark"
+                            <el-tooltip :content="$t('Display note on the list')" :open-delay="openDelay" class="item"
+                                        effect="dark"
                                         placement="top">
                                 <eye-icon @click="displayNoteInList(true, note)"
                                           class="text-primary w-4 mx-2 cursor-pointer"
                                           v-if="!note.displayed"></eye-icon>
                             </el-tooltip>
-                            <el-tooltip :content="$t('Hide note from list')" class="item" effect="dark" placement="top">
+                            <el-tooltip :content="$t('Hide note from list')" :open-delay="openDelay" class="item"
+                                        effect="dark" placement="top">
                                 <eye-off-icon @click="displayNoteInList(false, note)"
                                               class="text-primary w-4 mx-2 cursor-pointer"
                                               v-if="note.displayed"></eye-off-icon>
                             </el-tooltip>
-                            <el-tooltip :content="$t('Open edit mode for this note')" class="item" effect="dark"
+                            <el-tooltip :content="$t('Open edit mode for this note')" :open-delay="openDelay"
+                                        class="item" effect="dark"
                                         placement="top">
                                 <edit-3-icon @click="onEditNote(note)" class="text-green w-4 mx-2"></edit-3-icon>
                             </el-tooltip>
-                            <el-tooltip :content="$t('Remove note')" class="item" effect="dark"
+                            <el-tooltip :content="$t('Remove note')" :open-delay="openDelay" class="item" effect="dark"
                                         placement="top">
                                 <trash-2-icon @click="removeNote(note)" class="text-red w-4"></trash-2-icon>
                             </el-tooltip>
@@ -90,6 +95,7 @@
                 creationMode: false,
                 displayAllNotes: false,
                 noteToUpdate: null,
+                openDelay: 400,
             }
         },
         computed: {
@@ -117,7 +123,7 @@
                 let time = this.timeAgo(note.date)
                 return `<p class="">${userName}<span class="mx-2 text-main-sm text-grey-400 opacity-50">${this.$t('added a note', {time: time})}</span></p>`
             },
-            timeAgo(time) {
+            timeAgo (time) {
                 return formatDistance(
                     time,
                     new Date().getTime(),
@@ -140,8 +146,8 @@
                     this.emmitUpdate()
                 }
             },
-            removeNote (note) {
-                this.$confirm(
+            async removeNote (note) {
+                await this.$confirm(
                     this.$t('common.confirm.question', {
                         action: this.$t('to remove this note'),
                     }), this.$t('Remove note'), {
@@ -193,11 +199,18 @@
     .note-list-editor {
         .note-container {
             @apply border-b-2 cursor-pointer;
-            .right-border:hover{
-                @apply border-primary border-r-4;
+            .right-border {
+                @apply border-r-4 border-transparent;
+                &:hover {
+                    @apply border-primary border-r-4;
+                }
             }
-            .left-border:hover{
-                @apply border-primary border-l-4;
+
+            .left-border {
+                @apply border-l-4 border-transparent;
+                &:hover {
+                    @apply border-primary border-l-4;
+                }
             }
         }
     }
