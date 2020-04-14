@@ -3,11 +3,11 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
             <div class="flex items-center">
                 <slot name="title"/>
-                <slot name="time-frame"/>
                 <div class="flex w-48 sm:w-64 px-1">
                     <slot name="search-input"/>
                 </div>
             </div>
+                <slot name="time-frame"/>
             <div class="flex items-center table-row__count"
                  :class="margins">
                 <el-dropdown size="mini" trigger="click">

@@ -333,6 +333,10 @@
     "QueueName": "Queue Name",
     "CallerNumber": "Caller Number",
     "CallerName": "Caller Name",
+<<<<<<< HEAD
+=======
+    "Caller ID": "Caller ID",
+>>>>>>> 64279f622164fc5a94bdd60b828d8bfd8b0c040d
     "WaitingTime": "Waiting Time",
     "Queue Name": "Queue Name",
     "Caller Number": "Caller Number",
@@ -606,7 +610,7 @@
     "Ringing duration":"Ringing duration",
     "call status": "call status",
     "Call source":"Call source",
-    "Date": "Date",
     "CallerID": "Caller ID",
-    "Autodialer ": "Autodialer"
+    "Autodialer ": "Autodialer",
+    "Date": "Date"
 }
