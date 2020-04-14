@@ -103,6 +103,7 @@
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from "@/enum/generic";
     import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
+    import {getWidgetData} from "@/services/widgetService";
 
     export default {
         components: {
@@ -210,7 +211,7 @@
                     return queueID
                 }
 
-                let queue = this.allQueues.filter((queue) => queue.QueueID === queueID)
+                let queue = this.allQueues.filter((queue) => queue.QueueID === Number(queueID))
                 return get(queue, '[0].QueueName', '--')
             },
             userExtension (userId) {

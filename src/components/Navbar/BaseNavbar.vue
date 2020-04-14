@@ -223,7 +223,7 @@
             deleteDashboard(dashboard) {
                 this.$confirm(
                     this.$t('common.confirm.question', {
-                        action: 'to delete this dashboard',
+                        action: this.$t('to delete this dashboard'),
                     }), this.$t('common.deleteDashboard'), {
                         cancelButtonText: this.$t('common.cancel'),
                         confirmButtonText: this.$t('common.confirm'),
