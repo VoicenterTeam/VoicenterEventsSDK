@@ -14,7 +14,11 @@
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
             <template v-if="isMultiQueuesDashboard(data) && !displayQueueAsColumn" v-slot:header_title="{column}">
-                {{getQueueName(column.prop)}}
+                <el-tooltip :content="getQueueName(column.prop)" :open-delay="300" placement="top">
+                        <span class="font-medium uppercase">
+                            {{getQueueName(column.prop)}}
+                        </span>
+                </el-tooltip>
             </template>
             <template v-if="isMultiQueuesDashboard(data)" v-slot:QueueName="{row}">
                 {{getQueueName(row.QueueID)}}
@@ -90,7 +94,7 @@
     import {format} from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import {Option, Pagination, Select} from 'element-ui'
+    import {Option, Pagination, Select,Tooltip} from 'element-ui'
     import UserStatus from './UserStatus'
     import AudioPlayer from "@/components/Audio/AudioPlayer";
     import {WidgetApi} from '@/api/widgetApi'
@@ -114,6 +118,7 @@
             StatusDuration,
             [Select.name]: Select,
             [Option.name]: Option,
+            [Tooltip.name]: Tooltip,
             [Pagination.name]: Pagination,
         },
         props: {
