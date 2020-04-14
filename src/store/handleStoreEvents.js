@@ -50,7 +50,7 @@ export default function onNewEvent({ eventData, store, extensionsModuleName, que
       break;
     case eventTypes.QUEUE_EVENT:
       let queue = data.data;
-      const allQueues = get(store.state, `[${queuesModuleName}].all`, [])
+      const allQueues = store.state.queuesModuleName.all || []
       let queueIndex = allQueues.findIndex(e => e.QueueID === queue.QueueID)
       if (queueIndex !== -1) {
         store.dispatch(`${queuesModuleName}/updateQueue`, {
