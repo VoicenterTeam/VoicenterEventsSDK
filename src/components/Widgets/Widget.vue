@@ -39,6 +39,7 @@
     import {Tooltip} from 'element-ui'
     import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
+    import WidgetNoteList from './WidgetNoteList'
     import TableData from './Data/Table/TableData'
     import EditButton from '@/components/EditButton'
     import HtmlWidget from './ExternalData/HtmlWidget'
@@ -86,6 +87,7 @@
             QueueDashboard,
             TotalOutgoingCall,
             XaxisChart,
+            WidgetNoteList,
         },
         props: {
             editable: {

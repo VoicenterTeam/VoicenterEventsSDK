@@ -29,21 +29,21 @@
                             <el-tooltip :content="$t('Display note on the list')" class="item" effect="dark"
                                         placement="top">
                                 <eye-icon @click="displayNoteInList(true, note)"
-                                          class="text-primary w-5 mx-2 cursor-pointer"
+                                          class="text-primary w-4 mx-2 cursor-pointer"
                                           v-if="!note.displayed"></eye-icon>
                             </el-tooltip>
                             <el-tooltip :content="$t('Hide note from list')" class="item" effect="dark" placement="top">
                                 <eye-off-icon @click="displayNoteInList(false, note)"
-                                              class="text-primary w-5 mx-2 cursor-pointer"
+                                              class="text-primary w-4 mx-2 cursor-pointer"
                                               v-if="note.displayed"></eye-off-icon>
                             </el-tooltip>
                             <el-tooltip :content="$t('Open edit mode for this note')" class="item" effect="dark"
                                         placement="top">
-                                <edit-3-icon @click="onEditNote(note)" class="text-green w-5 mx-2"></edit-3-icon>
+                                <edit-3-icon @click="onEditNote(note)" class="text-green w-4 mx-2"></edit-3-icon>
                             </el-tooltip>
                             <el-tooltip :content="$t('Remove note')" class="item" effect="dark"
                                         placement="top">
-                                <trash-2-icon @click="removeNote(note)" class="text-red w-5"></trash-2-icon>
+                                <trash-2-icon @click="removeNote(note)" class="text-red w-4"></trash-2-icon>
                             </el-tooltip>
                         </div>
                     </div>

@@ -1,34 +1,28 @@
 <template>
-    <div>
-        <div v-if="data.TemplateID === 78">
-            <widget-note-list v-on="$listeners" :data="data" :editable="editable"/>
+    <div class="trix-widget">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full py-1">
+            <div class="flex">
+                <p class="text-main-2xl font-semibold" v-if="data.Title">
+                    {{getInfo}}
+                </p>
+            </div>
+            <div :class="margins" class="flex items-center">
+                <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">
+                    <el-switch v-model="editMode"/>
+                </el-tooltip>
+            </div>
         </div>
-
-        <div class="trix-widget" v-else>
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full py-1">
-                <div class="flex">
-                    <p class="text-main-2xl font-semibold" v-if="data.Title">
-                        {{getInfo}}
-                    </p>
-                </div>
-                <div :class="margins" class="flex items-center">
-                    <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">
-                        <el-switch v-model="editMode"/>
-                    </el-tooltip>
-                </div>
+        <div :style="getStyles" class="bg-white rounded">
+            <div
+                :style="getStyles"
+                v-html="fetchData"
+                v-if="!editMode">
             </div>
-            <div :style="getStyles" class="bg-white rounded">
-                <div
-                    :style="getStyles"
-                    v-html="fetchData"
-                    v-if="!editMode">
-                </div>
-                <html-editor
-                    :editMode="editMode"
-                    :value="fetchData"
-                    @on-update="onUpdate"
-                    v-else/>
-            </div>
+            <html-editor
+                :editMode="editMode"
+                :value="fetchData"
+                @on-update="onUpdate"
+                v-else/>
         </div>
     </div>
 </template>
@@ -64,7 +58,7 @@
             }
         },
         computed: {
-            fetchData() {
+            fetchData () {
                 return this.data.WidgetLayout.htmlData || `<p>${this.$t('Click the switch to enable edit mode for this html')}</p>`
             },
             margins () {
