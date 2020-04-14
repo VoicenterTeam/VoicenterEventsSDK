@@ -211,7 +211,7 @@
                     return queueID
                 }
 
-                let queue = this.allQueues.filter((queue) => queue.QueueID === queueID)
+                let queue = this.allQueues.filter((queue) => queue.QueueID === Number(queueID))
                 return get(queue, '[0].QueueName', '--')
             },
             userExtension (userId) {
