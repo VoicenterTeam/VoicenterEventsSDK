@@ -244,7 +244,7 @@ function onNewEvent(_ref) {
 
     case eventTypes.QUEUE_EVENT:
       var queue = data.data;
-      var allQueues = store.state.queuesModuleName.all || [];
+      var allQueues = store.state[queuesModuleName].all || [];
       var queueIndex = allQueues.findIndex(function (e) {
         return e.QueueID === queue.QueueID;
       });
