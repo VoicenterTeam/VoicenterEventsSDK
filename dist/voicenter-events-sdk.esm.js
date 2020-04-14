@@ -483,7 +483,6 @@ function () {
         return;
       }
 
-      store.registerModule('extensions');
       this.options.store.registerModule(moduleName, extensionsModule);
       this._handleLocalEvents = true;
     }
