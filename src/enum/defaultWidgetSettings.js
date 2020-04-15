@@ -10,7 +10,7 @@ export const realTimeSettings = {
 }
 export const defaultColors = {
     background: "#edf2f7",
-    frames: "#000000",
+    frames: "#edf2f7",
     fonts: '#000000'
 }
 

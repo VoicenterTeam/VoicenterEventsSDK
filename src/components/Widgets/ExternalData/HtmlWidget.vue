@@ -2,41 +2,42 @@
     <div class="trix-widget">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full py-1">
             <div class="flex">
-                <p v-if="data.Title" class="text-main-2xl font-semibold">
+                <p class="text-main-2xl font-semibold" v-if="data.Title">
                     {{getInfo}}
                 </p>
             </div>
-            <div class="flex items-center" :class="margins">
-                <el-tooltip class="item" effect="dark" :content="$t('tooltip.set.edit.mode')" placement="top">
+            <div :class="margins" class="flex items-center">
+                <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">
                     <el-switch v-model="editMode"/>
                 </el-tooltip>
             </div>
         </div>
-        <div class="bg-white rounded" :style="getStyles">
+        <div :style="getStyles" class="bg-white rounded">
             <div
                 :style="getStyles"
-                v-if="!editMode"
-                v-html="fetchData">
+                v-html="fetchData"
+                v-if="!editMode">
             </div>
             <html-editor
-                v-else
-                :value="fetchData"
                 :editMode="editMode"
-                @on-update="onUpdate"/>
+                :value="fetchData"
+                @on-update="onUpdate"
+                v-else/>
         </div>
     </div>
 </template>
-
 <script>
     import get from 'lodash/get'
     import format from 'date-fns/format'
     import parseISO from 'date-fns/parseISO'
     import HtmlEditor from '../../Html/HtmlEditor'
     import {Switch, Tooltip} from 'element-ui'
-    import { defaultColors, fullHeightIdentifier } from '@/enum/defaultWidgetSettings'
+    import {defaultColors, fullHeightIdentifier} from '@/enum/defaultWidgetSettings'
+    import WidgetNoteList from "@/components/Widgets/WidgetNoteList";
 
     export default {
         components: {
+            WidgetNoteList,
             HtmlEditor,
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
@@ -51,23 +52,23 @@
                 default: false
             },
         },
-        data() {
+        data () {
             return {
                 editMode: this.editable,
             }
         },
         computed: {
-            fetchData() {
+            fetchData () {
                 return this.data.WidgetLayout.htmlData || `<p>${this.$t('Click the switch to enable edit mode for this html')}</p>`
             },
-            margins() {
+            margins () {
                 if (this.$rtl.isRTL) {
                     return this.editable ? 'ml-24' : 'ml-12'
                 } else {
                     return this.editable ? 'mr-24' : 'mr-12'
                 }
             },
-            getStyles() {
+            getStyles () {
                 let height = get(this.data.WidgetLayout, 'height')
 
                 if (!height || height === fullHeightIdentifier) {
@@ -85,7 +86,7 @@
                     'margin-top': '10px'
                 }
             },
-            getInfo() {
+            getInfo () {
                 if (!this.data.LastUpdate) {
                     return this.data.Title
                 }
@@ -99,7 +100,7 @@
             }
         },
         methods: {
-            onUpdate(val) {
+            onUpdate (val) {
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...{htmlData: val}
