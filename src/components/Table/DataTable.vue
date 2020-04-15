@@ -37,7 +37,8 @@
                       :key="tableKey"
                       :data="rowsData"
                       v-bind="$attrs"
-                      v-on="listeners">
+                      v-on="listeners"
+                      :style="customStyle">
                 <slot name="">
                     <el-table-column
                         v-for="(column, index) in renderedColumns"
@@ -156,6 +157,10 @@
             widgetTitle: {
                 type: String,
                 default: '- -'
+            },
+            customStyle: {
+                type: Object,
+                default: () => ({})
             }
         },
         data() {
