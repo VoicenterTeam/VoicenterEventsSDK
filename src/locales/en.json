@@ -616,5 +616,8 @@
     "Call source":"Call source",
     "CallerID": "Caller ID",
     "Autodialer ": "Autodialer",
-    "Date": "Date"
+    "Date": "Date",
+    "Relative": "Relative",
+    "Absolute": "Absolute",
+    "row(s)": "row(s)"
 }

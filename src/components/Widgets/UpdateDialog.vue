@@ -113,7 +113,7 @@
                             <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
                                 <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
                                           v-for="widgetTimeType in widgetTimeTypes">
-                                    {{widgetTimeType.text}}
+                                    {{$t(widgetTimeType.text)}}
                                 </el-radio>
                             </el-radio-group>
                         </template>

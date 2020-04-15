@@ -8,6 +8,7 @@
              @click="focusSelect"
              :src="activeLanguage.icon"
              :alt="activeLanguage.name"
+             :class="{'mr-0 ml-8': $rtl.isRTL}"
              slot="prefix">
         <el-option v-for="language in languages"
                    class="flex items-center"
