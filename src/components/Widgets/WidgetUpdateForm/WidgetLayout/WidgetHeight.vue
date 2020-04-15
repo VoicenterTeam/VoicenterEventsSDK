@@ -3,7 +3,6 @@
         <label>{{$t(label)}}</label>
         <el-slider
             class="px-1 pb-5"
-            :step="step"
             :min="min"
             :max="max"
             :marks="bestOptions"
@@ -36,8 +35,7 @@
         data() {
             return {
                 value: 0,
-                step: 10,
-                min: 150,
+                min: 0,
                 max: 1500,
                 bestOptions: {
                     300: '300',

@@ -1,9 +1,9 @@
 <template>
     <div>
         <data-table
-            :customStyle="getStyles"
             :border="border"
             :columns="availableColumns"
+            :customStyle="getStyles"
             :editable="editable"
             :showColumns="visibleColumns"
             :stripe="stripe"
@@ -55,7 +55,6 @@
                 width: '30%',
                 drawRow: true,
                 widget: cloneDeep(this.data),
-                widgetCaptionHeight: 40,
             }
         },
         computed: {
@@ -64,8 +63,8 @@
                 let minHeight = get(this.data.WidgetLayout, 'minHeight', 'auto')
                 let maxHeight = get(this.data.WidgetLayout, 'maxHeight', 'auto')
 
-                minHeight = minHeight === fullHeightIdentifier ? 'auto' : minHeight + this.widgetCaptionHeight + 'px'
-                maxHeight = maxHeight === fullHeightIdentifier ? 'auto' : maxHeight + this.widgetCaptionHeight  + 'px'
+                minHeight = minHeight === fullHeightIdentifier ? 'auto' : minHeight + 'px'
+                maxHeight = maxHeight === fullHeightIdentifier ? 'auto' : maxHeight + 'px'
 
                 return {
                     'min-height': minHeight,
