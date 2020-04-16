@@ -1,85 +1,67 @@
 <template>
     <div>
-        <div v-bind="$attrs" v-if="isMultiQueuesDashboard(data)" v-on="$listeners">
-
-        </div>
-        <div v-else>
-            <data-table
-                :border="border"
-                :cell-class-name="getCellClassName"
-                :cell-style="getCellStyle"
-                :columns="availableColumns"
-                :editable="editable"
-                :showColumns="visibleColumns"
-                :stripe="stripe"
-                :tableData="fetchTableData"
-                :widgetTitle="data.Title"
-                @on-update-layout="onUpdateLayout"
-                @sort-change="sortChange">
-                <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
-                    <status-duration :extension="userExtension(row.user_id)"
-                                     :key="row.user_id"
-                                     :settings="getSettings"
-                                     v-if="userExtension(row.user_id) && drawRow">
-                    </status-duration>
-                    <span v-else>{{$t('N/A')}}</span>
-                </template>
-                <template v-if="isRealTimeTable" v-slot:status="{row}">
-                    <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
-                                 :userId="row.user_id"
-                                 v-if="userExtension(row.user_id) && drawRow"/>
-                    <span v-else>{{$t('N/A')}}</span>
-                </template>
-                <template v-if="isRealTimeTable" v-slot:user_name="{row}">
-                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{userExtension(row.user_id).userName}}
+        <data-table
+            :border="border"
+            :cell-class-name="getCellClassName"
+            :cell-style="getCellStyle"
+            :columns="availableColumns"
+            :editable="editable"
+            :row-style="getRowStyle"
+            :showColumns="visibleColumns"
+            :stripe="isStripeTable"
+            :tableData="fetchTableData"
+            :widgetTitle="data.Title"
+            @on-update-layout="onUpdateLayout"
+            @sort-change="sortChange">
+            <template v-if="!displayQueueAsColumn" v-slot:header_title="{column}">
+                <el-tooltip :content="getQueueName(column.prop)" :open-delay="300" placement="top">
+                        <span class="font-medium uppercase">
+                            {{getQueueName(column.prop)}}
                         </span>
-                    <span v-else>---</span>
-                </template>
-                <template v-slot:Recording="{row}">
-                    <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
-                    <div v-else>{{$t('N/A')}}</div>
-                </template>
-                <template v-slot:pagination>
-                    <div class="flex items-center">
-                        <el-select
-                            @change="handlePageChange(1)"
-                            class="w-16 mx-1 py-1"
-                            size="mini"
-                            v-model="pageSize">
-                            <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
-                        </el-select>
-                        <el-pagination
-                            :current-page="currentPage"
-                            :hide-on-single-page="hideOnSinglePage"
-                            :page-size="pageSize"
-                            :page-sizes="pageSizes"
-                            :pager-count="pagerCount"
-                            :total="filteredDataLength"
-                            @current-change="handlePageChange"
-                            layout="prev, pager, next">
-                        </el-pagination>
-                    </div>
-                </template>
-                <template v-slot:title>
-                    <base-widget-title :title="data.Title"/>
-                </template>
-                <template v-slot:time-frame>
-                    <time-frame :widget="data"/>
-                </template>
-                <template v-slot:search-input>
-                    <el-input
-                        clearable
-                        placeholder="Type text to filter"
-                        size="medium"
-                        suffix-icon="el-icon-search"
-                        v-model="filter"/>
-                </template>
-                <template v-slot:additional-data>
-                    <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
-                </template>
-            </data-table>
-        </div>
+                </el-tooltip>
+            </template>
+            <template v-if="isMultiQueuesDashboard(data)" v-slot:QueueName="{row}">
+                {{getQueueName(row.QueueID)}}
+            </template>
+            <template v-slot:pagination>
+                <div class="flex items-center">
+                    <el-select
+                        @change="handlePageChange(1)"
+                        class="w-16 mx-1 py-1"
+                        size="mini"
+                        v-model="pageSize">
+                        <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
+                    </el-select>
+                    <el-pagination
+                        :current-page="currentPage"
+                        :hide-on-single-page="hideOnSinglePage"
+                        :page-size="pageSize"
+                        :page-sizes="pageSizes"
+                        :pager-count="pagerCount"
+                        :total="filteredDataLength"
+                        @current-change="handlePageChange"
+                        layout="prev, pager, next">
+                    </el-pagination>
+                </div>
+            </template>
+            <template v-slot:title>
+                <base-widget-title :title="data.Title"/>
+            </template>
+            <template v-slot:time-frame>
+                <time-frame :widget="data"/>
+            </template>
+            <template v-slot:search-input>
+                <el-input
+                    clearable
+                    placeholder="Type text to filter"
+                    size="medium"
+                    suffix-icon="el-icon-search"
+                    v-model="filter"/>
+            </template>
+            <template v-slot:additional-data>
+                <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
+            </template>
+        </data-table>
     </div>
 </template>
 <script>
@@ -88,7 +70,7 @@
     import {format} from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import {Option, Pagination, Select, Tooltip} from 'element-ui'
+    import {Option, Pagination, Select,Tooltip} from 'element-ui'
     import UserStatus from './UserStatus'
     import AudioPlayer from "@/components/Audio/AudioPlayer";
     import {WidgetApi} from '@/api/widgetApi'
@@ -99,7 +81,8 @@
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
-    import {getDefaultTimeDelay} from '@/enum/generic'
+    import {getDefaultTimeDelay} from "@/enum/generic";
+    import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
     import {getWidgetData} from "@/services/widgetService";
 
     export default {
@@ -140,10 +123,12 @@
                 border: true,
                 widget: cloneDeep(this.data),
                 drawRow: true,
-                stripe: true,
             }
         },
         computed: {
+            isStripeTable() {
+                return !this.isMultiQueuesDashboard(this.widget);
+            },
             fetchTableData () {
                 let tableData = this.tableData
 
@@ -193,9 +178,23 @@
             visibleColumns () {
                 return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
             },
+            allQueues () {
+                return this.$store.state.queues.all
+            },
+            displayQueueAsColumn () {
+                return get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
+            }
         },
         methods: {
             isMultiQueuesDashboard,
+            getQueueName (queueID) {
+                if (queueID === 'All' || queueID === 'Stat type') {
+                    return queueID
+                }
+
+                let queue = this.allQueues.filter((queue) => queue.QueueID === Number(queueID))
+                return get(queue, '[0].QueueName', '--')
+            },
             userExtension (userId) {
                 return this.extensions.find(e => e.userID === userId)
             },
@@ -208,13 +207,30 @@
                         color = extensionColor(extension)
                     }
                 }
+
+                if (isMultiQueuesDashboard(this.widget)) {
+                    color = get(queueDashboardColumnStyles[column.property], 'color')
+                }
+
+                return {'background-color': color}
+            },
+            getRowStyle ({row}) {
+                if (!isMultiQueuesDashboard(this.widget)) {
+                    return
+                }
+
+                let color = get(queueDashboardColumnStyles[row['Stat type']], 'color')
                 return {'background-color': color}
             },
             getCellClassName ({column, row}) {
                 let className = ''
-                let extension = this.userExtension(row.user_id)
 
-                if (dynamicRows.includes(column.property) && extension) {
+                let extension = this.userExtension(row.user_id)
+                if (queueDashboardColumnStyles[column.property] || (dynamicRows.includes(column.property) && extension)) {
+                    className = 'text-white'
+                }
+
+                if (queueDashboardColumnStyles[row['Stat type']]) {
                     className = 'text-white'
                 }
 
@@ -226,14 +242,25 @@
                     if (!data) {
                         return
                     }
-
                     let columns = [];
                     let containsDate = false
                     let dateColumns = ['date & time', 'date', 'call time', 'contacted time']
-
                     if (data.length) {
 
-                        for (let column in data[0]) {
+                        let availableColumns = data[0]
+                        let minWidth = 0
+
+                        if (isMultiQueuesDashboard(this.data)) {
+                            let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
+                            let displayQueueAsColumn = this.displayQueueAsColumn
+                            let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn)
+
+                            availableColumns = result.columns
+                            data = result.data
+                            minWidth = 130
+                        }
+
+                        for (let column in availableColumns) {
                             if (dateColumns.includes(column.toLowerCase())) {
                                 containsDate = true
                                 this.formatDateColumn(data, column)
@@ -242,6 +269,7 @@
                                 prop: column,
                                 fixed: false,
                                 align: 'center',
+                                minWidth: minWidth,
                                 label: this.$t(column) || startCase(column),
                                 className: containsDate ? 'direction-ltr' : ''
                             }
@@ -315,6 +343,9 @@
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
+            }
+            if (isMultiQueuesDashboard(this.data) && !this.data.WidgetLayout.displayRowWithTotals) {
+                this.$set(this.data.WidgetLayout, 'displayRowWithTotals', true)
             }
         },
         watch: {
