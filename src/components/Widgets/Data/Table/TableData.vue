@@ -1,7 +1,14 @@
 <template>
     <div>
-        <div v-bind="$attrs" v-if="isMultiQueuesDashboard(data)" v-on="$listeners">
+        <div v-if="isMultiQueuesDashboard(data)">
+            <queues-table
+                :data="widget"
+                :tableData="queuesTableData"
 
+
+                v-bind="$attrs"
+                v-on="$listeners"
+            ></queues-table>
         </div>
         <div v-else>
             <data-table
@@ -101,6 +108,7 @@
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from '@/enum/generic'
     import {getWidgetData} from "@/services/widgetService";
+    import MultiQueuesDashboard from "@/components/Widgets/Data/Queue/MultiQueuesDashboard";
 
     export default {
         components: {
@@ -113,6 +121,7 @@
             [Option.name]: Option,
             [Tooltip.name]: Tooltip,
             [Pagination.name]: Pagination,
+            [MultiQueuesDashboard.name]: MultiQueuesDashboard,
         },
         props: {
             data: {
@@ -141,6 +150,7 @@
                 widget: cloneDeep(this.data),
                 drawRow: true,
                 stripe: true,
+                queuesTableData: []
             }
         },
         computed: {
@@ -223,9 +233,12 @@
             async getWidgetData () {
                 try {
                     let data = await getWidgetData(this.widget)
+
                     if (!data) {
                         return
                     }
+
+                    this.queuesTableData = data
 
                     let columns = [];
                     let containsDate = false
