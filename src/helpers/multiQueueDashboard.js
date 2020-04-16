@@ -21,7 +21,7 @@ export const queueDashboardColumnStyles = {
     'JoinEmpty': {
         color: colors.LUNCH_COLOR,
     },
-    'LeavEempty': {
+    'LeaveEmpty': {
         color: colors.PRIVATE_COLOR,
     },
     'JoinUnavail': {
@@ -38,16 +38,16 @@ export const queueDashboardColumnStyles = {
     },
 }
 
-export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsColumn) {
+export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsColumn, columnsAreManaged) {
 
     if (!displayQueueAsColumn) {
-        return queueAsRows(records, displayRowWithTotals)
+        return queueAsRows(records, displayRowWithTotals, columnsAreManaged)
     }
 
-    return queueAsColumns(records, displayRowWithTotals)
+    return queueAsColumns(records, displayRowWithTotals, columnsAreManaged)
 }
 
-function queueAsRows (records, displayRowWithTotals) {
+function queueAsRows (records, displayRowWithTotals, columnsAreManaged) {
 
     let columns = {}
     let data = []
@@ -62,7 +62,7 @@ function queueAsRows (records, displayRowWithTotals) {
         }
     })
 
-    let rowsData = queueAsColumns(records, true).data
+    let rowsData = queueAsColumns(records, true, columnsAreManaged).data
 
     const queueIds = Object.keys(columns)
     const rowsDataKeys = Object.keys(rowsData[0])
@@ -97,16 +97,16 @@ function queueAsRows (records, displayRowWithTotals) {
 }
 
 
-function queueAsColumns (records, displayRowWithTotals) {
+function queueAsColumns (records, displayRowWithTotals, columnsAreManaged) {
 
-    const additionalColumns = {
+    let additionalColumns = {
         'Answer': 0,
         'Abandoned': 0,
         'IVRExit': 0,
         'PickUp': 0,
         'TimeOutExit': 0,
         'JoinEmpty': 0,
-        'LeavEempty': 0,
+        'LeaveEmpty': 0,
         'JoinUnavail': 0,
         'LeaveUnavail': 0,
         'Full': 0,
@@ -114,14 +114,13 @@ function queueAsColumns (records, displayRowWithTotals) {
     }
 
     const tableColumns = {
-        'QueueName': '',
+        'queue_id': '',
         ...additionalColumns,
         'CallCount': 0,
         'MaxRingTime': 0,
         'NotInSLACount': 0,
         'InSLACount': 0,
         'AvgRingTime': 0,
-        'QueueID': '',
     }
 
     let data = []
@@ -136,8 +135,6 @@ function queueAsColumns (records, displayRowWithTotals) {
             ...column
         }
 
-        rowData.QueueID = column['queue_id']
-
         rowData.MaxRingTime = timeFormatter(rowData.MaxRingTime)
         rowData.AvgRingTime = timeFormatter(rowData.AvgRingTime)
 
@@ -149,16 +146,24 @@ function queueAsColumns (records, displayRowWithTotals) {
 
         for (let statistic of additionalData) {
             const columnName = additionalRows[statistic['billing_cdr_queue_type']]
+
+            if (!columnName) {
+                return
+            }
+
             rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)} %`
+
             if (displayRowWithTotals) {
                 queueTotals[columnName] += Number(statistic['ExitTypeCount'])
                 if (index === recordsCount - 1) {
                     queueTotals[columnName] = `${((Number(queueTotals[columnName]) * 100) / allQueueCalls).toFixed(2)} %`
                 }
             }
+
         }
 
         delete rowData[ADDITIONAL_DATA_KEY]
+        delete rowData.queue_id
 
         if (displayRowWithTotals) {
             queueTotals.CallCount += column.CallCount
@@ -172,8 +177,7 @@ function queueAsColumns (records, displayRowWithTotals) {
     })
 
     if (displayRowWithTotals) {
-        queueTotals.QueueID = 'All'
-        queueTotals.QueueName = 'All'
+        queueTotals.queue_id = 'All'
         queueTotals.MaxRingTime = timeFormatter(queueTotals.MaxRingTime)
         queueTotals.AvgRingTime = timeFormatter(queueTotals.AvgRingTime)
         data.splice(0, 0, queueTotals)

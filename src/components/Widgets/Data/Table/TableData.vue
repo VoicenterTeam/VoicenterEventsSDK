@@ -2,13 +2,8 @@
     <div>
         <div v-if="isMultiQueuesDashboard(data)">
             <queues-table
-                :data="widget"
-                :tableData="queuesTableData"
-
-
-                v-bind="$attrs"
-                v-on="$listeners"
-            ></queues-table>
+                :data="data"
+                :queuesData="queuesTableData"/>
         </div>
         <div v-else>
             <data-table
@@ -98,7 +93,6 @@
     import {Option, Pagination, Select, Tooltip} from 'element-ui'
     import UserStatus from './UserStatus'
     import AudioPlayer from "@/components/Audio/AudioPlayer";
-    import {WidgetApi} from '@/api/widgetApi'
     import StatusDuration from './StatusDuration'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
@@ -109,8 +103,10 @@
     import {getDefaultTimeDelay} from '@/enum/generic'
     import {getWidgetData} from "@/services/widgetService";
     import MultiQueuesDashboard from "@/components/Widgets/Data/Queue/MultiQueuesDashboard";
+    import dataTableMixin from "@/mixins/dataTableMixin";
 
     export default {
+        mixins: [dataTableMixin],
         components: {
             DataTable,
             TimeFrame,
@@ -183,25 +179,11 @@
             loggedOutUserIds () {
                 return this.extensions.filter(e => e.representativeStatus === LOGOUT_STATUS).map((el) => el.userID)
             },
-            dataCounts () {
-                if (this.filteredDataLength) {
-                    let from = this.pageSize * (this.currentPage - 1) + 1;
-                    let to = (this.pageSize * this.currentPage) < this.filteredDataLength ? (this.pageSize * this.currentPage) : this.filteredDataLength
-                    return from + ' - ' + to
-                }
-                return 0 + ' - ' + 0
-            },
             isRealTimeTable () {
                 return isRealtimeWidget(this.widget)
             },
             getSettings () {
                 return this.data.WidgetLayout.settings || realTimeSettings
-            },
-            availableColumns () {
-                return get(this.widget.WidgetLayout, 'Columns.availableColumns') || this.columns
-            },
-            visibleColumns () {
-                return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
             },
         },
         methods: {
@@ -302,20 +284,7 @@
                 }
                 return ''
             },
-            handlePageChange (val) {
-                this.currentPage = val
-            },
-            async onUpdateLayout (data) {
-                this.widget.WidgetLayout['Columns'] = data
-                await WidgetApi.update(this.widget)
-                let updatedWidget = await WidgetApi.find(this.widget.WidgetID)
-                this.widget = {
-                    ...this.widget,
-                    ...updatedWidget,
-                    WidgetConfig: this.widget.WidgetConfig
-                }
-                this.data.WidgetLayout = updatedWidget.WidgetLayout || this.widget.WidgetLayout
-            },
+
             sortChange () {
                 this.drawRow = false
                 this.$nextTick(() => {

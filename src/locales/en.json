@@ -618,5 +618,6 @@
     "Autodialer ": "Autodialer",
     "Date": "Date",
     "QueueID": "Queue ID",
-    "Multi Queue real time table": "Multi Queue real time table"
+    "Multi Queue real time table": "Multi Queue real time table",
+    "ExitCounts": "ExitCounts"
 }

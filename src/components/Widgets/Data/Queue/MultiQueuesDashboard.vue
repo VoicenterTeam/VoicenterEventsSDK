@@ -20,7 +20,7 @@
                 </el-tooltip>
             </template>
             <template v-slot:QueueName="{row}">
-                {{getQueueName(row.QueueID)}}
+                {{getQueueName(row.QueueName)}}
             </template>
             <template v-slot:pagination>
                 <div class="flex items-center">
@@ -69,12 +69,14 @@
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
     import {Option, Pagination, Select, Tooltip} from 'element-ui'
-    import {WidgetApi} from '@/api/widgetApi'
     import DataTable from '@/components/Table/DataTable'
     import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
 
+    import dataTableMixin from "@/mixins/dataTableMixin";
+
     export default {
         name: 'queues-table',
+        mixins: [dataTableMixin],
         components: {
             DataTable,
             TimeFrame,
@@ -92,13 +94,18 @@
                 type: Boolean,
                 default: false
             },
-            tableData: {
+            queuesData: {
                 type: Array,
                 default: []
+            },
+            tableConfigs: {
+                type: Object,
+                default: () => ({})
             }
         },
         data () {
             return {
+                tableData: [],
                 columns: [],
                 searchableFields: [],
                 pageSizes: [5, 10, 25, 50, 100, 500],
@@ -130,25 +137,14 @@
                 this.filteredDataLength = tableData.length
                 return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             },
-            dataCounts () {
-                if (this.filteredDataLength) {
-                    let from = this.pageSize * (this.currentPage - 1) + 1;
-                    let to = (this.pageSize * this.currentPage) < this.filteredDataLength ? (this.pageSize * this.currentPage) : this.filteredDataLength
-                    return from + ' - ' + to
-                }
-                return 0 + ' - ' + 0
-            },
-            availableColumns () {
-                return get(this.widget.WidgetLayout, 'Columns.availableColumns') || this.columns
-            },
-            visibleColumns () {
-                return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
-            },
             allQueues () {
                 return this.$store.state.queues.all
             },
             displayQueueAsColumn () {
                 return get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
+            },
+            columnsAreManaged() {
+                return !!get(this.widget.WidgetLayout, 'Columns.visibleColumns');
             }
         },
         methods: {
@@ -180,34 +176,36 @@
             async getWidgetData () {
                 try {
 
-                    if (!this.tableData.length) {
+                    if (!this.queuesData.length) {
                         return
                     }
 
-                        let availableColumns = this.tableData[0]
-                        let data = this.tableData
-                        let columns = []
+                    let availableColumns = this.queuesData[0]
+                    let data = this.queuesData
+                    let columns = []
 
-                        let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
-                        let displayQueueAsColumn = this.displayQueueAsColumn
-                        let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn)
+                    let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
+                    let displayQueueAsColumn = this.displayQueueAsColumn
+                    let columnsAreManaged = this.columnsAreManaged
 
-                        availableColumns = result.columns
-                        data = result.data
+                    let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn, columnsAreManaged)
 
-                        for (let column in availableColumns) {
+                    availableColumns = result.columns
+                    data = result.data
 
-                            const columnData = {
-                                prop: column,
-                                fixed: false,
-                                align: 'center',
-                                minWidth: 130,
-                                label: this.$t(column) || startCase(column),
-                            }
+                    for (let column in availableColumns) {
 
-                            columns.push(columnData)
-                            this.searchableFields.push(column)
+                        const columnData = {
+                            prop: column,
+                            fixed: false,
+                            align: 'center',
+                            minWidth: 130,
+                            label: this.$t(column) || startCase(column),
                         }
+
+                        columns.push(columnData)
+                        this.searchableFields.push(column)
+                    }
 
                     this.tableData = data
                     this.columns = columns
@@ -215,21 +213,6 @@
                 } catch (e) {
                     console.warn(e)
                 }
-            },
-
-            handlePageChange (val) {
-                this.currentPage = val
-            },
-            async onUpdateLayout (data) {
-                this.widget.WidgetLayout['Columns'] = data
-                await WidgetApi.update(this.widget)
-                let updatedWidget = await WidgetApi.find(this.widget.WidgetID)
-                this.widget = {
-                    ...this.widget,
-                    ...updatedWidget,
-                    WidgetConfig: this.widget.WidgetConfig
-                }
-                this.data.WidgetLayout = updatedWidget.WidgetLayout || this.widget.WidgetLayout
             },
         },
         mounted () {
@@ -241,7 +224,7 @@
             filter () {
                 this.currentPage = 1
             },
-            tableData: {
+            queuesData: {
                 immediate: true,
                 deep: true,
                 handler: function () {
