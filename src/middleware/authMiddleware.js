@@ -43,6 +43,7 @@ export default function authMiddleware (router, store) {
         let activeTokens = store.getters['users/activeTokens']
 
         if (tokensString !== activeTokens) {
+            store.commit('dashboards/RESET_ACTIVE_DASHBOARD')
             localStorage.clear()
         }
 
