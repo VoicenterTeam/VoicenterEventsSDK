@@ -9,6 +9,7 @@
             :row-style="getRowStyle"
             :showColumns="visibleColumns"
             :stripe="stripe"
+            :manageColumns='displayQueueAsColumn'
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
             @on-update-layout="onUpdateLayout">
@@ -20,7 +21,7 @@
                 </el-tooltip>
             </template>
             <template v-slot:QueueName="{row}">
-                {{getQueueName(row.QueueName)}}
+                {{getQueueName(row.queue_id)}}
             </template>
             <template v-slot:pagination>
                 <div class="flex items-center">
@@ -70,7 +71,7 @@
     import startCase from 'lodash/startCase'
     import {Option, Pagination, Select, Tooltip} from 'element-ui'
     import DataTable from '@/components/Table/DataTable'
-    import {formatQueueDashboardsData, queueDashboardColumnStyles} from "@/helpers/multiQueueDashboard";
+    import {formatQueueDashboardsData, queueDashboardColumnStyles, allColumns} from "@/helpers/multiQueueDashboard";
 
     import dataTableMixin from "@/mixins/dataTableMixin";
 
@@ -106,7 +107,7 @@
         data () {
             return {
                 tableData: [],
-                columns: [],
+                columns: allColumns,
                 searchableFields: [],
                 pageSizes: [5, 10, 25, 50, 100, 500],
                 pageSize: 5,
@@ -186,29 +187,29 @@
 
                     let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
                     let displayQueueAsColumn = this.displayQueueAsColumn
-                    let columnsAreManaged = this.columnsAreManaged
 
-                    let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn, columnsAreManaged)
-
+                    let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn)
+                    // console.log(JSON.stringify(result))
                     availableColumns = result.columns
                     data = result.data
-
-                    for (let column in availableColumns) {
-
-                        const columnData = {
-                            prop: column,
-                            fixed: false,
-                            align: 'center',
-                            minWidth: 130,
-                            label: this.$t(column) || startCase(column),
-                        }
-
-                        columns.push(columnData)
-                        this.searchableFields.push(column)
-                    }
-
+                    //
+                    // for (let column in availableColumns) {
+                    //     if (column === 'queue_id') {
+                    //         column = 'QueueName'
+                    //     }
+                    //     const columnData = {
+                    //         prop: column,
+                    //         fixed: false,
+                    //         align: 'center',
+                    //         minWidth: 130,
+                    //         label: this.$t(column) || startCase(column),
+                    //     }
+                    //
+                    //     columns.push(columnData)
+                    //     this.searchableFields.push(column)
+                    // }
+                    // console.log(JSON.stringify(columns))
                     this.tableData = data
-                    this.columns = columns
 
                 } catch (e) {
                     console.warn(e)
@@ -218,6 +219,9 @@
         mounted () {
             if (!this.data.WidgetLayout.displayRowWithTotals) {
                 this.$set(this.data.WidgetLayout, 'displayRowWithTotals', true)
+            }
+            if (!this.columnsAreManaged) {
+
             }
         },
         watch: {

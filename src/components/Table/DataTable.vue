@@ -10,7 +10,7 @@
                 <slot name="time-frame"/>
             <div class="flex items-center table-row__count"
                  :class="margins">
-                <el-dropdown size="mini" trigger="click">
+                <el-dropdown size="mini" trigger="click" v-if="manageColumns">
                     <el-button type="primary" size="small">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"/>
@@ -156,7 +156,11 @@
             widgetTitle: {
                 type: String,
                 default: '- -'
-            }
+            },
+            manageColumns: {
+                type: Boolean,
+                default: true
+            },
         },
         data() {
             return {
