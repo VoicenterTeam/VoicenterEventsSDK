@@ -90,7 +90,11 @@
                         <widget-width :model="model"/>
                     </el-form-item>
                     <el-form-item v-if="isHtmlWidget(widget)">
-                        <widget-height :model="model"/>
+                        <widget-height :model="model" :propToChange="'height'" :label="'Widget height'"/>
+                    </el-form-item>
+                    <el-form-item v-if="isQueueActiveCall(widget)">
+                        <widget-height :model="model" :propToChange="'minHeight'" :label="'Widget minimum height'"/>
+                        <widget-height :model="model" :propToChange="'maxHeight'" :label="'Widget maximum height'"/>
                     </el-form-item>
                     <el-form-item>
                         <widget-padding :model="model"/>
@@ -189,6 +193,7 @@
         isQueueGauge,
         isQueueTable,
         isRealtimeWidget,
+        isQueueActiveCall,
     } from '@/helpers/widgetUtils'
     import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
 
@@ -253,14 +258,15 @@
             },
         },
         methods: {
-            isRealtimeWidget,
             isPieWidget,
             isQueueTable,
             isQueueChart,
             isQueueGauge,
             isHtmlWidget,
-            isQueueDashboardWidget,
+            isRealtimeWidget,
+            isQueueActiveCall,
             isQueueActivityGauge,
+            isQueueDashboardWidget,
             isMultiQueuesDashboard,
             isAutoComplete (WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE

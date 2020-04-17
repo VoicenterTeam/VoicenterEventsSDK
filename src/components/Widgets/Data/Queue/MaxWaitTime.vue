@@ -1,5 +1,5 @@
 <template>
-    <div :key="queueID">
+    <div>
         {{getMaxWaitTime}}
     </div>
 </template>
