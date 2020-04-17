@@ -71,8 +71,9 @@
         computed: {
             filteredWidgetTemplates() {
                 return this.widgetTemplates.filter((widgetTemplate) => {
-                    if (widgetTemplate.TemplateName) {
-                        return widgetTemplate.TemplateName.toLowerCase().includes(this.search.toLowerCase())
+                    const templateName = this.translateTemplateName(widgetTemplate.TemplateName)
+                    if (templateName) {
+                        return templateName.toLowerCase().includes(this.search.toLowerCase())
                     }
                     return false
                 })
@@ -82,6 +83,9 @@
             },
         },
         methods: {
+            translateTemplateName(tName) {
+                return this.$t(tName)
+            },
             addAllWidgetsFromCategory() {
                 this.addWidgetsToGroup(this.widgetTemplates)
             },

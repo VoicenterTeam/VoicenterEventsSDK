@@ -33,3 +33,13 @@ li.el-select-dropdown__item.hover, li.el-select-dropdown__item:hover {
     right: auto;
     left: 20px;
 }
+
+.rtl {
+    .el-input__suffix {
+        left: 5px;
+        right: auto;
+    }
+    .el-select__input {
+        margin-right: 15px;
+    }
+}

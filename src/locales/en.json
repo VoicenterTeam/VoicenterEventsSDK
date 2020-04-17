@@ -613,12 +613,15 @@
     "Display note on the list": "Display note on the list",
     "to remove this note": "to remove this note",
     "added a note": "added a note - {time} ago",
-    "Call source":"Call source",
+    "Call source": "Call source",
     "CallerID": "Caller ID",
     "Autodialer ": "Autodialer",
     "Date": "Date",
     "QueueID": "Queue ID",
     "Multi Queue real time table": "Multi Queue real time table",
     "ExitCounts": "Exit Counts",
-    "MaxWaitTime": "Max Wait Time"
+    "MaxWaitTime": "Max Wait Time",
+    "Relative": "Relative",
+    "Absolute": "Absolute",
+    "row(s)": "row(s)"
 }

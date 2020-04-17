@@ -1,13 +1,16 @@
 import Vue from 'vue'
-import { DashboardApi } from '@/api/dashboardApi'
+import {DashboardApi} from '@/api/dashboardApi'
 
 const ACTIVE_DASHBOARD = 'active-dashboard'
-let previousActiveDashboard = localStorage.getItem(ACTIVE_DASHBOARD)
 
-try {
-    previousActiveDashboard = JSON.parse(previousActiveDashboard)
-} catch (e) {
-    console.log(e)
+function previousActiveDashboard () {
+    let dashboard = localStorage.getItem(ACTIVE_DASHBOARD)
+    try {
+        dashboard = JSON.parse(dashboard)
+    } catch (e) {
+        console.log(e)
+    }
+    return dashboard
 }
 
 const types = {
@@ -18,6 +21,7 @@ const types = {
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD',
     SET_LOADING: 'SET_LOADING',
     DELETE_DASHBOARD: 'DELETE_DASHBOARD',
+    RESET_ACTIVE_DASHBOARD: 'RESET_ACTIVE_DASHBOARD'
 };
 const state = {
     allDashboards: [],
@@ -61,18 +65,22 @@ const mutations = {
             state.allDashboards.splice(index, 1)
         }
     },
+    [types.RESET_ACTIVE_DASHBOARD]: (state) => {
+        state.activeDashboard = null
+    }
 };
 
 const actions = {
-    async getDashboards({ commit }) {
+    async getDashboards ({commit, state}) {
         commit(types.SET_LOADING, true)
         let dashboards = await DashboardApi.getAll()
         commit(types.SET_LOADING, false)
         commit(types.SET_ALL_DASHBOARDS, dashboards)
 
     },
-    async selectDashboard({ commit, state }, dashboard) {
-        dashboard = dashboard || previousActiveDashboard || state.allDashboards[0]
+    async selectDashboard ({commit, state}, dashboard) {
+        const previousDashboard = previousActiveDashboard()
+        dashboard = dashboard || previousDashboard || state.allDashboards[0]
         if (dashboard) {
             commit(types.SET_LOADING, true)
             dashboard = await DashboardApi.find(dashboard.DashboardID)
@@ -80,19 +88,19 @@ const actions = {
             commit(types.SET_LOADING, false)
         }
     },
-    async createDashboard({ commit }, dashboard) {
+    async createDashboard ({commit}, dashboard) {
         dashboard = await DashboardApi.store(dashboard)
         commit(types.ADD_DASHBOARD, dashboard)
         commit(types.SET_ACTIVE_DASHBOARD, dashboard)
     },
-    async updateDashboard({ commit }, dashboard) {
+    async updateDashboard ({commit}, dashboard) {
         commit(types.UPDATE_DASHBOARD, dashboard)
         commit(types.SET_LOADING, false)
     },
-    setLoadingData({ commit }, value) {
+    setLoadingData ({commit}, value) {
         commit(types.SET_LOADING, value)
     },
-    async deleteDashboard({ commit }, dashboard) {
+    async deleteDashboard ({commit}, dashboard) {
         await DashboardApi.destroy(dashboard.DashboardID)
         commit(types.DELETE_DASHBOARD, dashboard)
     }
@@ -106,8 +114,8 @@ const getters = {
         return state.settings.refreshRealTimeDataDelay
     },
     widgetTitleStyles: state => {
-        const { widgetGroupTitles } = state.settings.colors
-        const { widgetTitlesFontSize } = state.settings
+        const {widgetGroupTitles} = state.settings.colors
+        const {widgetTitlesFontSize} = state.settings
         const styles = {}
         if (widgetGroupTitles) {
             styles.color = widgetGroupTitles
@@ -116,6 +124,9 @@ const getters = {
             styles.fontSize = `${widgetTitlesFontSize}px`
         }
         return styles
+    },
+    getActiveDashboard: state => {
+        return state.activeDashboard
     }
 }
 
