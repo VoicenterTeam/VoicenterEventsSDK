@@ -436,7 +436,7 @@ var getters$1 = {
         return state.all;
       }
 
-      state.all.filter(function (e) {
+      return state.all.filter(function (e) {
         return queueIds.includes(e.QueueID);
       });
     };
