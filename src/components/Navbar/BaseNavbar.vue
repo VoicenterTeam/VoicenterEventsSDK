@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar__wrapper">
+    <div class="navbar__wrapper" v-if="activeDashboard">
         <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
             <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-4 flex xl:mx-16">
             <menu-icon
@@ -28,7 +28,7 @@
                         <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
                                 @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
                         <span
-                            class="mx-1 text-main-sm md:text-main-lg text-gray-700">{{currentUser.name || $t('navbar.default.username')}}</span>
+                            class="mx-1 text-main-sm md:text-main-lg text-gray-700">{{currentAccount.name || $t('navbar.default.username')}}</span>
                             <IconArrowDown/>
                         </button>
                     </div>
@@ -174,13 +174,13 @@
         },
         computed: {
             activeDashboard() {
-                return this.$store.state.dashboards.activeDashboard
+                return this.$store.getters['dashboards/getActiveDashboard']
             },
             allDashboards() {
                 return this.$store.state.dashboards.allDashboards
             },
-            currentUser() {
-                return this.$store.state.users.currentUser
+            currentAccount() {
+                return this.$store.getters['entities/getCurrentAccount']
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID

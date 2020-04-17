@@ -619,5 +619,8 @@
     "Date": "Date",
     "Widget minimum height": "Widget minimum height",
     "Widget maximum height": "Widget maximum height",
-    "Full height(auto)": "Full height(auto)"
+    "Full height(auto)": "Full height(auto)",
+    "Relative": "Relative",
+    "Absolute": "Absolute",
+    "row(s)": "row(s)"
 }
