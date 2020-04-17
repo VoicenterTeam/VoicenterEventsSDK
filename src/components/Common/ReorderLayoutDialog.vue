@@ -6,7 +6,7 @@
                            :value="widgetGroups"
                            @change="(ev) => onGroupListChange(ev)">
                 <el-collapse-item v-for="(widgetGroup, groupIndex) in widgetGroups"
-                                  :title="widgetGroup.WidgetGroupTitle"
+                                  :title="$t(widgetGroup.WidgetGroupTitle)"
                                   :name="widgetGroup.WidgetGroupTitle" class="w-full p-2 widget-group"
                                   :key="groupIndex">
                     <DraggableList group="widgets"
@@ -14,7 +14,7 @@
                                    @change="(ev) => onWidgetListChange(ev, widgetGroup, groupIndex)">
                         <div v-for="widget in widgetGroup.WidgetList" class="w-full p-2 items" :key="widget.WidgetID">
                             <div class="widget-item" :style="$store.getters['dashboards/widgetTitleStyles']">
-                                {{widget.Title}}
+                                {{$t(widget.Title)}}
                             </div>
                         </div>
                     </DraggableList>
