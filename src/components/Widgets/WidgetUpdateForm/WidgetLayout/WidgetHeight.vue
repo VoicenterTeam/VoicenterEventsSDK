@@ -1,13 +1,12 @@
 <template>
     <div>
-        <label>{{$t('Widget height')}}</label>
+        <label>{{$t(label)}}</label>
         <el-slider
             class="px-1 pb-5"
-            :step="step"
             :min="min"
             :max="max"
             :marks="bestOptions"
-            v-model="model.WidgetLayout.height">
+            v-model="model.WidgetLayout[propToChange]">
         </el-slider>
     </div>
 </template>
@@ -20,14 +19,23 @@
             [Slider.name]: Slider,
         },
         props: {
-            model: Object,
-            default: () => ({})
+            model: {
+                type: Object,
+                default: () => ({}),
+            },
+            propToChange: {
+                type: String,
+                default: 'height'
+            },
+            label: {
+                type: String,
+                default: 'Widget height'
+            }
         },
         data() {
             return {
                 value: 0,
-                step: 10,
-                min: 150,
+                min: 0,
                 max: 1500,
                 bestOptions: {
                     300: '300',
