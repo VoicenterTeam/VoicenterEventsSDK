@@ -40,141 +40,6 @@ export const queueDashboardColumnStyles = {
         color: colors.LOGOUT_COLOR,
     },
 }
-export const allColumns = [
-    {
-        "prop": "queue_id",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Queue Name"
-    },
-    {
-        "prop": "Callers",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Callers"
-    },
-    {
-        "prop": "MaxWaitTime",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "MaxWaitTime"
-    },
-    {
-        "prop": "Answer",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Answer"
-    },
-    {
-        "prop": "Abandoned",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Abandoned"
-    },
-    {
-        "prop": "IVRExit",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "IVR Exit"
-    },
-    {
-        "prop": "PickUp",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "PickUp"
-    },
-    {
-        "prop": "TimeOutExit",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "TimeOut Exit"
-    },
-    {
-        "prop": "JoinEmpty",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Join Empty"
-    },
-    {
-        "prop": "LeaveEmpty",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "LeaveEmpty"
-    },
-    {
-        "prop": "JoinUnavail",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Join Unavailable"
-    },
-    {
-        "prop": "LeaveUnavail",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Leave Unavailable"
-    },
-    {
-        "prop": "Full",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Full"
-    },
-    {
-        "prop": "NextDestination",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Next Destination"
-    },
-    {
-        "prop": "CallCount",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Call Count"
-    },
-    {
-        "prop": "MaxRingTime",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Max Ring Time"
-    },
-    {
-        "prop": "NotInSLACount",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Not in SLA Count"
-    },
-    {
-        "prop": "InSLACount",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "In SLA Count"
-    },
-    {
-        "prop": "AvgRingTime",
-        "fixed": false,
-        "align": "center",
-        "minWidth": 130,
-        "label": "Avg Ring Time"
-    }
-]
 
 export const defaultVisibleColumns = [
     'queue_id',
@@ -265,6 +130,8 @@ function queueAsColumns (records, displayRowWithTotals) {
 
     const tableColumns = {
         'queue_id': '',
+        'Callers': '',
+        'MaxWaitTime': '',
         'Answer': 0,
         'Abandoned': 0,
         'IVRExit': 0,

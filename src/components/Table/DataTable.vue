@@ -80,6 +80,10 @@
                                   :index="$index">
                                 {{formatCell(row, column)}}
                             </slot>
+                            <slot name="realTimeCell"
+                                :row="row"
+                                :index="$index">
+                            </slot>
                         </template>
                     </el-table-column>
                 </slot>

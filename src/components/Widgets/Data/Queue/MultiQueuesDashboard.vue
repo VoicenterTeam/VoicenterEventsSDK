@@ -4,15 +4,16 @@
             :border="border"
             :cell-class-name="getCellClassName"
             :cell-style="getCellStyle"
-            :columns="availableColumns"
+            :columns="getAvailableColumns"
             :editable="editable"
-            :row-style="getRowStyle"
-            :showColumns="visibleColumns"
-            :stripe="stripe"
             :manageColumns='displayQueueAsColumn'
+            :row-style="getRowStyle"
+            :showColumns="getVisibleColumns"
+            :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
-            @on-update-layout="onUpdateLayout">
+            @on-update-layout="onUpdateLayout"
+            v-if="drawRow">
             <template v-if="!displayQueueAsColumn" v-slot:header_title="{column}">
                 <el-tooltip :content="getQueueName(column.prop)" :open-delay="300" placement="top">
                         <span class="font-medium uppercase">
@@ -20,8 +21,22 @@
                         </span>
                 </el-tooltip>
             </template>
-            <template v-slot:QueueName="{row}">
+            <template v-slot:Callers="{row, index}">
+                <div :key="$index">
+                    {{row.queue_id}}
+                    <caller-count :key="index" :queueID="row.queue_id"/>
+                </div>
+            </template>
+            <template v-slot:MaxWaitTime="{row, index}">
+                <max-wait-time :key="index" :queueID="row.queue_id"/>
+            </template>
+            <template v-slot:queue_id="{row}">
                 {{getQueueName(row.queue_id)}}
+            </template>
+            <template v-slot:realTimeCell="{row, $index}">
+                <div v-if="isRealTimeCell(row)">
+                    comming
+                </div>
             </template>
             <template v-slot:pagination>
                 <div class="flex items-center">
@@ -68,17 +83,23 @@
     import TimeFrame from "../Table/TimeFrame";
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import startCase from 'lodash/startCase'
     import {Option, Pagination, Select, Tooltip} from 'element-ui'
     import DataTable from '@/components/Table/DataTable'
-    import {formatQueueDashboardsData, queueDashboardColumnStyles, allColumns} from "@/helpers/multiQueueDashboard";
-
+    import {
+        defaultVisibleColumns,
+        formatQueueDashboardsData,
+        queueDashboardColumnStyles
+    } from "@/helpers/multiQueueDashboard";
     import dataTableMixin from "@/mixins/dataTableMixin";
+    import CallerCount from "./CallerCount";
+    import MaxWaitTime from "./MaxWaitTime";
 
     export default {
         name: 'queues-table',
         mixins: [dataTableMixin],
         components: {
+            CallerCount,
+            MaxWaitTime,
             DataTable,
             TimeFrame,
             [Select.name]: Select,
@@ -107,7 +128,7 @@
         data () {
             return {
                 tableData: [],
-                columns: allColumns,
+                columns: [],
                 searchableFields: [],
                 pageSizes: [5, 10, 25, 50, 100, 500],
                 pageSize: 5,
@@ -118,12 +139,19 @@
                 hideOnSinglePage: true,
                 border: true,
                 stripe: false,
-                widget: cloneDeep(this.data),
+                drawRow: true,
+                widget: {},
             }
         },
         computed: {
             fetchTableData () {
                 let tableData = this.tableData
+
+                if (!this.displayQueueAsColumn) {
+                    let visibleRows = this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
+                    tableData = tableData.filter(c => visibleRows.includes(c['Stat type']))
+                    tableData = this.mapOrder(tableData, visibleRows, 'Stat type')
+                }
 
                 if (this.filter && this.searchableFields.length > 0) {
                     tableData = tableData.filter(c => {
@@ -135,6 +163,7 @@
                         })
                     })
                 }
+
                 this.filteredDataLength = tableData.length
                 return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             },
@@ -144,16 +173,45 @@
             displayQueueAsColumn () {
                 return get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
             },
-            columnsAreManaged() {
+            columnsAreManaged () {
                 return !!get(this.widget.WidgetLayout, 'Columns.visibleColumns');
-            }
+            },
+            getAvailableColumns () {
+                if (!this.displayQueueAsColumn) {
+                    return this.columns
+                }
+                return this.availableColumns
+            },
+            getVisibleColumns () {
+                if (!this.displayQueueAsColumn) {
+                    return this.columns.map(el => el.prop)
+                }
+
+                if (!this.columnsAreManaged) {
+                    return defaultVisibleColumns
+                }
+
+                return this.visibleColumns
+            },
         },
         methods: {
+            mapOrder (array, order, key) {
+                array.sort(function (a, b) {
+                    let A = a[key]
+                    let B = b[key]
+
+                    if (order.indexOf(A) > order.indexOf(B)) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+                return array
+            },
             getQueueName (queueID) {
                 if (queueID === 'All' || queueID === 'Stat type') {
                     return queueID
                 }
-
                 let queue = this.allQueues.filter((queue) => queue.QueueID === Number(queueID))
                 return get(queue, '[0].QueueName', '--')
             },
@@ -189,44 +247,54 @@
                     let displayQueueAsColumn = this.displayQueueAsColumn
 
                     let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn)
-                    // console.log(JSON.stringify(result))
+
                     availableColumns = result.columns
                     data = result.data
-                    //
-                    // for (let column in availableColumns) {
-                    //     if (column === 'queue_id') {
-                    //         column = 'QueueName'
-                    //     }
-                    //     const columnData = {
-                    //         prop: column,
-                    //         fixed: false,
-                    //         align: 'center',
-                    //         minWidth: 130,
-                    //         label: this.$t(column) || startCase(column),
-                    //     }
-                    //
-                    //     columns.push(columnData)
-                    //     this.searchableFields.push(column)
-                    // }
-                    // console.log(JSON.stringify(columns))
+
+                    for (let column in availableColumns) {
+                        const columnData = {
+                            prop: column,
+                            fixed: false,
+                            align: 'center',
+                            minWidth: 130,
+                            label: this.$t(column) || startCase(column),
+                        }
+                        columns.push(columnData)
+                        this.searchableFields.push(column)
+                    }
+
+                    this.columns = columns
                     this.tableData = data
+
+                    this.drawRow = false
+                    this.$nextTick(() => {
+                        this.drawRow = true
+                    })
 
                 } catch (e) {
                     console.warn(e)
                 }
             },
+            isRealTimeCell (row) {
+                return ['Callers', 'MaxWaitTime'].includes(row['Stat type'])
+            },
+
         },
         mounted () {
             if (!this.data.WidgetLayout.displayRowWithTotals) {
                 this.$set(this.data.WidgetLayout, 'displayRowWithTotals', true)
             }
-            if (!this.columnsAreManaged) {
-
-            }
         },
         watch: {
             filter () {
                 this.currentPage = 1
+            },
+            data: {
+                immediate: true,
+                deep: true,
+                handler: function (data) {
+                    this.widget = cloneDeep(data)
+                }
             },
             queuesData: {
                 immediate: true,
@@ -241,5 +309,52 @@
 <style lang="scss">
     td.text-white > .cell {
         color: white;
+    }
+
+
+    .form-group {
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    .form-group input {
+        padding: 0;
+        height: initial;
+        width: initial;
+        margin-bottom: 0;
+        display: none;
+        cursor: pointer;
+    }
+
+    .form-group label {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .form-group label:before {
+        content:'';
+        -webkit-appearance: none;
+        background-color: transparent;
+        border: 2px solid #0079bf;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+        padding: 10px;
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    .form-group input:checked + label:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 2px;
+        left: 9px;
+        width: 6px;
+        height: 14px;
+        border: solid #0079bf;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
     }
 </style>
