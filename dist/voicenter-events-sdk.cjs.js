@@ -394,8 +394,7 @@ var extensionsModule = {
   getters: getters
 };
 
-var _mutations$1,
-    _this = undefined;
+var _mutations$1;
 
 var types$1 = {
   SET_QUEUES: 'SET_QUEUES',
@@ -441,7 +440,7 @@ var getters$1 = {
         return state.all;
       }
 
-      _this.state.all.filter(function (e) {
+      state.all.filter(function (e) {
         return queueIds.includes(e.QueueID);
       });
     };
