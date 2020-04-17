@@ -7,6 +7,7 @@
     import get from 'lodash/get'
     import {getInitialTime} from "@/util/timeUtils";
     import {timeFormatter} from "@/helpers/timeFormatter";
+    import {getMinValue} from "@/helpers/util";
 
     export default {
         props: {
@@ -28,14 +29,13 @@
             getMaxWaitTime () {
                 clearInterval(this.timeout)
                 let queueData = this.getQueueByID
-
                 let calls = get(queueData, '[0].Calls', [])
 
                 if(!calls.length) {
                     return timeFormatter(0)
                 }
 
-                let minJoinTimeStamp = this.getMinValue(calls, 'JoinTimeStamp')
+                let minJoinTimeStamp = getMinValue(calls, 'JoinTimeStamp')
 
                 this.dataCount = getInitialTime(minJoinTimeStamp)
 
@@ -45,11 +45,6 @@
 
                 this.dataCount = timeFormatter(this.dataCount)
                 return this.dataCount
-            }
-        },
-        methods: {
-            getMinValue (data, key) {
-                return data.reduce((min, object) => Math.min(min, object[key]), data[0][key]);
             }
         },
         beforeDestroy () {

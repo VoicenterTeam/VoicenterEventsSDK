@@ -21,8 +21,6 @@
                 let queueData = this.getQueueByID
 
                 let calls = get(queueData, '[0].Calls', [])
-                console.log(calls.length)
-                console.log('queueID', this.queueID)
                 return calls.length
             }
         },

@@ -81,6 +81,7 @@
                                 {{formatCell(row, column)}}
                             </slot>
                             <slot name="realTimeCell"
+                                :column="column"
                                 :row="row"
                                 :index="$index">
                             </slot>

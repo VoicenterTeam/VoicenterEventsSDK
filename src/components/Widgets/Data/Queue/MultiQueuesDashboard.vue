@@ -22,10 +22,7 @@
                 </el-tooltip>
             </template>
             <template v-slot:Callers="{row, index}">
-                <div :key="$index">
-                    {{row.queue_id}}
-                    <caller-count :key="index" :queueID="row.queue_id"/>
-                </div>
+                <caller-count :key="index" :queueID="row.queue_id"/>
             </template>
             <template v-slot:MaxWaitTime="{row, index}">
                 <max-wait-time :key="index" :queueID="row.queue_id"/>
@@ -33,9 +30,12 @@
             <template v-slot:queue_id="{row}">
                 {{getQueueName(row.queue_id)}}
             </template>
-            <template v-slot:realTimeCell="{row, $index}">
-                <div v-if="isRealTimeCell(row)">
-                    comming
+            <template v-slot:realTimeCell="{column, row, index}">
+                <div v-if="isCallersRealTimeCell(column, row)">
+                    <caller-count :key="index" :queueID="getColumnQueueID(column)"/>
+                </div>
+                <div v-if="isMaxWaitTimeRealTimeCell(column, row)">
+                    <max-wait-time :key="index" :queueID="getColumnQueueID(column)"/>
                 </div>
             </template>
             <template v-slot:pagination>
@@ -93,6 +93,7 @@
     import dataTableMixin from "@/mixins/dataTableMixin";
     import CallerCount from "./CallerCount";
     import MaxWaitTime from "./MaxWaitTime";
+    import {mapOrder} from "@/helpers/util";
 
     export default {
         name: 'queues-table',
@@ -150,7 +151,7 @@
                 if (!this.displayQueueAsColumn) {
                     let visibleRows = this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
                     tableData = tableData.filter(c => visibleRows.includes(c['Stat type']))
-                    tableData = this.mapOrder(tableData, visibleRows, 'Stat type')
+                    tableData = mapOrder(tableData, visibleRows, 'Stat type')
                 }
 
                 if (this.filter && this.searchableFields.length > 0) {
@@ -195,19 +196,6 @@
             },
         },
         methods: {
-            mapOrder (array, order, key) {
-                array.sort(function (a, b) {
-                    let A = a[key]
-                    let B = b[key]
-
-                    if (order.indexOf(A) > order.indexOf(B)) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                })
-                return array
-            },
             getQueueName (queueID) {
                 if (queueID === 'All' || queueID === 'Stat type') {
                     return queueID
@@ -275,10 +263,21 @@
                     console.warn(e)
                 }
             },
-            isRealTimeCell (row) {
-                return ['Callers', 'MaxWaitTime'].includes(row['Stat type'])
+            isCallersRealTimeCell (column, row) {
+                if (['All', 'Stat type'].includes(column.prop)) {
+                    return
+                }
+                return row['Stat type'] === 'Callers';
             },
-
+            isMaxWaitTimeRealTimeCell (column, row) {
+                if (['All', 'Stat type'].includes(column.prop)) {
+                    return
+                }
+                return row['Stat type'] === 'MaxWaitTime';
+            },
+            getColumnQueueID (column) {
+                return Number(column.prop)
+            }
         },
         mounted () {
             if (!this.data.WidgetLayout.displayRowWithTotals) {
@@ -309,52 +308,5 @@
 <style lang="scss">
     td.text-white > .cell {
         color: white;
-    }
-
-
-    .form-group {
-        display: block;
-        margin-bottom: 15px;
-    }
-
-    .form-group input {
-        padding: 0;
-        height: initial;
-        width: initial;
-        margin-bottom: 0;
-        display: none;
-        cursor: pointer;
-    }
-
-    .form-group label {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .form-group label:before {
-        content:'';
-        -webkit-appearance: none;
-        background-color: transparent;
-        border: 2px solid #0079bf;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
-        padding: 10px;
-        display: inline-block;
-        position: relative;
-        vertical-align: middle;
-        cursor: pointer;
-        margin-right: 5px;
-    }
-
-    .form-group input:checked + label:after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 2px;
-        left: 9px;
-        width: 6px;
-        height: 14px;
-        border: solid #0079bf;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
     }
 </style>
