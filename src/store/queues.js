@@ -40,7 +40,7 @@ const getters = {
     if (!queueIds || !Array.isArray(queueIds)) {
       return state.all
     }
-    state.all.filter(e => queueIds.includes(e.QueueID))
+    return state.all.filter(e => queueIds.includes(e.QueueID))
   }
 }
 export default {
