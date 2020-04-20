@@ -1,4 +1,7 @@
 import colors from "@/enum/colors";
+import sumBy from 'lodash/sumBy'
+import groupBy from 'lodash/groupBy'
+
 import {timeFormatter} from "@/helpers/timeFormatter";
 import {ADDITIONAL_DATA_KEY, TOTAL_CALLS_KEY} from "@/enum/queueDashboardStatistics";
 
@@ -21,7 +24,7 @@ export const queueDashboardColumnStyles = {
     'JoinEmpty': {
         color: colors.LUNCH_COLOR,
     },
-    'LeavEempty': {
+    'LeaveEmpty': {
         color: colors.PRIVATE_COLOR,
     },
     'JoinUnavail': {
@@ -37,6 +40,19 @@ export const queueDashboardColumnStyles = {
         color: colors.LOGOUT_COLOR,
     },
 }
+
+export const defaultVisibleColumns = [
+    'queue_id',
+    'Callers',
+    'MaxWaitTime',
+    'Answer',
+    'Abandoned',
+    'CallCount',
+    'MaxRingTime',
+    'NotInSLACount',
+    'InSLACount',
+    'AvgRingTime',
+]
 
 export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsColumn) {
 
@@ -96,65 +112,72 @@ function queueAsRows (records, displayRowWithTotals) {
     }
 }
 
-
 function queueAsColumns (records, displayRowWithTotals) {
 
-    const additionalColumns = {
+    let billingCdrQueueTypes = {
+        1: 'Answer',
+        2: 'Abandoned',
+        3: 'IVRExit',
+        4: 'PickUp',
+        5: 'TimeOutExit',
+        6: 'JoinEmpty',
+        7: 'LeaveEmpty',
+        8: 'JoinUnavail',
+        9: 'LeaveUnavail',
+        10: 'Full',
+        11: 'NextDestination',
+    }
+
+    const tableColumns = {
+        'queue_id': '',
+        'Callers': '',
+        'MaxWaitTime': '',
         'Answer': 0,
         'Abandoned': 0,
         'IVRExit': 0,
         'PickUp': 0,
         'TimeOutExit': 0,
         'JoinEmpty': 0,
-        'LeavEempty': 0,
+        'LeaveEmpty': 0,
         'JoinUnavail': 0,
         'LeaveUnavail': 0,
         'Full': 0,
         'NextDestination': 0,
-    }
-
-    const tableColumns = {
-        'QueueName': '',
-        ...additionalColumns,
         'CallCount': 0,
         'MaxRingTime': 0,
         'NotInSLACount': 0,
         'InSLACount': 0,
         'AvgRingTime': 0,
-        'QueueID': '',
     }
 
     let data = []
     let queueTotals = tableColumns
 
-    const recordsCount = records.length
+    let exitTypeCounts = []
     let allQueueCalls = 1
 
-    records.forEach((column, index) => {
+    records.forEach((column) => {
         let rowData = {
             ...tableColumns,
             ...column
         }
 
-        rowData.QueueID = column['queue_id']
-
         rowData.MaxRingTime = timeFormatter(rowData.MaxRingTime)
         rowData.AvgRingTime = timeFormatter(rowData.AvgRingTime)
 
         const additionalData = column[ADDITIONAL_DATA_KEY]
-        const additionalRows = Object.keys(additionalColumns)
+
         let qTotalCalls = column[TOTAL_CALLS_KEY] || 1
 
         allQueueCalls += Number(qTotalCalls)
 
         for (let statistic of additionalData) {
-            const columnName = additionalRows[statistic['billing_cdr_queue_type']]
+            const columnName = billingCdrQueueTypes[statistic['billing_cdr_queue_type']]
+
             rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)} %`
+
             if (displayRowWithTotals) {
-                queueTotals[columnName] += Number(statistic['ExitTypeCount'])
-                if (index === recordsCount - 1) {
-                    queueTotals[columnName] = `${((Number(queueTotals[columnName]) * 100) / allQueueCalls).toFixed(2)} %`
-                }
+                exitTypeCounts.push(statistic)
             }
         }
 
@@ -172,8 +195,16 @@ function queueAsColumns (records, displayRowWithTotals) {
     })
 
     if (displayRowWithTotals) {
-        queueTotals.QueueID = 'All'
-        queueTotals.QueueName = 'All'
+
+        let statistics = groupBy(exitTypeCounts, 'billing_cdr_queue_type')
+
+        for (let key in statistics) {
+            const columnName = billingCdrQueueTypes[key]
+            let value = sumBy(statistics[key], 'ExitTypeCount')
+            queueTotals[columnName] = `${((Number(value) * 100) / allQueueCalls).toFixed(2)} %`
+        }
+
+        queueTotals.queue_id = 'All'
         queueTotals.MaxRingTime = timeFormatter(queueTotals.MaxRingTime)
         queueTotals.AvgRingTime = timeFormatter(queueTotals.AvgRingTime)
         data.splice(0, 0, queueTotals)
