@@ -6,6 +6,12 @@
 }
 
 .el-select-dropdown {
+    .el-scrollbar{
+        .el-select-dropdown__wrap {
+            margin-right: 0 !important;
+        }
+    }
+
     .el-select-dropdown__item {
         font-size: var(--font-size-sm);
 
@@ -39,6 +45,7 @@ li.el-select-dropdown__item.hover, li.el-select-dropdown__item:hover {
         left: 5px;
         right: auto;
     }
+
     .el-select__input {
         margin-right: 15px;
     }
