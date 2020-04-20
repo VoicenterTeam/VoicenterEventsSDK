@@ -12,8 +12,7 @@
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
-            @on-update-layout="onUpdateLayout"
-            v-if="drawRow">
+            @on-update-layout="onUpdateLayout">
             <template v-if="!displayQueueAsColumn" v-slot:header_title="{column}">
                 <el-tooltip :content="getQueueName(column.prop)" :open-delay="300" placement="top">
                         <span class="font-medium uppercase">
@@ -140,7 +139,6 @@
                 hideOnSinglePage: true,
                 border: true,
                 stripe: false,
-                drawRow: true,
                 widget: {},
             }
         },
@@ -254,11 +252,6 @@
                     this.columns = columns
                     this.tableData = data
 
-                    this.drawRow = false
-                    this.$nextTick(() => {
-                        this.drawRow = true
-                    })
-
                 } catch (e) {
                     console.warn(e)
                 }
@@ -291,14 +284,14 @@
             data: {
                 immediate: true,
                 deep: true,
-                handler: function (data) {
+                handler (data) {
                     this.widget = cloneDeep(data)
                 }
             },
             queuesData: {
                 immediate: true,
                 deep: true,
-                handler: function () {
+                handler () {
                     this.getWidgetData()
                 }
             }
