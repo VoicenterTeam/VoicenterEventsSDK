@@ -158,7 +158,7 @@
 
                     if (queueCalls > 0) {
                         this.dataCount = getInitialTime(minJoinTimeStamp)
-                        setInterval(() => {
+                        this.timeout = setInterval(() => {
                             this.dataCount++
                         }, 1000)
                         this.dataCount = timeFormatter(this.dataCount)
@@ -166,7 +166,7 @@
                         this.dataCount = timeFormatter(this.dataCount)
                     }
                 }
-                
+
                 return this.dataCount
             },
             cardIcon () {

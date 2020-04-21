@@ -22,6 +22,9 @@ export default class Timer {
     }
 
     start () {
+        if (this.interval) {
+            clearInterval(this.interval)
+        }
         this.interval = setInterval(() => {
             this.state.seconds++
         }, this.options.interval || 1000)
