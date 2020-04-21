@@ -94,6 +94,7 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **timeout**  | Number  | 10000 |  Login timeout. Will throw an error if no event is sent back based on the emitted login event  |
 | **protocol**  | String  | https |  Protocol to use when connecting via sockets with the server  |
 | **keepAliveTimeout**  | Number  | 60000 |  Timeout after which a keep alive event is sent  |
+| **idleInterval**  | Number  | 60000 * 5 |  Interval after which resync event is sent  |
 | **transports**  | Array  | ['websocket'] |  Available transports. It's desired to leave this setting as it is. |
 | **upgrade**  | Boolean  | false |  Available transports. It's desired to leave this setting as it is. |
 | **serverType**  | Number  | null |  Optional parameter to be passed to api call that retrieves available servers. Can be 1 or 2. 2 should be used for chrome extension |
