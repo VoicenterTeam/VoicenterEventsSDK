@@ -35,11 +35,11 @@
         data() {
             return {
                 value: 0,
-                min: 0,
+                min: 300,
                 max: 1500,
                 bestOptions: {
-                    300: '300',
-                    500: '500',
+                    450: '450',
+                    600: '600',
                     900: '900',
                     [fullHeightIdentifier]: 'Full height'
                 },
