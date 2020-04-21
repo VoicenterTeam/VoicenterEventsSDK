@@ -30,6 +30,10 @@ export default class Timer {
         }, this.options.interval || 1000)
     }
 
+    stop () {
+        clearInterval(this.interval)
+    }
+
     destroy () {
         clearInterval(this.interval)
     }

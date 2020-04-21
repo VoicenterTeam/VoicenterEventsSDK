@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{getMaxWaitTime}}
+        {{maxWaitTime}}
     </div>
 </template>
 <script>
@@ -8,6 +8,7 @@
     import {getInitialTime} from "@/util/timeUtils";
     import {timeFormatter} from "@/helpers/timeFormatter";
     import {getMinValue} from "@/helpers/util";
+    import Timer from "@/util/Timer";
 
     export default {
         props: {
@@ -19,36 +20,49 @@
         data() {
             return {
                 timeout: null,
-                dataCount: timeFormatter(0)
+                timer: new Timer(),
             }
         },
         computed: {
             getQueueByID() {
                 return this.$store.getters['queues/filterQueuesByIds']([this.queueID])
             },
-            getMaxWaitTime () {
-                clearInterval(this.timeout)
+            stats() {
                 let queueData = this.getQueueByID
                 let calls = get(queueData, '[0].Calls', [])
 
-                if(!calls.length) {
-                    return timeFormatter(0)
+                let minJoinTimestamp = getMinValue(calls, 'JoinTimeStamp')
+                minJoinTimestamp = getInitialTime(minJoinTimestamp)
+
+                return {
+                    minJoinTimestamp,
+                    calls
                 }
-
-                let minJoinTimeStamp = getMinValue(calls, 'JoinTimeStamp')
-
-                this.dataCount = getInitialTime(minJoinTimeStamp)
-
-                this.timeout = setInterval(() => {
-                    this.dataCount++
-                }, 1000)
-
-                this.dataCount = timeFormatter(this.dataCount)
-                return this.dataCount
+            },
+            maxWaitTime() {
+                return timeFormatter(this.timer.state.seconds)
+            },
+        },
+        methods: {
+            setCounterState(callCount) {
+                this.timer.setValue(this.stats.minJoinTimestamp)
+                if (callCount === 0) {
+                    this.timer.stop()
+                } else {
+                    this.timer.start()
+                }
             }
         },
+        watch: {
+          'stats.calls': {
+              immediate: true,
+              handler(calls) {
+                  this.setCounterState(calls.length)
+              }
+          }
+        },
         beforeDestroy () {
-            clearInterval(this.timeout)
+            this.timer.destroy()
         },
     }
 </script>
