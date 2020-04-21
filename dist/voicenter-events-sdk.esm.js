@@ -472,7 +472,7 @@ var defaultOptions = {
   maxReconnectAttempts: 2,
   timeout: 10000,
   keepAliveTimeout: 60000,
-  idleTimeout: 60000 * 5,
+  idleInterval: 60000 * 5,
   // 5 minutes
   protocol: 'https',
   transports: ['websocket'],
@@ -527,6 +527,11 @@ function () {
   }
 
   _createClass(EventsSDK, [{
+    key: "getLastEventTimestamp",
+    value: function getLastEventTimestamp() {
+      return this._lastEventTimestamp;
+    }
+  }, {
     key: "_registerExtensionsModule",
     value: function _registerExtensionsModule() {
       var moduleName = this.options.extensionsModuleName || 'sdkExtensions';
@@ -761,40 +766,27 @@ function () {
 
       this.keepAliveInterval = setInterval(function () {
         var now = new Date().getTime();
-        var maxDelay = _this.options.keepAliveTimeout * 3; // If keep alive timeout is 1 minute and we still don't get a response after 3 minutes, find another server
+        var delta = _this.options.keepAliveTimeout * 2;
 
-        if (now > _this._lastEventTimestamp + maxDelay) {
-          debugger;
-
+        if (now > _this.getLastEventTimestamp() + delta) {
           _this._connect('next');
 
           return;
         }
 
         if (!_this.socket) {
-          debugger;
-
           _this._initSocketConnection();
 
           return;
         }
 
-        if (now > _this._lastEventTimestamp + _this.options.keepAliveTimeout) {
+        if (now > _this.getLastEventTimestamp() + _this.options.keepAliveTimeout) {
           _this.emit(eventTypes.KEEP_ALIVE, _this.options.token);
         }
       }, this.options.keepAliveTimeout);
       this.idleInterval = setInterval(function () {
-        _this.reSync(false); // if we are idle for more time, try reconnecting
-
-
-        var now = new Date().getTime();
-
-        if (now > _this._lastEventTimestamp + _this.options.idleTimeout * 3) {
-          debugger;
-
-          _this._connect('next');
-        }
-      }, this.options.idleTimeout);
+        _this.reSync(false);
+      }, this.options.idleInterval);
     }
   }, {
     key: "_findCurrentServer",
@@ -817,8 +809,6 @@ function () {
     key: "_findNextAvailableServer",
     value: function _findNextAvailableServer() {
       var currentServerPriority = this.server.Priority;
-      console.trace('FAILOVER');
-      debugger;
       this.Logger.log("Failover -> Trying to find another server");
 
       if (currentServerPriority > 0) {
@@ -904,7 +894,7 @@ function () {
         }
       });
 
-      var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.PONG, this._onPong), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
+      var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
         if (!_this2.connected) {
           _this2._onConnect();
         }
