@@ -513,7 +513,7 @@ function () {
     this.socket = null;
     this.connected = false;
     this.connectionEstablished = false;
-    this.lastKeepAliveTimestamp = new Date().getTime();
+    this._lastEventTimestamp = new Date().getTime();
 
     this._initReconnectOptions();
 
@@ -523,7 +523,6 @@ function () {
       trailing: false
     });
     this._lastLoginTimestamp = null;
-    this._lastPong = null;
     this._handleLocalEvents = false;
 
     this._registerExtensionsModule();
@@ -666,7 +665,7 @@ function () {
 
       if (data && this.connected) {
         this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
-        this.lastKeepAliveTimestamp = new Date().getTime();
+        this._lastEventTimestamp = new Date().getTime();
       } else {
         this._initSocketConnection();
       }
@@ -677,11 +676,6 @@ function () {
       if (data.ErrorCode === 0 && data.Token && !this.options.token) {
         this.options.token = data.Token;
       }
-    }
-  }, {
-    key: "_onPong",
-    value: function _onPong() {
-      this._lastPong = new Date().getTime();
     }
   }, {
     key: "_parsePacket",
@@ -773,23 +767,35 @@ function () {
         var now = new Date().getTime();
         var maxDelay = _this.options.keepAliveTimeout * 3; // If keep alive timeout is 1 minute and we still don't get a response after 3 minutes, find another server
 
-        if (now > _this.lastKeepAliveTimestamp + maxDelay) {
+        if (now > _this._lastEventTimestamp + maxDelay) {
+          debugger;
+
           _this._connect('next');
+
+          return;
         }
 
         if (!_this.socket) {
+          debugger;
+
           _this._initSocketConnection();
 
           return;
         }
 
-        _this.emit(eventTypes.KEEP_ALIVE, _this.options.token);
+        if (now > _this._lastEventTimestamp + _this.options.keepAliveTimeout) {
+          _this.emit(eventTypes.KEEP_ALIVE, _this.options.token);
+        }
       }, this.options.keepAliveTimeout);
       this.idleInterval = setInterval(function () {
         _this.reSync(false); // if we are idle for more time, try reconnecting
 
 
-        if (_this._lastPong + _this.options.idleTimeout * 3 > new Date().getTime()) {
+        var now = new Date().getTime();
+
+        if (now > _this._lastEventTimestamp + _this.options.idleTimeout * 3) {
+          debugger;
+
           _this._connect('next');
         }
       }, this.options.idleTimeout);
@@ -815,6 +821,8 @@ function () {
     key: "_findNextAvailableServer",
     value: function _findNextAvailableServer() {
       var currentServerPriority = this.server.Priority;
+      console.trace('FAILOVER');
+      debugger;
       this.Logger.log("Failover -> Trying to find another server");
 
       if (currentServerPriority > 0) {
@@ -890,6 +898,7 @@ function () {
       var evt = this._parsePacket(packet);
 
       this.Logger.log("New event -> ".concat(evt.name), evt);
+      this._lastEventTimestamp = new Date().getTime();
 
       this._listenersMap.forEach(function (callback, eventName) {
         if (eventName === '*') {
