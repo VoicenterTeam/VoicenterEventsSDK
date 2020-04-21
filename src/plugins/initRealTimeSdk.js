@@ -49,11 +49,11 @@ export default async function initRealTimeSdk() {
     }
 }
 
-export function reSyncSdk() {
+export async function reSyncSdk() {
     if (!sdk) {
         return
     }
-    sdk.reSync(false)
+    await initRealTimeSdk()
 }
 
 export async function setToken(token) {

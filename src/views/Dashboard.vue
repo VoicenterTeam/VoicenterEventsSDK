@@ -397,7 +397,8 @@
             async retrySocketConnection () {
                 this.socketResync = true
                 Notification.info(this.$t('common.socketAttemptSync'));
-                reSyncSdk()
+                await reSyncSdk()
+                Notification.success(this.$t('common.socketSynced'));
             },
             sortDashboardEntities (dashboard) {
                 try {
