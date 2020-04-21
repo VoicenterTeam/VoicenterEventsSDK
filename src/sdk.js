@@ -18,7 +18,7 @@ const defaultOptions = {
   maxReconnectAttempts: 2,
   timeout: 10000,
   keepAliveTimeout: 60000,
-  idleTimeout: 60000 * 5, // 5 minutes
+  idleInterval: 60000 * 5, // 5 minutes
   protocol: 'https',
   transports: ['websocket'],
   upgrade: false,
@@ -49,15 +49,18 @@ class EventsSDK {
     this.socket = null;
     this.connected = false;
     this.connectionEstablished = false;
-    this.lastKeepAliveTimestamp = new Date().getTime()
+    this._lastEventTimestamp = new Date().getTime()
     this._initReconnectOptions();
     this._listenersMap = listenersMap;
     this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
     this._lastLoginTimestamp = null
-    this._lastPong = null
     this._handleLocalEvents = false
     this._registerExtensionsModule()
     this._registerQueueModule()
+  }
+
+  getLastEventTimestamp() {
+    return this._lastEventTimestamp
   }
 
   _registerExtensionsModule() {
@@ -161,7 +164,7 @@ class EventsSDK {
     }
     if (data && this.connected) {
       this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
-      this.lastKeepAliveTimestamp = new Date().getTime()
+      this._lastEventTimestamp = new Date().getTime()
     } else {
       this._initSocketConnection();
     }
@@ -171,10 +174,6 @@ class EventsSDK {
     if (data.ErrorCode === 0 && data.Token && !this.options.token) {
       this.options.token = data.Token
     }
-  }
-
-  _onPong() {
-    this._lastPong = new Date().getTime()
   }
 
   _parsePacket(packet) {
@@ -247,25 +246,25 @@ class EventsSDK {
     }
     this.keepAliveInterval = setInterval(()=>{
       const now = new Date().getTime()
-      const maxDelay = this.options.keepAliveTimeout * 3
-      // If keep alive timeout is 1 minute and we still don't get a response after 3 minutes, find another server
-      if (now > this.lastKeepAliveTimestamp + maxDelay) {
+      const delta = this.options.keepAliveTimeout * 2
+
+      if (now > this.getLastEventTimestamp() + delta) {
         this._connect('next')
+        return
       }
       if (!this.socket) {
         this._initSocketConnection();
         return
       }
-      this.emit(eventTypes.KEEP_ALIVE, this.options.token);
+      if (now > this.getLastEventTimestamp() + this.options.keepAliveTimeout) {
+        this.emit(eventTypes.KEEP_ALIVE, this.options.token);
+      }
+
     }, this.options.keepAliveTimeout);
 
     this.idleInterval = setInterval(() => {
       this.reSync(false)
-      // if we are idle for more time, try reconnecting
-      if (this._lastPong + this.options.idleTimeout * 3 > new Date().getTime()) {
-        this._connect('next')
-      }
-    }, this.options.idleTimeout)
+    }, this.options.idleInterval)
   }
 
   _findCurrentServer() {
@@ -336,6 +335,7 @@ class EventsSDK {
     }
     let evt = this._parsePacket(packet);
     this.Logger.log(`New event -> ${evt.name}`, evt);
+    this._lastEventTimestamp = new Date().getTime()
     this._listenersMap.forEach((callback, eventName) => {
       if (eventName === '*') {
         callback(evt);
@@ -353,7 +353,6 @@ class EventsSDK {
       [eventTypes.CONNECT_TIMEOUT]: this._onConnectTimeout,
       [eventTypes.KEEP_ALIVE_RESPONSE]: this._onKeepAlive,
       [eventTypes.LOGIN_RESPONSE]: this._onLoginResponse,
-      [eventTypes.PONG]: this._onPong,
       [eventTypes.EXTENSION_UPDATED]: this._retryConnection,
       [eventTypes.QUEUES_UPDATED]: this._retryConnection,
       [eventTypes.DIALERS_UPDATED]: this._retryConnection,
