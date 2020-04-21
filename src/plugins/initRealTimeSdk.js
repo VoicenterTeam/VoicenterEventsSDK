@@ -24,7 +24,7 @@ export default async function initRealTimeSdk() {
             sdk.emit(sdkEventTypes.CLOSE)
             sdk = null
         }
-        const config = {
+        let config = {
             token: store.state.users.tokenString,
             store: store,
             extensionsModuleName: 'extensions',
@@ -37,10 +37,21 @@ export default async function initRealTimeSdk() {
         if (process.env.VUE_APP_EVENTS_SDK_SERVERS) {
             config.servers = process.env.VUE_APP_EVENTS_SDK_SERVERS
         }
+        if (process.env.VUE_APP_EVENTS_SDK_OPTIONS) {
+            let newOptions = {}
+            try {
+                newOptions = JSON.parse(process.env.VUE_APP_EVENTS_SDK_OPTIONS)
+            } catch (e) {
+                console.warn('Invalid sdk options format provided via env config')
+            }
+            config = {
+                ...config,
+                ...newOptions
+            }
+        }
         if (typeof config.servers === 'string') {
             config.servers = JSON.parse(config.servers)
         }
-        console.log(store)
         sdk = new EventsSDK(config)
         await sdk.init()
         sdk.on('*', onNewEvent)
