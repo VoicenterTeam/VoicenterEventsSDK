@@ -1,6 +1,7 @@
 <template>
     <div>
         <base-wrapper
+            class="queue-card"
             :cardIcon="cardIcon"
             :cardText="cardText"
             :cardValue="cardValue"
@@ -83,8 +84,8 @@
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import queueMixin from '@/mixins/queueMixin'
-    import {timeFormatter} from "@/helpers/timeFormatter";
     import {getInitialTime} from '@/util/timeUtils'
+    import Timer from "@/util/Timer";
 
     export default {
         mixins: [queueMixin],
@@ -130,7 +131,7 @@
                 showStatusText: this.showText,
                 displayItemBorder: this.displayBorder,
                 timeout: null,
-                dataCount: 0,
+                timer: new Timer(),
                 model: {},
                 layoutWidth: {},
             }
@@ -140,34 +141,10 @@
                 return this.allQueues.filter(e => this.selectedQueues.includes(e.QueueID))
             },
             cardValue () {
-                clearInterval(this.timeout)
-                this.dataCount = 0
                 if (this.selectedType === typeKeys.CALLERS_ID) {
-                    this.dataCount = this.allQueueCalls.length
-                } else if (this.selectedType === typeKeys.MAXIMUM_WAITING_ID) {
-                    let minJoinTimeStamp = new Date().getTime() * 10000
-                    let queueCalls = 0
-                    this.filteredQueue.forEach((queue) => {
-                        queue.Calls.forEach((call) => {
-                            if (call.JoinTimeStamp < minJoinTimeStamp) {
-                                minJoinTimeStamp = call.JoinTimeStamp
-                                queueCalls++
-                            }
-                        })
-                    })
-
-                    if (queueCalls > 0) {
-                        this.dataCount = getInitialTime(minJoinTimeStamp)
-                        this.timeout = setInterval(() => {
-                            this.dataCount++
-                        }, 1000)
-                        this.dataCount = timeFormatter(this.dataCount)
-                    } else {
-                        this.dataCount = timeFormatter(this.dataCount)
-                    }
+                    return this.allQueueCalls.length
                 }
-
-                return this.dataCount
+                return this.timer.displayTime
             },
             cardIcon () {
                 return types[this.queueType].icon
@@ -196,6 +173,30 @@
             },
         },
         methods: {
+            getQueueStats() {
+                let minJoinTimeStamp = new Date().getTime() * 10000
+                let queueCalls = 0
+                this.filteredQueue.forEach((queue) => {
+                    queue.Calls.forEach((call) => {
+                        if (call.JoinTimeStamp < minJoinTimeStamp) {
+                            minJoinTimeStamp = call.JoinTimeStamp
+                            queueCalls++
+                        }
+                    })
+                })
+                return { queueCalls, minJoinTimeStamp }
+            },
+            getInitialQueueTime() {
+                if (this.selectedType !== typeKeys.MAXIMUM_WAITING_ID) {
+                    return 0
+                }
+
+                const queueStats = this.getQueueStats()
+                if (queueStats.queueCalls === 0) {
+                    return 0
+                }
+                return getInitialTime(queueStats.minJoinTimeStamp)
+            },
             onChange () {
                 let data = {
                     queues: this.selectedQueues,
@@ -217,23 +218,41 @@
             onShowModal () {
                 this.showModal = true
             },
+            setCounterState() {
+                let callCount = this.getQueueStats().queueCalls
+                this.timer.stop()
+                this.timer.setValue(this.getInitialQueueTime())
+                if (callCount !== 0) {
+                    this.timer.start()
+                }
+            }
         },
         mounted () {
             this.layoutWidth = {
                 maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
                 minWidth: this.data.WidgetLayout['minWidth'] || '250'
             }
+
         },
         beforeDestroy () {
-            clearInterval(this.timeout)
+            this.timer.destroy()
         },
         watch: {
             data: {
                 immediate: true,
-                handler: function (widget) {
+                handler(widget) {
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
                 }
+            },
+            selectedType: {
+                immediate: true,
+                handler() {
+                    this.setCounterState()
+                }
+            },
+            'allQueueCalls.length'() {
+                this.setCounterState()
             }
         }
     }
@@ -248,5 +267,9 @@
 
     .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
         color: var(--primary-color);
+    }
+    .queue-card /deep/ .card-value {
+        min-width: 80px;
+        @apply flex justify-center;
     }
 </style>
