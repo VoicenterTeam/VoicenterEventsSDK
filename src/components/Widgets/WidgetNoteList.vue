@@ -123,12 +123,12 @@
                         fixed: false,
                         align: 'center',
                         label: this.$t('Date'),
-                        width: 180,
+                        width: 170,
                     },
                     {
                         prop: 'text',
                         fixed: false,
-                        align: 'center',
+                        align: 'left',
                         label: this.$t('Text'),
                     },
                     {
@@ -136,7 +136,7 @@
                         fixed: false,
                         align: 'center',
                         label: this.$t('Actions'),
-                        width: 150,
+                        width: 130,
                     },
                 ],
             }
