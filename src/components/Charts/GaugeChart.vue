@@ -9,6 +9,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
@@ -40,14 +41,19 @@
                 default: true
             },
         },
-        data() {
+        data () {
             return {
                 chartVisibility: true,
                 chartData: {},
             }
         },
+        computed: {
+            getMaximumRange () {
+                return get(this.data, 'WidgetLayout.maximumRange', 0)
+            }
+        },
         methods: {
-            async chartOptions() {
+            async chartOptions () {
                 if (isExternalDataWidget(this.data)) {
                     let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
                     this.chartData = {...gaugeChartConfig, ...{series: data}}
@@ -60,8 +66,8 @@
                     this.chartVisibility = true
                 })
             },
-            getAgentsData() {
-                let queuesCount = this.allQueues.length
+            getAgentsData () {
+                let queuesCount = this.getMaximumRange || this.allQueues.length
 
                 let range = {
                     min: 0,
@@ -95,11 +101,11 @@
                     this.chartOptions()
                 }
             },
-            allQueues() {
+            allQueues () {
                 this.chartOptions()
             }
         },
-        mounted() {
+        mounted () {
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
