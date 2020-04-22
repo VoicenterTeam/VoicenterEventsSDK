@@ -84,7 +84,6 @@
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import queueMixin from '@/mixins/queueMixin'
-    import {timeFormatter} from "@/helpers/timeFormatter";
     import {getInitialTime} from '@/util/timeUtils'
     import Timer from "@/util/Timer";
 
@@ -145,7 +144,7 @@
                 if (this.selectedType === typeKeys.CALLERS_ID) {
                     return this.allQueueCalls.length
                 }
-                return timeFormatter(this.timer.state.seconds)
+                return this.timer.displayTime
             },
             cardIcon () {
                 return types[this.queueType].icon
@@ -172,7 +171,9 @@
                 }
                 return styles;
             },
-            queueStats() {
+        },
+        methods: {
+            getQueueStats() {
                 let minJoinTimeStamp = new Date().getTime() * 10000
                 let queueCalls = 0
                 this.filteredQueue.forEach((queue) => {
@@ -185,19 +186,17 @@
                 })
                 return { queueCalls, minJoinTimeStamp }
             },
-            initialQueueTime() {
+            getInitialQueueTime() {
                 if (this.selectedType !== typeKeys.MAXIMUM_WAITING_ID) {
                     return 0
                 }
-                let { queueCalls, minJoinTimeStamp } = this.queueStats
 
-                if (queueCalls === 0) {
+                const queueStats = this.getQueueStats()
+                if (queueStats.queueCalls === 0) {
                     return 0
                 }
-                return getInitialTime(minJoinTimeStamp)
-            }
-        },
-        methods: {
+                return getInitialTime(queueStats.minJoinTimeStamp)
+            },
             onChange () {
                 let data = {
                     queues: this.selectedQueues,
@@ -219,11 +218,11 @@
             onShowModal () {
                 this.showModal = true
             },
-            setCounterState(callCount) {
-                this.timer.setValue(this.initialQueueTime)
-                if (callCount === 0) {
-                    this.timer.stop()
-                } else {
+            setCounterState() {
+                let callCount = this.getQueueStats().queueCalls
+                this.timer.stop()
+                this.timer.setValue(this.getInitialQueueTime())
+                if (callCount !== 0) {
                     this.timer.start()
                 }
             }
@@ -249,11 +248,11 @@
             selectedType: {
                 immediate: true,
                 handler() {
-                    this.setCounterState(this.queueStats.queueCalls)
+                    this.setCounterState()
                 }
             },
-            'queueStats.queueCalls'(callCount) {
-                this.setCounterState(callCount)
+            'allQueueCalls.length'() {
+                this.setCounterState()
             }
         }
     }

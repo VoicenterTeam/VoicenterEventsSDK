@@ -6,7 +6,6 @@
 <script>
     import get from 'lodash/get'
     import {getInitialTime} from "@/util/timeUtils";
-    import {timeFormatter} from "@/helpers/timeFormatter";
     import {getMinValue} from "@/helpers/util";
     import Timer from "@/util/Timer";
 
@@ -40,7 +39,7 @@
                 }
             },
             maxWaitTime() {
-                return timeFormatter(this.timer.state.seconds)
+                return this.timer.displayTime
             },
         },
         methods: {
