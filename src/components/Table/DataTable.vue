@@ -7,11 +7,11 @@
                     <slot name="search-input"/>
                 </div>
             </div>
-                <slot name="time-frame"/>
-            <div class="flex items-center table-row__count"
-                 :class="margins">
+            <slot name="time-frame"/>
+            <div :class="margins"
+                 class="flex items-center table-row__count">
                 <el-dropdown size="mini" trigger="click" v-if="manageColumns">
-                    <el-button type="primary" size="small">
+                    <el-button size="small" type="primary">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
@@ -27,35 +27,37 @@
                 <slot name="additional-data"/>
             </div>
         </div>
+        <slot name="container-above"/>
         <div class="bg-white rounded-lg mt-1 data-table w-full">
-            <el-table ref="table"
-                      id="table"
-                      row-key="id"
-                      class="rounded-lg"
-                      v-if="drawTable"
+            <el-table :data="rowsData"
                       :fit="fitWidth"
                       :key="tableKey"
-                      :data="rowsData"
+                      :style="customStyle"
+                      class="rounded-lg"
+                      id="table"
+                      ref="table"
+                      row-key="id"
                       v-bind="$attrs"
-                      v-on="listeners"
-                      :style="customStyle">
+                      v-if="drawTable"
+                      v-on="listeners">
                 <slot name="">
                     <el-table-column
-                        v-for="(column, index) in renderedColumns"
-                        :sortable="true"
-                        :key="column.prop"
-                        :class-name="column.className"
-                        v-bind="column"
-                        :label="$t(column.prop) || column.label"
-                        :column-key="column.prop"
-                        :min-width="column.minWidth || '170px'"
-                        :fixed="column.fixed || false"
                         :align="column.align"
-                        :type="column.type">
+                        :class-name="column.className"
+                        :column-key="column.prop"
+                        :fixed="column.fixed || false"
+                        :key="column.prop"
+                        :label="$t(column.prop) || column.label"
+                        :min-width="column.minWidth || '170px'"
+                        :sortable="true"
+                        :type="column.type"
+                        v-bind="column"
+                        v-for="(column, index) in renderedColumns">
                         <template slot="header">
                             <div class="truncate">
-                                <slot name="header_title" :column="column">
-                                    <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300" placement="top">
+                                <slot :column="column" name="header_title">
+                                    <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300"
+                                                placement="top">
                                     <span class="font-medium uppercase">
                                         {{$t(column.prop) || column.label}}
                                     </span>
@@ -64,27 +66,27 @@
                             </div>
                             <!-- This part is bulky from UI perspective. Has to be refined-->
                             <header-actions
-                                v-if="false"
                                 :availableColumns="availableColumns"
-                                :visibleColumns="visibleColumns"
                                 :currentColumn="column"
-                                @on-change-visibility="updateColumnsVisibility"
+                                :visibleColumns="visibleColumns"
                                 @on-change-columns-size="updateColumnsSize"
+                                @on-change-visibility="updateColumnsVisibility"
                                 @on-pin-column="(value) => pinColumn(value, index)"
-                                @on-reset-props="resetColumnsProps">
+                                @on-reset-props="resetColumnsProps"
+                                v-if="false">
                             </header-actions>
                             <!-- This part is bulky from UI perspective. Has to be refined-->
                         </template>
                         <template slot-scope="{row, $index}">
-                            <slot :name="column.prop || column.type || column.label"
-                                  :row="row"
-                                  :index="$index">
+                            <slot :index="$index"
+                                  :name="column.prop || column.type || column.label"
+                                  :row="row">
                                 {{formatCell(row, column)}}
                             </slot>
-                            <slot name="realTimeCell"
-                                :column="column"
-                                :row="row"
-                                :index="$index">
+                            <slot :column="column"
+                                  :index="$index"
+                                  :row="row"
+                                  name="realTimeCell">
                             </slot>
                         </template>
                     </el-table-column>
@@ -93,13 +95,13 @@
         </div>
         <div class="flex items-center justify-between -mx-1" v-if="tableData.length">
             <div class="flex">
-                <div class="mx-2 cursor-pointer export-button" @click="exportTableData(EXPORT_TO.XLSX)">
+                <div @click="exportTableData(EXPORT_TO.XLSX)" class="mx-2 cursor-pointer export-button">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.excel')}}</p>
                         <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
                     </div>
                 </div>
-                <div class="mx-2 cursor-pointer export-button" @click="exportTableData(EXPORT_TO.CSV)">
+                <div @click="exportTableData(EXPORT_TO.CSV)" class="mx-2 cursor-pointer export-button">
                     <div class="flex items-center">
                         <p class="text-md">{{$t('general.export.csv')}}</p>
                         <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
@@ -120,7 +122,7 @@
     import Sortable from 'sortablejs'
     import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
+    import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
     import ManageColumns from './ManageColumns'
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
@@ -172,7 +174,7 @@
                 default: () => ({})
             },
         },
-        data() {
+        data () {
             return {
                 visibleColumns: cloneDeep(this.showColumns),
                 availableColumns: cloneDeep(this.columns),
@@ -184,18 +186,18 @@
             }
         },
         computed: {
-            listeners() {
+            listeners () {
                 return {
                     ...this.$listeners
                 }
             },
-            renderedColumns() {
+            renderedColumns () {
                 return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
             },
-            rowsData() {
+            rowsData () {
                 return this.tableData
             },
-            margins() {
+            margins () {
                 if (this.$rtl.isRTL) {
                     return this.editable ? 'ml-24' : 'ml-12'
                 } else {
@@ -204,21 +206,21 @@
             },
         },
         methods: {
-            formatCell(row, column) {
-              // can be used to format cells for all tables
-              return row[column.prop]
+            formatCell (row, column) {
+                // can be used to format cells for all tables
+                return row[column.prop]
             },
-            tryInitSortable() {
+            tryInitSortable () {
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
                 const self = this
                 Sortable.create(table, {
                     group: 'description',
                     fallbackOnBody: true,
                     animation: 150,
-                    onChoose() {
+                    onChoose () {
                         bus.$emit('sortable.childDragStart')
                     },
-                    onEnd({newIndex, oldIndex}) {
+                    onEnd ({newIndex, oldIndex}) {
                         bus.$emit('sortable.childDragStop')
                         const targetRow = get(self.availableColumns.splice(oldIndex, 1), '[0]')
                         self.availableColumns.splice(newIndex, 0, targetRow)
@@ -228,11 +230,11 @@
                     }
                 })
             },
-            updateColumnsVisibility(columns) {
+            updateColumnsVisibility (columns) {
                 this.visibleColumns = columns
                 this.updateLayout()
             },
-            reorderColumn(data) {
+            reorderColumn (data) {
                 let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data;
 
                 oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
@@ -246,35 +248,35 @@
                 })
                 this.updateLayout()
             },
-            updateLayout() {
+            updateLayout () {
                 let objToEmit = {
                     visibleColumns: this.visibleColumns,
                     availableColumns: this.availableColumns,
                 }
                 this.$emit('on-update-layout', objToEmit)
             },
-            pinColumn(column, columnIndex) {
+            pinColumn (column, columnIndex) {
                 this.availableColumns[columnIndex] = column
             },
-            updateColumnsSize(val) {
+            updateColumnsSize (val) {
                 this.fitWidth = val
                 this.drawTable = false
                 this.$nextTick(() => {
                     this.drawTable = true
                 })
             },
-            resetColumnsProps() {
+            resetColumnsProps () {
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
                 this.updateLayout()
             },
-            getFileName(type) {
+            getFileName (type) {
                 let widgetTitle = this.widgetTitle || this.$t('widget.title')
                 let currentDate = format(new Date(), 'MM-dd-yyyy')
 
                 return widgetTitle + ' ' + currentDate + type
             },
-            exportTableData(exportTo) {
+            exportTableData (exportTo) {
                 let fileName = this.getFileName(exportTo)
                 // export Excel file
                 let tableElement = document.getElementById('table');
@@ -283,12 +285,12 @@
             }
         },
         watch: {
-            columns(newColumns) {
+            columns (newColumns) {
                 this.visibleColumns = cloneDeep(this.showColumns)
                 this.availableColumns = cloneDeep(newColumns)
             }
         },
-        mounted() {
+        mounted () {
             this.tryInitSortable()
         }
     }
@@ -318,6 +320,7 @@
         opacity: 0.3;
         @apply bg-gray-300 rounded text-primary;
     }
+
     .data-table /deep/ .el-table td.direction-ltr {
         direction: ltr;
     }
