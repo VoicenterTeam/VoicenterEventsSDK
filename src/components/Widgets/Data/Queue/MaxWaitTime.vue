@@ -36,8 +36,7 @@
         },
         methods: {
             getStats() {
-                let queueData = this.getQueueByID
-                let calls = get(queueData, '[0].Calls', [])
+                let calls = get(this.getQueueByID, '[0].Calls', [])
 
                 let minJoinTimestamp = new Date().getTime() * 10000
 
