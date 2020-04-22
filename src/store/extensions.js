@@ -78,8 +78,8 @@ const getters = {
         } else {
           extension['representativeStatus'] = callStatuses.CALLING;
         }
+        groupedExtensions.push(extension);
       }
-      groupedExtensions.push(extension);
     });
 
     if (hideLoggedOutUsers) {
