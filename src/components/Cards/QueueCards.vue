@@ -271,6 +271,6 @@
     }
     .queue-card /deep/ .card-value {
         min-width: 80px;
-        @apply flex justify-end;
+        @apply flex justify-center;
     }
 </style>
