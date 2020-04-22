@@ -616,9 +616,7 @@
     "Call source": "Call source",
     "CallerID": "Caller ID",
     "Autodialer ": "Autodialer",
-    "Date": "Date",
     "QueueID": "Queue ID",
-    "Multi Queue real time table": "Multi Queue real time table",
     "ExitCounts": "Exit Counts",
     "MaxWaitTime": "Max Wait Time",
     "Widget minimum height": "Widget minimum height",
@@ -627,5 +625,9 @@
     "Relative": "Relative",
     "Absolute": "Absolute",
     "row(s)": "row(s)",
-    "Multi Queue real time table": "Multi Queue real time table"
+    "Multi Queue real time table": "Multi Queue real time table",
+    "Date": "Date",
+    "Text": "Text",
+    "Actions": "Actions",
+    "Add New Note": "Add New Note"
 }

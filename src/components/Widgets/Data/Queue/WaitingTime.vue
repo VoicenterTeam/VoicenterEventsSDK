@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center justify-center">
-        <span class="font-medium tracking-wide call-time font-mono">{{timer.displayTime}}</span>
+        <span class="font-medium tracking-wide font-mono">{{timer.displayTime}}</span>
     </div>
 </template>
 <script>
@@ -34,12 +34,3 @@
         }
     }
 </script>
-<style scoped>
-    .call-time {
-        min-width: 48px;
-    }
-
-    .rtl .direction-icon {
-        transform: rotate(180deg);
-    }
-</style>
