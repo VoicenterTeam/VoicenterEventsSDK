@@ -1,13 +1,13 @@
 <template>
     <div>
-        {{getMaxWaitTime}}
+        {{maxWaitTime}}
     </div>
 </template>
 <script>
     import get from 'lodash/get'
     import {getInitialTime} from "@/util/timeUtils";
-    import {timeFormatter} from "@/helpers/timeFormatter";
     import {getMinValue} from "@/helpers/util";
+    import Timer from "@/util/Timer";
 
     export default {
         props: {
@@ -19,36 +19,56 @@
         data() {
             return {
                 timeout: null,
-                dataCount: timeFormatter(0)
+                timer: new Timer(),
             }
         },
         computed: {
             getQueueByID() {
                 return this.$store.getters['queues/filterQueuesByIds']([this.queueID])
             },
-            getMaxWaitTime () {
-                clearInterval(this.timeout)
-                let queueData = this.getQueueByID
-                let calls = get(queueData, '[0].Calls', [])
-
-                if(!calls.length) {
-                    return timeFormatter(0)
-                }
-
-                let minJoinTimeStamp = getMinValue(calls, 'JoinTimeStamp')
-
-                this.dataCount = getInitialTime(minJoinTimeStamp)
-
-                this.timeout = setInterval(() => {
-                    this.dataCount++
-                }, 1000)
-
-                this.dataCount = timeFormatter(this.dataCount)
-                return this.dataCount
+            maxWaitTime() {
+                return this.timer.displayTime
+            },
+            callCount() {
+                let calls = get(this.getQueueByID, '[0].Calls', [])
+                return calls.length
             }
         },
+        methods: {
+            getStats() {
+                let calls = get(this.getQueueByID, '[0].Calls', [])
+
+                let minJoinTimestamp = new Date().getTime() * 10000
+
+                if (calls.length) {
+                    minJoinTimestamp = getMinValue(calls, 'JoinTimeStamp')
+                }
+                minJoinTimestamp = getInitialTime(minJoinTimestamp)
+
+                return {
+                    minJoinTimestamp,
+                    calls
+                }
+            },
+            setCounterState(callCount) {
+                const stats = this.getStats()
+                this.timer.stop()
+                this.timer.setValue(stats.minJoinTimestamp)
+                if (callCount !== 0) {
+                    this.timer.start()
+                }
+            }
+        },
+        watch: {
+            callCount: {
+              immediate: true,
+              handler(callCount) {
+                  this.setCounterState(callCount)
+              }
+          }
+        },
         beforeDestroy () {
-            clearInterval(this.timeout)
+            this.timer.destroy()
         },
     }
 </script>

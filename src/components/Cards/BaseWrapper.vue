@@ -18,7 +18,7 @@
                 <slot name="value">
                     <h5 :class="{'-my-6': isVertical}"
                         :style="mainColor"
-                        class="text-6xl font-bold -my-5">
+                        class="text-6xl font-bold -my-5 card-value">
                         {{cardValue}}
                     </h5>
                 </slot>
