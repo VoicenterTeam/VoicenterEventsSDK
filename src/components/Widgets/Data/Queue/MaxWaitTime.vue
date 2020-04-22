@@ -26,11 +26,24 @@
             getQueueByID() {
                 return this.$store.getters['queues/filterQueuesByIds']([this.queueID])
             },
-            stats() {
+            maxWaitTime() {
+                return this.timer.displayTime
+            },
+            callCount() {
+                let calls = get(this.getQueueByID, '[0].Calls', [])
+                return calls.length
+            }
+        },
+        methods: {
+            getStats() {
                 let queueData = this.getQueueByID
                 let calls = get(queueData, '[0].Calls', [])
 
-                let minJoinTimestamp = getMinValue(calls, 'JoinTimeStamp')
+                let minJoinTimestamp = new Date().getTime() * 10000
+
+                if (calls.length) {
+                    minJoinTimestamp = getMinValue(calls, 'JoinTimeStamp')
+                }
                 minJoinTimestamp = getInitialTime(minJoinTimestamp)
 
                 return {
@@ -38,25 +51,20 @@
                     calls
                 }
             },
-            maxWaitTime() {
-                return this.timer.displayTime
-            },
-        },
-        methods: {
             setCounterState(callCount) {
-                this.timer.setValue(this.stats.minJoinTimestamp)
-                if (callCount === 0) {
-                    this.timer.stop()
-                } else {
+                const stats = this.getStats()
+                this.timer.stop()
+                this.timer.setValue(stats.minJoinTimestamp)
+                if (callCount !== 0) {
                     this.timer.start()
                 }
             }
         },
         watch: {
-          'stats.calls': {
+            callCount: {
               immediate: true,
-              handler(calls) {
-                  this.setCounterState(calls.length)
+              handler(callCount) {
+                  this.setCounterState(callCount)
               }
           }
         },
