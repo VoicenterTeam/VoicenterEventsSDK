@@ -14,6 +14,12 @@ export const defaultColors = {
     fonts: '#000000'
 }
 
+export const defaultCardColors = {
+    background: "white",
+    frames: "#000000",
+    fonts: '#000000'
+}
+
 export const widths = [
     {
         label: 'Full width (100%)',
