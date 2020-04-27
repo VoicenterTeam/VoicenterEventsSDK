@@ -32,7 +32,7 @@
             maxWaitTime () {
                 return this.timer.displayTime
             },
-            callCount () {
+            queueCalls () {
                 let calls = []
 
                 if (this.queueID === 'All') {
@@ -45,7 +45,7 @@
         },
         methods: {
             getStats () {
-                let calls = this.callCount
+                let calls = this.queueCalls
 
                 let minJoinTimestamp = new Date().getTime() * 10000
 
@@ -69,7 +69,7 @@
             }
         },
         watch: {
-            callCount: {
+            queueCalls: {
                 deep: true,
                 immediate: true,
                 handler (calls) {
