@@ -44,7 +44,7 @@ export const queueDashboardColumnStyles = {
 export const defaultVisibleColumns = [
     'queue_id',
     'Callers',
-    'MaxWaitTime',
+    'CurrentWaitTime',
     'Answer',
     'Abandoned',
     'CallCount',
@@ -131,18 +131,18 @@ function queueAsColumns (records, displayRowWithTotals) {
     const tableColumns = {
         'queue_id': '',
         'Callers': '',
-        'MaxWaitTime': '',
-        'Answer': 0,
-        'Abandoned': 0,
-        'IVRExit': 0,
-        'PickUp': 0,
-        'TimeOutExit': 0,
-        'JoinEmpty': 0,
-        'LeaveEmpty': 0,
-        'JoinUnavail': 0,
-        'LeaveUnavail': 0,
-        'Full': 0,
-        'NextDestination': 0,
+        'CurrentWaitTime': '',
+        'Answer': '0%',
+        'Abandoned': '0%',
+        'IVRExit': '0%',
+        'PickUp': '0%',
+        'TimeOutExit': '0%',
+        'JoinEmpty': '0%',
+        'LeaveEmpty': '0%',
+        'JoinUnavail': '0%',
+        'LeaveUnavail': '0%',
+        'Full': '0%',
+        'NextDestination': '0%',
         'CallCount': 0,
         'MaxRingTime': 0,
         'NotInSLACount': 0,
@@ -174,7 +174,7 @@ function queueAsColumns (records, displayRowWithTotals) {
         for (let statistic of additionalData) {
             const columnName = billingCdrQueueTypes[statistic['billing_cdr_queue_type']]
 
-            rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)} %`
+            rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)}%`
 
             if (displayRowWithTotals) {
                 exitTypeCounts.push(statistic)
@@ -184,7 +184,7 @@ function queueAsColumns (records, displayRowWithTotals) {
         delete rowData[ADDITIONAL_DATA_KEY]
 
         if (displayRowWithTotals) {
-            queueTotals.CallCount += column.CallCount
+            queueTotals.CallCount += Number(column.CallCount)
             queueTotals.MaxRingTime += column.MaxRingTime
             queueTotals.NotInSLACount += column.NotInSLACount
             queueTotals.InSLACount += column.InSLACount
@@ -201,7 +201,7 @@ function queueAsColumns (records, displayRowWithTotals) {
         for (let key in statistics) {
             const columnName = billingCdrQueueTypes[key]
             let value = sumBy(statistics[key], 'ExitTypeCount')
-            queueTotals[columnName] = `${((Number(value) * 100) / allQueueCalls).toFixed(2)} %`
+            queueTotals[columnName] = `${((Number(value) * 100) / allQueueCalls).toFixed(2)}%`
         }
 
         queueTotals.queue_id = 'All'

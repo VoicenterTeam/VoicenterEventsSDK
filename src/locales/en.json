@@ -618,7 +618,7 @@
     "Autodialer ": "Autodialer",
     "QueueID": "Queue ID",
     "ExitCounts": "Exit Counts",
-    "MaxWaitTime": "Max Wait Time",
+    "CurrentWaitTime": "Current wait time",
     "Widget minimum height": "Widget minimum height",
     "Widget maximum height": "Widget maximum height",
     "Full height(auto)": "Full height(auto)",
@@ -633,5 +633,8 @@
     "Add New Note": "Add New Note",
     "No dashboards": "No dashboards",
     "Account no data": "This account contains no data.",
-    "Add Dashboard": "Add Dashboard"
+    "Add Dashboard": "Add Dashboard",
+    "LeaveEmpty": "LeaveEmpty",
+    "Callers": "Callers",
+    "queue_id": "Queue Name"
 }
