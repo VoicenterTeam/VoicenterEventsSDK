@@ -27,6 +27,13 @@
                     </div>
                 </div>
             </el-form-item>
+            <el-form-item v-if="isQueueGauge(widget)">
+                <div class="pt-4 flex justify-between">
+                    <label>{{$t('Maximum range value')}}</label>
+                    <el-input-number :max="1000" :min="1" :step="2" type="number"
+                                     v-model="model.WidgetLayout.maximumRange"/>
+                </div>
+            </el-form-item>
             <el-form-item v-if="isQueueTable(widget) || isQueueGauge(widget)">
                 <label>{{$t('queues.to.display')}}</label>
                 <base-select
@@ -90,11 +97,11 @@
                         <widget-width :model="model"/>
                     </el-form-item>
                     <el-form-item v-if="isHtmlWidget(widget)">
-                        <widget-height :model="model" :propToChange="'height'" :label="'Widget height'"/>
+                        <widget-height :label="'Widget height'" :model="model" :propToChange="'height'"/>
                     </el-form-item>
                     <el-form-item v-if="isQueueActiveCall(widget)">
-                        <widget-height :model="model" :propToChange="'minHeight'" :label="'Widget minimum height'"/>
-                        <widget-height :model="model" :propToChange="'maxHeight'" :label="'Widget maximum height'"/>
+                        <widget-height :label="'Widget minimum height'" :model="model" :propToChange="'minHeight'"/>
+                        <widget-height :label="'Widget maximum height'" :model="model" :propToChange="'maxHeight'"/>
                     </el-form-item>
                     <el-form-item>
                         <widget-padding :model="model"/>
@@ -165,7 +172,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, InputNumber, Radio, RadioGroup} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import queueMixin from '@/mixins/queueMixin'
     import {allSeries} from '@/enum/queueConfigs'
@@ -187,13 +194,13 @@
         isHtmlWidget,
         isMultiQueuesDashboard,
         isPieWidget,
+        isQueueActiveCall,
         isQueueActivityGauge,
         isQueueChart,
         isQueueDashboardWidget,
         isQueueGauge,
         isQueueTable,
         isRealtimeWidget,
-        isQueueActiveCall,
     } from '@/helpers/widgetUtils'
     import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
 
@@ -212,13 +219,14 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             [Checkbox.name]: Checkbox,
+            [Checkbox.name]: Checkbox,
+            [InputNumber.name]: InputNumber,
             AutoComplete,
             OtherFilters,
             WidgetColors,
             WidgetPadding,
             WidgetHeight,
             RefreshButton,
-            [Tooltip.name]: Tooltip,
             StaticWidgetInfo,
             ActivityGaugeConfig,
         },
