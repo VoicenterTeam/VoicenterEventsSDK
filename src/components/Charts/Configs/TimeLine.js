@@ -3,6 +3,7 @@ import i18n from '@/i18n'
 import config from '@/config'
 import Exporting from 'highcharts/modules/exporting'
 import noDataModule from 'highcharts/modules/no-data-to-display'
+import {timeFormatter} from "@/helpers/timeFormatter";
 
 Exporting(Highcharts)
 noDataModule(Highcharts)
@@ -52,6 +53,7 @@ Highcharts.setOptions({
     tooltip: {
         useHTML: true,
         formatter: function () {
+
             if (this.point.radius) {
                 return false
             }
@@ -74,6 +76,11 @@ Highcharts.setOptions({
 
             if (this.point.innerRadius) {
                 return `${this.series.name}<br><span style="font-size:2em; color: ${this.point.color}; font-weight: bold">${this.point.y} %</span>`
+            }
+
+            if (this.point.toTime) {
+                let valueToDisplay = timeFormatter(this.point.y)
+                return `<p style="font-size: config.fonts.base; color: ${this.point.color};">${this.series.name}: ${valueToDisplay}</p>`
             }
 
             if (this.point.start && this.point.start) {
