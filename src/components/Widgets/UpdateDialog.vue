@@ -136,9 +136,10 @@
                 :model="model"
                 v-if="isRealtimeWidget(widget) && model.settings">
             </real-time-settings>
-            <div class="flex items-center justify-between text-main-base" v-if="autoCompletes.length">
+            <div class="flex items-center text-main-base" v-if="autoCompletes.length">
                 {{$t('tooltip.refresh.entities.list')}}
                 <RefreshButton
+                    class="mx-2"
                     :disabled="loadEntitiesList"
                     :loading="loadEntitiesList"
                     @click.native="refreshEntitiesList"/>
