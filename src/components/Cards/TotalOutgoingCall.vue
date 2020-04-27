@@ -1,7 +1,7 @@
 <template>
     <div>
         <base-wrapper
-            :cardIcon="null"
+            :cardIcon="cardIcon"
             :cardText="model.Title"
             :cardValue="cardValue"
             :layoutWidth="layoutWidth"
@@ -112,6 +112,10 @@
             displayBorder: {
                 type: Boolean,
                 default: true
+            },
+            cardIcon: {
+                type: String,
+                default: 'IconTotalOutgoingCalls'
             },
         },
         computed: {
