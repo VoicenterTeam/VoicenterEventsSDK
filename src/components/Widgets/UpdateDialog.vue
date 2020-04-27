@@ -136,33 +136,32 @@
                 :model="model"
                 v-if="isRealtimeWidget(widget) && model.settings">
             </real-time-settings>
-            <div v-if="autoCompletes.length || otherFilters.length">
-                <div class="flex items-center justify-between text-main-base">
-                    {{$t('tooltip.refresh.entities.list')}}
-                    <RefreshButton
-                        :disabled="loadEntitiesList"
-                        :loading="loadEntitiesList"
-                        @click.native="refreshEntitiesList"/>
-                </div>
-                <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
-                    <el-collapse-item :title="$t('settings.filters')" name="filters">
-                        <auto-complete
-                            :key="index"
-                            :model="model.WidgetConfig[index]"
-                            v-for="(filter, index) in model.WidgetConfig"
-                            v-if="isAutoComplete(filter)"/>
-                    </el-collapse-item>
-                </el-collapse>
-                <el-collapse class="pt-4" v-if="otherFilters.length" v-model="activeCollapse">
-                    <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
-                        <other-filters
-                            :key="index"
-                            :model="model.WidgetConfig[index]"
-                            v-for="(filter, index) in model.WidgetConfig"
-                            v-if="isOtherFilters(filter)"/>
-                    </el-collapse-item>
-                </el-collapse>
+            <div class="flex items-center text-main-base" v-if="autoCompletes.length">
+                {{$t('tooltip.refresh.entities.list')}}
+                <RefreshButton
+                    class="mx-2"
+                    :disabled="loadEntitiesList"
+                    :loading="loadEntitiesList"
+                    @click.native="refreshEntitiesList"/>
             </div>
+            <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
+                <el-collapse-item :title="$t('settings.filters')" name="filters">
+                    <auto-complete
+                        :key="index"
+                        :model="model.WidgetConfig[index]"
+                        v-for="(filter, index) in model.WidgetConfig"
+                        v-if="isAutoComplete(filter)"/>
+                </el-collapse-item>
+            </el-collapse>
+            <el-collapse class="pt-4" v-if="otherFilters.length" v-model="activeCollapse">
+                <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
+                    <other-filters
+                        :key="index"
+                        :model="model.WidgetConfig[index]"
+                        v-for="(filter, index) in model.WidgetConfig"
+                        v-if="isOtherFilters(filter)"/>
+                </el-collapse-item>
+            </el-collapse>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
@@ -262,7 +261,7 @@
                 return this.widget.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
             otherFilters () {
-                return this.widget.WidgetConfig.filter(c => c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
+                return this.widget.WidgetConfig.filter(c => c.ParameterType && c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
         },
         methods: {
