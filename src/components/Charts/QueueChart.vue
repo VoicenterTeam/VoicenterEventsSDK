@@ -18,7 +18,6 @@
     import queueMixin from '@/mixins/queueMixin'
     import {getServerTimeOffset} from '@/enum/generic'
     import {administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS} from '@/enum/extensionStatuses'
-    import {timeFormatter} from "@/helpers/timeFormatter";
 
     export default {
         mixins: [queueMixin],
@@ -170,11 +169,9 @@
                         }
                     })
                 })
-
+                
                 let agentsOnline = this.agentsOnline
                 let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
-
-                maxWaitingTime = timeFormatter(maxWaitingTime)
 
                 let currentTime = (new Date()).getTime() + getServerTimeOffset();
 
@@ -217,8 +214,13 @@
                     }
                 });
 
+                this.chartData.series[0].data.push({
+                    x: currentTime,
+                    y: maxWaitingTime,
+                    toTime: maxWaitingTime,
+                });
+
                 [
-                    maxWaitingTime,
                     queueCalls,
                     agentsAvailable,
                     agentsInCall,
@@ -226,12 +228,13 @@
                     agentsInBreak,
                     agentsWithACallInHold
                 ].forEach((agents, index) => {
-                    this.chartData.series[index].data.push({
+                    this.chartData.series[index + 1].data.push({
                         x: currentTime,
                         y: agents.length,
                         agents: agents,
                     });
                 })
+
             },
 
         },
