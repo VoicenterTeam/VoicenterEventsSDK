@@ -1,7 +1,7 @@
 <template>
     <div>
         <socket-status-alert @retry="retrySocketConnection"></socket-status-alert>
-        <base-navbar v-if="dashboard">
+        <base-navbar>
             <template v-slot:dashboard-operations>
                 <div class="flex">
                     <div class="my-3 flex items-center">

@@ -50,7 +50,7 @@ const mutations = {
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
-        state.settings = dashboard.DashboardLayout.settings
+        state.settings = dashboard ? dashboard.DashboardLayout.settings : {}
         localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
     },
     [types.SET_LOADING]: (state, loading) => {
