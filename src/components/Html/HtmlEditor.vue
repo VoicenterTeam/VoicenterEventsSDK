@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
+    <div class="relative w-full">
         <textarea ref="redactor" :name="name" :placeholder="placeholder" :value="value"/>
         <div class="flex save-buttons">
             <el-tooltip class="item" effect="dark" :content="$t('common.revert.changes')" placement="top">

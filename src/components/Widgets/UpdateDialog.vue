@@ -1,43 +1,66 @@
 <template>
-    <modal v-bind="$attrs" v-on="$listeners" v-if="model.WidgetLayout">
+    <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners">
         <div class="flex flex-row items-center">
-            <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
-            <static-widget-info class="px-2" :widget="widget"/>
+            <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{$t('widget.update')}}</h3>
+            <static-widget-info :widget="widget" class="px-2"/>
         </div>
-        <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model">
+        <el-form :model="model" :rules="rules" @submit.native.prevent="onChange" ref="updateWidget">
             <el-form-item>
                 <div>
                     <label>{{$t('widget.title')}}</label>
                     <el-input v-model="model.Title"/>
                 </div>
             </el-form-item>
+            <el-form-item v-if="isMultiQueuesDashboard(widget)">
+                <div class="flex w-full flex-col lg:flex-row">
+                    <div class="flex lg:w-1/2">
+                        <div class="flex lg:w-1/2">
+                            <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueueAsColumn">
+                                {{$t('Display queue as column')}}
+                            </el-checkbox>
+                        </div>
+                    </div>
+                    <div class="flex lg:w-1/2">
+                        <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
+                            {{$t('Display the row with totals')}}
+                        </el-checkbox>
+                    </div>
+                </div>
+            </el-form-item>
+            <el-form-item v-if="isQueueGauge(widget)">
+                <div class="pt-4 flex justify-between">
+                    <label>{{$t('Maximum range value')}}</label>
+                    <el-input-number :max="1000" :min="1" :step="2" type="number"
+                                     v-model="model.WidgetLayout.maximumRange"/>
+                </div>
+            </el-form-item>
             <el-form-item v-if="isQueueTable(widget) || isQueueGauge(widget)">
                 <label>{{$t('queues.to.display')}}</label>
                 <base-select
-                    v-model="model.WidgetLayout.showQueues"
                     :data="allQueues"
                     :labelKey="'QueueName'"
-                    :valueKey="'QueueID'"/>
+                    :valueKey="'QueueID'"
+                    v-model="model.WidgetLayout.showQueues"/>
             </el-form-item>
             <el-form-item v-if="isQueueChart(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
                         <el-form-item :label="$t('queues.to.display')">
                             <base-select
-                                v-model="model.WidgetLayout.showQueues"
                                 :data="allQueues"
                                 :labelKey="'QueueName'"
-                                :valueKey="'QueueID'"/>
+                                :valueKey="'QueueID'"
+                                v-model="model.WidgetLayout.showQueues"/>
                         </el-form-item>
                     </div>
                     <div class="flex lg:w-1/2">
                         <el-form-item :label="$t('blocks.to.display')">
                             <base-select
                                 :class="$rtl.isRTL ? 'lg:pr-2' : 'lg:pl-2'"
-                                v-model="model.WidgetLayout.showSeries"
                                 :data="allSeries"
                                 :labelKey="'label'"
-                                :valueKey="'value'"/>
+                                :valueKey="'value'"
+                                v-model="model.WidgetLayout.showSeries"/>
                         </el-form-item>
                     </div>
                 </div>
@@ -45,9 +68,9 @@
             <el-form-item v-if="isQueueDashboardWidget(widget)">
                 <label>{{$t('statistics.to.display')}}</label>
                 <base-select
+                    :data="statistics"
                     v-model="model.WidgetLayout.ShowStatistics"
-                    valueKey="key"
-                    :data="statistics"/>
+                    valueKey="key"/>
                 <div class="flex w-full flex-col lg:flex-row pt-4">
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
@@ -62,19 +85,23 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueActivityGauge(widget)">
-                <el-collapse v-model="activeCollapse" class="pt-4">
+                <el-collapse class="pt-4" v-model="activeCollapse">
                     <el-collapse-item :title="$t('widget.config')" name="queueActivity">
                         <ActivityGaugeConfig :model="model"></ActivityGaugeConfig>
                     </el-collapse-item>
                 </el-collapse>
             </el-form-item>
-            <el-collapse v-model="activeCollapse" class="pt-4">
+            <el-collapse class="pt-4" v-model="activeCollapse">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
                         <widget-width :model="model"/>
                     </el-form-item>
                     <el-form-item v-if="isHtmlWidget(widget)">
-                        <widget-height :model="model"/>
+                        <widget-height :label="'Widget height'" :model="model" :propToChange="'height'"/>
+                    </el-form-item>
+                    <el-form-item v-if="isQueueActiveCall(widget)">
+                        <widget-height :label="'Widget minimum height'" :model="model" :propToChange="'minHeight'"/>
+                        <widget-height :label="'Widget maximum height'" :model="model" :propToChange="'maxHeight'"/>
                     </el-form-item>
                     <el-form-item>
                         <widget-padding :model="model"/>
@@ -83,7 +110,7 @@
                 </el-collapse-item>
             </el-collapse>
             <el-form-item v-if="isPieWidget(widget)">
-                <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-4">
+                <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">
                     {{$t('Don`t count logged out agents')}}
                 </el-checkbox>
             </el-form-item>
@@ -94,10 +121,10 @@
                         :timeFrameType="model.WidgetTime.type"
                         :widgetTimeOptions="widgetTimeOptions">
                         <template v-slot:frame-types>
-                            <el-radio-group v-model="model.WidgetTime.type" class="pb-4">
-                                <el-radio v-for="widgetTimeType in widgetTimeTypes" v-bind="widgetTimeType"
-                                          :key="widgetTimeType.text">
-                                    {{widgetTimeType.text}}
+                            <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
+                                <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
+                                          v-for="widgetTimeType in widgetTimeTypes">
+                                    {{$t(widgetTimeType.text)}}
                                 </el-radio>
                             </el-radio-group>
                         </template>
@@ -105,9 +132,9 @@
                 </div>
             </el-form-item>
             <real-time-settings
-                v-if="isRealtimeWidget(widget) && model.settings"
                 :data="widget"
-                :model="model">
+                :model="model"
+                v-if="isRealtimeWidget(widget) && model.settings">
             </real-time-settings>
             <div v-if="autoCompletes.length || otherFilters.length">
                 <div class="flex items-center justify-between text-main-base">
@@ -117,35 +144,35 @@
                         :loading="loadEntitiesList"
                         @click.native="refreshEntitiesList"/>
                 </div>
-                <el-collapse v-model="activeCollapse" class="pt-4" v-if="autoCompletes.length">
+                <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
                     <el-collapse-item :title="$t('settings.filters')" name="filters">
                         <auto-complete
-                            v-for="(filter, index) in model.WidgetConfig"
                             :key="index"
-                            v-if="isAutoComplete(filter)"
-                            :model="model.WidgetConfig[index]"/>
+                            :model="model.WidgetConfig[index]"
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isAutoComplete(filter)"/>
                     </el-collapse-item>
                 </el-collapse>
-                <el-collapse v-model="activeCollapse" class="pt-4" v-if="otherFilters.length">
+                <el-collapse class="pt-4" v-if="otherFilters.length" v-model="activeCollapse">
                     <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
                         <other-filters
-                            v-for="(filter, index) in model.WidgetConfig"
                             :key="index"
-                            v-if="isOtherFilters(filter)"
-                            :model="model.WidgetConfig[index]"/>
+                            :model="model.WidgetConfig[index]"
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isOtherFilters(filter)"/>
                     </el-collapse-item>
                 </el-collapse>
             </div>
         </el-form>
         <template slot="footer">
             <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
-            <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
+            <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
         </template>
     </modal>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, InputNumber, Radio, RadioGroup} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import queueMixin from '@/mixins/queueMixin'
     import {allSeries} from '@/enum/queueConfigs'
@@ -165,7 +192,9 @@
     import {statistics} from '@/enum/queueDashboardStatistics'
     import {
         isHtmlWidget,
+        isMultiQueuesDashboard,
         isPieWidget,
+        isQueueActiveCall,
         isQueueActivityGauge,
         isQueueChart,
         isQueueDashboardWidget,
@@ -190,13 +219,14 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             [Checkbox.name]: Checkbox,
+            [Checkbox.name]: Checkbox,
+            [InputNumber.name]: InputNumber,
             AutoComplete,
             OtherFilters,
             WidgetColors,
             WidgetPadding,
             WidgetHeight,
             RefreshButton,
-            [Tooltip.name]: Tooltip,
             StaticWidgetInfo,
             ActivityGaugeConfig,
         },
@@ -206,7 +236,7 @@
                 default: () => ({})
             },
         },
-        data() {
+        data () {
             return {
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
@@ -222,35 +252,37 @@
             }
         },
         computed: {
-            rules() {
+            rules () {
                 if (isRealtimeWidget(this.widget)) {
                     return realTimeWidgetRules(this.model)
                 }
                 return {}
             },
-            autoCompletes() {
+            autoCompletes () {
                 return this.widget.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
-            otherFilters() {
+            otherFilters () {
                 return this.widget.WidgetConfig.filter(c => c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
         },
         methods: {
-            isRealtimeWidget,
             isPieWidget,
             isQueueTable,
             isQueueChart,
             isQueueGauge,
             isHtmlWidget,
-            isQueueDashboardWidget,
+            isRealtimeWidget,
+            isQueueActiveCall,
             isQueueActivityGauge,
-            isAutoComplete(WidgetConfig) {
+            isQueueDashboardWidget,
+            isMultiQueuesDashboard,
+            isAutoComplete (WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
-            isOtherFilters(WidgetConfig) {
+            isOtherFilters (WidgetConfig) {
                 return WidgetConfig.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE
             },
-            onChange() {
+            onChange () {
                 this.$refs.updateWidget.validate((valid) => {
 
                     if (!valid) return;
@@ -271,9 +303,15 @@
 
                     try {
                         this.model.WidgetConfig.forEach((config) => {
+                            if (config.ParameterType !== AUTO_COMPLETE_PARAMETER_TYPE) {
+                                delete config.WidgetParameterValueJson
+                                return
+                            }
+
                             if (typeof config.WidgetParameterValueJson === 'object') {
                                 config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
                             }
+
                             if (typeof config.WidgetParameterValue === 'object') {
                                 config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
                                 config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
@@ -281,27 +319,29 @@
                         })
                     } catch (e) {
                     }
+
                     this.$emit('on-update', this.model)
                     this.toggleVisibility(false);
                 })
             },
-            toggleVisibility(value) {
+            toggleVisibility (value) {
                 this.$emit('update:visible', value)
             },
-            async refreshEntitiesList() {
+            async refreshEntitiesList () {
                 this.loadEntitiesList = true
                 await this.$store.dispatch('entities/getEntitiesList')
                 this.loadEntitiesList = false
             }
-        }
-        ,
-        mounted() {
+        },
+        mounted () {
             this.model = cloneDeep(this.widget)
+
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
 
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
+
             if (isPieWidget(this.widget)) {
                 this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
             }
@@ -310,8 +350,7 @@
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                 this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]
             }
-        }
-        ,
+        },
     }
 </script>
 

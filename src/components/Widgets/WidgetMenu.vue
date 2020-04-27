@@ -2,6 +2,10 @@
     <div>
         <el-input size="small" class="mb-2" placeholder="Search" v-model="search"
                   suffix-icon="el-icon-search"></el-input>
+        <el-button
+            @click="addAllWidgetsFromCategory"
+            type="default"
+            class="w-full">{{$t('Add all widgets')}}</el-button>
         <div class="widget-menu-container">
             <DraggableList v-model="widgetTemplates"
                               :enable-transition="false"
@@ -67,8 +71,9 @@
         computed: {
             filteredWidgetTemplates() {
                 return this.widgetTemplates.filter((widgetTemplate) => {
-                    if (widgetTemplate.TemplateName) {
-                        return widgetTemplate.TemplateName.toLowerCase().includes(this.search.toLowerCase())
+                    const templateName = this.translateTemplateName(widgetTemplate.TemplateName)
+                    if (templateName) {
+                        return templateName.toLowerCase().includes(this.search.toLowerCase())
                     }
                     return false
                 })
@@ -78,6 +83,12 @@
             },
         },
         methods: {
+            translateTemplateName(tName) {
+                return this.$t(tName)
+            },
+            addAllWidgetsFromCategory() {
+                this.addWidgetsToGroup(this.widgetTemplates)
+            },
             addWidgets() {
                 let widgetTemplateIdsToAdd = Object.keys(this.quantities).filter(key => this.quantities[key] > 0)
                 let widgetTemplatesToAdd = []
@@ -88,12 +99,15 @@
                         widgetTemplatesToAdd.push(template)
                     })
                 })
+                this.addWidgetsToGroup(widgetTemplatesToAdd)
+                this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
+            },
+            addWidgetsToGroup(widgetTemplatesToAdd) {
                 let objectToEmit = {
                     widgets: widgetTemplatesToAdd,
                     group: this.widgetGroup
                 }
                 this.$emit('addWidgetsToGroup', objectToEmit)
-                this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
             }
         }
     }

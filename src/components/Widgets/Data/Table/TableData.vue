@@ -1,107 +1,123 @@
 <template>
     <div>
-        <data-table
-            :tableData="fetchTableData"
-            :columns="availableColumns"
-            :showColumns="visibleColumns"
-            :widgetTitle="data.Title"
-            :editable="editable"
-            :stripe="stripe"
-            :border="border"
-            :cell-style="getCellStyle"
-            @sort-change="sortChange"
-            @on-update-layout="onUpdateLayout"
-            :cell-class-name="getCellClassName">
-            <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
-                <status-duration v-if="userExtension(row.user_id) && drawRow"
-                                 :key="row.user_id"
-                                 :extension="userExtension(row.user_id)"
-                                 :settings="getSettings">
-                </status-duration>
-                <span v-else>{{$t('N/A')}}</span>
-            </template>
-            <template v-if="isRealTimeTable" v-slot:status="{row}">
-                <user-status v-if="userExtension(row.user_id) && drawRow" :userId="row.user_id"
-                             :key="row.user_id"
-                             :extension="userExtension(row.user_id)"/>
-                <span v-else>{{$t('N/A')}}</span>
-            </template>
-            <template v-if="isRealTimeTable" v-slot:user_name="{row}">
-                        <span v-if="userExtension(row.user_id) && drawRow" :key="row.user_id">
+        <div v-if="isMultiQueuesDashboard(data)">
+            <queues-table
+                :data="data"
+                :queuesData="queuesTableData"/>
+        </div>
+        <div v-else>
+            <data-table
+                :border="border"
+                :cell-class-name="getCellClassName"
+                :cell-style="getCellStyle"
+                :columns="availableColumns"
+                :editable="editable"
+                :showColumns="visibleColumns"
+                :stripe="stripe"
+                :tableData="fetchTableData"
+                :widgetTitle="data.Title"
+                @on-update-layout="onUpdateLayout"
+                @sort-change="sortChange">
+                <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
+                    <status-duration :extension="userExtension(row.user_id)"
+                                     :key="row.user_id"
+                                     :settings="getSettings"
+                                     v-if="userExtension(row.user_id) && drawRow">
+                    </status-duration>
+                    <span v-else>{{$t('N/A')}}</span>
+                </template>
+                <template v-if="isRealTimeTable" v-slot:status="{row}">
+                    <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
+                                 :userId="row.user_id"
+                                 v-if="userExtension(row.user_id) && drawRow"/>
+                    <span v-else>{{$t('N/A')}}</span>
+                </template>
+                <template v-if="isRealTimeTable" v-slot:user_name="{row}">
+                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
                             {{userExtension(row.user_id).userName}}
                         </span>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:Recording="{row}">
-                <audio-player v-if="row.Recording" :url="getRecordingUrl(row.Recording)"/>
-                <div v-else>{{$t('N/A')}}</div>
-            </template>
-            <template v-slot:pagination>
-                <div class="flex items-center">
-                    <el-select
-                        v-model="pageSize"
-                        @change="handlePageChange(1)"
-                        size="mini"
-                        class="w-16 mx-1 py-1">
-                        <el-option v-for="option in pageSizes" :value="parseInt(option)" :key="option"/>
-                    </el-select>
-                    <el-pagination
-                        @current-change="handlePageChange"
-                        :page-sizes="pageSizes"
-                        :pager-count="pagerCount"
-                        :page-size="pageSize"
-                        :current-page="currentPage"
-                        layout="prev, pager, next"
-                        :hide-on-single-page="hideOnSinglePage"
-                        :total="filteredDataLength">
-                    </el-pagination>
-                </div>
-            </template>
-            <template v-slot:title>
-                <base-widget-title :title="data.Title"/>
-            </template>
-            <template v-slot:search-input>
-                <el-input
-                    size="medium"
-                    placeholder="Type text to filter"
-                    v-model="filter"
-                    suffix-icon="el-icon-search"
-                    clearable/>
-            </template>
-            <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
-            </template>
-        </data-table>
+                    <span v-else>---</span>
+                </template>
+                <template v-slot:Recording="{row}">
+                    <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
+                    <div v-else>{{$t('N/A')}}</div>
+                </template>
+                <template v-slot:pagination>
+                    <div class="flex items-center">
+                        <el-select
+                            @change="handlePageChange(1)"
+                            class="w-16 mx-1 py-1"
+                            size="mini"
+                            v-model="pageSize">
+                            <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
+                        </el-select>
+                        <el-pagination
+                            :current-page="currentPage"
+                            :hide-on-single-page="hideOnSinglePage"
+                            :page-size="pageSize"
+                            :page-sizes="pageSizes"
+                            :pager-count="pagerCount"
+                            :total="filteredDataLength"
+                            @current-change="handlePageChange"
+                            layout="prev, pager, next">
+                        </el-pagination>
+                    </div>
+                </template>
+                <template v-slot:title>
+                    <base-widget-title :title="data.Title"/>
+                </template>
+                <template v-slot:time-frame>
+                    <time-frame :widget="data"/>
+                </template>
+                <template v-slot:search-input>
+                    <el-input
+                        clearable
+                        placeholder="Type text to filter"
+                        size="medium"
+                        suffix-icon="el-icon-search"
+                        v-model="filter"/>
+                </template>
+                <template v-slot:additional-data>
+                    <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
+                </template>
+            </data-table>
+        </div>
     </div>
 </template>
 <script>
+    import TimeFrame from "./TimeFrame";
     import get from 'lodash/get'
     import {format} from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import {Option, Pagination, Select} from 'element-ui'
+    import {Option, Pagination, Select, Tooltip} from 'element-ui'
     import UserStatus from './UserStatus'
     import AudioPlayer from "@/components/Audio/AudioPlayer";
-    import {WidgetApi} from '@/api/widgetApi'
     import StatusDuration from './StatusDuration'
     import DataTable from '@/components/Table/DataTable'
     import {extensionColor} from '@/util/extensionStyles'
-    import {getWidgetData} from '@/services/widgetService'
-    import {isRealtimeWidget} from '@/helpers/widgetUtils'
+    import {isMultiQueuesDashboard, isRealtimeWidget} from '@/helpers/widgetUtils'
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
-    import {getDefaultTimeDelay} from "@/enum/generic";
+    import {getDefaultTimeDelay} from '@/enum/generic'
+    import {getWidgetData} from "@/services/widgetService";
+    import MultiQueuesDashboard from "@/components/Widgets/Data/Queue/MultiQueuesDashboard";
+    import dataTableMixin from "@/mixins/dataTableMixin";
 
     export default {
+        mixins: [dataTableMixin],
         components: {
-            AudioPlayer,
             DataTable,
+            TimeFrame,
             UserStatus,
+            AudioPlayer,
             StatusDuration,
             [Select.name]: Select,
             [Option.name]: Option,
+            [Tooltip.name]: Tooltip,
             [Pagination.name]: Pagination,
+            [MultiQueuesDashboard.name]: MultiQueuesDashboard,
         },
         props: {
             data: {
@@ -113,7 +129,7 @@
                 default: false
             },
         },
-        data() {
+        data () {
             return {
                 tableData: [],
                 columns: [],
@@ -127,13 +143,14 @@
                 filteredDataLength: null,
                 hideOnSinglePage: true,
                 border: true,
-                stripe: true,
                 widget: cloneDeep(this.data),
                 drawRow: true,
+                stripe: true,
+                queuesTableData: []
             }
         },
         computed: {
-            fetchTableData() {
+            fetchTableData () {
                 let tableData = this.tableData
 
                 let showLoggedOutUsers = get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
@@ -156,39 +173,27 @@
                 this.filteredDataLength = tableData.length
                 return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             },
-            extensions() {
+            extensions () {
                 return this.$store.state.extensions.extensions
             },
-            loggedOutUserIds() {
+            loggedOutUserIds () {
                 return this.extensions.filter(e => e.representativeStatus === LOGOUT_STATUS).map((el) => el.userID)
             },
-            dataCounts() {
-                if (this.filteredDataLength) {
-                    let from = this.pageSize * (this.currentPage - 1) + 1;
-                    let to = (this.pageSize * this.currentPage) < this.filteredDataLength ? (this.pageSize * this.currentPage) : this.filteredDataLength
-                    return from + ' - ' + to
-                }
-                return 0 + ' - ' + 0
-            },
-            isRealTimeTable() {
+            isRealTimeTable () {
                 return isRealtimeWidget(this.widget)
             },
-            getSettings() {
+            getSettings () {
                 return this.data.WidgetLayout.settings || realTimeSettings
             },
-            availableColumns() {
-                return get(this.widget.WidgetLayout, 'Columns.availableColumns') || this.columns
-            },
-            visibleColumns() {
-                return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
-            }
         },
         methods: {
-            userExtension(userId) {
+            isMultiQueuesDashboard,
+            userExtension (userId) {
                 return this.extensions.find(e => e.userID === userId)
             },
-            getCellStyle({row, column}) {
+            getCellStyle ({row, column}) {
                 let color = 'transparent'
+
                 if (dynamicRows.includes(column.property)) {
                     let extension = this.userExtension(row.user_id)
                     if (extension) {
@@ -197,23 +202,34 @@
                 }
                 return {'background-color': color}
             },
-            getCellClassName({column, row}) {
+            getCellClassName ({column, row}) {
+                let className = ''
                 let extension = this.userExtension(row.user_id)
+
                 if (dynamicRows.includes(column.property) && extension) {
-                    return 'text-white'
+                    className = 'text-white'
                 }
-                return ''
+
+                return className
             },
-            async getWidgetData() {
+            async getWidgetData () {
                 try {
                     let data = await getWidgetData(this.widget)
+
                     if (!data) {
                         return
                     }
+                    if (isMultiQueuesDashboard(this.widget)) {
+                        this.queuesTableData = data
+                        return
+                    }
+
                     let columns = [];
                     let containsDate = false
                     let dateColumns = ['date & time', 'date', 'call time', 'contacted time']
+
                     if (data.length) {
+
                         for (let column in data[0]) {
                             if (dateColumns.includes(column.toLowerCase())) {
                                 containsDate = true
@@ -230,10 +246,8 @@
                             if (column === 'Recording') {
                                 columnData.minWidth = '320px'
                             }
-                            this.searchableFields.push(columnData)
-
+                            this.searchableFields.push(column)
                         }
-
                         if (this.isRealTimeTable) {
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
                         }
@@ -251,7 +265,7 @@
                 } finally {
                 }
             },
-            formatDateColumn(data, column) {
+            formatDateColumn (data, column) {
                 data.forEach(row => {
                     if (row[column]) {
                         try {
@@ -263,7 +277,7 @@
                 })
                 return data
             },
-            getRecordingUrl(recordingLink) {
+            getRecordingUrl (recordingLink) {
                 const div = document.createElement('div')
                 div.innerHTML = recordingLink
                 const anchor = div.querySelector('a')
@@ -272,28 +286,15 @@
                 }
                 return ''
             },
-            handlePageChange(val) {
-                this.currentPage = val
-            },
-            async onUpdateLayout(data) {
-                this.widget.WidgetLayout['Columns'] = data
-                await WidgetApi.update(this.widget)
-                let updatedWidget = await WidgetApi.find(this.widget.WidgetID)
-                this.widget = {
-                    ...this.widget,
-                    ...updatedWidget,
-                    WidgetConfig: this.widget.WidgetConfig
-                }
-                this.data.WidgetLayout = updatedWidget.WidgetLayout || this.widget.WidgetLayout
-            },
-            sortChange() {
+
+            sortChange () {
                 this.drawRow = false
                 this.$nextTick(() => {
                     this.drawRow = true
                 })
             },
         },
-        mounted() {
+        mounted () {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -301,7 +302,7 @@
             }
         },
         watch: {
-            filter() {
+            filter () {
                 this.currentPage = 1
             },
             data: {
@@ -312,7 +313,7 @@
                 }
             }
         },
-        beforeDestroy() {
+        beforeDestroy () {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }

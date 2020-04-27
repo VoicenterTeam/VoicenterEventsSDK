@@ -84,7 +84,7 @@
     import UpdateDialog from './UpdateDialog'
     import RefreshButton from '@/components/RefreshButton'
     import {getWidgetData} from '@/services/widgetService'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
+    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
     import {Checkbox, Collapse, CollapseItem, Tooltip} from 'element-ui'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
@@ -231,7 +231,7 @@
                 handler: function (widget) {
                     this.getWidgetData()
                     this.model = cloneDeep(widget)
-                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
                 }
             }
         },
