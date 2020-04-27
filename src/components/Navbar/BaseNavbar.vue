@@ -1,5 +1,6 @@
 <template>
-    <div class="navbar__wrapper" v-if="activeDashboard">
+    <div>
+        <div class="navbar__wrapper" v-if="activeDashboard">
         <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
             <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-4 flex xl:mx-16">
             <menu-icon
@@ -74,21 +75,6 @@
                         </div>
                     </fade-transition>
                 </div>
-                <modal :visible.sync="showCreateDashboardDialog"
-                           :append-to-body="true" :width="dialogWidth">
-                    <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">
-                        {{$t('dashboards.new.title')}}</h3>
-                    <el-form @submit.native.prevent="confirmNewDashboard">
-                        <el-form-item>
-                            <label>{{$t('dashboards.new.form.title')}}</label>
-                            <el-input v-model="newDashboard.DashboardTitle"/>
-                        </el-form-item>
-                    </el-form>
-                    <template slot="footer">
-                        <el-button @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
-                        <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
-                    </template>
-                </modal>
                 <settings
                     v-if="showEditSettingsDialog"
                     :activeDashboard="activeDashboard"
@@ -139,6 +125,35 @@
                 </div>
             </div>
         </fade-transition>
+    </div>
+        <div v-if="accountNoData" class="min-h-screen flex">
+            <div class="w-full flex flex-col items-center justify-center"
+                 key="no-data">
+                <IconNoData class="h-56 w-56"/>
+                <p class="text-gray-600 max-w-lg text-center">{{$t('Account no data')}}</p>
+                <span
+                    class="hover:bg-primary-100 hover:text-primary py-1 mt-2 px-4 cursor-pointer text-gray-600 flex items-center border-2 rounded"
+                    @click="createNewDashboard()">
+                        <IconPlus class="w-3 mr-1 mb-0-5 text-primary"/>
+                        <span>{{$t('common.newDashboard')}}</span>
+                    </span>
+            </div>
+        </div>
+        <modal :visible.sync="showCreateDashboardDialog"
+               :append-to-body="true" :width="dialogWidth">
+            <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">
+                {{$t('Add Dashboard')}}</h3>
+            <el-form @submit.native.prevent="confirmNewDashboard">
+                <el-form-item>
+                    <label>{{$t('dashboards.new.form.title')}}</label>
+                    <el-input v-model="newDashboard.DashboardTitle"/>
+                </el-form-item>
+            </el-form>
+            <template slot="footer">
+                <el-button @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
+                <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
+            </template>
+        </modal>
     </div>
 </template>
 <script>
@@ -193,6 +208,12 @@
             },
             activeLanguage() {
                 return localStorage.getItem('locale') || this.$i18n.locale
+            },
+            loadingData () {
+                return this.$store.state.dashboards.loadingData;
+            },
+            accountNoData() {
+                return !this.activeDashboard && !this.loadingData;
             }
         },
         methods: {
