@@ -60,9 +60,10 @@
     import cloneDeep from 'lodash/cloneDeep'
     import UpdateDialog from './UpdateDialog'
     import extensionMixin from '@/mixins/extensionMixin'
+    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import {defaultColors} from '@/enum/defaultWidgetSettings'
-    import statusTypes, {callStatuses} from '@/enum/statusTypes'
     import {Checkbox, Option, Select, Tooltip} from 'element-ui'
+    import statusTypes, {callStatuses, otherStatuses} from '@/enum/statusTypes'
 
     export default {
         mixins: [extensionMixin],
@@ -108,6 +109,7 @@
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
                 let finalStatuses = []
+
                 if (storeStatuses.length) {
                     finalStatuses = this.getStoreStatuses()
                 } else {
@@ -119,12 +121,18 @@
                         }
                     })
                 }
+
                 finalStatuses.push(statusTypes[callStatuses.CALLING])
                 finalStatuses.push(statusTypes[callStatuses.HOLD])
+                finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
+
                 return finalStatuses
             },
             cardValue () {
-                return this.extensionWithCalls.filter(el => el.representativeStatus === this.status).length || '0'
+                if (this.status === otherStatuses.AT_WORK) {
+                    return this.extensions.filter(el => el.representativeStatus !== LOGOUT_STATUS).length || '0'
+                }
+                return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
             },
             cardIcon () {
                 return statusTypes[this.status].icon
