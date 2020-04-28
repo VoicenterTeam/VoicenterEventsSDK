@@ -23,11 +23,19 @@
             <template v-slot:Callers="{row, index}">
                 <caller-count :key="index" :queueID="row.queue_id"/>
             </template>
-            <template v-slot:MaxWaitTime="{row, index}">
+            <template v-slot:CurrentWaitTime="{row, index}">
                 <max-wait-time :key="index" :queueID="row.queue_id"/>
             </template>
             <template v-slot:queue_id="{row}">
                 {{getQueueName(row.queue_id)}}
+            </template>
+            <template v-slot:All="{row, index}">
+                <div v-if="isMaxWaitTimeRealTimeRow(row)">
+                    <max-wait-time :key="index" :queueID="queueWithOldestCall"/>
+                </div>
+                <div v-else>
+                    {{getQueueTotals(row)}}
+                </div>
             </template>
             <template v-slot:realTimeCell="{column, row, index}">
                 <div v-if="isCallersRealTimeCell(column, row)">
@@ -93,6 +101,7 @@
     import CallerCount from "./CallerCount";
     import MaxWaitTime from "./MaxWaitTime";
     import {mapOrder} from "@/helpers/util";
+    import minBy from 'lodash/minBy'
 
     export default {
         name: 'queues-table',
@@ -192,6 +201,24 @@
 
                 return this.visibleColumns
             },
+            allQueueCalls() {
+                return this.$store.getters['queues/allQueueCalls']
+            },
+            queueWithActiveCalls () {
+                 return this.$store.getters['queues/queueWithActiveCalls']
+            },
+            queueWithOldestCall () {
+                const allCalls = []
+                this.queueWithActiveCalls.forEach((queue) => {
+                    let calls = queue.Calls || []
+                    calls.map((call) => {
+                        call['QueueID'] = queue.QueueID
+                    })
+                    allCalls.push(...calls)
+                })
+                let oldestCall = minBy(allCalls, 'JoinTimeStamp');
+                return get(oldestCall, 'QueueID', null)
+            },
         },
         methods: {
             getQueueName (queueID) {
@@ -266,10 +293,19 @@
                 if (['All', 'Stat type'].includes(column.prop)) {
                     return
                 }
-                return row['Stat type'] === 'MaxWaitTime';
+                return row['Stat type'] === 'CurrentWaitTime';
             },
             getColumnQueueID (column) {
                 return Number(column.prop)
+            },
+            isMaxWaitTimeRealTimeRow (row) {
+                return row['Stat type'] === 'CurrentWaitTime';
+            },
+            getQueueTotals(row) {
+                if(row['Stat type'] === 'Callers') {
+                    return this.allQueueCalls.length
+                }
+                return row['All']
             }
         },
         mounted () {

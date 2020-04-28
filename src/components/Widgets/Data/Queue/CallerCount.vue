@@ -17,7 +17,14 @@
             getQueueByID () {
                 return this.$store.getters['queues/filterQueuesByIds']([this.queueID])
             },
+            allQueueCalls () {
+                return this.$store.getters['queues/allQueueCalls']
+            },
             getCallersCount () {
+                if (this.queueID === 'All') {
+                    return this.allQueueCalls.length
+                }
+
                 let queueData = this.getQueueByID
 
                 let calls = get(queueData, '[0].Calls', [])

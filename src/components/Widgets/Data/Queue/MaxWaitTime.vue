@@ -16,27 +16,36 @@
                 default: null
             }
         },
-        data() {
+        data () {
             return {
                 timeout: null,
                 timer: new Timer(),
             }
         },
         computed: {
-            getQueueByID() {
+            getQueueByID () {
                 return this.$store.getters['queues/filterQueuesByIds']([this.queueID])
             },
-            maxWaitTime() {
+            allQueueCalls () {
+                return this.$store.getters['queues/allQueueCalls']
+            },
+            maxWaitTime () {
                 return this.timer.displayTime
             },
-            callCount() {
-                let calls = get(this.getQueueByID, '[0].Calls', [])
-                return calls.length
+            queueCalls () {
+                let calls = []
+
+                if (this.queueID === 'All') {
+                    calls = this.allQueueCalls
+                } else {
+                    calls = get(this.getQueueByID, '[0].Calls', [])
+                }
+                return calls
             }
         },
         methods: {
-            getStats() {
-                let calls = get(this.getQueueByID, '[0].Calls', [])
+            getStats () {
+                let calls = this.queueCalls
 
                 let minJoinTimestamp = new Date().getTime() * 10000
 
@@ -50,22 +59,23 @@
                     calls
                 }
             },
-            setCounterState(callCount) {
+            setCounterState (calls) {
                 const stats = this.getStats()
                 this.timer.stop()
                 this.timer.setValue(stats.minJoinTimestamp)
-                if (callCount !== 0) {
+                if (calls.length !== 0) {
                     this.timer.start()
                 }
             }
         },
         watch: {
-            callCount: {
-              immediate: true,
-              handler(callCount) {
-                  this.setCounterState(callCount)
-              }
-          }
+            queueCalls: {
+                deep: true,
+                immediate: true,
+                handler (calls) {
+                    this.setCounterState(calls)
+                }
+            }
         },
         beforeDestroy () {
             this.timer.destroy()
