@@ -1,87 +1,73 @@
 <template>
     <div>
-        <data-table
-            :border="border"
-            :columns="availableColumns"
-            :editable="editable"
-            :manageColumns="false"
-            :showColumns="visibleColumns"
-            :stripe="stripe"
-            :tableData="fetchNotes"
-            :widgetTitle="data.Title">
-            <template v-slot:title>
-                <base-widget-title :title="data.Title"/>
-            </template>
-            <template v-slot:date="{row, index}">
-                {{getFormattedDate(row.date)}}
-            </template>
-            <template v-slot:text="{row, index}">
-                <div class="text-main-sm  flex justify-left">
+        <div class="flex justify-between mt-0-5">
+            <base-widget-title :title="data.Title"/>
+            <div class="flex justify-end items-center" v-if="!creationMode" :class="margins">
+                <el-tooltip :content="$t('Display hidden notes')" :open-delay="openDelay" class="item"
+                            effect="dark"
+                            placement="top">
+                    <el-switch class="mx-2" v-model="onEditMode"/>
+                </el-tooltip>
+                <el-tooltip :content="$t('Add New Note')" :open-delay="openDelay" class="item" effect="dark"
+                            placement="top">
+                    <AddButton @click="onAddNote"/>
+                </el-tooltip>
+            </div>
+        </div>
+        <div class="w-full py-2">
+            <html-editor
+                v-if="creationMode"
+                @on-update="addNote"/>
+        </div>
+        <div class="flex flex-row justify-between" v-for="note in fetchNotes">
+            <div class="border p-2 w-48 text-center">
+                {{getFormattedDate(note.date)}}
+            </div>
+            <div class="border p-2 flex-1">
+                <div class="text-main-sm">
                     <html-editor
-                        :value="row.text"
-                        @on-update="(data) => updateNote(data, row)"
-                        v-if="noteToUpdate === row.date">
+                        :value="note.text"
+                        @on-update="(data) => updateNote(data, note)"
+                        v-if="noteToUpdate === note.date">
                     </html-editor>
-                    <div v-else v-html="row.text"></div>
+                    <div v-else v-html="note.text"></div>
                 </div>
-            </template>
-            <template v-slot:actions="{row, index}">
+            </div>
+            <div class="border p-2 w-32" v-if="showActions(note)">
                 <div class="flex justify-center">
                     <el-tooltip :content="$t('Display note on the list')" :open-delay="openDelay" class="item"
                                 effect="dark"
                                 placement="top">
-                        <eye-icon @click="displayNoteInList(true, row)"
+                        <eye-icon @click="displayNoteInList(true, note)"
                                   class="text-primary w-4 cursor-pointer"
-                                  v-if="!row.displayed"></eye-icon>
+                                  v-if="!note.displayed"></eye-icon>
                     </el-tooltip>
                     <el-tooltip :content="$t('Hide note from list')" :open-delay="openDelay" class="item"
                                 effect="dark" placement="top">
-                        <eye-off-icon @click="displayNoteInList(false, row)"
+                        <eye-off-icon @click="displayNoteInList(false, note)"
                                       class="text-primary w-4 cursor-pointer"
-                                      v-if="row.displayed"></eye-off-icon>
+                                      v-if="note.displayed"></eye-off-icon>
                     </el-tooltip>
                     <el-tooltip :content="$t('Open edit mode for this note')" :open-delay="openDelay"
                                 class="item" effect="dark"
                                 placement="top">
-                        <edit-3-icon @click="onEditNote(row)" class="text-green w-4 mx-2 cursor-pointer"
+                        <edit-3-icon @click="onEditNote(note)" class="text-green w-4 mx-2 cursor-pointer"
                                      cursor-pointer></edit-3-icon>
                     </el-tooltip>
                     <el-tooltip :content="$t('Remove note')" :open-delay="openDelay" class="item" effect="dark"
                                 placement="top">
-                        <trash-2-icon @click="removeNote(row)"
+                        <trash-2-icon @click="removeNote(note)"
                                       class="text-red w-4 cursor-pointer"></trash-2-icon>
                     </el-tooltip>
                 </div>
-            </template>
-            <template v-slot:additional-data>
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full py-0-5">
-                    <div class="flex items-center" v-if="!creationMode">
-                        <el-tooltip :content="$t('Display hidden notes')" :open-delay="openDelay" class="item"
-                                    effect="dark"
-                                    placement="top">
-                            <el-switch class="mx-2" v-model="displayAllNotes"/>
-                        </el-tooltip>
-                        <el-tooltip :content="$t('Add New Note')" :open-delay="openDelay" class="item" effect="dark"
-                                    placement="top">
-                            <AddButton @click="onAddNote"/>
-                        </el-tooltip>
-                    </div>
-                </div>
-            </template>
-            <template v-slot:container-above>
-                <div class="w-full py-2" v-if="creationMode">
-                    <html-editor
-                        @on-update="addNote"/>
-                </div>
-            </template>
-        </data-table>
+            </div>
+        </div>
     </div>
 </template>
 <script>
     import get from 'lodash/get'
     import format from 'date-fns/format'
     import {Switch, Tooltip} from 'element-ui'
-    import DataTable from "@/components/Table/DataTable";
     import AddButton from '@/components/AddButton'
     import HtmlEditor from '@/components/Html/HtmlEditor'
     import {Edit3Icon, EyeIcon, EyeOffIcon, Trash2Icon} from 'vue-feather-icons'
@@ -96,7 +82,6 @@
             AddButton,
             HtmlEditor,
             EyeIcon,
-            DataTable,
         },
         props: {
             data: {
@@ -111,51 +96,30 @@
         data () {
             return {
                 creationMode: false,
-                displayAllNotes: false,
+                onEditMode: false,
                 noteToUpdate: null,
                 openDelay: 400,
-                border: true,
-                stripe: true,
-                manageColumns: false,
-                availableColumns: [
-                    {
-                        prop: 'date',
-                        fixed: false,
-                        align: 'center',
-                        label: this.$t('Date'),
-                        width: 170,
-                    },
-                    {
-                        prop: 'text',
-                        fixed: false,
-                        align: 'left',
-                        label: this.$t('Text'),
-                    },
-                    {
-                        prop: 'actions',
-                        fixed: false,
-                        align: 'center',
-                        label: this.$t('Actions'),
-                        width: 130,
-                    },
-                ],
             }
         },
         computed: {
             fetchNotes () {
                 let allNotes = get(this.data.WidgetLayout, 'Notes', [])
-                if (this.displayAllNotes) {
+                if (this.onEditMode) {
                     return allNotes
                 }
                 return allNotes.filter((note) => note.displayed)
             },
-            visibleColumns () {
-                return this.availableColumns.map(c => c.prop)
-            }
+            margins () {
+                if (this.$rtl.isRTL) {
+                    return this.editable ? 'ml-24' : 'ml-12'
+                } else {
+                    return this.editable ? 'mr-24' : 'mr-12'
+                }
+            },
         },
         methods: {
             getFormattedDate(date) {
-                return format(date, 'yy-MM-dd H:m:s')
+                return format(date, 'yy-MM-dd HH:mm')
             },
             onAddNote () {
                 this.creationMode = !this.creationMode
@@ -207,11 +171,14 @@
                 }
             },
             getNoteIndex (note) {
-                return this.data.WidgetLayout['Notes'].filter((el) => el.date === note.date)
+                return this.data.WidgetLayout['Notes'].findIndex((el) => el.date === note.date)
             },
             emmitUpdate () {
                 this.$emit('on-update', this.data)
                 this.noteToUpdate = null
+            },
+            showActions(note) {
+                return this.onEditMode && (!this.noteToUpdate || this.noteToUpdate !== note.date);
             }
         },
         mounted () {

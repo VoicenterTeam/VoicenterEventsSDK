@@ -35,6 +35,9 @@ module.exports = {
             minWidth: {
                 16: '4rem'
             },
+            maxWidth: {
+                ...defaultTheme.maxWidth
+            },
             spacing: {
                 '0-5': ' 0.125rem;',
                 9: '2.25rem',
