@@ -1,25 +1,29 @@
 <template>
     <div class="flex items-center justify-between mt-2">
-        <div class="flex flex-col">
-            <span class="text-main-xs mr-2" :class="textColor">+{{call.callerphone}}</span>
+        <div class="flex flex-col" v-if="!hideCallerInfo" :class="{'w-full': hideCallInfo}">
+            <span class="text-main-xs mr-2 text-gray-500">+{{call.callerphone}}</span>
             <span v-if="call.callerphone !== call.callername" class="text-main-xs font-medium">{{call.callername}}</span>
         </div>
-        <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
-        <el-tooltip v-if="call.callstatus === 'Hold'"
-                    placement="top"
-                    :open-delay="300"
-                    :content="$t('status.hold')"
-        >
-            <icon-hold class="w-4 h-4"></icon-hold>
-        </el-tooltip>
-        <slot name="threshold" :statusThreshold="threshold"/>
-        <span class="font-medium tracking-wide call-time font-mono">{{timer.displayTime}}</span>
+        <template v-if="!hideCallInfo">
+            <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
+            <el-tooltip
+                v-if="call.callstatus === 'Hold'"
+                placement="top"
+                :open-delay="300"
+                :content="$t('status.hold')"
+                >
+                <icon-hold class="w-4 h-4"></icon-hold>
+            </el-tooltip>
+            <slot name="threshold" :statusThreshold="threshold"/>
+            <span class="font-medium tracking-wide call-time font-mono">{{timer.displayTime}}</span>
+        </template>
     </div>
 </template>
 <script>
     import Timer from '@/util/Timer'
     import {getInitialTime} from '@/util/timeUtils'
     import { Tooltip } from 'element-ui'
+
     export default {
         components: {
             [Tooltip.name]: Tooltip
@@ -29,13 +33,17 @@
                 type: Object,
                 default: () => ({})
             },
-            textColor: {
-                type: String,
-                default: () => 'text-gray-500'
-            },
             settings: {
                 type: Object,
                 default: () => ({})
+            },
+            hideCallerInfo: {
+                type: Boolean,
+                default: false,
+            },
+            hideCallInfo: {
+                type: Boolean,
+                default: false,
             },
         },
         data() {

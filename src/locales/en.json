@@ -636,5 +636,6 @@
     "Add Dashboard": "Add Dashboard",
     "LeaveEmpty": "LeaveEmpty",
     "Callers": "Callers",
-    "queue_id": "Queue Name"
+    "queue_id": "Queue Name",
+    "No callers": "No callers"
 }

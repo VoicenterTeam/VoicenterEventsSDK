@@ -6125,6 +6125,11 @@ pkg-up@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
+portal-vue@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
+  integrity sha512-+yCno2oB3xA7irTt0EU5Ezw22L2J51uKAacE/6hMPMoO/mx3h4rXFkkBkT4GFsMDv/vEe8TNKC3ujJJ0PTwb6g==
+
 portfinder@^1.0.20:
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.20.tgz#bea68632e54b2e13ab7b0c4775e9b41bf270e44a"
@@ -8286,10 +8291,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
 
-voicenter-events-sdk@^0.7.9:
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/voicenter-events-sdk/-/voicenter-events-sdk-0.7.9.tgz#13c606dc10c4320378536b28fba8015d27383742"
-  integrity sha512-vVnAF2e4pNnEsOgPafnYKxYtmRAfbQOQH7SV7HgFra7tb5YSw/5o4/uYgRfau8JH9Ymc+I2/V9sZWr1N187NdQ==
+voicenter-events-sdk@^0.7.10:
+  version "0.7.10"
+  resolved "https://registry.yarnpkg.com/voicenter-events-sdk/-/voicenter-events-sdk-0.7.10.tgz#651b544195a87fa95214e558ce11b244cdd798b0"
+  integrity sha512-6S4ensJMF/Jk/X9oOl6YNUnHArz/6jReSNgtDCawE5RHT2pv+81XKP/f2WjP/MSeDg09DoMilpn8WkrYGbcVoA==
   dependencies:
     core-js "^2.6.5"
     socket.io-client "1.3.7"

@@ -1,32 +1,15 @@
 <template>
-    <div class="flex flex-col">
-        <div class="flex items-center justify-center">
-            <span class="font-mono">{{timer.displayTime}}</span>
-            <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"/>
-        </div>
-        <call-info
-            v-for="(call, index) in extension.calls"
-            :key="call.ivrid"
-            :text-color="'text-white'"
-            :call="call"
-            :settings="settings"
-        >
-            <template v-slot:threshold="{statusThreshold}">
-                <component v-if="statusThreshold.show" :is="statusThreshold.icon" class="w-6 mb-1 mx-2"/>
-            </template>
-        </call-info>
+    <div class="flex items-center justify-center">
+        <span class="font-mono">{{timer.displayTime}}</span>
+        <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"/>
     </div>
 </template>
 <script>
     import Timer from '@/util/Timer'
     import { getInitialExtensionTime } from '@/util/timeUtils'
     import {sdkEventReasons} from '@/enum/sdkEvents'
-    import CallInfo from '@/components/Cards/CallInfo'
 
     export default {
-        components: {
-            CallInfo
-        },
         props: {
             extension: {
                 type: Object,
@@ -35,7 +18,7 @@
             settings: {
                 type: Object,
                 default: () => ({})
-            }
+            },
         },
         data() {
             let initialTimeInSeconds = getInitialExtensionTime(this.extension, this.settings)

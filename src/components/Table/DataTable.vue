@@ -59,7 +59,7 @@
                                     <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300"
                                                 placement="top">
                                     <span class="font-medium uppercase">
-                                        {{$t(column.prop) || column.label}}
+                                        {{$t(column.label) || column.prop}}
                                     </span>
                                     </el-tooltip>
                                 </slot>

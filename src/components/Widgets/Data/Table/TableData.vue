@@ -42,6 +42,20 @@
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
                     <div v-else>{{$t('N/A')}}</div>
                 </template>
+                <template v-if="isRealTimeTable" v-slot:call_info="{row}">
+                    <calls-info :extension="userExtension(row.user_id)" :key="row.user_id"
+                                 :userId="row.user_id"
+                                 :hideCallerInfo="true"
+                                 v-if="userExtension(row.user_id) && drawRow"/>
+                    <span v-else>{{$t('N/A')}}</span>
+                </template>
+                <template v-if="isRealTimeTable" v-slot:caller_info="{row}">
+                    <calls-info :extension="userExtension(row.user_id)" :key="row.user_id"
+                                 :userId="row.user_id"
+                                 :hideCallInfo="true"
+                                 v-if="userExtension(row.user_id) && drawRow"/>
+                    <span v-else>{{$t('N/A')}}</span>
+                </template>
                 <template v-slot:pagination>
                     <div class="flex items-center">
                         <el-select
@@ -104,10 +118,12 @@
     import {getWidgetData} from "@/services/widgetService";
     import MultiQueuesDashboard from "@/components/Widgets/Data/Queue/MultiQueuesDashboard";
     import dataTableMixin from "@/mixins/dataTableMixin";
+    import CallsInfo from "./CallsInfo";
 
     export default {
         mixins: [dataTableMixin],
         components: {
+            CallsInfo,
             DataTable,
             TimeFrame,
             UserStatus,
@@ -146,7 +162,7 @@
                 widget: cloneDeep(this.data),
                 drawRow: true,
                 stripe: true,
-                queuesTableData: []
+                queuesTableData: [],
             }
         },
         computed: {
@@ -249,7 +265,7 @@
                             this.searchableFields.push(column)
                         }
                         if (this.isRealTimeTable) {
-                            columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2])
+                            columns.splice(5, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2], dynamicColumns[3], dynamicColumns[4])
                         }
                     }
 
@@ -311,7 +327,7 @@
                 handler: function () {
                     this.getWidgetData()
                 }
-            }
+            },
         },
         beforeDestroy () {
             if (this.fetchDataInterval) {
