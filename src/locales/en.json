@@ -71,6 +71,7 @@
     "settings.color.widgetGroupFrames": "Widget Group Borders",
     "settings.color.widgetGroupTitles": "Widget Group Titles",
     "widgetTitles.font.size": "Widget titles font size (recommended - 22px)",
+    "widgetGroupTitles.font.size": "Widget group titles font size (recommended - 22px)",
     "settings.extension.logout": "Show logged out users",
     "settings.set.threshold": "Activate general threshold",
     "settings.set.threshold.call": "Activate call threshold",
