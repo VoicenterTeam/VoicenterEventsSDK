@@ -113,6 +113,7 @@
     "status.talking": "Is Talking",
     "status.show.text": "Show status text",
     "status.display.border": "Display card border",
+    "status.atWork": "At work",
     "extensions.sort.default": "Default",
     "extensions.sort.userName": "User name",
     "extensions.sort.activeTime": "Active time",

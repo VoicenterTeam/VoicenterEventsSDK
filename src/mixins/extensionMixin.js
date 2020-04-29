@@ -8,9 +8,11 @@ export default {
         extensionWithCalls () {
             let hideLoggedOutUsers = get(this.data.WidgetLayout, 'hideLoggedOutUsers')
             const getExtensions = this.$store.getters['extensions/extensionsWithCalls']
+
             if (!getExtensions) {
                 return []
             }
+
             return getExtensions(hideLoggedOutUsers)
         },
     }
