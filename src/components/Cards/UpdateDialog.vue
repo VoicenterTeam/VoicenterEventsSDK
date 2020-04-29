@@ -13,24 +13,44 @@
                 <div class="flex flex-row">
                     <div>
                         <label>{{$t('Widget maximum width')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutWidth.maxWidth"/>
+                        <el-input class="mt-2" type="number" v-model="layoutConfig.maxWidth"/>
                     </div>
                     <div class="w-4"/>
                     <div>
                         <label>{{$t('Widget minimum width')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutWidth.minWidth"/>
+                        <el-input class="mt-2" type="number" v-model="layoutConfig.minWidth"/>
                     </div>
                 </div>
                 <div class="flex flex-row pt-4">
                     <div>
                         <label>{{$t('Widget maximum height')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutWidth.maxHeight"/>
+                        <el-input class="mt-2" type="number" v-model="layoutConfig.maxHeight"/>
                     </div>
                     <div class="w-4"/>
                     <div>
                         <label>{{$t('Widget minimum height')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutWidth.minHeight"/>
+                        <el-input class="mt-2" type="number" v-model="layoutConfig.minHeight"/>
                     </div>
+                </div>
+                <div class="py-4">
+                    <label>{{$t('Card title font size')}}</label>
+                    <el-slider
+                        :min="titleFontSizes.min"
+                        :max="titleFontSizes.max"
+                        :marks="titleBestOptions"
+                        v-model="layoutConfig.titleFontSize"
+                        show-input>
+                    </el-slider>
+                </div>
+                <div class="py-4">
+                    <label>{{$t('Card value font size')}}</label>
+                    <el-slider
+                        :min="valueFontSizes.min"
+                        :max="valueFontSizes.max"
+                        :marks="valueBestOptions"
+                        v-model="layoutConfig.valueFontSize"
+                        show-input>
+                    </el-slider>
                 </div>
                 <widget-colors :model="model" :onlyBackground="onlyBackground"/>
             </el-collapse-item>
@@ -43,7 +63,7 @@
 </template>
 <script>
     import Modal from "@/components/Common/Modal";
-    import {Collapse, CollapseItem} from 'element-ui'
+    import {Collapse, CollapseItem, Slider} from 'element-ui'
     import StaticWidgetInfo from '../Widgets/WidgetUpdateForm/StaticWidgetInfo'
     import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
@@ -51,10 +71,11 @@
         inheritAttrs: false,
         components: {
             Modal,
-            [Collapse.name]: Collapse,
-            [CollapseItem.name]: CollapseItem,
             WidgetColors,
             StaticWidgetInfo,
+            [Slider.name]: Slider,
+            [Collapse.name]: Collapse,
+            [CollapseItem.name]: CollapseItem,
         },
         props: {
             model: {
@@ -65,7 +86,7 @@
                 type: Boolean,
                 default: false
             },
-            layoutWidth: {
+            layoutConfig: {
                 type: Object,
                 default: () => ({})
             },
@@ -81,7 +102,30 @@
         },
         data () {
             return {
-                activeCollapse: ['layout']
+                activeCollapse: ['layout'],
+                titleFontSizes: {
+                    min: 12,
+                    max: 64
+                },
+                titleBestOptions: {
+                    16: '16px',
+                    24: '24px',
+                    32: '32px',
+                    48: '48px',
+                    56: '56px',
+                },
+                valueFontSizes: {
+                    min: 24,
+                    max: 128
+                },
+                valueBestOptions: {
+                    32: '32px',
+                    48: '48px',
+                    64: '64px',
+                    80: '80px',
+                    96: '96px',
+                    112: '112px',
+                },
             }
         }
     }

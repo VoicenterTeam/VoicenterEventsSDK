@@ -18,6 +18,7 @@
             </div>
             <el-radio-group v-model="model.WidgetLayout['mainActivity']">
                 <el-radio :label="option.key"
+                          :key="option.key"
                           v-bind="option"
                           v-for="option in activitiesToDisplay">
                     {{$t(option.value)}}

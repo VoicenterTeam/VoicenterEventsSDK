@@ -4,7 +4,7 @@
             :cardIcon="cardIcon"
             :cardText="cardText"
             :cardValue="cardValue"
-            :layoutWidth="layoutWidth"
+            :layoutConfig="layoutConfig"
             :showText="showStatusText"
             :styles="getCardStyles"
             @show-modal="onShowModal"
@@ -13,7 +13,7 @@
         />
         <update-dialog
             :model="model"
-            :layoutWidth="layoutWidth"
+            :layoutConfig="layoutConfig"
             :visible.sync="showModal"
             @on-change="onChange"
             v-if="showModal">
@@ -102,7 +102,7 @@
                 showStatusText: this.showText,
                 displayItemBorder: this.displayBorder,
                 model: {},
-                layoutWidth: {},
+                layoutConfig: {},
             }
         },
         computed: {
@@ -159,8 +159,9 @@
                     'min-width': `${this.data.WidgetLayout['minWidth'] || '250'}px`,
                     'max-height': `${this.data.WidgetLayout['maxHeight'] || '300'}px`,
                     'min-height': `${this.data.WidgetLayout['minHeight'] || '100'}px`,
+                    'titleFontSize':`${this.data.WidgetLayout['titleFontSize'] || '22'}px`,
+                    'valueFontSize': `${this.data.WidgetLayout['valueFontSize'] || '64'}px`,
                 }
-
                 if (this.displayBorder) {
                     styles = {
                         ...styles,
@@ -197,8 +198,8 @@
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
-                    ...this.model,
-                    ...this.layoutWidth
+                    ...this.layoutConfig,
+                    colors: this.model.colors
                 };
 
                 this.$emit('on-update', this.data);
@@ -218,11 +219,13 @@
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
-            this.layoutWidth = {
+            this.layoutConfig = {
                 maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
                 minWidth: this.data.WidgetLayout['minWidth'] || '250',
                 maxHeight: this.data.WidgetLayout['maxHeight'] || 'auto',
                 minHeight: this.data.WidgetLayout['minHeight'] || '100',
+                titleFontSize: this.data.WidgetLayout['titleFontSize'] || 22,
+                valueFontSize: this.data.WidgetLayout['valueFontSize'] || 64,
             }
         },
         watch: {

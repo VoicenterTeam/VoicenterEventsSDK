@@ -644,5 +644,7 @@
     "No callers": "No callers",
     "Display as main count": "Display as main count",
     "AnswerCount": "Answer Count",
-    "Select count to be displayed in the bigger circle": "Select count to be displayed in the bigger circle"
+    "Select count to be displayed in the bigger circle": "Select count to be displayed in the bigger circle",
+    "Card title font size": "Card title font size",
+    "Card value font size": "Card value font size"
 }
