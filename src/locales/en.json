@@ -640,5 +640,8 @@
     "LeaveEmpty": "LeaveEmpty",
     "Callers": "Callers",
     "queue_id": "Queue Name",
-    "No callers": "No callers"
+    "No callers": "No callers",
+    "Display as main count": "Display as main count",
+    "AnswerCount": "Answer Count",
+    "Select count to be displayed in the bigger circle": "Select count to be displayed in the bigger circle"
 }
