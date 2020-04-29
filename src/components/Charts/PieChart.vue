@@ -9,6 +9,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
@@ -41,6 +42,11 @@
                 chartVisibility: true,
                 chartData: {},
                 HOLD_STATUS: "Hold",
+            }
+        },
+        computed: {
+            getLabelFontSize() {
+                return get(this.data, 'WidgetLayout.labelFontSize', 16)
             }
         },
         methods: {
@@ -91,10 +97,18 @@
                     delete el.color
                     return el
                 });
+
+                const labelFontSize  = this.getLabelFontSize
+
                 const series = [{
                     name: this.$t('Agents'),
                     colorByPoint: true,
-                    data: data
+                    data: data,
+                    dataLabels: {
+                        style: {
+                            fontSize: labelFontSize
+                        }
+                    },
                 }]
                 const colors = this.getColorOptions(initialColors)
                 return {
@@ -126,7 +140,7 @@
             getExtensionsData () {
                 let data = []
                 let statusData = []
-                let extensions = this.extensionWithCalls
+                let extensions = this.extensions
 
                 if (extensions) {
                     statusData = groupBy(extensions, 'representativeStatus')

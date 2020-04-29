@@ -646,5 +646,6 @@
     "AnswerCount": "Answer Count",
     "Select count to be displayed in the bigger circle": "Select count to be displayed in the bigger circle",
     "Card title font size": "Card title font size",
-    "Card value font size": "Card value font size"
+    "Card value font size": "Card value font size",
+    "Status label font size": "Status label font size"
 }
