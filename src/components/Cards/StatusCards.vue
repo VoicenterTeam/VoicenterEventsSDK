@@ -197,7 +197,7 @@
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
-                    ...this.model.WidgetLayout,
+                    ...this.model,
                     ...this.layoutWidth
                 };
 
