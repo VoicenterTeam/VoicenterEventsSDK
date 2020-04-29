@@ -1,6 +1,7 @@
 .el-dialog__wrapper {
     .el-dialog__body {
         padding-top: 0;
+        padding-bottom: 0;
     }
 
     .el-dialog__header {
@@ -8,7 +9,11 @@
     }
 }
 
-.el-dialog__headerbtn i.el-dialog__close:hover {
-    color: var(--primary-color);
+.el-dialog__headerbtn i.el-dialog__close {
+    font-size: 20px;
+
+    &:hover {
+        color: var(--primary-color);
+    }
 }
 

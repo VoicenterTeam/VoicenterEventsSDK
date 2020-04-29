@@ -635,6 +635,8 @@
     "No dashboards": "No dashboards",
     "Account no data": "This account contains no data.",
     "Add Dashboard": "Add Dashboard",
+    "Widget minimum width": "Widget minimum width",
+    "Widget maximum width": "Widget maximum width",
     "LeaveEmpty": "LeaveEmpty",
     "Callers": "Callers",
     "queue_id": "Queue Name",

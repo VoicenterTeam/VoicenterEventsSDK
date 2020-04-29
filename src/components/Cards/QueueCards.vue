@@ -7,18 +7,19 @@
             :cardValue="cardValue"
             :layoutWidth="layoutWidth"
             :showText="showStatusText"
-            :styles="getStyles"
+            :styles="getCardStyles"
             @show-modal="onShowModal"
             v-bind="$attrs"
             v-on="$listeners"
         />
         <update-dialog
             :model="model"
+            :layoutWidth="layoutWidth"
             :visible.sync="showModal"
             @on-change="onChange"
             v-if="showModal">
             <template v-slot:content>
-                <el-form :label-position="labelPosition" @submit.native.prevent="onChange">
+                <el-form @submit.native.prevent="onChange">
                     <div class="flex w-full flex-col lg:flex-row">
                         <div class="flex lg:w-1/2">
                             <el-form-item :label="$t('queues.to.display')" class="font-bold">
@@ -51,23 +52,15 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <el-form-item>
+                    <div class="py-4 flex">
                         <el-checkbox v-model="showStatusText">
                             {{$t('status.show.text')}}
                         </el-checkbox>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-checkbox v-model="displayItemBorder">
+                        <el-checkbox class="px-4" v-model="displayItemBorder">
                             {{$t('status.display.border')}}
                         </el-checkbox>
-                    </el-form-item>
+                    </div>
                 </el-form>
-            </template>
-            <template v-slot:width>
-                <label class="pt-3 pb-2">{{$t('Widget max width')}}</label>
-                <el-input type="number" v-model="layoutWidth.maxWidth"/>
-                <label class="pt-3 pb-2">{{$t('Widget min width')}}</label>
-                <el-input type="number" v-model="layoutWidth.minWidth"/>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -78,11 +71,11 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Option, Select, Tooltip} from 'element-ui'
+    import {Option, Select, Tooltip, Checkbox} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
     import {typeKeys, typeNames, types} from '@/enum/queueCounters'
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
+    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
     import queueMixin from '@/mixins/queueMixin'
     import {getInitialTime} from '@/util/timeUtils'
     import Timer from "@/util/Timer";
@@ -124,7 +117,6 @@
         data () {
             return {
                 showModal: false,
-                labelPosition: 'top',
                 selectedQueues: this.queues,
                 selectedType: this.queueType,
                 availableTypes: typeNames,
@@ -152,24 +144,29 @@
             cardText () {
                 return this.$t(types[this.queueType].text)
             },
-            getStyles () {
-                let styles = {}
-                let color = types[this.queueType].color
+            getCardStyles () {
+                let widget = this.model
 
-                styles = {
+                let styles = {
                     color: {
-                        'color': color,
-                    }
-                };
+                        'color': widget.colors.fonts
+                    },
+                    'background': widget.colors.background,
+                    'max-width': `${this.data.WidgetLayout['maxWidth'] || '400'}px`,
+                    'min-width': `${this.data.WidgetLayout['minWidth'] || '250'}px`,
+                    'max-height': `${this.data.WidgetLayout['maxHeight'] || '300'}px`,
+                    'min-height': `${this.data.WidgetLayout['minHeight'] || '100'}px`,
+                }
 
                 if (this.displayBorder) {
-                    let border = {'border': `2px solid ${color}`}
                     styles = {
                         ...styles,
-                        ...border,
+                        ...{
+                            'border': `2px solid ${widget.colors.frames}`,
+                        }
                     }
                 }
-                return styles;
+                return styles
             },
         },
         methods: {
@@ -230,9 +227,10 @@
         mounted () {
             this.layoutWidth = {
                 maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
-                minWidth: this.data.WidgetLayout['minWidth'] || '250'
+                minWidth: this.data.WidgetLayout['minWidth'] || '250',
+                maxHeight: this.data.WidgetLayout['maxHeight'] || 'auto',
+                minHeight: this.data.WidgetLayout['minHeight'] || '100',
             }
-
         },
         beforeDestroy () {
             this.timer.destroy()
@@ -242,7 +240,7 @@
                 immediate: true,
                 handler(widget) {
                     this.model = cloneDeep(widget)
-                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
                 }
             },
             selectedType: {

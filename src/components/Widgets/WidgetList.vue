@@ -6,7 +6,7 @@
         <div :class="getWidgetClass(widget)"
              :key="widget.WidgetID"
              :style="getStyles(widget)"
-             class="px-2"
+             class="mx-2"
              v-for="widget in widgets">
             <WidgetErrorBoundary>
                 <Widget :editable="editable"
