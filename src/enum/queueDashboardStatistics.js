@@ -296,15 +296,16 @@ export const statistics = Object.values(allStatistics)
 
 export const activitiesToDisplay = [
     {
+        key: 'AnswerCount',
+        value: 'AnswerCount',
+    },
+    {
         key: 'InSLACount',
         value: 'InSLACount',
     },
-    {
-        key: 'AnswerCount',
-        value: 'AnswerCount',
-    }
+
 ]
 
 export const queueActivities = [
-    'InSLACount', 'AnswerCount'
+    'AnswerCount', 'InSLACount'
 ]
