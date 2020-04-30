@@ -31,6 +31,7 @@ export const settings = {
     showWidgetTitles: true,
     fontSize: defaultFontSize,
     widgetTitlesFontSize: 22,
+    widgetGroupTitlesFontSize: 22,
     minRefreshInterval: 10,
     refreshRealTimeDataDelay: 30
 }

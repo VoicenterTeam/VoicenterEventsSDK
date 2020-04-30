@@ -50,6 +50,9 @@
         computed: {
             getMaximumRange () {
                 return get(this.data, 'WidgetLayout.maximumRange', 0)
+            },
+            getLabelFontSize () {
+                return get(this.data, 'WidgetLayout.labelFontSize', 16)
             }
         },
         methods: {
@@ -77,19 +80,41 @@
                 let stops = [
                     [0, '#55BF3B'],
                     [queuesCount / 2 + 0.1, '#DDDF0D'],
-                    [queuesCount, '#DF5353']
+                    [queuesCount, '#DF5353'],
                 ]
+
+                const labelFontSize = this.getLabelFontSize
 
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
                     ...range,
                     stops,
+                    labels: {
+                        y: labelFontSize * 0.8,
+                        style: {
+                            fontSize: labelFontSize
+                        }
+                    },
                 }
 
+                const allQueueCalls = this.allQueueCalls.length
 
-                let allQueueCalls = this.allQueueCalls.length
-                this.data.series = [{data: [allQueueCalls]}]
+                const labelStyle = `style="font-size:${labelFontSize}px"`
+
+                this.data.series = [{
+                    data: [allQueueCalls],
+                    dataLabels: {
+                        style: {
+                            fontSize: labelFontSize
+                        },
+                        y: -70,
+                        format:
+                            '<div style="text-align:center">' +
+                            `<span ${labelStyle}>{y}</span><br/>` +
+                            '</div>'
+                    },
+                }]
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             }

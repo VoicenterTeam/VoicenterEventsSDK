@@ -12,7 +12,7 @@
                     </edit-group-buttons>
                 </div>
                 <h3 v-else class="font-semibold text-main-2xl text-gray-800"
-                    :style="$store.getters['dashboards/widgetTitleStyles']">
+                    :style="$store.getters['dashboards/widgetGroupTitleStyles']">
                     {{widgetGroup.WidgetGroupTitle}}
                 </h3>
                 <widget-list

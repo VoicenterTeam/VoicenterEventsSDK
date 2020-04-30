@@ -93,6 +93,16 @@
             </el-form-item>
             <el-collapse class="pt-4" v-model="activeCollapse">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
+                    <el-form-item class="pb-8" v-if="isPieWidget(widget) || isQueueGauge(widget)">
+                        <label>{{$t('Status label font size')}}</label>
+                        <el-slider
+                            :min="textFontSizes.min"
+                            :max="textFontSizes.max"
+                            :marks="textSizeBestOptions"
+                            v-model="model.WidgetLayout.labelFontSize"
+                            show-input>
+                        </el-slider>
+                    </el-form-item>
                     <el-form-item>
                         <widget-width :model="model"/>
                     </el-form-item>
@@ -171,7 +181,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, InputNumber, Radio, RadioGroup} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, InputNumber, Radio, RadioGroup, Slider} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import queueMixin from '@/mixins/queueMixin'
     import {allSeries} from '@/enum/queueConfigs'
@@ -220,6 +230,7 @@
             [Checkbox.name]: Checkbox,
             [Checkbox.name]: Checkbox,
             [InputNumber.name]: InputNumber,
+            [Slider.name]: Slider,
             AutoComplete,
             OtherFilters,
             WidgetColors,
@@ -248,6 +259,18 @@
                 statistics,
                 allSeries,
                 AUTO_COMPLETE_PARAMETER_TYPE,
+                textFontSizes: {
+                    min: 12,
+                    max: 64
+                },
+                textSizeBestOptions: {
+                    16: '16px',
+                    24: '24px',
+                    32: '32px',
+                    40: '40px',
+                    48: '48px',
+                    56: '56px',
+                },
             }
         },
         computed: {

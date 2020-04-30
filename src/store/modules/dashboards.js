@@ -113,20 +113,31 @@ const getters = {
     refreshDelay: state => {
         return state.settings.refreshRealTimeDataDelay
     },
-    widgetTitleStyles: state => {
+    widgetGroupTitleStyles: state => {
         const {widgetGroupTitles} = state.settings.colors
-        const {widgetTitlesFontSize} = state.settings
+        const {widgetGroupTitlesFontSize} = state.settings
         const styles = {}
         if (widgetGroupTitles) {
             styles.color = widgetGroupTitles
         }
-        if (widgetTitlesFontSize) {
-            styles.fontSize = `${widgetTitlesFontSize}px`
+        if (widgetGroupTitlesFontSize) {
+            styles.fontSize = `${widgetGroupTitlesFontSize}px`
         }
         return styles
     },
     getActiveDashboard: state => {
         return state.activeDashboard
+    },
+    widgetTitleStyles: state => {
+        const {widgetTitlesFontSize} = state.settings
+
+        if (!widgetTitlesFontSize) {
+            return {}
+        }
+
+        return {
+            fontSize: `${widgetTitlesFontSize}px`
+        }
     }
 }
 
