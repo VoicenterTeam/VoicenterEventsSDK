@@ -21,13 +21,22 @@
                         <el-input class="mt-2" type="number" v-model="layoutConfig.minWidth"/>
                     </div>
                 </div>
-                <div class="flex flex-row pt-4">
-                    <div>
-                        <label>{{$t('Widget maximum height')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutConfig.maxHeight"/>
+                <div class="flex flex-row pt-4 items-center">
+                    <div class="w-1/2">
+                        <div class="flex">
+                            <label>{{$t('Widget maximum height')}}</label>
+                            <el-popover
+                                placement="bottom-start"
+                                trigger="hover">
+                                {{$t('Widget minimum height should be 200px')}}
+                                <InfoIcon class="text-primary cursor-help w-4 mx-1" slot="reference"></InfoIcon>
+                            </el-popover>
+                        </div>
+                        <el-input :min="minHeightValue" @blur="onBlur" class="mt-2" type="number"
+                                  v-model="layoutConfig.maxHeight"/>
                     </div>
                     <div class="w-4"/>
-                    <div>
+                    <div class="w-1/2">
                         <label>{{$t('Widget minimum height')}}</label>
                         <el-input class="mt-2" type="number" v-model="layoutConfig.minHeight"/>
                     </div>
@@ -35,21 +44,21 @@
                 <div class="py-4">
                     <label>{{$t('Card title font size')}}</label>
                     <el-slider
-                        :min="titleFontSizes.min"
-                        :max="titleFontSizes.max"
                         :marks="titleBestOptions"
-                        v-model="layoutConfig.titleFontSize"
-                        show-input>
+                        :max="titleFontSizes.max"
+                        :min="titleFontSizes.min"
+                        show-input
+                        v-model="layoutConfig.titleFontSize">
                     </el-slider>
                 </div>
                 <div class="py-4">
                     <label>{{$t('Card value font size')}}</label>
                     <el-slider
-                        :min="valueFontSizes.min"
-                        :max="valueFontSizes.max"
                         :marks="valueBestOptions"
-                        v-model="layoutConfig.valueFontSize"
-                        show-input>
+                        :max="valueFontSizes.max"
+                        :min="valueFontSizes.min"
+                        show-input
+                        v-model="layoutConfig.valueFontSize">
                     </el-slider>
                 </div>
                 <widget-colors :model="model" :onlyBackground="onlyBackground"/>
@@ -62,8 +71,9 @@
     </modal>
 </template>
 <script>
-    import Modal from "@/components/Common/Modal";
-    import {Collapse, CollapseItem, Slider} from 'element-ui'
+    import {InfoIcon} from 'vue-feather-icons'
+    import Modal from '@/components/Common/Modal'
+    import {Collapse, CollapseItem, Popover, Slider} from 'element-ui'
     import StaticWidgetInfo from '../Widgets/WidgetUpdateForm/StaticWidgetInfo'
     import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
@@ -71,9 +81,11 @@
         inheritAttrs: false,
         components: {
             Modal,
+            InfoIcon,
             WidgetColors,
             StaticWidgetInfo,
             [Slider.name]: Slider,
+            [Popover.name]: Popover,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
         },
@@ -89,6 +101,10 @@
             layoutConfig: {
                 type: Object,
                 default: () => ({})
+            },
+            minHeightValue: {
+                type: Number,
+                default: 200,
             },
         },
         computed: {
@@ -126,6 +142,15 @@
                     96: '96px',
                     112: '112px',
                 },
+            }
+        },
+        methods: {
+            onBlur () {
+                if (this.layoutConfig.maxHeight >= this.minHeightValue) {
+                    return;
+                }
+
+                this.layoutConfig.maxHeight = this.minHeightValue
             }
         }
     }

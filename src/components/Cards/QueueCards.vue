@@ -79,9 +79,10 @@
     import queueMixin from '@/mixins/queueMixin'
     import {getInitialTime} from '@/util/timeUtils'
     import Timer from "@/util/Timer";
+    import cardWidgetMixin from '@/mixins/cardWidgetMixin'
 
     export default {
-        mixins: [queueMixin],
+        mixins: [queueMixin, cardWidgetMixin],
         props: {
             queues: {
                 type: Array,
@@ -144,32 +145,6 @@
             cardText () {
                 return this.$t(types[this.queueType].text)
             },
-            getCardStyles () {
-                let widget = this.model
-
-                let styles = {
-                    color: {
-                        'color': widget.colors.fonts
-                    },
-                    'background': widget.colors.background,
-                    'max-width': `${this.data.WidgetLayout['maxWidth'] || '400'}px`,
-                    'min-width': `${this.data.WidgetLayout['minWidth'] || '250'}px`,
-                    'max-height': `${this.data.WidgetLayout['maxHeight'] || '300'}px`,
-                    'min-height': `${this.data.WidgetLayout['minHeight'] || '100'}px`,
-                    'titleFontSize':`${this.data.WidgetLayout['titleFontSize'] || '22'}px`,
-                    'valueFontSize': `${this.data.WidgetLayout['valueFontSize'] || '64'}px`,
-                }
-
-                if (this.displayBorder) {
-                    styles = {
-                        ...styles,
-                        ...{
-                            'border': `2px solid ${widget.colors.frames}`,
-                        }
-                    }
-                }
-                return styles
-            },
         },
         methods: {
             getQueueStats() {
@@ -224,16 +199,6 @@
                 if (callCount !== 0) {
                     this.timer.start()
                 }
-            }
-        },
-        mounted () {
-            this.layoutConfig = {
-                maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
-                minWidth: this.data.WidgetLayout['minWidth'] || '250',
-                maxHeight: this.data.WidgetLayout['maxHeight'] || 'auto',
-                minHeight: this.data.WidgetLayout['minHeight'] || '100',
-                titleFontSize: this.data.WidgetLayout['titleFontSize'] || 22,
-                valueFontSize: this.data.WidgetLayout['valueFontSize'] || 64,
             }
         },
         beforeDestroy () {
