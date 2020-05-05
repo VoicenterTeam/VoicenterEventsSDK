@@ -81,8 +81,10 @@
     import {Collapse, CollapseItem, Tooltip, Checkbox} from 'element-ui'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
+    import cardWidgetMixin from '@/mixins/cardWidgetMixin'
 
     export default {
+        mixins: [cardWidgetMixin],
         components: {
             OtherFilters,
             AutoComplete,
@@ -127,32 +129,6 @@
             }
         },
         computed: {
-            getCardStyles () {
-                let widget = this.model
-
-                let styles = {
-                    color: {
-                        'color': widget.colors.fonts
-                    },
-                    'background': widget.colors.background,
-                    'max-width': `${this.data.WidgetLayout['maxWidth'] || '400'}px`,
-                    'min-width': `${this.data.WidgetLayout['minWidth'] || '250'}px`,
-                    'max-height': `${this.data.WidgetLayout['maxHeight'] || '300'}px`,
-                    'min-height': `${this.data.WidgetLayout['minHeight'] || '100'}px`,
-                    'titleFontSize':`${this.data.WidgetLayout['titleFontSize'] || '22'}px`,
-                    'valueFontSize': `${this.data.WidgetLayout['valueFontSize'] || '64'}px`,
-                }
-
-                if (this.displayBorder) {
-                    styles = {
-                        ...styles,
-                        ...{
-                            'border': `2px solid ${widget.colors.frames}`,
-                        }
-                    }
-                }
-                return styles
-            },
             autoCompletes () {
                 return this.data.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
@@ -219,14 +195,6 @@
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
-            }
-            this.layoutConfig = {
-                maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
-                minWidth: this.data.WidgetLayout['minWidth'] || '250',
-                maxHeight: this.data.WidgetLayout['maxHeight'] || 'auto',
-                minHeight: this.data.WidgetLayout['minHeight'] || '100',
-                titleFontSize: this.data.WidgetLayout['titleFontSize'] || 22,
-                valueFontSize: this.data.WidgetLayout['valueFontSize'] || 64,
             }
         },
         watch: {
