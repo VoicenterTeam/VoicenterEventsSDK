@@ -12,8 +12,8 @@
             v-on="$listeners"
         />
         <update-dialog
-            :model="model"
             :layoutConfig="layoutConfig"
+            :model="model"
             :visible.sync="showModal"
             @on-change="onChange"
             v-if="showModal">
@@ -38,6 +38,20 @@
                 </el-form>
             </template>
             <template v-slot:additional-data>
+                <time-frame
+                    :model="model"
+                    :timeFrameType="model.WidgetTime.type"
+                    :widgetTimeOptions="widgetTimeOptions"
+                    v-if="model && model.WidgetTime">
+                    <template v-slot:frame-types>
+                        <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
+                            <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
+                                      v-for="widgetTimeType in widgetTimeTypes">
+                                {{$t(widgetTimeType.text)}}
+                            </el-radio>
+                        </el-radio-group>
+                    </template>
+                </time-frame>
                 <div class="flex items-center justify-between text-main-base" v-if="autoCompletes.length">
                     {{$t('tooltip.refresh.entities.list')}}
                     <RefreshButton
@@ -78,18 +92,23 @@
     import RefreshButton from '@/components/RefreshButton'
     import {getWidgetData} from '@/services/widgetService'
     import {defaultCardColors} from '@/enum/defaultWidgetSettings'
-    import {Collapse, CollapseItem, Tooltip, Checkbox} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip} from 'element-ui'
+    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
+    import TimeFrame from "@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame";
 
     export default {
         mixins: [cardWidgetMixin],
         components: {
+            TimeFrame,
             OtherFilters,
             AutoComplete,
             UpdateDialog,
             RefreshButton,
+            [Radio.name]: Radio,
+            [RadioGroup.name]: RadioGroup,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
@@ -126,6 +145,8 @@
                 AUTO_COMPLETE_PARAMETER_TYPE: 6,
                 loadEntitiesList: false,
                 activeCollapse: 'filters',
+                widgetTimeTypes,
+                widgetTimeOptions,
             }
         },
         computed: {
@@ -163,6 +184,14 @@
                 } catch (e) {
                 }
 
+                if (this.model.WidgetTime.type === 'relative') {
+                    let widgetTime = widgetTimeOptions.find((el) => el.datedeff === this.model.WidgetTime.datedeff)
+                    this.model.WidgetTime = {
+                        ...this.model.WidgetTime,
+                        ...widgetTime
+                    }
+                }
+
                 let data = {
                     showText: this.displayCardText,
                     displayBorder: this.displayCardBorder,
@@ -172,8 +201,11 @@
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
-                    colors: this.model.colors
+                    colors: this.model.colors,
+
                 };
+
+                this.data.WidgetTime = this.model.WidgetTime
 
                 this.$emit('on-update', this.data);
                 this.showModal = false;
