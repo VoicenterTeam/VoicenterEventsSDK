@@ -18,6 +18,7 @@
                         v-if="displayCounter(item)"
                         @on-change="(data) => onChange(data, item)"
                         :item="item"
+                        :widget="data"
                     />
                 </div>
                 <div v-for="item in queueStatistics[PERCENTAGE_TYPE]">
@@ -25,6 +26,7 @@
                         v-if="displayCounter(item)"
                         @on-change="(data) => onChange(data, item)"
                         :item="getItem(item)"
+                        :widget="data"
                     />
                 </div>
                 <div v-if="showSumOfOthers" class="statistic-card"
