@@ -647,5 +647,6 @@
     "Select count to be displayed in the bigger circle": "Select count to be displayed in the bigger circle",
     "Card title font size": "Card title font size",
     "Card value font size": "Card value font size",
-    "Status label font size": "Status label font size"
+    "Status label font size": "Status label font size",
+    "Widget minimum height should be 200px": "Widget minimum height should be 200px"
 }
