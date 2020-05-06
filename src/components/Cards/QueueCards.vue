@@ -1,23 +1,25 @@
 <template>
     <div>
         <base-wrapper
+            class="queue-card"
             :cardIcon="cardIcon"
             :cardText="cardText"
             :cardValue="cardValue"
-            :layoutWidth="layoutWidth"
+            :layoutConfig="layoutConfig"
             :showText="showStatusText"
-            :styles="getStyles"
+            :styles="getCardStyles"
             @show-modal="onShowModal"
             v-bind="$attrs"
             v-on="$listeners"
         />
         <update-dialog
             :model="model"
+            :layoutConfig="layoutConfig"
             :visible.sync="showModal"
             @on-change="onChange"
             v-if="showModal">
             <template v-slot:content>
-                <el-form :label-position="labelPosition" @submit.native.prevent="onChange">
+                <el-form @submit.native.prevent="onChange">
                     <div class="flex w-full flex-col lg:flex-row">
                         <div class="flex lg:w-1/2">
                             <el-form-item :label="$t('queues.to.display')" class="font-bold">
@@ -50,23 +52,15 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <el-form-item>
+                    <div class="py-4 flex">
                         <el-checkbox v-model="showStatusText">
                             {{$t('status.show.text')}}
                         </el-checkbox>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-checkbox v-model="displayItemBorder">
+                        <el-checkbox class="px-4" v-model="displayItemBorder">
                             {{$t('status.display.border')}}
                         </el-checkbox>
-                    </el-form-item>
+                    </div>
                 </el-form>
-            </template>
-            <template v-slot:width>
-                <label class="pt-3 pb-2">{{$t('Widget max width')}}</label>
-                <el-input type="number" v-model="layoutWidth.maxWidth"/>
-                <label class="pt-3 pb-2">{{$t('Widget min width')}}</label>
-                <el-input type="number" v-model="layoutWidth.minWidth"/>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -77,17 +71,18 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Option, Select, Tooltip} from 'element-ui'
+    import {Option, Select, Tooltip, Checkbox} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
     import {typeKeys, typeNames, types} from '@/enum/queueCounters'
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
+    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
     import queueMixin from '@/mixins/queueMixin'
-    import {timeFormatter} from "@/helpers/timeFormatter";
     import {getInitialTime} from '@/util/timeUtils'
+    import Timer from "@/util/Timer";
+    import cardWidgetMixin from '@/mixins/cardWidgetMixin'
 
     export default {
-        mixins: [queueMixin],
+        mixins: [queueMixin, cardWidgetMixin],
         props: {
             queues: {
                 type: Array,
@@ -123,16 +118,15 @@
         data () {
             return {
                 showModal: false,
-                labelPosition: 'top',
                 selectedQueues: this.queues,
                 selectedType: this.queueType,
                 availableTypes: typeNames,
                 showStatusText: this.showText,
                 displayItemBorder: this.displayBorder,
                 timeout: null,
-                dataCount: 0,
+                timer: new Timer(),
                 model: {},
-                layoutWidth: {},
+                layoutConfig: {},
             }
         },
         computed: {
@@ -140,31 +134,10 @@
                 return this.allQueues.filter(e => this.selectedQueues.includes(e.QueueID))
             },
             cardValue () {
-                clearInterval(this.timeout)
-                this.dataCount = 0
                 if (this.selectedType === typeKeys.CALLERS_ID) {
-                    this.dataCount = this.allQueueCalls.length
-                } else if (this.selectedType === typeKeys.MAXIMUM_WAITING_ID) {
-                    let minJoinTimeStamp = new Date().getTime() * 10000
-                    let queueCalls = 0
-                    this.filteredQueue.forEach((queue) => {
-                        queue.Calls.forEach((call) => {
-                            if (call.JoinTimeStamp < minJoinTimeStamp) {
-                                minJoinTimeStamp = call.JoinTimeStamp
-                                queueCalls++
-                            }
-                        })
-                    })
-
-                    if (queueCalls > 0) {
-                        this.dataCount = getInitialTime(minJoinTimeStamp)
-                        setInterval(() => {
-                            this.dataCount++
-                        }, 1000)
-                        this.dataCount = timeFormatter(this.dataCount)
-                    }
+                    return this.allQueueCalls.length
                 }
-                return this.dataCount
+                return this.timer.displayTime
             },
             cardIcon () {
                 return types[this.queueType].icon
@@ -172,27 +145,32 @@
             cardText () {
                 return this.$t(types[this.queueType].text)
             },
-            getStyles () {
-                let styles = {}
-                let color = types[this.queueType].color
-
-                styles = {
-                    color: {
-                        'color': color,
-                    }
-                };
-
-                if (this.displayBorder) {
-                    let border = {'border': `2px solid ${color}`}
-                    styles = {
-                        ...styles,
-                        ...border,
-                    }
-                }
-                return styles;
-            },
         },
         methods: {
+            getQueueStats() {
+                let minJoinTimeStamp = new Date().getTime() * 10000
+                let queueCalls = 0
+                this.filteredQueue.forEach((queue) => {
+                    queue.Calls.forEach((call) => {
+                        if (call.JoinTimeStamp < minJoinTimeStamp) {
+                            minJoinTimeStamp = call.JoinTimeStamp
+                            queueCalls++
+                        }
+                    })
+                })
+                return { queueCalls, minJoinTimeStamp }
+            },
+            getInitialQueueTime() {
+                if (this.selectedType !== typeKeys.MAXIMUM_WAITING_ID) {
+                    return 0
+                }
+
+                const queueStats = this.getQueueStats()
+                if (queueStats.queueCalls === 0) {
+                    return 0
+                }
+                return getInitialTime(queueStats.minJoinTimeStamp)
+            },
             onChange () {
                 let data = {
                     queues: this.selectedQueues,
@@ -204,8 +182,8 @@
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
-                    ...this.model,
-                    ...this.layoutWidth
+                    ...this.layoutConfig,
+                    colors: this.model.colors
                 }
 
                 this.$emit('on-update', this.data);
@@ -214,23 +192,34 @@
             onShowModal () {
                 this.showModal = true
             },
-        },
-        mounted () {
-            this.layoutWidth = {
-                maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
-                minWidth: this.data.WidgetLayout['minWidth'] || '250'
+            setCounterState() {
+                let callCount = this.getQueueStats().queueCalls
+                this.timer.stop()
+                this.timer.setValue(this.getInitialQueueTime())
+                if (callCount !== 0) {
+                    this.timer.start()
+                }
             }
         },
         beforeDestroy () {
-            clearInterval(this.timeout)
+            this.timer.destroy()
         },
         watch: {
             data: {
                 immediate: true,
-                handler: function (widget) {
+                handler(widget) {
                     this.model = cloneDeep(widget)
-                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
                 }
+            },
+            selectedType: {
+                immediate: true,
+                handler() {
+                    this.setCounterState()
+                }
+            },
+            'allQueueCalls.length'() {
+                this.setCounterState()
             }
         }
     }
@@ -245,5 +234,9 @@
 
     .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
         color: var(--primary-color);
+    }
+    .queue-card /deep/ .card-value {
+        min-width: 80px;
+        @apply flex justify-center;
     }
 </style>

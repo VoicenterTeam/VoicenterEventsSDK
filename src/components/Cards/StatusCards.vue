@@ -4,50 +4,51 @@
             :cardIcon="cardIcon"
             :cardText="cardText"
             :cardValue="cardValue"
-            :layoutWidth="layoutWidth"
+            :layoutConfig="layoutConfig"
             :showText="showStatusText"
-            :styles="getStyles"
+            :styles="getCardStyles"
             @show-modal="onShowModal"
             v-bind="$attrs"
             v-on="$listeners"
         />
         <update-dialog
             :model="model"
+            :layoutConfig="layoutConfig"
             :visible.sync="showModal"
             @on-change="onChange"
             v-if="showModal">
             <template v-slot:header>
-                <component :is="selectedIcon" class="w-8 mx-1"/>
-                <p class="text-main-lg font-semibold text-gray-700" slot="title">{{$t(selectedOption.text)}}</p>
+                <div class="flex items-center pt-4">
+                    <component :is="selectedIcon" class="w-8 mx-1"/>
+                    <p class="text-main-lg font-semibold text-gray-700" slot="title">{{$t(selectedOption.text)}}</p>
+                </div>
             </template>
             <template v-slot:content>
-                <el-select :placeholder="$t('common.selectStatus')"
-                           @change="onStatusChange"
-                           class="w-full"
-                           label="select"
-                           v-model="selectedStatus">
-                    <el-option :key="option.value"
-                               :label="$t(option.text)"
-                               v-bind="option"
-                               v-for="option in statuses">
+                <el-select
+                    :placeholder="$t('common.selectStatus')"
+                    @change="onStatusChange"
+                    class="w-full"
+                    label="select"
+                    v-model="selectedStatus">
+                    <el-option
+                        :key="option.value"
+                        :label="$t(option.text)"
+                        v-bind="option"
+                        v-for="option in statuses">
                         <div class="flex">
                             <component :is="option.icon" class="w-5 mx-1 text-primary"/>
                             <span class="w-16 mx-1">{{$t(option.text)}}</span>
                         </div>
                     </el-option>
                 </el-select>
-                <el-checkbox class="pt-4" v-model="showStatusText">
-                    {{$t('status.show.text')}}
-                </el-checkbox>
-                <el-checkbox class="pt-4" v-model="displayItemBorder">
-                    {{$t('status.display.border')}}
-                </el-checkbox>
-            </template>
-            <template v-slot:width>
-                <label class="pt-3 pb-2">{{$t('Widget max width')}}</label>
-                <el-input type="number" v-model="layoutWidth.maxWidth"/>
-                <label class="pt-3 pb-2">{{$t('Widget min width')}}</label>
-                <el-input type="number" v-model="layoutWidth.minWidth"/>
+                <div class="py-4 flex">
+                    <el-checkbox v-model="showStatusText">
+                        {{$t('status.show.text')}}
+                    </el-checkbox>
+                    <el-checkbox class="px-4" v-model="displayItemBorder">
+                        {{$t('status.display.border')}}
+                    </el-checkbox>
+                </div>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -60,12 +61,14 @@
     import cloneDeep from 'lodash/cloneDeep'
     import UpdateDialog from './UpdateDialog'
     import extensionMixin from '@/mixins/extensionMixin'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
-    import statusTypes, {callStatuses} from '@/enum/statusTypes'
+    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
+    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
     import {Checkbox, Option, Select, Tooltip} from 'element-ui'
+    import statusTypes, {callStatuses, otherStatuses} from '@/enum/statusTypes'
+    import cardWidgetMixin from '@/mixins/cardWidgetMixin'
 
     export default {
-        mixins: [extensionMixin],
+        mixins: [extensionMixin, cardWidgetMixin],
         props: {
             status: {
                 type: Number,
@@ -100,7 +103,7 @@
                 showStatusText: this.showText,
                 displayItemBorder: this.displayBorder,
                 model: {},
-                layoutWidth: {},
+                layoutConfig: {},
             }
         },
         computed: {
@@ -108,6 +111,7 @@
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
                 let finalStatuses = []
+
                 if (storeStatuses.length) {
                     finalStatuses = this.getStoreStatuses()
                 } else {
@@ -119,12 +123,18 @@
                         }
                     })
                 }
+
                 finalStatuses.push(statusTypes[callStatuses.CALLING])
                 finalStatuses.push(statusTypes[callStatuses.HOLD])
+                finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
+
                 return finalStatuses
             },
             cardValue () {
-                return this.extensionWithCalls.filter(el => el.representativeStatus === this.status).length || '0'
+                if (this.status === otherStatuses.AT_WORK) {
+                    return this.extensions.filter(el => el.representativeStatus !== LOGOUT_STATUS).length || '0'
+                }
+                return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
             },
             cardIcon () {
                 return statusTypes[this.status].icon
@@ -137,26 +147,6 @@
                 return {
                     color: `${color}`
                 }
-            },
-            getStyles () {
-                let styles = {}
-                let color = statusTypes[this.status].color
-
-                styles = {
-                    color: {
-                        'color': color,
-                    }
-                };
-
-                if (!this.displayBorder) {
-                    return styles;
-                }
-
-                styles['border'] = `2px solid ${color}`
-                return styles;
-            },
-            isMobileOrTablet () {
-                return this.$store.getters['utils/isMobileOrTablet']
             },
         },
         methods: {
@@ -184,8 +174,8 @@
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
-                    ...this.model,
-                    ...this.layoutWidth
+                    ...this.layoutConfig,
+                    colors: this.model.colors
                 };
 
                 this.$emit('on-update', this.data);
@@ -205,20 +195,15 @@
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
-            this.layoutWidth = {
-                maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
-                minWidth: this.data.WidgetLayout['minWidth'] || '250'
-            }
         },
         watch: {
             data: {
                 immediate: true,
                 handler: function (widget) {
                     this.model = cloneDeep(widget)
-                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
                 }
             },
-
         }
     }
 </script>

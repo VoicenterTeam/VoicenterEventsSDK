@@ -19,7 +19,14 @@ export const dynamicColumns = [{
     align: 'center',
     label: 'Current Status Duration',
     width: '250px'
+}, {
+    prop: 'caller_info',
+    fixed: false,
+    align: 'center',
+    label: 'Caller Info',
+}, {
+    prop: 'call_info',
+    fixed: false,
+    align: 'center',
+    label: 'Call Info',
 }]
-
-//The DB query should be happening every 10 seconds
-export const refreshDataInterval = 10000

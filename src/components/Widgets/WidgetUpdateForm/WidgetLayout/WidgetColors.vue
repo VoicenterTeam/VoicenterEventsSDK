@@ -1,7 +1,7 @@
 <template>
     <div class="pt-2">
         <label class="text-main-sm">{{$t('Widget colors')}}</label>
-        <div class="flex pt-4">
+        <div class="flex pt-2">
             <div class="flex" v-for="option of getWidgetColors">
                 <color-picker
                     v-model="model.colors[option]"

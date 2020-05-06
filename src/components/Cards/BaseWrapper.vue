@@ -1,7 +1,6 @@
 <template>
-    <div :class="{'is-vertical': isVertical}"
-         :style="styles"
-         class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4">
+    <div :style="styles"
+         class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4 overflow-y-scroll">
         <div :class="{'flex-col': isVertical}"
              class="w-full flex items-center justify-center">
             <slot name="icon">
@@ -9,18 +8,18 @@
             </slot>
             <slot name="text">
                 <el-tooltip :content="cardText" class="item" effect="dark" placement="top" v-if="showText">
-                    <h5 :style="mainColor" class="text-main-xl font-bold mx-3 status-text">
+                    <p :style="cardTitleStyles" class="font-bold mx-3 status-text">
                         {{cardText}}
-                    </h5>
+                    </p>
                 </el-tooltip>
             </slot>
             <div :class="{[$rtl.isRTL ? 'mr-auto' : 'ml-auto']: !isVertical}">
                 <slot name="value">
-                    <h5 :class="{'-my-6': isVertical}"
-                        :style="mainColor"
-                        class="text-6xl font-bold -my-5" v-if="cardValue">
-                        {{cardValue || '--'}}
-                    </h5>
+                    <p :class="{'-my-6': isVertical}"
+                       :style="cardValueStyles"
+                       class="text-6xl font-bold -my-5 card-value">
+                        {{cardValue}}
+                    </p>
                 </slot>
             </div>
             <div :class="{'edit-mode': editable}" class="absolute flex action-icons">
@@ -87,7 +86,7 @@
                 type: Object,
                 default: () => ({}),
             },
-            layoutWidth: {
+            layoutConfig: {
                 type: Object,
                 default: () => ({}),
             },
@@ -103,11 +102,23 @@
             },
             mainColor () {
                 return get(this.styles, 'color')
-            }
+            },
+            cardTitleStyles () {
+                return {
+                    ...this.mainColor,
+                    fontSize: this.styles.titleFontSize
+                }
+            },
+            cardValueStyles () {
+                return {
+                    ...this.mainColor,
+                    fontSize: this.styles.valueFontSize
+                }
+            },
         },
         methods: {
             checkIfCardIsVertical () {
-                this.isVertical = this.layoutWidth.minWidth < 280;
+                this.isVertical = this.layoutConfig.minWidth < 280;
             },
             showModal () {
                 this.$emit('show-modal')
@@ -125,7 +136,7 @@
                     this.checkIfCardIsVertical()
                 }
             },
-            'layoutWidth.minWidth' () {
+            'layoutConfig.minWidth' () {
                 this.$nextTick(this.checkIfCardIsVertical)
             }
         }

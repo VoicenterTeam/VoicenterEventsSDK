@@ -9,6 +9,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
     import {Chart} from 'highcharts-vue'
@@ -40,14 +41,22 @@
                 default: true
             },
         },
-        data() {
+        data () {
             return {
                 chartVisibility: true,
                 chartData: {},
             }
         },
+        computed: {
+            getMaximumRange () {
+                return get(this.data, 'WidgetLayout.maximumRange', 0)
+            },
+            getLabelFontSize () {
+                return get(this.data, 'WidgetLayout.labelFontSize', 16)
+            }
+        },
         methods: {
-            async chartOptions() {
+            async chartOptions () {
                 if (isExternalDataWidget(this.data)) {
                     let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
                     this.chartData = {...gaugeChartConfig, ...{series: data}}
@@ -60,8 +69,8 @@
                     this.chartVisibility = true
                 })
             },
-            getAgentsData() {
-                let queuesCount = this.allQueues.length
+            getAgentsData () {
+                let queuesCount = this.getMaximumRange || this.allQueues.length
 
                 let range = {
                     min: 0,
@@ -71,19 +80,41 @@
                 let stops = [
                     [0, '#55BF3B'],
                     [queuesCount / 2 + 0.1, '#DDDF0D'],
-                    [queuesCount, '#DF5353']
+                    [queuesCount, '#DF5353'],
                 ]
+
+                const labelFontSize = this.getLabelFontSize
 
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
                     ...range,
                     stops,
+                    labels: {
+                        y: labelFontSize * 0.8,
+                        style: {
+                            fontSize: labelFontSize
+                        }
+                    },
                 }
 
+                const allQueueCalls = this.allQueueCalls.length
 
-                let allQueueCalls = this.allQueueCalls.length
-                this.data.series = [{data: [allQueueCalls]}]
+                const labelStyle = `style="font-size:${labelFontSize}px"`
+
+                this.data.series = [{
+                    data: [allQueueCalls],
+                    dataLabels: {
+                        style: {
+                            fontSize: labelFontSize
+                        },
+                        y: -70,
+                        format:
+                            '<div style="text-align:center">' +
+                            `<span ${labelStyle}>{y}</span><br/>` +
+                            '</div>'
+                    },
+                }]
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
             }
@@ -95,11 +126,11 @@
                     this.chartOptions()
                 }
             },
-            allQueues() {
+            allQueues () {
                 this.chartOptions()
             }
         },
-        mounted() {
+        mounted () {
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }

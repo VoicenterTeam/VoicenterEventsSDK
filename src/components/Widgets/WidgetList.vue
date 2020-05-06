@@ -6,7 +6,6 @@
         <div :class="getWidgetClass(widget)"
              :key="widget.WidgetID"
              :style="getStyles(widget)"
-             class="px-2"
              v-for="widget in widgets">
             <WidgetErrorBoundary>
                 <Widget :editable="editable"
@@ -83,7 +82,7 @@
             },
             getWidgetClass (widget) {
                 if (this.isCardWidget(widget)) {
-                    return 'lg:w-auto flex-1'
+                    return 'lg:w-auto flex-1 mx-2'
                 }
 
                 if (!widget.WidgetLayout.widths) {
@@ -91,7 +90,7 @@
                 }
                 let widths = widget.WidgetLayout.widths
 
-                return `${widths.mobile} lg:${widths.desktop} md:${widths.tablet}`
+                return `px-2 ${widths.mobile} lg:${widths.desktop} md:${widths.tablet}`
             },
             getStyles (widget) {
                 if (this.isCardWidget(widget)) {

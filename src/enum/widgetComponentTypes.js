@@ -19,4 +19,5 @@ export default {
     [widgetDataTypes.RICH_TEXT_EDITOR_ID]: 'HtmlWidget',
     [widgetDataTypes.TOTAL_OUTGOING_CALLS]: 'TotalOutgoingCall',
     [widgetDataTypes.CHART_AREA_ID]: 'AreaChart',
+    [widgetDataTypes.RICH_TEXT_EDITOR_LIST]: 'WidgetNoteList',
 }

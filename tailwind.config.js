@@ -5,7 +5,8 @@ module.exports = {
             colors: {
                 primary: {
                     default: 'var(--primary-color)',
-                    100: 'var(--primary-color-opacity)'
+                    100: 'var(--primary-color-opacity)',
+                    200: 'var(--primary-color-opacity-200)'
                 },
                 gray: {
                     ...defaultTheme.colors.gray,
@@ -33,6 +34,9 @@ module.exports = {
             },
             minWidth: {
                 16: '4rem'
+            },
+            maxWidth: {
+                ...defaultTheme.maxWidth
             },
             spacing: {
                 '0-5': ' 0.125rem;',

@@ -49,6 +49,16 @@
                         </el-slider>
                     </el-form-item>
                     <el-form-item class="pb-4">
+                        <label>{{$t('widgetGroupTitles.font.size')}}</label>
+                        <el-slider
+                            :min="titleFontSizes.min"
+                            :max="titleFontSizes.max"
+                            :marks="titleBestOptions"
+                            v-model="settings.widgetGroupTitlesFontSize"
+                            show-input>
+                        </el-slider>
+                    </el-form-item>
+                    <el-form-item class="pb-4">
                         <label>{{$t('widgetTitles.font.size')}}</label>
                         <el-slider
                                 :min="titleFontSizes.min"
@@ -250,6 +260,9 @@
                 }
                 if (!this.settings.widgetTitlesFontSize) {
                     this.$set(this.settings, 'widgetTitlesFontSize', defaultSettings.widgetTitlesFontSize)
+                }
+                if (!this.settings.widgetGroupTitlesFontSize) {
+                    this.$set(this.settings, 'widgetGroupTitlesFontSize', defaultSettings.widgetGroupTitlesFontSize)
                 }
                 if (this.settings.showWidgetTitles === undefined) {
                     this.$set(this.settings, 'showWidgetTitles', defaultSettings.showWidgetTitles)

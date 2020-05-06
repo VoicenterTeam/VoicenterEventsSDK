@@ -5,6 +5,10 @@ export const callStatuses = {
     HOLD: 101,
 }
 
+export const otherStatuses = {
+    AT_WORK: 102,
+}
+
 export default {
     1: {
         icon: "IconLogin",
@@ -71,5 +75,12 @@ export default {
         color: colors.HOLD_COLOR,
         text: 'status.hold',
         value: 101
+    },
+    102: {
+        icon: 'IconAtWork',
+        color: colors.LIGHT_GREEN,
+        text: 'status.atWork',
+        value: 102
+
     }
 }

@@ -7,6 +7,7 @@ import authMiddleware from './middleware/authMiddleware'
 import {Notification, MessageBox} from 'element-ui';
 import './registerServiceWorker'
 import i18n from './i18n'
+import initRealTimeSdk from "@/plugins/initRealTimeSdk";
 
 Vue.config.productionTip = false
 
@@ -22,3 +23,8 @@ new Vue({
     i18n,
     render: h => h(App)
 }).$mount('#app')
+
+
+initRealTimeSdk().then(() => {
+    console.log('Real time SDK Initialized')
+})

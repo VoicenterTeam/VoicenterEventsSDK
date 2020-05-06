@@ -16,6 +16,6 @@ export default {
     RICH_TEXT_EDITOR_ID: 16,
     TOTAL_OUTGOING_CALLS: 17,
     CHART_AREA_ID: 18,
-
+    RICH_TEXT_EDITOR_LIST: 19,
     INFO_TYPE_ID: 222,
 }

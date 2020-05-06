@@ -1,5 +1,4 @@
-import i18n from "@/i18n";
-import colors from "@/enum/colors";
+import colors from '@/enum/colors'
 
 export const ADDITIONAL_DATA_KEY = 'ExitCounts'
 export const TOTAL_CALLS_KEY = 'CallCount'
@@ -297,15 +296,16 @@ export const statistics = Object.values(allStatistics)
 
 export const activitiesToDisplay = [
     {
+        key: 'AnswerCount',
+        value: 'AnswerCount',
+    },
+    {
         key: 'InSLACount',
         value: 'InSLACount',
     },
-    {
-        key: 'AnswerCount',
-        value: 'AnswerCount',
-    }
+
 ]
 
 export const queueActivities = [
-    'InSLACount', 'AnswerCount'
+    'AnswerCount', 'InSLACount'
 ]

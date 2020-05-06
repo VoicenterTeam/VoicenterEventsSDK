@@ -1,10 +1,10 @@
 <template>
     <div>
         <base-wrapper
-            :cardIcon="null"
+            :cardIcon="cardIcon"
             :cardText="model.Title"
             :cardValue="cardValue"
-            :layoutWidth="layoutWidth"
+            :layoutConfig="layoutConfig"
             :showText="showText"
             :styles="getCardStyles"
             @show-modal="onShowModal"
@@ -12,6 +12,7 @@
             v-on="$listeners"
         />
         <update-dialog
+            :layoutConfig="layoutConfig"
             :model="model"
             :visible.sync="showModal"
             @on-change="onChange"
@@ -25,51 +26,57 @@
                         </div>
                     </el-form-item>
                     <el-form-item>
-                        <el-checkbox v-model="displayCardText">
-                            {{$t('status.show.text')}}
-                        </el-checkbox>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-checkbox v-model="displayCardBorder">
-                            {{$t('status.display.border')}}
-                        </el-checkbox>
+                        <div class="py-2 flex">
+                            <el-checkbox v-model="displayCardText">
+                                {{$t('status.show.text')}}
+                            </el-checkbox>
+                            <el-checkbox class="px-4" v-model="displayCardBorder">
+                                {{$t('status.display.border')}}
+                            </el-checkbox>
+                        </div>
                     </el-form-item>
                 </el-form>
             </template>
-            <template v-slot:width>
-                <label class="pt-3 pb-2">{{$t('Widget max width')}}</label>
-                <el-input type="number" v-model="layoutWidth.maxWidth"/>
-                <label class="pt-3 pb-2">{{$t('Widget min width')}}</label>
-                <el-input type="number" v-model="layoutWidth.minWidth"/>
-            </template>
             <template v-slot:additional-data>
-                <div v-if="autoCompletes.length || otherFilters.length">
-                    <div class="flex items-center justify-between text-main-base">
-                        {{$t('tooltip.refresh.entities.list')}}
-                        <RefreshButton
-                            :disabled="loadEntitiesList"
-                            :loading="loadEntitiesList"
-                            @click.native="refreshEntitiesList"/>
-                    </div>
-                    <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
-                        <el-collapse-item :title="$t('settings.filters')" name="filters">
-                            <auto-complete
-                                :key="index"
-                                :model="model.WidgetConfig[index]"
-                                v-for="(filter, index) in model.WidgetConfig"
-                                v-if="isAutoComplete(filter)"/>
-                        </el-collapse-item>
-                    </el-collapse>
-                    <el-collapse class="pt-4" v-if="otherFilters.length" v-model="activeCollapse">
-                        <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
-                            <other-filters
-                                :key="index"
-                                :model="model.WidgetConfig[index]"
-                                v-for="(filter, index) in model.WidgetConfig"
-                                v-if="isOtherFilters(filter)"/>
-                        </el-collapse-item>
-                    </el-collapse>
+                <time-frame
+                    :model="model"
+                    :timeFrameType="model.WidgetTime.type"
+                    :widgetTimeOptions="widgetTimeOptions"
+                    v-if="model && model.WidgetTime">
+                    <template v-slot:frame-types>
+                        <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
+                            <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
+                                      v-for="widgetTimeType in widgetTimeTypes">
+                                {{$t(widgetTimeType.text)}}
+                            </el-radio>
+                        </el-radio-group>
+                    </template>
+                </time-frame>
+                <div class="flex items-center justify-between text-main-base" v-if="autoCompletes.length">
+                    {{$t('tooltip.refresh.entities.list')}}
+                    <RefreshButton
+                        :disabled="loadEntitiesList"
+                        :loading="loadEntitiesList"
+                        @click.native="refreshEntitiesList"/>
                 </div>
+                <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
+                    <el-collapse-item :title="$t('settings.filters')" name="filters">
+                        <auto-complete
+                            :key="index"
+                            :model="model.WidgetConfig[index]"
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isAutoComplete(filter)"/>
+                    </el-collapse-item>
+                </el-collapse>
+                <el-collapse class="pt-4" v-if="otherFilters.length" v-model="activeCollapse">
+                    <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
+                        <other-filters
+                            :key="index"
+                            :model="model.WidgetConfig[index]"
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isOtherFilters(filter)"/>
+                    </el-collapse-item>
+                </el-collapse>
             </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
@@ -84,17 +91,24 @@
     import UpdateDialog from './UpdateDialog'
     import RefreshButton from '@/components/RefreshButton'
     import {getWidgetData} from '@/services/widgetService'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
-    import {Checkbox, Collapse, CollapseItem, Tooltip} from 'element-ui'
+    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
+    import {Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip} from 'element-ui'
+    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
+    import cardWidgetMixin from '@/mixins/cardWidgetMixin'
+    import TimeFrame from "@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame";
 
     export default {
+        mixins: [cardWidgetMixin],
         components: {
+            TimeFrame,
             OtherFilters,
             AutoComplete,
             UpdateDialog,
             RefreshButton,
+            [Radio.name]: Radio,
+            [RadioGroup.name]: RadioGroup,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
@@ -113,35 +127,9 @@
                 type: Boolean,
                 default: true
             },
-        },
-        computed: {
-            getCardStyles () {
-                let widget = this.model
-
-                let styles = {
-                    color: {
-                        'color': widget.colors.fonts
-                    },
-                    'background': widget.colors.background,
-                    'min-width': `${this.layoutWidth.minWidth}px`,
-                    'max-width': `${this.layoutWidth.maxWidth}px`,
-                }
-
-                if (this.displayBorder) {
-                    styles = {
-                        ...styles,
-                        ...{
-                            'border': `2px solid ${widget.colors.frames}`,
-                        }
-                    }
-                }
-                return styles
-            },
-            autoCompletes () {
-                return this.data.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
-            },
-            otherFilters () {
-                return this.data.WidgetConfig.filter(c => c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
+            cardIcon: {
+                type: String,
+                default: 'IconTotalOutgoingCalls'
             },
         },
         data () {
@@ -150,14 +138,24 @@
                 cardValue: null,
                 DATA_KEY: 'Total Outgoing Calls',
                 showModal: false,
-                layoutWidth: {},
+                layoutConfig: {},
                 displayCardText: this.showText,
                 displayCardBorder: this.displayBorder,
                 model: {},
                 AUTO_COMPLETE_PARAMETER_TYPE: 6,
                 loadEntitiesList: false,
                 activeCollapse: 'filters',
+                widgetTimeTypes,
+                widgetTimeOptions,
             }
+        },
+        computed: {
+            autoCompletes () {
+                return this.data.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
+            },
+            otherFilters () {
+                return this.data.WidgetConfig.filter(c => c.ParameterType && c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
+            },
         },
         methods: {
             get,
@@ -186,20 +184,30 @@
                 } catch (e) {
                 }
 
+                if (this.model.WidgetTime.type === 'relative') {
+                    let widgetTime = widgetTimeOptions.find((el) => el.datedeff === this.model.WidgetTime.datedeff)
+                    this.model.WidgetTime = {
+                        ...this.model.WidgetTime,
+                        ...widgetTime
+                    }
+                }
+
                 let data = {
                     showText: this.displayCardText,
                     displayBorder: this.displayCardBorder,
                 }
 
-                this.model.WidgetLayout = {
-                    ...this.model.WidgetLayout,
+                this.data.WidgetLayout = {
+                    ...this.data.WidgetLayout,
                     ...data,
-                    ...this.layoutWidth,
-                    colors: this.model.colors
-                }
+                    ...this.layoutConfig,
+                    colors: this.model.colors,
 
-                delete this.model.colors
-                this.$emit('on-update', this.model);
+                };
+
+                this.data.WidgetTime = this.model.WidgetTime
+
+                this.$emit('on-update', this.data);
                 this.showModal = false;
             },
             async refreshEntitiesList () {
@@ -220,10 +228,6 @@
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
             }
-            this.layoutWidth = {
-                maxWidth: this.data.WidgetLayout['maxWidth'] || '400',
-                minWidth: this.data.WidgetLayout['minWidth'] || '250'
-            }
         },
         watch: {
             data: {
@@ -231,7 +235,7 @@
                 handler: function (widget) {
                     this.getWidgetData()
                     this.model = cloneDeep(widget)
-                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultColors)
+                    this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
                 }
             }
         },

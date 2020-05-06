@@ -1,16 +1,17 @@
 import $axios from './apiConnection'
 import parseCatch from '@/helpers/handleErrors'
 
+const SUCCESS_STATUS = 'OK'
+
 export const WidgetApi = {
-    async find(id) {
+    async find (id) {
         try {
-            let res = await $axios.get(`/Widgets/Get/${id}`)
-            return res
+            return await $axios.get(`/Widgets/Get/${id}`)
         } catch (e) {
             parseCatch(e, true, 'Find Widget')
         }
     },
-    async update(data) {
+    async update (data) {
         try {
             if (!data.WidgetTime) {
                 data.WidgetTime = {}
@@ -18,21 +19,32 @@ export const WidgetApi = {
             if (data.Order === null) {
                 data.Order = 0
             }
-            return await $axios.post(`/Widgets/Update/`, data)
+
+            let result = await $axios.post(`/Widgets/Update/`, data)
+            return parseCustomErrorMessage(result, 'Update Widget')
         } catch (e) {
             parseCatch(e, true, 'Update Widget')
         }
     },
 
-    async store(data) {
+    async store (data) {
         try {
-            return await $axios.post('/Widgets/Add/', data)
+            let result = await $axios.post('/Widgets/Add/', data)
+            return parseCustomErrorMessage(result, 'Add Widget')
         } catch (e) {
             parseCatch(e, true, 'Add Widget')
         }
     },
 
-    destroy(widgetId) {
+    destroy (widgetId) {
         return $axios.post(`/Widgets/Delete/${widgetId}`)
     }
+}
+
+function parseCustomErrorMessage (result, prefixMessage) {
+    if (typeof result === 'string' && result !== SUCCESS_STATUS) {
+        let apiError = {message: result}
+        parseCatch(apiError, true, prefixMessage)
+    }
+    return result
 }
