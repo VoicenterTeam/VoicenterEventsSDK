@@ -126,6 +126,7 @@
     import ManageColumns from './ManageColumns'
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
+    import {makeRandomID} from "@/helpers/util";
 
     const EXPORT_TO = {
         'XLSX': '.xlsx',
@@ -175,6 +176,7 @@
             },
         },
         data () {
+            const tableId = makeRandomID()
             return {
                 visibleColumns: cloneDeep(this.showColumns),
                 availableColumns: cloneDeep(this.columns),
@@ -183,7 +185,7 @@
                 fitWidth: true,
                 drawTable: true,
                 EXPORT_TO,
-                tableId: null
+                tableId,
             }
         },
         computed: {
@@ -294,7 +296,6 @@
         },
         mounted () {
             this.tryInitSortable()
-            this.tableId = Math.random()
         }
     }
 </script>
