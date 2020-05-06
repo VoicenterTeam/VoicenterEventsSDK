@@ -1,6 +1,6 @@
 <template>
     <div :style="styles"
-         class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4 overflow-y-scroll">
+         class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4">
         <div :class="{'flex-col': isVertical}"
              class="w-full flex items-center justify-center">
             <slot name="icon">
