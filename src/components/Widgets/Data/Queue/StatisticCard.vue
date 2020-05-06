@@ -5,7 +5,7 @@
             <div class="flex flex-col w-full items-center justify-between">
                 <slot name="label">
                     <div class="flex">
-                        <h5 class="text-2xl font-bold mx-1" v-if="item.layout.showText">
+                        <h5 :style="getTextFontSize" class="font-bold mx-1" v-if="item.layout.showText">
                             {{$t(item.label) || item.label}}
                         </h5>
                     </div>
@@ -13,7 +13,7 @@
                 <slot name="value">
                     <div class="flex items-center">
                         <span class="text-xl px-1" v-if="item.showAbsoluteNumbers">({{item.count}})</span>
-                        <h2 class="text-4xl font-bold -my-2">
+                        <h2 :style="getValueFontSize" class="font-bold -my-2">
                             {{formatItemValue}}
                         </h2>
                     </div>
@@ -23,6 +23,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import {EditIcon} from 'vue-feather-icons'
     import {Checkbox, Tooltip} from 'element-ui'
     import {timeFormatter} from "@/helpers/timeFormatter";
@@ -41,8 +42,24 @@
                 type: Object,
                 default: () => ({})
             },
+            widget: {
+                type: Object,
+                default: () => ({})
+            },
         },
         computed: {
+            getTextFontSize () {
+                const fontSize = get(this.widget, 'WidgetLayout.titleFontSize', '24')
+                return {
+                    'font-size': `${fontSize}px`
+                }
+            },
+            getValueFontSize () {
+                const fontSize = get(this.widget, 'WidgetLayout.valueFontSize', '36')
+                return {
+                    'font-size': `${fontSize}px`
+                }
+            },
             getCardStyles () {
                 let item = this.item
 

@@ -17,14 +17,16 @@
                     <statistic-card
                         v-if="displayCounter(item)"
                         @on-change="(data) => onChange(data, item)"
-                        :item="item"
+                        :item="getItemValue(item)"
+                        :widget="data"
                     />
                 </div>
                 <div v-for="item in queueStatistics[PERCENTAGE_TYPE]">
                     <statistic-card
                         v-if="displayCounter(item)"
                         @on-change="(data) => onChange(data, item)"
-                        :item="getItem(item)"
+                        :item="getItemInPercentage(item)"
+                        :widget="data"
                     />
                 </div>
                 <div v-if="showSumOfOthers" class="statistic-card"
@@ -73,6 +75,7 @@
                 PERCENTAGE_TYPE,
                 PRIMARY_TYPE,
                 TOTAL_CALLS_KEY,
+                primaryCountersInPercentage: ['InSLACount', 'NotInSLACount']
             }
         },
         computed: {
@@ -114,7 +117,13 @@
 
                 return `<div class="text-2xl px-2">${OTHER_STATISTIC_LABEL}</div><div class="text-3xl">${percentageText} %</div>`
             },
-            getItem(item) {
+            getItemValue(item) {
+                if (!this.primaryCountersInPercentage.includes(item.key)) {
+                    return item
+                }
+                return this.getItemInPercentage(item)
+            },
+            getItemInPercentage(item) {
                 let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY] || 1
                 let count = item.value || 0
                 let percentage = `${((count * 100) / totalCalls).toFixed(2)} %`

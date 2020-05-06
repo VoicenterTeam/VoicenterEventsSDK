@@ -93,6 +93,28 @@
             </el-form-item>
             <el-collapse class="pt-4" v-model="activeCollapse">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
+                    <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
+                        <div class="py-4">
+                            <label>{{$t('Card title font size')}}</label>
+                            <el-slider
+                                :marks="cardTitleBestOptions"
+                                :max="cardTitleFontSizes.max"
+                                :min="cardTitleFontSizes.min"
+                                show-input
+                                v-model="model.WidgetLayout.titleFontSize">
+                            </el-slider>
+                        </div>
+                        <div class="py-4">
+                            <label>{{$t('Card value font size')}}</label>
+                            <el-slider
+                                :marks="cardValueBestOptions"
+                                :max="cardValueFontSizes.max"
+                                :min="cardValueFontSizes.min"
+                                show-input
+                                v-model="model.WidgetLayout.valueFontSize">
+                            </el-slider>
+                        </div>
+                    </el-form-item>
                     <el-form-item class="pb-8" v-if="isPieWidget(widget) || isQueueGauge(widget)">
                         <label>{{$t('Status label font size')}}</label>
                         <el-slider
@@ -270,6 +292,29 @@
                     40: '40px',
                     48: '48px',
                     56: '56px',
+                },
+                cardTitleFontSizes: {
+                    min: 12,
+                    max: 64
+                },
+                cardTitleBestOptions: {
+                    16: '16px',
+                    24: '24px',
+                    32: '32px',
+                    48: '48px',
+                    56: '56px',
+                },
+                cardValueFontSizes: {
+                    min: 24,
+                    max: 128
+                },
+                cardValueBestOptions: {
+                    32: '32px',
+                    48: '48px',
+                    64: '64px',
+                    80: '80px',
+                    96: '96px',
+                    112: '112px',
                 },
             }
         },
