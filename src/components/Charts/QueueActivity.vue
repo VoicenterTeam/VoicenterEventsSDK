@@ -214,7 +214,7 @@
             }
         },
         watch: {
-            data: {
+            statisticCounts: {
                 deep: true,
                 immediate: true,
                 handler: function () {
