@@ -115,6 +115,10 @@ export function isQueueActiveCall (widget) {
     return widget.DataTypeID === widgetDataTypes.QUEUE_ACTIVE_CALL;
 }
 
+export function isAreaChartWidget (widget) {
+    return widget.DataTypeID === widgetDataTypes.CHART_AREA_ID;
+}
+
 export const groupedWidgets = [
     widgetDataTypes.COUNTER_TYPE_ID,
     widgetDataTypes.CHART_SPEEDOMETER,

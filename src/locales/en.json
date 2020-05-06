@@ -67,6 +67,8 @@
     "widget.settings.color.fonts": "Text",
     "widget.settings.color.background": "Background",
     "widget.settings.color.frames": "Border",
+    "widget.settings.color.outgoing": "Outgoing Area",
+    "widget.settings.color.incoming": "Incoming Area",
     "settings.color.widgetGroupBackground": "Widget Group Backgrounds",
     "settings.color.widgetGroupFrames": "Widget Group Borders",
     "settings.color.widgetGroupTitles": "Widget Group Titles",

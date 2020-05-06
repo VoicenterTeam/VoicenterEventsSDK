@@ -118,11 +118,11 @@
                     <el-form-item class="pb-8" v-if="isPieWidget(widget) || isQueueGauge(widget)">
                         <label>{{$t('Status label font size')}}</label>
                         <el-slider
-                            :min="textFontSizes.min"
-                            :max="textFontSizes.max"
                             :marks="textSizeBestOptions"
-                            v-model="model.WidgetLayout.labelFontSize"
-                            show-input>
+                            :max="textFontSizes.max"
+                            :min="textFontSizes.min"
+                            show-input
+                            v-model="model.WidgetLayout.labelFontSize">
                         </el-slider>
                     </el-form-item>
                     <el-form-item>
@@ -138,7 +138,7 @@
                     <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
-                    <widget-colors :model="model"/>
+                    <widget-colors :availableColors="availableColors" :model="model"/>
                 </el-collapse-item>
             </el-collapse>
             <el-form-item v-if="isPieWidget(widget)">
@@ -171,10 +171,10 @@
             <div class="flex items-center text-main-base" v-if="autoCompletes.length">
                 {{$t('tooltip.refresh.entities.list')}}
                 <RefreshButton
-                    class="mx-2"
                     :disabled="loadEntitiesList"
                     :loading="loadEntitiesList"
-                    @click.native="refreshEntitiesList"/>
+                    @click.native="refreshEntitiesList"
+                    class="mx-2"/>
             </div>
             <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
                 <el-collapse-item :title="$t('settings.filters')" name="filters">
@@ -219,9 +219,10 @@
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
-    import {defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
+    import {defaultAreaChartColors, defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
     import {statistics} from '@/enum/queueDashboardStatistics'
     import {
+        isAreaChartWidget,
         isHtmlWidget,
         isMultiQueuesDashboard,
         isPieWidget,
@@ -234,6 +235,7 @@
         isRealtimeWidget,
     } from '@/helpers/widgetUtils'
     import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
+    import {areaChartWidgetColors, defaultWidgetColors} from "@/enum/layout";
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -319,6 +321,12 @@
             }
         },
         computed: {
+            availableColors () {
+                if (!isAreaChartWidget(this.widget)) {
+                    return defaultWidgetColors
+                }
+                return areaChartWidgetColors
+            },
             rules () {
                 if (isRealtimeWidget(this.widget)) {
                     return realTimeWidgetRules(this.model)
@@ -404,6 +412,10 @@
             this.model = cloneDeep(this.widget)
 
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
+
+            if (isAreaChartWidget(this.widget)) {
+                this.model.colors = {...defaultAreaChartColors, ...this.model.WidgetLayout.colors}
+            }
 
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
