@@ -63,8 +63,6 @@
                         this.outgoingAreaColor,
                     ]
 
-                    console.log(this.chartOptions['colors'])
-
                     this.chartVisibility = false
                     this.$nextTick(() => {
                         this.chartVisibility = true
