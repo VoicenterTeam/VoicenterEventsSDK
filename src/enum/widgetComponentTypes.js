@@ -18,5 +18,6 @@ export default {
     [widgetDataTypes.PIE_TYPE_ID]: 'PieChart',
     [widgetDataTypes.RICH_TEXT_EDITOR_ID]: 'HtmlWidget',
     [widgetDataTypes.TOTAL_OUTGOING_CALLS]: 'TotalOutgoingCall',
-    [widgetDataTypes.RICH_TEXT_EDITOR_LIST]: 'WidgetNoteList'
+    [widgetDataTypes.CHART_AREA_ID]: 'AreaChart',
+    [widgetDataTypes.RICH_TEXT_EDITOR_LIST]: 'WidgetNoteList',
 }
