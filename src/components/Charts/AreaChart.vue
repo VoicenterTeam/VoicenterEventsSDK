@@ -43,12 +43,27 @@
                 chartOptions: {},
             }
         },
+        computed: {
+            outgoingAreaColor() {
+                return get(this.data.WidgetLayout,'colors.outgoing', '#61B5FE')
+            },
+            incomingAreaColor() {
+                return get(this.data.WidgetLayout,'colors.incoming', '#49CA6D')
+            },
+        },
         methods: {
             async getWidgetData() {
                 try {
 
                     let Data = await getWidgetData(this.data)
                     this.chartOptions = get(Data, '0', {})
+
+                    this.chartOptions['colors'] = [
+                        this.incomingAreaColor,
+                        this.outgoingAreaColor,
+                    ]
+
+                    console.log(this.chartOptions['colors'])
 
                     this.chartVisibility = false
                     this.$nextTick(() => {

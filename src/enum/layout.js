@@ -15,11 +15,16 @@ export const settingsColors = [
     'widgetGroupTitles'
 ];
 
-export const widgetColors = [
+export const defaultWidgetColors = [
     "background",
     "frames",
     "fonts",
 ];
+ export const areaChartWidgetColors = [
+     ...defaultWidgetColors,
+     "outgoing",
+     "incoming"
+ ];
 
 export const predefinedColors = [
     '#F7FAFC',

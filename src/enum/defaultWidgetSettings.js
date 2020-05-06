@@ -14,6 +14,12 @@ export const defaultColors = {
     fonts: '#000000'
 }
 
+export const defaultAreaChartColors = {
+    ...defaultColors,
+    outgoing: '#61B5FE',
+    incoming: '#49CA6D',
+}
+
 export const defaultCardColors = {
     background: "white",
     frames: "#000000",

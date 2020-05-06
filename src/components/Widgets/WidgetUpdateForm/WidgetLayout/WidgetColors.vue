@@ -15,7 +15,8 @@
     import uniq from 'lodash/uniq'
     import values from 'lodash/values'
     import ColorPicker from '@/components/Common/ColorPicker'
-    import {widgetColors} from '@/enum/layout'
+    import {defaultWidgetColors} from "@/enum/layout";
+
 
     const BACKGROUND_COLOR_KEY = ["background"];
 
@@ -31,7 +32,11 @@
             onlyBackground: {
                 type: Boolean,
                 default: false
-            }
+            },
+            availableColors: {
+                type: Array,
+                default: () => defaultWidgetColors
+            },
         },
         computed: {
             predefinedColors() {
@@ -42,7 +47,7 @@
                 if (this.onlyBackground) {
                     return BACKGROUND_COLOR_KEY
                 }
-                return widgetColors
+                return this.availableColors
             }
         }
     }
