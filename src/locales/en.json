@@ -648,5 +648,7 @@
     "Card title font size": "Card title font size",
     "Card value font size": "Card value font size",
     "Status label font size": "Status label font size",
-    "Widget minimum height should be 200px": "Widget minimum height should be 200px"
+    "Widget minimum height should be 200px": "Widget minimum height should be 200px",
+    "This widget is displaying a partial list because of permissions issues.": "This widget is displaying a partial list because of permissions issues.",
+    "The following IDs were not displayed are": "The following IDs were not displayed are"
 }
