@@ -34,7 +34,7 @@
                       :key="tableKey"
                       :style="customStyle"
                       class="rounded-lg"
-                      id="table"
+                      :id="tableId"
                       ref="table"
                       row-key="id"
                       v-bind="$attrs"
@@ -126,6 +126,7 @@
     import ManageColumns from './ManageColumns'
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
+    import {makeRandomID} from "@/helpers/util";
 
     const EXPORT_TO = {
         'XLSX': '.xlsx',
@@ -175,6 +176,7 @@
             },
         },
         data () {
+            const tableId = makeRandomID()
             return {
                 visibleColumns: cloneDeep(this.showColumns),
                 availableColumns: cloneDeep(this.columns),
@@ -182,7 +184,8 @@
                 active: false,
                 fitWidth: true,
                 drawTable: true,
-                EXPORT_TO
+                EXPORT_TO,
+                tableId,
             }
         },
         computed: {
@@ -278,8 +281,9 @@
             },
             exportTableData (exportTo) {
                 let fileName = this.getFileName(exportTo)
+                const tableId = this.tableId
                 // export Excel file
-                let tableElement = document.getElementById('table');
+                let tableElement = document.getElementById(tableId);
                 let excelWorkBook = XLSX.utils.table_to_book(tableElement);
                 XLSX.writeFile(excelWorkBook, fileName)
             }
