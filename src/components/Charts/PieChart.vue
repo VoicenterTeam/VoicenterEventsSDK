@@ -19,6 +19,7 @@
     import statusTypes from '@/enum/statusTypes'
     import {isExternalDataWidget} from '@/helpers/widgetUtils'
     import extensionMixin from '@/mixins/extensionMixin'
+    import {LOGOUT_STATUS} from "@/enum/extensionStatuses";
 
     export default {
         mixins: [extensionMixin],
@@ -47,7 +48,15 @@
         computed: {
             getLabelFontSize() {
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
-            }
+            },
+            filteredExtensions() {
+                let hideLoggedOutUsers = get(this.data.WidgetLayout, 'hideLoggedOutUsers')
+
+                if (hideLoggedOutUsers) {
+                    return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
+                }
+                return this.extensions
+            },
         },
         methods: {
             async chartOptions () {
@@ -140,7 +149,7 @@
             getExtensionsData () {
                 let data = []
                 let statusData = []
-                let extensions = this.extensions
+                let extensions = this.filteredExtensions
 
                 if (extensions) {
                     statusData = groupBy(extensions, 'representativeStatus')
