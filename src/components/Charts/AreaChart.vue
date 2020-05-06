@@ -5,7 +5,7 @@
                 {{data.Title}}
             </p>
         </div>
-        <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility && chartOptions.series">
+        <div class="rounded-lg pt-2" v-if="chartVisibility">
             <highcharts class="chart-content_wrapper"
                         :options="chartOptions"/>
         </div>
