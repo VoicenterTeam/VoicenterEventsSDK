@@ -29,7 +29,7 @@ export const settings = {
     },
     showWidgetAsTabs: false,
     showWidgetTitles: true,
-    fontSize: defaultFontSize,
+    fontSize: 16,
     widgetTitlesFontSize: 22,
     widgetGroupTitlesFontSize: 22,
     minRefreshInterval: 10,
