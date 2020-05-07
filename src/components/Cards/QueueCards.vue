@@ -25,13 +25,13 @@
                             <el-form-item :label="$t('queues.to.display')" class="font-bold">
                                 <base-select
                                     :class="$rtl.isRTL ? 'lg:pl-2' : 'lg:pr-2'"
-                                    :data="allQueues"
+                                    :data="allEntityQueues"
                                     collapse-tags
                                     filterable
-                                    label-key="QueueName"
+                                    label-key="q_name"
                                     multiple
                                     v-model="selectedQueues"
-                                    value-key="QueueID">
+                                    value-key="queue_id">
                                 </base-select>
                             </el-form-item>
                         </div>
@@ -80,6 +80,7 @@
     import {getInitialTime} from '@/util/timeUtils'
     import Timer from "@/util/Timer";
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
+    import {getOptionsList} from "@/helpers/entitiesList";
 
     export default {
         mixins: [queueMixin, cardWidgetMixin],
@@ -130,6 +131,9 @@
             }
         },
         computed: {
+            allEntityQueues() {
+                return getOptionsList('{|queue_list|}')
+            },
             filteredQueue () {
                 return this.allQueues.filter(e => this.selectedQueues.includes(e.QueueID))
             },
@@ -221,7 +225,7 @@
             'allQueueCalls.length'() {
                 this.setCounterState()
             }
-        }
+        },
     }
 </script>
 <style lang="scss" scoped>
