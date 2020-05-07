@@ -2,7 +2,7 @@
     <div>
         <base-wrapper
             :cardIcon="cardIcon"
-            :cardText="model.Title"
+            :cardText="data.Title"
             :cardValue="cardValue"
             :layoutConfig="layoutConfig"
             :showText="showText"
@@ -206,6 +206,8 @@
                 };
 
                 this.data.WidgetTime = this.model.WidgetTime
+                this.data.WidgetConfig = this.model.WidgetConfig
+                this.data.Title = this.model.Title
 
                 this.$emit('on-update', this.data);
                 this.showModal = false;
