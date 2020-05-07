@@ -8,6 +8,10 @@ export function getOptionsList (ParameterName) {
 
     let options = store.getters['entities/getEntityList'](EntitiesListKey)
 
+    if (!options) {
+        return []
+    }
+
     options = options.filter(object => {
         return Object.keys(object).every(field => {
             if (object[field]) {
@@ -16,7 +20,7 @@ export function getOptionsList (ParameterName) {
             return false;
         })
     })
-    
+
     return options
 }
 

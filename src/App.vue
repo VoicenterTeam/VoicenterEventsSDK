@@ -13,9 +13,9 @@
             NetworkStatusAlert
         },
         async created() {
+            await this.$store.dispatch('entities/getEntitiesList')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
             await this.$store.dispatch('dashboards/getDashboards')
-            await this.$store.dispatch('entities/getEntitiesList')
             this.$store.dispatch('dashboards/selectDashboard')
             this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
         },

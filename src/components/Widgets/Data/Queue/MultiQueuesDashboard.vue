@@ -102,6 +102,7 @@
     import MaxWaitTime from "./MaxWaitTime";
     import {mapOrder} from "@/helpers/util";
     import minBy from 'lodash/minBy'
+    import {getOptionsList} from "@/helpers/entitiesList";
 
     export default {
         name: 'queues-table',
@@ -149,6 +150,7 @@
                 border: true,
                 stripe: false,
                 widget: {},
+                QUEUE_LIST_KEY: '{|queue_list|}',
             }
         },
         computed: {
@@ -175,8 +177,8 @@
                 this.filteredDataLength = tableData.length
                 return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             },
-            allQueues () {
-                return this.$store.state.queues.all
+            allEntityQueues () {
+                return getOptionsList(`${this.QUEUE_LIST_KEY}`)
             },
             displayQueueAsColumn () {
                 return get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
@@ -201,11 +203,19 @@
 
                 return this.visibleColumns
             },
-            allQueueCalls() {
+            allQueueCalls () {
                 return this.$store.getters['queues/allQueueCalls']
             },
+            selectedQueues () {
+                try {
+                    const queueListConfig = this.data.WidgetConfig.filter((config) => config.ParameterName === this.QUEUE_LIST_KEY)
+                    return get(queueListConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
+                } catch (e) {
+                    return []
+                }
+            },
             queueWithActiveCalls () {
-                 return this.$store.getters['queues/queueWithActiveCalls']
+                return this.$store.getters['queues/queueWithActiveCalls']
             },
             queueWithOldestCall () {
                 const allCalls = []
@@ -225,8 +235,9 @@
                 if (queueID === 'All' || queueID === 'Stat type') {
                     return queueID
                 }
-                let queue = this.allQueues.filter((queue) => queue.QueueID === Number(queueID))
-                return get(queue, '[0].QueueName', '--')
+
+                let queue = this.allEntityQueues.filter((queue) => queue.queue_id === Number(queueID))
+                return get(queue, '[0].q_name', '--')
             },
             getCellStyle ({row, column}) {
                 let color = get(queueDashboardColumnStyles[column.property], 'color', 'transparent')
@@ -253,11 +264,31 @@
                     }
 
                     let availableColumns = this.queuesData[0]
-                    let data = this.queuesData
+
+                    let data = [...this.queuesData]
                     let columns = []
 
                     let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
                     let displayQueueAsColumn = this.displayQueueAsColumn
+                    let selectedEntityQueues = this.selectedQueues
+
+                    let queueIDsFromSocket = data.map((queue) => queue.queue_id)
+
+                    selectedEntityQueues.forEach((queueID) => {
+                        if (queueIDsFromSocket.includes(queueID)) {
+                            return
+                        }
+                        let objectToAppend = {
+                            'AvgRingTime': 0,
+                            'CallCount': 0,
+                            'ExitCounts': [],
+                            'InSLACount': 0,
+                            'MaxRingTime': 0,
+                            'NotInSLACount': 0,
+                            'queue_id': Number(queueID)
+                        }
+                        data.push(objectToAppend)
+                    })
 
                     let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn)
 
@@ -301,12 +332,12 @@
             isMaxWaitTimeRealTimeRow (row) {
                 return row['Stat type'] === 'CurrentWaitTime';
             },
-            getQueueTotals(row) {
-                if(row['Stat type'] === 'Callers') {
+            getQueueTotals (row) {
+                if (row['Stat type'] === 'Callers') {
                     return this.allQueueCalls.length
                 }
                 return row['All']
-            }
+            },
         },
         mounted () {
             if (!this.data.WidgetLayout.displayRowWithTotals) {
