@@ -12,7 +12,7 @@
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
             <template v-slot:WaitingTime="{row}">
-                <waiting-time :call="row.Call" :key="row.IvrUniqueID" :textColor="'text-white'"
+                <waiting-time :call="row.Call" :key="row.Call.ivrid" :textColor="'text-white'"
                               v-if="row.Call && drawRow"/>
             </template>
             <template v-slot:title>
