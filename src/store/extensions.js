@@ -78,8 +78,8 @@ const getters = {
         } else {
           extension['representativeStatus'] = callStatuses.CALLING;
         }
-        groupedExtensions.push(extension);
       }
+      groupedExtensions.push(extension);
     });
 
     if (hideLoggedOutUsers) {
@@ -88,7 +88,7 @@ const getters = {
     return groupedExtensions;
   },
   extensionCountByStatus: (state, getters) => status => {
-    return getters.extensionWithCalls.filter(el => el.representativeStatus === status).length || 0
+    return getters.extensionsWithCalls.filter(el => el.representativeStatus === status).length || 0
   }
 }
 

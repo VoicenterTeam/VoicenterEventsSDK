@@ -376,7 +376,7 @@ var getters = {
   },
   extensionCountByStatus: function extensionCountByStatus(state, getters) {
     return function (status) {
-      return getters.extensionWithCalls.filter(function (el) {
+      return getters.extensionsWithCalls.filter(function (el) {
         return el.representativeStatus === status;
       }).length || 0;
     };
