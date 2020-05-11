@@ -2,6 +2,8 @@
     .el-dialog__body {
         padding-top: 0;
         padding-bottom: 0;
+        max-height: 65vh;
+        overflow: auto;
     }
 
     .el-dialog__header {
