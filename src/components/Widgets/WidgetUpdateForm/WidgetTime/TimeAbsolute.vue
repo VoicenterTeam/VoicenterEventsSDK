@@ -44,10 +44,10 @@
         },
         methods: {
             onChange(dates) {
-                let Difference_In_Time = new Date().getTime() - dates[0].getTime()
-                this.model.WidgetTime.datedeff = parseInt(Difference_In_Time / TIME_LINE_TIMESTAMP.DAY)
+                let Difference_In_Time = dates[1].getTime() - dates[0].getTime()
+                this.model.WidgetTime.datedeff = parseInt(Difference_In_Time / TIME_LINE_TIMESTAMP.DAY).toString()
 
-                let _Difference_In_Time = dates[1].getTime() - dates[0].getTime()
+                let _Difference_In_Time = new Date().getTime() - dates[0].getTime()
                 this.model.WidgetTime.Date_interval = parseInt(_Difference_In_Time / TIME_LINE_TIMESTAMP.DAY).toString()
 
             }
