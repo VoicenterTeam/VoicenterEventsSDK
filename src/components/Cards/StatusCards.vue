@@ -132,9 +132,9 @@
             },
             cardValue () {
                 if (this.status === otherStatuses.AT_WORK) {
-                    return this.extensions.filter(el => el.representativeStatus !== LOGOUT_STATUS).length || '0'
+                    return this.extensionWithCalls.filter(el => el.representativeStatus !== LOGOUT_STATUS).length || '0'
                 }
-                return this.extensions.filter(el => el.representativeStatus === this.status).length || '0'
+                return this.extensionWithCalls.filter(el => el.representativeStatus === this.status).length || '0'
             },
             cardIcon () {
                 return statusTypes[this.status].icon
