@@ -147,7 +147,7 @@
                 </el-checkbox>
             </el-form-item>
             <el-form-item>
-                <div v-if="model.WidgetTime && widget.WidgetTime.Date_interval">
+                <div v-if="model.WidgetTime">
                     <time-frame
                         :model="model"
                         :timeFrameType="model.WidgetTime.type"
@@ -363,7 +363,7 @@
                     if (!valid) return;
 
                     if (this.model.WidgetTime.type === 'relative') {
-                        let widgetTime = widgetTimeOptions.find((el) => el.datedeff === this.model.WidgetTime.datedeff)
+                        let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                         this.model.WidgetTime = {
                             ...this.model.WidgetTime,
                             ...widgetTime

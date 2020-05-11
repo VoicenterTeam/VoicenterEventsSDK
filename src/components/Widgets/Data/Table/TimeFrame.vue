@@ -19,8 +19,8 @@
                 let start = new Date()
                 let end = new Date()
 
-                const startDate = get(this.widget, 'WidgetTime.datedeff', 1)
-                const dateInterval = get(this.widget, 'WidgetTime.Date_interval', 1)
+                const startDate = get(this.widget, 'WidgetTime.Date_interval', 0)
+                const dateInterval = get(this.widget, 'WidgetTime.datedeff', 0)
 
                 start.setDate(start.getDate() - startDate)
                 end.setDate(end.getDate() - (startDate - dateInterval))
