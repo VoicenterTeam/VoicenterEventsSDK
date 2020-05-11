@@ -49,14 +49,6 @@
             getLabelFontSize() {
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
             },
-            filteredExtensions() {
-                let hideLoggedOutUsers = get(this.data.WidgetLayout, 'hideLoggedOutUsers')
-
-                if (hideLoggedOutUsers) {
-                    return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
-                }
-                return this.extensions
-            },
         },
         methods: {
             async chartOptions () {
@@ -149,9 +141,9 @@
             getExtensionsData () {
                 let data = []
                 let statusData = []
-                let extensions = this.filteredExtensions
+                let extensions = this.extensionWithCalls
 
-                if (extensions) {
+                if (extensions.length) {
                     statusData = groupBy(extensions, 'representativeStatus')
                 }
 
