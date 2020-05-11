@@ -143,7 +143,7 @@
                 let statusData = []
                 let extensions = this.extensionWithCalls
 
-                if (extensions) {
+                if (extensions.length) {
                     statusData = groupBy(extensions, 'representativeStatus')
                 }
 
