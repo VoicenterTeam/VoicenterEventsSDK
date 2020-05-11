@@ -34,21 +34,22 @@
                 let newDate = new Date()
                 let widgetTime = this.model.WidgetTime
 
-                let startDate = newDate.setDate(newDate.getDate() - parseInt(widgetTime.datedeff));
+                let startDate = newDate.setDate(newDate.getDate() - parseInt(widgetTime.Date_interval));
 
                 newDate = new Date();
-                let endDate = newDate.setDate(newDate.getDate() + (-parseInt(widgetTime.datedeff) + parseInt(widgetTime.Date_interval)))
+                let endDate = newDate.setDate(newDate.getDate() + (-parseInt(widgetTime.Date_interval) + parseInt(widgetTime.datedeff)))
 
                 return [startDate, endDate]
             }
         },
         methods: {
             onChange(dates) {
-                let Difference_In_Time = new Date().getTime() - dates[0].getTime()
+                let Difference_In_Time = dates[1].getTime() - dates[0].getTime()
                 this.model.WidgetTime.datedeff = parseInt(Difference_In_Time / TIME_LINE_TIMESTAMP.DAY).toString()
 
-                let _Difference_In_Time = dates[1].getTime() - dates[0].getTime()
-                this.model.WidgetTime.Date_interval = parseInt(_Difference_In_Time / TIME_LINE_TIMESTAMP.DAY)
+                let _Difference_In_Time = new Date().getTime() - dates[0].getTime()
+                this.model.WidgetTime.Date_interval = parseInt(_Difference_In_Time / TIME_LINE_TIMESTAMP.DAY).toString()
+
             }
         }
     }

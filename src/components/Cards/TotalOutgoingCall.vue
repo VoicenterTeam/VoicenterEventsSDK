@@ -185,7 +185,7 @@
                 }
 
                 if (this.model.WidgetTime.type === 'relative') {
-                    let widgetTime = widgetTimeOptions.find((el) => el.datedeff === this.model.WidgetTime.datedeff)
+                    let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                     this.model.WidgetTime = {
                         ...this.model.WidgetTime,
                         ...widgetTime
