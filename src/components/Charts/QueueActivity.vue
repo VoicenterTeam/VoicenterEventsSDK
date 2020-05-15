@@ -164,7 +164,7 @@
 
                     if (activitiesToDisplay.includes('InSLACount')) {
                         let index = reversedCounts ? 0 : 1
-                        dataLabels[index] = `<span style="font-size: ${InSLACountStyles['fontSize'] + 'px'}; color: ${InSLACountStyles['color']}">${inSLAPercentage}%<br>${this.$t('In SLA')}</span>`
+                        dataLabels[index] = `<span style="font-size: ${InSLACountStyles['fontSize'] + 'px'}; color: ${InSLACountStyles['color']}">${inSLAPercentage}% <label style="font-size: ${InSLACountStyles['fontSize'] - 4}px;">(${CallCount})</label><br>${this.$t('In SLA')}</span>`
                         yMargin += InSLACountStyles['fontSize']
                     }
 
