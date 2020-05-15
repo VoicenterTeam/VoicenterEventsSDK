@@ -120,6 +120,9 @@
     import dataTableMixin from "@/mixins/dataTableMixin";
     import CallsInfo from "./CallsInfo";
 
+    const DATE_FORMAT = 'dd/MM/yyyy'
+    const DATE_TIME_FORMAT = 'HH:mm:ss dd/MM/yyyy'
+
     export default {
         mixins: [dataTableMixin],
         components: {
@@ -242,15 +245,23 @@
 
                     let columns = [];
                     let containsDate = false
-                    let dateColumns = ['date & time', 'date', 'call time', 'contacted time']
+                    let dateColumns = ['date']
+                    let dateTimeColumns = ['date & time', 'call time', 'contacted time']
 
                     if (data.length) {
 
                         for (let column in data[0]) {
+
+                            if (dateTimeColumns.includes(column.toLowerCase())) {
+                                containsDate = true
+                                this.formatDateColumn(data, column, DATE_TIME_FORMAT)
+                            }
+
                             if (dateColumns.includes(column.toLowerCase())) {
                                 containsDate = true
-                                this.formatDateColumn(data, column)
+                                this.formatDateColumn(data, column, DATE_FORMAT)
                             }
+
                             const columnData = {
                                 prop: column,
                                 fixed: false,
@@ -258,10 +269,13 @@
                                 label: this.$t(column) || startCase(column),
                                 className: containsDate ? 'direction-ltr' : ''
                             }
+
                             columns.push(columnData)
+
                             if (column === 'Recording') {
                                 columnData.minWidth = '320px'
                             }
+
                             this.searchableFields.push(column)
                         }
                         if (this.isRealTimeTable) {
@@ -281,12 +295,12 @@
                 } finally {
                 }
             },
-            formatDateColumn (data, column) {
+            formatDateColumn (data, column, dateFormat) {
                 data.forEach(row => {
                     if (row[column]) {
                         try {
                             // To prevent date-fns errors like: Invalid time value
-                            row[column] = format(new Date(row[column]), 'HH:mm:ss dd-MM-yyyy')
+                            row[column] = format(new Date(row[column]), dateFormat)
                         } catch (e) {
                         }
                     }
