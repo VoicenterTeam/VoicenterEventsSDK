@@ -49,6 +49,9 @@
             getLabelFontSize() {
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
             },
+            getDataLabelsColor() {
+                return get(this.data, 'WidgetLayout.dataLabelsColor', '#000000')
+            },
         },
         methods: {
             async chartOptions () {
@@ -100,6 +103,7 @@
                 });
 
                 const labelFontSize  = this.getLabelFontSize
+                const dataLabelsColor = this.getDataLabelsColor
 
                 const series = [{
                     name: this.$t('Agents'),
@@ -107,7 +111,8 @@
                     data: data,
                     dataLabels: {
                         style: {
-                            fontSize: labelFontSize
+                            fontSize: labelFontSize,
+                            color: dataLabelsColor,
                         }
                     },
                 }]

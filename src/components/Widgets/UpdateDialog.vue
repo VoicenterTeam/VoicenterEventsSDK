@@ -115,7 +115,7 @@
                             </el-slider>
                         </div>
                     </el-form-item>
-                    <el-form-item class="pb-8" v-if="isPieWidget(widget) || isQueueGauge(widget)">
+                    <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
                         <label>{{$t('Status label font size')}}</label>
                         <el-slider
                             :marks="textSizeBestOptions"
@@ -124,6 +124,13 @@
                             show-input
                             v-model="model.WidgetLayout.labelFontSize">
                         </el-slider>
+                        <div class="flex flex-row items-center pt-10">
+                            <label>{{$t('Data labels color')}}</label>
+                            <el-color-picker
+                                class="mx-4"
+                                :predefine="predefinedColors"
+                                v-model="model.WidgetLayout.dataLabelsColor"/>
+                        </div>
                     </el-form-item>
                     <el-form-item>
                         <widget-width :model="model"/>
@@ -203,7 +210,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, InputNumber, Radio, RadioGroup, Slider} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, InputNumber, Radio, RadioGroup, Slider, ColorPicker} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import queueMixin from '@/mixins/queueMixin'
     import {allSeries} from '@/enum/queueConfigs'
@@ -236,6 +243,8 @@
     } from '@/helpers/widgetUtils'
     import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
     import {areaChartWidgetColors, defaultWidgetColors} from "@/enum/layout";
+    import values from "lodash/values";
+    import uniq from "lodash/uniq";
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -255,6 +264,7 @@
             [Checkbox.name]: Checkbox,
             [InputNumber.name]: InputNumber,
             [Slider.name]: Slider,
+            [ColorPicker.name]: ColorPicker,
             AutoComplete,
             OtherFilters,
             WidgetColors,
@@ -326,6 +336,10 @@
                     return defaultWidgetColors
                 }
                 return areaChartWidgetColors
+            },
+            predefinedColors () {
+                let options = values(this.$store.getters['dashboards/baseColors'])
+                return uniq(options)
             },
             rules () {
                 if (isRealtimeWidget(this.widget)) {
