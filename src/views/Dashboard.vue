@@ -78,7 +78,8 @@
                 :visible.sync="showReorderDataDialog"
                 :widgetGroupList="activeDashboardData.WidgetGroupList"
                 :width="'50%'"
-                @on-cancel="showReorderDataDialog = false"
+                @on-cancel="triggerReorderDataDialog"
+                @removeWidget="(data) => removeWidget(data.widget, data.group)"
                 @on-submit="reorderWidgetGroup"
                 v-if="showReorderDataDialog"
             />
@@ -414,6 +415,10 @@
                 } catch (e) {
                 }
             },
+            triggerReorderDataDialog() {
+                this.resetDashboard()
+                this.showReorderDataDialog = false
+            }
         },
         watch: {
             dashboard: {
