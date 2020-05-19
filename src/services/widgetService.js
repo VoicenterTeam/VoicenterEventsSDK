@@ -42,7 +42,11 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
         newWidget.WidgetTime = template.DefaultWidgetTime || {}
 
         newWidget = await WidgetApi.store(newWidget)
-        widgets.push(newWidget)
+
+        if (typeof newWidget !== 'string') {
+            widgets.push(newWidget)
+        }
+
     }
     return widgets;
 }
