@@ -1,30 +1,30 @@
 <template>
-    <modal v-bind="$attrs" v-on="$listeners" :append-to-body="true">
-        <h3 slot="title" class="text-main-xl font-medium text-gray-700">{{$t('settings.update.title')}}</h3>
-        <el-form @submit.native.prevent="updateSettings" :rules="rules" ref="settings" :model="settings">
+    <modal :append-to-body="true" v-bind="$attrs" v-on="$listeners">
+        <h3 class="text-main-xl font-medium text-gray-700" slot="title">{{$t('settings.update.title')}}</h3>
+        <el-form :model="settings" :rules="rules" @submit.native.prevent="updateSettings" ref="settings">
             <el-collapse v-model="activeCollapses">
                 <el-collapse-item :title="$t('settings.layout')" name="layout">
                     <el-form-item prop="DashboardTitle">
                         {{$t('dashboards.new.form.title')}}
                         <el-input v-model="DashboardTitle"/>
                     </el-form-item>
-                    <el-form-item prop="logo" class="">
+                    <el-form-item class="" prop="logo">
                         {{$t('dashboards.new.form.logo')}}
                         <div class="image-upload upload-button flex">
-                            <label for="file-input" class="cursor-pointer flex items-center">
+                            <label class="cursor-pointer flex items-center" for="file-input">
                                 <img class="px-2"
                                      src="https://cdn.shopify.com/s/files/1/2065/6315/t/46/assets/UploadIcon.svg"/>
                                 {{$t('Upload Logo')}}
                             </label>
                             <input
-                                id="file-input"
-                                type="file"
+                                @change="onFileChange()"
                                 accept="image/*"
-                                @change="onFileChange()"/>
+                                id="file-input"
+                                type="file"/>
                             <div class="flex items-center" v-if="settings.logoName">
                                 <p class="text-black px-2">{{settings.logoName}} </p>
-                                <trash-icon class="cursor-pointer w-5 h-5 text-red trash-icon"
-                                            @click="removeFile()"/>
+                                <trash-icon @click="removeFile()"
+                                            class="cursor-pointer w-5 h-5 text-red trash-icon"/>
                             </div>
                         </div>
                     </el-form-item>
@@ -41,59 +41,59 @@
                     <el-form-item class="pb-4">
                         <label>{{$t('font.size')}}</label>
                         <el-slider
-                            :min="fontSize.min"
-                            :max="fontSize.max"
                             :marks="bestOptions"
-                            v-model="settings.fontSize"
-                            show-input>
+                            :max="fontSize.max"
+                            :min="fontSize.min"
+                            show-input
+                            v-model="settings.fontSize">
                         </el-slider>
                     </el-form-item>
                     <el-form-item class="pb-4">
                         <label>{{$t('widgetGroupTitles.font.size')}}</label>
                         <el-slider
-                            :min="titleFontSizes.min"
-                            :max="titleFontSizes.max"
                             :marks="titleBestOptions"
-                            v-model="settings.widgetGroupTitlesFontSize"
-                            show-input>
+                            :max="titleFontSizes.max"
+                            :min="titleFontSizes.min"
+                            show-input
+                            v-model="settings.widgetGroupTitlesFontSize">
                         </el-slider>
                     </el-form-item>
                     <el-form-item class="pb-4">
                         <label>{{$t('widgetTitles.font.size')}}</label>
                         <el-slider
-                                :min="titleFontSizes.min"
-                                :max="titleFontSizes.max"
-                                :marks="titleBestOptions"
-                                v-model="settings.widgetTitlesFontSize"
-                                show-input>
+                            :marks="titleBestOptions"
+                            :max="titleFontSizes.max"
+                            :min="titleFontSizes.min"
+                            show-input
+                            v-model="settings.widgetTitlesFontSize">
                         </el-slider>
                     </el-form-item>
                     <el-form-item class="pb-4">
                         <label>{{$t('settings.minRefreshInterval')}}</label>
                         <el-slider
-                            :min="refreshInterval.min"
-                            :max="refreshInterval.max"
-                            :step="refreshInterval.step"
                             :marks="refreshInterval.bestOptions"
-                            v-model="settings.minRefreshInterval"
-                            show-input>
+                            :max="refreshInterval.max"
+                            :min="refreshInterval.min"
+                            :step="refreshInterval.step"
+                            show-input
+                            v-model="settings.minRefreshInterval">
                         </el-slider>
                     </el-form-item>
                     <el-form-item class="pb-4">
                         <label>{{$t('settings.refreshRealTimeDataDelay')}}</label>
                         <el-slider
-                            :min="refreshRealTimeDataDelay.min"
-                            :max="refreshRealTimeDataDelay.max"
                             :marks="refreshRealTimeDataDelay.bestOptions"
-                            v-model="settings.refreshRealTimeDataDelay"
-                            show-input>
+                            :max="refreshRealTimeDataDelay.max"
+                            :min="refreshRealTimeDataDelay.min"
+                            show-input
+                            v-model="settings.refreshRealTimeDataDelay">
                         </el-slider>
                     </el-form-item>
                 </el-collapse-item>
                 <el-collapse-item :title="$t('settings.reports')" name="report">
                     <el-form-item prop="report.interval">
                         {{$t('settings.switch.title')}}
-                        <el-input-number class="mx-2 w-36" size="small" :min="0"
+                        <el-input-number :min="0" class="mx-2 w-36" size="small"
                                          v-model.number="settings.report.interval"/>
                         {{$t('settings.switch.interval')}}
                     </el-form-item>
@@ -110,10 +110,16 @@
                     <div class="flex flex-col">
                         <div class="flex flex-row" v-for="option of settingsColors">
                             <color-picker
-                                v-model="settings.colors[option]"
-                                :predefine="predefinedColors"/>
+                                :predefine="predefinedColors"
+                                v-model="settings.colors[option]"/>
                             <span class="p-2 text-main-sm">{{$t('settings.color.'+option)}}</span>
                         </div>
+                    </div>
+                </el-collapse-item>
+                <el-collapse-item :title="$t('Real time server')" name="socket">
+                    <div class="flex items-center">
+                        {{$t('Retry Socket Connection')}}
+                        <socket-status-button class="mx-2" @click="retrySocketConnection"/>
                     </div>
                 </el-collapse-item>
             </el-collapse>
@@ -123,14 +129,15 @@
             <el-button
                 :disabled="storingData"
                 :loading="storingData"
-                type="primary"
-                @click="updateSettings">{{$t('common.save')}}
+                @click="updateSettings"
+                type="primary">{{$t('common.save')}}
             </el-button>
         </template>
     </modal>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
+    import SocketStatusButton from '@/components/Common/SocketStatusButton'
     import {Checkbox, Collapse, CollapseItem, InputNumber, Slider, Tooltip} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import ColorPicker from '../Common/ColorPicker'
@@ -138,9 +145,10 @@
     import parseCatch from '@/helpers/handleErrors'
     import {updateDashboard} from '@/services/dashboardService'
     import {predefinedColors, settingsColors} from '@/enum/layout'
-    import { settings as defaultSettings } from '@/enum/defaultDashboardSettings'
+    import {settings as defaultSettings} from '@/enum/defaultDashboardSettings'
     import {getBase64} from '@/helpers/util'
     import {TrashIcon} from 'vue-feather-icons'
+    import {retrySocketConnection} from "@/plugins/initRealTimeSdk";
 
     export default {
         inheritAttrs: false,
@@ -152,13 +160,14 @@
             [CollapseItem.name]: CollapseItem,
             [Tooltip.name]: Tooltip,
             [Slider.name]: Slider,
+            SocketStatusButton,
             ColorPicker,
             TrashIcon,
         },
-        data() {
+        data () {
             return {
                 settings: cloneDeep(this.$store.state.dashboards.settings),
-                activeCollapses: ['layout', 'report', 'color'],
+                activeCollapses: ['layout', 'report', 'color', 'socket'],
                 predefinedColors,
                 storingData: false,
                 settingsColors,
@@ -214,10 +223,10 @@
             }
         },
         computed: {
-            storeSettings() {
+            storeSettings () {
                 return this.$store.state.dashboards.settings
             },
-            rules() {
+            rules () {
                 return {
                     'report.interval': [
                         {
@@ -235,19 +244,19 @@
             }
         },
         watch: {
-            storeSettings(newVal) {
+            storeSettings (newVal) {
                 this.settings = cloneDeep(newVal)
                 this.addDefaultValues()
             }
         },
-        mounted() {
-          this.addDefaultValues()
+        mounted () {
+            this.addDefaultValues()
         },
         methods: {
             /**
              * Ensure newly added colors are backwards compatible with old ones
              */
-            addDefaultValues() {
+            addDefaultValues () {
                 if (!this.settings.colors) {
                     this.settings.colors = {
                         ...defaultSettings.colors
@@ -268,7 +277,7 @@
                     this.$set(this.settings, 'showWidgetTitles', defaultSettings.showWidgetTitles)
                 }
             },
-            updateSettings() {
+            updateSettings () {
                 this.$refs.settings.validate((valid) => {
                     if (valid) {
                         this.storingData = true
@@ -290,17 +299,18 @@
                     }
                 });
             },
-            toggleVisibility(value) {
+            toggleVisibility (value) {
                 this.$emit('update:visible', value)
             },
-            async onFileChange() {
+            async onFileChange () {
                 let file = event.target.files[0]
                 this.settings.logo = await getBase64(file)
                 this.settings.logoName = file.name
             },
-            removeFile() {
+            removeFile () {
                 this.settings.logoName = ''
-            }
+            },
+            retrySocketConnection,
         },
     }
 </script>

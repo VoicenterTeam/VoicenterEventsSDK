@@ -1,11 +1,10 @@
 <template>
     <div>
-        <socket-status-alert @retry="retrySocketConnection"></socket-status-alert>
+        <socket-status-alert @retry="retrySocketConnection"/>
         <base-navbar>
             <template v-slot:dashboard-operations>
                 <div class="flex">
                     <div class="my-3 flex items-center">
-                        <socket-status-button @click="retrySocketConnection"/>
                         <div @click="showReorderDataDialog = true" class="mx-1 cursor-pointer" v-if="!editMode">
                             <el-tooltip :content="$t('tooltip.reorder.dashboard.layout')" class="item" effect="dark"
                                         placement="bottom">
@@ -112,10 +111,9 @@
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import SocketStatusAlert from "@/components/Common/SocketStatusAlert";
-    import SocketStatusButton from "@/components/Common/SocketStatusButton";
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
     import {ListIcon} from 'vue-feather-icons'
-    import {reSyncSdk} from "@/plugins/initRealTimeSdk";
+    import {retrySocketConnection} from "@/plugins/initRealTimeSdk";
 
     export default {
         components: {
@@ -132,7 +130,6 @@
             ReorderLayoutDialog,
             [Tooltip.name]: Tooltip,
             ListIcon,
-            SocketStatusButton,
         },
         mixins: [pageSizeMixin],
         data () {
@@ -189,6 +186,7 @@
             }
         },
         methods: {
+            retrySocketConnection,
             async addWidgetsToGroup (data = {}) {
                 let {widgets: widgetTemplates, group: widgetGroup} = data
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
@@ -394,12 +392,6 @@
             switchTab (tab) {
                 this.activeTab = tab
                 this.saveActiveTab(tab)
-            },
-            async retrySocketConnection () {
-                this.socketResync = true
-                Notification.info(this.$t('common.socketAttemptSync'));
-                await reSyncSdk()
-                Notification.success(this.$t('common.socketSynced'));
             },
             sortDashboardEntities (dashboard) {
                 try {
