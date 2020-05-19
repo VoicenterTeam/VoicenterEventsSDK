@@ -45,27 +45,6 @@
                     <max-wait-time :key="index" :queueID="getColumnQueueID(column)"/>
                 </div>
             </template>
-            <template v-slot:pagination>
-                <div class="flex items-center">
-                    <el-select
-                        @change="handlePageChange(1)"
-                        class="w-16 mx-1 py-1"
-                        size="mini"
-                        v-model="pageSize">
-                        <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
-                    </el-select>
-                    <el-pagination
-                        :current-page="currentPage"
-                        :hide-on-single-page="hideOnSinglePage"
-                        :page-size="pageSize"
-                        :page-sizes="pageSizes"
-                        :pager-count="pagerCount"
-                        :total="filteredDataLength"
-                        @current-change="handlePageChange"
-                        layout="prev, pager, next">
-                    </el-pagination>
-                </div>
-            </template>
             <template v-slot:title>
                 <base-widget-title :title="data.Title"/>
             </template>
@@ -81,7 +60,7 @@
                     v-model="filter"/>
             </template>
             <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
+                <p class="text-main-sm px-2">{{tableData.length}} row(s)</p>
             </template>
         </data-table>
     </div>
@@ -103,6 +82,7 @@
     import {mapOrder} from "@/helpers/util";
     import minBy from 'lodash/minBy'
     import {getOptionsList} from "@/helpers/entitiesList";
+    import {fullHeightIdentifier} from "@/enum/defaultWidgetSettings";
 
     export default {
         name: 'queues-table',
@@ -140,13 +120,7 @@
                 tableData: [],
                 columns: [],
                 searchableFields: [],
-                pageSizes: [5, 10, 25, 50, 100, 500],
-                pageSize: 5,
-                pagerCount: 5,
-                currentPage: 1,
                 filter: '',
-                filteredDataLength: null,
-                hideOnSinglePage: true,
                 border: true,
                 stripe: false,
                 widget: {},
@@ -173,9 +147,7 @@
                         })
                     })
                 }
-
-                this.filteredDataLength = tableData.length
-                return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+                return tableData
             },
             allEntityQueues () {
                 return getOptionsList(`${this.QUEUE_LIST_KEY}`)
@@ -345,9 +317,6 @@
             }
         },
         watch: {
-            filter () {
-                this.currentPage = 1
-            },
             data: {
                 immediate: true,
                 deep: true,

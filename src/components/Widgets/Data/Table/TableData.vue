@@ -5,56 +5,27 @@
                 :data="data"
                 :queuesData="queuesTableData"/>
         </div>
-        <div v-else>
+        <div v-if="isRealtimeWidget(data)">
+            <RealTimeUserTable
+                :columns="columns"
+                :data="data"
+                :searchableFields="searchableFields"
+                :tableData="tableData">
+            </RealTimeUserTable>
+        </div>
+        <div v-if="isSimpleTable">
             <data-table
                 :border="border"
-                :cell-class-name="getCellClassName"
-                :cell-style="getCellStyle"
                 :columns="availableColumns"
                 :editable="editable"
                 :showColumns="visibleColumns"
                 :stripe="stripe"
                 :tableData="fetchTableData"
                 :widgetTitle="data.Title"
-                @on-update-layout="onUpdateLayout"
-                @sort-change="sortChange">
-                <template v-if="isRealTimeTable" v-slot:status_duration="{row}">
-                    <status-duration :extension="userExtension(row.user_id)"
-                                     :key="row.user_id"
-                                     :settings="getSettings"
-                                     v-if="userExtension(row.user_id) && drawRow">
-                    </status-duration>
-                    <span v-else>{{$t('N/A')}}</span>
-                </template>
-                <template v-if="isRealTimeTable" v-slot:status="{row}">
-                    <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
-                                 :userId="row.user_id"
-                                 v-if="userExtension(row.user_id) && drawRow"/>
-                    <span v-else>{{$t('N/A')}}</span>
-                </template>
-                <template v-if="isRealTimeTable" v-slot:user_name="{row}">
-                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{userExtension(row.user_id).userName}}
-                        </span>
-                    <span v-else>---</span>
-                </template>
+                @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
                     <div v-else>{{$t('N/A')}}</div>
-                </template>
-                <template v-if="isRealTimeTable" v-slot:call_info="{row}">
-                    <calls-info :extension="userExtension(row.user_id)" :key="row.user_id"
-                                 :userId="row.user_id"
-                                 :hideCallerInfo="true"
-                                 v-if="userExtension(row.user_id) && drawRow"/>
-                    <span v-else>{{$t('N/A')}}</span>
-                </template>
-                <template v-if="isRealTimeTable" v-slot:caller_info="{row}">
-                    <calls-info :extension="userExtension(row.user_id)" :key="row.user_id"
-                                 :userId="row.user_id"
-                                 :hideCallInfo="true"
-                                 v-if="userExtension(row.user_id) && drawRow"/>
-                    <span v-else>{{$t('N/A')}}</span>
                 </template>
                 <template v-slot:pagination>
                     <div class="flex items-center">
@@ -86,7 +57,7 @@
                 <template v-slot:search-input>
                     <el-input
                         clearable
-                        placeholder="Type text to filter"
+                        :placeholder="$t('Type text to filter')"
                         size="medium"
                         suffix-icon="el-icon-search"
                         v-model="filter"/>
@@ -99,26 +70,21 @@
     </div>
 </template>
 <script>
+    import RealTimeUserTable from "./RealTimeUserTable";
     import TimeFrame from "./TimeFrame";
     import get from 'lodash/get'
     import {format} from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import {Option, Pagination, Select, Tooltip} from 'element-ui'
-    import UserStatus from './UserStatus'
+    import {Option, Pagination, Select} from 'element-ui'
     import AudioPlayer from "@/components/Audio/AudioPlayer";
-    import StatusDuration from './StatusDuration'
     import DataTable from '@/components/Table/DataTable'
-    import {extensionColor} from '@/util/extensionStyles'
     import {isMultiQueuesDashboard, isRealtimeWidget} from '@/helpers/widgetUtils'
-    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
-    import {realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {dynamicColumns, dynamicRows} from '@/enum/realTimeTableConfigs'
     import {getDefaultTimeDelay} from '@/enum/generic'
     import {getWidgetData} from "@/services/widgetService";
     import MultiQueuesDashboard from "@/components/Widgets/Data/Queue/MultiQueuesDashboard";
     import dataTableMixin from "@/mixins/dataTableMixin";
-    import CallsInfo from "./CallsInfo";
+    import {dynamicColumns} from "@/enum/realTimeTableConfigs";
 
     const DATE_FORMAT = 'dd/MM/yyyy'
     const DATE_TIME_FORMAT = 'HH:mm:ss dd/MM/yyyy'
@@ -126,15 +92,12 @@
     export default {
         mixins: [dataTableMixin],
         components: {
-            CallsInfo,
             DataTable,
             TimeFrame,
-            UserStatus,
             AudioPlayer,
-            StatusDuration,
+            RealTimeUserTable,
             [Select.name]: Select,
             [Option.name]: Option,
-            [Tooltip.name]: Tooltip,
             [Pagination.name]: Pagination,
             [MultiQueuesDashboard.name]: MultiQueuesDashboard,
         },
@@ -163,7 +126,6 @@
                 hideOnSinglePage: true,
                 border: true,
                 widget: cloneDeep(this.data),
-                drawRow: true,
                 stripe: true,
                 queuesTableData: [],
             }
@@ -171,12 +133,6 @@
         computed: {
             fetchTableData () {
                 let tableData = this.tableData
-
-                let showLoggedOutUsers = get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
-                if (!showLoggedOutUsers && this.isRealTimeTable) {
-                    let userIds = this.loggedOutUserIds
-                    tableData = tableData.filter((user) => user.user_id !== undefined && !userIds.includes(user.user_id) && this.userExtension(user.user_id))
-                }
 
                 if (this.filter && this.searchableFields.length > 0) {
                     tableData = tableData.filter(c => {
@@ -192,45 +148,13 @@
                 this.filteredDataLength = tableData.length
                 return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
             },
-            extensions () {
-                return this.$store.state.extensions.extensions
-            },
-            loggedOutUserIds () {
-                return this.extensions.filter(e => e.representativeStatus === LOGOUT_STATUS).map((el) => el.userID)
-            },
-            isRealTimeTable () {
-                return isRealtimeWidget(this.widget)
-            },
-            getSettings () {
-                return this.data.WidgetLayout.settings || realTimeSettings
-            },
+            isSimpleTable () {
+                return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data);
+            }
         },
         methods: {
             isMultiQueuesDashboard,
-            userExtension (userId) {
-                return this.extensions.find(e => e.userID === userId)
-            },
-            getCellStyle ({row, column}) {
-                let color = 'transparent'
-
-                if (dynamicRows.includes(column.property)) {
-                    let extension = this.userExtension(row.user_id)
-                    if (extension) {
-                        color = extensionColor(extension)
-                    }
-                }
-                return {'background-color': color}
-            },
-            getCellClassName ({column, row}) {
-                let className = ''
-                let extension = this.userExtension(row.user_id)
-
-                if (dynamicRows.includes(column.property) && extension) {
-                    className = 'text-white'
-                }
-
-                return className
-            },
+            isRealtimeWidget,
             async getWidgetData () {
                 try {
                     let data = await getWidgetData(this.widget)
@@ -238,6 +162,7 @@
                     if (!data) {
                         return
                     }
+
                     if (isMultiQueuesDashboard(this.widget)) {
                         this.queuesTableData = data
                         return
@@ -278,7 +203,8 @@
 
                             this.searchableFields.push(column)
                         }
-                        if (this.isRealTimeTable) {
+
+                        if (isRealtimeWidget(this.data)) {
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2], dynamicColumns[3], dynamicColumns[4])
                         }
                     }
@@ -316,13 +242,6 @@
                 }
                 return ''
             },
-
-            sortChange () {
-                this.drawRow = false
-                this.$nextTick(() => {
-                    this.drawRow = true
-                })
-            },
         },
         mounted () {
             if (this.data.DefaultRefreshInterval) {
@@ -350,8 +269,3 @@
         },
     }
 </script>
-<style lang="scss">
-    td.text-white > .cell {
-        color: white;
-    }
-</style>
