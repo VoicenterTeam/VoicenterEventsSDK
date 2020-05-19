@@ -653,6 +653,8 @@
     "Widget minimum height should be 200px": "Widget minimum height should be 200px",
     "This widget is displaying a partial list because of permissions issues.": "This widget is displaying a partial list because of permissions issues.",
     "The following IDs were not displayed are": "The following IDs were not displayed are",
+    "Custom value": "Custom value",
+    "Apply": "Apply",
     "Real time server": "Real time server",
     "Retry Socket Connection": "Retry Socket Connection",
     "Type text to filter": "Type text to filter"

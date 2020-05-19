@@ -31,10 +31,19 @@
                     <div class="flex items-center">
                         <el-select
                             @change="handlePageChange(1)"
-                            class="w-16 mx-1 py-1"
+                            class="w-20 mx-1 py-1"
                             size="mini"
                             v-model="pageSize">
                             <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
+                            <slot>
+                                <div class="w-28 mx-2">
+                                    <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
+                                    <div class="flex flex-row">
+                                        <el-input size="mini" class="mx-1" v-model="customPageSize"></el-input>
+                                        <el-button size="mini" class="mx-1" @click="applyCustomPageSize">{{$t('Apply')}}</el-button>
+                                    </div>
+                                </div>
+                            </slot>
                         </el-select>
                         <el-pagination
                             :current-page="currentPage"
@@ -117,7 +126,8 @@
                 columns: [],
                 searchableFields: [],
                 pageSizes: [5, 10, 25, 50, 100, 500],
-                pageSize: 5,
+                pageSize: 10,
+                customPageSize: 10,
                 pagerCount: 5,
                 currentPage: 1,
                 fetchDataInterval: null,
@@ -242,6 +252,18 @@
                 }
                 return ''
             },
+            storePaginationSettings (pageSize) {
+                this.data.WidgetLayout['paginationSize'] = Number(pageSize)
+                this.$emit('on-update', this.data)
+            },
+            applyPaginationSettings() {
+                this.pageSize = get(this.data.WidgetLayout, 'paginationSize', 10)
+                this.customPageSize = this.pageSize
+            },
+            applyCustomPageSize() {
+                const pageSize = this.customPageSize
+                this.storePaginationSettings(pageSize)
+            }
         },
         mounted () {
             if (this.data.DefaultRefreshInterval) {
@@ -249,6 +271,7 @@
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
             }
+
         },
         watch: {
             filter () {
@@ -259,6 +282,12 @@
                 deep: true,
                 handler: function () {
                     this.getWidgetData()
+                    this.applyPaginationSettings()
+                }
+            },
+            pageSize: {
+                handler: function (val) {
+                    this.storePaginationSettings(val)
                 }
             },
         },
