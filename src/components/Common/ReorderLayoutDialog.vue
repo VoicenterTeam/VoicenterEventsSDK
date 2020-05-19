@@ -17,7 +17,7 @@
                             <div :style="$store.getters['dashboards/widgetTitleStyles']" class="widget-item p-1">
                                 {{$t(widget.Title)}}
                             </div>
-                            <el-tooltip :content="$t('tooltip.reset.changes')" class="item" effect="dark"
+                            <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark"
                                         placement="top">
                                 <button
                                     @click="removeWidget(widget, widgetGroup)"
