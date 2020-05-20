@@ -18,11 +18,11 @@
                         :widgets="widgetGroup.WidgetList"
                         :widgetTemplates="widgetTemplates"
                         :editable="editMode"
-                        v-bind="$attrs"
                         :widget-group="widgetGroup"
+                        v-bind="$attrs"
                         v-on="$listeners">
-                </widget-list>
-            </div>
+                    </widget-list>
+                </div>
         </transition-group>
     </div>
 </template>

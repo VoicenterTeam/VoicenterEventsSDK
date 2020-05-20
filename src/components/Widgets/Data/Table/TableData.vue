@@ -64,12 +64,14 @@
                     <time-frame :widget="data"/>
                 </template>
                 <template v-slot:search-input>
-                    <el-input
-                        clearable
-                        :placeholder="$t('Type text to filter')"
-                        size="medium"
-                        suffix-icon="el-icon-search"
-                        v-model="filter"/>
+                    <div class="flex w-48 sm:w-64 px-1">
+                        <el-input
+                            clearable
+                            placeholder="Type text to filter"
+                            size="medium"
+                            suffix-icon="el-icon-search"
+                            v-model="filter"/>
+                    </div>
                 </template>
                 <template v-slot:additional-data>
                     <p class="text-main-sm px-2">{{dataCounts}} / {{filteredDataLength}} row(s)</p>

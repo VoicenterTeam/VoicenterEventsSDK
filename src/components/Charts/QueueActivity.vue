@@ -1,5 +1,5 @@
 <template>
-    <div class="queue-activity__wrapper">
+    <div class="queue-activity__wrapper w-full">
         <div class="flex flex-row md:items-center justify-between">
             <base-widget-title :title="data.Title"/>
         </div>
@@ -169,7 +169,7 @@
                     }
 
                     dataLabels = `<p style="text-align: center;"> ${dataLabels[0]} <br> ${dataLabels[1]}<p>`
-                    yMargin = (yMargin * 1.5 - activitiesToDisplay.length*5)
+                    yMargin = (yMargin * 1.5 - activitiesToDisplay.length * 5)
 
                     this.chartData = {
                         ...activityChartConfig,
@@ -217,10 +217,16 @@
             statisticCounts: {
                 deep: true,
                 immediate: true,
-                handler: function () {
+                handler () {
                     this.chartOptions()
                 }
-            }
+            },
+            data: {
+                deep: true,
+                handler () {
+                    this.chartOptions()
+                }
+            },
         },
         mounted () {
             this.initWidgetConfig();

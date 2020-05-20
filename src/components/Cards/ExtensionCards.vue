@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex w-full justify-between pr-12" :class="responsiveClass">
+        <div class="flex w-full justify-between pr-12 -mt-0-5 items-center" :class="responsiveClass">
             <base-widget-title :title="data.Title"/>
             <div class="flex">
                 <div class="mx-1 -my-1 cursor-pointer hidden lg:block">

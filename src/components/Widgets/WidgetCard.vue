@@ -45,7 +45,8 @@
         }
 
         .el-input-number.is-controls-right .el-input__inner {
-            padding-right: 39px;
+            padding-right: 35px;
+            padding-left: 5px;
         }
 
         .el-input-number--mini {

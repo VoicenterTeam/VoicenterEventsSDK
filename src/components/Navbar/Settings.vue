@@ -28,11 +28,6 @@
                             </div>
                         </div>
                     </el-form-item>
-                    <el-form-item prop="showWidgetAsTabs">
-                        <el-checkbox v-model="settings.showWidgetAsTabs">
-                            {{$t('settings.widget.tabbed.view')}}
-                        </el-checkbox>
-                    </el-form-item>
                     <el-form-item prop="showWidgetTitles">
                         <el-checkbox v-model="settings.showWidgetTitles">
                             {{$t('settings.widget.show.titles')}}
@@ -119,7 +114,7 @@
                 <el-collapse-item :title="$t('Real time server')" name="socket">
                     <div class="flex items-center">
                         {{$t('Retry Socket Connection')}}
-                        <socket-status-button class="mx-2" @click="retrySocketConnection"/>
+                        <socket-status-button @click="retrySocketConnection" class="mx-2"/>
                     </div>
                 </el-collapse-item>
             </el-collapse>
@@ -337,6 +332,5 @@
 
     .upload-button {
         color: #678ee3;
-        /*color: var(--primary-color);*/
     }
 </style>

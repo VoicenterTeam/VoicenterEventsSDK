@@ -56,7 +56,7 @@
                          v-if="showSidebar"/>
                 <div :class="getClass" :key="activeDashboardData.DashboardID" class="pt-12 px-6 md:px-12">
                     <fade-transition :duration="250" mode="out-in">
-                        <keep-alive>
+                        <component
                             <component
                                 :activeTab="activeTab"
                                 :editMode="editMode"
@@ -70,8 +70,7 @@
                                 @removeWidget="(data) => removeWidget(data.widget, data.group)"
                                 @switch-tab="(tab) => switchTab(tab)"
                                 @updateWidget="(data) => updateWidget(data.widget, data.group)">
-                            </component>
-                        </keep-alive>
+                        </component>
                     </fade-transition>
                 </div>
             </div>
@@ -93,6 +92,7 @@
     import {Tooltip} from 'element-ui'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
+    import isEqual from 'lodash/isEqual'
     import cloneDeep from 'lodash/cloneDeep'
     import {ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes} from '@/enum/layout'
     import differenceBy from 'lodash/differenceBy'
@@ -115,6 +115,7 @@
     import SocketStatusAlert from "@/components/Common/SocketStatusAlert";
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
     import {ListIcon} from 'vue-feather-icons'
+    import bus from '@/event-bus/EventBus'
     import {retrySocketConnection} from "@/plugins/initRealTimeSdk";
 
     export default {
@@ -148,7 +149,6 @@
                 operations: new DashboardOperations(),
                 activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
                 showReorderDataDialog: false,
-                socketResync: false,
                 groupToEdit: {}
             }
         },
@@ -215,6 +215,8 @@
 
                 this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
                 this.showWidgetMenu = false
+
+                bus.$emit('added-widgets', createdWidgets);
             },
             reorderWidgetGroup (data = {}) {
                 let {allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate, widgetsToUpdate: widgetsToUpdate} = data
@@ -230,6 +232,7 @@
                     } else {
                         switch (widget.operation.type) {
                             case draggableEvents.ADDED:
+                                delete widget.WidgetLayout.GridLayout
                                 this.operations.add(dashboardOperation(types.MOVED_IN, targets.WIDGET, widget, widget.operation.parentID))
                                 break
                             case draggableEvents.REMOVED:
@@ -238,6 +241,7 @@
                         }
                     }
                 })
+
                 this.showReorderDataDialog = false
                 this.saveDashboard()
             },
@@ -339,20 +343,51 @@
             },
             updateDashboardOperations () {
                 let oldDashboardWidgetGroupList = this.$store.state.dashboards.activeDashboard.WidgetGroupList
+
                 //Check if some widgetGroups are updated and add changes to dashboard operations
                 let widgetGroupsToUpdate = differenceBy(this.activeDashboardData.WidgetGroupList, oldDashboardWidgetGroupList, 'WidgetGroupTitle')
+
                 //Check if the widgetsGroups are changed order
                 this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
+
                     if (oldDashboardWidgetGroupList[index] && group.WidgetGroupID !== oldDashboardWidgetGroupList[index].WidgetGroupID) {
                         widgetGroupsToUpdate.push(group)
                     }
+                    this.updateGridStacks(group)
                 })
+
                 //Exclude additional operations duplicate(title updates)
                 widgetGroupsToUpdate = uniqBy(widgetGroupsToUpdate, "WidgetGroupID")
                 widgetGroupsToUpdate.forEach((widgetGroup) => {
                     this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
                 })
+            },
+            updateGridStacks(group) {
+                const activeDashboardWidgets = group.WidgetList
 
+                window.grids.forEach(grid => {
+                    grid.engine.nodes.forEach((node) => {
+                        let widget = activeDashboardWidgets.find((widget) => Number(widget.WidgetID) === Number(node.id));
+                        if (!widget) {
+                            return
+                        }
+                        let nodeLayout  = {
+                            x: node.x,
+                            y: node.y,
+                            width: node.width,
+                            height: node.height
+                        }
+                        let widgetGridLayout = widget.WidgetLayout.GridLayout
+
+                        if (isEqual(widgetGridLayout, nodeLayout)) {
+                            return
+                        }
+
+                        widget.WidgetLayout.GridLayout = nodeLayout
+                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, group))
+                    })
+
+                })
             },
             resetDashboard () {
                 this.showWidgetMenu = false
@@ -363,7 +398,6 @@
                 this.operations = new DashboardOperations()
             },
             switchDashboardLayout (type) {
-                // TODO: update dashboard generalSettings
                 this.layoutType = type
                 this.saveLayoutType(type)
             },
@@ -395,6 +429,9 @@
                 this.resetDashboard()
                 this.showReorderDataDialog = false
             }
+        },
+        created() {
+            window.grids = []
         },
         watch: {
             dashboard: {

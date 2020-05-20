@@ -1,8 +1,8 @@
+import get from 'lodash/get'
 import store from '@/store/store'
 import {WidgetApi} from '@/api/widgetApi'
 import {widgetModel} from '@/models/instances'
 import {WidgetDataApi} from '@/api/widgetDataApi'
-import {queueActivityGaugeKey} from '@/enum/generic'
 import {getOptionsValues} from '@/helpers/entitiesList'
 import {isExternalDataWidget} from '@/helpers/widgetUtils'
 
@@ -15,14 +15,26 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
     let index = 0
 
     for (let template of templates) {
+
+        const templateWidth = get(template, 'TemplateSettings.DefaultWidthPrecentage', '100')
+
+        // data-gs-height - 1 = 60px
+        const templateHeight = get(template, 'TemplateSettings.DefaultHeightPixels', '2')
+        let widgetLayout = template.WidgetLayout
+
+        widgetLayout['GridLayout']['width'] = Math.ceil(12 * Number(templateWidth) / 100);
+        widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 60);
+
         let newWidget = widgetModel(template.TemplateID, template.TemplateName, {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,
             DataTypeID: template.DataType.DataTypeID,
             Endpoint: template.Endpoint,
-            DefaultRefreshInterval: template.DefaultRefreshInterval
+            DefaultRefreshInterval: template.DefaultRefreshInterval,
+            ...widgetLayout,
         })
 
         let WidgetConfig = []
+
         if (template.DefaultWidgetConfig.length) {
             for (let config of template.DefaultWidgetConfig) {
                 if (config.ParameterType === AUTO_COMPLETE_TYPE_KEY) {

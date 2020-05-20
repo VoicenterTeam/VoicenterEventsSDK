@@ -43,9 +43,6 @@
             <el-collapse v-model="activeCollapse" class="pt-4">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
-                        <widget-width :model="model"/>
-                    </el-form-item>
-                    <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
                     <widget-colors :model="model"/>
@@ -64,7 +61,6 @@
     import Modal from "@/components/Common/Modal";
     import {isPieWidget} from '@/helpers/widgetUtils'
     import {dictionary, options} from '@/enum/externalDataWidgetConfig'
-    import WidgetWidth from '../WidgetUpdateForm/WidgetLayout/WidgetWidth'
     import WidgetColors from '../WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
@@ -79,7 +75,6 @@
             [CollapseItem.name]: CollapseItem,
             Modal,
             WidgetColors,
-            WidgetWidth,
             WidgetPadding,
             StaticWidgetInfo
         },

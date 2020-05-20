@@ -2,35 +2,33 @@
     <div v-if="tabs.length">
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
             <template v-slot="{tab, activeTab}">
-                <component :is="widgetsViewMode"
-                           v-if="activeTab.toString() === tab.WidgetGroupID.toString()"
-                           :widgets="tab.WidgetList"
-                           :editable="editMode"
-                           v-bind="$attrs"
-                           :widget-group="tab"
-                           :class="getClass(tab.WidgetList)"
-                           v-on="$listeners">
-                </component>
+                <widget-list
+                    :editable="editMode"
+                    :widget-group="tab"
+                    :widgetTemplates="widgetTemplates"
+                    :widgets="tab.WidgetList"
+                    v-bind="$attrs"
+                    v-if="activeTab.toString() === tab.WidgetGroupID.toString()"
+                    v-on="$listeners">
+                </widget-list>
             </template>
         </tabs>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
-    import uniq from 'lodash/uniq'
     import Tabs from '@/components/Tabs'
-    import widgetViewTypes from '@/enum/widgetViewTypes'
-    import {getWidgetDataType, groupedWidgets} from '@/helpers/widgetUtils'
     import WidgetList from '@/components/Widgets/WidgetList'
-    import WidgetTabs from '@/components/Widgets/WidgetTabs'
 
     export default {
         components: {
             WidgetList,
-            WidgetTabs,
             Tabs
         },
         props: {
+            widgetTemplates: {
+                type: Array,
+                default: () => []
+            },
             widgetGroupList: {
                 type: Array,
                 default: () => []
@@ -39,7 +37,7 @@
                 type: Boolean,
                 default: false
             },
-            activeTab: [String, Number]
+            activeTab: [String, Number],
         },
         computed: {
             dashboardSettings() {
@@ -59,31 +57,6 @@
                 let data = this.widgetGroupList
                 return this.$rtl.isRTL ? data.reverse() : data
             },
-            widgetsViewMode() {
-                let showWidgetAsTabs = get(this.dashboardSettings, 'showWidgetAsTabs')
-                if (showWidgetAsTabs && !this.editMode) {
-                    return widgetViewTypes.TABS
-                }
-                return widgetViewTypes.LIST
-            },
         },
-        methods: {
-            getClass(widgets) {
-                if (!widgets.length) {
-                    return ''
-                }
-
-                let tabsToDisplay = uniq(widgets.map((widget) => {
-                    return getWidgetDataType(widget)
-                }))
-
-                if (tabsToDisplay.length === 1) {
-                    if (groupedWidgets.includes(tabsToDisplay[0]) || widgets.length === 1) {
-                        return ''
-                    }
-                }
-                return 'display-widget__tabs'
-            }
-        }
     }
 </script>

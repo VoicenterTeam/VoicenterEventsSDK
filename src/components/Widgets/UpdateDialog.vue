@@ -133,16 +133,6 @@
                         </div>
                     </el-form-item>
                     <el-form-item>
-                        <widget-width :model="model"/>
-                    </el-form-item>
-                    <el-form-item v-if="isHtmlWidget(widget)">
-                        <widget-height :label="'Widget height'" :model="model" :propToChange="'height'"/>
-                    </el-form-item>
-                    <el-form-item v-if="isQueueActiveCall(widget)">
-                        <widget-height :label="'Widget minimum height'" :model="model" :propToChange="'minHeight'"/>
-                        <widget-height :label="'Widget maximum height'" :model="model" :propToChange="'maxHeight'"/>
-                    </el-form-item>
-                    <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
                     <widget-colors :availableColors="availableColors" :model="model"/>
@@ -221,8 +211,6 @@
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
     import StaticWidgetInfo from './WidgetUpdateForm/StaticWidgetInfo'
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
-    import WidgetWidth from './WidgetUpdateForm/WidgetLayout/WidgetWidth'
-    import WidgetHeight from './WidgetUpdateForm/WidgetLayout/WidgetHeight'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
@@ -230,10 +218,8 @@
     import {statistics} from '@/enum/queueDashboardStatistics'
     import {
         isAreaChartWidget,
-        isHtmlWidget,
         isMultiQueuesDashboard,
         isPieWidget,
-        isQueueActiveCall,
         isQueueActivityGauge,
         isQueueChart,
         isQueueDashboardWidget,
@@ -252,7 +238,6 @@
         inheritAttrs: false,
         mixins: [queueMixin],
         components: {
-            WidgetWidth,
             RealTimeSettings,
             TimeFrame,
             Modal,
@@ -269,7 +254,6 @@
             OtherFilters,
             WidgetColors,
             WidgetPadding,
-            WidgetHeight,
             RefreshButton,
             StaticWidgetInfo,
             ActivityGaugeConfig,
@@ -359,9 +343,7 @@
             isQueueTable,
             isQueueChart,
             isQueueGauge,
-            isHtmlWidget,
             isRealtimeWidget,
-            isQueueActiveCall,
             isQueueActivityGauge,
             isQueueDashboardWidget,
             isMultiQueuesDashboard,

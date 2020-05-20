@@ -653,6 +653,7 @@
     "Widget minimum height should be 200px": "Widget minimum height should be 200px",
     "This widget is displaying a partial list because of permissions issues.": "This widget is displaying a partial list because of permissions issues.",
     "The following IDs were not displayed are": "The following IDs were not displayed are",
+    "Move widget to another group": "When you move a widget in another widget, make sure that the grid looks good, or go in edit mode and reorder / resize the widget.",
     "Select a widget group to edit": "Select a widget group to edit",
     "Custom value": "Custom value",
     "Apply": "Apply",

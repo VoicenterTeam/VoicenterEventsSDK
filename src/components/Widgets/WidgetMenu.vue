@@ -1,40 +1,38 @@
 <template>
     <div>
-        <el-input size="small" class="mb-2" placeholder="Search" v-model="search"
-                  suffix-icon="el-icon-search"></el-input>
+        <el-input class="mb-2" placeholder="Search" size="small" suffix-icon="el-icon-search"
+                  v-model="search"></el-input>
         <el-button
             @click="addAllWidgetsFromCategory"
-            type="default"
-            class="w-full">{{$t('Add all widgets')}}</el-button>
-        <div class="widget-menu-container">
-            <DraggableList v-model="widgetTemplates"
-                              :enable-transition="false"
-                              :group="{ name: 'widgetTemplates', pull: 'clone', put: false }">
-                <div v-for="widgetTemplate in filteredWidgetTemplates"
-                     :key="widgetTemplate.TemplateID"
-                     class="w-full px-2">
-                    <WidgetCard
-                        v-bind="widgetTemplate"
-                        class="w-full"
-                        @add-widget="$emit('add-widget', widgetTemplate)">
-                        <template v-slot:quantity>
-                            <el-input-number :size="'mini'"
-                                             controls-position="right"
-                                             placeholder="0"
-                                             v-model="quantities[widgetTemplate.TemplateID]"
-                                             :min="0" :max="99">
-                            </el-input-number>
-                        </template>
-                    </WidgetCard>
-                </div>
-            </DraggableList>
-            <h3 v-if="widgetTemplates.length === 0" class="text-center my-4">
+            class="w-full"
+            type="default">{{$t('Add all widgets')}}
+        </el-button>
+        <div class="widget-menu-container flex -mx-2 flex-col">
+            <div :key="widgetTemplate.TemplateID"
+                 class="w-full px-2"
+                 v-for="widgetTemplate in filteredWidgetTemplates">
+                <WidgetCard
+                    @add-widget="$emit('add-widget', widgetTemplate)"
+                    class="w-full"
+                    v-bind="widgetTemplate">
+                    <template v-slot:quantity>
+                        <el-input-number
+                            :max="99"
+                            :min="0"
+                            :size="'mini'"
+                            controls-position="right"
+                            placeholder="0" v-model="quantities[widgetTemplate.TemplateID]">
+                        </el-input-number>
+                    </template>
+                </WidgetCard>
+            </div>
+            <h3 class="text-center my-4" v-if="widgetTemplates.length === 0">
                 {{$t('no.widgets.added')}}
             </h3>
         </div>
         <div class="flex items-center justify-between widget-menu-footer py-2">
             <p class="text-main-xs">{{$t('save.to.add')}}</p>
-            <el-button type="primary" size="small" @click="addWidgets" :disabled="!validForSubmit">
+            <el-button :disabled="!validForSubmit" @click="addWidgets" size="small" type="primary">
                 {{$t('common.save')}}
             </el-button>
         </div>
@@ -44,15 +42,13 @@
     import times from 'lodash/times'
     import {InputNumber} from 'element-ui'
     import WidgetCard from './WidgetCard'
-    import DraggableList from './DraggableList'
 
     export default {
         components: {
             WidgetCard,
-            DraggableList,
             [InputNumber.name]: InputNumber
         },
-        data() {
+        data () {
             return {
                 search: '',
                 quantities: {}
@@ -69,7 +65,7 @@
             }
         },
         computed: {
-            filteredWidgetTemplates() {
+            filteredWidgetTemplates () {
                 return this.widgetTemplates.filter((widgetTemplate) => {
                     const templateName = this.translateTemplateName(widgetTemplate.TemplateName)
                     if (templateName) {
@@ -78,18 +74,18 @@
                     return false
                 })
             },
-            validForSubmit() {
+            validForSubmit () {
                 return Object.keys(this.quantities).filter(key => this.quantities[key] > 0).length
             },
         },
         methods: {
-            translateTemplateName(tName) {
+            translateTemplateName (tName) {
                 return this.$t(tName)
             },
-            addAllWidgetsFromCategory() {
+            addAllWidgetsFromCategory () {
                 this.addWidgetsToGroup(this.widgetTemplates)
             },
-            addWidgets() {
+            addWidgets () {
                 let widgetTemplateIdsToAdd = Object.keys(this.quantities).filter(key => this.quantities[key] > 0)
                 let widgetTemplatesToAdd = []
 
@@ -102,7 +98,7 @@
                 this.addWidgetsToGroup(widgetTemplatesToAdd)
                 this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
             },
-            addWidgetsToGroup(widgetTemplatesToAdd) {
+            addWidgetsToGroup (widgetTemplatesToAdd) {
                 let objectToEmit = {
                     widgets: widgetTemplatesToAdd,
                     group: this.widgetGroup
@@ -112,7 +108,7 @@
         }
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
     .widget-menu-container {
         max-height: 400px;

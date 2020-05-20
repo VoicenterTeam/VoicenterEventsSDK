@@ -10,37 +10,6 @@
         </div>
         <el-collapse class="pt-2" v-model="activeCollapse">
             <el-collapse-item :title="$t('widget.layout')" name="layout">
-                <div class="flex flex-row">
-                    <div>
-                        <label>{{$t('Widget maximum width')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutConfig.maxWidth"/>
-                    </div>
-                    <div class="w-4"/>
-                    <div>
-                        <label>{{$t('Widget minimum width')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutConfig.minWidth"/>
-                    </div>
-                </div>
-                <div class="flex flex-row pt-4 items-center">
-                    <div class="w-1/2">
-                        <div class="flex">
-                            <label>{{$t('Widget maximum height')}}</label>
-                            <el-popover
-                                placement="bottom-start"
-                                trigger="hover">
-                                {{$t('Widget minimum height should be 200px')}}
-                                <InfoIcon class="text-primary cursor-help w-4 mx-1" slot="reference"></InfoIcon>
-                            </el-popover>
-                        </div>
-                        <el-input :min="minHeightValue" @blur="onBlur" class="mt-2" type="number"
-                                  v-model="layoutConfig.maxHeight"/>
-                    </div>
-                    <div class="w-4"/>
-                    <div class="w-1/2">
-                        <label>{{$t('Widget minimum height')}}</label>
-                        <el-input class="mt-2" type="number" v-model="layoutConfig.minHeight"/>
-                    </div>
-                </div>
                 <div class="py-4">
                     <label>{{$t('Card title font size')}}</label>
                     <el-slider
@@ -102,17 +71,13 @@
                 type: Object,
                 default: () => ({})
             },
-            minHeightValue: {
-                type: Number,
-                default: 200,
-            },
         },
         computed: {
             setWidth () {
                 if (this.isMobileOrTablet) {
                     return '80%'
                 } else {
-                    return '40%'
+                    return '45%'
                 }
             },
         },
@@ -144,14 +109,5 @@
                 },
             }
         },
-        methods: {
-            onBlur () {
-                if (this.layoutConfig.maxHeight >= this.minHeightValue) {
-                    return;
-                }
-
-                this.layoutConfig.maxHeight = this.minHeightValue
-            }
-        }
     }
 </script>

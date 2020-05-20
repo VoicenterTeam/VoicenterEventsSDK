@@ -3,7 +3,6 @@
         <data-table
             :border="border"
             :columns="availableColumns"
-            :customStyle="getStyles"
             :editable="editable"
             :showColumns="visibleColumns"
             :stripe="stripe"
@@ -30,7 +29,6 @@
     import queueMixin from '@/mixins/queueMixin'
     import DataTable from '@/components/Table/DataTable'
     import {activeCallColumns} from '@/enum/queueConfigs'
-    import {fullHeightIdentifier} from "@/enum/defaultWidgetSettings";
 
     export default {
         mixins: [queueMixin],
@@ -59,20 +57,6 @@
             }
         },
         computed: {
-            getStyles () {
-
-                let minHeight = get(this.data.WidgetLayout, 'minHeight', 'auto')
-                let maxHeight = get(this.data.WidgetLayout, 'maxHeight', 'auto')
-
-                minHeight = minHeight === fullHeightIdentifier ? 'auto' : minHeight + 'px'
-                maxHeight = maxHeight === fullHeightIdentifier ? 'auto' : maxHeight + 'px'
-
-                return {
-                    'min-height': minHeight,
-                    'max-height': maxHeight,
-                    overflow: 'auto',
-                }
-            },
             fetchTableData () {
                 let data = []
                 this.filteredQueuesWithActiveCalls.forEach((queue) => {

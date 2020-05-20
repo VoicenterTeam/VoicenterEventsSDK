@@ -107,15 +107,6 @@
             display: none;
         }
 
-        .el-tabs__content {
-            .display-widget__tabs {
-                .el-tabs__header {
-                    display: block !important;
-                    @apply m-0;
-                }
-            }
-        }
-
         .el-tabs__nav-scroll {
             @apply px-2;
         }

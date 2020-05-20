@@ -32,7 +32,7 @@
     import parseISO from 'date-fns/parseISO'
     import HtmlEditor from '../../Html/HtmlEditor'
     import {Switch, Tooltip} from 'element-ui'
-    import {defaultColors, fullHeightIdentifier} from '@/enum/defaultWidgetSettings'
+    import {defaultColors} from '@/enum/defaultWidgetSettings'
     import WidgetNoteList from "@/components/Widgets/WidgetNoteList";
 
     export default {
@@ -69,17 +69,8 @@
                 }
             },
             getStyles () {
-                let height = get(this.data.WidgetLayout, 'height')
-
-                if (!height || height === fullHeightIdentifier) {
-                    height = 'auto'
-                } else {
-                    height = height + 'px'
-                }
                 let colors = get(this.data.WidgetLayout, 'colors') || defaultColors;
                 return {
-                    height: height,
-                    overflow: 'auto',
                     border: 0,
                     backgroundColor: colors.background,
                     color: colors.fonts,

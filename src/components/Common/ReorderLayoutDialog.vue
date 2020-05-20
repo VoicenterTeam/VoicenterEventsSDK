@@ -1,6 +1,17 @@
 <template>
     <modal v-bind="$attrs" v-on="$listeners">
-        <h3 class="text-main-xl font-medium text-gray-700" slot="title">{{$t('tooltip.reorder.dashboard.layout')}}</h3>
+        <div class="flex items-center">
+            <h3 class="text-main-xl font-medium text-gray-700" slot="title">
+                {{$t('tooltip.reorder.dashboard.layout')}}</h3>
+            <el-popover
+                :width="popoverWidth"
+                class="mx-2"
+                placement="bottom-start"
+                trigger="hover">
+                {{$t('Move widget to another group')}}
+                <AlertTriangleIcon class="text-orange-400 cursor-help" slot="reference"></AlertTriangleIcon>
+            </el-popover>
+        </div>
         <el-collapse class="w-full reorder-layout" v-model="activeCollapses">
             <DraggableList :value="widgetGroups"
                            @change="(ev) => onGroupListChange(ev)"
@@ -40,20 +51,22 @@
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import differenceBy from 'lodash/differenceBy'
-    import {Collapse, CollapseItem, Tooltip} from 'element-ui'
+    import {Collapse, CollapseItem, Popover, Tooltip} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import DraggableList from '../Widgets/DraggableList'
     import draggableEvents from '@/enum/draggableEvents'
-    import {XIcon} from 'vue-feather-icons'
+    import {AlertTriangleIcon, XIcon} from 'vue-feather-icons'
 
     export default {
         components: {
             Modal,
+            AlertTriangleIcon,
+            [Popover.name]: Popover,
             XIcon,
             [Tooltip.name]: Tooltip,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
-            DraggableList
+            DraggableList,
         },
         props: {
             widgetGroupList: {
@@ -64,6 +77,7 @@
         data () {
             return {
                 activeCollapses: [],
+                popoverWidth: 300,
                 widgetGroups: [],
                 widgetsToUpdate: []
             }
@@ -134,7 +148,7 @@
             widgetGroupList: {
                 deep: true,
                 immediate: true,
-                handler(value) {
+                handler (value) {
                     this.widgetGroups = cloneDeep(value)
                 }
             }
@@ -142,7 +156,6 @@
     }
 </script>
 <style lang="scss" scoped>
-
     .items {
         @apply flex bg-gray-100 w-full p-2;
         border: 1px dashed;

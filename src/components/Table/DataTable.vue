@@ -1,11 +1,9 @@
 <template>
-    <div class="data-table__container">
+    <div class="data-table__container h-full">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
             <div class="flex items-center">
                 <slot name="title"/>
-                <div class="flex w-48 sm:w-64 px-1">
-                    <slot name="search-input"/>
-                </div>
+                <slot name="search-input"/>
             </div>
             <slot name="time-frame"/>
             <div :class="margins"
@@ -27,13 +25,11 @@
                 <slot name="additional-data"/>
             </div>
         </div>
-        <slot name="container-above"/>
-        <div class="bg-white rounded-lg mt-1 data-table w-full">
+        <div class="bg-white rounded-lg mt-1 data-table w-full" style="height: calc(100% - 2.2rem)">
             <el-table :data="rowsData"
                       :fit="fitWidth"
                       :key="tableKey"
-                      :style="customStyle"
-                      class="rounded-lg"
+                      class="rounded-lg h-full"
                       :id="tableId"
                       ref="table"
                       row-key="id"
@@ -169,10 +165,6 @@
             manageColumns: {
                 type: Boolean,
                 default: true
-            },
-            customStyle: {
-                type: Object,
-                default: () => ({})
             },
         },
         data () {

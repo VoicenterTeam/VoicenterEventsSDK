@@ -27,7 +27,6 @@ export const settings = {
         widgetGroupFrames: storageColors.widgetGroupFrames || "#edf2f7",
         widgetGroupTitles: storageColors.widgetGroupTitles || '#000000'
     },
-    showWidgetAsTabs: false,
     showWidgetTitles: true,
     fontSize: 16,
     widgetTitlesFontSize: 22,

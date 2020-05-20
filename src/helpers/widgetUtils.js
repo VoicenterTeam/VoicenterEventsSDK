@@ -99,10 +99,6 @@ export function isQueueChart (widget) {
     return widget.DataTypeID === widgetDataTypes.CHART_QUEUE;
 }
 
-export function isHtmlWidget (widget) {
-    return widget.DataTypeID === widgetDataTypes.RICH_TEXT_EDITOR_ID;
-}
-
 export function isQueueDashboardWidget (widget) {
     return widget.DataTypeID === widgetDataTypes.QUEUE_DASHBOARD && !isQueueActivityGauge(widget)
 }
@@ -111,18 +107,6 @@ export function isQueueActivityGauge (widget) {
     return widget.EndPoint.includes(queueActivityGaugeKey);
 }
 
-export function isQueueActiveCall (widget) {
-    return widget.DataTypeID === widgetDataTypes.QUEUE_ACTIVE_CALL;
-}
-
 export function isAreaChartWidget (widget) {
     return widget.DataTypeID === widgetDataTypes.CHART_AREA_ID;
 }
-
-export const groupedWidgets = [
-    widgetDataTypes.COUNTER_TYPE_ID,
-    widgetDataTypes.CHART_SPEEDOMETER,
-    widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
-    widgetDataTypes.PIE_TYPE_ID,
-    widgetDataTypes.TOTAL_OUTGOING_CALLS,
-]

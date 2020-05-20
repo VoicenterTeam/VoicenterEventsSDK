@@ -1,12 +1,12 @@
 <template>
-    <div class="relative mt-1">
-        <div class="absolute top-0 right-0 mt-1 mr-12 widget-delete__button"
+    <div class="relative mt-1 grid-stack-item-content">
+        <div class="absolute top-0 right-0 mr-12 widget-delete__button mt-0-5"
              v-if="editable && showDeleteButton" :style="getPadding">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
                 <delete-button @click="removeWidget(widget)"/>
             </el-tooltip>
         </div>
-        <div class="absolute top-0 right-0 widget-edit__button mt-1"
+        <div class="absolute top-0 right-0 widget-edit__button mt-0-5"
              v-if="showDeleteButton" :style="getPadding">
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
                 <edit-button @click="showUpdateDialog = true"
@@ -18,7 +18,7 @@
                    :data="widget"
                    v-bind="widget.WidgetLayout"
                    :editable="editable"
-                   class="widget"
+                   class="widget h-full"
                    :style="getStyles"
                    @on-update="(data) => onUpdate(data)"
                    @remove-item="removeWidget(widget)">

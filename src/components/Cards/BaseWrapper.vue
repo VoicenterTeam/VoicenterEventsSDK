@@ -1,6 +1,8 @@
 <template>
     <div :style="styles"
-         class="w-auto bg-white px-6 flex items-center justify-between rounded-lg shadow widget-card p-4">
+         v-if="widget.WidgetID"
+         :ref="`wrapperContainer-${widget.WidgetID}`"
+         class="w-auto h-full flex items-center rounded-lg justify-between p-4">
         <div :class="{'flex-col': isVertical}"
              class="w-full flex items-center justify-center">
             <slot name="icon">
@@ -26,23 +28,19 @@
                 <template v-if="editable">
                     <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
                         <trash-icon @click="$emit('remove-item')"
-                                    class="flex align-center w-8 h-8 p-2 text-red trash-icon"/>
+                                    class="flex cursor-pointer align-center w-6 h-8 py-2 text-red trash-icon"/>
                     </el-tooltip>
                     <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
                         <edit-icon :style="mainColor"
                                    @click="showModal"
-                                   class="flex align-center w-10 h-8 p-2 edit-icon text-primary"/>
+                                   class="flex cursor-pointer align-center w-6 h-8 py-2 edit-icon text-primary"/>
                     </el-tooltip>
-                    <div class="flex">
-                        <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-1"/>
-                        <more-vertical-icon class="flex align-center w-5 h-8 text-primary -mx-2"/>
-                    </div>
                 </template>
                 <template v-else>
                     <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
                         <edit-icon :style="mainColor"
                                    @click="showModal"
-                                   class="flex align-center w-10 h-8 p-2 edit-card-icon text-primary"/>
+                                   class="flex cursor-pointer align-center w-6 h-8 py-2 edit-card-icon text-primary"/>
                     </el-tooltip>
                 </template>
             </div>
@@ -51,14 +49,13 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
+    import {EditIcon, TrashIcon} from 'vue-feather-icons'
     import {Tooltip} from "element-ui";
 
     export default {
         components: {
             TrashIcon,
             EditIcon,
-            MoreVerticalIcon,
             [Tooltip.name]: Tooltip,
         },
         props: {
@@ -90,6 +87,10 @@
                 type: Object,
                 default: () => ({}),
             },
+            widget: {
+                type: Object,
+                default: () => ({}),
+            }
         },
         data () {
             return {
@@ -97,9 +98,6 @@
             }
         },
         computed: {
-            pageWidth () {
-                return this.$store.state.utils.page.width
-            },
             mainColor () {
                 return get(this.styles, 'color')
             },
@@ -117,27 +115,26 @@
             },
         },
         methods: {
-            checkIfCardIsVertical () {
-                this.isVertical = this.layoutConfig.minWidth < 280;
+            checkIfCardIsVertical (WidgetID) {
+                let wrapper = this.$refs[`wrapperContainer-${WidgetID}`]
+                if (!wrapper) {
+                    return
+                }
+                this.isVertical = wrapper.clientWidth < 280;
             },
             showModal () {
                 this.$emit('show-modal')
             }
         },
-        mounted () {
-            setTimeout(() => {
-                this.checkIfCardIsVertical()
-            }, 50)
-        },
         watch: {
-            pageWidth: {
-                immediate: true,
-                handler () {
-                    this.checkIfCardIsVertical()
+            widget: {
+                deep: true,
+                immediate:true,
+                handler(widget) {
+                    this.$nextTick(() => {
+                        this.checkIfCardIsVertical(widget.WidgetID)
+                    })
                 }
-            },
-            'layoutConfig.minWidth' () {
-                this.$nextTick(this.checkIfCardIsVertical)
             }
         }
     }

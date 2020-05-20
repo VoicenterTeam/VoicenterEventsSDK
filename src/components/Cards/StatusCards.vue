@@ -10,6 +10,7 @@
             @show-modal="onShowModal"
             v-bind="$attrs"
             v-on="$listeners"
+            :widget="data"
         />
         <update-dialog
             :model="model"
