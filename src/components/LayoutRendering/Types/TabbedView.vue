@@ -31,9 +31,9 @@
             Tabs
         },
         props: {
-            activeDashboardData: {
-                type: Object,
-                default: () => ({})
+            widgetGroupList: {
+                type: Array,
+                default: () => []
             },
             editMode: {
                 type: Boolean,
@@ -56,7 +56,7 @@
                 }
             },
             tabs() {
-                let data = this.activeDashboardData.WidgetGroupList
+                let data = this.widgetGroupList
                 return this.$rtl.isRTL ? data.reverse() : data
             },
             widgetsViewMode() {

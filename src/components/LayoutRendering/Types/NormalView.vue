@@ -1,8 +1,7 @@
 <template>
-    <div :key="dashboardKey">
+    <div>
         <transition-group name="flip-list">
-            <div v-for="widgetGroup in activeDashboardData.WidgetGroupList" :key="widgetGroup.WidgetGroupID"
-                 class=""
+            <div v-for="widgetGroup in widgetGroupList" :key="widgetGroup.WidgetGroupID"
                  :class="{'editable-widgets px-2 sm:px-8':editMode}">
                 <div v-if="editMode" class="flex items-center justify-between">
                     <base-input v-model="widgetGroup.WidgetGroupTitle"/>
@@ -39,10 +38,6 @@
             WidgetList
         },
         props: {
-            activeDashboardData: {
-                type: Object,
-                default: () => ({})
-            },
             editMode: {
                 type: Boolean,
                 default: false
@@ -50,16 +45,11 @@
             widgetTemplates: {
                 type: Array,
                 default: () => []
-            }
-        },
-        computed: {
-            dashboardKey() {
-                return this.activeDashboardData.ID
             },
-        }
+            widgetGroupList: {
+                type: Array,
+                default: () => []
+            },
+        },
     }
 </script>
-
-<style scoped>
-
-</style>

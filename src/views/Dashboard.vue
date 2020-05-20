@@ -22,7 +22,10 @@
                         </AddButton>
                         <manage-dashboard-buttons
                             :edit-mode="editMode"
-                            @click.stop="editMode = !editMode"
+                            :layoutType="layoutType"
+                            :widgetGroupList="activeDashboardData.WidgetGroupList"
+                            @edit-group="onEditGroup"
+                            @remove-widget-group="removeWidgetGroup"
                             @reset-dashboard="resetDashboard"
                             @save-dashboard="saveDashboard">
                         </manage-dashboard-buttons>
@@ -55,14 +58,13 @@
                     <fade-transition :duration="250" mode="out-in">
                         <keep-alive>
                             <component
-                                :activeDashboardData="activeDashboardData"
                                 :activeTab="activeTab"
                                 :editMode="editMode"
                                 :is="layoutTypes[layoutType]"
                                 :layoutType="layoutType"
+                                :widgetGroupList="groupsToDisplay"
                                 :widgetTemplates="allWidgetTemplates"
                                 @addWidgetsToGroup="addWidgetsToGroup"
-                                @moveGroups="(data) => moveWidgetGroup(data.widgetGroup, data.direction)"
                                 @onListChange="(data) => onListChange(data.event, data.group)"
                                 @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
                                 @removeWidget="(data) => removeWidget(data.widget, data.group)"
@@ -78,8 +80,8 @@
                 :widgetGroupList="activeDashboardData.WidgetGroupList"
                 :width="'50%'"
                 @on-cancel="triggerReorderDataDialog"
-                @removeWidget="(data) => removeWidget(data.widget, data.group)"
                 @on-submit="reorderWidgetGroup"
+                @removeWidget="(data) => removeWidget(data.widget, data.group)"
                 v-if="showReorderDataDialog"
             />
         </div>
@@ -88,7 +90,7 @@
 <script>
     import map from 'lodash/map'
     import get from 'lodash/get'
-    import {Notification, Tooltip} from 'element-ui'
+    import {Tooltip} from 'element-ui'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
@@ -146,7 +148,8 @@
                 operations: new DashboardOperations(),
                 activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
                 showReorderDataDialog: false,
-                socketResync: false
+                socketResync: false,
+                groupToEdit: {}
             }
         },
         computed: {
@@ -183,10 +186,21 @@
             },
             activeWidgetGroupID () {
                 return this.activeTab || get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
+            },
+            groupsToDisplay () {
+                if (this.editMode) {
+                    return [this.groupToEdit]
+                }
+                return this.activeDashboardData.WidgetGroupList
             }
         },
         methods: {
             retrySocketConnection,
+            onEditGroup (widgetGroup) {
+                this.groupToEdit = widgetGroup
+                this.editMode = true
+                this.operations = new DashboardOperations()
+            },
             async addWidgetsToGroup (data = {}) {
                 let {widgets: widgetTemplates, group: widgetGroup} = data
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
@@ -201,41 +215,6 @@
 
                 this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
                 this.showWidgetMenu = false
-            },
-            moveWidgetGroup (widgetGroup, direction) {
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                let newIndex = index;
-                if (direction === 'up') {
-                    newIndex = index - 1;
-                } else {
-                    newIndex = index + 1;
-                }
-
-                if (newIndex < 0) {
-                    //move first down
-                    let selectedGroup = this.activeDashboardData.WidgetGroupList[0];
-                    this.activeDashboardData.WidgetGroupList.splice(0, 1)
-                    this.activeDashboardData.WidgetGroupList.push(selectedGroup)
-                    this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
-                        group.Order = index
-                    })
-                } else if (newIndex >= this.activeDashboardData.WidgetGroupList.length) {
-                    //move last up
-                    let newPosition = this.activeDashboardData.WidgetGroupList.length - 1;
-                    let selectedGroup = this.activeDashboardData.WidgetGroupList[newPosition];
-                    this.activeDashboardData.WidgetGroupList.splice(newPosition, 1)
-                    this.activeDashboardData.WidgetGroupList.splice(0, 0, selectedGroup)
-                    this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
-                        group.Order = index
-                    })
-                } else {
-                    let originWidget = this.activeDashboardData.WidgetGroupList[index];
-                    let destinationWidget = this.activeDashboardData.WidgetGroupList[newIndex];
-                    originWidget.Order = newIndex
-                    destinationWidget.Order = index
-                    this.activeDashboardData.WidgetGroupList.splice(newIndex, 1, originWidget)
-                    this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationWidget)
-                }
             },
             reorderWidgetGroup (data = {}) {
                 let {allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate, widgetsToUpdate: widgetsToUpdate} = data
@@ -325,7 +304,10 @@
                 }
             },
             addNewGroup () {
-                this.activeDashboardData.WidgetGroupList.splice(0, 0, widgetGroupModel())
+                const group = {...widgetGroupModel}
+                this.groupToEdit = group
+
+                this.activeDashboardData.WidgetGroupList.splice(0, 0, group)
                 this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
                     group.Order = index
                 })
@@ -347,6 +329,7 @@
             },
             async saveDashboard () {
                 this.showWidgetMenu = false
+                this.editMode = false
                 //CheckWidgetGroupUpdates
                 this.updateDashboardOperations()
                 //RunDashboardOperations
@@ -373,6 +356,7 @@
             },
             resetDashboard () {
                 this.showWidgetMenu = false
+                this.editMode = false
                 let dashboard = this.$store.state.dashboards.activeDashboard
                 this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
@@ -407,7 +391,7 @@
                 } catch (e) {
                 }
             },
-            triggerReorderDataDialog() {
+            triggerReorderDataDialog () {
                 this.resetDashboard()
                 this.showReorderDataDialog = false
             }

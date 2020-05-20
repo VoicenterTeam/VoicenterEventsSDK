@@ -1,147 +1,153 @@
 <template>
     <div>
         <div class="navbar__wrapper" v-if="activeDashboard">
-        <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
-            <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-4 flex xl:mx-16">
-            <menu-icon
-                class="w-8 h-8 p-2 text-primary shadow rounded bg-white hover:bg-primary-100 flex md:hidden mx-4 cursor-pointer"
-                @click="triggerMobileMenu"/>
-            <div class="hidden md:flex">
-                <div class="relative">
-                    <div class="flex items-center py-3 mx-4 xl:mx-16">
-                        <div class="flex items-center px-2">
+            <nav class="navbar w-full bg-white py-3 flex items-center justify-between z-10">
+                <img :src="getLogo" alt="Logo" class="h-10 mb-2 mx-4 flex xl:mx-16">
+                <menu-icon
+                    @click="triggerMobileMenu"
+                    class="w-8 h-8 p-2 text-primary shadow rounded bg-white hover:bg-primary-100 flex md:hidden mx-4 cursor-pointer"/>
+                <div class="hidden md:flex">
+                    <div class="relative">
+                        <div class="flex items-center py-3 mx-4 xl:mx-16">
+                            <div class="flex items-center px-2">
+                                <slot name="dashboard-operations"/>
+                                <div @click="showEditSettingsDialog = true"
+                                     class="flex px-1 cursor-pointer outline-none">
+                                    <el-tooltip :content="$t('tooltip.general.settings')" class="item" effect="dark"
+                                                placement="bottom">
+                                        <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
+                                            <IconSettings class="text-primary"/>
+                                        </button>
+                                    </el-tooltip>
+                                </div>
+                                <language-select :value="activeLanguage" @change="onLocaleChange"/>
+                            </div>
+                            <div class="relative">
+                                <button @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')"
+                                        class="flex items-center px-1 rounded-lg cursor-pointer outline-none">
+                                    <span class="mx-1 text-main-sm md:text-main-lg text-gray-700"
+                                          v-if="activeDashboard">{{activeDashboard.DashboardTitle}}</span>
+                                    <IconArrowDown/>
+                                </button>
+                                <fade-transition :duration="250">
+                                    <div class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0"
+                                         v-click-outside="onMenuClickOutside"
+                                         v-if="showDashboardsMenu">
+                            <span :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}"
+                                  @click="chooseDashboard(dashboard)"
+                                  class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
+                                  v-for="dashboard in allDashboards">
+                                  {{dashboard.DashboardTitle}}
+                                <el-tooltip :content="$t('common.deleteDashboard')" class="item" effect="dark"
+                                            placement="top">
+                                    <IconMinus :class="$rtl.isRTL ? 'float-left' : 'float-right'"
+                                               class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
+                                               v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
+                                               v-on:click.stop.prevent="deleteDashboard(dashboard)">
+                                    </IconMinus>
+                                </el-tooltip>
+                            </span>
+                                        <span
+                                            @click="createNewDashboard()"
+                                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center">
+                                <IconPlus class="w-3 mr-1 mb-1 text-primary"/>
+                                <span>{{$t('common.newDashboard')}}</span>
+                            </span>
+                                    </div>
+                                </fade-transition>
+                            </div>
+                            <div class="relative">
+                                <button @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')"
+                                        class="flex items-center px-1 rounded-lg cursor-pointer outline-none">
+                            <span
+                                class="mx-1 text-main-sm md:text-main-lg text-gray-700">{{currentAccount.name || $t('navbar.default.username')}}</span>
+                                    <IconArrowDown/>
+                                </button>
+                                <fade-transition :duration="250">
+                                    <div class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0 max-h-screen overflow-auto"
+                                         v-click-outside="onMenuClickOutside"
+                                         v-if="showUsersMenu">
+                                    <span :class="{ 'text-primary': currentAccountId === account.ID}"
+                                          @click="chooseAccount(account)"
+                                          class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
+                                          v-for="account in allAccounts">
+                                        {{account.name || $t('navbar.default.username') }}
+                                    </span>
+                                        <span @click="logout"
+                                              class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer">{{$t('navbar.logout')}}</span>
+                                    </div>
+                                </fade-transition>
+                            </div>
+                        </div>
+                    </div>
+                    <settings
+                        :activeDashboard="activeDashboard"
+                        :visible.sync="showEditSettingsDialog"
+                        :width="'55%'"
+                        v-if="showEditSettingsDialog">
+                    </settings>
+                </div>
+            </nav>
+            <fade-transition :duration="400">
+                <div class="flex absolute flex-col mt-16 z-10 bg-white w-full py-10"
+                     v-if="showMobileMenu">
+                    <div class="mx-4">
+                        <div class="flex items-center justify-center rounded border">
                             <slot name="dashboard-operations"/>
-                            <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
-                                <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
+                            <div @click="showEditSettingsDialog = true" class="flex px-1 cursor-pointer outline-none">
+                                <el-tooltip :content="$t('tooltip.general.settings')" class="item" effect="dark"
                                             placement="bottom">
                                     <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
                                         <IconSettings class="text-primary"/>
                                     </button>
                                 </el-tooltip>
+                                <language-select :value="$i18n.locale" @change="onLocaleChange"/>
                             </div>
-                            <language-select :value="activeLanguage" @change="onLocaleChange"/>
                         </div>
-                        <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
-                                @click.stop="triggerMenus('showDashboardsMenu', 'showUsersMenu')">
-                            <span class="mx-1 text-main-sm md:text-main-lg text-gray-700" v-if="activeDashboard">{{activeDashboard.DashboardTitle}}</span>
-                            <IconArrowDown/>
-                        </button>
-                        <button class="flex items-center px-1 rounded-lg cursor-pointer outline-none"
-                                @click.stop="triggerMenus('showUsersMenu', 'showDashboardsMenu')">
-                        <span
-                            class="mx-1 text-main-sm md:text-main-lg text-gray-700">{{currentAccount.name || $t('navbar.default.username')}}</span>
-                            <IconArrowDown/>
-                        </button>
-                    </div>
-                    <fade-transition :duration="250">
-                        <div v-if="showDashboardsMenu"
-                             v-click-outside="onMenuClickOutside"
-                             class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col dashboard-menu">
-                    <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
-                          @click="chooseDashboard(dashboard)"
-                          v-for="dashboard in allDashboards"
-                          :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}">
-                          {{dashboard.DashboardTitle}}
-                        <el-tooltip class="item" effect="dark" :content="$t('common.deleteDashboard')"
-                                    placement="top">
-                            <IconMinus v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
-                                       class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
-                                       :class="$rtl.isRTL ? 'float-left' : 'float-right'"
-                                       v-on:click.stop.prevent="deleteDashboard(dashboard)">
-                            </IconMinus>
-                        </el-tooltip>
-                    </span>
-                            <span
-                                class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center"
-                                @click="createNewDashboard()">
-                        <IconPlus class="w-3 mr-1 mb-1 text-primary"/>
-                        <span>{{$t('common.newDashboard')}}</span>
-                    </span>
+                        <el-select
+                            :value="activeDashboard.DashboardID"
+                            class="w-full py-2">
+                            <el-option :key="dashboard.DashboardID"
+                                       :label="dashboard.DashboardTitle"
+                                       :value="dashboard.DashboardID"
+                                       v-for="dashboard in allDashboards">
+                                <p @click="chooseDashboard(dashboard)">{{dashboard.DashboardTitle}}</p>
+                            </el-option>
+                        </el-select>
+                        <el-select
+                            :value="get(allAccounts, '[0].ID')"
+                            class="w-full py-2">
+                            <el-option :key="account.ID"
+                                       :label="account.name"
+                                       :value="account.ID"
+                                       v-for="account in allAccounts">
+                                <p @click="chooseAccount(account)">{{account.name || $t('navbar.default.username')
+                                    }}</p>
+                            </el-option>
+                        </el-select>
+                        <div @click="logout" class="flex justify-center pt-2">
+                            {{$t('navbar.logout')}}
                         </div>
-                    </fade-transition>
-                    <fade-transition :duration="250">
-                        <div v-if="showUsersMenu"
-                             v-click-outside="onMenuClickOutside"
-                             class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col users-menu max-h-screen overflow-auto">
-                        <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
-                              @click="chooseAccount(account)"
-                              v-for="account in allAccounts"
-                              :class="{ 'text-primary': currentAccountId === account.ID}">
-                            {{account.name || $t('navbar.default.username') }}
-                        </span>
-                            <span class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
-                                  @click="logout">{{$t('navbar.logout')}}
-                        </span>
-                        </div>
-                    </fade-transition>
-                </div>
-                <settings
-                    v-if="showEditSettingsDialog"
-                    :activeDashboard="activeDashboard"
-                    :width="'55%'"
-                    :visible.sync="showEditSettingsDialog">
-                </settings>
-            </div>
-        </nav>
-        <fade-transition :duration="400">
-            <div class="flex absolute flex-col mt-16 z-10 bg-white w-full py-10"
-                 v-if="showMobileMenu">
-                <div class="mx-4">
-                    <div class="flex items-center justify-center rounded border">
-                        <slot name="dashboard-operations"/>
-                        <div class="flex px-1 cursor-pointer outline-none" @click="showEditSettingsDialog = true">
-                            <el-tooltip class="item" effect="dark" :content="$t('tooltip.general.settings')"
-                                        placement="bottom">
-                                <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
-                                    <IconSettings class="text-primary"/>
-                                </button>
-                            </el-tooltip>
-                            <language-select :value="$i18n.locale" @change="onLocaleChange"/>
-                        </div>
-                    </div>
-                    <el-select
-                        class="w-full py-2"
-                        :value="activeDashboard.DashboardID">
-                        <el-option v-for="dashboard in allDashboards"
-                                   :value="dashboard.DashboardID"
-                                   :label="dashboard.DashboardTitle"
-                                   :key="dashboard.DashboardID">
-                            <p @click="chooseDashboard(dashboard)">{{dashboard.DashboardTitle}}</p>
-                        </el-option>
-                    </el-select>
-                    <el-select
-                        class="w-full py-2"
-                        :value="get(allAccounts, '[0].ID')">
-                        <el-option v-for="account in allAccounts"
-                                   :value="account.ID"
-                                   :label="account.name"
-                                   :key="account.ID">
-                            <p @click="chooseAccount(account)">{{account.name || $t('navbar.default.username') }}</p>
-                        </el-option>
-                    </el-select>
-                    <div class="flex justify-center pt-2" @click="logout">
-                        {{$t('navbar.logout')}}
                     </div>
                 </div>
-            </div>
-        </fade-transition>
-    </div>
-        <div v-if="accountNoData" class="min-h-screen flex">
+            </fade-transition>
+        </div>
+        <div class="min-h-screen flex" v-if="accountNoData">
             <div class="w-full flex flex-col items-center justify-center"
                  key="no-data">
                 <IconNoData class="h-56 w-56"/>
                 <p class="text-gray-600 max-w-lg text-center">{{$t('Account no data')}}</p>
                 <span
-                    class="hover:bg-primary-100 hover:text-primary py-1 mt-2 px-4 cursor-pointer text-gray-600 flex items-center border-2 rounded"
-                    @click="createNewDashboard()">
+                    @click="createNewDashboard()"
+                    class="hover:bg-primary-100 hover:text-primary py-1 mt-2 px-4 cursor-pointer text-gray-600 flex items-center border-2 rounded">
                         <IconPlus class="w-3 mr-1 mb-0-5 text-primary"/>
                         <span>{{$t('common.newDashboard')}}</span>
                     </span>
             </div>
         </div>
-        <modal :visible.sync="showCreateDashboardDialog"
-               :append-to-body="true" :width="dialogWidth">
-            <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">
+        <modal :append-to-body="true"
+               :visible.sync="showCreateDashboardDialog" :width="dialogWidth">
+            <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">
                 {{$t('Add Dashboard')}}</h3>
             <el-form @submit.native.prevent="confirmNewDashboard">
                 <el-form-item>
@@ -151,14 +157,14 @@
             </el-form>
             <template slot="footer">
                 <el-button @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
-                <el-button type="primary" @click="confirmNewDashboard">{{$t('common.save')}}</el-button>
+                <el-button @click="confirmNewDashboard" type="primary">{{$t('common.save')}}</el-button>
             </template>
         </modal>
     </div>
 </template>
 <script>
     import get from 'lodash/get'
-    import { Option, Select, Tooltip} from 'element-ui'
+    import {Option, Select, Tooltip} from 'element-ui'
     import {MenuIcon} from 'vue-feather-icons'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
@@ -175,7 +181,7 @@
             LanguageSelect,
             MenuIcon,
         },
-        data() {
+        data () {
             return {
                 get,
                 showDashboardsMenu: false,
@@ -188,44 +194,44 @@
             }
         },
         computed: {
-            activeDashboard() {
+            activeDashboard () {
                 return this.$store.getters['dashboards/getActiveDashboard']
             },
-            allDashboards() {
+            allDashboards () {
                 return this.$store.state.dashboards.allDashboards
             },
-            currentAccount() {
+            currentAccount () {
                 return this.$store.getters['entities/getCurrentAccount']
             },
-            currentAccountId() {
+            currentAccountId () {
                 return this.$store.state.entities.selectedAccountID
             },
-            allAccounts() {
+            allAccounts () {
                 return this.$store.getters['entities/accountsList']
             },
-            getLogo() {
+            getLogo () {
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
-            activeLanguage() {
+            activeLanguage () {
                 return localStorage.getItem('locale') || this.$i18n.locale
             },
             loadingData () {
                 return this.$store.state.dashboards.loadingData;
             },
-            accountNoData() {
+            accountNoData () {
                 return !this.activeDashboard && !this.loadingData;
             }
         },
         methods: {
-            chooseDashboard(dashboard) {
+            chooseDashboard (dashboard) {
                 this.$store.dispatch('dashboards/selectDashboard', dashboard)
                 this.showDashboardsMenu = false
             },
-            createNewDashboard() {
+            createNewDashboard () {
                 this.showCreateDashboardDialog = true
                 this.showDashboardsMenu = false
             },
-            confirmNewDashboard() {
+            confirmNewDashboard () {
                 this.$store.dispatch('dashboards/createDashboard', {
                     ...this.newDashboard,
                     AccountID: this.$store.state.entities.selectedAccountID,
@@ -233,15 +239,15 @@
                 this.newDashboard = dashboardModel()
                 this.showCreateDashboardDialog = false
             },
-            onMenuClickOutside() {
+            onMenuClickOutside () {
                 this.showDashboardsMenu = false
                 this.showUsersMenu = false
             },
-            chooseAccount(account) {
+            chooseAccount (account) {
                 this.$store.commit('entities/SET_SELECTED_ACCOUNT_ID', account.ID)
                 this.showUsersMenu = false
             },
-            deleteDashboard(dashboard) {
+            deleteDashboard (dashboard) {
                 this.$confirm(
                     this.$t('common.confirm.question', {
                         action: this.$t('to delete this dashboard'),
@@ -252,15 +258,15 @@
                     this.$store.dispatch('dashboards/deleteDashboard', dashboard)
                 })
             },
-            logout() {
+            logout () {
                 localStorage.clear()
                 this.$store.dispatch('users/logout')
             },
-            triggerMenus(clicked, second) {
+            triggerMenus (clicked, second) {
                 this[clicked] = !this[clicked];
                 this[second] = false;
             },
-            onLocaleChange(val) {
+            onLocaleChange (val) {
                 this.$store.dispatch('lang/setLanguage', val)
                 this.$i18n.locale = val
                 if (val === 'he') {
@@ -269,7 +275,7 @@
                     this.$rtl.disableRTL()
                 }
             },
-            triggerMobileMenu() {
+            triggerMobileMenu () {
                 this.showMobileMenu = !this.showMobileMenu
             }
         }
@@ -285,25 +291,4 @@
         top: 0;
         border-bottom: 1px solid var(--silver-color);
     }
-
-    .users-menu {
-        right: 3rem;
-    }
-
-    .dashboard-menu {
-        right: 11rem;
-        max-height: 500px;
-        overflow: auto;
-    }
-
-    .rtl .users-menu {
-        left: 3rem;
-        right: auto;
-    }
-
-    .rtl .dashboard-menu {
-        left: 11rem;
-        right: auto;
-    }
-
 </style>

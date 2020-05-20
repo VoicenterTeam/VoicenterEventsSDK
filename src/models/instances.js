@@ -12,13 +12,13 @@ export const dashboardModel = () => {
     }
 }
 
-export const widgetGroupModel = () => ({
+export const widgetGroupModel = {
     "Order": 0,
     "WidgetGroupID": Math.random() * 100,
     "WidgetGroupTitle": "",
     "WidgetList": [],
     "IsNew": true
-})
+}
 
 export const dashboardOperation = (type, target, payload, parentID = null, temporaryID = false) => ({
     type: type,

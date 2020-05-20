@@ -1,32 +1,17 @@
 <template>
-    <div class="flex">
-        <el-tooltip class="item" effect="dark" :content="$t('tooltip.move.group.down')" placement="top">
-            <ArrowDownIcon class="flex align-center w-6 h-6 mx-1 text-primary cursor-pointer"
-                           @click="orderWidgetGroup('down')">
-            </ArrowDownIcon>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" :content="$t('tooltip.move.group.up')" placement="top">
-            <ArrowUpIcon class="flex align-center w-6 h-6 mx-2 text-primary cursor-pointer"
-                         @click="orderWidgetGroup('up')">
-            </ArrowUpIcon>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.group')" placement="top">
-            <Trash2Icon class="flex align-center w-6 h-6 mx-1 text-red cursor-pointer"
-                        @click="$emit('removeGroup', widgetGroup)">
-            </Trash2Icon>
-        </el-tooltip>
-    </div>
+    <el-tooltip :content="$t('tooltip.remove.group')" class="item" effect="dark" placement="top">
+        <Trash2Icon @click="$emit('removeGroup', widgetGroup)"
+                    class="flex align-center w-6 h-6 mx-1 text-red cursor-pointer">
+        </Trash2Icon>
+    </el-tooltip>
 </template>
 <script>
-
     import {Tooltip} from 'element-ui'
-    import {ArrowUpIcon, ArrowDownIcon, Trash2Icon} from 'vue-feather-icons'
+    import {Trash2Icon} from 'vue-feather-icons'
 
     export default {
         name: "edit-group-buttons",
         components: {
-            ArrowUpIcon,
-            ArrowDownIcon,
             Trash2Icon,
             [Tooltip.name]: Tooltip
         },
@@ -36,14 +21,5 @@
                 default: () => ({})
             }
         },
-        methods: {
-            orderWidgetGroup(direction) {
-                this.$emit('moveGroups', {'widgetGroup': this.widgetGroup, 'direction': direction})
-            }
-        }
     }
 </script>
-
-<style scoped>
-
-</style>
