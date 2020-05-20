@@ -127,8 +127,8 @@
                         <div class="flex flex-row items-center pt-10">
                             <label>{{$t('Data labels color')}}</label>
                             <el-color-picker
-                                class="mx-4"
                                 :predefine="predefinedColors"
+                                class="mx-4"
                                 v-model="model.WidgetLayout.dataLabelsColor"/>
                         </div>
                     </el-form-item>
@@ -200,7 +200,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, InputNumber, Radio, RadioGroup, Slider, ColorPicker} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Radio, RadioGroup, Slider} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import queueMixin from '@/mixins/queueMixin'
     import {allSeries} from '@/enum/queueConfigs'
@@ -379,16 +379,24 @@
                                 return
                             }
 
-                            if (typeof config.WidgetParameterValueJson === 'object') {
-                                config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
-                            }
-
                             if (typeof config.WidgetParameterValue === 'object') {
                                 config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
                                 config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
                             }
+
+                            if (typeof config.WidgetParameterValueJson !== 'object') {
+                                return;
+                            }
+
+                            if (config.WidgetParameterValueJson['EntityPositive'].length) {
+                                config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
+                            } else {
+                                config.WidgetParameterValueJson['AccountList'] = []
+                            }
+
                         })
                     } catch (e) {
+                        console.warn(e)
                     }
 
                     this.$emit('on-update', this.model)

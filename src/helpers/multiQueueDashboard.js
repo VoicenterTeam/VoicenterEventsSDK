@@ -154,7 +154,7 @@ function queueAsColumns (records, displayRowWithTotals) {
     let queueTotals = tableColumns
 
     let exitTypeCounts = []
-    let allQueueCalls = 1
+    let allQueueCalls = 0
 
     records.forEach((column) => {
         let rowData = {
@@ -167,7 +167,7 @@ function queueAsColumns (records, displayRowWithTotals) {
 
         const additionalData = column[ADDITIONAL_DATA_KEY]
 
-        let qTotalCalls = column[TOTAL_CALLS_KEY] || 1
+        let qTotalCalls = column[TOTAL_CALLS_KEY] || 0
 
         allQueueCalls += Number(qTotalCalls)
 

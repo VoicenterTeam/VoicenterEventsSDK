@@ -231,8 +231,10 @@
             },
             async getWidgetData () {
                 try {
+                    
+                    const selectedEntityQueues = this.selectedQueues
 
-                    if (!this.queuesData.length) {
+                    if (!selectedEntityQueues.length) {
                         return
                     }
 
@@ -243,7 +245,7 @@
 
                     let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
                     let displayQueueAsColumn = this.displayQueueAsColumn
-                    let selectedEntityQueues = this.selectedQueues
+
 
                     let queueIDsFromSocket = data.map((queue) => queue.queue_id)
 
@@ -323,6 +325,7 @@
                 deep: true,
                 handler (data) {
                     this.widget = cloneDeep(data)
+                    this.getWidgetData()
                 }
             },
             queuesData: {
