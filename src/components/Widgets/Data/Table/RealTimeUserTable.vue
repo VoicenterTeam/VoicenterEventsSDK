@@ -53,12 +53,14 @@
                 <time-frame :widget="data"/>
             </template>
             <template v-slot:search-input>
-                <el-input
-                    clearable
-                    :placeholder="$t('Type text to filter')"
-                    size="medium"
-                    suffix-icon="el-icon-search"
-                    v-model="filter"/>
+                <div class="w-48 px-1">
+                    <el-input
+                        clearable
+                        :placeholder="$t('Type text to filter')"
+                        size="medium"
+                        suffix-icon="el-icon-search"
+                        v-model="filter"/>
+                </div>
             </template>
             <template v-slot:additional-data>
                 <p class="text-main-sm px-2">{{tableData.length}} row(s)</p>

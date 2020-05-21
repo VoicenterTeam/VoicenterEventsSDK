@@ -1,14 +1,19 @@
 <template>
     <div class="data-table__container h-full">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
+        <div class="flex flex-col w-full" :class="getClass">
             <div class="flex items-center">
                 <slot name="title"/>
                 <slot name="search-input"/>
             </div>
-            <slot name="time-frame"/>
+            <div class="hidden lg:flex">
+                <slot name="time-frame"/>
+            </div>
             <div :class="margins"
-                 class="flex items-center table-row__count">
-                <el-dropdown size="mini" trigger="click" v-if="manageColumns">
+                 class="flex items-center table-row__count pt-2 lg:pt-0">
+                <div class="flex lg:hidden">
+                    <slot name="time-frame"/>
+                </div>
+                <el-dropdown class="px-2" size="mini" trigger="click" v-if="manageColumns">
                     <el-button size="small" type="primary">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"/>
@@ -28,9 +33,9 @@
         <div class="bg-white rounded-lg mt-1 data-table w-full" style="height: calc(100% - 2.2rem)">
             <el-table :data="rowsData"
                       :fit="fitWidth"
+                      :id="tableId"
                       :key="tableKey"
                       class="rounded-lg h-full"
-                      :id="tableId"
                       ref="table"
                       row-key="id"
                       v-bind="$attrs"
@@ -199,6 +204,9 @@
                     return this.editable ? 'mr-24' : 'mr-12'
                 }
             },
+            getClass() {
+                return 'lg:flex-row lg:items-center lg:justify-between'
+            }
         },
         methods: {
             formatCell (row, column) {

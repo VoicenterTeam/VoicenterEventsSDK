@@ -52,10 +52,10 @@
                 <time-frame :widget="data"/>
             </template>
             <template v-slot:search-input>
-                <div class="flex w-48 sm:w-64 px-1">
+                <div class="w-48 px-1">
                     <el-input
                         clearable
-                        placeholder="Type text to filter"
+                        :placeholder="$t('Type text to filter')"
                         size="medium"
                         suffix-icon="el-icon-search"
                         v-model="filter"/>

@@ -1,6 +1,6 @@
 <template>
-    <div class="h-8">
-        <p v-if="title && showWidgetTitle" class="text-main-2xl font-semibold"
+    <div class="max-h-8 flex">
+        <p v-if="title && showWidgetTitle" class="text-main-2xl font-semibold truncate"
            :style="$store.getters['dashboards/widgetTitleStyles']">
             <slot>
                 {{$t(title)}}

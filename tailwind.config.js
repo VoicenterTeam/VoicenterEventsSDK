@@ -38,6 +38,10 @@ module.exports = {
             maxWidth: {
                 ...defaultTheme.maxWidth
             },
+            maxHeight: {
+                ...defaultTheme.maxHeight,
+                8: '2rem',
+            },
             spacing: {
                 '0-5': ' 0.125rem;',
                 9: '2.25rem',
