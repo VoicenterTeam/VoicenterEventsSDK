@@ -14,6 +14,7 @@
     import {convertHex} from '@/helpers/convertHex'
     import {queueActivities} from '@/enum/queueDashboardStatistics'
     import activityChartConfig from '@/components/Charts/Configs/ActivityGauge'
+    import bus from "@/event-bus/EventBus";
 
     export default {
         components: {
@@ -194,10 +195,7 @@
                 } catch (e) {
                     console.log(e)
                 }
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
+                this.reDrawChart()
             },
             initWidgetConfig () {
                 if (!this.data.WidgetLayout.ShowActivities) {
@@ -211,6 +209,20 @@
                 if (!this.data.WidgetLayout['mainActivity']) {
                     this.$set(this.data.WidgetLayout, 'mainActivity', 'AnswerCount')
                 }
+            },
+            triggerResizeEvent () {
+                bus.$on('widget-resized', (widgetID) => {
+                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                        return;
+                    }
+                    this.reDrawChart()
+                });
+            },
+            reDrawChart() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             }
         },
         watch: {
@@ -229,7 +241,8 @@
             },
         },
         mounted () {
-            this.initWidgetConfig();
+            this.initWidgetConfig()
+            this.triggerResizeEvent()
         }
     }
 </script>

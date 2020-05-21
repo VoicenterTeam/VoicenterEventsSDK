@@ -163,7 +163,15 @@
                 this.grid.resizable('.grid-stack-item', this.editable);
 
                 window.grids.push(this.grid)
+
+                this.resizeEventEmitter()
                 this.onDragStartEvent()
+            },
+            resizeEventEmitter () {
+                this.grid.on('gsresizestop', function (event, element) {
+                    const widgetID = element.getAttribute('data-gs-id')
+                    bus.$emit('widget-resized', widgetID);
+                });
             },
             tryDestroyGrid () {
                 const {grid, index} = this.findMatchingGrid()
@@ -184,7 +192,7 @@
                     })
                 })
             },
-            onDragStartEvent() {
+            onDragStartEvent () {
                 this.grid.on('dragstart', () => {
                     this.onMousedown()
                 });

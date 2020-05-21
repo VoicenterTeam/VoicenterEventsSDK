@@ -18,6 +18,7 @@
     import queueMixin from '@/mixins/queueMixin'
     import {getServerTimeOffset} from '@/enum/generic'
     import {administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS} from '@/enum/extensionStatuses'
+    import bus from "@/event-bus/EventBus";
 
     export default {
         mixins: [queueMixin],
@@ -169,7 +170,7 @@
                         }
                     })
                 })
-                
+
                 let agentsOnline = this.agentsOnline
                 let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
 
@@ -234,9 +235,21 @@
                         agents: agents,
                     });
                 })
-
             },
-
+            triggerResizeEvent () {
+                bus.$on('widget-resized', (widgetID) => {
+                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                        return;
+                    }
+                    this.reDrawChart()
+                });
+            },
+            reDrawChart() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
+            }
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {
@@ -248,6 +261,7 @@
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
             this.$nextTick(this.updateChartData)
+            this.triggerResizeEvent()
         },
         watch: {
             data() {

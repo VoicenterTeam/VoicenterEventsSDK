@@ -20,6 +20,7 @@
     import highchartsMoreInit from 'highcharts/highcharts-more'
     import solidGaugeInit from 'highcharts/modules/solid-gauge'
     import {isExternalDataWidget} from '@/helpers/widgetUtils'
+    import bus from "@/event-bus/EventBus";
 
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
@@ -64,10 +65,7 @@
                     this.chartData = this.getAgentsData()
                 }
 
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
+                this.reDrawChart()
             },
             getAgentsData () {
                 let queuesCount = this.getMaximumRange || this.allQueues.length
@@ -117,6 +115,20 @@
                 }]
 
                 return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
+            },
+            triggerResizeEvent () {
+                bus.$on('widget-resized', (widgetID) => {
+                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                        return;
+                    }
+                    this.reDrawChart()
+                });
+            },
+            reDrawChart() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             }
         },
         watch: {
@@ -134,6 +146,7 @@
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
+            this.triggerResizeEvent()
         },
     }
 </script>

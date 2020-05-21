@@ -17,6 +17,7 @@
     import widgetDataTypes from '@/enum/widgetDataTypes'
     import {getWidgetData} from '@/services/widgetService'
     import {getDefaultTimeDelay} from "@/enum/generic";
+    import bus from "@/event-bus/EventBus";
 
     export default {
         name: 'TimeLineChart',
@@ -84,14 +85,10 @@
                         },
                         ...chartData,
                     }
+
                     this.addLegendToChart(data)
-
-                    this.chartVisibility = false
-                    this.$nextTick(() => {
-                        this.chartVisibility = true
-                    })
-
                     this.chartOptions = data
+                    this.reDrawChart()
                 } catch (e) {
                     console.warn(e)
                     let status = get(e, 'response.status')
@@ -110,6 +107,20 @@
                     chart.legend.enabled = true
                 }
                 return chart
+            },
+            triggerResizeEvent () {
+                bus.$on('widget-resized', (widgetID) => {
+                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                        return;
+                    }
+                    this.reDrawChart()
+                });
+            },
+            reDrawChart() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             }
         },
         mounted() {
@@ -118,6 +129,7 @@
                     this.getWidgetData()
                 }, this.data.DefaultRefreshInterval)
             }
+            this.triggerResizeEvent()
         },
         watch: {
             data: {

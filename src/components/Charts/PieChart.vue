@@ -19,7 +19,7 @@
     import statusTypes from '@/enum/statusTypes'
     import {isExternalDataWidget} from '@/helpers/widgetUtils'
     import extensionMixin from '@/mixins/extensionMixin'
-    import {LOGOUT_STATUS} from "@/enum/extensionStatuses";
+    import bus from "@/event-bus/EventBus";
 
     export default {
         mixins: [extensionMixin],
@@ -83,10 +83,7 @@
                     colors,
                 };
 
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
+                this.reDrawChart()
             },
             async getChartSeriesData () {
                 let data = []
@@ -170,7 +167,24 @@
                 }
 
                 return data
+            },
+            triggerResizeEvent () {
+                bus.$on('widget-resized', (widgetID) => {
+                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                        return;
+                    }
+                    this.reDrawChart()
+                });
+            },
+            reDrawChart() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             }
+        },
+        mounted() {
+            this.triggerResizeEvent()
         },
         watch: {
             data: {

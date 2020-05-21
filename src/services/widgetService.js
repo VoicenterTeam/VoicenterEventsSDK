@@ -17,13 +17,12 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
     for (let template of templates) {
 
         const templateWidth = get(template, 'TemplateSettings.DefaultWidthPrecentage', '100')
+        const templateHeight = get(template, 'TemplateSettings.DefaultHeightPixels', '160')
 
-        // data-gs-height - 1 = 60px
-        const templateHeight = get(template, 'TemplateSettings.DefaultHeightPixels', '2')
         let widgetLayout = template.WidgetLayout
 
         widgetLayout['GridLayout']['width'] = Math.ceil(12 * Number(templateWidth) / 100);
-        widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 60);
+        widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 80);
 
         let newWidget = widgetModel(template.TemplateID, template.TemplateName, {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,
