@@ -156,6 +156,9 @@ function queueAsColumns (records, displayRowWithTotals) {
     let exitTypeCounts = []
     let allQueueCalls = 1
 
+    let maxRingTime = []
+    let avgRingTime = []
+
     records.forEach((column) => {
         let rowData = {
             ...tableColumns,
@@ -184,11 +187,12 @@ function queueAsColumns (records, displayRowWithTotals) {
         delete rowData[ADDITIONAL_DATA_KEY]
 
         if (displayRowWithTotals) {
+            maxRingTime.push(Number(column.MaxRingTime))
+            avgRingTime.push(Number(column.AvgRingTime))
+
             queueTotals.CallCount += Number(column.CallCount)
-            queueTotals.MaxRingTime += column.MaxRingTime
             queueTotals.NotInSLACount += column.NotInSLACount
             queueTotals.InSLACount += column.InSLACount
-            queueTotals.AvgRingTime += column.AvgRingTime
         }
 
         data.push(rowData)
@@ -205,8 +209,12 @@ function queueAsColumns (records, displayRowWithTotals) {
         }
 
         queueTotals.queue_id = 'All'
-        queueTotals.MaxRingTime = timeFormatter(queueTotals.MaxRingTime)
-        queueTotals.AvgRingTime = timeFormatter(queueTotals.AvgRingTime)
+
+        maxRingTime = Math.max(...maxRingTime)
+        avgRingTime = Math.max(...avgRingTime)
+
+        queueTotals.MaxRingTime = timeFormatter(maxRingTime)
+        queueTotals.AvgRingTime = timeFormatter(avgRingTime)
         data.splice(0, 0, queueTotals)
     }
 
