@@ -7,6 +7,7 @@
         >
             <div
                 :key="widget.WidgetID"
+                @mousedown="onMousedown"
                 class="grid-stack-item"
                 v-bind="gridStackAttributes(widget)"
                 v-for="widget in widgets">
@@ -80,7 +81,7 @@
                 const currentLanguage = this.$store.state.lang.language
                 return currentLanguage !== 'en';
             },
-            gridId() {
+            gridId () {
                 return `grid-stack-${this.widgetGroup.WidgetGroupID}`
             }
         },
@@ -131,7 +132,7 @@
             updateWidget (val) {
                 this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
             },
-            findMatchingGrid() {
+            findMatchingGrid () {
                 const matchingGridIndex = window.grids.findIndex(grid => grid.el.id === this.gridId)
 
                 return {
@@ -139,10 +140,10 @@
                     index: matchingGridIndex
                 }
             },
-            nextTick() {
-              return new Promise((resolve) => {
-                  this.$nextTick(resolve)
-              })
+            nextTick () {
+                return new Promise((resolve) => {
+                    this.$nextTick(resolve)
+                })
             },
             async initWindowGrid () {
                 await this.nextTick()
@@ -162,9 +163,10 @@
                 this.grid.resizable('.grid-stack-item', this.editable);
 
                 window.grids.push(this.grid)
+                this.onDragStartEvent()
             },
-            tryDestroyGrid() {
-                const { grid, index } = this.findMatchingGrid()
+            tryDestroyGrid () {
+                const {grid, index} = this.findMatchingGrid()
                 if (!grid) {
                     return
                 }
@@ -182,6 +184,19 @@
                     })
                 })
             },
+            onDragStartEvent() {
+                this.grid.on('dragstart', () => {
+                    this.onMousedown()
+                });
+            },
+            onMousedown () {
+                const isWidgetModalOpen = this.isWidgetModalOpen()
+                this.grid.movable('.grid-stack-item', !isWidgetModalOpen);
+            },
+            isWidgetModalOpen () {
+                let bodyElement = document.body;
+                return bodyElement.classList.contains("el-popup-parent--hidden")
+            }
         },
         mounted () {
             this.initWindowGrid()
