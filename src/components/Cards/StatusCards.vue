@@ -7,14 +7,14 @@
             :layoutConfig="layoutConfig"
             :showText="showStatusText"
             :styles="getCardStyles"
+            :widget="data"
             @show-modal="onShowModal"
             v-bind="$attrs"
             v-on="$listeners"
-            :widget="data"
         />
         <update-dialog
-            :model="model"
             :layoutConfig="layoutConfig"
+            :model="model"
             :visible.sync="showModal"
             @on-change="onChange"
             v-if="showModal">
@@ -51,6 +51,17 @@
                     </el-checkbox>
                 </div>
             </template>
+            <template v-slot:additional-data>
+                <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
+                    <el-collapse-item :title="$t('settings.filters')" name="filters">
+                        <auto-complete
+                            :key="index"
+                            :model="model.WidgetConfig[index]"
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isAutoComplete(filter)"/>
+                    </el-collapse-item>
+                </el-collapse>
+            </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
                 <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
@@ -59,14 +70,16 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import UpdateDialog from './UpdateDialog'
     import extensionMixin from '@/mixins/extensionMixin'
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import {defaultCardColors} from '@/enum/defaultWidgetSettings'
-    import {Checkbox, Option, Select, Tooltip} from 'element-ui'
+    import {Checkbox, Collapse, CollapseItem, Option, Select, Tooltip} from 'element-ui'
     import statusTypes, {callStatuses, otherStatuses} from '@/enum/statusTypes'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
+    import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
 
     export default {
         mixins: [extensionMixin, cardWidgetMixin],
@@ -90,10 +103,13 @@
         },
         components: {
             UpdateDialog,
+            AutoComplete,
             [Option.name]: Option,
             [Select.name]: Select,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
+            [Collapse.name]: Collapse,
+            [CollapseItem.name]: CollapseItem,
         },
         data () {
             return {
@@ -105,9 +121,15 @@
                 displayItemBorder: this.displayBorder,
                 model: {},
                 layoutConfig: {},
+                activeCollapse: ['filters'],
+                AUTO_COMPLETE_PARAMETER_TYPE: 6,
+                USER_ID_LIST_KEY: '{|User_ID_id_list|}',
             }
         },
         computed: {
+            autoCompletes () {
+                return this.model.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
+            },
             statuses () {
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
@@ -131,11 +153,17 @@
 
                 return finalStatuses
             },
+            userToDisplay () {
+                return get(this.data.WidgetConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
+            },
             cardValue () {
+                const userToDisplay = this.userToDisplay
+
                 if (this.status === otherStatuses.AT_WORK) {
-                    return this.extensionWithCalls.filter(el => el.representativeStatus !== LOGOUT_STATUS).length || '0'
+                    return this.extensionWithCalls.filter(el => el.representativeStatus !== LOGOUT_STATUS && userToDisplay.includes(el.userID)).length || '0'
                 }
-                return this.extensionWithCalls.filter(el => el.representativeStatus === this.status).length || '0'
+
+                return this.extensionWithCalls.filter(el => el.representativeStatus === this.status && userToDisplay.includes(el.userID)).length || '0'
             },
             cardIcon () {
                 return statusTypes[this.status].icon
@@ -166,6 +194,20 @@
                 })
             },
             onChange () {
+                try {
+                    this.model.WidgetConfig.forEach((config) => {
+                        if (typeof config.WidgetParameterValueJson === 'object') {
+                            config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
+                        }
+                        if (typeof config.WidgetParameterValue === 'object') {
+                            config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
+                            config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
+                        }
+                    })
+                } catch (e) {
+                    console.warn(e)
+                }
+
                 let data = {
                     status: this.selectedStatus,
                     showText: this.showStatusText,
@@ -179,6 +221,8 @@
                     colors: this.model.colors
                 };
 
+                this.data.WidgetConfig = this.model.WidgetConfig
+
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },
@@ -190,6 +234,9 @@
             },
             onShowModal () {
                 this.showModal = true
+            },
+            isAutoComplete (WidgetConfig) {
+                return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
         },
         mounted () {
