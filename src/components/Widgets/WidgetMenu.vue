@@ -12,8 +12,8 @@
                  class="w-full px-2"
                  v-for="widgetTemplate in filteredWidgetTemplates">
                 <WidgetCard
-                    @add-widget="$emit('add-widget', widgetTemplate)"
-                    class="w-full"
+                    @add-widget="addWidget(widgetTemplate)"
+                    class="w-full cursor-pointer"
                     v-bind="widgetTemplate">
                     <template v-slot:quantity>
                         <el-input-number
@@ -85,25 +85,64 @@
             addAllWidgetsFromCategory () {
                 this.addWidgetsToGroup(this.widgetTemplates)
             },
+            getDefaultGridLayout () {
+                let rowCount = 2
+                const gridStackContainer = document.getElementsByClassName('grid-stack')
+
+                if (gridStackContainer) {
+                    rowCount = gridStackContainer[0].getAttribute('data-gs-current-row');
+                }
+
+                return {
+                    x: 0,
+                    y: Number(rowCount),
+                    width: 12,
+                    height: 2,
+                }
+            },
             addWidgets () {
+
+                let defaultLayout = this.getDefaultGridLayout()
+
                 let widgetTemplateIdsToAdd = Object.keys(this.quantities).filter(key => this.quantities[key] > 0)
                 let widgetTemplatesToAdd = []
 
                 this.widgetTemplates.filter((template) => {
                     widgetTemplateIdsToAdd.includes(template.TemplateID)
+                    template['WidgetLayout'] = {GridLayout: defaultLayout}
                     return times(this.quantities[template.TemplateID], () => {
                         widgetTemplatesToAdd.push(template)
                     })
                 })
+
                 this.addWidgetsToGroup(widgetTemplatesToAdd)
                 this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
             },
             addWidgetsToGroup (widgetTemplatesToAdd) {
+
+                let defaultLayout = this.getDefaultGridLayout()
+
+                let layout = {...defaultLayout}
+
+                widgetTemplatesToAdd.forEach((template) => {
+                    if (!template['WidgetLayout']) {
+                        layout.y = layout.y + 2
+                        template['WidgetLayout'] = {GridLayout: layout}
+                    }
+                })
+
                 let objectToEmit = {
                     widgets: widgetTemplatesToAdd,
                     group: this.widgetGroup
                 }
                 this.$emit('addWidgetsToGroup', objectToEmit)
+            },
+            addWidget (widgetTemplate) {
+                let defaultLayout = this.getDefaultGridLayout()
+
+                widgetTemplate['WidgetLayout'] = {GridLayout: defaultLayout}
+
+                this.addWidgetsToGroup([widgetTemplate])
             }
         }
     }
