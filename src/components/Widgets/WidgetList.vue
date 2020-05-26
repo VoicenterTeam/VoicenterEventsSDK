@@ -101,9 +101,6 @@
                     "data-gs-height": get(widget, "WidgetLayout.GridLayout.height", 2)
                 };
             },
-            onListChange (ev) {
-                this.$emit('onListChange', {'event': ev, 'group': this.widgetGroup})
-            },
             addWidgetsToGroup (widget) {
                 const gridStackContainer = this.$refs.widgetListContainer
                 if (!gridStackContainer) {

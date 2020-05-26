@@ -1,5 +1,5 @@
 export const layoutTypes = {
-    NORMAL: 'normal',
+    LIST: 'list',
     TABBED: 'tabbed',
 };
 

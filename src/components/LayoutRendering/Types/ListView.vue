@@ -1,28 +1,29 @@
 <template>
-    <div>
+    <div v-if="!storingData">
         <transition-group name="flip-list">
-            <div v-for="widgetGroup in widgetGroupList" :key="widgetGroup.WidgetGroupID"
-                 :class="{'editable-widgets px-2':editMode}">
-                <div v-if="editMode" class="flex items-center justify-between">
+            <div :class="{'editable-widgets px-2':editMode}" :key="index"
+                 v-for="(widgetGroup, index) in widgetGroupList">
+                <div class="flex items-center justify-between" v-if="editMode">
                     <base-input v-model="widgetGroup.WidgetGroupTitle"/>
                     <edit-group-buttons
-                            v-on="$listeners"
-                            :widgetGroup="widgetGroup">
+                        :widgetGroup="widgetGroup"
+                        v-on="$listeners">
                     </edit-group-buttons>
                 </div>
-                <h3 v-else class="font-semibold text-main-2xl text-gray-800"
-                    :style="$store.getters['dashboards/widgetGroupTitleStyles']">
+                <h3 :style="$store.getters['dashboards/widgetGroupTitleStyles']"
+                    class="font-semibold text-main-2xl text-gray-800"
+                    v-else>
                     {{widgetGroup.WidgetGroupTitle}}
                 </h3>
                 <widget-list
-                        :widgets="widgetGroup.WidgetList"
-                        :widgetTemplates="widgetTemplates"
-                        :editable="editMode"
-                        :widget-group="widgetGroup"
-                        v-bind="$attrs"
-                        v-on="$listeners">
-                    </widget-list>
-                </div>
+                    :editable="editMode"
+                    :widget-group="widgetGroup"
+                    :widgetTemplates="widgetTemplates"
+                    :widgets="widgetGroup.WidgetList"
+                    v-bind="$attrs"
+                    v-on="$listeners">
+                </widget-list>
+            </div>
         </transition-group>
     </div>
 </template>
@@ -49,6 +50,10 @@
             widgetGroupList: {
                 type: Array,
                 default: () => []
+            },
+            storingData: {
+                type: Boolean,
+                default: false
             },
         },
     }

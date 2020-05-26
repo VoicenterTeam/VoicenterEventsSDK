@@ -13,9 +13,9 @@
             </el-tooltip>
             <el-tooltip class="item" effect="dark" :content="$t('tooltip.select.list.view')" placement="top">
                 <button class="btn shadow rounded bg-white mx-1 text-gray-300 hover:bg-primary-100 hover:text-primary"
-                        @click="switching('normal')"
-                        :class="{'text-primary': activeType === 'normal'}">
-                    <IconNormalView/>
+                        @click="switching('list')"
+                        :class="{'text-primary': activeType === 'list'}">
+                    <IconListView/>
                 </button>
             </el-tooltip>
         </div>
@@ -33,7 +33,7 @@
         props: {
             activeType: {
                 type: String,
-                default: 'normal'
+                default: 'list'
             }
         },
         methods: {

@@ -57,19 +57,18 @@
                 <div :class="getClass" :key="activeDashboardData.DashboardID" class="pt-12 px-6 md:px-12">
                     <fade-transition :duration="250" mode="out-in">
                         <component
-                            <component
-                                :activeTab="activeTab"
-                                :editMode="editMode"
-                                :is="layoutTypes[layoutType]"
-                                :layoutType="layoutType"
-                                :widgetGroupList="groupsToDisplay"
-                                :widgetTemplates="allWidgetTemplates"
-                                @addWidgetsToGroup="addWidgetsToGroup"
-                                @onListChange="(data) => onListChange(data.event, data.group)"
-                                @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                                @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                                @switch-tab="(tab) => switchTab(tab)"
-                                @updateWidget="(data) => updateWidget(data.widget, data.group)">
+                            :storingData="storingData"
+                            :activeTab="activeTab"
+                            :editMode="editMode"
+                            :is="layoutTypes[layoutType]"
+                            :layoutType="layoutType"
+                            :widgetGroupList="groupsToDisplay"
+                            :widgetTemplates="allWidgetTemplates"
+                            @addWidgetsToGroup="addWidgetsToGroup"
+                            @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
+                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
+                            @switch-tab="(tab) => switchTab(tab)"
+                            @updateWidget="(data) => updateWidget(data.widget, data.group)">
                         </component>
                     </fade-transition>
                 </div>
@@ -90,12 +89,11 @@
     import map from 'lodash/map'
     import get from 'lodash/get'
     import {Tooltip} from 'element-ui'
-    import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import isEqual from 'lodash/isEqual'
+    import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import {ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes} from '@/enum/layout'
-    import differenceBy from 'lodash/differenceBy'
+    import {ListIcon} from 'vue-feather-icons'
     import AddButton from '@/components/AddButton'
     import {targets, types} from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
@@ -105,18 +103,17 @@
     import Sidebar from '@/components/LayoutRendering/Sidebar'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
+    import {retrySocketConnection} from '@/plugins/initRealTimeSdk'
     import {runDashboardOperations} from '@/services/dashboardService'
-    import NormalView from '@/components/LayoutRendering/Types/NormalView'
+    import ListView from '@/components/LayoutRendering/Types/ListView'
+    import SocketStatusAlert from '@/components/Common/SocketStatusAlert'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
     import {dashboardOperation, widgetGroupModel} from '@/models/instances'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
-    import SocketStatusAlert from "@/components/Common/SocketStatusAlert";
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
-    import {ListIcon} from 'vue-feather-icons'
-    import bus from '@/event-bus/EventBus'
-    import {retrySocketConnection} from "@/plugins/initRealTimeSdk";
+    import {ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes} from '@/enum/layout'
 
     export default {
         components: {
@@ -125,7 +122,7 @@
             NewGroupButton,
             AddButton,
             WidgetMenu,
-            NormalView,
+            ListView,
             TabbedView,
             Sidebar,
             TemplatesCategory,
@@ -141,7 +138,7 @@
                 editMode: false,
                 activeDashboardData: null,
                 layoutTypes: {
-                    [layoutTypes.NORMAL]: 'NormalView',
+                    [layoutTypes.LIST]: 'ListView',
                     [layoutTypes.TABBED]: 'TabbedView',
                 },
                 layoutType: localStorage.getItem(LAYOUT_TYPE_KEY) || 'tabbed',
@@ -149,7 +146,8 @@
                 operations: new DashboardOperations(),
                 activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
                 showReorderDataDialog: false,
-                groupToEdit: {}
+                groupToEdit: {},
+                storingData: false
             }
         },
         computed: {
@@ -168,9 +166,7 @@
                 }
             },
             showSidebar () {
-                if (this.layoutType === layoutTypes.TABBED) {
-                    return true
-                }
+                return this.layoutType === layoutTypes.TABBED;
             },
             token () {
                 return this.$store.state.users.tokenString
@@ -191,7 +187,7 @@
                 if (this.editMode) {
                     return [this.groupToEdit]
                 }
-                return this.activeDashboardData.WidgetGroupList
+                return this.dashboard.WidgetGroupList
             }
         },
         methods: {
@@ -200,6 +196,11 @@
                 this.groupToEdit = widgetGroup
                 this.editMode = true
                 this.operations = new DashboardOperations()
+
+                if (!widgetGroup) {
+                    this.groupToEdit = {...widgetGroupModel}
+                    this.activeDashboardData.WidgetGroupList = [this.groupToEdit]
+                }
             },
             async addWidgetsToGroup (data = {}) {
                 let {widgets: widgetTemplates, group: widgetGroup} = data
@@ -215,6 +216,7 @@
 
                 this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
                 this.showWidgetMenu = false
+                this.groupToEdit = this.activeDashboardData.WidgetGroupList[index]
 
                 bus.$emit('added-widgets', createdWidgets);
             },
@@ -245,40 +247,6 @@
                 this.showReorderDataDialog = false
                 this.saveDashboard()
             },
-            //Order list & add to List - events
-            async onListChange (event, widgetGroup) {
-                if (event[draggableEvents.MOVED]) {
-                    event = event[draggableEvents.MOVED]
-                    if (!widgetGroup.IsNew) {
-                        widgetGroup.WidgetList.splice(event.newIndex, 0, widgetGroup.WidgetList.splice(event.oldIndex, 1)[0]);
-                        widgetGroup.WidgetList.forEach((widget, index) => {
-                            if (!widget.WidgetLayout) {
-                                widget.WidgetLayout = {
-                                    Order: index + 1
-                                }
-                            } else {
-                                widget.WidgetLayout.Order = index + 1
-                            }
-                            this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
-                        })
-                    }
-                } else {
-                    event = event[draggableEvents.ADDED]
-
-                    let newWidget = await createNewWidgets([event.element], widgetGroup, event.newIndex)
-                    widgetGroup.WidgetList.splice(event.newIndex, 0, newWidget[0])
-
-                    let widgetsToUpdate = widgetGroup.WidgetList.slice(event.newIndex + 1)
-                    widgetsToUpdate.forEach((widget, index) => {
-                        widget.WidgetLayout.Order = index + 1 + event.newIndex
-                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
-                    })
-                }
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                if (index !== -1) {
-                    this.activeDashboardData.WidgetGroupList.splice(index, 1, widgetGroup)
-                }
-            },
             onWidgetMenuClickOutside () {
                 this.showWidgetMenu = false
             },
@@ -288,6 +256,7 @@
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
                     if (widgetIndex !== -1) {
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1)
+                        this.groupToEdit = this.activeDashboardData.WidgetGroupList[index]
                         if (!widgetGroup.IsNew) {
                             this.operations.add(dashboardOperation(types.REMOVE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
                         } else {
@@ -296,16 +265,29 @@
                     }
                 }
             },
-            removeWidgetGroup (widgetGroup) {
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                if (index !== -1) {
-                    this.activeDashboardData.WidgetGroupList.splice(index, 1)
-                    if (!widgetGroup.IsNew) {
-                        this.operations.removeGroup(dashboardOperation(types.REMOVE, targets.WIDGET_GROUP, widgetGroup))
+            async removeWidgetGroup (widgetGroup) {
+                await this.$confirm(
+                    this.$t('common.confirm.question', {
+                        action: this.$t('to delete this widget group'),
+                    }), this.$t('Delete Widget Group'), {
+                        cancelButtonText: this.$t('common.cancel'),
+                        confirmButtonText: this.$t('common.confirm'),
+                    }).then(() => {
+
+                    let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
+
+                    if (index !== -1) {
+                        this.activeDashboardData.WidgetGroupList.splice(index, 1)
+                        let widgetIds = map(widgetGroup.WidgetList, 'WidgetID')
+                        removeDummyWidgets(widgetIds)
+
+                        if (!widgetGroup.IsNew) {
+                            this.operations.removeGroup(dashboardOperation(types.REMOVE, targets.WIDGET_GROUP, widgetGroup))
+                            this.saveDashboard()
+                        }
                     }
-                    let widgetIds = map(widgetGroup.WidgetList, 'WidgetID')
-                    removeDummyWidgets(widgetIds)
-                }
+                    this.editMode = false
+                })
             },
             addNewGroup () {
                 const group = {...widgetGroupModel}
@@ -319,6 +301,7 @@
             updateWidget (widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
+
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
                     if (widgetIndex !== -1 && !widgetGroup.IsNew) {
                         this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
@@ -327,42 +310,27 @@
 
                         if (!this.editMode) {
                             this.saveDashboard()
+                        } else {
+                            this.groupToEdit = widgetGroup
                         }
                     }
                 }
             },
             async saveDashboard () {
-                this.showWidgetMenu = false
                 this.editMode = false
-                //CheckWidgetGroupUpdates
-                this.updateDashboardOperations()
+                this.showWidgetMenu = false
+                this.storingData = true
+                const currentGroup = this.groupToEdit
+                this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, currentGroup))
+                await this.updateGridStacks(currentGroup)
+
                 //RunDashboardOperations
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.operations = new DashboardOperations()
+                this.storingData = false
             },
-            updateDashboardOperations () {
-                let oldDashboardWidgetGroupList = this.$store.state.dashboards.activeDashboard.WidgetGroupList
-
-                //Check if some widgetGroups are updated and add changes to dashboard operations
-                let widgetGroupsToUpdate = differenceBy(this.activeDashboardData.WidgetGroupList, oldDashboardWidgetGroupList, 'WidgetGroupTitle')
-
-                //Check if the widgetsGroups are changed order
-                this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
-
-                    if (oldDashboardWidgetGroupList[index] && group.WidgetGroupID !== oldDashboardWidgetGroupList[index].WidgetGroupID) {
-                        widgetGroupsToUpdate.push(group)
-                    }
-                    this.updateGridStacks(group)
-                })
-
-                //Exclude additional operations duplicate(title updates)
-                widgetGroupsToUpdate = uniqBy(widgetGroupsToUpdate, "WidgetGroupID")
-                widgetGroupsToUpdate.forEach((widgetGroup) => {
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, widgetGroup))
-                })
-            },
-            updateGridStacks(group) {
+            updateGridStacks (group) {
                 const activeDashboardWidgets = group.WidgetList
 
                 window.grids.forEach(grid => {
@@ -371,7 +339,7 @@
                         if (!widget) {
                             return
                         }
-                        let nodeLayout  = {
+                        let nodeLayout = {
                             x: node.x,
                             y: node.y,
                             width: node.width,
@@ -396,6 +364,11 @@
                 this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.operations = new DashboardOperations()
+
+                this.storingData = true
+                this.$nextTick(() => {
+                    this.storingData = false
+                })
             },
             switchDashboardLayout (type) {
                 this.layoutType = type
@@ -430,7 +403,7 @@
                 this.showReorderDataDialog = false
             }
         },
-        created() {
+        created () {
             window.grids = []
         },
         watch: {
@@ -445,7 +418,7 @@
                 this.$store.commit('dashboards/SET_EDIT_MODE', val)
                 if (val) {
                     this.previousLayoutType = this.layoutType
-                    this.layoutType = layoutTypes.NORMAL
+                    this.layoutType = layoutTypes.LIST
                 } else {
                     this.layoutType = this.previousLayoutType
                 }

@@ -93,11 +93,12 @@
         },
         methods: {
             triggerMenu () {
-                if (this.widgetGroupList.length === 1) {
+                if (this.widgetGroupList.length < 2) {
                     let widgetGroup = this.widgetGroupList[0]
                     this.$emit('edit-group', widgetGroup)
                     return
                 }
+
                 this.activeTab = localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || null;
                 this.showMenu = !this.showMenu
             },
