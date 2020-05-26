@@ -27,7 +27,7 @@
     "dashboards.new.title": "Create new Dashboard",
     "dashboards.new.form.title": "Dashboard title",
     "dashboards.new.form.logo": "Dashboard logo",
-    "dashboards.widgets.noData": "This dashboard contains no data. Click on the plus icon to drag and drop new widgets",
+    "dashboards.widgets.noData": "This dashboard contains no data. Click on the Pen to enter Edit mode",
     "widgets.phoneNumbers.description": "Telephone Numbers",
     "widgets.users.description": "Users",
     "widgets.extensions.description": "Extensions",
@@ -659,5 +659,7 @@
     "Apply": "Apply",
     "Real time server": "Real time server",
     "Retry Socket Connection": "Retry Socket Connection",
-    "Type text to filter": "Type text to filter"
+    "Type text to filter": "Type text to filter",
+    "Dashboard no Data": "This dashboard contains no data. Click on the Pen to enter Edit mode.",
+    "WidgetGroup no Data": "This widget group contains no data. Click on the plus icon to add new widgets."
 }
