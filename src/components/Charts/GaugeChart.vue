@@ -106,7 +106,7 @@
                         style: {
                             fontSize: labelFontSize
                         },
-                        y: -70,
+                        y: -35,
                         format:
                             '<div style="text-align:center">' +
                             `<span ${labelStyle}>{y}</span><br/>` +
