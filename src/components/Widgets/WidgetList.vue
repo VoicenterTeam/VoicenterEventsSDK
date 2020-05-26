@@ -36,8 +36,13 @@
         <div :key="`no-data-${widgetGroup.WidgetGroupID}`"
              class="w-full flex flex-col items-center mt-20"
              v-if="widgets.length === 0">
-            <IconNoData class="h-56 w-56" v-if="!editable"/>
-            <p class="text-gray-600 max-w-lg text-center">{{$t('dashboards.widgets.noData')}}</p>
+            <div v-if="!editable" class="flex flex-col items-center">
+                <IconNoData class="h-56 w-56"/>
+                <p class="text-gray-600 max-w-lg text-center">{{$t('Dashboard no Data')}}</p>
+            </div>
+            <div v-else>
+                <p class="text-gray-600 max-w-lg text-center">{{$t('WidgetGroup no Data')}}</p>
+            </div>
         </div>
     </div>
 </template>
