@@ -2,19 +2,25 @@ export default {
     chart: {
         type: 'solidgauge',
         backgroundColor: 'transparent',
+        height: '170px',
+        marginTop: 20
     },
     pane: {
-        size: '100%',
+        center: ['50%', '85%'],
+        size: '180%',
         startAngle: -90,
         endAngle: 90,
         background: {
             backgroundColor: '#EEEE',
-            innerRadius: '80%',
+            innerRadius: '60%',
             outerRadius: '100%',
             shape: 'arc'
         }
     },
     tooltip: {
+        enabled: false
+    },
+    exporting: {
         enabled: false
     },
     legend: {
