@@ -146,7 +146,7 @@
                 operations: new DashboardOperations(),
                 activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
                 showReorderDataDialog: false,
-                groupToEdit: {},
+                groupToEdit: null,
                 storingData: false
             }
         },
@@ -320,19 +320,22 @@
                 this.editMode = false
                 this.showWidgetMenu = false
                 this.storingData = true
-                const currentGroup = this.groupToEdit
-                this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, currentGroup))
-                await this.updateGridStacks(currentGroup)
+
+                if (this.groupToEdit) {
+                    const currentGroup = this.groupToEdit
+                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, currentGroup))
+                    await this.updateGridStacks(currentGroup)
+                }
 
                 //RunDashboardOperations
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.operations = new DashboardOperations()
                 this.storingData = false
+                this.groupToEdit = null
             },
             updateGridStacks (group) {
                 const activeDashboardWidgets = group.WidgetList
-
                 window.grids.forEach(grid => {
                     grid.engine.nodes.forEach((node) => {
                         let widget = activeDashboardWidgets.find((widget) => Number(widget.WidgetID) === Number(node.id));
