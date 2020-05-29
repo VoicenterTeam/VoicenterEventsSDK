@@ -15,8 +15,8 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
                         <div class="flex lg:w-1/2">
-                            <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueueAsColumn">
-                                {{$t('Display queue as column')}}
+                            <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueuesAsRow">
+                                {{$t('Display queues as rows')}}
                             </el-checkbox>
                         </div>
                     </div>

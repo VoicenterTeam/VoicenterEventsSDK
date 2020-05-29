@@ -663,5 +663,6 @@
     "to delete this widget group": "to delete this widget group",
     "Delete Widget Group": "Delete Widget Group",
     "Dashboard no Data": "This dashboard contains no data. Click on the Pen to enter Edit mode.",
-    "WidgetGroup no Data": "This widget group contains no data. Click on the plus icon to add new widgets."
+    "WidgetGroup no Data": "This widget group contains no data. Click on the plus icon to add new widgets.",
+    "Display queues as rows": "Display queues as rows"
 }

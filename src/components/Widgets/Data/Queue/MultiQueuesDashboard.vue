@@ -6,14 +6,14 @@
             :cell-style="getCellStyle"
             :columns="getAvailableColumns"
             :editable="editable"
-            :manageColumns='displayQueueAsColumn'
+            :manageColumns="!displayQueueAsRows"
             :row-style="getRowStyle"
             :showColumns="getVisibleColumns"
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
             @on-update-layout="onUpdateLayout">
-            <template v-if="!displayQueueAsColumn" v-slot:header_title="{column}">
+            <template v-if="displayQueueAsRows" v-slot:header_title="{column}">
                 <el-tooltip :content="getQueueName(column.prop)" :open-delay="300" placement="top">
                         <span class="font-medium uppercase">
                             {{getQueueName(column.prop)}}
@@ -132,7 +132,7 @@
             fetchTableData () {
                 let tableData = this.tableData
 
-                if (!this.displayQueueAsColumn) {
+                if (this.displayQueueAsRows) {
                     let visibleRows = this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
                     tableData = tableData.filter(c => visibleRows.includes(c['Stat type']))
                     tableData = mapOrder(tableData, visibleRows, 'Stat type')
@@ -153,20 +153,20 @@
             allEntityQueues () {
                 return getOptionsList(`${this.QUEUE_LIST_KEY}`)
             },
-            displayQueueAsColumn () {
-                return get(this.data.WidgetLayout, 'displayQueueAsColumn', false)
+            displayQueueAsRows () {
+                return get(this.data.WidgetLayout, 'displayQueuesAsRow', true)
             },
             columnsAreManaged () {
                 return !!get(this.widget.WidgetLayout, 'Columns.visibleColumns');
             },
             getAvailableColumns () {
-                if (!this.displayQueueAsColumn) {
+                if (this.displayQueueAsRows) {
                     return this.columns
                 }
                 return this.availableColumns
             },
             getVisibleColumns () {
-                if (!this.displayQueueAsColumn) {
+                if (this.displayQueueAsRows) {
                     return this.columns.map(el => el.prop)
                 }
 
@@ -231,7 +231,7 @@
             },
             async getWidgetData () {
                 try {
-                    
+
                     const selectedEntityQueues = this.selectedQueues
 
                     if (!selectedEntityQueues.length) {
@@ -244,8 +244,7 @@
                     let columns = []
 
                     let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
-                    let displayQueueAsColumn = this.displayQueueAsColumn
-
+                    let displayQueueAsRows = this.displayQueueAsRows
 
                     let queueIDsFromSocket = data.map((queue) => queue.queue_id)
 
@@ -265,7 +264,7 @@
                         data.push(objectToAppend)
                     })
 
-                    let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsColumn)
+                    let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsRows)
 
                     availableColumns = result.columns
                     data = result.data
@@ -315,7 +314,10 @@
             },
         },
         mounted () {
-            if (!this.data.WidgetLayout.displayRowWithTotals) {
+            if (!this.data.WidgetLayout.hasOwnProperty('displayQueuesAsRow')) {
+                this.$set(this.data.WidgetLayout, 'displayQueuesAsRow', true)
+            }
+            if (!this.data.WidgetLayout.hasOwnProperty('displayRowWithTotals')) {
                 this.$set(this.data.WidgetLayout, 'displayRowWithTotals', true)
             }
         },

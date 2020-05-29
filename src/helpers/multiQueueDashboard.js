@@ -54,9 +54,9 @@ export const defaultVisibleColumns = [
     'AvgRingTime',
 ]
 
-export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsColumn) {
+export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsRows) {
 
-    if (!displayQueueAsColumn) {
+    if (displayQueueAsRows) {
         return queueAsRows(records, displayRowWithTotals)
     }
 
