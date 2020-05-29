@@ -211,7 +211,7 @@ function queueAsColumns (records, displayRowWithTotals) {
         queueTotals.queue_id = 'All'
         maxRingTime = Math.max(...maxRingTime)
 
-        const avgRingTime = Math.ceil(queueTotals.AvgRingTime / allQueueCalls)
+        const avgRingTime = Math.ceil(queueTotals.AvgRingTime / allQueueCalls) || 0
 
         queueTotals.AvgRingTime = timeFormatter(avgRingTime)
         queueTotals.MaxRingTime = timeFormatter(maxRingTime)
