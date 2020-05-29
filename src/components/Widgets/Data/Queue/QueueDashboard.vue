@@ -15,22 +15,22 @@
             <div class="flex flex-wrap -mx-1 pt-2" v-if="queueStatistics">
                 <div v-for="item in queueStatistics[PRIMARY_TYPE]">
                     <statistic-card
-                        v-if="displayCounter(item)"
-                        @on-change="(data) => onChange(data, item)"
                         :item="getItemValue(item)"
                         :widget="data"
+                        @on-change="(data) => onChange(data, item)"
+                        v-if="displayCounter(item)"
                     />
                 </div>
                 <div v-for="item in queueStatistics[PERCENTAGE_TYPE]">
                     <statistic-card
-                        v-if="displayCounter(item)"
-                        @on-change="(data) => onChange(data, item)"
                         :item="getItemInPercentage(item)"
                         :widget="data"
+                        @on-change="(data) => onChange(data, item)"
+                        v-if="displayCounter(item)"
                     />
                 </div>
-                <div v-if="showSumOfOthers" class="statistic-card"
-                     v-html="getSumOfOtherStatistics()">
+                <div class="statistic-card" v-html="getSumOfOtherStatistics()"
+                     v-if="showSumOfOthers">
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
             data: Object,
             default: () => ({})
         },
-        data() {
+        data () {
             return {
                 fetchDataInterval: null,
                 queueStatistics: {},
@@ -79,20 +79,20 @@
             }
         },
         computed: {
-            countersToShow() {
+            countersToShow () {
                 return get(this.data.WidgetLayout, 'ShowStatistics')
             },
-            showSumOfOthers() {
+            showSumOfOthers () {
                 return get(this.data.WidgetLayout, 'SumOfOthers')
             },
-            showAbsoluteNumbers() {
+            showAbsoluteNumbers () {
                 return get(this.data.WidgetLayout, 'AbsoluteNumbers')
             },
         },
         methods: {
             startCase,
             isQueueActivityGauge,
-            getSumOfOtherStatistics() {
+            getSumOfOtherStatistics () {
                 let queueData = this.queueStatistics[PERCENTAGE_TYPE]
 
                 let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY]
@@ -117,13 +117,13 @@
 
                 return `<div class="text-2xl px-2">${OTHER_STATISTIC_LABEL}</div><div class="text-3xl">${percentageText} %</div>`
             },
-            getItemValue(item) {
+            getItemValue (item) {
                 if (!this.primaryCountersInPercentage.includes(item.key)) {
                     return item
                 }
                 return this.getItemInPercentage(item)
             },
-            getItemInPercentage(item) {
+            getItemInPercentage (item) {
                 let totalCalls = this.queueStatistics[TOTAL_CALLS_KEY] || 1
                 let count = item.value || 0
                 let percentage = `${((count * 100) / totalCalls).toFixed(2)} %`
@@ -137,7 +137,7 @@
 
                 return result
             },
-            async getWidgetData() {
+            async getWidgetData () {
                 try {
                     let data = await getWidgetData(this.data)
                     if (data) {
@@ -154,7 +154,7 @@
                 } finally {
                 }
             },
-            composeStatistics(data) {
+            composeStatistics (data) {
                 data.forEach((queue) => {
                     delete queue.queue_id;
 
@@ -163,21 +163,22 @@
 
                         if (key === ADDITIONAL_DATA_KEY) {
                             this.fetchAdditionalCounts(queue[ADDITIONAL_DATA_KEY])
-                        } else {
+                        }
+                        if (this.queueStatistics[PRIMARY_TYPE][key]) {
                             this.queueStatistics[PRIMARY_TYPE][key]['value'] += queue[key]
                         }
                     })
                 })
             },
-            fetchAdditionalCounts(queueData) {
+            fetchAdditionalCounts (queueData) {
                 queueData.forEach((option) => {
                     this.queueStatistics[PERCENTAGE_TYPE][option['billing_cdr_queue_type']]['value'] += option['ExitTypeCount']
                 })
             },
-            displayCounter(item) {
+            displayCounter (item) {
                 return this.countersToShow.length === statistics.length || this.countersToShow.includes(item.key)
             },
-            onChange(styles, item) {
+            onChange (styles, item) {
                 item.value = 0;
                 this.data.WidgetLayout.allStatistics[item.key] = {
                     ...item,
@@ -185,7 +186,7 @@
                 }
                 this.$emit('on-update', this.data)
             },
-            initStatistics() {
+            initStatistics () {
                 return {
                     [TOTAL_CALLS_KEY]: 0,
                     [PRIMARY_TYPE]: PRIMARY_COUNTERS(),
@@ -193,7 +194,7 @@
                 }
             },
         },
-        mounted() {
+        mounted () {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -218,7 +219,7 @@
                 }
             }
         },
-        beforeDestroy() {
+        beforeDestroy () {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }
