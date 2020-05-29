@@ -5,6 +5,7 @@
     import {TIME_LINE_TIMESTAMP} from '@/enum/generic'
     import RangeFilter from '../../../Common/RangeFilter'
     import {format} from 'date-fns'
+    import get from 'lodash/get'
 
     export default {
         props: {
@@ -39,21 +40,24 @@
 
                 newDate = new Date();
                 let endDate = newDate.setDate(newDate.getDate() + (-parseInt(widgetTime.Date_interval) + parseInt(widgetTime.datedeff)))
-                
+
                 return [startDate, endDate]
             }
         },
         methods: {
             onChange(dates) {
-                let Difference_In_Time = dates[1].getTime() - dates[0].getTime()
+                const dateStart = get(dates, '[0]')
+                const dateEnd = get(dates, '[1]')
+
+                let Difference_In_Time = dateEnd.getTime() - dateStart.getTime()
 
                 this.model.WidgetTime.datedeff = parseInt(Difference_In_Time / TIME_LINE_TIMESTAMP.DAY).toString()
 
-                let _Difference_In_Time = new Date().getTime() - dates[0].getTime()
+                let _Difference_In_Time = new Date().getTime() - dateStart.getTime()
                 this.model.WidgetTime.Date_interval = parseInt(_Difference_In_Time / TIME_LINE_TIMESTAMP.DAY).toString()
 
-                this.model.WidgetTime['Date_start'] = format(new Date(dates[0]), 'yyyy-MM-dd')
-                this.model.WidgetTime['Date_end'] =format(new Date(dates[1]), 'yyyy-MM-dd')
+                this.model.WidgetTime['Date_start'] = format(new Date(dateStart), 'yyyy-MM-dd')
+                this.model.WidgetTime['Date_end'] =format(new Date(dateEnd), 'yyyy-MM-dd')
             }
         }
     }
