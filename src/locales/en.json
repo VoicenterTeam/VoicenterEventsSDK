@@ -665,5 +665,9 @@
     "Dashboard no Data": "This dashboard contains no data. Click on the Pen to enter Edit mode.",
     "WidgetGroup no Data": "This widget group contains no data. Click on the plus icon to add new widgets.",
     "Display queues as rows": "Display queues as rows",
+    "Counters to display": "Counters to display",
+    "Average duration of all calls": "Average duration of all calls",
+    "Average duration of incoming calls": "Average duration of incoming calls",
+    "Average duration of outgoing calls": "Average duration of outgoing calls",
     "Group ID": "Group ID"
 }

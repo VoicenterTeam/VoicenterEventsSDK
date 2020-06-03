@@ -11,6 +11,12 @@
                     <el-input v-model="model.Title"/>
                 </div>
             </el-form-item>
+            <el-form-item v-if="isAverageCallsWidget(widget)">
+                <label>{{$t('Counters to display')}}</label>
+                <base-select
+                    :data="availableCounters"
+                    v-model="model.WidgetLayout.showCounters"/>
+            </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
@@ -93,7 +99,7 @@
             </el-form-item>
             <el-collapse class="pt-4" v-model="activeCollapse">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
-                    <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
+                    <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget) || isAverageCallsWidget(widget)">
                         <div class="py-4">
                             <label>{{$t('Card title font size')}}</label>
                             <el-slider
@@ -226,11 +232,13 @@
         isQueueGauge,
         isQueueTable,
         isRealtimeWidget,
+        isAverageCallsWidget,
     } from '@/helpers/widgetUtils'
     import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
     import {areaChartWidgetColors, defaultWidgetColors} from "@/enum/layout";
     import values from "lodash/values";
     import uniq from "lodash/uniq";
+    import {availableCounters} from "@/enum/queueCounters"
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -268,6 +276,7 @@
             return {
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
+                availableCounters,
                 model: {
                     settings: realTimeSettings,
                     colors: defaultColors,
@@ -347,6 +356,7 @@
             isQueueActivityGauge,
             isQueueDashboardWidget,
             isMultiQueuesDashboard,
+            isAverageCallsWidget,
             isAutoComplete (WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },

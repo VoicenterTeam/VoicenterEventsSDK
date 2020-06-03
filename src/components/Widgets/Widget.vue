@@ -57,6 +57,7 @@
     import {defaultColors} from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
+    import AverageCallDuration from '@/components/Widgets/Data/Queue/AverageCallDuration'
     import XaxisChart from '@/components/Charts/XaxisChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
@@ -90,6 +91,7 @@
             XaxisChart,
             AreaChart,
             WidgetNoteList,
+            AverageCallDuration,
         },
         props: {
             editable: {

@@ -22,3 +22,18 @@ export const typeNames = [
     'queue.counter.callers',
     'queue.maximum.waiting.caller'
 ]
+
+export const availableCounters = [
+    {
+        label: 'Average duration of all calls',
+        value: 'Average duration of all calls',
+    },
+    {
+        label: 'Average duration of incoming calls',
+        value: 'Average duration of incoming calls',
+    },
+    {
+        label: 'Average duration of outgoing calls',
+        value: 'Average duration of outgoing calls',
+    },
+];
