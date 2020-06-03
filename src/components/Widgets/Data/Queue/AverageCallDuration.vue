@@ -1,8 +1,8 @@
 <template>
     <div class="overflow-scroll" :key="data.WidgetID">
         <base-widget-title :title="data.Title"/>
-        <div class="flex flex-row pt-3">
-            <div class="flex w-auto m-1" v-for="(value, key) in counters" v-if="displayCounter(key)">
+        <div class="flex flex-row">
+            <div class="flex w-auto" v-for="(value, key) in counters" v-if="displayCounter(key)">
                 <div :key="key" class="mx-1 py-2">
                     <div :style="counterStyle[key]"
                          class="bg-white px-4 py-6 flex items-center justify-between rounded-lg shadow">
