@@ -156,7 +156,7 @@
                 }
             },
             composeStatistics (data) {
-                let maxRingTimes = []
+                let maxRingTimes = [0]
 
                 data.forEach((queue) => {
                     delete queue.queue_id;
@@ -185,7 +185,7 @@
                 })
 
                 this.queueStatistics[PRIMARY_TYPE][MAX_RING_TIME_KEY]['value'] = Math.max(...maxRingTimes)
-                this.queueStatistics[PRIMARY_TYPE][AVG_RING_TIME_KEY]['value'] = parseInt(this.queueStatistics[PRIMARY_TYPE][AVG_RING_TIME_KEY]['value'] / this.queueStatistics[TOTAL_CALLS_KEY])
+                this.queueStatistics[PRIMARY_TYPE][AVG_RING_TIME_KEY]['value'] = parseInt(this.queueStatistics[PRIMARY_TYPE][AVG_RING_TIME_KEY]['value'] / this.queueStatistics[TOTAL_CALLS_KEY]) || 0
             },
             fetchAdditionalCounts (queueData) {
                 queueData.forEach((option) => {
