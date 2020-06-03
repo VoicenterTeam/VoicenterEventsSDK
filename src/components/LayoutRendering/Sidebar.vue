@@ -5,7 +5,7 @@
             <p @click="switchTab(group.WidgetGroupID.toString())"
                class="whitespace-no-wrap"
                :class="{'active': group.WidgetGroupID.toString() === activeTab.toString()}">
-                {{group.WidgetGroupTitle}}
+                {{group.WidgetGroupTitle || $t('Group ID') +': '+ group.WidgetGroupID}}
             </p>
             <div v-if="group.WidgetGroupID.toString() === activeTab.toString()"
                  class="self-border">

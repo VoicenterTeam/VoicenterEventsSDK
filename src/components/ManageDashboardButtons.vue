@@ -24,7 +24,7 @@
                             <div :key="widgetGroup.WidgetGroupID"
                                  @click="onEditGroup(widgetGroup)"
                                  class="rounded m-2 cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-primary-100 border-2 border-dotted">
-                                {{widgetGroup.WidgetGroupTitle}}
+                                {{widgetGroup.WidgetGroupTitle || $t('Group ID') +': '+ widgetGroup.WidgetGroupID}}
                             </div>
                         </div>
                     </div>

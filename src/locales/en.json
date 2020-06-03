@@ -664,5 +664,6 @@
     "Delete Widget Group": "Delete Widget Group",
     "Dashboard no Data": "This dashboard contains no data. Click on the Pen to enter Edit mode.",
     "WidgetGroup no Data": "This widget group contains no data. Click on the plus icon to add new widgets.",
-    "Display queues as rows": "Display queues as rows"
+    "Display queues as rows": "Display queues as rows",
+    "Group ID": "Group ID"
 }
