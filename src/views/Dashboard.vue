@@ -49,7 +49,7 @@
             </template>
         </base-navbar>
         <div class="dashboard" element-loading-background="transparent" v-loading="loading">
-            <div class="dashboard-container" v-if="dashboard">
+            <div class="dashboard-container min-h-screen pb-10" v-if="dashboard">
                 <sidebar :activeTab="activeTab"
                          :widgetGroupList="activeDashboardData.WidgetGroupList"
                          @switch-tab="(tab) => switchTab(tab)"
