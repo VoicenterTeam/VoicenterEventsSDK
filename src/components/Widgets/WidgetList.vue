@@ -200,8 +200,8 @@
                 });
             },
             onMousedown () {
-                const isWidgetModalOpen = this.isWidgetModalOpen()
-                this.grid.movable('.grid-stack-item', !isWidgetModalOpen);
+                let preventMovable = !!(this.isWidgetModalOpen() || !this.editable);
+                this.grid.movable('.grid-stack-item', !preventMovable);
             },
             isWidgetModalOpen () {
                 let bodyElement = document.body;
