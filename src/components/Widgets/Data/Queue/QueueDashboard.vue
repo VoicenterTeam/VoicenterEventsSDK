@@ -168,7 +168,7 @@
                             this.fetchAdditionalCounts(queue[ADDITIONAL_DATA_KEY])
                         }
                         if (this.queueStatistics[PRIMARY_TYPE][key]) {
-                            
+
                             if (key === AVG_RING_TIME_KEY) {
                                 const result = queue[key] * queue[TOTAL_CALLS_KEY]
                                 this.queueStatistics[PRIMARY_TYPE][key]['value'] += result
