@@ -44,6 +44,8 @@
     import {
         ADDITIONAL_DATA_KEY,
         allStatistics,
+        AVG_RING_TIME_KEY,
+        MAX_RING_TIME_KEY,
         OTHER_STATISTIC_LABEL,
         PERCENTAGE_COUNTERS,
         PERCENTAGE_TYPE,
@@ -134,7 +136,6 @@
                     showAbsoluteNumbers: this.showAbsoluteNumbers,
                     count
                 }
-
                 return result
             },
             async getWidgetData () {
@@ -155,6 +156,8 @@
                 }
             },
             composeStatistics (data) {
+                let maxRingTimes = []
+
                 data.forEach((queue) => {
                     delete queue.queue_id;
 
@@ -165,10 +168,24 @@
                             this.fetchAdditionalCounts(queue[ADDITIONAL_DATA_KEY])
                         }
                         if (this.queueStatistics[PRIMARY_TYPE][key]) {
-                            this.queueStatistics[PRIMARY_TYPE][key]['value'] += queue[key]
+                            
+                            if (key === AVG_RING_TIME_KEY) {
+                                const result = queue[key] * queue[TOTAL_CALLS_KEY]
+                                this.queueStatistics[PRIMARY_TYPE][key]['value'] += result
+                            } else {
+                                this.queueStatistics[PRIMARY_TYPE][key]['value'] += queue[key]
+                            }
+
+                        }
+
+                        if (key === MAX_RING_TIME_KEY) {
+                            maxRingTimes.push(queue[key])
                         }
                     })
                 })
+
+                this.queueStatistics[PRIMARY_TYPE][MAX_RING_TIME_KEY]['value'] = Math.max(...maxRingTimes)
+                this.queueStatistics[PRIMARY_TYPE][AVG_RING_TIME_KEY]['value'] = parseInt(this.queueStatistics[PRIMARY_TYPE][AVG_RING_TIME_KEY]['value'] / this.queueStatistics[TOTAL_CALLS_KEY])
             },
             fetchAdditionalCounts (queueData) {
                 queueData.forEach((option) => {
