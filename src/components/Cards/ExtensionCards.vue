@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex w-full justify-between pr-12 -mt-0-5 items-center" :class="responsiveClass">
+        <div :class="responsiveClass" class="flex w-full justify-between pr-12 -mt-0-5 items-center">
             <base-widget-title :title="data.Title"/>
             <div class="flex">
                 <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
@@ -8,17 +8,17 @@
                         <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"/>
                     </div>
                     <fade-transition :duration="250">
-                        <div v-if="showGridMenu"
+                        <div class="bg-white rounded mt-1 absolute flex flex-col border-2"
                              v-click-outside="onMenuClickOutside"
-                             class="bg-white rounded mt-1 absolute flex flex-col border-2">
+                             v-if="showGridMenu">
                             <div class="bg-gray-200 rounded-t border-b-2">
                                 <p class="p-2 text-main-sm font-medium">{{layoutColumns}} {{$t('columns.layout')}}</p>
                             </div>
                             <div class="w-full flex p-2 justify-between">
-                                <i v-for="index in maxLayoutColumns"
+                                <i :class="{'bg-primary-100': index <= layoutColumns}"
+                                   @click="updateGrid(index)"
                                    class="icon-square mx-margin--1"
-                                   :class="{'bg-primary-100': index <= layoutColumns}"
-                                   @click="updateGrid(index)"/>
+                                   v-for="index in maxLayoutColumns"/>
                             </div>
                         </div>
                     </fade-transition>
@@ -29,22 +29,24 @@
                         <i class="el-icon-d-caret"/>
                     </span>
                     </template>
-                    <el-option v-for="option in sortByOptions" v-bind="option" :key="option.label"/>
+                    <el-option :key="option.label" v-bind="option" v-for="option in sortByOptions"/>
                 </el-select>
             </div>
         </div>
         <div>
             <div class="flex pt-1 extension-cards justify-center">
-                <fade-transition class="flex flex-wrap" group
-                                 :style="renderColumns"
-                                 :class="{'grid-container overflow-x-auto': sortedExtensions.length, 'w-full': sortedExtensions.length === 0}">
-                    <div v-for="(extension, index) in sortedExtensions"
-                         :key="index"
-                         class="px-1">
+                <fade-transition
+                    :class="{'grid-container overflow-x-auto': sortedExtensions.length, 'w-full': sortedExtensions.length === 0}"
+                    :style="renderColumns"
+                    class="flex flex-wrap"
+                    group>
+                    <div :key="index"
+                         class="px-1"
+                         v-for="(extension, index) in sortedExtensions">
                         <extension-card :extension="extension" :settings="getSettings"/>
                     </div>
-                    <div key="no-data"
-                         class="flex flex-col w-full items-center"
+                    <div class="flex flex-col w-full items-center"
+                         key="no-data"
                          v-if="sortedExtensions.length === 0">
                         <h3 class="text-main-xl">{{$t('extensions.noData')}}</h3>
                         <icon-no-data class="w-64"/>
@@ -58,7 +60,7 @@
     import get from 'lodash/get'
     import times from 'lodash/times'
     import orderBy from 'lodash/orderBy'
-    import {Select, Option} from 'element-ui'
+    import {Option, Select} from 'element-ui'
     import {FadeTransition} from 'vue2-transitions'
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import ExtensionCard from '@/components/Cards/ExtensionCard'
@@ -83,7 +85,7 @@
                 default: () => ({})
             }
         },
-        data() {
+        data () {
             return {
                 statusMappings: {
                     1: "IconLogin",
@@ -118,23 +120,29 @@
             }
         },
         computed: {
-            token() {
+            token () {
                 return this.$store.state.users.tokenString
             },
-            extensions() {
+            extensions () {
                 return this.$store.state.extensions.extensions
             },
-            onlineExtensions() {
+            onlineExtensions () {
                 let showLoggedOutUsers = get(this.data.WidgetLayout.settings, 'showLoggedOutUsers')
                 if (!showLoggedOutUsers) {
                     return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
                 }
                 return this.extensions
             },
-            sortedExtensions() {
-                return orderBy(this.onlineExtensions, this.sortBy, 'asc')
+            extensionToDisplay () {
+                return get(this.data.WidgetConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
             },
-            responsiveClass() {
+            sortedExtensions () {
+                let extensionToDisplay = this.extensionToDisplay
+                let onlineExtensions = this.onlineExtensions.filter((el) => extensionToDisplay.includes(el.userID))
+
+                return orderBy(onlineExtensions, this.sortBy, 'asc')
+            },
+            responsiveClass () {
                 if (this.editable && this.$rtl.isRTL) {
                     return 'pl-24 mx-2'
                 }
@@ -145,7 +153,7 @@
                     return 'pr-24'
                 }
             },
-            renderColumns() {
+            renderColumns () {
                 let columns = ''
                 times(this.layoutColumns, () => {
                     columns = columns + ' auto'
@@ -154,18 +162,18 @@
                     'grid-template-columns': columns
                 }
             },
-            pageWidth() {
+            pageWidth () {
                 return this.$store.getters['utils/pageWidth']
             },
-            getSettings() {
+            getSettings () {
                 return this.data.WidgetLayout.settings || realTimeSettings
             }
         },
         methods: {
-            onMenuClickOutside() {
+            onMenuClickOutside () {
                 this.showGridMenu = false
             },
-            updateGrid(val) {
+            updateGrid (val) {
                 this.layoutColumns = val
             }
         },
@@ -181,7 +189,7 @@
         },
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .icon-square {
         width: 20px;
         height: 20px;
