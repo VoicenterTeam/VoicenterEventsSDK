@@ -6,7 +6,6 @@
              ref="widgetListContainer"
         >
             <div
-                :key="widget.WidgetID"
                 @mousedown="onMousedown"
                 class="grid-stack-item"
                 v-bind="gridStackAttributes(widget)"

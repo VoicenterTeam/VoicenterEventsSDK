@@ -1,58 +1,39 @@
 <template>
     <div>
         <base-wrapper
-            class="queue-card"
             :cardIcon="cardIcon"
             :cardText="cardText"
             :cardValue="cardValue"
             :layoutConfig="layoutConfig"
             :showText="showStatusText"
             :styles="getCardStyles"
+            :widget="data"
             @show-modal="onShowModal"
+            class="queue-card"
             v-bind="$attrs"
             v-on="$listeners"
-            :widget="data"
         />
         <update-dialog
-            :model="model"
             :layoutConfig="layoutConfig"
+            :model="model"
             :visible.sync="showModal"
             @on-change="onChange"
             v-if="showModal">
             <template v-slot:content>
                 <el-form @submit.native.prevent="onChange">
-                    <div class="flex w-full flex-col lg:flex-row">
-                        <div class="flex lg:w-1/2">
-                            <el-form-item :label="$t('queues.to.display')" class="font-bold">
-                                <base-select
-                                    :class="$rtl.isRTL ? 'lg:pl-2' : 'lg:pr-2'"
-                                    :data="allEntityQueues"
-                                    collapse-tags
-                                    filterable
-                                    label-key="q_name"
-                                    multiple
-                                    v-model="selectedQueues"
-                                    value-key="queue_id">
-                                </base-select>
-                            </el-form-item>
-                        </div>
-                        <div class="flex lg:w-1/2">
-                            <el-form-item :label="$t('queue.counter.type')" class="font-bold">
-                                <el-select
-                                    :class="$rtl.isRTL ? 'lg:pr-2' : 'lg:pl-2'"
-                                    filterable
-                                    v-model="selectedType">
-                                    <el-option
-                                        :key="index"
-                                        :label="$t(type)"
-                                        :value="index"
-                                        class="queue-type"
-                                        v-for="(type, index) in availableTypes">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </div>
-                    </div>
+                    <el-form-item :label="$t('queue.counter.type')" class="font-bold">
+                        <el-select
+                            filterable
+                            v-model="selectedType">
+                            <el-option
+                                :key="index"
+                                :label="$t(type)"
+                                :value="index"
+                                class="queue-type"
+                                v-for="(type, index) in availableTypes">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <div class="py-4 flex">
                         <el-checkbox v-model="showStatusText">
                             {{$t('status.show.text')}}
@@ -63,6 +44,17 @@
                     </div>
                 </el-form>
             </template>
+            <template v-slot:additional-data>
+                <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
+                    <el-collapse-item :title="$t('settings.filters')" name="filters">
+                        <auto-complete
+                            :key="index"
+                            :model="model.WidgetConfig[index]"
+                            v-for="(filter, index) in model.WidgetConfig"
+                            v-if="isAutoComplete(filter)"/>
+                    </el-collapse-item>
+                </el-collapse>
+            </template>
             <template v-slot:footer>
                 <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
                 <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
@@ -72,7 +64,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Option, Select, Tooltip, Checkbox} from 'element-ui'
+    import {Checkbox, Option, Select, Tooltip, Collapse, CollapseItem,} from 'element-ui'
     import UpdateDialog from './UpdateDialog'
     import {typeKeys, typeNames, types} from '@/enum/queueCounters'
     import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
@@ -82,6 +74,8 @@
     import Timer from "@/util/Timer";
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
     import {getOptionsList} from "@/helpers/entitiesList";
+    import get from "lodash/get";
+    import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
 
     export default {
         mixins: [queueMixin, cardWidgetMixin],
@@ -112,15 +106,17 @@
             EditIcon,
             MoreVerticalIcon,
             UpdateDialog,
+            AutoComplete,
             [Select.name]: Select,
             [Option.name]: Option,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
+            [Collapse.name]: Collapse,
+            [CollapseItem.name]: CollapseItem,
         },
         data () {
             return {
                 showModal: false,
-                selectedQueues: this.queues,
                 selectedType: this.queueType,
                 availableTypes: typeNames,
                 showStatusText: this.showText,
@@ -129,18 +125,26 @@
                 timer: new Timer(),
                 model: {},
                 layoutConfig: {},
+                AUTO_COMPLETE_PARAMETER_TYPE: 6,
+                activeCollapse: ['filters'],
             }
         },
         computed: {
-            allEntityQueues() {
+            autoCompletes () {
+                return this.data.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
+            },
+            allEntityQueues () {
                 return getOptionsList('{|queue_list|}')
             },
+            queueToDisplay () {
+                return get(this.data.WidgetConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
+            },
             filteredQueue () {
-                return this.allQueues.filter(e => this.selectedQueues.includes(e.QueueID))
+                return this.allQueues.filter(e => this.queueToDisplay.includes(e.QueueID))
             },
             cardValue () {
                 if (this.selectedType === typeKeys.CALLERS_ID) {
-                    return this.allQueueCalls.length
+                    return this.getQueueStats().queueCalls
                 }
                 return this.timer.displayTime
             },
@@ -152,20 +156,20 @@
             },
         },
         methods: {
-            getQueueStats() {
+            getQueueStats () {
                 let minJoinTimeStamp = new Date().getTime() * 10000
                 let queueCalls = 0
                 this.filteredQueue.forEach((queue) => {
                     queue.Calls.forEach((call) => {
                         if (call.JoinTimeStamp < minJoinTimeStamp) {
                             minJoinTimeStamp = call.JoinTimeStamp
-                            queueCalls++
                         }
+                        queueCalls++
                     })
                 })
-                return { queueCalls, minJoinTimeStamp }
+                return {queueCalls, minJoinTimeStamp}
             },
-            getInitialQueueTime() {
+            getInitialQueueTime () {
                 if (this.selectedType !== typeKeys.MAXIMUM_WAITING_ID) {
                     return 0
                 }
@@ -177,8 +181,21 @@
                 return getInitialTime(queueStats.minJoinTimeStamp)
             },
             onChange () {
+                try {
+                    this.model.WidgetConfig.forEach((config) => {
+                        if (typeof config.WidgetParameterValueJson === 'object') {
+                            config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
+                        }
+                        if (typeof config.WidgetParameterValue === 'object') {
+                            config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
+                            config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
+                        }
+                    })
+                } catch (e) {
+                    console.warn(e)
+                }
+
                 let data = {
-                    queues: this.selectedQueues,
                     queueType: this.selectedType,
                     showText: this.showStatusText,
                     displayBorder: this.displayItemBorder,
@@ -191,39 +208,45 @@
                     colors: this.model.colors
                 }
 
+                this.data.WidgetConfig = this.model.WidgetConfig
+
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },
             onShowModal () {
                 this.showModal = true
             },
-            setCounterState() {
+            setCounterState () {
                 let callCount = this.getQueueStats().queueCalls
                 this.timer.stop()
                 this.timer.setValue(this.getInitialQueueTime())
                 if (callCount !== 0) {
                     this.timer.start()
                 }
-            }
+            },
+            isAutoComplete (WidgetConfig) {
+                return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
+            },
         },
         beforeDestroy () {
             this.timer.destroy()
         },
         watch: {
             data: {
+                deep: true,
                 immediate: true,
-                handler(widget) {
+                handler (widget) {
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
                 }
             },
             selectedType: {
                 immediate: true,
-                handler() {
+                handler () {
                     this.setCounterState()
                 }
             },
-            'allQueueCalls.length'() {
+            filteredQueue () {
                 this.setCounterState()
             }
         },
@@ -240,6 +263,7 @@
     .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
         color: var(--primary-color);
     }
+
     .queue-card /deep/ .card-value {
         min-width: 80px;
         @apply flex justify-center;
