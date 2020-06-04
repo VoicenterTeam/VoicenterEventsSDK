@@ -82,7 +82,7 @@
 
                     let AnswerCountStyles = this.data.WidgetLayout['AnswerCount']
                     let InSLACountStyles = this.data.WidgetLayout['InSLACount']
-
+                    let InSLACount = 0
                     activitiesToDisplay.forEach((el) => {
 
                         if (el === 'AnswerCount') {
@@ -119,7 +119,7 @@
                             pane['background'].push(answerPane)
                         }
                         if (el === 'InSLACount') {
-                            let InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value');
+                            InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value');
 
                             if (CallCount) {
                                 inSLAPercentage = InSLACount ? (InSLACount / CallCount * 100).toFixed(2) : 0
@@ -165,7 +165,7 @@
 
                     if (activitiesToDisplay.includes('InSLACount')) {
                         let index = reversedCounts ? 0 : 1
-                        dataLabels[index] = `<span style="font-size: ${InSLACountStyles['fontSize'] + 'px'}; color: ${InSLACountStyles['color']}">${inSLAPercentage}% <label style="font-size: ${InSLACountStyles['fontSize'] - 4}px;">(${CallCount})</label><br>${this.$t('In SLA')}</span>`
+                        dataLabels[index] = `<span style="font-size: ${InSLACountStyles['fontSize'] + 'px'}; color: ${InSLACountStyles['color']}">${inSLAPercentage}% <label style="font-size: ${InSLACountStyles['fontSize'] - 4}px;">(${InSLACount})</label><br>${this.$t('In SLA')}</span>`
                         yMargin += InSLACountStyles['fontSize']
                     }
 
