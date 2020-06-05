@@ -167,6 +167,7 @@
                         if (key === ADDITIONAL_DATA_KEY) {
                             this.fetchAdditionalCounts(queue[ADDITIONAL_DATA_KEY])
                         }
+
                         if (this.queueStatistics[PRIMARY_TYPE][key]) {
 
                             if (key === AVG_RING_TIME_KEY) {

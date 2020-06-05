@@ -170,7 +170,7 @@ function queueAsColumns (records, displayRowWithTotals) {
 
         rowData.MaxRingTime = timeFormatter(rowData.MaxRingTime)
         const avgRingTime = qTotalCalls * rowData.AvgRingTime
-        rowData.AvgRingTime = timeFormatter(avgRingTime)
+        rowData.AvgRingTime = timeFormatter(rowData.AvgRingTime)
 
         allQueueCalls += Number(qTotalCalls)
 
@@ -188,7 +188,6 @@ function queueAsColumns (records, displayRowWithTotals) {
 
         if (displayRowWithTotals) {
             maxRingTime.push(Number(column.MaxRingTime))
-
             queueTotals.AvgRingTime += Number(avgRingTime)
             queueTotals.CallCount += Number(column.CallCount)
             queueTotals.NotInSLACount += column.NotInSLACount
