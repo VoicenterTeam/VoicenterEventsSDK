@@ -48,7 +48,7 @@
                 </div>
             </template>
         </base-navbar>
-        <div class="dashboard" element-loading-background="transparent" v-loading="loading">
+        <div class="dashboard" element-loading-background="transparent" v-loading="loading" :key="activeLanguage">
             <div class="dashboard-container min-h-screen pb-10" v-if="dashboard">
                 <sidebar :activeTab="activeTab"
                          :widgetGroupList="activeDashboardData.WidgetGroupList"
@@ -57,11 +57,11 @@
                 <div :class="getClass" :key="activeDashboardData.DashboardID" class="pt-12 px-6 md:px-12">
                     <fade-transition :duration="250" mode="out-in">
                         <component
-                            :storingData="storingData"
                             :activeTab="activeTab"
                             :editMode="editMode"
                             :is="layoutTypes[layoutType]"
                             :layoutType="layoutType"
+                            :storingData="storingData"
                             :widgetGroupList="groupsToDisplay"
                             :widgetTemplates="allWidgetTemplates"
                             @addWidgetsToGroup="addWidgetsToGroup"
@@ -151,6 +151,9 @@
             }
         },
         computed: {
+            activeLanguage () {
+                return this.$store.state.lang.language
+            },
             loading () {
                 return this.$store.state.dashboards.loadingData;
             },
