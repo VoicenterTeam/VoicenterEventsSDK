@@ -154,7 +154,7 @@
                 return getOptionsList(`${this.QUEUE_LIST_KEY}`)
             },
             displayQueueAsRows () {
-                return get(this.data.WidgetLayout, 'displayQueuesAsRow', true)
+                return !get(this.data.WidgetLayout, 'displayQueuesAsRow', true)
             },
             columnsAreManaged () {
                 return !!get(this.widget.WidgetLayout, 'Columns.visibleColumns');
