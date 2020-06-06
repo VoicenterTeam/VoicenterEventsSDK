@@ -190,7 +190,7 @@
                 if (this.editMode) {
                     return [this.groupToEdit]
                 }
-                return this.dashboard.WidgetGroupList
+                return this.activeDashboardData.WidgetGroupList
             }
         },
         methods: {
@@ -206,7 +206,9 @@
                 }
             },
             async addWidgetsToGroup (data = {}) {
-                let {widgets: widgetTemplates, group: widgetGroup} = data
+                let {widgets: widgetTemplates} = data
+                let widgetGroup = {...this.groupToEdit}
+
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
@@ -294,11 +296,17 @@
             },
             addNewGroup () {
                 const group = {...widgetGroupModel}
-                this.groupToEdit = group
 
                 this.activeDashboardData.WidgetGroupList.splice(0, 0, group)
                 this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
                     group.Order = index
+                })
+
+                this.editMode = false
+
+                this.$nextTick(() => {
+                    this.editMode = true
+                    this.groupToEdit = group
                 })
             },
             updateWidget (widget, widgetGroup) {
