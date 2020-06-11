@@ -158,7 +158,10 @@
                 }
 
                 this.filteredDataLength = tableData.length
-                return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+
+                if (tableData.length) {
+                    return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+                }
             },
             isSimpleTable () {
                 return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data);
