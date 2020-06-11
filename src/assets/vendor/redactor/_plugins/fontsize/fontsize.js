@@ -15,7 +15,7 @@
             this.toolbar = app.toolbar;
 
             // local
-    		this.sizes = [10, 11, 12, 14, 16, 18, 20, 24, 28, 30];
+    		this.sizes = [10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 48, 64, 98, 104];
         },
         // public
         start: function()
