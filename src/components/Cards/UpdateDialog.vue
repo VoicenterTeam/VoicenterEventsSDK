@@ -86,14 +86,16 @@
                 activeCollapse: ['layout'],
                 titleFontSizes: {
                     min: 12,
-                    max: 64
+                    max: 150
                 },
                 titleBestOptions: {
                     16: '16px',
-                    24: '24px',
                     32: '32px',
-                    48: '48px',
                     56: '56px',
+                    72: '72px',
+                    96: '96px',
+                    112: '112px',
+                    136: '136px',
                 },
                 valueFontSizes: {
                     min: 24,
