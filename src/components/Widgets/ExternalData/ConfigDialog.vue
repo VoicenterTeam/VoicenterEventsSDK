@@ -18,6 +18,7 @@
                 <label>{{$t('Widget type')}}</label>
                 <el-select v-model="model.WidgetLayout.ComponentTypeID"
                            placeholder="Select"
+                           @change="triggerChange"
                            class="w-full pt-2">
                     <el-option
                         v-for="(item, index) of options"
@@ -60,7 +61,7 @@
     import {Alert, Checkbox, Collapse, CollapseItem, Option, Select} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import {isPieWidget} from '@/helpers/widgetUtils'
-    import {dictionary, options} from '@/enum/externalDataWidgetConfig'
+    import {dictionary, options, dummyDataEndpoints} from '@/enum/externalDataWidgetConfig'
     import WidgetColors from '../WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
@@ -90,6 +91,7 @@
                 options,
                 dictionary,
                 activeCollapse: ['layout'],
+                dummyDataEndpoints,
             }
         },
         computed: {
@@ -125,6 +127,10 @@
             },
             toggleVisibility(value) {
                 this.$emit('update:visible', value)
+            },
+            triggerChange() {
+                let endpoint = this.dummyDataEndpoints[this.model.WidgetLayout.ComponentTypeID]
+                this.$set(this.model.WidgetLayout, 'Endpoint', endpoint)
             },
         },
         mounted() {

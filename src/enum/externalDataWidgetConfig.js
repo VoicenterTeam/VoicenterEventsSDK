@@ -33,9 +33,17 @@ export const options = [
 ];
 
 export const dictionary = {
-    [`${types.COUNTER}`]: 'The response must be a value',
-    [`${types.SPEEDOMETER}`]: "<a href='https://www.highcharts.com/demo/gauge-solid' target='_blank'>Click to see the documentation</a>",
-    [`${types.TABLE}`]: 'The response must be an array of objects: [{key: value...},{...}]',
-    [`${types.LINES}`]: "<a href='https://www.highcharts.com/demo/line-basic' target='_blank'>Click to see the documentation</a>",
-    [`${types.PIE}`]: "<a href='https://www.highcharts.com/demo/pie-legend' target='_blank'>Click to see the documentation</a>",
+    [types.COUNTER]: 'The response must be a value',
+    [types.SPEEDOMETER]: "<a href='https://www.highcharts.com/demo/gauge-solid' target='_blank'>Click to see the documentation</a>",
+    [types.TABLE]: 'The response must be an array of objects: [{key: value...},{...}]',
+    [types.LINES]: "<a href='https://www.highcharts.com/demo/line-basic' target='_blank'>Click to see the documentation</a>",
+    [types.PIE]: "<a href='https://www.highcharts.com/demo/pie-legend' target='_blank'>Click to see the documentation</a>",
+};
+
+export const dummyDataEndpoints = {
+    [types.COUNTER]: 'https://external-data.now.sh/counter.json',
+    [types.SPEEDOMETER]: 'https://external-data.now.sh/speedometer.json',
+    [types.TABLE]: 'https://external-data.now.sh/table.json',
+    [types.LINES]: 'https://external-data.now.sh/lines.json',
+    [types.PIE]: 'https://external-data.now.sh/pie.json',
 };
