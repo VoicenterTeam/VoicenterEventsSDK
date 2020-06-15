@@ -1,12 +1,7 @@
 <template>
-    <div>
-        <div class="flex flex-row md:items-center justify-between">
-            <base-widget-title :title="data.Title"/>
-        </div>
-        <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility">
-            <highcharts class="chart-content_wrapper"
-                        :options="chartOptions"/>
-        </div>
+    <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility">
+        <highcharts :options="chartOptions"
+                    class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
@@ -35,7 +30,7 @@
                 default: false
             },
         },
-        data() {
+        data () {
             return {
                 chartVisibility: true,
                 chartOptions: {},
@@ -43,7 +38,7 @@
             }
         },
         methods: {
-            async getWidgetData() {
+            async getWidgetData () {
                 try {
                     let widgetDataType = this.data.DataTypeID
                     let Data = await getWidgetData(this.data)
@@ -98,7 +93,7 @@
                     }
                 }
             },
-            addLegendToChart(chart) {
+            addLegendToChart (chart) {
                 if (!chart.legend) {
                     chart.legend = {
                         enabled: true
@@ -116,14 +111,14 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart() {
+            reDrawChart () {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
             }
         },
-        mounted() {
+        mounted () {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -139,14 +134,14 @@
                 }
             }
         },
-        beforeDestroy() {
+        beforeDestroy () {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }
         },
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .chart-content_wrapper {
         max-height: 400px;
     }

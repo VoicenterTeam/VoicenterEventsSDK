@@ -1,7 +1,7 @@
 <template>
-    <div class="max-h-8 flex">
+    <div class="max-h-8 flex items-center">
         <p v-if="title && showWidgetTitle" class="text-main-2xl font-semibold truncate"
-           :style="$store.getters['dashboards/widgetTitleStyles']">
+           :style="widgetTitleStyles">
             <slot>
                 {{$t(title)}}
             </slot>
@@ -22,9 +22,10 @@
                     return true
                 }
                 return showTitles
+            },
+            widgetTitleStyles() {
+                return this.$store.getters['dashboards/widgetTitleStyles']
             }
         }
     }
 </script>
-<style>
-</style>

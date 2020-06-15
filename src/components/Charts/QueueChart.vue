@@ -1,13 +1,6 @@
 <template>
-    <div>
-        <div class="flex flex-row md:items-center justify-between">
-            <div class="flex">
-                <base-widget-title :title="data.Title" :class="$rtl.isRTL ? 'ml-5' : 'mr-5'"/>
-            </div>
-        </div>
-        <div class="rounded-lg pt-2" v-if="chartVisibility">
-            <highcharts class="chart-content_wrapper" :options="chartOptions"/>
-        </div>
+    <div class="rounded-lg pt-2" v-if="chartVisibility">
+        <highcharts :options="chartOptions" class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
@@ -36,7 +29,7 @@
                 default: () => ({})
             },
         },
-        data() {
+        data () {
             return {
                 chartVisibility: true,
                 fetchDataInterval: null,
@@ -122,10 +115,10 @@
             };
         },
         computed: {
-            agentsOnline() {
+            agentsOnline () {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
             },
-            chartOptions() {
+            chartOptions () {
                 if (this.fetchDataInterval) {
                     clearInterval(this.fetchDataInterval)
                 }
@@ -143,7 +136,7 @@
                 }
                 return this.chartData
             },
-            responsiveClass() {
+            responsiveClass () {
                 if (this.editable && this.$rtl.isRTL) {
                     return 'pl-24'
                 }
@@ -156,7 +149,7 @@
             },
         },
         methods: {
-            updateChartData() {
+            updateChartData () {
                 let queues = this.filteredQueues
 
                 let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
@@ -244,19 +237,19 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart() {
+            reDrawChart () {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
             }
         },
-        beforeDestroy() {
+        beforeDestroy () {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }
         },
-        mounted() {
+        mounted () {
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
@@ -264,7 +257,7 @@
             this.triggerResizeEvent()
         },
         watch: {
-            data() {
+            data () {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
@@ -273,7 +266,7 @@
         },
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .chart-content_wrapper {
         max-height: 400px;
     }

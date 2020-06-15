@@ -6,6 +6,7 @@
              ref="widgetListContainer"
         >
             <div
+                :data-id="widget.WidgetID"
                 @mousedown="onMousedown"
                 class="grid-stack-item"
                 v-bind="gridStackAttributes(widget)"
@@ -13,6 +14,7 @@
                 <WidgetErrorBoundary>
                     <Widget
                         :editable="editable"
+                        :inViewById="inViewById"
                         :key="widget.WidgetID"
                         :widget="widget"
                         @remove-item="removeWidget(widget)"
@@ -35,7 +37,7 @@
         <div :key="`no-data-${widgetGroup.WidgetGroupID}`"
              class="w-full flex flex-col items-center mt-20"
              v-if="widgets.length === 0">
-            <div v-if="!editable" class="flex flex-col items-center">
+            <div class="flex flex-col items-center" v-if="!editable">
                 <IconNoData class="h-56 w-56"/>
                 <p class="text-gray-600 max-w-lg text-center">{{$t('Dashboard no Data')}}</p>
             </div>
@@ -61,6 +63,7 @@
         data () {
             return {
                 grid: null,
+                inViewById: {}
             }
         },
         props: {
@@ -167,6 +170,7 @@
 
                 this.resizeEventEmitter()
                 this.onDragStartEvent()
+                this.initIntersectionObserver()
             },
             resizeEventEmitter () {
                 this.grid.on('gsresizestop', function (event, element) {
@@ -205,7 +209,37 @@
             isWidgetModalOpen () {
                 let bodyElement = document.body;
                 return bodyElement.classList.contains("el-popup-parent--hidden")
-            }
+            },
+            initIntersectionObserver () {
+                const sections = document.querySelectorAll('.grid-stack-item')
+
+                const options = {
+                    root: null,
+                    threshold: 0.1,
+                    rootMargin: '200px'
+                }
+                let inViewById = {}
+                let callback = (entries, observer) => {
+                    entries.forEach((entry) => {
+                        let id = entry.target.dataset.id;
+                        if (!entry.isIntersecting) {
+                            inViewById[id] = entry.isIntersecting
+                        } else {
+                            inViewById[id] = entry.isIntersecting
+                            observer.unobserve(entry.target)
+                        }
+                    });
+                    this.inViewById = inViewById
+                };
+
+                const observer = new IntersectionObserver(callback, options)
+
+                sections.forEach((section) => {
+                    observer.observe(section)
+                })
+
+                this.observer = observer;
+            },
         },
         mounted () {
             this.initWindowGrid()
@@ -228,6 +262,9 @@
         },
         beforeDestroy () {
             this.tryDestroyGrid()
+            if (this.observer) {
+                this.observer.disconnect();
+            }
         }
     }
 </script>

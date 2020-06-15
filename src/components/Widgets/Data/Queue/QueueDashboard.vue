@@ -7,11 +7,6 @@
             />
         </div>
         <div v-else>
-            <div class="flex items-center">
-                <div class="flex flex-col md:flex-row md:items-center">
-                    <base-widget-title :title="data.Title"/>
-                </div>
-            </div>
             <div class="flex flex-wrap -mx-1 pt-2" v-if="queueStatistics">
                 <div v-for="item in queueStatistics[PRIMARY_TYPE]">
                     <statistic-card

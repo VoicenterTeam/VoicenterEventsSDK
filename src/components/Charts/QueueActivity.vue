@@ -1,11 +1,6 @@
 <template>
-    <div class="queue-activity__wrapper w-full">
-        <div class="flex flex-row md:items-center justify-between">
-            <base-widget-title :title="data.Title"/>
-        </div>
-        <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
-            <highcharts :options="chartData" class="chart-content_wrapper"/>
-        </div>
+    <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
+        <highcharts :options="chartData" class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
@@ -218,7 +213,7 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart() {
+            reDrawChart () {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true

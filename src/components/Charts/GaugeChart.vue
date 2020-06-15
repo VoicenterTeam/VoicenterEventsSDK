@@ -1,11 +1,6 @@
 <template>
-    <div class="gouge-wrapper">
-        <div class="flex flex-row md:items-center justify-between">
-            <base-widget-title :title="data.Title"/>
-        </div>
-        <div class="bg-transparent pt-2 rounded-lg" v-if="chartVisibility">
-            <highcharts :options="chartData"/>
-        </div>
+    <div class="bg-transparent pt-2 rounded-lg" v-if="chartVisibility">
+        <highcharts :options="chartData"/>
     </div>
 </template>
 <script>
@@ -124,7 +119,7 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart() {
+            reDrawChart () {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true

@@ -89,7 +89,7 @@
                 </div>
             </nav>
             <fade-transition :duration="400">
-                <div class="flex absolute flex-col mt-16 z-10 bg-white w-full py-10"
+                <div class="flex absolute flex-col mt-10 z-10 bg-white w-full py-10"
                      v-if="showMobileMenu">
                     <div class="mx-4">
                         <div class="flex items-center justify-center rounded border">

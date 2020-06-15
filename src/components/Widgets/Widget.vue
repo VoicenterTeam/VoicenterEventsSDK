@@ -1,36 +1,44 @@
 <template>
-    <div class="relative mt-1 grid-stack-item-content">
-        <div class="absolute top-0 right-0 mr-12 widget-delete__button mt-0-5"
-             v-if="editable && showDeleteButton" :style="getPadding">
-            <el-tooltip class="item" effect="dark" :content="$t('tooltip.remove.widget')" placement="top">
-                <delete-button @click="removeWidget(widget)"/>
-            </el-tooltip>
+    <div :class="getClass" class="grid-stack-item-content relative mt-1">
+        <div class="flex w-full flex-row items-center justify-between widget-header" v-if="showDeleteButton">
+            <base-widget-title :title="widget.Title"/>
+            <portal-target :name="`widget-header__${widget.WidgetID}`" class="hidden lg:flex w-full justify-between"/>
+            <div class="flex">
+                <div class="widget-delete__button" v-if="editable">
+                    <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
+                        <delete-button @click="removeWidget(widget)"/>
+                    </el-tooltip>
+                </div>
+                <div class="widget-edit__button">
+                    <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
+                        <edit-button :class="{'border border-primary': editable}"
+                                     @click="showUpdateDialog = true">
+                        </edit-button>
+                    </el-tooltip>
+                </div>
+            </div>
         </div>
-        <div class="absolute top-0 right-0 widget-edit__button mt-0-5"
-             v-if="showDeleteButton" :style="getPadding">
-            <el-tooltip class="item" effect="dark" :content="$t('tooltip.edit.widget')" placement="top">
-                <edit-button @click="showUpdateDialog = true"
-                             :class="{'border border-primary': editable}">
-                </edit-button>
-            </el-tooltip>
+        <div class="flex w-full flex-col h-full widget-container" v-if="inView">
+            <component
+                :data="widget"
+                :editable="editable"
+                :is="getComponentTypeAndSetData(widget)"
+                :style="getStyles"
+                @on-update="(data) => onUpdate(data)"
+                @remove-item="removeWidget(widget)"
+                class="widget h-full"
+                v-bind="widget.WidgetLayout">
+            </component>
+            <portal-target :class="{'h-14': showDeleteButton}" :name="`widget-footer__${widget.WidgetID}`"/>
         </div>
-        <component :is="getComponentTypeAndSetData(widget)"
-                   :data="widget"
-                   v-bind="widget.WidgetLayout"
-                   :editable="editable"
-                   class="widget h-full"
-                   :style="getStyles"
-                   @on-update="(data) => onUpdate(data)"
-                   @remove-item="removeWidget(widget)">
-        </component>
         <component
             :is="getDialogComponent"
-            width="45%"
-            v-if="showUpdateDialog"
+            :visible.sync="showUpdateDialog"
             :widget="widget"
             @on-update="(data) => onUpdate(data)"
+            v-if="showUpdateDialog"
             v-on="$listeners"
-            :visible.sync="showUpdateDialog">
+            width="45%">
         </component>
     </div>
 </template>
@@ -105,16 +113,24 @@
             layoutType: {
                 type: String,
                 default: () => ""
-            }
+            },
+            inViewById: {
+                type: Object,
+                default: () => ({})
+            },
         },
-        data() {
+        data () {
             return {
                 showUpdateDialog: false,
                 loading: false,
+                TABLE_DATA_TYPE_ID: '4',
             }
         },
         computed: {
-            showDeleteButton() {
+            inView() {
+                return this.inViewById[this.widget.WidgetID]
+            },
+            showDeleteButton () {
                 let exceptions = [
                     widgetDataTypes.COUNTER_TYPE_ID,
                     widgetDataTypes.HISTORY_COUNTERS,
@@ -125,13 +141,13 @@
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
             },
-            getDialogComponent() {
+            getDialogComponent () {
                 if (this.widget.DataTypeID === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
                     return 'ConfigDialog'
                 }
                 return 'UpdateDialog'
             },
-            getStyles() {
+            getStyles () {
                 let styles = {};
                 let colors = get(this.widget.WidgetLayout, 'colors') || defaultColors;
 
@@ -150,19 +166,22 @@
                 }
                 return styles;
             },
-            getPadding() {
-                let padding = get(this.widget.WidgetLayout, 'padding') || 0;
-                return {'padding': padding + 'px'};
-            },
+            getClass () {
+                const DataTypeID = get(this.widget, 'DataTypeID', '0')
+
+                if (DataTypeID.toString() === this.TABLE_DATA_TYPE_ID) {
+                    return 'has-margin'
+                }
+            }
         },
         methods: {
-            removeWidget(widget) {
+            removeWidget (widget) {
                 this.$emit('remove-item', widget)
             },
-            onUpdate(widget) {
+            onUpdate (widget) {
                 this.$emit('update-item', widget)
             },
-            getComponentTypeAndSetData(widget) {
+            getComponentTypeAndSetData (widget) {
                 let dataTypeId = getWidgetDataType(widget)
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
@@ -174,13 +193,13 @@
                 this.$set(widget, 'DefaultRefreshInterval', refreshInterval)
                 return componentType
             },
-            setComponentEndPoint(widget) {
+            setComponentEndPoint (widget) {
                 return getWidgetEndpoint(widget)
             },
         },
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .rtl {
         .widget-edit__button {
             right: auto;
@@ -199,5 +218,19 @@
 
     .widget {
         @apply rounded-lg;
+    }
+</style>
+<style lang="scss">
+    .grid-stack > .grid-stack-item > .grid-stack-item-content {
+        overflow: inherit;
+
+        .widget {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    }
+
+    .grid-stack > .grid-stack-item > .grid-stack-item-content.has-margin {
+        @apply mb-8;
     }
 </style>

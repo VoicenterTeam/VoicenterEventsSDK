@@ -6,9 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode dev",
     "build-prod": "vue-cli-service build --mode prod",
+    "generate-missing-translations": "node src/translationHelpers/getMissingTranslations.js",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "locale-diff": "node src/translationHelpers/localeDiff.js",
-    "generate-missing-translations": "node src/translationHelpers/getMissingTranslations.js"
+    "locale-diff": "node src/translationHelpers/localeDiff.js"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -19,9 +19,10 @@
     "highcharts-vue": "^1.3.5",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
+    "portal-vue": "^2.1.7",
     "register-service-worker": "^1.6.2",
     "sortablejs": "^1.10.0-rc3",
-    "tailwindcss": "^1.0.4",
+    "tailwindcss": "^1.4.5",
     "voicenter-events-sdk": "^0.7.11",
     "vue": "^2.6.10",
     "vue-audio": "^0.0.12",

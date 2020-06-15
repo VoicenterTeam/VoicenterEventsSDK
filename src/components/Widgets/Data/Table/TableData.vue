@@ -15,11 +15,13 @@
         </div>
         <div v-if="isSimpleTable">
             <data-table
+                :widget="data"
                 :border="border"
                 :columns="availableColumns"
                 :editable="editable"
                 :showColumns="visibleColumns"
                 :stripe="stripe"
+                :allRecords="tableData"
                 :tableData="fetchTableData"
                 :widgetTitle="data.Title"
                 @on-update-layout="onUpdateLayout">
@@ -57,14 +59,11 @@
                         </el-pagination>
                     </div>
                 </template>
-                <template v-slot:title>
-                    <base-widget-title :title="data.Title"/>
-                </template>
                 <template v-slot:time-frame>
                     <time-frame :widget="data"/>
                 </template>
                 <template v-slot:search-input>
-                    <div class="w-48 px-1">
+                    <div class="flex items-center w-48 px-1">
                         <el-input
                             clearable
                             :placeholder="$t('Type text to filter')"

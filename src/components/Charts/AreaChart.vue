@@ -1,14 +1,7 @@
 <template>
-    <div>
-        <div class="flex flex-row md:items-center justify-between">
-            <p v-if="data.Title" class="text-main-2xl font-semibold">
-                {{data.Title}}
-            </p>
-        </div>
-        <div class="rounded-lg pt-2" v-if="chartVisibility">
-            <highcharts class="chart-content_wrapper"
-                        :options="chartOptions"/>
-        </div>
+    <div class="rounded-lg pt-2" v-if="chartVisibility">
+        <highcharts :options="chartOptions"
+                    class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
@@ -37,7 +30,7 @@
                 default: false
             },
         },
-        data() {
+        data () {
             return {
                 chartVisibility: true,
                 fetchDataInterval: null,
@@ -45,15 +38,15 @@
             }
         },
         computed: {
-            outgoingAreaColor() {
-                return get(this.data.WidgetLayout,'colors.outgoing', '#61B5FE')
+            outgoingAreaColor () {
+                return get(this.data.WidgetLayout, 'colors.outgoing', '#61B5FE')
             },
-            incomingAreaColor() {
-                return get(this.data.WidgetLayout,'colors.incoming', '#49CA6D')
+            incomingAreaColor () {
+                return get(this.data.WidgetLayout, 'colors.incoming', '#49CA6D')
             },
         },
         methods: {
-            async getWidgetData() {
+            async getWidgetData () {
                 try {
 
                     let Data = await getWidgetData(this.data)
@@ -82,14 +75,14 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart() {
+            reDrawChart () {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
             }
         },
-        mounted() {
+        mounted () {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -106,14 +99,14 @@
                 }
             }
         },
-        beforeDestroy() {
+        beforeDestroy () {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }
         },
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .chart-content_wrapper {
         max-height: 400px;
     }

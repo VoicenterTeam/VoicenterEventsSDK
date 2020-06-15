@@ -1,11 +1,6 @@
 <template>
-    <div>
-        <div class="flex flex-row md:items-center justify-between">
-            <base-widget-title :title="data.Title"/>
-        </div>
-        <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
-            <highcharts :options="chartData" class="chart-content_wrapper"/>
-        </div>
+    <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
+        <highcharts :options="chartData" class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
@@ -46,10 +41,10 @@
             }
         },
         computed: {
-            getLabelFontSize() {
+            getLabelFontSize () {
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
             },
-            getDataLabelsColor() {
+            getDataLabelsColor () {
                 return get(this.data, 'WidgetLayout.dataLabelsColor', '#000000')
             },
         },
@@ -99,7 +94,7 @@
                     return el
                 });
 
-                const labelFontSize  = this.getLabelFontSize
+                const labelFontSize = this.getLabelFontSize
                 const dataLabelsColor = this.getDataLabelsColor
 
                 const series = [{
@@ -176,14 +171,14 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart() {
+            reDrawChart () {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
             }
         },
-        mounted() {
+        mounted () {
             this.triggerResizeEvent()
         },
         watch: {

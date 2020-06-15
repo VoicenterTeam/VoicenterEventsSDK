@@ -1,5 +1,5 @@
 <template>
-    <div class="text-main-2xl font-semibold" :style="$store.getters['dashboards/widgetTitleStyles']">
+    <div class="text-main-2xl flex items-center font-semibold" :style="$store.getters['dashboards/widgetTitleStyles']">
         {{getDateInterval}}
     </div>
 </template>

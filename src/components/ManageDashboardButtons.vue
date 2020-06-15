@@ -9,7 +9,7 @@
                     <EditIcon class="w-5 h-5 text-primary"></EditIcon>
                 </button>
             </el-tooltip>
-            <div class="origin-top-right absolute right-0 mt-4 w-64" v-click-outside="onClickOutside" v-if="showMenu">
+            <div class="origin-top-right absolute right-0 mt-4 w-64 z-50" v-click-outside="onClickOutside" v-if="showMenu">
                 <div class="shadow-lg rounded-lg bg-white">
                     <div class="py-1">
                         <div class="px-3 py-2 text-center">{{$t('Select a widget group to edit')}}</div>

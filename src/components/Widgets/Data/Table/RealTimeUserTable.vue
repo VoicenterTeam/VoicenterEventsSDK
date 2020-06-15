@@ -1,6 +1,7 @@
 <template>
     <div>
         <data-table
+            :widget="data"
             :border="border"
             :cell-class-name="getCellClassName"
             :cell-style="getCellStyle"
@@ -53,7 +54,7 @@
                 <time-frame :widget="data"/>
             </template>
             <template v-slot:search-input>
-                <div class="w-48 px-1">
+                <div class="flex items-center w-48 px-1">
                     <el-input
                         clearable
                         :placeholder="$t('Type text to filter')"
@@ -63,7 +64,7 @@
                 </div>
             </template>
             <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{tableData.length}} row(s)</p>
+                <p class="text-main-sm px-2">{{fetchTableData.length}} row(s)</p>
             </template>
         </data-table>
     </div>

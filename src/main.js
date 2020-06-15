@@ -8,11 +8,13 @@ import {Notification, MessageBox} from 'element-ui';
 import './registerServiceWorker'
 import i18n from './i18n'
 import initRealTimeSdk from "@/plugins/initRealTimeSdk";
+import PortalVue from 'portal-vue'
 
 Vue.config.productionTip = false
 
 authMiddleware(router, store)
 
+Vue.use(PortalVue)
 Vue.use(dashboardPlugin)
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;

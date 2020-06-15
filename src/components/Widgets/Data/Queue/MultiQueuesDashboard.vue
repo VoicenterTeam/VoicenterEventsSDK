@@ -1,6 +1,7 @@
 <template>
     <div>
         <data-table
+            :widget="data"
             :border="border"
             :cell-class-name="getCellClassName"
             :cell-style="getCellStyle"
@@ -52,7 +53,7 @@
                 <time-frame :widget="data"/>
             </template>
             <template v-slot:search-input>
-                <div class="w-48 px-1">
+                <div class="flex items-center w-48 px-1">
                     <el-input
                         clearable
                         :placeholder="$t('Type text to filter')"

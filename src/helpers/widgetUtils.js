@@ -115,4 +115,9 @@ export function isAverageCallsWidget (widget) {
     return widget.DataTypeID === widgetDataTypes.AVERAGE_CALLS_DURATION;
 }
 
+export function isARealtimeTableWidget (widget) {
+    let isQueueWidgetType = [widgetDataTypes.QUEUE_DASHBOARD, widgetDataTypes.QUEUE_ACTIVE_CALL].includes(widget.DataTypeID)
+    return isQueueWidgetType || isRealtimeWidget(widget)  || isMultiQueuesDashboard(widget)
+}
+
 

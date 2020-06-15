@@ -1,18 +1,9 @@
 <template>
     <div class="data-table__container h-full">
-        <div class="flex flex-col w-full" :class="getClass">
-            <div class="flex items-center">
-                <slot name="title"/>
-                <slot name="search-input"/>
-            </div>
-            <div class="hidden lg:flex">
-                <slot name="time-frame"/>
-            </div>
-            <div :class="margins"
-                 class="flex items-center table-row__count pt-2 lg:pt-0">
-                <div class="flex lg:hidden">
-                    <slot name="time-frame"/>
-                </div>
+        <portal :to="`widget-header__${widget.WidgetID}`">
+            <slot name="search-input"/>
+            <slot name="time-frame"/>
+            <div class="flex items-center table-row__count">
                 <el-dropdown class="px-2" size="mini" trigger="click" v-if="manageColumns">
                     <el-button size="small" type="primary">
                         {{$t('datatable.manage.columns')}}
@@ -29,8 +20,8 @@
                 </el-dropdown>
                 <slot name="additional-data"/>
             </div>
-        </div>
-        <div class="bg-white rounded-lg mt-1 data-table w-full" style="height: calc(100% - 2.2rem)">
+        </portal>
+        <div class="bg-white rounded-lg mt-1 data-table w-full">
             <el-table :data="rowsData"
                       :fit="fitWidth"
                       :id="tableId"
@@ -94,25 +85,27 @@
                 </slot>
             </el-table>
         </div>
-        <div class="flex items-center justify-between -mx-1" v-if="tableData.length">
-            <div class="flex">
-                <div @click="exportTableData(EXPORT_TO.XLSX)" class="mx-2 cursor-pointer export-button">
-                    <div class="flex items-center">
-                        <p class="text-md">{{$t('general.export.excel')}}</p>
-                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
+        <portal :to="`widget-footer__${widget.WidgetID}`">
+            <div class="flex items-center justify-between -mx-1 widget-footer" v-if="tableData.length">
+                <div class="flex">
+                    <div @click="exportTableData(EXPORT_TO.XLSX)" class="mx-2 cursor-pointer export-button">
+                        <div class="flex items-center">
+                            <p class="text-md">{{$t('general.export.excel')}}</p>
+                            <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
+                        </div>
+                    </div>
+                    <div @click="exportTableData(EXPORT_TO.CSV)" class="mx-2 cursor-pointer export-button">
+                        <div class="flex items-center">
+                            <p class="text-md">{{$t('general.export.csv')}}</p>
+                            <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
+                        </div>
                     </div>
                 </div>
-                <div @click="exportTableData(EXPORT_TO.CSV)" class="mx-2 cursor-pointer export-button">
-                    <div class="flex items-center">
-                        <p class="text-md">{{$t('general.export.csv')}}</p>
-                        <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
-                    </div>
+                <div class="flex">
+                    <slot name="pagination"/>
                 </div>
             </div>
-            <div class="flex">
-                <slot name="pagination"/>
-            </div>
-        </div>
+        </portal>
     </div>
 </template>
 <script>
@@ -128,6 +121,7 @@
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
     import {makeRandomID} from "@/helpers/util";
+    import {isARealtimeTableWidget} from "@/helpers/widgetUtils";
 
     const EXPORT_TO = {
         'XLSX': '.xlsx',
@@ -147,17 +141,21 @@
             [TableColumn.name]: TableColumn,
         },
         props: {
+            widget: {
+                type: Object,
+                default: () => ({})
+            },
             tableData: {
                 type: Array,
-                default: () => ([])
+                default: () => []
             },
             columns: {
                 type: Array,
-                default: () => ([])
+                default: () => []
             },
             showColumns: {
                 type: Array,
-                default: () => ([])
+                default: () => []
             },
             editable: {
                 type: Boolean,
@@ -171,6 +169,10 @@
                 type: Boolean,
                 default: true
             },
+            allRecords: {
+                type: Array,
+                default: () => []
+            }
         },
         data () {
             const tableId = makeRandomID()
@@ -197,14 +199,7 @@
             rowsData () {
                 return this.tableData
             },
-            margins () {
-                if (this.$rtl.isRTL) {
-                    return this.editable ? 'ml-24' : 'ml-12'
-                } else {
-                    return this.editable ? 'mr-24' : 'mr-12'
-                }
-            },
-            getClass() {
+            getClass () {
                 return 'lg:flex-row lg:items-center lg:justify-between'
             }
         },
@@ -281,10 +276,22 @@
             },
             exportTableData (exportTo) {
                 let fileName = this.getFileName(exportTo)
-                const tableId = this.tableId
-                // export Excel file
-                let tableElement = document.getElementById(tableId);
-                let excelWorkBook = XLSX.utils.table_to_book(tableElement);
+
+                if (isARealtimeTableWidget(this.widget)) {
+
+                    const tableId = this.tableId
+
+                    let tableElement = document.getElementById(tableId);
+                    let excelWorkBook = XLSX.utils.table_to_book(tableElement);
+
+                    XLSX.writeFile(excelWorkBook, fileName)
+                    return;
+                }
+
+                let data = XLSX.utils.json_to_sheet(this.allRecords)
+                let excelWorkBook = XLSX.utils.book_new()
+
+                XLSX.utils.book_append_sheet(excelWorkBook, data, 'data')
                 XLSX.writeFile(excelWorkBook, fileName)
             }
         },

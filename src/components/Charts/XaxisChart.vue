@@ -1,14 +1,7 @@
 <template>
-    <div>
-        <div class="flex flex-row md:items-center justify-between">
-            <p v-if="data.Title" class="text-main-2xl font-semibold">
-                {{data.Title}}
-            </p>
-        </div>
-        <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility && chartOptions.series">
-            <highcharts class="chart-content_wrapper"
-                        :options="chartOptions"/>
-        </div>
+    <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility && chartOptions.series">
+        <highcharts :options="chartOptions"
+                    class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
@@ -36,7 +29,7 @@
                 default: false
             },
         },
-        data() {
+        data () {
             return {
                 chartVisibility: true,
                 fetchDataInterval: null,
@@ -44,7 +37,7 @@
             }
         },
         methods: {
-            async getWidgetData() {
+            async getWidgetData () {
                 try {
                     let Data = await getWidgetData(this.data)
                     let chartData = get(Data, '0')
@@ -71,12 +64,12 @@
                             reversed: true
                         }
                     }
-                    this.chartOptions['plotOptions']= {
+                    this.chartOptions['plotOptions'] = {
                         series: {
                             pointPadding: 0.25
                         }
                     },
-                    this.chartVisibility = false
+                        this.chartVisibility = false
                     this.$nextTick(() => {
                         this.chartVisibility = true
                     })
@@ -90,7 +83,7 @@
                 }
             }
         },
-        mounted() {
+        mounted () {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -105,14 +98,14 @@
                 }
             }
         },
-        beforeDestroy() {
+        beforeDestroy () {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }
         },
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .chart-content_wrapper {
         max-height: 400px;
     }

@@ -1,17 +1,12 @@
 <template>
     <div class="trix-widget">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full py-1">
-            <div class="flex">
-                <p class="text-main-2xl font-semibold" v-if="data.Title">
-                    {{getInfo}}
-                </p>
-            </div>
-            <div :class="margins" class="flex items-center">
+        <portal :to="`widget-header__${data.WidgetID}`">
+            <div class="flex w-full justify-end items-center mx-1">
                 <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">
                     <el-switch v-model="editMode"/>
                 </el-tooltip>
             </div>
-        </div>
+        </portal>
         <div :style="getStyles" class="bg-white rounded">
             <div
                 :style="getStyles"

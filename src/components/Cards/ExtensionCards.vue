@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div :class="responsiveClass" class="flex w-full justify-between pr-12 -mt-0-5 items-center">
-            <base-widget-title :title="data.Title"/>
-            <div class="flex">
+        <portal :to="`widget-header__${data.WidgetID}`">
+            <div class="flex  w-full justify-end">
                 <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
                     <div>
                         <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"/>
@@ -32,7 +31,7 @@
                     <el-option :key="option.label" v-bind="option" v-for="option in sortByOptions"/>
                 </el-select>
             </div>
-        </div>
+        </portal>
         <div>
             <div class="flex pt-1 extension-cards justify-center">
                 <fade-transition
@@ -141,17 +140,6 @@
                 let onlineExtensions = this.onlineExtensions.filter((el) => extensionToDisplay.includes(el.userID))
 
                 return orderBy(onlineExtensions, this.sortBy, 'asc')
-            },
-            responsiveClass () {
-                if (this.editable && this.$rtl.isRTL) {
-                    return 'pl-24 mx-2'
-                }
-                if (this.$rtl.isRTL) {
-                    return 'pl-24'
-                }
-                if (this.editable) {
-                    return 'pr-24'
-                }
             },
             renderColumns () {
                 let columns = ''

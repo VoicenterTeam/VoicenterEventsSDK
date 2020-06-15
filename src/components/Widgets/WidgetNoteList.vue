@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div class="flex justify-between mt-0-5">
-            <base-widget-title :title="data.Title"/>
-            <div class="flex justify-end items-center" v-if="!creationMode" :class="margins">
+        <portal :to="`widget-header__${data.WidgetID}`">
+            <div class="flex w-full justify-end items-center mx-1" v-if="!creationMode">
                 <el-tooltip :content="$t('Display hidden notes')" :open-delay="openDelay" class="item"
                             effect="dark"
                             placement="top">
@@ -13,11 +12,11 @@
                     <AddButton @click="onAddNote"/>
                 </el-tooltip>
             </div>
-        </div>
+        </portal>
         <div class="w-full py-2">
             <html-editor
-                v-if="creationMode"
-                @on-update="addNote"/>
+                @on-update="addNote"
+                v-if="creationMode"/>
         </div>
         <div class="flex flex-row justify-between" v-for="note in fetchNotes">
             <div class="border p-2 w-48 text-center">
@@ -118,7 +117,7 @@
             },
         },
         methods: {
-            getFormattedDate(date) {
+            getFormattedDate (date) {
                 return format(date, 'yy-MM-dd HH:mm')
             },
             onAddNote () {
@@ -177,7 +176,7 @@
                 this.$emit('on-update', this.data)
                 this.noteToUpdate = null
             },
-            showActions(note) {
+            showActions (note) {
                 return this.onEditMode && (!this.noteToUpdate || this.noteToUpdate !== note.date);
             }
         },
