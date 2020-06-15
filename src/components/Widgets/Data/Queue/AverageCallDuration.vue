@@ -1,18 +1,15 @@
 <template>
-    <div class="overflow-scroll" :key="data.WidgetID">
-        <base-widget-title :title="data.Title"/>
-        <div class="flex flex-row">
-            <div class="flex w-auto" v-for="(value, key) in counters" v-if="displayCounter(key)">
-                <div :key="key" class="mx-1 py-2">
-                    <div :style="counterStyle[key]"
-                         class="bg-white px-4 py-6 flex items-center justify-between rounded-lg shadow">
-                        <div class="flex flex-col w-full items-center justify-center font-bold">
-                            <div :style="getValueFontSize" class="mb-2">
-                                {{value}}
-                            </div>
-                            <div :style="getTextFontSize" class="font-bold text-center">
-                                {{$t(key)}}
-                            </div>
+    <div :key="data.WidgetID" class="overflow-scroll flex flex-row">
+        <div class="flex w-auto" v-for="(value, key) in counters" v-if="displayCounter(key)">
+            <div :key="key" class="mx-1 py-2">
+                <div :style="counterStyle[key]"
+                     class="bg-white px-4 py-6 flex items-center justify-between rounded-lg shadow">
+                    <div class="flex flex-col w-full items-center justify-center font-bold">
+                        <div :style="getValueFontSize" class="mb-2">
+                            {{value}}
+                        </div>
+                        <div :style="getTextFontSize" class="font-bold text-center">
+                            {{$t(key)}}
                         </div>
                     </div>
                 </div>
@@ -91,7 +88,7 @@
             displayCounter (key) {
                 return this.countersToDisplay.includes(key)
             },
-            showDefaultCards() {
+            showDefaultCards () {
                 this.countersToDisplay.forEach((counter) => {
                     this.counters[counter] = '0:00:00'
                 })
