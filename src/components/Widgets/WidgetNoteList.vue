@@ -184,6 +184,10 @@
             if (!this.data.WidgetLayout['Notes']) {
                 this.data.WidgetLayout['Notes'] = []
             }
+
+            if (!this.data.WidgetLayout.hasOwnProperty('displayWidgetTitle')) {
+                this.$set(this.data.WidgetLayout, 'displayWidgetTitle', false)
+            }
         }
     }
 </script>

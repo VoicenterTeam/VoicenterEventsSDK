@@ -99,6 +99,16 @@
             </el-form-item>
             <el-collapse class="pt-4" v-model="activeCollapse">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
+                    <el-form-item v-if="isHtmlEditor(widget)">
+                        <el-checkbox v-model="model.WidgetLayout.showLastUpdateDate">
+                            {{$t('Display last update date')}}
+                        </el-checkbox>
+                    </el-form-item>
+                    <el-form-item v-if="isNoteListWidget(widget)">
+                        <el-checkbox v-model="model.WidgetLayout.displayWidgetTitle">
+                            {{$t('Display widget title')}}
+                        </el-checkbox>
+                    </el-form-item>
                     <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget) || isAverageCallsWidget(widget)">
                         <div class="py-4">
                             <label>{{$t('Card title font size')}}</label>
@@ -233,6 +243,8 @@
         isQueueTable,
         isRealtimeWidget,
         isAverageCallsWidget,
+        isHtmlEditor,
+        isNoteListWidget,
     } from '@/helpers/widgetUtils'
     import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
     import {areaChartWidgetColors, defaultWidgetColors} from "@/enum/layout";
@@ -348,6 +360,7 @@
             },
         },
         methods: {
+            isHtmlEditor,
             isPieWidget,
             isQueueTable,
             isQueueChart,
@@ -357,6 +370,7 @@
             isQueueDashboardWidget,
             isMultiQueuesDashboard,
             isAverageCallsWidget,
+            isNoteListWidget,
             isAutoComplete (WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },

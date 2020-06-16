@@ -115,9 +115,15 @@ export function isAverageCallsWidget (widget) {
     return widget.DataTypeID === widgetDataTypes.AVERAGE_CALLS_DURATION;
 }
 
+export function isHtmlEditor (widget) {
+    return widget.DataTypeID === widgetDataTypes.RICH_TEXT_EDITOR_ID
+}
+
+export function isNoteListWidget (widget) {
+    return widget.DataTypeID === widgetDataTypes.RICH_TEXT_EDITOR_LIST
+}
+
 export function isARealtimeTableWidget (widget) {
     let isQueueWidgetType = [widgetDataTypes.QUEUE_DASHBOARD, widgetDataTypes.QUEUE_ACTIVE_CALL].includes(widget.DataTypeID)
     return isQueueWidgetType || isRealtimeWidget(widget)  || isMultiQueuesDashboard(widget)
 }
-
-

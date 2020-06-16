@@ -669,5 +669,7 @@
     "Average duration of all calls": "Average duration of all calls",
     "Average duration of incoming calls": "Average duration of incoming calls",
     "Average duration of outgoing calls": "Average duration of outgoing calls",
-    "Group ID": "Group ID"
+    "Group ID": "Group ID",
+    "Display last update date": "Display last update date",
+    "Display widget title": "Display widget title"
 }

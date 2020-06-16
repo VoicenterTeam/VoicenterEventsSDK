@@ -53,6 +53,9 @@
             }
         },
         computed: {
+            displayLastUpdateDate() {
+                return get(this.data.WidgetLayout, 'showLastUpdateDate', true)
+            },
             fetchData () {
                 return this.data.WidgetLayout.htmlData || `<p>${this.$t('Click the switch to enable edit mode for this html')}</p>`
             },
@@ -73,15 +76,18 @@
                 }
             },
             getInfo () {
-                if (!this.data.LastUpdate) {
+                if (!this.displayLastUpdateDate || !this.data.LastUpdate) {
                     return this.data.Title
                 }
+
                 let date = this.data.LastUpdate
+
                 try {
                     date = format(parseISO(this.data.LastUpdate), 'MMM dd HH:mm')
                 } catch (e) {
-
+                    console.warn(e)
                 }
+
                 return this.data.Title + ' / ' + date;
             }
         },
@@ -95,13 +101,18 @@
                 this.editMode = false
             },
         },
+        mounted() {
+            if (!this.data.WidgetLayout.hasOwnProperty('showLastUpdateDate')) {
+                this.$set(this.data.WidgetLayout, 'showLastUpdateDate', true)
+            }
+        },
         watch: {
             editable: {
                 handler: function (state) {
                     this.editMode = state
                 }
             },
-        }
+        },
     }
 </script>
 <style lang="scss">
