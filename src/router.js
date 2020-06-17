@@ -11,6 +11,11 @@ export default new Router({
             path: '/',
             name: 'home',
             component: () => import(/* webpackChunkName: "home" */ './views/Dashboard.vue')
-        }
+        },
+        {
+            path: '/layout-management',
+            name: 'layout-management',
+            component: () => import(/* webpackChunkName: "home" */ './views/LayoutManagement.vue')
+        },
     ]
 })
