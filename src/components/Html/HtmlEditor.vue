@@ -48,7 +48,7 @@
             config: {
                 type: Object,
                 default: () => ({
-                    plugins: ['alignment', 'fontcolor', 'fontsize', 'imagemanager', 'textdirection'],
+                    plugins: ['alignment', 'fontcolor',  'imagemanager', 'textdirection','fontsize', 'customfontsize'],
                     imageResizable: true,
                     imagePosition: true
                 }),
@@ -91,6 +91,7 @@
                 import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/fontsize/fontsize'),
                 import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/fontcolor/fontcolor'),
                 import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/textdirection/textdirection'),
+                import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/customfontsize/customfontsize'),
             ])
             this.init()
         },
