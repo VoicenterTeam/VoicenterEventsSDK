@@ -1,20 +1,21 @@
 (function ($R) {
     $R.add('plugin', 'customfontsize', {
-        modals: {
-            'customfontsize': '<form action="">'
-                + '<div class="form-item">'
-                + '<label>## customfontsize-label ##</label>'
-                + '<input min="5" name="fontSize" type="number" style="height: 35px;"></input>'
-                + '</div>'
-                + '</form>'
-        },
         translations: {
             en: {
                 "buttonTitle": "Font size",
                 "customfontsize": "Set custom Font Size",
-                "customfontsize-label": "Type a value",
-                "apply": "Apply"
+                "customfontsize-label": "Type a value (between 1 and 200)",
+                "apply": "Apply",
             }
+        },
+        modals: {
+            'customfontsize': '<form action="">'
+                + '<div class="form-item">'
+                + '<label>## customfontsize-label ##</label>'
+                + '<input min="1" max="200" name="fontSize" type="number" style="height: 35px;"></input>'
+                + '<div id="validation-message" style="display: none; margin-top: 5px; color: red; font-size:14px;">The value should be between 1 and 200.</div>'
+                + '</div>'
+                + '</form>'
         },
         init: function (app) {
             this.app = app;
@@ -60,13 +61,19 @@
 
         _apply: function (size) {
 
-            this.app.api('module.modal.close');
+            if (size < 1 || size > 200) {
+                let elem = document.getElementById('validation-message');
+                elem.style.display = 'block';
+                return;
+            }
 
             let args = {
                 tag: 'span',
                 style: {'font-size': size + 'px'},
                 type: 'toggle'
             };
+
+            this.app.api('module.modal.close');
 
             this.inline.format(args);
         }
