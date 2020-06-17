@@ -17,7 +17,7 @@
                 <span class="account-details">{{currentAccount.name}}</span>
             </div>
         </div>
-        <div class="p-16">123</div>
+        <div class="p-16">{{activeDashboard}}</div>
     </div>
 </template>
 <script>

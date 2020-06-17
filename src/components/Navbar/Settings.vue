@@ -11,10 +11,8 @@
                     <el-form-item class="" prop="logo">
                         {{$t('dashboards.new.form.logo')}}
                         <div class="image-upload upload-button flex">
-                            <label class="cursor-pointer flex items-center" for="file-input">
-                                <img class="px-2"
-                                     src="https://cdn.shopify.com/s/files/1/2065/6315/t/46/assets/UploadIcon.svg"/>
-                                {{$t('Upload Logo')}}
+                            <label class="cursor-pointer flex items-center text-primary" for="file-input">
+                                <IconUpload class="text-primary mr-2" :class="{'mr-0 ml-2': $rtl.isRTL}"/> {{$t('Upload Logo')}}
                             </label>
                             <input
                                 @change="onFileChange()"

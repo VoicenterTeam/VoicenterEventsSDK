@@ -43,9 +43,9 @@
         set: function(size)
 		{
     		var args = {
-        	    tag: 'span',
-        	    style: { 'font-size': size + 'px' },
-        	    type: 'toggle'
+                tag: 'span',
+                style: { 'font-size': size + 'px' },
+                type: 'toggle'
     		};
 
 			this.inline.format(args);

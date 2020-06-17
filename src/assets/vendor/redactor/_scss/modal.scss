@@ -254,13 +254,15 @@
     & button.redactor-button-danger,
     & button.redactor-button-unstyled {
         background: none;
-        border-color: transparent;
-        color: rgba(#2a2e34, .6);
+        color: #ff3265;
+        border-radius: 3px;
+        border: 2px solid #ff3265;
         &:hover {
             background: none;
-            border-color: transparent;
+            //border-color: transparent;
             color: #ff3265;
-            text-decoration: underline;
+            color: rgba(#ff3265, .6);
+            border-color: rgba(#ff3265, .5);
         }
     }
 
@@ -295,7 +297,7 @@
         text-align: left;
     }
     .redactor-modal-footer button.redactor-button-unstyled {
-        float:left;
+        float:right;
         margin-left: 0;
     }
 }
@@ -311,7 +313,7 @@
     }
 }
 .redactor-modal-body {
-    padding: 32px 48px;
+    padding: 25px;
     padding-bottom: 40px;
 }
 .redactor-modal-footer {

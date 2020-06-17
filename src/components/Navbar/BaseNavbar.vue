@@ -30,29 +30,46 @@
                                     <IconArrowDown/>
                                 </button>
                                 <fade-transition :duration="250">
-                                    <div class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0"
-                                         v-click-outside="onMenuClickOutside"
-                                         v-if="showDashboardsMenu">
-                            <span :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}"
-                                  @click="chooseDashboard(dashboard)"
-                                  class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
-                                  v-for="dashboard in allDashboards">
-                                  {{dashboard.DashboardTitle}}
-                                <el-tooltip :content="$t('common.deleteDashboard')" class="item" effect="dark"
-                                            placement="top">
-                                    <IconMinus :class="$rtl.isRTL ? 'float-left' : 'float-right'"
-                                               class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
-                                               v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
-                                               v-on:click.stop.prevent="deleteDashboard(dashboard)">
-                                    </IconMinus>
-                                </el-tooltip>
-                            </span>
-                                        <span
+                                    <div
+                                        class="bg-white shadow-lg rounded-lg mt-3 absolute w-64 origin-top-right mt-4 right-0 flex flex-col"
+                                        v-click-outside="onMenuClickOutside"
+                                        v-if="showDashboardsMenu">
+                                        <div
+                                            :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}"
+                                            @click="chooseDashboard(dashboard)"
+                                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer flex flex-row items-center justify-between border-b"
+                                            v-for="dashboard in allDashboards">
+                                            <div class="flex"> {{dashboard.DashboardTitle}}</div>
+                                            <div class="flex">
+                                                <el-tooltip :content="$t('tooltip.general.settings')" class="item"
+                                                            effect="dark"
+                                                            placement="top">
+                                                    <button
+                                                        v-on:click.stop.prevent="accessManageLayoutPage(dashboard)"
+                                                        class="btn px-1 shadow rounded bg-white hover:bg-primary-100">
+                                                        <SettingsIcon class="text-primary w-4"/>
+                                                    </button>
+                                                </el-tooltip>
+                                                <el-tooltip :content="$t('common.deleteDashboard')" class="item"
+                                                            effect="dark"
+                                                            placement="top">
+                                                    <button
+                                                        v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
+                                                        v-on:click.stop.prevent="deleteDashboard(dashboard)"
+                                                        class="btn px-1 shadow rounded bg-white hover:bg-primary-100 mx-1">
+                                                        <Trash2Icon class="text-red w-4"/>
+                                                    </button>
+                                                </el-tooltip>
+                                            </div>
+                                        </div>
+                                        <div
                                             @click="createNewDashboard()"
-                                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center">
-                                <IconPlus class="w-3 mr-1 mb-1 text-primary"/>
-                                <span>{{$t('common.newDashboard')}}</span>
-                            </span>
+                                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex flex-row items-center">
+                                        <div>
+                                            <IconPlus class="w-4 hover:bg-primary-100"/>
+                                        </div>
+                                        <span class="mx-2">{{$t('common.newDashboard')}}</span>
+                                        </div>
                                     </div>
                                 </fade-transition>
                             </div>
@@ -64,12 +81,13 @@
                                     <IconArrowDown/>
                                 </button>
                                 <fade-transition :duration="250">
-                                    <div class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0 max-h-screen overflow-auto"
-                                         v-click-outside="onMenuClickOutside"
-                                         v-if="showUsersMenu">
+                                    <div
+                                        class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0 max-h-screen overflow-auto"
+                                        v-click-outside="onMenuClickOutside"
+                                        v-if="showUsersMenu">
                                     <span :class="{ 'text-primary': currentAccountId === account.ID}"
                                           @click="chooseAccount(account)"
-                                          class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
+                                          class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer border-b"
                                           v-for="account in allAccounts">
                                         {{account.name || $t('navbar.default.username') }}
                                     </span>
@@ -165,7 +183,7 @@
 <script>
     import get from 'lodash/get'
     import {Option, Select, Tooltip} from 'element-ui'
-    import {MenuIcon} from 'vue-feather-icons'
+    import {MenuIcon, SettingsIcon, Trash2Icon} from 'vue-feather-icons'
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
@@ -179,9 +197,11 @@
             [Option.name]: Option,
             Settings,
             LanguageSelect,
+            Trash2Icon,
             MenuIcon,
+            SettingsIcon,
         },
-        data () {
+        data() {
             return {
                 get,
                 showDashboardsMenu: false,
@@ -194,44 +214,48 @@
             }
         },
         computed: {
-            activeDashboard () {
+            activeDashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
             },
-            allDashboards () {
+            allDashboards() {
                 return this.$store.state.dashboards.allDashboards
             },
-            currentAccount () {
+            currentAccount() {
                 return this.$store.getters['entities/getCurrentAccount']
             },
-            currentAccountId () {
+            currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
             },
-            allAccounts () {
+            allAccounts() {
                 return this.$store.getters['entities/accountsList']
             },
-            getLogo () {
+            getLogo() {
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
-            activeLanguage () {
+            activeLanguage() {
                 return localStorage.getItem('locale') || this.$i18n.locale
             },
-            loadingData () {
+            loadingData() {
                 return this.$store.state.dashboards.loadingData;
             },
-            accountNoData () {
+            accountNoData() {
                 return !this.activeDashboard && !this.loadingData;
             }
         },
         methods: {
-            chooseDashboard (dashboard) {
+            accessManageLayoutPage(dashboard) {
+                this.chooseDashboard(dashboard)
+                this.$router.push('layout-management')
+            },
+            chooseDashboard(dashboard) {
                 this.$store.dispatch('dashboards/selectDashboard', dashboard)
                 this.showDashboardsMenu = false
             },
-            createNewDashboard () {
+            createNewDashboard() {
                 this.showCreateDashboardDialog = true
                 this.showDashboardsMenu = false
             },
-            confirmNewDashboard () {
+            confirmNewDashboard() {
                 this.$store.dispatch('dashboards/createDashboard', {
                     ...this.newDashboard,
                     AccountID: this.$store.state.entities.selectedAccountID,
@@ -239,15 +263,15 @@
                 this.newDashboard = dashboardModel()
                 this.showCreateDashboardDialog = false
             },
-            onMenuClickOutside () {
+            onMenuClickOutside() {
                 this.showDashboardsMenu = false
                 this.showUsersMenu = false
             },
-            chooseAccount (account) {
+            chooseAccount(account) {
                 this.$store.commit('entities/SET_SELECTED_ACCOUNT_ID', account.ID)
                 this.showUsersMenu = false
             },
-            deleteDashboard (dashboard) {
+            deleteDashboard(dashboard) {
                 this.$confirm(
                     this.$t('common.confirm.question', {
                         action: this.$t('to delete this dashboard'),
@@ -258,15 +282,15 @@
                     this.$store.dispatch('dashboards/deleteDashboard', dashboard)
                 })
             },
-            logout () {
+            logout() {
                 localStorage.clear()
                 this.$store.dispatch('users/logout')
             },
-            triggerMenus (clicked, second) {
+            triggerMenus(clicked, second) {
                 this[clicked] = !this[clicked];
                 this[second] = false;
             },
-            onLocaleChange (val) {
+            onLocaleChange(val) {
                 this.$store.dispatch('lang/setLanguage', val)
                 this.$i18n.locale = val
                 if (val === 'he') {
@@ -275,7 +299,7 @@
                     this.$rtl.disableRTL()
                 }
             },
-            triggerMobileMenu () {
+            triggerMobileMenu() {
                 this.showMobileMenu = !this.showMobileMenu
             }
         }
