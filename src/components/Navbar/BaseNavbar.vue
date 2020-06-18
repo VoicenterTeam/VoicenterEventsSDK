@@ -41,7 +41,7 @@
                                             v-for="dashboard in allDashboards">
                                             <div class="flex"> {{dashboard.DashboardTitle}}</div>
                                             <div class="flex">
-                                                <el-tooltip :content="$t('tooltip.general.settings')" class="item"
+                                                <el-tooltip :content="$t('Go to Layout Management page')" class="item"
                                                             effect="dark"
                                                             placement="top">
                                                     <button
