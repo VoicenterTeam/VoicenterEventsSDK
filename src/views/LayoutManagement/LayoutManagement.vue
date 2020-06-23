@@ -36,7 +36,13 @@
                                 :name="layoutConfig.LayoutID"
                                 :key="layoutConfig.LayoutID">
                                 <template slot="title">
-                                    <LinkIcon class="w-4 text-primary" @click.stop="assignLayout(layoutConfig)"/><div class="px-2"> {{layoutConfig.LayoutName}}</div>
+                                    <el-tooltip class="item" effect="dark" :content="$t('Assign layout')" placement="top">
+                                        <LinkIcon class="w-4 text-primary" @click.stop="assignLayout(layoutConfig)"/>
+                                    </el-tooltip>
+                                    <el-tooltip class="item" effect="dark" :content="$t('Clone layout')" placement="top">
+                                        <CopyIcon v-if="layout.key !== ACCOUNT_LAYOUTS_KEY" class="mx-2 w-4 text-primary" @click.stop="cloneLayout(layoutConfig)"/>
+                                    </el-tooltip>
+                                    <div class="px-2"> {{layoutConfig.LayoutName}}</div>
                                 </template>
                                 <div v-if="layout.key === ACCOUNT_LAYOUTS_KEY" class="py-4 flex flex-col border-b">
                                     <label class="pb-2">{{$t('Layout Name')}}</label>
@@ -69,9 +75,9 @@
 <script>
     import get from 'lodash/get'
     import {LayoutApi} from '@/api/layoutApi'
-    import {ArrowLeftIcon, LinkIcon} from 'vue-feather-icons'
-    import {availableLayouts, globalAccountSettings, ACCOUNT_LAYOUTS_KEY} from './layout-management-config'
-    import {Collapse, CollapseItem, TabPane, Tabs} from 'element-ui'
+    import {ArrowLeftIcon, CopyIcon, LinkIcon} from 'vue-feather-icons'
+    import {ACCOUNT_LAYOUTS_KEY, availableLayouts, globalAccountSettings} from './layout-management-config'
+    import {Collapse, CollapseItem, TabPane, Tabs, Tooltip} from 'element-ui'
     import ColorParameterType from './components/ColorParameterType'
     import IntegerParameterType from './components/IntegerParameterType'
     import BooleanParameterType from './components/BooleanParameterType'
@@ -84,8 +90,10 @@
             [BooleanParameterType.name]: BooleanParameterType,
             [IntegerParameterType.name]: IntegerParameterType,
             LinkIcon,
+            CopyIcon,
             ArrowLeftIcon,
             [Tabs.name]: Tabs,
+            [Tooltip.name]: Tooltip,
             [TabPane.name]: TabPane,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
@@ -112,7 +120,7 @@
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
             currentAccountId() {
-                return  634;
+                return 634;
                 return this.$store.state.entities.selectedAccountID
             },
         },
@@ -138,8 +146,8 @@
                     }
                     this.accountLayouts = await LayoutApi.globals(accountSettings)
                 } catch (e) {
-                    console.warn(e)
                     this.accountLayouts = []
+                    console.warn(e)
                 } finally {
                 }
             },
@@ -156,9 +164,12 @@
             },
             async assignLayout(layoutConfig) {
                 try {
-                    debugger
                     this.storingData = true
-                    await DashboardApi.update(layoutConfig)
+
+                    const dashboard = this.activeDashboard
+                    dashboard['DashboardLayoutID'] = layoutConfig.LayoutID
+
+                    await DashboardApi.update(dashboard)
                 } catch (e) {
                     console.warn(e)
                 } finally {
@@ -169,8 +180,13 @@
                 const accountID = this.currentAccountId
                 const layout = defaultLayout(accountID)
                 this.accountLayouts.push(layout)
-                console.log('layout',JSON.stringify(layout))
+                console.log('layout', JSON.stringify(layout))
             },
+            cloneLayout(layoutConfig) {
+                layoutConfig['LayoutAccountID'] = this.currentAccountId
+                this.updateLayout(layoutConfig)
+                this.activeTab = 'accountLayouts'
+            }
         },
         mounted() {
             this.getGlobalLayouts()

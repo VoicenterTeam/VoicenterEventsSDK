@@ -1,8 +1,7 @@
 import i18n from "@/i18n";
 
 export const globalAccountSettings = {
-    "LayoutID": "1",
-    "LayoutAccountID": "0"
+    "LayoutID": "1"
 };
 
 export const ACCOUNT_LAYOUTS_KEY = 'accountLayouts';
