@@ -36,7 +36,11 @@
         data () {
             return {
                 fetchDataInterval: null,
-                counters: {},
+                counters: {
+                    'Average duration of all calls': '0:00:00',
+                    'Average duration of incoming calls': '0:00:00',
+                    'Average duration of outgoing calls': '0:00:00',
+                },
                 counterStyle: {
                     'Average duration of incoming calls': {
                         'color': '#5EB300',

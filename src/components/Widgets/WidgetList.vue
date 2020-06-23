@@ -189,10 +189,13 @@
             addWidgetsToGrid (widgets) {
                 this.$nextTick(() => {
                     widgets.forEach((widget) => {
+                        this.inViewById[widget.WidgetID] = true;
                         const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
+
                         if (!isPresent) {
                             return
                         }
+
                         this.grid.makeWidget(`#${widget.WidgetID}`);
                     })
                 })

@@ -131,7 +131,7 @@
                 return get(this.widget.WidgetLayout, 'displayWidgetTitle', true)
             },
             inView() {
-                return this.inViewById[this.widget.WidgetID]
+                return this.inViewById[this.widget.WidgetID] || true
             },
             showDeleteButton () {
                 let exceptions = [
@@ -200,6 +200,9 @@
                 return getWidgetEndpoint(widget)
             },
         },
+        mounted() {
+            this.getComponentTypeAndSetData(this.widget)
+        }
     }
 </script>
 <style lang="scss" scoped>
