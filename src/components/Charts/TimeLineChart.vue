@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded-lg pt-2" v-if="data.WidgetID && chartVisibility">
+    <div class="rounded-lg pt-2" v-if="chartVisibility">
         <highcharts :options="chartOptions"
                     class="chart-content_wrapper"/>
     </div>
