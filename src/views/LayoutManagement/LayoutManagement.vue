@@ -1,54 +1,109 @@
 <template>
-    <div element-loading-background="transparent" v-loading="loading">
-        <div class="flex flex-col">
-            <div class="border-b px-16 flex flex-row justify-between h-14 items-center">
-                <img :src="getLogo" alt="Logo" class="h-10">
-                <div class="flex items-center">
-                    <el-button
-                        size="mini"
-                        class="back-button"
-                        @click="redirectBack">
-                        <div class="flex items-center">
-                            <ArrowLeftIcon class="w-4"/>
-                            <span class="px-1 text-main-sm">{{$t('Back')}}</span>
-                        </div>
-                    </el-button>
-                    <span class="mx-4 account-details">{{activeDashboard.DashboardTitle}}</span>
-                    <span class="account-details">{{currentAccount.name}}</span>
-                </div>
+    <div class="flex flex-col bg-white">
+        <div class="border-b px-16 flex flex-row justify-between h-14 items-center">
+            <img :src="getLogo" alt="Logo" class="h-10">
+            <div class="flex items-center">
+                <el-button
+                    size="mini"
+                    class="back-button"
+                    @click="redirectBack">
+                    <div class="flex items-center">
+                        <ArrowLeftIcon class="w-4"/>
+                        <span class="px-1 text-main-sm">{{$t('Back')}}</span>
+                    </div>
+                </el-button>
+                <span class="mx-4 account-details">{{activeDashboard.DashboardTitle}}</span>
+                <span class="account-details">{{currentAccount.name}}</span>
             </div>
-            <div class="content-wrapper">
-                <div class="w-1/2 px-2 bg-red-200">
-                    {{activeDashboard}}
-                </div>
-                <div class="w-1/2 px-4 bg-green-200">
+        </div>
+        <div class="content-wrapper">
+            <div class="layouts-container">
+                <p class="text-center pb-2">{{$t('Current Layouts')}}</p>
+            </div>
+            <div class="layouts-container">
+                <el-tabs v-model="activeTab">
+                    <el-tab-pane v-for="layout in availableLayouts" v-bind="layout">
+                        <el-collapse class="w-full" v-model="activeCollapses">
+                            <div v-if="layout.key === ACCOUNT_LAYOUTS_KEY" class="pb-3 flex justify-center">
+                                <el-button
+                                    @click="newLayout"
+                                    type="primary">{{$t('New Layout')}}
+                                </el-button>
+                            </div>
+                            <el-collapse-item
+                                class="w-full"
+                                v-for="layoutConfig in getData(layout.data)"
+                                :name="layoutConfig.LayoutID"
+                                :key="layoutConfig.LayoutID">
+                                <template slot="title">
+                                    <LinkIcon class="w-4 text-primary" @click.stop="assignLayout(layoutConfig)"/><div class="px-2"> {{layoutConfig.LayoutName}}</div>
+                                </template>
+                                <div v-if="layout.key === ACCOUNT_LAYOUTS_KEY" class="py-4 flex flex-col border-b">
+                                    <label class="pb-2">{{$t('Layout Name')}}</label>
+                                    <el-input v-model="layoutConfig.LayoutName"/>
+                                </div>
+                                <div v-for="layoutParameter in layoutConfig.LayoutParametersList">
+                                    <component
+                                        v-bind="layoutParameter"
+                                        :is="layoutParameter.ParameterTypeName"
+                                        v-model="layoutParameter.Value"
+                                    />
+                                </div>
+                                <div v-if="layout.key === ACCOUNT_LAYOUTS_KEY" class="pt-4 flex justify-end">
+                                    <el-button
+                                        :disabled="storingData"
+                                        :loading="storingData"
+                                        @click="updateLayout(layoutConfig)"
+                                        type="primary">{{$t('common.save')}}
+                                    </el-button>
+                                </div>
+                            </el-collapse-item>
 
-                </div>
+                        </el-collapse>
+                    </el-tab-pane>
+                </el-tabs>
             </div>
         </div>
     </div>
 </template>
 <script>
     import get from 'lodash/get'
-    import {ArrowLeftIcon} from 'vue-feather-icons'
-    import {globalAccountSettings} from './layout-management-config'
-    import {LayoutApi} from "@/api/layoutApi";
+    import {LayoutApi} from '@/api/layoutApi'
+    import {ArrowLeftIcon, LinkIcon} from 'vue-feather-icons'
+    import {availableLayouts, globalAccountSettings, ACCOUNT_LAYOUTS_KEY} from './layout-management-config'
+    import {Collapse, CollapseItem, TabPane, Tabs} from 'element-ui'
+    import ColorParameterType from './components/ColorParameterType'
+    import IntegerParameterType from './components/IntegerParameterType'
+    import BooleanParameterType from './components/BooleanParameterType'
+    import {DashboardApi} from '@/api/dashboardApi'
+    import {defaultLayout} from './default-layout'
 
     export default {
         components: {
-            ArrowLeftIcon
+            [ColorParameterType.name]: ColorParameterType,
+            [BooleanParameterType.name]: BooleanParameterType,
+            [IntegerParameterType.name]: IntegerParameterType,
+            LinkIcon,
+            ArrowLeftIcon,
+            [Tabs.name]: Tabs,
+            [TabPane.name]: TabPane,
+            [Collapse.name]: Collapse,
+            [CollapseItem.name]: CollapseItem,
         },
         data() {
             return {
-                loading: false,
+                activeTab: 'accountLayouts',
+                globalLayouts: [],
+                accountLayouts: [],
+                activeCollapses: [],
+                availableLayouts,
+                ACCOUNT_LAYOUTS_KEY,
+                storingData: false,
             }
         },
         computed: {
             activeDashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
-            },
-            allDashboards() {
-                return this.$store.state.dashboards.allDashboards
             },
             currentAccount() {
                 return this.$store.getters['entities/getCurrentAccount']
@@ -57,6 +112,7 @@
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
             currentAccountId() {
+                return  634;
                 return this.$store.state.entities.selectedAccountID
             },
         },
@@ -64,19 +120,61 @@
             redirectBack() {
                 this.$router.go(-1)
             },
+            getData(layoutType) {
+                return this[layoutType]
+            },
             async getGlobalLayouts() {
                 try {
-                    let data = await LayoutApi.globals(globalAccountSettings)
-                    console.log(JSON.stringify(data));
+                    this.globalLayouts = await LayoutApi.globals(globalAccountSettings)
                 } catch (e) {
-
+                    console.warn(e)
                 } finally {
-
                 }
-            }
+            },
+            async getAccountLayouts() {
+                try {
+                    let accountSettings = {
+                        "LayoutAccountID": this.currentAccountId
+                    }
+                    this.accountLayouts = await LayoutApi.globals(accountSettings)
+                } catch (e) {
+                    console.warn(e)
+                    this.accountLayouts = []
+                } finally {
+                }
+            },
+            async updateLayout(layoutConfig) {
+                try {
+                    this.storingData = true
+                    await LayoutApi.update(layoutConfig)
+                    await this.getAccountLayouts()
+                } catch (e) {
+                    console.warn(e)
+                } finally {
+                    this.storingData = false
+                }
+            },
+            async assignLayout(layoutConfig) {
+                try {
+                    debugger
+                    this.storingData = true
+                    await DashboardApi.update(layoutConfig)
+                } catch (e) {
+                    console.warn(e)
+                } finally {
+                    this.storingData = false
+                }
+            },
+            newLayout() {
+                const accountID = this.currentAccountId
+                const layout = defaultLayout(accountID)
+                this.accountLayouts.push(layout)
+                console.log('layout',JSON.stringify(layout))
+            },
         },
         mounted() {
             this.getGlobalLayouts()
+            this.getAccountLayouts()
         }
     }
 </script>
@@ -91,9 +189,14 @@
     }
 
     .content-wrapper {
-        @apply px-12 py-6 flex flex-row w-full;
-    }
-    .el-loading-mask > .el-loading-spinner {
-        @apply fixed;
+        @apply px-6 py-8 flex flex-row w-full;
+
+        .layouts-container {
+            @apply w-1/2 mx-2 px-5 py-2 border rounded min-h-screen;
+
+            /deep/ div.el-collapse .el-collapse-item__content {
+                padding: 0 1rem 1rem;
+            }
+        }
     }
 </style>

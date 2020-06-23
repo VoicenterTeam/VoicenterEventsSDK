@@ -10,4 +10,14 @@ export const LayoutApi = {
             parseCatch(e, true, 'Get Global Layouts')
         }
     },
+
+    async update (data) {
+        try {
+            return await $axios.post('/Layout/Upsert/', data)
+        } catch (e) {
+            parseCatch(e, true, 'Update Account Layouts')
+        }
+    },
+
+
 }

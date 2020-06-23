@@ -673,5 +673,20 @@
     "Display last update date": "Display last update date",
     "Display widget title": "Display widget title",
     "Back": "Back",
-    "Go to Layout Management page": "Go to Layout Management page"
+    "Go to Layout Management page": "Go to Layout Management page",
+    "ShowWidgetTitles": "Show widget titles",
+    "FontSize": "Dashboard base font size(recommended - 16px)",
+    "WidgetTitlesFontSize": "Widget group titles font size (recommended - 22px)",
+    "WidgetGroupTitlesFontSize": "Widget titles font size (recommended - 22px)",
+    "MinRefreshInterval": "Minimum refresh interval for real time widgets (seconds)",
+    "RefreshRealTimeDataDelay": "Refresh real-time data delay on server error",
+    "ReportInterval": "Switch category every selected seconds",
+    "ReportSwitching": "Automatic category switching",
+    "ReportRefresh": "Automatic category refresh",
+    "ColorPrimary": "Primary Color (color of base components in the application)",
+    "ColorBackground": "Dashboard Background",
+    "ColorFrames": "Dashboard Border",
+    "ColorWidgetGroupBackground": "Widget Group Backgrounds",
+    "ColorWidgetGroupFrames": "Widget Group Borders",
+    "ColorWidgetGroupTitles": "Widget Group Titles"
 }
