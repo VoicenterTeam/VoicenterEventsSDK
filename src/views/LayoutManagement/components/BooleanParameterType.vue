@@ -14,10 +14,6 @@
             [Checkbox.name]: Checkbox,
         },
         props: {
-            // Value: {
-            //     type: String,
-            //     Default: '',
-            // },
             LayoutParameterName: {
                 type: String,
                 Default: '',
@@ -38,12 +34,9 @@
         },
         methods: {
             onInput(value) {
-                const state  = Number(value).toString()
-                this.$emit('input', state);
+                const valToEmit = Number(value).toString()
+                this.$emit('input', valToEmit);
             }
         },
-        mounted() {
-            console.log('$attrs', this.$attrs)
-        }
     }
 </script>

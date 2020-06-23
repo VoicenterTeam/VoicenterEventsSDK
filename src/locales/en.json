@@ -689,6 +689,7 @@
     "ColorWidgetGroupBackground": "Widget Group Backgrounds",
     "ColorWidgetGroupFrames": "Widget Group Borders",
     "ColorWidgetGroupTitles": "Widget Group Titles",
-    "Assign layout": "Assign layout",
-    "Clone layout": "Clone layout"
+    "Apply layout": "Apply layout",
+    "Clone layout": "Clone layout",
+    "Back to Dashboard": "Back to Dashboard"
 }

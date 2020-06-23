@@ -2,7 +2,7 @@ import $axios from './apiConnection'
 import parseCatch from '@/helpers/handleErrors'
 
 export const LayoutApi = {
-    async globals (data) {
+    async get (data) {
         try {
             const result = await $axios.post('/Layout/List/', data)
             return result.Data

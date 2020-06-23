@@ -7,10 +7,13 @@
                     size="mini"
                     class="back-button"
                     @click="redirectBack">
-                    <div class="flex items-center">
-                        <ArrowLeftIcon class="w-4"/>
-                        <span class="px-1 text-main-sm">{{$t('Back')}}</span>
-                    </div>
+                    <el-tooltip class="item" effect="dark" :content="$t('Back to Dashboard')"
+                                placement="top">
+                        <div class="flex items-center">
+                            <ArrowLeftIcon class="w-4"/>
+                            <span class="px-1 text-main-sm">{{$t('Back to Dashboard')}}</span>
+                        </div>
+                    </el-tooltip>
                 </el-button>
                 <span class="mx-4 account-details">{{activeDashboard.DashboardTitle}}</span>
                 <span class="account-details">{{currentAccount.name}}</span>
@@ -18,31 +21,53 @@
         </div>
         <div class="content-wrapper">
             <div class="layouts-container">
-                <p class="text-center pb-2">{{$t('Current Layouts')}}</p>
+                <p class="text-center py-2">{{$t('Current Layout Config')}}</p>
+                <div v-if="activeLayout">
+                    <div class="py-4 flex flex-col border-b">
+                        <label class="pb-2">{{$t('Layout Name')}}</label>
+                        <el-input v-model="activeLayout.LayoutName"/>
+                    </div>
+                    <div v-for="layoutParameter in activeLayout.LayoutParametersList">
+                        <component
+                            v-bind="layoutParameter"
+                            :is="layoutParameter.ParameterTypeName"
+                            v-model="layoutParameter.Value"
+                        />
+                    </div>
+                    <div class="pt-4 flex justify-end">
+                        <el-button
+                            :disabled="storingData"
+                            :loading="storingData"
+                            @click="updateLayout(activeLayout)"
+                            type="primary">{{$t('common.save')}}
+                        </el-button>
+                    </div>
+                </div>
+                <div v-else>
+                </div>
             </div>
             <div class="layouts-container">
                 <el-tabs v-model="activeTab">
                     <el-tab-pane v-for="layout in availableLayouts" v-bind="layout">
                         <el-collapse class="w-full" v-model="activeCollapses">
-                            <div v-if="layout.key === ACCOUNT_LAYOUTS_KEY" class="pb-3 flex justify-center">
-                                <el-button
-                                    @click="newLayout"
-                                    type="primary">{{$t('New Layout')}}
-                                </el-button>
-                            </div>
                             <el-collapse-item
-                                class="w-full"
+                                class="w-full "
+                                style="max-height: 500px; overflow: scroll;"
                                 v-for="layoutConfig in getData(layout.data)"
                                 :name="layoutConfig.LayoutID"
                                 :key="layoutConfig.LayoutID">
                                 <template slot="title">
-                                    <el-tooltip class="item" effect="dark" :content="$t('Assign layout')" placement="top">
-                                        <LinkIcon class="w-4 text-primary" @click.stop="assignLayout(layoutConfig)"/>
+                                    <el-tooltip class="item" effect="dark" :content="$t('Apply layout')"
+                                                placement="top">
+                                        <LinkIcon class="w-4 text-primary" @click.stop="applyLayout(layoutConfig)"/>
                                     </el-tooltip>
-                                    <el-tooltip class="item" effect="dark" :content="$t('Clone layout')" placement="top">
-                                        <CopyIcon v-if="layout.key !== ACCOUNT_LAYOUTS_KEY" class="mx-2 w-4 text-primary" @click.stop="cloneLayout(layoutConfig)"/>
+                                    <el-tooltip class="item" effect="dark" :content="$t('Clone layout')"
+                                                placement="top">
+                                        <CopyIcon v-if="layout.key !== ACCOUNT_LAYOUTS_KEY"
+                                                  class="mx-2 w-4 text-primary"
+                                                  @click.stop="cloneLayout(layoutConfig)"/>
                                     </el-tooltip>
-                                    <div class="px-2"> {{layoutConfig.LayoutName}}</div>
+                                    <div class="px-2">{{layoutConfig.LayoutName}}</div>
                                 </template>
                                 <div v-if="layout.key === ACCOUNT_LAYOUTS_KEY" class="py-4 flex flex-col border-b">
                                     <label class="pb-2">{{$t('Layout Name')}}</label>
@@ -64,7 +89,6 @@
                                     </el-button>
                                 </div>
                             </el-collapse-item>
-
                         </el-collapse>
                     </el-tab-pane>
                 </el-tabs>
@@ -82,7 +106,6 @@
     import IntegerParameterType from './components/IntegerParameterType'
     import BooleanParameterType from './components/BooleanParameterType'
     import {DashboardApi} from '@/api/dashboardApi'
-    import {defaultLayout} from './default-layout'
 
     export default {
         components: {
@@ -103,6 +126,7 @@
                 activeTab: 'accountLayouts',
                 globalLayouts: [],
                 accountLayouts: [],
+                activeLayout: {},
                 activeCollapses: [],
                 availableLayouts,
                 ACCOUNT_LAYOUTS_KEY,
@@ -113,6 +137,9 @@
             activeDashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
             },
+            getDashboardLayoutID() {
+                return get(this.activeDashboard, 'DashboardLayoutID', null);
+            },
             currentAccount() {
                 return this.$store.getters['entities/getCurrentAccount']
             },
@@ -120,7 +147,6 @@
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
             currentAccountId() {
-                return 634;
                 return this.$store.state.entities.selectedAccountID
             },
         },
@@ -133,7 +159,7 @@
             },
             async getGlobalLayouts() {
                 try {
-                    this.globalLayouts = await LayoutApi.globals(globalAccountSettings)
+                    this.globalLayouts = await LayoutApi.get(globalAccountSettings)
                 } catch (e) {
                     console.warn(e)
                 } finally {
@@ -144,7 +170,7 @@
                     let accountSettings = {
                         "LayoutAccountID": this.currentAccountId
                     }
-                    this.accountLayouts = await LayoutApi.globals(accountSettings)
+                    this.accountLayouts = await LayoutApi.get(accountSettings)
                 } catch (e) {
                     this.accountLayouts = []
                     console.warn(e)
@@ -162,13 +188,11 @@
                     this.storingData = false
                 }
             },
-            async assignLayout(layoutConfig) {
+            async applyLayout(layoutConfig) {
                 try {
                     this.storingData = true
-
                     const dashboard = this.activeDashboard
                     dashboard['DashboardLayoutID'] = layoutConfig.LayoutID
-
                     await DashboardApi.update(dashboard)
                 } catch (e) {
                     console.warn(e)
@@ -176,14 +200,22 @@
                     this.storingData = false
                 }
             },
-            newLayout() {
-                const accountID = this.currentAccountId
-                const layout = defaultLayout(accountID)
-                this.accountLayouts.push(layout)
-                console.log('layout', JSON.stringify(layout))
+            async activeDashboardLayout() {
+                try {
+                    const dashboardLayoutID = this.getDashboardLayoutID
+                    const data = {
+                        LayoutID: dashboardLayoutID
+                    }
+                    const layout = await LayoutApi.get(data)
+                    this.activeLayout = get(layout, '[0]', {})
+                } catch (e) {
+                    console.warn(e)
+                } finally {
+                }
             },
             cloneLayout(layoutConfig) {
                 layoutConfig['LayoutAccountID'] = this.currentAccountId
+                delete layoutConfig.LayoutID
                 this.updateLayout(layoutConfig)
                 this.activeTab = 'accountLayouts'
             }
@@ -191,6 +223,7 @@
         mounted() {
             this.getGlobalLayouts()
             this.getAccountLayouts()
+            this.activeDashboardLayout()
         }
     }
 </script>
@@ -208,7 +241,7 @@
         @apply px-6 py-8 flex flex-row w-full;
 
         .layouts-container {
-            @apply w-1/2 mx-2 px-5 py-2 border rounded min-h-screen;
+            @apply w-1/2 mx-2 px-5 py-4 border rounded min-h-screen;
 
             /deep/ div.el-collapse .el-collapse-item__content {
                 padding: 0 1rem 1rem;

@@ -44,7 +44,8 @@
         },
         methods: {
             onInput(value) {
-                this.$emit('input', value.toString());
+                const valToEmit = value.toString()
+                this.$emit('input', valToEmit);
             }
         }
     }
