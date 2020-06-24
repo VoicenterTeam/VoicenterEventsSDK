@@ -9,6 +9,7 @@
     import {Checkbox} from 'element-ui'
 
     export default {
+        inheritAttrs: false,
         name: 'Boolean',
         components: {
             [Checkbox.name]: Checkbox,
@@ -19,24 +20,22 @@
                 Default: '',
             },
         },
-        data() {
-            return {
-                valueToBool: Boolean(this.$attrs.Value)
-            }
-        },
         computed: {
             listeners() {
                 return {
                     ...this.$listeners,
-                    input: this.onInput
+                    change: this.onChange
                 };
-            }
+            },
+            valueToBool() {
+                return Boolean(this.$attrs.Value)
+            },
         },
         methods: {
-            onInput(value) {
+            onChange(value) {
                 const valToEmit = Number(value).toString()
                 this.$emit('input', valToEmit);
-            }
+            },
         },
     }
 </script>

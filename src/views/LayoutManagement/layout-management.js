@@ -4,18 +4,19 @@ export const globalAccountSettings = {
     "LayoutID": "1"
 };
 
-export const ACCOUNT_LAYOUTS_KEY = 'accountLayouts';
+export const ENABLED_STATUS_ID = 1;
+export const DELETED_STATUS_ID = 2;
 
 export const availableLayouts = [{
-    label: i18n.t('Account Layouts'),
-    name: 'accountLayouts',
-    key: 'accountLayouts',
-    data: 'accountLayouts',
+    label: i18n.t('Active Layouts'),
+    statusID: ENABLED_STATUS_ID,
+    statusName: 'Enable',
+    name: 'enabledLayouts',
 }, {
-    label: i18n.t('Default Layouts'),
-    name: 'globalLayouts',
-    key: 'globalLayouts',
-    data: 'globalLayouts',
+    label: i18n.t('Recycle Bin'),
+    statusID: DELETED_STATUS_ID,
+    statusName: 'Deleted',
+    name: 'deletedLayouts',
 }];
 
 export const sliderOptionConfigs = {

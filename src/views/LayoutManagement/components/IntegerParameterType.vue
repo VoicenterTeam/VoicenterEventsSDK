@@ -11,18 +11,15 @@
 </template>
 <script>
     import {Slider} from 'element-ui'
-    import {sliderOptionConfigs} from '../layout-management-config'
+    import {sliderOptionConfigs} from '../layout-management'
 
     export default {
+        inheritAttrs: false,
         name: 'Integer',
         components: {
             [Slider.name]: Slider,
         },
         props: {
-            Value: {
-                type: String,
-                Default: '',
-            },
             LayoutParameterName: {
                 type: String,
                 Default: '',
@@ -31,7 +28,6 @@
         data() {
             return {
                 sliderOptionConfigs,
-                valueToInt: Number(this.Value)
             }
         },
         computed: {
@@ -40,6 +36,9 @@
                     ...this.$listeners,
                     input: this.onInput
                 };
+            },
+            valueToInt() {
+                return Number(this.$attrs.Value)
             }
         },
         methods: {

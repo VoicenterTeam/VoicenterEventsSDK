@@ -11,15 +11,6 @@
                         <div class="flex items-center py-3 mx-4 xl:mx-16">
                             <div class="flex items-center px-2">
                                 <slot name="dashboard-operations"/>
-                                <div @click="showEditSettingsDialog = true"
-                                     class="flex px-1 cursor-pointer outline-none">
-                                    <el-tooltip :content="$t('tooltip.general.settings')" class="item" effect="dark"
-                                                placement="bottom">
-                                        <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
-                                            <IconSettings class="text-primary"/>
-                                        </button>
-                                    </el-tooltip>
-                                </div>
                                 <language-select :value="activeLanguage" @change="onLocaleChange"/>
                             </div>
                             <div class="relative">

@@ -10,9 +10,10 @@
 </template>
 <script>
     import {ColorPicker} from 'element-ui'
-    import {predefinedColors} from '../layout-management-config'
+    import {predefinedColors} from '../layout-management'
 
     export default {
+        inheritAttrs: false,
         name: 'Color',
         components: {
             [ColorPicker.name]: ColorPicker,
