@@ -69,8 +69,13 @@
                 }
             },
         },
-        mounted() {
-            this.getCurrentDashboardLayout()
+        watch: {
+            dashboardLayoutID: {
+                immediate: true,
+                handler() {
+                    this.getCurrentDashboardLayout()
+                }
+            }
         }
     }
 </script>

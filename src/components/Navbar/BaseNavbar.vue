@@ -11,6 +11,9 @@
                         <div class="flex items-center py-3 mx-4 xl:mx-16">
                             <div class="flex items-center px-2">
                                 <slot name="dashboard-operations"/>
+                                <div @click="showEditSettingsDialog = true"
+                                     class="flex px-1 cursor-pointer outline-none">
+                                </div>
                                 <language-select :value="activeLanguage" @change="onLocaleChange"/>
                             </div>
                             <div class="relative">
@@ -110,7 +113,7 @@
                                         <IconSettings class="text-primary"/>
                                     </button>
                                 </el-tooltip>
-                                <language-select :value="$i18n.locale" @change="onLocaleChange"/>
+                                <language-select/>
                             </div>
                         </div>
                         <el-select
