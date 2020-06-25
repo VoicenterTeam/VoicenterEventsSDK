@@ -693,7 +693,7 @@
     "Clone layout": "Clone layout",
     "Back to Dashboard": "Back to Dashboard",
     "Dashboard Layout": "Dashboard Layout",
-    "General": "General",
+    "Fonts": "Fonts",
     "Colors": "Colors",
     "Timers": "Timers",
     "Recycle Bin": "Recycle Bin",
@@ -704,5 +704,10 @@
     "New layout": "New layout",
     "Active Layouts": "Active Layouts",
     "This is a default config, please add a new one if you want to edit it": "This is a default config, please add a new one if you want to edit it",
-    "Clone default Dashboard layout": "Clone default Dashboard layout"
+    "Clone default Dashboard layout": "Clone default Dashboard layout",
+    "Update": "Update",
+    "Current dashboard layout": "Current dashboard layout",
+    "enable layout": "enable layout",
+    "move layout to bin": "move layout to bin",
+    "Update status": "Update status"
 }

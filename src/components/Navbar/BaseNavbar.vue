@@ -150,12 +150,20 @@
                 </el-form-item>
                 <el-form-item v-if="accountLayouts">
                     <label>{{$t('Dashboard layout')}}</label>
-                    <base-select
-                        :multiple="false"
-                        :data="accountLayouts"
-                        :labelKey="'LayoutName'"
-                        :valueKey="'LayoutID'"
-                        v-model="newDashboard.DashboardLayoutID"/>
+                    <el-select
+                        v-model="newDashboard.DashboardLayoutID"
+                        class="w-full py-2">
+                        <el-option
+                            :key="layout.LayoutID"
+                            :label="layout.LayoutName"
+                            :value="layout.LayoutID"
+                            v-for="layout in accountLayouts">
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 rounded" :style="getPrimaryColor(layout)"></span>
+                                <p class="px-2">{{layout.LayoutName}}</p>
+                            </div>
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <template slot="footer">
@@ -237,8 +245,22 @@
                     let accountSettings = {
                         LayoutAccountID: this.currentAccountId
                     }
-                    this.accountLayouts = await LayoutApi.get(accountSettings)
+                    let data = await LayoutApi.get(accountSettings)
+
+                    data.map((layout) => {
+                        const primaryColor = layout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorPrimary')
+                        layout['primaryColor'] = get(primaryColor, `[0]['Value']`, '#2575FF')
+                        return layout;
+                    })
+
+                    this.accountLayouts = data
                 } catch (e) {
+                }
+            },
+            getPrimaryColor(layout) {
+                return {
+                    border: '1px solid',
+                    background: `${layout.primaryColor}`
                 }
             },
             accessManageLayoutPage(dashboard) {

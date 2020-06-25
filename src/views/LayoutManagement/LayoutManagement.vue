@@ -20,14 +20,35 @@
                 <span class="account-details">{{currentAccount.name}}</span>
             </div>
         </div>
-        <div class="content-wrapper">
+        <div class="content-wrapper" v-if="!$rtl.isRTL">
             <div class="layouts-container">
-                <current-layout :dashboardLayoutID="dashboardLayoutID"></current-layout>
+                <account-layout
+                    v-if="showLayouts"
+                    :dashboardLayoutID="dashboardLayoutID"
+                    :currentAccountId="currentAccountId"
+                    @refresh-current-layout="refreshCurrentLayout"
+                    :activeDashboard="activeDashboard"/>
+            </div>
+            <div class="layouts-container">
+                <current-layout
+                    @refresh-layouts="refreshLayouts"
+                    v-if="showCurrentLayout"
+                    :dashboardLayoutID="dashboardLayoutID"></current-layout>
+            </div>
+        </div>
+        <div class="content-wrapper" v-else>
+            <div class="layouts-container">
+                <current-layout
+                    @refresh-layouts="refreshLayouts"
+                    v-if="showCurrentLayout"
+                    :dashboardLayoutID="dashboardLayoutID"></current-layout>
             </div>
             <div class="layouts-container">
                 <account-layout
+                    v-if="showLayouts"
                     :dashboardLayoutID="dashboardLayoutID"
                     :currentAccountId="currentAccountId"
+                    @refresh-current-layout="refreshCurrentLayout"
                     :activeDashboard="activeDashboard"/>
             </div>
         </div>
@@ -54,6 +75,8 @@
                 activeTab: 'enabledLayouts',
                 accountLayouts: [],
                 activeCollapses: [],
+                showCurrentLayout: true,
+                showLayouts: true,
             }
         },
         computed: {
@@ -89,6 +112,18 @@
                     this.$rtl.disableRTL()
                 }
             },
+            refreshCurrentLayout() {
+                this.showCurrentLayout = false
+                this.$nextTick(() => {
+                    this.showCurrentLayout = true
+                })
+            },
+            refreshLayouts() {
+                this.showLayouts = false
+                this.$nextTick(() => {
+                    this.showLayouts = true
+                })
+            }
         }
     }
 </script>

@@ -10,7 +10,7 @@
                         :disabled="storingData"
                         :loading="storingData"
                         @click="updateLayout(layout)"
-                        type="primary">{{$t('common.save')}}
+                        type="primary">{{$t('Update')}}
                     </el-button>
                 </div>
                 <div v-else :class="$rtl.isRTL ? 'pr-4' : 'pl-4'">
@@ -32,14 +32,12 @@
     </div>
 </template>
 <script>
-
     import get from 'lodash/get'
     import {Popover} from 'element-ui'
     import {LayoutApi} from '@/api/layoutApi'
     import LayoutWrapper from './LayoutWrapper'
     import {AlertTriangleIcon} from 'vue-feather-icons'
     import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
-
 
     export default {
         components: {
@@ -80,8 +78,9 @@
                 try {
                     this.storingData = true
                     await LayoutApi.update(layoutConfig)
-                    
+
                     this.$store.commit('layout/SET_ACTIVE_LAYOUT', layoutConfig)
+                    this.$emit('refresh-layouts')
                 } catch (e) {
                     console.warn(e)
                 } finally {

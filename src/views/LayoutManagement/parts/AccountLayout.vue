@@ -8,42 +8,59 @@
             </el-tooltip>
         </div>
         <el-tab-pane v-for="layout in availableLayouts" v-bind="layout">
-            <el-collapse class="w-full" v-model="activeCollapses">
+            <el-collapse
+                class="w-full"
+                v-model="activeCollapses">
                 <el-collapse-item
                     class="w-full"
                     v-for="layoutConfig in getData(layout.statusID)"
                     :name="layoutConfig.LayoutID"
                     :key="layoutConfig.LayoutID">
                     <template slot="title">
-                        <div class="flex justify-between w-full">
-                            <div class="flex items-center">
+                        <div class="flex flex justify-between w-full items-center" v-if="layoutConfig.LayoutID !== dashboardLayoutID">
+                            <div class="flex justify-between w-full">
+                                <div class="flex items-center">
+                                    <el-tooltip
+                                        class="item" effect="dark" :content="$t('Apply layout')"
+                                        placement="top">
+                                        <CopyIcon
+                                            v-if="layout.statusID === ENABLED_STATUS_ID"
+                                            class="w-4 text-primary" @click.stop="applyLayout(layoutConfig)"/>
+                                    </el-tooltip>
+                                    <div class="px-2">{{layoutConfig.LayoutName}}</div>
+                                </div>
+                            </div>
+                            <div>
                                 <el-tooltip
-                                    class="item" effect="dark" :content="$t('Apply layout')"
+                                    v-if="layout.statusID === ENABLED_STATUS_ID"
+                                    class="item" effect="dark"
+                                    :content="$t('Move layout to bin')"
                                     placement="top">
-                                    <CopyIcon
-                                        v-if="layout.statusID === ENABLED_STATUS_ID"
-                                        class="w-4 text-primary" @click.stop="applyLayout(layoutConfig)"/>
+                                    <Trash2Icon
+                                        class="text-red w-4 mx-2"
+                                        @click.stop="changeLayoutStatus(layoutConfig, DELETED_STATUS_ID)"/>
                                 </el-tooltip>
-                                <div class="px-2">{{layoutConfig.LayoutName}}</div>
+                                <el-tooltip
+                                    v-if="layout.statusID === DELETED_STATUS_ID" class="item" effect="dark"
+                                    :content="$t('Restore layout')"
+                                    placement="top">
+                                    <RotateCcwIcon class="text-primary w-4 mx-2"
+                                                   @click.stop="changeLayoutStatus(layoutConfig, ENABLED_STATUS_ID)"></RotateCcwIcon>
+                                </el-tooltip>
                             </div>
                         </div>
-                        <div>
-                            <el-tooltip
-                                v-if="layout.statusID === ENABLED_STATUS_ID"
-                                class="item" effect="dark"
-                                :content="$t('Move layout to bin')"
-                                placement="top">
-                                <Trash2Icon
-                                    class="text-red w-4 mx-2"
-                                    @click.stop="changeLayoutStatus(layoutConfig, DELETED_STATUS_ID)"/>
-                            </el-tooltip>
-                            <el-tooltip
-                                v-if="layout.statusID === DELETED_STATUS_ID" class="item" effect="dark"
-                                :content="$t('Restore layout')"
-                                placement="top">
-                                <RotateCcwIcon class="text-primary w-4 mx-2"
-                                               @click.stop="changeLayoutStatus(layoutConfig, ENABLED_STATUS_ID)"></RotateCcwIcon>
-                            </el-tooltip>
+                        <div v-else>
+                            <div class="flex justify-between w-full text-primary">
+                                <div class="flex items-center">
+                                    <el-tooltip
+                                        class="item" effect="dark" :content="$t('Current dashboard layout')"
+                                        placement="top">
+                                        <CheckCircleIcon
+                                            class="w-4"/>
+                                    </el-tooltip>
+                                    <div class="px-2">{{layoutConfig.LayoutName}}</div>
+                                </div>
+                            </div>
                         </div>
                     </template>
                     <div :key="layoutConfig.LayoutID">
@@ -74,8 +91,8 @@
 </template>
 <script>
     import {LayoutApi} from '@/api/layoutApi'
-    import {CopyIcon, RotateCcwIcon, Trash2Icon} from 'vue-feather-icons'
-    import {availableLayouts, DELETED_STATUS_ID, ENABLED_STATUS_ID} from '../layout-management'
+    import {CopyIcon, RotateCcwIcon, Trash2Icon, CheckCircleIcon} from 'vue-feather-icons'
+    import {availableLayouts, DELETED_STATUS_ID, ENABLED_STATUS_ID, statusDictionary} from '../layout-management'
     import {Collapse, CollapseItem, TabPane, Tabs, Tooltip} from 'element-ui'
     import {DashboardApi} from '@/api/dashboardApi'
     import LayoutWrapper from './LayoutWrapper'
@@ -86,6 +103,7 @@
             LayoutWrapper,
             CopyIcon,
             Trash2Icon,
+            CheckCircleIcon,
             RotateCcwIcon,
             [Tabs.name]: Tabs,
             [Tooltip.name]: Tooltip,
@@ -120,7 +138,7 @@
         },
         methods: {
             getData(layoutStatus) {
-                return this.accountLayouts.filter((layout) => layout.LayoutStatusID === layoutStatus && layout.LayoutID !== this.dashboardLayoutID)
+                return this.accountLayouts.filter((layout) => layout.LayoutStatusID === layoutStatus)
             },
             async getAccountLayouts() {
                 try {
@@ -138,6 +156,11 @@
                 try {
                     this.storingData = true
                     await LayoutApi.update(layoutConfig)
+
+                    if (layoutConfig.LayoutID === this.dashboardLayoutID) {
+                        this.$emit('refresh-current-layout')
+                        this.$store.commit('layout/SET_ACTIVE_LAYOUT', layoutConfig)
+                    }
 
                 } catch (e) {
                     console.warn(e)
@@ -165,20 +188,30 @@
                 }
             },
             async changeLayoutStatus(layoutConfig, status) {
-                try {
+                let message = statusDictionary[status]
+                this.$confirm(
+                    this.$t('common.confirm.question', {
+                        action: this.$t(message),
+                    }), this.$t('Update status'), {
+                        cancelButtonText: this.$t('common.cancel'),
+                        confirmButtonText: this.$t('common.confirm'),
+                    }).then(() => {
+                    try {
 
-                    let data = {
-                        LayoutID: layoutConfig.LayoutID,
-                        LayoutStatus: status,
-                        LayoutAccountID: this.currentAccountId,
+                        let data = {
+                            LayoutID: layoutConfig.LayoutID,
+                            LayoutStatus: status,
+                            LayoutAccountID: this.currentAccountId,
+                        }
+
+                         LayoutApi.updateStatus(data)
+                         this.getAccountLayouts()
+                    } catch (e) {
+                        console.warn(e)
+                    } finally {
                     }
+                })
 
-                    await LayoutApi.updateStatus(data)
-                    await this.getAccountLayouts()
-                } catch (e) {
-                    console.warn(e)
-                } finally {
-                }
             },
             async newLayout() {
                 try {

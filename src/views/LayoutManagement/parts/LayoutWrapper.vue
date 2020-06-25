@@ -64,3 +64,17 @@
         }
     }
 </script>
+<style lang="scss">
+    .rtl {
+        .layout-wrapper /deep/ {
+
+            .el-button--primary {
+                margin-left: 10px;
+            }
+
+            .el-button--default {
+                margin-left: 10px;
+            }
+        }
+    }
+</style>

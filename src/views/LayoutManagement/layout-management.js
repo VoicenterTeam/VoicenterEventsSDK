@@ -19,6 +19,11 @@ export const availableLayouts = [{
     name: 'deletedLayouts',
 }]
 
+export const statusDictionary = {
+    1: 'enable layout',
+    2: 'move layout to bin'
+}
+
 export const sliderOptionConfigs = {
     FontSize: {
         min: 8,
@@ -103,16 +108,16 @@ export const predefinedColors = [
     '#000000',
 ]
 
-export const DEFAULT_SELECTED_GROUP = 'General'
+export const DEFAULT_SELECTED_GROUP = 'Colors'
 
 export const DEFAULT_LAYOUT_GROUPS = [
-    'General',
     'Colors',
+    'Fonts',
     'Timers',
 ]
 
 export const DEFAULT_GROUP_KEYS = {
-    'General': [
+    'Fonts': [
         'ShowWidgetTitles',
         'FontSize',
         'WidgetTitlesFontSize',
