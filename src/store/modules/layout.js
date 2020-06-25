@@ -44,6 +44,12 @@ const getters = {
             widgetGroupTitles: '#000000'
         }
 
+        result['primary_rgba'] = convertHex(result.primary);
+
+        if (!state.data || !state.data.LayoutParametersList.length) {
+            return result
+        }
+
         state.data.LayoutParametersList.forEach((el) => {
 
             if (el.LayoutParameterName === "ColorPrimary") {
