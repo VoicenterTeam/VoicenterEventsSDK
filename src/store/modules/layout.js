@@ -80,6 +80,7 @@ const getters = {
             let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'FontSize')
             return Number(result[0]['Value'])
         } catch (e) {
+            console.warn(e)
             return 16
         }
     },
@@ -88,6 +89,7 @@ const getters = {
             let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'RefreshRealTimeDataDelay')
             return Number(result[0]['Value'])
         } catch (e) {
+            console.warn(e)
             return 30
         }
     },
@@ -96,14 +98,16 @@ const getters = {
             let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ReportInterval')
             return Number(result[0]['Value'])
         } catch (e) {
+            console.warn(e)
             return null
         }
     },
     switchReport: state => {
         try {
             let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ReportSwitching')
-            return Boolean(result[0]['Value'])
+            return Boolean(result[0]['Value'] === "1");
         } catch (e) {
+            console.warn(e)
             return false
         }
     },
@@ -119,6 +123,7 @@ const getters = {
                 fontSize: `${_fontSize}px`
             }
         } catch (e) {
+            console.warn(e)
             return {
                 color: '#000000',
                 fontSize: '22px'
@@ -133,6 +138,7 @@ const getters = {
                 fontSize: `${fontSize}px`
             }
         } catch (e) {
+            console.warn(e)
             return {
                 fontSize: '22px'
             }
@@ -140,9 +146,10 @@ const getters = {
     },
     showWidgetTitles: state => {
         try {
-            let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'showWidgetTitles')
-            return Boolean(result[0]['Value'])
+            let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ShowWidgetTitles')
+            return Boolean(result[0]['Value'] === "1");
         } catch (e) {
+            console.warn(e)
             return true
         }
     }
