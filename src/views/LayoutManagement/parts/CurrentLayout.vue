@@ -64,9 +64,11 @@
             async getCurrentDashboardLayout() {
                 try {
                     const dashboardLayoutID = this.dashboardLayoutID
+
                     const data = {
                         LayoutID: dashboardLayoutID
                     }
+
                     const layout = await LayoutApi.get(data)
                     this.layout = get(layout, '[0]', {})
                 } catch (e) {
@@ -78,6 +80,7 @@
                 try {
                     this.storingData = true
                     await LayoutApi.update(layoutConfig)
+                    
                     this.$store.commit('layout/SET_ACTIVE_LAYOUT', layoutConfig)
                 } catch (e) {
                     console.warn(e)

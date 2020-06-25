@@ -26,7 +26,6 @@
     import BooleanParameterType from '../components/BooleanParameterType'
     import {DEFAULT_GROUP_KEYS, DEFAULT_LAYOUT_GROUPS, DEFAULT_SELECTED_GROUP} from '../layout-management'
 
-
     export default {
         inheritAttrs: false,
         components: {

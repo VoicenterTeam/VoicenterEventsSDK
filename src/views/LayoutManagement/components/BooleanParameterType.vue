@@ -1,6 +1,6 @@
 <template>
     <div class="py-4 border-b">
-        <el-checkbox :checked="valueToBool" v-on="listeners">
+        <el-checkbox :checked="valueToBool" @change="onChange">
             {{$t(LayoutParameterName)}}
         </el-checkbox>
     </div>
@@ -21,14 +21,8 @@
             },
         },
         computed: {
-            listeners() {
-                return {
-                    ...this.$listeners,
-                    change: this.onChange
-                };
-            },
             valueToBool() {
-                return Boolean(this.$attrs.Value)
+                return this.$attrs.Value === "1";
             },
         },
         methods: {
