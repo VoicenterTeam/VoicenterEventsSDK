@@ -148,7 +148,7 @@
                     <label>{{$t('dashboards.new.form.title')}}</label>
                     <el-input v-model="newDashboard.DashboardTitle"/>
                 </el-form-item>
-                <el-form-item v-if="accountLayouts">
+                <el-form-item v-if="accountLayouts.length">
                     <label>{{$t('Dashboard layout')}}</label>
                     <el-select
                         v-model="newDashboard.DashboardLayoutID"
@@ -203,7 +203,7 @@
                 newDashboard: dashboardModel(),
                 dialogWidth: '30%',
                 showMobileMenu: false,
-                accountLayouts: null,
+                accountLayouts: [],
                 DEFAULT_LAYOUT_ID,
             }
         },
