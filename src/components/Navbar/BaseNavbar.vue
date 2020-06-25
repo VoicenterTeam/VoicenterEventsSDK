@@ -166,6 +166,15 @@
                     <label>{{$t('dashboards.new.form.title')}}</label>
                     <el-input v-model="newDashboard.DashboardTitle"/>
                 </el-form-item>
+                <el-form-item v-if="accountLayouts">
+                    <label>{{$t('Dashboard layout')}}</label>
+                    <base-select
+                        :multiple="false"
+                        :data="accountLayouts"
+                        :labelKey="'LayoutName'"
+                        :valueKey="'LayoutID'"
+                        v-model="newDashboard.DashboardLayoutID"/>
+                </el-form-item>
             </el-form>
             <template slot="footer">
                 <el-button @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
@@ -181,7 +190,9 @@
     import Settings from './Settings'
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
-    import Modal from "@/components/Common/Modal";
+    import Modal from '@/components/Common/Modal'
+    import {LayoutApi} from '@/api/layoutApi'
+    import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
 
     export default {
         components: {
@@ -205,6 +216,8 @@
                 showEditSettingsDialog: false,
                 dialogWidth: '30%',
                 showMobileMenu: false,
+                accountLayouts: null,
+                DEFAULT_LAYOUT_ID,
             }
         },
         computed: {
@@ -234,9 +247,23 @@
             },
             accountNoData() {
                 return !this.activeDashboard && !this.loadingData;
-            }
+            },
+            dashboardLayoutID() {
+                return get(this.activeDashboard, 'DashboardLayoutID', this.DEFAULT_LAYOUT_ID);
+            },
         },
         methods: {
+            async getAccountLayouts() {
+                try {
+                    let accountSettings = {
+                        LayoutAccountID: this.currentAccountId
+                    }
+                    this.accountLayouts = await LayoutApi.get(accountSettings)
+                    console.log('accountLayouts', this.accountLayouts)
+                } catch (e) {
+
+                }
+            },
             accessManageLayoutPage(dashboard) {
                 this.chooseDashboard(dashboard)
                 this.$router.push('layout-management')
@@ -246,14 +273,18 @@
                 this.showDashboardsMenu = false
             },
             createNewDashboard() {
+                this.getAccountLayouts()
+                this.newDashboard['DashboardLayoutID'] = this.dashboardLayoutID
                 this.showCreateDashboardDialog = true
                 this.showDashboardsMenu = false
             },
-            confirmNewDashboard() {
-                this.$store.dispatch('dashboards/createDashboard', {
+            async confirmNewDashboard() {
+
+                await this.$store.dispatch('dashboards/createDashboard', {
                     ...this.newDashboard,
-                    AccountID: this.$store.state.entities.selectedAccountID,
+                    AccountID: this.currentAccountId,
                 })
+
                 this.newDashboard = dashboardModel()
                 this.showCreateDashboardDialog = false
             },
@@ -295,8 +326,8 @@
             },
             triggerMobileMenu() {
                 this.showMobileMenu = !this.showMobileMenu
-            }
-        }
+            },
+        },
     }
 </script>
 

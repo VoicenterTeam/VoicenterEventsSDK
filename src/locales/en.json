@@ -700,5 +700,9 @@
     "Current layout": "Current layout",
     "Move layout to bin": "Move layout to bin",
     "Restore layout": "Restore layout",
-    "Layout Name": "Layout Name"
+    "Layout Name": "Layout Name",
+    "New layout": "New layout",
+    "Active Layouts": "Active Layouts",
+    "This is a default config, please add a new one if you want to edit it": "This is a default config, please add a new one if you want to edit it",
+    "Clone default Dashboard layout": "Clone default Dashboard layout"
 }

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {DashboardApi} from '@/api/dashboardApi'
+import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
 
 const ACTIVE_DASHBOARD = 'active-dashboard'
 
@@ -50,7 +51,13 @@ const mutations = {
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
+
+        if(!dashboard.DashboardLayoutID) {
+            dashboard.DashboardLayoutID = DEFAULT_LAYOUT_ID
+        }
+
         state.settings = dashboard ? dashboard.DashboardLayout.settings : {}
+        // if (SET_ACTIVE_DASHBOARD)
         localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
     },
     [types.SET_LOADING]: (state, loading) => {
@@ -76,7 +83,6 @@ const actions = {
         let dashboards = await DashboardApi.getAll()
         commit(types.SET_LOADING, false)
         commit(types.SET_ALL_DASHBOARDS, dashboards)
-
     },
     async selectDashboard ({commit, state}, dashboard) {
         const previousDashboard = previousActiveDashboard()

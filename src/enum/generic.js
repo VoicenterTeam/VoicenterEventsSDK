@@ -25,3 +25,5 @@ export const getDefaultTimeDelay = () => {
 
 //Queue Activity Gauge suggestive word/key
 export const queueActivityGaugeKey = 'GetQueuesGaugeById'
+
+export const DEFAULT_LAYOUT_ID = 1

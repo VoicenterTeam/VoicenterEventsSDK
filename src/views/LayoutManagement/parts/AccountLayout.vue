@@ -1,5 +1,12 @@
 <template>
     <el-tabs v-model="activeTab">
+        <div class="pb-4">
+            <el-tooltip
+                class="item" effect="dark" :content="$t('Clone default Dashboard layout')"
+                placement="top">
+                <el-button @click="newLayout">{{$t('New layout')}}</el-button>
+            </el-tooltip>
+        </div>
         <el-tab-pane v-for="layout in availableLayouts" v-bind="layout">
             <el-collapse class="w-full" v-model="activeCollapses">
                 <el-collapse-item
@@ -45,7 +52,13 @@
                             <el-input v-model="layoutConfig.LayoutName"/>
                         </div>
                         <layout-wrapper :key="layoutConfig.LayoutID" :layout="layoutConfig"/>
-                        <div class="pt-4 flex justify-end">
+                        <div class="pt-4 flex justify-between">
+                            <el-button
+                                :disabled="storingData"
+                                :loading="storingData"
+                                @click="resetChanges()">
+                                {{$t('common.cancel')}}
+                            </el-button>
                             <el-button
                                 :disabled="storingData"
                                 :loading="storingData"
@@ -66,6 +79,7 @@
     import {Collapse, CollapseItem, TabPane, Tabs, Tooltip} from 'element-ui'
     import {DashboardApi} from '@/api/dashboardApi'
     import LayoutWrapper from './LayoutWrapper'
+    import {defaultLayout} from '@/enum/default-layout'
 
     export default {
         components: {
@@ -131,6 +145,9 @@
                     this.storingData = false
                 }
             },
+            async resetChanges() {
+                return this.getAccountLayouts()
+            },
             async applyLayout(layoutConfig) {
                 try {
                     this.storingData = true
@@ -159,6 +176,20 @@
                 } catch (e) {
                     console.warn(e)
                 } finally {
+                }
+            },
+            async newLayout() {
+                try {
+                    this.activeTab = 'enabledLayouts'
+                    this.storingData = true
+                    let layout = defaultLayout(this.currentAccountId)
+
+                    await LayoutApi.update(layout)
+                    await this.getAccountLayouts()
+                } catch (e) {
+                    console.warn(e)
+                } finally {
+                    this.storingData = false
                 }
             },
         },

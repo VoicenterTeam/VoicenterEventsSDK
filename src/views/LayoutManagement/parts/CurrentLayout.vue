@@ -3,15 +3,25 @@
         <p class="text-center pt-2">{{$t('Dashboard Layout')}}</p>
         <div class="pt-10 pb-4 flex flex-col border-b">
             <label class="pb-2">{{$t('Layout Name')}}</label>
-            <div class="flex flex-row">
+            <div class="flex flex-row items-center">
                 <el-input v-model="layout.LayoutName"/>
-                <div :class="$rtl.isRTL ? 'pr-4' : 'pl-4'">
+                <div v-if="layout.LayoutID !== DEFAULT_LAYOUT_ID" :class="$rtl.isRTL ? 'pr-4' : 'pl-4'">
                     <el-button
                         :disabled="storingData"
                         :loading="storingData"
                         @click="updateLayout(layout)"
                         type="primary">{{$t('common.save')}}
                     </el-button>
+                </div>
+                <div v-else :class="$rtl.isRTL ? 'pr-4' : 'pl-4'">
+                    <el-popover
+                        placement="bottom-start"
+                        trigger="hover">
+                        <div>
+                            {{$t('This is a default config, please add a new one if you want to edit it')}}
+                        </div>
+                        <AlertTriangleIcon class="text-orange-500 cursor-help" slot="reference"></AlertTriangleIcon>
+                    </el-popover>
                 </div>
             </div>
         </div>
@@ -23,12 +33,18 @@
 </template>
 <script>
 
+    import get from 'lodash/get'
+    import {Popover} from 'element-ui'
+    import {LayoutApi} from '@/api/layoutApi'
     import LayoutWrapper from './LayoutWrapper'
-    import {LayoutApi} from "@/api/layoutApi";
-    import get from "lodash/get";
+    import {AlertTriangleIcon} from 'vue-feather-icons'
+    import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
+
 
     export default {
         components: {
+            [Popover.name]: Popover,
+            AlertTriangleIcon,
             LayoutWrapper,
         },
         props: {
@@ -41,6 +57,7 @@
             return {
                 layout: null,
                 storingData: false,
+                DEFAULT_LAYOUT_ID,
             }
         },
         methods: {

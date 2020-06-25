@@ -1,5 +1,7 @@
 export const defaultLayout = (LayoutAccountID) => ({
+    "LayoutStatusID": 1,
     "LayoutName": "New Layout",
+    "LayoutStatusName": "Enable",
     "LayoutAccountID": LayoutAccountID,
     "LayoutParametersList": [
         {
