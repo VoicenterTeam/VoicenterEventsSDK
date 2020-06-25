@@ -5,6 +5,9 @@
             <template v-slot:dashboard-operations>
                 <div class="flex">
                     <div class="my-3 flex items-center">
+                        <div class="flex items-center">
+                            <socket-status-button @click="retrySocketConnection" class="mx-2"/>
+                        </div>
                         <div @click="showReorderDataDialog = true" class="mx-1 cursor-pointer" v-if="!editMode">
                             <el-tooltip :content="$t('tooltip.reorder.dashboard.layout')" class="item" effect="dark"
                                         placement="bottom">
@@ -110,6 +113,7 @@
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
     import {dashboardOperation, widgetGroupModel} from '@/models/instances'
+    import SocketStatusButton from '@/components/Common/SocketStatusButton'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
@@ -125,6 +129,7 @@
             ListView,
             TabbedView,
             Sidebar,
+            SocketStatusButton,
             TemplatesCategory,
             SocketStatusAlert,
             ReorderLayoutDialog,
