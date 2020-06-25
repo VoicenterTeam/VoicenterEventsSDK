@@ -2,7 +2,7 @@ import i18n from "@/i18n";
 
 export const globalAccountSettings = {
     "LayoutID": "1"
-};
+}
 
 export const ENABLED_STATUS_ID = 1;
 export const DELETED_STATUS_ID = 2;
@@ -17,7 +17,7 @@ export const availableLayouts = [{
     statusID: DELETED_STATUS_ID,
     statusName: 'Deleted',
     name: 'deletedLayouts',
-}];
+}]
 
 export const sliderOptionConfigs = {
     FontSize: {
@@ -88,7 +88,7 @@ export const sliderOptionConfigs = {
             800: '800s',
         }
     },
-};
+}
 
 export const predefinedColors = [
     '#F7FAFC',
@@ -101,4 +101,36 @@ export const predefinedColors = [
     '#D53F8C',
     '#E53E3E',
     '#000000',
-];
+]
+
+export const DEFAULT_SELECTED_GROUP = 'General'
+
+export const DEFAULT_LAYOUT_GROUPS = [
+    'General',
+    'Colors',
+    'Timers',
+]
+
+export const DEFAULT_GROUP_KEYS = {
+    'General': [
+        'ShowWidgetTitles',
+        'FontSize',
+        'WidgetTitlesFontSize',
+        'WidgetGroupTitlesFontSize',
+        'MinRefreshInterval',
+        'RefreshRealTimeDataDelay',
+    ],
+    'Colors': [
+        'ColorPrimary',
+        'ColorBackground',
+        'ColorFrames',
+        'ColorWidgetGroupBackground',
+        'ColorWidgetGroupFrames',
+        'ColorWidgetGroupTitles',
+    ],
+    'Timers': [
+        'ReportInterval',
+        'ReportSwitching',
+        'ReportRefresh'
+    ],
+}

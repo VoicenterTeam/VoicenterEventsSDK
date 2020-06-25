@@ -24,6 +24,8 @@
     import ColorParameterType from '../components/ColorParameterType'
     import IntegerParameterType from '../components/IntegerParameterType'
     import BooleanParameterType from '../components/BooleanParameterType'
+    import {DEFAULT_GROUP_KEYS, DEFAULT_LAYOUT_GROUPS, DEFAULT_SELECTED_GROUP} from '../layout-management'
+
 
     export default {
         inheritAttrs: false,
@@ -40,35 +42,9 @@
         },
         data() {
             return {
-                selectedGroup: 'General',
-                layoutGroups: [
-                    'General',
-                    'Colors',
-                    'Timers',
-                ],
-                groupKeys: {
-                    'General': [
-                        'ShowWidgetTitles',
-                        'FontSize',
-                        'WidgetTitlesFontSize',
-                        'WidgetGroupTitlesFontSize',
-                        'MinRefreshInterval',
-                        'RefreshRealTimeDataDelay',
-                    ],
-                    'Colors': [
-                        'ColorPrimary',
-                        'ColorBackground',
-                        'ColorFrames',
-                        'ColorWidgetGroupBackground',
-                        'ColorWidgetGroupFrames',
-                        'ColorWidgetGroupTitles',
-                    ],
-                    'Timers': [
-                        'ReportInterval',
-                        'ReportSwitching',
-                        'ReportRefresh'
-                    ],
-                }
+                selectedGroup: DEFAULT_SELECTED_GROUP,
+                layoutGroups: DEFAULT_LAYOUT_GROUPS,
+                groupKeys: DEFAULT_GROUP_KEYS,
             }
         },
         computed: {

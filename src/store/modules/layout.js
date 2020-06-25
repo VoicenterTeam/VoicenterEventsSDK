@@ -34,7 +34,6 @@ const actions = {
 };
 const getters = {
     colors: state => {
-
         let result = {
             primary: "#2575FF",
             primary_rgba: "37, 117, 255",
@@ -48,21 +47,25 @@ const getters = {
         state.data.LayoutParametersList.forEach((el) => {
 
             if (el.LayoutParameterName === "ColorPrimary") {
-                console.log('here')
                 result.primary = el.Value
             }
+
             if (el.LayoutParameterName === "ColorBackground") {
                 result.background = el.Value
             }
+
             if (el.LayoutParameterName === "ColorFrames") {
                 result.frames = el.Value
             }
+
             if (el.LayoutParameterName === "ColorWidgetGroupBackground") {
                 result.widgetGroupBackground = el.Value
             }
+
             if (el.LayoutParameterName === "ColorWidgetGroupFrames") {
                 result.widgetGroupFrames = el.Value
             }
+
             if (el.LayoutParameterName === "ColorWidgetGroupTitles") {
                 result.widgetGroupTitles = el.Value
             }
@@ -104,7 +107,6 @@ const getters = {
             return false
         }
     },
-
     widgetGroupTitleStyles: state => {
         try {
             const fontSize = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTitlesFontSize')
@@ -123,7 +125,6 @@ const getters = {
             }
         }
     },
-
     widgetTitleStyles: state => {
         try {
             const result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTitlesFontSize')
@@ -137,7 +138,6 @@ const getters = {
             }
         }
     },
-
     showWidgetTitles: state => {
         try {
             let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'showWidgetTitles')
@@ -146,9 +146,7 @@ const getters = {
             return true
         }
     }
-
 }
-
 
 export default {
     namespaced: true,

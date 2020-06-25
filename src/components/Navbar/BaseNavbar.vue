@@ -56,10 +56,10 @@
                                         <div
                                             @click="createNewDashboard()"
                                             class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex flex-row items-center">
-                                        <div>
-                                            <IconPlus class="w-4 hover:bg-primary-100"/>
-                                        </div>
-                                        <span class="mx-2">{{$t('common.newDashboard')}}</span>
+                                            <div>
+                                                <IconPlus class="w-4 hover:bg-primary-100"/>
+                                            </div>
+                                            <span class="mx-2">{{$t('common.newDashboard')}}</span>
                                         </div>
                                     </div>
                                 </fade-transition>
@@ -238,9 +238,7 @@
                         LayoutAccountID: this.currentAccountId
                     }
                     this.accountLayouts = await LayoutApi.get(accountSettings)
-                    console.log('accountLayouts', this.accountLayouts)
                 } catch (e) {
-
                 }
             },
             accessManageLayoutPage(dashboard) {
