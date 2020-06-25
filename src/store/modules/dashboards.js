@@ -113,38 +113,9 @@ const actions = {
 };
 
 const getters = {
-    baseColors: state => {
-        return state.settings.colors
-    },
-    refreshDelay: state => {
-        return state.settings.refreshRealTimeDataDelay
-    },
-    widgetGroupTitleStyles: state => {
-        const {widgetGroupTitles} = state.settings.colors
-        const {widgetGroupTitlesFontSize} = state.settings
-        const styles = {}
-        if (widgetGroupTitles) {
-            styles.color = widgetGroupTitles
-        }
-        if (widgetGroupTitlesFontSize) {
-            styles.fontSize = `${widgetGroupTitlesFontSize}px`
-        }
-        return styles
-    },
     getActiveDashboard: state => {
         return state.activeDashboard
     },
-    widgetTitleStyles: state => {
-        const {widgetTitlesFontSize} = state.settings
-
-        if (!widgetTitlesFontSize) {
-            return {}
-        }
-
-        return {
-            fontSize: `${widgetTitlesFontSize}px`
-        }
-    }
 }
 
 export default {

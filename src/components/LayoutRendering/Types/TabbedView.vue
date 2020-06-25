@@ -40,15 +40,10 @@
             activeTab: [String, Number],
         },
         computed: {
-            dashboardSettings() {
-                return this.$store.state.dashboards.settings
-            },
-            reportSettings() {
-                return this.dashboardSettings.report
-            },
             circularTimeout() {
-                if (this.$store.state.dashboards.settings.report.switching) {
-                    return this.reportSettings.interval
+                const reportSwitching = this.$store.getters['layout/switchReport']
+                if (reportSwitching) {
+                    return this.$store.getters['layout/switchInterval']
                 } else {
                     return null
                 }

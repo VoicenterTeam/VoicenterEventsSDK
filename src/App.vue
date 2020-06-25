@@ -16,15 +16,19 @@
             await this.$store.dispatch('entities/getEntitiesList')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
             await this.$store.dispatch('dashboards/getDashboards')
-            this.$store.dispatch('dashboards/selectDashboard')
+            await this.$store.dispatch('dashboards/selectDashboard')
+            await this.$store.dispatch('layout/setLayout')
             this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
         },
         computed: {
+            layout() {
+                return this.$store.state.layout.data
+            },
             colors() {
-                return this.$store.state.dashboards.settings.colors
+                return this.$store.getters['layout/colors']
             },
             fontSize() {
-                return this.$store.state.dashboards.settings.fontSize
+                return this.$store.getters['layout/baseFontSize']
             }
         },
         methods: {
@@ -51,11 +55,11 @@
             },
         },
         mounted() {
-            this.initMainColorsVars(settings.colors)
             this.initializeLayout(this.$store.state.lang.language)
         },
         watch: {
             colors: {
+                deep: true,
                 immediate: true,
                 handler: function (values) {
                     this.initMainColorsVars(values)
@@ -66,7 +70,7 @@
                 handler: function (value) {
                     this.initMainFontSizeVar(value)
                 }
-            }
+            },
         }
     }
 </script>

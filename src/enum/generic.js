@@ -18,7 +18,7 @@ export const MINUTE = HOUR / 60
 export const DEFAULT_TIME_DELAY = 30
 
 export const getDefaultTimeDelay = () => {
-    let minutes = store.getters['dashboards/refreshDelay'] || DEFAULT_TIME_DELAY;
+    let minutes = store.getters['layout/refreshDelay'] || DEFAULT_TIME_DELAY;
     let miliSeconds = minutes * 60 * 100;
     return miliSeconds
 }

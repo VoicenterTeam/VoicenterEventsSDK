@@ -25,7 +25,7 @@
                                    group="widgets">
                         <div :key="widget.WidgetID" class="w-full flex justify-between items-center items my-1"
                              v-for="widget in widgetGroup.WidgetList">
-                            <div :style="$store.getters['dashboards/widgetTitleStyles']" class="widget-item p-1">
+                            <div :style="getStyles" class="widget-item p-1">
                                 {{$t(widget.Title)}}
                             </div>
                             <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark"
@@ -80,6 +80,11 @@
                 popoverWidth: 300,
                 widgetGroups: [],
                 widgetsToUpdate: []
+            }
+        },
+        computed: {
+            getStyles() {
+                return this.$store.getters['layout/widgetTitleStyles']
             }
         },
         methods: {

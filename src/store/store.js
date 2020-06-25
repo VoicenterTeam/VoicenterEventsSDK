@@ -14,7 +14,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     plugins: [createPersistedState({
-        paths: ['users', 'dashboards.activeDashboard', 'dashboards.loadingData', 'dashboards.editMode', 'dashboards.settings', 'layout']
+        paths: ['users', 'dashboards.activeDashboard', 'dashboards.loadingData', 'dashboards.editMode', 'layout']
     })],
     modules: {
         lang,

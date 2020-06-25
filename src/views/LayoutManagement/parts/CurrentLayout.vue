@@ -78,7 +78,7 @@
                 try {
                     this.storingData = true
                     await LayoutApi.update(layoutConfig)
-
+                    this.$store.commit('layout/SET_ACTIVE_LAYOUT', layoutConfig)
                 } catch (e) {
                     console.warn(e)
                 } finally {

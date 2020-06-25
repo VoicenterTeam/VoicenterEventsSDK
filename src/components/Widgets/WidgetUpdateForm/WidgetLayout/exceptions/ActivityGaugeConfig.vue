@@ -96,7 +96,7 @@
         },
         computed: {
             predefinedColors () {
-                let options = values(this.$store.getters['dashboards/baseColors'])
+                let options = values(this.$store.getters['layout/colors'])
                 return uniq(options)
             },
             displayMainCountSelector () {

@@ -17,14 +17,10 @@
         },
         computed: {
             showWidgetTitle() {
-                const showTitles = this.$store.state.dashboards.settings.showWidgetTitles
-                if (showTitles === undefined) {
-                    return true
-                }
-                return showTitles
+                return this.$store.getters['layout/showWidgetTitles']
             },
             widgetTitleStyles() {
-                return this.$store.getters['dashboards/widgetTitleStyles']
+                return this.$store.getters['layout/widgetTitleStyles']
             }
         }
     }

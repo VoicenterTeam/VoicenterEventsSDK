@@ -156,6 +156,8 @@
                     await DashboardApi.update(dashboard)
                     await this.$store.dispatch('dashboards/updateDashboard', dashboard)
 
+                    this.$store.commit('layout/SET_ACTIVE_LAYOUT', layoutConfig)
+
                 } catch (e) {
                     console.warn(e)
                 } finally {
