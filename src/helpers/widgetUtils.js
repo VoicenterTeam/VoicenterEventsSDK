@@ -9,7 +9,7 @@ const MIN_REFRESH_INTERVAL = 10
 const MULTI_QUEUES_DASHBOARD_KEY = 'GetMultiQueuesDashboard'
 
 const minRefreshInterval = () => {
-    return store.state.dashboards.settings.minRefreshInterval || MIN_REFRESH_INTERVAL
+    return store.getters['layout/minRefreshInterval'] || MIN_REFRESH_INTERVAL
 }
 
 export function getWidgetRefreshInterval (widget) {

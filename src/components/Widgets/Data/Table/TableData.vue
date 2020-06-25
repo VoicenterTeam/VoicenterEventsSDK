@@ -73,7 +73,7 @@
                     </div>
                 </template>
                 <template v-slot:additional-data>
-                    <p class="text-main-sm px-2" :style="$store.getters['dashboards/widgetTitleStyles']">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
+                    <p class="text-main-sm px-2" :style="getStyles">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
                 </template>
             </data-table>
         </div>
@@ -142,6 +142,9 @@
             }
         },
         computed: {
+            getStyles() {
+                return this.$store.getters['layout/widgetTitleStyles']
+            },
             fetchTableData () {
                 let tableData = this.tableData
 

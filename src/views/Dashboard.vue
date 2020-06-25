@@ -5,6 +5,9 @@
             <template v-slot:dashboard-operations>
                 <div class="flex">
                     <div class="my-3 flex items-center">
+                        <div class="flex items-center">
+                            <socket-status-button @click="retrySocketConnection" class="mx-2"/>
+                        </div>
                         <div @click="showReorderDataDialog = true" class="mx-1 cursor-pointer" v-if="!editMode">
                             <el-tooltip :content="$t('tooltip.reorder.dashboard.layout')" class="item" effect="dark"
                                         placement="bottom">
@@ -110,6 +113,7 @@
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
     import {dashboardOperation, widgetGroupModel} from '@/models/instances'
+    import SocketStatusButton from '@/components/Common/SocketStatusButton'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
     import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
@@ -125,6 +129,7 @@
             ListView,
             TabbedView,
             Sidebar,
+            SocketStatusButton,
             TemplatesCategory,
             SocketStatusAlert,
             ReorderLayoutDialog,
@@ -132,7 +137,7 @@
             ListIcon,
         },
         mixins: [pageSizeMixin],
-        data () {
+        data() {
             return {
                 showWidgetMenu: false,
                 editMode: false,
@@ -151,42 +156,42 @@
             }
         },
         computed: {
-            activeLanguage () {
+            activeLanguage() {
                 return this.$store.state.lang.language
             },
-            loading () {
+            loading() {
                 return this.$store.state.dashboards.loadingData;
             },
-            dashboard () {
+            dashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
             },
-            allWidgetTemplates () {
+            allWidgetTemplates() {
                 return this.$store.state.widgetTemplate.allWidgetTemplates
             },
-            getClass () {
+            getClass() {
                 if (this.layoutType === layoutTypes.TABBED) {
                     return 'pt-24'
                 }
             },
-            showSidebar () {
+            showSidebar() {
                 return this.layoutType === layoutTypes.TABBED;
             },
-            token () {
+            token() {
                 return this.$store.state.users.tokenString
             },
-            extensions () {
+            extensions() {
                 return this.$store.state.extensions.extensions
             },
-            queues () {
+            queues() {
                 return this.$store.state.queues.all
             },
-            firstWidgetGroup () {
+            firstWidgetGroup() {
                 return this.activeDashboardData.WidgetGroupList[0]
             },
-            activeWidgetGroupID () {
+            activeWidgetGroupID() {
                 return this.activeTab || get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             },
-            groupsToDisplay () {
+            groupsToDisplay() {
                 if (this.editMode) {
                     return [this.groupToEdit]
                 }
@@ -195,7 +200,7 @@
         },
         methods: {
             retrySocketConnection,
-            onEditGroup (widgetGroup) {
+            onEditGroup(widgetGroup) {
                 this.groupToEdit = widgetGroup
                 this.editMode = true
                 this.operations = new DashboardOperations()
@@ -205,7 +210,7 @@
                     this.activeDashboardData.WidgetGroupList = [this.groupToEdit]
                 }
             },
-            async addWidgetsToGroup (data = {}) {
+            async addWidgetsToGroup(data = {}) {
                 let {widgets: widgetTemplates} = data
                 let widgetGroup = {...this.groupToEdit}
 
@@ -225,7 +230,7 @@
 
                 bus.$emit('added-widgets', createdWidgets);
             },
-            reorderWidgetGroup (data = {}) {
+            reorderWidgetGroup(data = {}) {
                 let {allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate, widgetsToUpdate: widgetsToUpdate} = data
                 this.activeDashboardData.WidgetGroupList = allWidgetGroups
 
@@ -252,10 +257,10 @@
                 this.showReorderDataDialog = false
                 this.saveDashboard()
             },
-            onWidgetMenuClickOutside () {
+            onWidgetMenuClickOutside() {
                 this.showWidgetMenu = false
             },
-            removeWidget (widget, widgetGroup) {
+            removeWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
@@ -270,7 +275,7 @@
                     }
                 }
             },
-            async removeWidgetGroup (widgetGroup) {
+            async removeWidgetGroup(widgetGroup) {
                 await this.$confirm(
                     this.$t('common.confirm.question', {
                         action: this.$t('to delete this widget group'),
@@ -294,7 +299,7 @@
                     this.editMode = false
                 })
             },
-            addNewGroup () {
+            addNewGroup() {
                 const group = {...widgetGroupModel}
 
                 this.activeDashboardData.WidgetGroupList.splice(0, 0, group)
@@ -309,7 +314,7 @@
                     this.groupToEdit = group
                 })
             },
-            updateWidget (widget, widgetGroup) {
+            updateWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
 
@@ -327,7 +332,7 @@
                     }
                 }
             },
-            async saveDashboard () {
+            async saveDashboard() {
                 this.editMode = false
                 this.showWidgetMenu = false
                 this.storingData = true
@@ -345,7 +350,7 @@
                 this.storingData = false
                 this.groupToEdit = null
             },
-            updateGridStacks (group) {
+            updateGridStacks(group) {
                 const activeDashboardWidgets = group.WidgetList
                 window.grids.forEach(grid => {
                     grid.engine.nodes.forEach((node) => {
@@ -371,7 +376,7 @@
 
                 })
             },
-            resetDashboard () {
+            resetDashboard() {
                 this.showWidgetMenu = false
                 this.editMode = false
                 let dashboard = this.$store.state.dashboards.activeDashboard
@@ -384,21 +389,21 @@
                     this.storingData = false
                 })
             },
-            switchDashboardLayout (type) {
+            switchDashboardLayout(type) {
                 this.layoutType = type
                 this.saveLayoutType(type)
             },
-            saveLayoutType (type) {
+            saveLayoutType(type) {
                 localStorage.setItem(LAYOUT_TYPE_KEY, type)
             },
-            saveActiveTab (tab) {
+            saveActiveTab(tab) {
                 localStorage.setItem(ACTIVE_WIDGET_GROUP_KEY, tab)
             },
-            switchTab (tab) {
+            switchTab(tab) {
                 this.activeTab = tab
                 this.saveActiveTab(tab)
             },
-            sortDashboardEntities (dashboard) {
+            sortDashboardEntities(dashboard) {
                 try {
                     dashboard.WidgetGroupList = orderBy(dashboard.WidgetGroupList, 'Order', 'asc')
                     dashboard.WidgetGroupList = dashboard.WidgetGroupList.map((widgetGroup) => {
@@ -412,12 +417,12 @@
                 } catch (e) {
                 }
             },
-            triggerReorderDataDialog () {
+            triggerReorderDataDialog() {
                 this.resetDashboard()
                 this.showReorderDataDialog = false
             }
         },
-        created () {
+        created() {
             window.grids = []
         },
         watch: {
@@ -428,7 +433,7 @@
                     this.sortDashboardEntities(dashboard)
                 }
             },
-            editMode (val) {
+            editMode(val) {
                 this.$store.commit('dashboards/SET_EDIT_MODE', val)
                 if (val) {
                     this.previousLayoutType = this.layoutType
@@ -440,7 +445,7 @@
             },
             activeWidgetGroupID: {
                 immediate: true,
-                handler (newVal) {
+                handler(newVal) {
                     this.switchTab(newVal)
                 }
             }

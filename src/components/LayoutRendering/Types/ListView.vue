@@ -10,7 +10,7 @@
                         v-on="$listeners">
                     </edit-group-buttons>
                 </div>
-                <h3 :style="$store.getters['dashboards/widgetGroupTitleStyles']"
+                <h3 :style="getStyles"
                     class="font-semibold text-main-2xl text-gray-800"
                     v-else>
                     {{widgetGroup.WidgetGroupTitle}}
@@ -56,5 +56,10 @@
                 default: false
             },
         },
+        computed: {
+            getStyles() {
+                return this.$store.getters['layout/widgetGroupTitleStyles']
+            }
+        }
     }
 </script>

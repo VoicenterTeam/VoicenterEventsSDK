@@ -1,23 +1,22 @@
-import {settings} from '@/enum/defaultDashboardSettings'
 import store from '../store/store'
 
 export const dashboardModel = () => {
     return {
-        "AccountID": store.state.entities.selectedAccountID,
-        "DashboardTitle": '',
-        "WidgetGroupList": [],
-        "DashboardLayout": {
-            settings: settings
+        AccountID: store.state.entities.selectedAccountID,
+        DashboardTitle: '',
+        DashboardLayoutID: '',
+        WidgetGroupList: [],
+        DashboardLayout: {
         }
     }
 }
 
 export const widgetGroupModel = {
-    "Order": 0,
-    "WidgetGroupID": Math.random() * 100,
-    "WidgetGroupTitle": "",
-    "WidgetList": [],
-    "IsNew": true
+    Order: 0,
+    WidgetGroupID: Math.random() * 100,
+    WidgetGroupTitle: '',
+    WidgetList: [],
+    IsNew: true
 }
 
 export const dashboardOperation = (type, target, payload, parentID = null, temporaryID = false) => ({

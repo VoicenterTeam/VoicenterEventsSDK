@@ -11,15 +11,6 @@
                         <div class="flex items-center py-3 mx-4 xl:mx-16">
                             <div class="flex items-center px-2">
                                 <slot name="dashboard-operations"/>
-                                <div @click="showEditSettingsDialog = true"
-                                     class="flex px-1 cursor-pointer outline-none">
-                                    <el-tooltip :content="$t('tooltip.general.settings')" class="item" effect="dark"
-                                                placement="bottom">
-                                        <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
-                                            <IconSettings class="text-primary"/>
-                                        </button>
-                                    </el-tooltip>
-                                </div>
                                 <language-select :value="activeLanguage" @change="onLocaleChange"/>
                             </div>
                             <div class="relative">
@@ -30,29 +21,46 @@
                                     <IconArrowDown/>
                                 </button>
                                 <fade-transition :duration="250">
-                                    <div class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0"
-                                         v-click-outside="onMenuClickOutside"
-                                         v-if="showDashboardsMenu">
-                            <span :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}"
-                                  @click="chooseDashboard(dashboard)"
-                                  class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
-                                  v-for="dashboard in allDashboards">
-                                  {{dashboard.DashboardTitle}}
-                                <el-tooltip :content="$t('common.deleteDashboard')" class="item" effect="dark"
-                                            placement="top">
-                                    <IconMinus :class="$rtl.isRTL ? 'float-left' : 'float-right'"
-                                               class="hover:text-red-600 w-4 mr-1 mb-1 fill-current"
-                                               v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
-                                               v-on:click.stop.prevent="deleteDashboard(dashboard)">
-                                    </IconMinus>
-                                </el-tooltip>
-                            </span>
-                                        <span
+                                    <div
+                                        class="bg-white shadow-lg rounded-lg mt-3 absolute w-64 origin-top-right mt-4 right-0 flex flex-col"
+                                        v-click-outside="onMenuClickOutside"
+                                        v-if="showDashboardsMenu">
+                                        <div
+                                            :class="{ 'text-primary': activeDashboard.DashboardID === dashboard.DashboardID}"
+                                            @click="chooseDashboard(dashboard)"
+                                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer flex flex-row items-center justify-between border-b"
+                                            v-for="dashboard in allDashboards">
+                                            <div class="flex"> {{dashboard.DashboardTitle}}</div>
+                                            <div class="flex">
+                                                <el-tooltip :content="$t('Go to Layout Management page')" class="item"
+                                                            effect="dark"
+                                                            placement="top">
+                                                    <button
+                                                        v-on:click.stop.prevent="accessManageLayoutPage(dashboard)"
+                                                        class="btn px-1 shadow rounded bg-white hover:bg-primary-100">
+                                                        <SettingsIcon class="text-primary w-4"/>
+                                                    </button>
+                                                </el-tooltip>
+                                                <el-tooltip :content="$t('common.deleteDashboard')" class="item"
+                                                            effect="dark"
+                                                            placement="top">
+                                                    <button
+                                                        v-if="dashboard.DashboardID !== activeDashboard.DashboardID"
+                                                        v-on:click.stop.prevent="deleteDashboard(dashboard)"
+                                                        class="btn px-1 shadow rounded bg-white hover:bg-primary-100 mx-1">
+                                                        <Trash2Icon class="text-red w-4"/>
+                                                    </button>
+                                                </el-tooltip>
+                                            </div>
+                                        </div>
+                                        <div
                                             @click="createNewDashboard()"
-                                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex items-center">
-                                <IconPlus class="w-3 mr-1 mb-1 text-primary"/>
-                                <span>{{$t('common.newDashboard')}}</span>
-                            </span>
+                                            class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer text-gray-600 flex flex-row items-center">
+                                            <div>
+                                                <IconPlus class="w-4 hover:bg-primary-100"/>
+                                            </div>
+                                            <span class="mx-2">{{$t('common.newDashboard')}}</span>
+                                        </div>
                                     </div>
                                 </fade-transition>
                             </div>
@@ -64,12 +72,13 @@
                                     <IconArrowDown/>
                                 </button>
                                 <fade-transition :duration="250">
-                                    <div class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0 max-h-screen overflow-auto"
-                                         v-click-outside="onMenuClickOutside"
-                                         v-if="showUsersMenu">
+                                    <div
+                                        class="bg-white shadow-lg rounded-lg py-2 mt-3 absolute w-56 flex flex-col origin-top-right mt-4 right-0 max-h-screen overflow-auto"
+                                        v-click-outside="onMenuClickOutside"
+                                        v-if="showUsersMenu">
                                     <span :class="{ 'text-primary': currentAccountId === account.ID}"
                                           @click="chooseAccount(account)"
-                                          class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer"
+                                          class="hover:bg-primary-100 hover:text-primary py-3 px-4 cursor-pointer border-b"
                                           v-for="account in allAccounts">
                                         {{account.name || $t('navbar.default.username') }}
                                     </span>
@@ -80,12 +89,6 @@
                             </div>
                         </div>
                     </div>
-                    <settings
-                        :activeDashboard="activeDashboard"
-                        :visible.sync="showEditSettingsDialog"
-                        :width="'55%'"
-                        v-if="showEditSettingsDialog">
-                    </settings>
                 </div>
             </nav>
             <fade-transition :duration="400">
@@ -94,15 +97,6 @@
                     <div class="mx-4">
                         <div class="flex items-center justify-center rounded border">
                             <slot name="dashboard-operations"/>
-                            <div @click="showEditSettingsDialog = true" class="flex px-1 cursor-pointer outline-none">
-                                <el-tooltip :content="$t('tooltip.general.settings')" class="item" effect="dark"
-                                            placement="bottom">
-                                    <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
-                                        <IconSettings class="text-primary"/>
-                                    </button>
-                                </el-tooltip>
-                                <language-select :value="$i18n.locale" @change="onLocaleChange"/>
-                            </div>
                         </div>
                         <el-select
                             :value="activeDashboard.DashboardID"
@@ -154,6 +148,23 @@
                     <label>{{$t('dashboards.new.form.title')}}</label>
                     <el-input v-model="newDashboard.DashboardTitle"/>
                 </el-form-item>
+                <el-form-item v-if="accountLayouts.length">
+                    <label>{{$t('Dashboard layout')}}</label>
+                    <el-select
+                        v-model="newDashboard.DashboardLayoutID"
+                        class="w-full py-2">
+                        <el-option
+                            :key="layout.LayoutID"
+                            :label="layout.LayoutName"
+                            :value="layout.LayoutID"
+                            v-for="layout in accountLayouts">
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 rounded" :style="getPrimaryColor(layout)"></span>
+                                <p class="px-2">{{layout.LayoutName}}</p>
+                            </div>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
             <template slot="footer">
                 <el-button @click="showCreateDashboardDialog = false">{{$t('common.cancel')}}</el-button>
@@ -165,11 +176,12 @@
 <script>
     import get from 'lodash/get'
     import {Option, Select, Tooltip} from 'element-ui'
-    import {MenuIcon} from 'vue-feather-icons'
-    import Settings from './Settings'
+    import {MenuIcon, SettingsIcon, Trash2Icon} from 'vue-feather-icons'
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
-    import Modal from "@/components/Common/Modal";
+    import Modal from '@/components/Common/Modal'
+    import {LayoutApi} from '@/api/layoutApi'
+    import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
 
     export default {
         components: {
@@ -177,77 +189,113 @@
             [Tooltip.name]: Tooltip,
             [Select.name]: Select,
             [Option.name]: Option,
-            Settings,
             LanguageSelect,
+            Trash2Icon,
             MenuIcon,
+            SettingsIcon,
         },
-        data () {
+        data() {
             return {
                 get,
                 showDashboardsMenu: false,
                 showUsersMenu: false,
                 showCreateDashboardDialog: false,
                 newDashboard: dashboardModel(),
-                showEditSettingsDialog: false,
                 dialogWidth: '30%',
                 showMobileMenu: false,
+                accountLayouts: [],
+                DEFAULT_LAYOUT_ID,
             }
         },
         computed: {
-            activeDashboard () {
+            activeDashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
             },
-            allDashboards () {
+            allDashboards() {
                 return this.$store.state.dashboards.allDashboards
             },
-            currentAccount () {
+            currentAccount() {
                 return this.$store.getters['entities/getCurrentAccount']
             },
-            currentAccountId () {
+            currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
             },
-            allAccounts () {
+            allAccounts() {
                 return this.$store.getters['entities/accountsList']
             },
-            getLogo () {
+            getLogo() {
                 return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
             },
-            activeLanguage () {
+            activeLanguage() {
                 return localStorage.getItem('locale') || this.$i18n.locale
             },
-            loadingData () {
+            loadingData() {
                 return this.$store.state.dashboards.loadingData;
             },
-            accountNoData () {
+            accountNoData() {
                 return !this.activeDashboard && !this.loadingData;
-            }
+            },
+            dashboardLayoutID() {
+                return get(this.activeDashboard, 'DashboardLayoutID', this.DEFAULT_LAYOUT_ID);
+            },
         },
         methods: {
-            chooseDashboard (dashboard) {
+            async getAccountLayouts() {
+                try {
+                    let accountSettings = {
+                        LayoutAccountID: this.currentAccountId
+                    }
+                    let data = await LayoutApi.get(accountSettings)
+
+                    data.map((layout) => {
+                        const primaryColor = layout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorPrimary')
+                        layout['primaryColor'] = get(primaryColor, `[0]['Value']`, '#2575FF')
+                        return layout;
+                    })
+
+                    this.accountLayouts = data
+                } catch (e) {
+                }
+            },
+            getPrimaryColor(layout) {
+                return {
+                    border: '1px solid',
+                    background: `${layout.primaryColor}`
+                }
+            },
+            accessManageLayoutPage(dashboard) {
+                this.chooseDashboard(dashboard)
+                this.$router.push('layout-management')
+            },
+            chooseDashboard(dashboard) {
                 this.$store.dispatch('dashboards/selectDashboard', dashboard)
                 this.showDashboardsMenu = false
             },
-            createNewDashboard () {
+            createNewDashboard() {
+                this.getAccountLayouts()
+                this.newDashboard['DashboardLayoutID'] = this.dashboardLayoutID
                 this.showCreateDashboardDialog = true
                 this.showDashboardsMenu = false
             },
-            confirmNewDashboard () {
-                this.$store.dispatch('dashboards/createDashboard', {
+            async confirmNewDashboard() {
+
+                await this.$store.dispatch('dashboards/createDashboard', {
                     ...this.newDashboard,
-                    AccountID: this.$store.state.entities.selectedAccountID,
+                    AccountID: this.currentAccountId,
                 })
+
                 this.newDashboard = dashboardModel()
                 this.showCreateDashboardDialog = false
             },
-            onMenuClickOutside () {
+            onMenuClickOutside() {
                 this.showDashboardsMenu = false
                 this.showUsersMenu = false
             },
-            chooseAccount (account) {
+            chooseAccount(account) {
                 this.$store.commit('entities/SET_SELECTED_ACCOUNT_ID', account.ID)
                 this.showUsersMenu = false
             },
-            deleteDashboard (dashboard) {
+            deleteDashboard(dashboard) {
                 this.$confirm(
                     this.$t('common.confirm.question', {
                         action: this.$t('to delete this dashboard'),
@@ -258,15 +306,15 @@
                     this.$store.dispatch('dashboards/deleteDashboard', dashboard)
                 })
             },
-            logout () {
+            logout() {
                 localStorage.clear()
                 this.$store.dispatch('users/logout')
             },
-            triggerMenus (clicked, second) {
+            triggerMenus(clicked, second) {
                 this[clicked] = !this[clicked];
                 this[second] = false;
             },
-            onLocaleChange (val) {
+            onLocaleChange(val) {
                 this.$store.dispatch('lang/setLanguage', val)
                 this.$i18n.locale = val
                 if (val === 'he') {
@@ -275,10 +323,10 @@
                     this.$rtl.disableRTL()
                 }
             },
-            triggerMobileMenu () {
+            triggerMobileMenu() {
                 this.showMobileMenu = !this.showMobileMenu
-            }
-        }
+            },
+        },
     }
 </script>
 
