@@ -46,7 +46,7 @@ const getters = {
 
         result['primary_rgba'] = convertHex(result.primary);
 
-        if (!state.data || !state.data.LayoutParametersList.length) {
+        if (!state.data || !state.data.LayoutParametersList || !state.data.LayoutParametersList.length) {
             return result
         }
 
@@ -158,7 +158,17 @@ const getters = {
             console.warn(e)
             return true
         }
+    },
+    minRefreshInterval: state => {
+        try {
+            let result = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'MinRefreshInterval')
+            return Number(result[0]['Value'])
+        } catch (e) {
+            console.warn(e)
+            return 10
+        }
     }
+
 }
 
 export default {
