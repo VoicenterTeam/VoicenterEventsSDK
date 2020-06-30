@@ -187,7 +187,7 @@
                     let columns = [];
                     let containsDate = false
                     let dateColumns = ['date']
-                    let dateTimeColumns = ['date & time', 'call time', 'contacted time']
+                    let dateTimeColumns = ['date & time', 'call time', 'contacted time', 'starttime', 'endtime']
 
                     if (data.length) {
 
