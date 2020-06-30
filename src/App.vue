@@ -29,7 +29,10 @@
             },
             fontSize() {
                 return this.$store.getters['layout/baseFontSize']
-            }
+            },
+            activeDashboard() {
+                return this.$store.getters['dashboards/getActiveDashboard']
+            },
         },
         methods: {
             initMainColorsVars(colors) {
@@ -71,6 +74,12 @@
                     this.initMainFontSizeVar(value)
                 }
             },
+            activeDashboard: {
+                deep: true,
+                handler: async function () {
+                    await this.$store.dispatch('layout/setLayout')
+                }
+            }
         }
     }
 </script>
