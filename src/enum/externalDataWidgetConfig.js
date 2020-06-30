@@ -41,7 +41,7 @@ export const dictionary = {
 };
 
 export const dummyDataEndpoints = {
-    [types.COUNTER]: 'https://external-data.now.sh/counter.json',
+    [types.COUNTER]: 'https://external-data.now.sh/counter.html',
     [types.SPEEDOMETER]: 'https://external-data.now.sh/speedometer.json',
     [types.TABLE]: 'https://external-data.now.sh/table.json',
     [types.LINES]: 'https://external-data.now.sh/lines.json',

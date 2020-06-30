@@ -16,7 +16,7 @@ export const WidgetDataApi = {
     async getExternalData(endPoint) {
         try {
             let res = await instance.get(endPoint)
-            return res.Data
+            return res.Data ? res.Data : res
         } catch (e) {
             parseCatch(e, true)
         }
