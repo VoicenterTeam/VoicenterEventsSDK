@@ -2,6 +2,8 @@ import {LayoutApi} from '@/api/layoutApi'
 import store from "@/store/store";
 import {defaultLayout} from '@/enum/default-layout'
 import {convertHex} from '@/helpers/convertHex'
+import get from "lodash/get";
+import {DEFAULT_LOGO} from "@/views/LayoutManagement/layout-management";
 
 const types = {
     SET_ACTIVE_LAYOUT: 'SET_ACTIVE_LAYOUT'
@@ -167,8 +169,16 @@ const getters = {
             console.warn(e)
             return 10
         }
+    },
+    getLogo: state => {
+        try {
+            const logo = state.data.LayoutParametersList.filter((el) => el.LayoutParameterName === 'DashboardLogo')
+            return get(logo, `[0]['ValueText']`, DEFAULT_LOGO);
+        } catch (e) {
+            console.warn(e)
+            return DEFAULT_LOGO
+        }
     }
-
 }
 
 export default {

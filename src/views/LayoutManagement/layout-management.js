@@ -117,6 +117,15 @@ export const DEFAULT_LAYOUT_GROUPS = [
 ]
 
 export const DEFAULT_GROUP_KEYS = {
+    'Colors': [
+        'DashboardLogo',
+        'ColorPrimary',
+        'ColorBackground',
+        'ColorFrames',
+        'ColorWidgetGroupBackground',
+        'ColorWidgetGroupFrames',
+        'ColorWidgetGroupTitles',
+    ],
     'Fonts': [
         'ShowWidgetTitles',
         'FontSize',
@@ -125,17 +134,11 @@ export const DEFAULT_GROUP_KEYS = {
         'MinRefreshInterval',
         'RefreshRealTimeDataDelay',
     ],
-    'Colors': [
-        'ColorPrimary',
-        'ColorBackground',
-        'ColorFrames',
-        'ColorWidgetGroupBackground',
-        'ColorWidgetGroupFrames',
-        'ColorWidgetGroupTitles',
-    ],
     'Timers': [
         'ReportInterval',
         'ReportSwitching',
         'ReportRefresh'
     ],
 }
+
+export const DEFAULT_LOGO = '/img/navbar/logo.png'

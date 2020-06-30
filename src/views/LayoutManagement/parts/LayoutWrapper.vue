@@ -11,17 +11,24 @@
         <div class="">
             <div v-for="group in groupedParameters">
                 <component
+                    v-if="group.ParameterTypeName !== 'DashboardLogo'"
                     v-bind="group"
                     :key="group.LayoutParameterValueID"
                     :is="group.ParameterTypeName"
                     v-model="group.Value"
                 />
+                <logo
+                    v-else
+                    v-bind="group"
+                    :key="group.LayoutParameterValueID"
+                    v-model="group.ValueText"/>
             </div>
         </div>
     </div>
 </template>
 <script>
     import ColorParameterType from '../components/ColorParameterType'
+    import ImageParameterType from '../components/ImageParameterType'
     import IntegerParameterType from '../components/IntegerParameterType'
     import BooleanParameterType from '../components/BooleanParameterType'
     import {DEFAULT_GROUP_KEYS, DEFAULT_LAYOUT_GROUPS, DEFAULT_SELECTED_GROUP} from '../layout-management'
@@ -30,6 +37,7 @@
         inheritAttrs: false,
         components: {
             [ColorParameterType.name]: ColorParameterType,
+            [ImageParameterType.name]: ImageParameterType,
             [BooleanParameterType.name]: BooleanParameterType,
             [IntegerParameterType.name]: IntegerParameterType,
         },
@@ -60,7 +68,7 @@
                 if (group === this.selectedGroup) {
                     return 'primary'
                 }
-            }
+            },
         }
     }
 </script>

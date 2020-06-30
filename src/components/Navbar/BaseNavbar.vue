@@ -224,7 +224,7 @@
                 return this.$store.getters['entities/accountsList']
             },
             getLogo() {
-                return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
+                return this.$store.getters['layout/getLogo']
             },
             activeLanguage() {
                 return localStorage.getItem('locale') || this.$i18n.locale

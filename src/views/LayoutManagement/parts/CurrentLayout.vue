@@ -36,8 +36,10 @@
     import {Popover} from 'element-ui'
     import {LayoutApi} from '@/api/layoutApi'
     import LayoutWrapper from './LayoutWrapper'
-    import {AlertTriangleIcon} from 'vue-feather-icons'
+    import {DEFAULT_LOGO} from '../layout-management'
     import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
+    import {AlertTriangleIcon} from 'vue-feather-icons'
+    import {globalAccountSettings} from "@/views/LayoutManagement/layout-management";
 
     export default {
         components: {
@@ -59,6 +61,14 @@
             }
         },
         methods: {
+            dashboardLogo() {
+                try {
+                    const logo = this.layout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'DashboardLogo')
+                    return get(logo, `[0]['ValueText']`, DEFAULT_LOGO);
+                } catch (e) {
+                    return DEFAULT_LOGO
+                }
+            },
             async getCurrentDashboardLayout() {
                 try {
                     const dashboardLayoutID = this.dashboardLayoutID
@@ -67,7 +77,14 @@
                         LayoutID: dashboardLayoutID
                     }
 
-                    const layout = await LayoutApi.get(data)
+                    let layout = await LayoutApi.get(data)
+
+                    if (layout.length) {
+                        this.layout = get(layout, '[0]', {})
+                        return
+                    }
+
+                    layout = await LayoutApi.get(globalAccountSettings)
                     this.layout = get(layout, '[0]', {})
                 } catch (e) {
                     console.warn(e)

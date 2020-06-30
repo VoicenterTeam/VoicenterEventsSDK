@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col bg-white min-h-screen">
         <div class="border-b px-16 flex flex-row justify-between h-14 items-center">
-            <img :src="getLogo" alt="Logo" class="h-10">
+            <img :src="getLogo()" alt="Logo" class="h-10">
             <div class="flex items-center">
                 <language-select class="mx-2" :value="activeLanguage" @change="onLocaleChange"/>
                 <el-button
@@ -31,6 +31,7 @@
             </div>
             <div class="layouts-container">
                 <current-layout
+                    ref="currentLayout"
                     @refresh-layouts="refreshLayouts"
                     v-if="showCurrentLayout"
                     :dashboardLayoutID="dashboardLayoutID"></current-layout>
@@ -61,6 +62,7 @@
     import {Tooltip} from 'element-ui'
     import {ArrowLeftIcon} from 'vue-feather-icons'
     import LanguageSelect from '@/components/Navbar/LanguageSwitcher'
+    import {DEFAULT_LOGO} from './layout-management'
 
     export default {
         components: {
@@ -89,9 +91,7 @@
             currentAccount() {
                 return this.$store.getters['entities/getCurrentAccount']
             },
-            getLogo() {
-                return get(this.activeDashboard, 'DashboardLayout.settings.logo') || '/img/navbar/logo.png'
-            },
+
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
             },
@@ -100,6 +100,12 @@
             },
         },
         methods: {
+            getLogo() {
+                if (this.$refs.currentLayout) {
+                    return this.$refs.currentLayout.dashboardLogo()
+                }
+                return DEFAULT_LOGO
+            },
             redirectBack() {
                 this.$router.go(-1)
             },
