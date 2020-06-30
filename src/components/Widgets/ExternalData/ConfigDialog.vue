@@ -33,14 +33,19 @@
                 </el-checkbox>
             </el-form-item>
             <br>
-            <el-alert
+            <el-collapse
                 v-if="model.WidgetLayout.ComponentTypeID"
-                class="mt-12"
-                v-html="dictionary[model.WidgetLayout.ComponentTypeID]"
-                type="info"
-                :closable="false"
-                show-icon>
-            </el-alert>
+                v-model="activeCollapse">
+                <el-collapse-item :title="$t('Dictionary')" name="dictionary">
+<!--                    <div v-html="dictionary[model.WidgetLayout.ComponentTypeID]"></div>-->
+                    <json-viewer
+                        :value="dictionary[model.WidgetLayout.ComponentTypeID]"
+                        :expand-depth=5
+                        copyable
+                        boxed
+                        sort></json-viewer>
+                </el-collapse-item>
+            </el-collapse>
             <el-collapse v-model="activeCollapse" class="pt-4">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
@@ -61,10 +66,11 @@
     import {Alert, Checkbox, Collapse, CollapseItem, Option, Select} from 'element-ui'
     import Modal from "@/components/Common/Modal";
     import {isPieWidget} from '@/helpers/widgetUtils'
-    import {dictionary, options, dummyDataEndpoints} from '@/enum/externalDataWidgetConfig'
+    import {dictionary, dummyDataEndpoints, options} from '@/enum/externalDataWidgetConfig'
     import WidgetColors from '../WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
+    import JsonViewer from 'vue-json-viewer'
 
     export default {
         components: {
@@ -75,6 +81,7 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             Modal,
+            JsonViewer,
             WidgetColors,
             WidgetPadding,
             StaticWidgetInfo
@@ -90,7 +97,7 @@
                 model: {},
                 options,
                 dictionary,
-                activeCollapse: ['layout'],
+                activeCollapse: [ 'layout' ],
                 dummyDataEndpoints,
             }
         },
@@ -120,7 +127,7 @@
             storeData() {
                 this.model.WidgetLayout = {
                     ...this.model.WidgetLayout,
-                    ...{colors: this.model.colors},
+                    ...{ colors: this.model.colors },
                 }
                 this.$emit('on-update', this.model)
                 this.toggleVisibility(false);
