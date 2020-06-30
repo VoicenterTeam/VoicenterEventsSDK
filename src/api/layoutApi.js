@@ -1,5 +1,7 @@
 import $axios from './apiConnection'
 import parseCatch from '@/helpers/handleErrors'
+import {Notification} from "element-ui";
+import i18n from "@/i18n";
 
 export const LayoutApi = {
     async get(data) {
@@ -13,7 +15,9 @@ export const LayoutApi = {
 
     async update(data) {
         try {
-            return await $axios.post('/Layout/Upsert/', data)
+            const result = await $axios.post('/Layout/Upsert/', data)
+            Notification.success(i18n.t('Layout updated with success'))
+            return result
         } catch (e) {
             parseCatch(e, true, 'Update Account Layout')
         }

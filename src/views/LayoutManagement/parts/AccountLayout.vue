@@ -93,10 +93,11 @@
     import {LayoutApi} from '@/api/layoutApi'
     import {CopyIcon, RotateCcwIcon, Trash2Icon, CheckCircleIcon} from 'vue-feather-icons'
     import {availableLayouts, DELETED_STATUS_ID, ENABLED_STATUS_ID, statusDictionary} from '../layout-management'
-    import {Collapse, CollapseItem, TabPane, Tabs, Tooltip} from 'element-ui'
+    import {Collapse, CollapseItem, Notification, TabPane, Tabs, Tooltip} from 'element-ui'
     import {DashboardApi} from '@/api/dashboardApi'
     import LayoutWrapper from './LayoutWrapper'
     import {defaultLayout} from '@/enum/default-layout'
+    import i18n from "@/i18n";
 
     export default {
         components: {
@@ -169,6 +170,7 @@
                 }
             },
             async resetChanges() {
+                this.activeCollapses = []
                 return this.getAccountLayouts()
             },
             async applyLayout(layoutConfig) {
@@ -180,7 +182,7 @@
                     await this.$store.dispatch('dashboards/updateDashboard', dashboard)
 
                     this.$store.commit('layout/SET_ACTIVE_LAYOUT', layoutConfig)
-
+                    Notification.success(i18n.t('Layout applied with success'))
                 } catch (e) {
                     console.warn(e)
                 } finally {
