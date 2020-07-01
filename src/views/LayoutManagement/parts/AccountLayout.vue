@@ -13,7 +13,9 @@
                     <el-button @click="newLayout">{{$t('New layout')}}</el-button>
                 </el-tooltip>
             </div>
-            <el-tab-pane v-for="layout in availableLayouts" v-bind="layout">
+            <el-tab-pane v-for="layout in availableLayouts"
+                         v-bind="layout"
+                         :key="layout.name">
                 <el-collapse
                     class="w-full"
                     v-model="activeCollapses">
