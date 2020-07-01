@@ -182,6 +182,7 @@
     import Modal from '@/components/Common/Modal'
     import {LayoutApi} from '@/api/layoutApi'
     import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
+    import {ENABLED_STATUS_ID} from "@/views/LayoutManagement/layout-management";
 
     export default {
         components: {
@@ -245,15 +246,18 @@
                     let accountSettings = {
                         LayoutAccountID: this.currentAccountId
                     }
-                    let data = await LayoutApi.get(accountSettings)
 
-                    data.map((layout) => {
+                    const data = await LayoutApi.get(accountSettings)
+
+                    let activeLayouts = data.filter(layout => layout.LayoutStatusID.toString() === ENABLED_STATUS_ID.toString())
+
+                    activeLayouts.map((layout) => {
                         const primaryColor = layout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorPrimary')
                         layout['primaryColor'] = get(primaryColor, `[0]['Value']`, '#2575FF')
                         return layout;
                     })
 
-                    this.accountLayouts = data
+                    this.accountLayouts = activeLayouts
                 } catch (e) {
                 }
             },

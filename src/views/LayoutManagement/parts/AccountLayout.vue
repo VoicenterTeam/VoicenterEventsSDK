@@ -3,7 +3,7 @@
         <GlobalLayout
             @on-apply-layout="applyLayout"
             :dashboardLayoutID="dashboardLayoutID"/>
-        <div class="pb-2">{{ $t('Account Layouts') }}</div>
+        <div class="pt-2">{{ $t('Account Layouts') }}</div>
         <el-tabs
             v-model="activeTab">
             <div class="pb-4">
