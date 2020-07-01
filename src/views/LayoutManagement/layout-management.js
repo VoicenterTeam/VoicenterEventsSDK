@@ -1,7 +1,9 @@
 import i18n from "@/i18n";
 
+export const GLOBAL_LAYOUT_ID = 1
+
 export const globalAccountSettings = {
-    "LayoutID": "1"
+    "LayoutID": GLOBAL_LAYOUT_ID
 }
 
 export const ENABLED_STATUS_ID = 1;
