@@ -657,7 +657,7 @@
   "Widget minimum height should be 200px": "גובה מקסימלי אמור להיות 200",
   "This widget is displaying a partial list because of permissions issues.": "מציג נתונים חלקיים בגלל הרשאות",
   "The following IDs were not displayed are": "המזהים הבאים לא הוצגו",
-    "Move widget to another group": "הזזת ווידגט לקבוצע אחרת , יש לוודא שהגודל מתאים אחרי יש לערות את הגודל",
+  "Move widget to another group": "הזזת ווידגט לקבוצע אחרת , יש לוודא שהגודל מתאים אחרי יש לערות את הגודל",
   "Select a widget group to edit": "תבחר את הקבוצה לעריכה",
   "Custom value": "ערך מותאם אישית",
   "Apply": "בצע",
