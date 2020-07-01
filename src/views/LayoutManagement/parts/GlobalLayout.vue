@@ -23,7 +23,6 @@
                                 </el-tooltip>
                                 <div class="px-2">{{layout.LayoutName}}</div>
                             </div>
-
                         </div>
                     </div>
                 </template>
