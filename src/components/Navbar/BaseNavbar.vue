@@ -159,7 +159,7 @@
                             :value="layout.LayoutID"
                             v-for="layout in accountLayouts">
                             <div class="flex items-center">
-                                <span class="w-6 h-6 rounded" :style="getPrimaryColor(layout)"></span>
+                                <span class="w-6 h-6 rounded" :style="layout.primaryColorBox"></span>
                                 <p class="px-2">{{layout.LayoutName}}</p>
                             </div>
                         </el-option>
@@ -180,9 +180,8 @@
     import LanguageSelect from './LanguageSwitcher'
     import {dashboardModel} from '@/models/instances'
     import Modal from '@/components/Common/Modal'
-    import {LayoutApi} from '@/api/layoutApi'
     import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
-    import {ENABLED_STATUS_ID} from "@/views/LayoutManagement/layout-management";
+    import {getLayoutsWithPrimaryColor} from "@/helpers/layoutUtil";
 
     export default {
         components: {
@@ -243,28 +242,10 @@
         methods: {
             async getAccountLayouts() {
                 try {
-                    let accountSettings = {
-                        LayoutAccountID: this.currentAccountId
-                    }
-
-                    const data = await LayoutApi.get(accountSettings)
-
-                    let activeLayouts = data.filter(layout => layout.LayoutStatusID.toString() === ENABLED_STATUS_ID.toString())
-
-                    activeLayouts.map((layout) => {
-                        const primaryColor = layout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorPrimary')
-                        layout['primaryColor'] = get(primaryColor, `[0]['Value']`, '#2575FF')
-                        return layout;
-                    })
-
-                    this.accountLayouts = activeLayouts
+                    const accountID = this.currentAccountId
+                    this.accountLayouts = await getLayoutsWithPrimaryColor(accountID)
                 } catch (e) {
-                }
-            },
-            getPrimaryColor(layout) {
-                return {
-                    border: '1px solid',
-                    background: `${layout.primaryColor}`
+                    console.warn(e)
                 }
             },
             accessManageLayoutPage(dashboard) {

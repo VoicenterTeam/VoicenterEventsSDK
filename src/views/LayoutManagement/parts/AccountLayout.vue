@@ -47,14 +47,14 @@
                                         placement="top">
                                         <Trash2Icon
                                             class="text-red w-4 mx-2"
-                                            @click.stop="changeLayoutStatus(layoutConfig, DELETED_STATUS_ID)"/>
+                                            @click.stop="tryChangeLayoutStatus(layoutConfig, DELETED_STATUS_ID)"/>
                                     </el-tooltip>
                                     <el-tooltip
                                         v-if="layout.statusID === DELETED_STATUS_ID" class="item" effect="dark"
                                         :content="$t('Restore layout')"
                                         placement="top">
                                         <RotateCcwIcon class="text-primary w-4 mx-2"
-                                                       @click.stop="changeLayoutStatus(layoutConfig, ENABLED_STATUS_ID)"></RotateCcwIcon>
+                                                       @click.stop="tryChangeLayoutStatus(layoutConfig, ENABLED_STATUS_ID)"></RotateCcwIcon>
                                     </el-tooltip>
                                 </div>
                             </div>
@@ -97,20 +97,31 @@
                 </el-collapse>
             </el-tab-pane>
         </el-tabs>
+        <update-status
+            v-if="showUpdateStatusDialog"
+            :statusToSet="statusToSet"
+            :layoutConfig="layoutToUpdate"
+            :currentAccountId="currentAccountId"
+            :visible.sync="showUpdateStatusDialog"
+            @on-update="onUpdateStatus"
+        />
     </div>
 </template>
 <script>
     import {LayoutApi} from '@/api/layoutApi'
-    import {CheckCircleIcon, CopyIcon, RotateCcwIcon, Trash2Icon} from 'vue-feather-icons'
-    import {availableLayouts, DELETED_STATUS_ID, ENABLED_STATUS_ID, statusDictionary} from '../layout-management'
-    import {Collapse, CollapseItem, Notification, TabPane, Tabs, Tooltip} from 'element-ui'
-    import {DashboardApi} from '@/api/dashboardApi'
-    import LayoutWrapper from './LayoutWrapper'
-    import {defaultLayout} from '@/enum/default-layout'
     import GlobalLayout from './GlobalLayout'
+    import LayoutWrapper from './LayoutWrapper'
+    import {DashboardApi} from '@/api/dashboardApi'
+    import {defaultLayout} from '@/enum/default-layout'
+    import UpdateLayoutStatusDialog from '../components/UpdateLayoutStatusDialog'
+    import {CheckCircleIcon, CopyIcon, RotateCcwIcon, Trash2Icon} from 'vue-feather-icons'
+    import {Collapse, CollapseItem, Notification, TabPane, Tabs, Tooltip} from 'element-ui'
+    import {availableLayouts, DELETED_STATUS_ID, ENABLED_STATUS_ID} from '../layout-management'
+    import UpdateStatus from "@/views/LayoutManagement/components/UpdateLayoutStatusDialog";
 
     export default {
         components: {
+            UpdateStatus,
             LayoutWrapper,
             GlobalLayout,
             CopyIcon,
@@ -122,6 +133,7 @@
             [TabPane.name]: TabPane,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            [UpdateLayoutStatusDialog.name]: UpdateLayoutStatusDialog,
         },
         props: {
             dashboardLayoutID: {
@@ -146,6 +158,9 @@
                 storingData: false,
                 ENABLED_STATUS_ID,
                 DELETED_STATUS_ID,
+                showUpdateStatusDialog: false,
+                statusToSet: '',
+                layoutToUpdate: '',
             }
         },
         methods: {
@@ -200,31 +215,28 @@
                     this.storingData = false
                 }
             },
-            async changeLayoutStatus(layoutConfig, status) {
-                let message = statusDictionary[status]
-                this.$confirm(
-                    this.$t('common.confirm.question', {
-                        action: this.$t(message),
-                    }), this.$t('Update status'), {
-                        cancelButtonText: this.$t('common.cancel'),
-                        confirmButtonText: this.$t('common.confirm'),
-                    }).then(() => {
-                    try {
+            async tryChangeLayoutStatus(layoutConfig, status) {
+                this.layoutToUpdate = layoutConfig
+                this.statusToSet = status
+                this.showUpdateStatusDialog = true
+            },
+            async onUpdateStatus({ LayoutID, status }) {
+                try {
 
-                        let data = {
-                            LayoutID: layoutConfig.LayoutID,
-                            LayoutStatus: status,
-                            LayoutAccountID: this.currentAccountId,
-                        }
-
-                        LayoutApi.updateStatus(data)
-                        this.getAccountLayouts()
-                    } catch (e) {
-                        console.warn(e)
-                    } finally {
+                    let data = {
+                        LayoutID: LayoutID,
+                        LayoutStatus: status,
+                        LayoutAccountID: this.currentAccountId,
                     }
-                })
 
+                    await LayoutApi.updateStatus(data)
+                    await this.getAccountLayouts()
+                    this.showUpdateStatusDialog = false
+
+                } catch (e) {
+                    console.warn(e)
+                } finally {
+                }
             },
             async newLayout() {
                 try {

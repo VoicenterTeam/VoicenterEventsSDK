@@ -718,5 +718,7 @@
     "Recommended dimensions:": "Recommended dimensions:",
     "Maximum Height - 150px": "Maximum Height - 150px",
     "Maximum Width - 700px": "Maximum Width - 700px",
-    "Maximum Size - 300 KB": "Maximum Size - 300 KB"
+    "Maximum Size - 300 KB": "Maximum Size - 300 KB",
+    "You must select another configuration for these dashboards": "You must select another configuration for these dashboards",
+    "This layout config is already used for dashboards": "This layout config is already used for dashboards"
 }
