@@ -6,8 +6,7 @@
 </template>
 <script>
     import Timer from '@/util/Timer'
-    import { getInitialExtensionTime } from '@/util/timeUtils'
-    import {sdkEventReasons} from '@/enum/sdkEvents'
+    import {getInitialExtensionTime} from '@/util/timeUtils'
 
     export default {
         props: {
@@ -47,7 +46,7 @@
                 } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
                     icon = 'IconRedBulb'
                 }
-                return {show, icon}
+                return { show, icon }
             },
             statusInfo() {
                 return this.$store.getters['entities/getStatusById'](this.extension.representativeStatus) || {}
@@ -59,17 +58,14 @@
                     this.timer.reset()
                 }
             },
-            'extension.calls'(newVal, oldVal) {
-                if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
-                    return
-                }
-
-                if (this.extension.lastEvent && this.extension.lastEvent.reason === sdkEventReasons.ANSWER) {
-                    let call = oldVal.find((call) => call.answered && call.ivrid === this.extension.lastEvent.ivrid)
-                    if (call) {
-                        this.timer.reset()
+            'extension.calls': {
+                deep: true,
+                handler() {
+                    if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
+                        return
                     }
-                }
+                    this.timer.reset()
+                },
             },
             'extension.userID'(newVal, oldVal) {
                 if (newVal !== oldVal) {
