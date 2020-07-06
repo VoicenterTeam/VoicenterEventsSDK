@@ -134,11 +134,17 @@
             },
             'extension.calls': {
                 deep: true,
-                handler() {
-                    if (!this.settings.resetIdleTime && this.settings.resetIdleTime !== 'undefined') {
-                        return
+                handler(newVal, oldVal) {
+                    if (!this.settings.resetIdleTime || !oldVal.length) {
+                        this.timer.reset()
+                        return;
                     }
-                    this.timer.reset()
+
+                    let oldCall = oldVal.find((call) => call.answered)
+
+                    if (oldCall && this.settings.resetIdleTime) {
+                        this.timer.reset()
+                    }
                 },
             },
             'extension.userID'(newVal, oldVal) {
