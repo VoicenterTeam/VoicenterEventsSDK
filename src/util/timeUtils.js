@@ -14,11 +14,15 @@ function getServerDelta () {
     return store.state.extensions.serverDelta
 }
 
-export function getInitialExtensionTime (extension, settings = {}) {
-    const valuesToCompare = [extension.lastAnsweredCallEventEpoch, extension.representativeUpdated / 1000]
-    if (settings.resetIdleTime) {
-        valuesToCompare.push(extension.lastCallEventEpoch)
+export function getInitialExtensionTime (extension, settings = {} ) {
+    if (!settings.resetIdleTime) {
+        const valuesToCompare = [extension.lastCallEventEpoch, extension.representativeUpdated / 1000]
+        const lastEventTimestamp = Math.max(...valuesToCompare)
+        return getInitialTime(lastEventTimestamp)
     }
+
+    const valuesToCompare = [extension.lastAnsweredCallEventEpoch, extension.representativeUpdated / 1000]
     const lastEventTimestamp = Math.max(...valuesToCompare)
+
     return getInitialTime(lastEventTimestamp)
 }

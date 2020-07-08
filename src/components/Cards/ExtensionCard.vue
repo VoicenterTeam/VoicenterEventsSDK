@@ -126,6 +126,12 @@
                 return this.$store.getters['entities/getStatusById'](this.extension.representativeStatus) || {}
             }
         },
+        methods: {
+            setTimerValue() {
+                const timerValue = getInitialExtensionTime(this.extension, this.settings)
+                this.timer.setValue(timerValue)
+            }
+        },
         watch: {
             'extension.representativeStatus'(newStatus, oldStatus) {
                 if (newStatus !== oldStatus) {
@@ -144,13 +150,14 @@
 
                     if (oldCall && this.settings.resetIdleTime) {
                         this.timer.reset()
+                    } else {
+                        this.setTimerValue()
                     }
                 },
             },
             'extension.userID'(newVal, oldVal) {
                 if (newVal !== oldVal) {
-                    const timerValue = getInitialExtensionTime(this.extension, this.settings)
-                    this.timer.setValue(timerValue)
+                    this.setTimerValue()
                 }
             }
         },
