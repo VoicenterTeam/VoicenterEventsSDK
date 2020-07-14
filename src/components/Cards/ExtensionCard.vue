@@ -141,6 +141,10 @@
             'extension.calls': {
                 deep: true,
                 handler(newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        return;
+                    }
+
                     if (!this.settings.resetIdleTime || !oldVal.length) {
                         this.timer.reset()
                         return;
