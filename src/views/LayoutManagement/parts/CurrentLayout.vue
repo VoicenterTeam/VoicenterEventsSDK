@@ -1,6 +1,9 @@
 <template>
     <div class="current-layout__wrapper px-5" v-if="layout">
-        <p class="text-center pt-2">{{$t('Dashboard Layout')}}</p>
+        <div class="flex text-center text-2xl items-center pt-2 justify-center">
+            <p>{{$t('Active Layout')}}:</p>&nbsp;
+            <p class="text-primary">{{layout.LayoutName}}</p>
+        </div>
         <div class="pt-10 pb-4 flex flex-col border-b">
             <label class="pb-2">{{$t('Layout Name')}}</label>
             <div class="flex flex-row items-center">
@@ -33,13 +36,13 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {Popover} from 'element-ui'
-    import {LayoutApi} from '@/api/layoutApi'
+    import { Popover } from 'element-ui'
+    import { LayoutApi } from '@/api/layoutApi'
     import LayoutWrapper from './LayoutWrapper'
-    import {DEFAULT_LOGO} from '../layout-management'
-    import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
-    import {AlertTriangleIcon} from 'vue-feather-icons'
-    import {globalAccountSettings} from "@/views/LayoutManagement/layout-management";
+    import { DEFAULT_LOGO } from '../layout-management'
+    import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
+    import { AlertTriangleIcon } from 'vue-feather-icons'
+    import { globalAccountSettings } from "@/views/LayoutManagement/layout-management";
 
     export default {
         components: {
