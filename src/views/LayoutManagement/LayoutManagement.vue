@@ -101,10 +101,7 @@
         },
         methods: {
             getLogo() {
-                if (this.$refs.currentLayout) {
-                    return this.$refs.currentLayout.dashboardLogo()
-                }
-                return DEFAULT_LOGO
+                return this.$store.getters['layout/getLogo']
             },
             redirectBack() {
                 this.$router.go(-1)
