@@ -96,8 +96,8 @@
     import dataTableMixin from "@/mixins/dataTableMixin";
     import {dynamicColumns} from "@/enum/realTimeTableConfigs";
 
-    const DATE_FORMAT = 'yyyy/MM/dd'
-    const DATE_TIME_FORMAT = 'HH:mm:ss yyyy/MM/dd'
+    const DATE_FORMAT = 'dd/MM/yyyy'
+    const DATE_TIME_FORMAT = 'HH:mm:ss dd/MM/yyyy'
 
     export default {
         mixins: [dataTableMixin],
