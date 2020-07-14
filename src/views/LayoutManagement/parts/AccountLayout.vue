@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div v-else class="flex justify-between w-full items-center text-primary">
-                                    <div class="flex items-center ">
+                                    <div class="flex items-center">
                                         <el-tooltip
                                             class="item" effect="dark" :content="$t('Current dashboard layout')"
                                             placement="top">

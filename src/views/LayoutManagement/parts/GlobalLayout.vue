@@ -5,17 +5,25 @@
             <el-collapse-item>
                 <template slot="title">
                     <div class="flex flex justify-between w-full items-center">
-                        <div class="flex justify-between w-full">
+                        <div class="flex justify-between w-full items-center"
+                             v-if="layout.LayoutID !== dashboardLayoutID">
+                            <div class="flex justify-between w-full items-center">
+                                <div class="p-2">{{layout.LayoutName}}</div>
+                                <div class="flex items-center">
+                                    <el-tooltip
+                                        class="item" effect="dark" :content="$t('Apply layout')"
+                                        placement="top">
+                                        <div class="px-2 text-green-600 underline hover:text-green-300"
+                                             @click.stop="applyLayout(layout)">
+                                            {{$t('Activate this Layout')}}
+                                        </div>
+                                    </el-tooltip>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="flex justify-between w-full items-center text-primary">
                             <div class="flex items-center">
                                 <el-tooltip
-                                    v-if="layout.LayoutID !== dashboardLayoutID"
-                                    class="item" effect="dark" :content="$t('Apply layout')"
-                                    placement="top">
-                                    <CopyIcon
-                                        class="w-4 text-primary" @click.stop="applyLayout(layout)"/>
-                                </el-tooltip>
-                                <el-tooltip
-                                    v-else
                                     class="item" effect="dark" :content="$t('Current dashboard layout')"
                                     placement="top">
                                     <CheckCircleIcon
@@ -23,6 +31,7 @@
                                 </el-tooltip>
                                 <div class="px-2">{{layout.LayoutName}}</div>
                             </div>
+                            <div class="px-2">{{$t('Active Layout')}}</div>
                         </div>
                     </div>
                 </template>
@@ -33,15 +42,14 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {LayoutApi} from '@/api/layoutApi'
-    import {CheckCircleIcon, CopyIcon} from 'vue-feather-icons'
+    import { LayoutApi } from '@/api/layoutApi'
+    import { CheckCircleIcon } from 'vue-feather-icons'
     import LayoutWrapper from './LayoutWrapper'
-    import {Collapse, CollapseItem, Tooltip} from 'element-ui'
-    import {globalAccountSettings} from "@/views/LayoutManagement/layout-management";
+    import { Collapse, CollapseItem, Tooltip } from 'element-ui'
+    import { globalAccountSettings } from "@/views/LayoutManagement/layout-management";
 
     export default {
         components: {
-            CopyIcon,
             LayoutWrapper,
             CheckCircleIcon,
             [Tooltip.name]: Tooltip,
@@ -50,7 +58,7 @@
         },
         props: {
             dashboardLayoutID: {
-                type: [ String, Number ],
+                type: [String, Number],
                 default: null
             }
         },
