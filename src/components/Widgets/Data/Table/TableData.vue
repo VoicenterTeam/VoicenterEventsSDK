@@ -139,6 +139,7 @@
                 widget: cloneDeep(this.data),
                 stripe: true,
                 queuesTableData: [],
+                QUEUE_STATISTICS_TEMPLATE: 45,
             }
         },
         computed: {
@@ -175,6 +176,7 @@
             async getWidgetData () {
                 try {
                     let data = await getWidgetData(this.widget)
+
                     if (!data) {
                         return
                     }
@@ -239,6 +241,10 @@
             },
             formatDateColumn (data, column, dateFormat) {
                 data.forEach(row => {
+                    if (this.widget.TemplateID.toString() === this.QUEUE_STATISTICS_TEMPLATE.toString()) {
+                        row[column] = row[column].replace(/\//g,'-');
+                        return
+                    }
                     if (row[column]) {
                         try {
                             // To prevent date-fns errors like: Invalid time value
