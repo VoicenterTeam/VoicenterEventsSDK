@@ -34,13 +34,14 @@
                       v-on="listeners">
                 <slot name="">
                     <el-table-column
+                        class="truncate"
                         :align="column.align"
                         :class-name="column.className"
                         :column-key="column.prop"
                         :fixed="column.fixed || false"
                         :key="column.prop"
                         :label="$t(column.prop) || column.label"
-                        :min-width="column.minWidth || '170px'"
+                        :min-width="column.minWidth || columnMinWidth"
                         :sortable="true"
                         :type="column.type"
                         v-bind="column"
@@ -116,12 +117,12 @@
     import Sortable from 'sortablejs'
     import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
+    import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import ManageColumns from './ManageColumns'
     import HeaderActions from "./Header/HeaderActions"
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
-    import {makeRandomID} from "@/helpers/util";
-    import {isARealtimeTableWidget} from "@/helpers/widgetUtils";
+    import { makeRandomID } from "@/helpers/util";
+    import { isARealtimeTableWidget } from "@/helpers/widgetUtils";
 
     const EXPORT_TO = {
         'XLSX': '.xlsx',
@@ -174,7 +175,7 @@
                 default: () => []
             }
         },
-        data () {
+        data() {
             const tableId = makeRandomID()
             return {
                 visibleColumns: cloneDeep(this.showColumns),
@@ -185,40 +186,45 @@
                 drawTable: true,
                 EXPORT_TO,
                 tableId,
+                columnMinWidth: '170px',
+                screenWidth: screen.width
             }
         },
         computed: {
-            listeners () {
+            listeners() {
                 return {
                     ...this.$listeners
                 }
             },
-            renderedColumns () {
+            renderedColumns() {
                 return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
             },
-            rowsData () {
+            rowsData() {
                 return this.tableData
             },
-            getClass () {
+            getClass() {
                 return 'lg:flex-row lg:items-center lg:justify-between'
-            }
+            },
+            pageWidth() {
+                return this.$store.state.utils.page.width
+            },
         },
         methods: {
-            formatCell (row, column) {
+            formatCell(row, column) {
                 // can be used to format cells for all tables
                 return row[column.prop]
             },
-            tryInitSortable () {
+            tryInitSortable() {
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
                 const self = this
                 Sortable.create(table, {
                     group: 'description',
                     fallbackOnBody: true,
                     animation: 150,
-                    onChoose () {
+                    onChoose() {
                         bus.$emit('sortable.childDragStart')
                     },
-                    onEnd ({newIndex, oldIndex}) {
+                    onEnd({newIndex, oldIndex}) {
                         bus.$emit('sortable.childDragStop')
                         const targetRow = get(self.availableColumns.splice(oldIndex, 1), '[0]')
                         self.availableColumns.splice(newIndex, 0, targetRow)
@@ -228,11 +234,11 @@
                     }
                 })
             },
-            updateColumnsVisibility (columns) {
+            updateColumnsVisibility(columns) {
                 this.visibleColumns = columns
                 this.updateLayout()
             },
-            reorderColumn (data) {
+            reorderColumn(data) {
                 let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data;
 
                 oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
@@ -246,35 +252,35 @@
                 })
                 this.updateLayout()
             },
-            updateLayout () {
+            updateLayout() {
                 let objToEmit = {
                     visibleColumns: this.visibleColumns,
                     availableColumns: this.availableColumns,
                 }
                 this.$emit('on-update-layout', objToEmit)
             },
-            pinColumn (column, columnIndex) {
+            pinColumn(column, columnIndex) {
                 this.availableColumns[columnIndex] = column
             },
-            updateColumnsSize (val) {
+            updateColumnsSize(val) {
                 this.fitWidth = val
                 this.drawTable = false
                 this.$nextTick(() => {
                     this.drawTable = true
                 })
             },
-            resetColumnsProps () {
+            resetColumnsProps() {
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
                 this.updateLayout()
             },
-            getFileName (type) {
+            getFileName(type) {
                 let widgetTitle = this.widgetTitle || this.$t('widget.title')
                 let currentDate = format(new Date(), 'MM-dd-yyyy')
 
                 return widgetTitle + ' ' + currentDate + type
             },
-            exportTableData (exportTo) {
+            exportTableData(exportTo) {
                 let fileName = this.getFileName(exportTo)
 
                 if (isARealtimeTableWidget(this.widget)) {
@@ -293,15 +299,41 @@
 
                 XLSX.utils.book_append_sheet(excelWorkBook, data, 'data')
                 XLSX.writeFile(excelWorkBook, fileName)
+            },
+            adaptColumnWidth(scale, pageWidth) {
+                if (scale == 0.9) {
+                    this.columnMinWidth = 150
+                    return
+                }
+                if (scale == 0.8) {
+                    this.columnMinWidth = 130
+                    return
+                }
+                if (scale == 0.75) {
+                    this.columnMinWidth = 120
+                    return
+                }
+                if (scale == 0.67 || scale < 0.34) {
+                    this.columnMinWidth = 90
+                    return
+                }
+                return (this.screenWidth / pageWidth).toFixed(2) * 170
             }
         },
         watch: {
-            columns (newColumns) {
+            columns(newColumns) {
                 this.visibleColumns = cloneDeep(this.showColumns)
                 this.availableColumns = cloneDeep(newColumns)
-            }
+            },
+            pageWidth: {
+                immediate: true,
+                handler(value) {
+                    const scale = (this.screenWidth / value).toFixed(2)
+                    this.adaptColumnWidth(scale, value)
+                }
+            },
         },
-        mounted () {
+        mounted() {
             this.tryInitSortable()
         }
     }
@@ -325,8 +357,7 @@
     }
 
 </style>
-
-<style scoped>
+<style scoped lang="scss">
     .data-table /deep/ .sortable-ghost {
         opacity: 0.3;
         @apply bg-gray-300 rounded text-primary;

@@ -63,17 +63,12 @@ const mutations = {
 const getters = {
     isMobile: state => state.viewPort.name === 'mobile',
     isTablet: state => state.viewPort.name === 'tablet',
+
     isMobileOrTablet: state => {
         let {viewPort} = state;
         return viewPort.name === 'mobile' || viewPort.name === 'tablet';
     },
-    /**
-     * Using dom element's bounding rect to detect whether the element
-     * is inside current viewport
-     * @param {obect} state
-     * @param {object} boundingRect domElement.getBoundingClientRect()
-     * @return {boolea} whether the dom element is inside current viewport
-     */
+
     isInViewport: state => boundingRect => {
         return (
             boundingRect.top >= 0 &&
