@@ -202,7 +202,6 @@
         },
         mounted() {
             this.getComponentTypeAndSetData(this.widget)
-            this.widget.Title = this.$t(this.widget.Title)
         }
     }
 </script>
