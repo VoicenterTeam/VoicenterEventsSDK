@@ -9,7 +9,7 @@
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
-                    <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-menu slot="dropdown" :key="widget.WidgetID">
                         <manage-columns
                             :available-columns="availableColumns"
                             :visible-columns="visibleColumns"

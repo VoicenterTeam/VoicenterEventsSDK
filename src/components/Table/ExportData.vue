@@ -45,7 +45,6 @@
     </div>
 </template>
 <script>
-    import pick from 'lodash/pick'
     import XLSX from 'xlsx'
     import format from 'date-fns/format'
     import {Alert, Radio} from 'element-ui'
@@ -102,7 +101,7 @@
                 exportFormat: '',
                 showExportDialog: false,
                 loading: false,
-                fileName: this.widgetTitle
+                fileName: '--',
             }
         },
         computed: {
@@ -114,6 +113,7 @@
             triggerExportDialog(exportFormat) {
                 this.showExportDialog = true
                 this.exportFormat = exportFormat
+                this.fileName = this.$t(this.widgetTitle)
             },
             getFileName() {
                 let fileName = this.fileName || this.$t('widget.title')
@@ -140,7 +140,15 @@
                 }
 
                 const columnsToExport = this.columnsToExport
-                const records = this.allRecords.map((data) => pick(data, columnsToExport))
+                let records = []
+
+                this.allRecords.forEach((record) => {
+                    const data = {}
+                    columnsToExport.forEach(key => {
+                        data[this.$t(key)] = record[key]
+                    })
+                    records.push(data)
+                })
 
                 let data = XLSX.utils.json_to_sheet(records)
                 let excelWorkBook = XLSX.utils.book_new()
