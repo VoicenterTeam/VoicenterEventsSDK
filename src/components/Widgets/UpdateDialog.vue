@@ -457,6 +457,7 @@
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                 this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]
             }
+            this.model.Title = this.$t(this.widget.Title)
         },
     }
 </script>

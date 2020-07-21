@@ -1,5 +1,5 @@
 <template>
-    <span>{{statusText}}</span>
+    <span>{{$t(statusText)}}</span>
 </template>
 
 <script>

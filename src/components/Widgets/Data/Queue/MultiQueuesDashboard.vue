@@ -63,7 +63,7 @@
                 </div>
             </template>
             <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{tableData.length}} row(s)</p>
+                <p class="text-main-sm px-2">{{tableData.length}} {{$t('row(s)')}}</p>
             </template>
         </data-table>
     </div>

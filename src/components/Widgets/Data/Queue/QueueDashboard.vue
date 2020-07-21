@@ -113,7 +113,7 @@
 
                 return {
                     key: -1,
-                    label: OTHER_STATISTIC_LABEL,
+                    label: this.$t(OTHER_STATISTIC_LABEL),
                     value: `${percentageText} %`,
                     colors: {
                         fonts: "var(--primary-color)",
@@ -139,14 +139,13 @@
                 let count = item.value || 0
                 let percentage = `${((count * 100) / totalCalls).toFixed(2)}`
 
-                let result = {
+                return {
                     ...item,
-                    label: `${item.label} %`,
+                    label: `${this.$t(item.label)} %`,
                     value: percentage,
                     showAbsoluteNumbers: this.showAbsoluteNumbers,
                     count
                 }
-                return result
             },
             async getWidgetData () {
                 try {

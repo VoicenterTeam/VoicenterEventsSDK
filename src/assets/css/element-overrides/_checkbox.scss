@@ -1,25 +1,34 @@
 .el-checkbox__input {
-  span:hover, &.is-focus span.el-checkbox__inner {
-    border-color: var(--primary-color);
-  }
+    span:hover, &.is-focus span.el-checkbox__inner {
+        border-color: var(--primary-color);
+    }
 
-  &.is-indeterminate span.el-checkbox__inner {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-  }
+    &.is-indeterminate span.el-checkbox__inner {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
 }
 
 .el-checkbox__input.is-checked {
-  + span.el-checkbox__label {
-    color: var(--greyish-brown);
-  }
+    + span.el-checkbox__label {
+        color: var(--greyish-brown);
+    }
 
-  span.el-checkbox__inner {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-  }
+    span.el-checkbox__inner {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
 }
 
 .el-checkbox .el-checkbox__label {
     font-size: var(--font-size-sm);
 }
+
+.rtl .el-checkbox {
+    margin-right: 0;
+    .el-checkbox__inner {
+        @apply ml-2;
+    }
+}
+
+

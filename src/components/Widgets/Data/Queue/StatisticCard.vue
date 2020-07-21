@@ -6,7 +6,7 @@
                 <slot name="label">
                     <div class="flex">
                         <h5 :style="getTextFontSize" class="font-bold mx-1" v-if="item.layout.showText">
-                            {{$t(item.label) || item.label}}
+                            {{$t(item.label)}}
                         </h5>
                     </div>
                 </slot>

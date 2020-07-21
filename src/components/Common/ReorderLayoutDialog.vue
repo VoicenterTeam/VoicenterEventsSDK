@@ -50,9 +50,8 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import differenceBy from 'lodash/differenceBy'
     import {Collapse, CollapseItem, Popover, Tooltip} from 'element-ui'
-    import Modal from "@/components/Common/Modal";
+    import Modal from '@/components/Common/Modal'
     import DraggableList from '../Widgets/DraggableList'
     import draggableEvents from '@/enum/draggableEvents'
     import {AlertTriangleIcon, XIcon} from 'vue-feather-icons'
@@ -71,46 +70,48 @@
         props: {
             widgetGroupList: {
                 type: Array,
-                default: () => []
-            }
+                default: () => [],
+            },
         },
-        data () {
+        data() {
             return {
                 activeCollapses: [],
                 popoverWidth: 300,
                 widgetGroups: [],
-                widgetsToUpdate: []
+                widgetsToUpdate: [],
             }
         },
         computed: {
             getStyles() {
                 return this.$store.getters['layout/widgetTitleStyles']
-            }
+            },
         },
         methods: {
-            removeWidget (widget, widgetGroup) {
+            removeWidget(widget, widgetGroup) {
                 this.$emit('removeWidget', {'widget': widget, 'group': widgetGroup})
             },
-            onGroupListChange (ev) {
+            onGroupListChange(ev) {
                 let eventData = ev[draggableEvents.MOVED]
                 let {newIndex: newIndex, oldIndex: oldIndex} = eventData
 
-                this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0]);
+                this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0])
             },
-            onSubmit () {
+            onSubmit() {
+                let widgetGroupsToUpdate = []
                 this.widgetGroups.forEach((group, index) => {
+
                     group.Order = index + 1
                     group.WidgetList.forEach((widget, _index) => {
-
                         let oldWidget = group.WidgetList.find((el) => el.WidgetID === widget.WidgetID)
                         if (oldWidget.WidgetLayout.Order !== _index + 1) {
                             widget.WidgetLayout.Order = _index + 1
-                            this.widgetsToUpdate.push(widget);
+                            this.widgetsToUpdate.push(widget)
                         }
                     })
+                    if (this.widgetGroupList[index]['WidgetGroupID'] !== group.WidgetGroupID) {
+                        widgetGroupsToUpdate.push(group)
+                    }
                 })
-
-                let widgetGroupsToUpdate = differenceBy(this.widgetGroups, this.widgetGroupList, 'Order')
 
                 let objectToEmit = {
                     groupsToUpdate: widgetGroupsToUpdate,
@@ -121,28 +122,28 @@
                 this.$emit('on-submit', objectToEmit)
             },
 
-            onWidgetListChange (ev, group, groupIndex) {
+            onWidgetListChange(ev, group, groupIndex) {
                 let action = get(Object.keys(ev), 0)
                 let eventData = ev[action]
-                let {element: widget, newIndex: newIndex, oldIndex: oldIndex} = eventData;
+                let {element: widget, newIndex: newIndex, oldIndex: oldIndex} = eventData
 
                 switch (action) {
                     case draggableEvents.MOVED:
                         this.widgetGroups[groupIndex].WidgetList.splice(newIndex, 0, group.WidgetList.splice(oldIndex, 1)[0])
-                        break;
+                        break
                     case draggableEvents.ADDED:
                         this.widgetGroups[groupIndex].WidgetList.splice(newIndex, 0, widget)
-                        break;
+                        break
                     case draggableEvents.REMOVED:
                         this.widgetGroups[groupIndex].WidgetList.splice(oldIndex, 1)
-                        break;
+                        break
                 }
 
                 if (action !== draggableEvents.MOVED) {
                     widget = cloneDeep(widget)
                     widget['operation'] = {
                         type: action,
-                        parentID: group.WidgetGroupID
+                        parentID: group.WidgetGroupID,
                     }
 
                     this.widgetsToUpdate.push(widget)
@@ -153,11 +154,11 @@
             widgetGroupList: {
                 deep: true,
                 immediate: true,
-                handler (value) {
+                handler(value) {
                     this.widgetGroups = cloneDeep(value)
-                }
-            }
-        }
+                },
+            },
+        },
     }
 </script>
 <style lang="scss" scoped>

@@ -73,7 +73,7 @@
                     </div>
                 </template>
                 <template v-slot:additional-data>
-                    <p class="text-main-sm px-2" :style="getStyles">{{dataCounts}} / {{filteredDataLength}} row(s)</p>
+                    <p class="text-main-sm px-2" :style="getStyles">{{dataCounts}} / {{filteredDataLength}} {{$t('row(s)')}}</p>
                 </template>
             </data-table>
         </div>

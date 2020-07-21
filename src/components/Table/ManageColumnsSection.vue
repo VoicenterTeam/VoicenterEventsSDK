@@ -23,7 +23,7 @@
                     group="columns"
                     @change="onChange">
                     <el-checkbox class="py-2 px-4" v-for="column in availableColumns" :label="column.prop"
-                                 :key="column.label"><i class="el-icon-rank text-primary font-bold"/> {{column.label}}
+                                 :key="column.label"><i class="el-icon-rank text-primary font-bold"/> {{$t(column.label)}}
                     </el-checkbox>
                 </draggable>
             </el-checkbox-group>

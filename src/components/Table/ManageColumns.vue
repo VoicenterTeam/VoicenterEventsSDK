@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex items-center manage-columns-header">{{$t('datatable.manage.columns.header')}}</div>
+        <div class="flex items-center manage-columns-header" v-if="showHeaderContainer">{{$t('datatable.manage.columns.header')}}</div>
         <div class="flex flex-col sm:flex-row">
             <manage-columns-section
                 :availableColumns="activeColumns"
@@ -51,12 +51,16 @@
         props: {
             availableColumns: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             visibleColumns: {
                 type: Array,
-                default: () => []
-            }
+                default: () => [],
+            },
+            showHeaderContainer: {
+                type: Boolean,
+                default: true,
+            },
         },
         data() {
             return {
@@ -84,36 +88,36 @@
                     }
                 }
                 return ''
-            }
+            },
         },
         methods: {
             addColumns(columns) {
-                let itemToRemove = this.unselectedColumns.filter(c => columns.includes(c.prop));
-                let remainingItems = this.unselectedColumns.filter(c => !columns.includes(c.prop));
-                this.activeColumns = this.activeColumns.concat([...itemToRemove]);
-                this.unselectedColumns = remainingItems;
+                let itemToRemove = this.unselectedColumns.filter(c => columns.includes(c.prop))
+                let remainingItems = this.unselectedColumns.filter(c => !columns.includes(c.prop))
+                this.activeColumns = this.activeColumns.concat([...itemToRemove])
+                this.unselectedColumns = remainingItems
 
-                this.valueToRemove = this.activeColumns.map(c => c.prop);
-                this.valueToAdd = [];
+                this.valueToRemove = this.activeColumns.map(c => c.prop)
+                this.valueToAdd = []
 
-                let newColumns = this.activeColumns.map(c => c.prop);
+                let newColumns = this.activeColumns.map(c => c.prop)
                 this.$emit('on-change-visibility', newColumns)
             },
             removeColumns(columns) {
-                let itemToRemove = this.activeColumns.filter(c => columns.includes(c.prop));
-                let remainingItems = this.activeColumns.filter(c => !columns.includes(c.prop));
-                this.unselectedColumns = this.unselectedColumns.concat([...itemToRemove]);
-                this.activeColumns = remainingItems;
+                let itemToRemove = this.activeColumns.filter(c => columns.includes(c.prop))
+                let remainingItems = this.activeColumns.filter(c => !columns.includes(c.prop))
+                this.unselectedColumns = this.unselectedColumns.concat([...itemToRemove])
+                this.activeColumns = remainingItems
 
-                this.valueToRemove = this.activeColumns.map(c => c.prop);
+                this.valueToRemove = this.activeColumns.map(c => c.prop)
 
-                let newColumns = this.activeColumns.map(c => c.prop);
+                let newColumns = this.activeColumns.map(c => c.prop)
                 this.$emit('on-change-visibility', newColumns)
             },
             onColumnChange(evt, section) {
                 // DOCS: This event is called with one argument containing one of the following properties: added/removed/moved
                 let action = get(Object.keys(evt), 0)
-                if (action === draggableEvents.REMOVED) return;
+                if (action === draggableEvents.REMOVED) return
 
                 let eventData = evt[action]
                 let column = get(eventData, 'element')
@@ -125,36 +129,36 @@
                 }
             },
             initData() {
-                this.activeColumns = this.availableColumns.filter(c => this.visibleColumns.includes(c.prop));
+                this.activeColumns = this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
                 this.unselectedColumns = xor(this.availableColumns, this.activeColumns)
-                this.allColumnsValue = this.activeColumns.map(c => c.prop);
-                this.valueToRemove = this.allColumnsValue;
+                this.allColumnsValue = this.activeColumns.map(c => c.prop)
+                this.valueToRemove = this.allColumnsValue
             },
             handleCheckAllChange(checked, section) {
-                this[section] = checked ? this.allColumnsValue : [];
-                this.isIndeterminate = false;
-            }
+                this[section] = checked ? this.allColumnsValue : []
+                this.isIndeterminate = false
+            },
         },
         watch: {
             filter(value) {
-                let filteredData = [];
+                let filteredData = []
                 this.unselectedColumns.forEach(el => {
                     if (el.label.toLowerCase().includes(value.toLowerCase())) {
-                        filteredData.push(el);
+                        filteredData.push(el)
                     }
-                });
+                })
                 this.filteredColumns = filteredData
             },
             visibleColumns: {
                 immediate: true,
                 handler: function () {
                     this.initData()
-                }
+                },
             },
             availableColumns() {
                 this.initData()
-            }
-        }
+            },
+        },
     }
 </script>
 <style scoped lang="scss">

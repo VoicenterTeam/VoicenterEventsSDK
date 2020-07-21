@@ -1,5 +1,5 @@
 <template>
-    <div v-if="tabs.length">
+    <div v-if="tabs.length && !storingData">
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
             <template v-slot="{tab, activeTab}">
                 <widget-list
@@ -25,6 +25,10 @@
             Tabs
         },
         props: {
+            storingData: {
+                type: Boolean,
+                default: false
+            },
             widgetTemplates: {
                 type: Array,
                 default: () => []

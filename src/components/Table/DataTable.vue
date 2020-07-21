@@ -52,7 +52,7 @@
                                     <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300"
                                                 placement="top">
                                     <span class="font-medium uppercase">
-                                        {{$t(column.label) || column.prop}}
+                                        {{$t(column.prop) || column.label}}
                                     </span>
                                     </el-tooltip>
                                 </slot>
@@ -88,20 +88,21 @@
         </div>
         <portal :to="`widget-footer__${widget.WidgetID}`">
             <div class="flex items-center justify-between -mx-1 widget-footer" v-if="tableData.length">
-                <div class="flex">
-                    <div @click="exportTableData(EXPORT_TO.XLSX)" class="mx-2 cursor-pointer export-button">
-                        <div class="flex items-center">
-                            <p class="text-md">{{$t('general.export.excel')}}</p>
-                            <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
-                        </div>
-                    </div>
-                    <div @click="exportTableData(EXPORT_TO.CSV)" class="mx-2 cursor-pointer export-button">
-                        <div class="flex items-center">
-                            <p class="text-md">{{$t('general.export.csv')}}</p>
-                            <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
-                        </div>
-                    </div>
-                </div>
+                <export-data :tableId="tableId"
+                             :widget="widget"
+                             @on-update-layout="updateLayout"
+                             v-bind="$attrs"
+                             :columns-to-export="columnsToExport">
+                    <template v-slot="{onManageExport}">
+                        <manage-columns
+                            :show-header-container="!onManageExport"
+                            :available-columns="availableColumns"
+                            :visible-columns="visibleColumns"
+                            @on-change-visibility="(data) => updateColumnsVisibility(data, onManageExport)"
+                            @on-reorder-column="(data) => reorderColumn(data, onManageExport)">
+                        </manage-columns>
+                    </template>
+                </export-data>
                 <div class="flex">
                     <slot name="pagination"/>
                 </div>
@@ -111,89 +112,73 @@
 </template>
 <script>
 
-    import XLSX from 'xlsx'
     import get from 'lodash/get'
-    import format from 'date-fns/format'
     import Sortable from 'sortablejs'
     import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
+    import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
     import ManageColumns from './ManageColumns'
-    import HeaderActions from "./Header/HeaderActions"
-    import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
-    import { makeRandomID } from "@/helpers/util";
-    import { isARealtimeTableWidget } from "@/helpers/widgetUtils";
-
-    const EXPORT_TO = {
-        'XLSX': '.xlsx',
-        'CSV': '.csv'
-    }
+    import HeaderActions from './Header/HeaderActions'
+    import {makeRandomID} from '@/helpers/util'
+    import ExportDataDialog from './ExportData'
 
     export default {
         inheritAttrs: false,
         components: {
-            DownloadIcon,
             ManageColumns,
             HeaderActions,
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
             [Dropdown.name]: Dropdown,
-            [DropdownMenu.name]: DropdownMenu,
             [TableColumn.name]: TableColumn,
+            [DropdownMenu.name]: DropdownMenu,
+            [ExportDataDialog.name]: ExportDataDialog,
         },
         props: {
             widget: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             tableData: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             columns: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             showColumns: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             editable: {
                 type: Boolean,
-                default: false
-            },
-            widgetTitle: {
-                type: String,
-                default: '- -'
+                default: false,
             },
             manageColumns: {
                 type: Boolean,
-                default: true
+                default: true,
             },
-            allRecords: {
-                type: Array,
-                default: () => []
-            }
         },
         data() {
             const tableId = makeRandomID()
             return {
+                columnsToExport: cloneDeep(this.showColumns),
                 visibleColumns: cloneDeep(this.showColumns),
                 availableColumns: cloneDeep(this.columns),
                 tableKey: 'table-key',
                 active: false,
                 fitWidth: true,
                 drawTable: true,
-                EXPORT_TO,
                 tableId,
                 columnMinWidth: '170px',
-                screenWidth: screen.width
+                screenWidth: screen.width,
             }
         },
         computed: {
             listeners() {
                 return {
-                    ...this.$listeners
+                    ...this.$listeners,
                 }
             },
             renderedColumns() {
@@ -231,32 +216,47 @@
                         self.tableKey = self.availableColumns.map(c => c.prop).join('_')
                         self.updateLayout()
                         self.$nextTick(self.tryInitSortable)
-                    }
+                    },
                 })
             },
-            updateColumnsVisibility(columns) {
+            updateColumnsVisibility(columns, onManageExport) {
+                if (onManageExport) {
+                    this.columnsToExport = columns
+                    return
+                }
                 this.visibleColumns = columns
                 this.updateLayout()
             },
-            reorderColumn(data) {
-                let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data;
+            reorderColumn(data, onManageExport) {
+                let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data
 
                 oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
 
-                this.availableColumns.splice(oldIndex, 1);
-                this.availableColumns.splice(newIndex, 0, column);
+                this.availableColumns.splice(oldIndex, 1)
+                this.availableColumns.splice(newIndex, 0, column)
+
+                if (onManageExport) {
+                    oldIndex = this.columnsToExport.findIndex((el) => el.prop === column.prop)
+
+                    this.columnsToExport.splice(oldIndex, 1)
+                    this.columnsToExport.splice(newIndex, 0, column.prop)
+
+                    return
+                }
+
+                this.updateLayout()
+            },
+            updateLayout(afterExport = false) {
+                let objToEmit = {
+                    visibleColumns: afterExport ? this.columnsToExport : this.visibleColumns,
+                    availableColumns: this.availableColumns,
+                }
 
                 this.drawTable = false
                 this.$nextTick(() => {
                     this.drawTable = true
                 })
-                this.updateLayout()
-            },
-            updateLayout() {
-                let objToEmit = {
-                    visibleColumns: this.visibleColumns,
-                    availableColumns: this.availableColumns,
-                }
+
                 this.$emit('on-update-layout', objToEmit)
             },
             pinColumn(column, columnIndex) {
@@ -273,32 +273,6 @@
                 this.availableColumns = cloneDeep(this.columns)
                 this.visibleColumns = this.columns.map(c => c.prop)
                 this.updateLayout()
-            },
-            getFileName(type) {
-                let widgetTitle = this.widgetTitle || this.$t('widget.title')
-                let currentDate = format(new Date(), 'MM-dd-yyyy')
-
-                return widgetTitle + ' ' + currentDate + type
-            },
-            exportTableData(exportTo) {
-                let fileName = this.getFileName(exportTo)
-
-                if (isARealtimeTableWidget(this.widget)) {
-
-                    const tableId = this.tableId
-
-                    let tableElement = document.getElementById(tableId);
-                    let excelWorkBook = XLSX.utils.table_to_book(tableElement);
-
-                    XLSX.writeFile(excelWorkBook, fileName)
-                    return;
-                }
-
-                let data = XLSX.utils.json_to_sheet(this.allRecords)
-                let excelWorkBook = XLSX.utils.book_new()
-
-                XLSX.utils.book_append_sheet(excelWorkBook, data, 'data')
-                XLSX.writeFile(excelWorkBook, fileName)
             },
             adaptColumnWidth(scale, pageWidth) {
                 if (scale == 0.9) {
@@ -318,7 +292,7 @@
                     return
                 }
                 return (this.screenWidth / pageWidth).toFixed(2) * 170
-            }
+            },
         },
         watch: {
             columns(newColumns) {
@@ -330,12 +304,12 @@
                 handler(value) {
                     const scale = (this.screenWidth / value).toFixed(2)
                     this.adaptColumnWidth(scale, value)
-                }
+                },
             },
         },
         mounted() {
             this.tryInitSortable()
-        }
+        },
     }
 </script>
 <style lang="scss">

@@ -722,5 +722,14 @@
     "This layout config is already used for dashboards": "This layout config is already used for dashboards",
     "Available Layouts": "Account Layouts",
     "Active Layout": "Active Layout",
-    "Activate this Layout": "Activate this Layout"
+    "Activate this Layout": "Activate this Layout",
+    "Export Data To": "Export Data To",
+    "Export": "Export",
+    "Save for future export": "Save for future export",
+    "Manage or set the order for the columns that will be present in the exported file": "Manage or set the order for the columns that will be present in the exported file",
+    "% of Other": "% of Other",
+    "User": "User",
+    "Avg Call Duration": "Avg Call Duration",
+    "Total Call Duration": "Total Call Duration",
+    "File Name": "File Name"
 }
