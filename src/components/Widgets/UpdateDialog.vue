@@ -80,7 +80,7 @@
                 <div class="flex w-full flex-col lg:flex-row pt-4">
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
-                            {{$t('Display % of of Others value')}}
+                            {{$t('Display % of Others value')}}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/2">

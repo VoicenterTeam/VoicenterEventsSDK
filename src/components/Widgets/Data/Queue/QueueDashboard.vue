@@ -12,7 +12,6 @@
                     <statistic-card
                         :item="getItemValue(item)"
                         :widget="data"
-                        @on-change="(data) => onChange(data, item)"
                         v-if="displayCounter(item)"
                     />
                 </div>
@@ -20,13 +19,14 @@
                     <statistic-card
                         :item="getItemInPercentage(item)"
                         :widget="data"
-                        @on-change="(data) => onChange(data, item)"
                         v-if="displayCounter(item)"
                     />
                 </div>
-                <div class="statistic-card" v-html="getSumOfOtherStatistics()"
-                     v-if="showSumOfOthers">
-                </div>
+                <statistic-card
+                    :item="getSumOfOtherStatistics()"
+                    :widget="data"
+                    v-if="showSumOfOthers"
+                />
             </div>
         </div>
     </div>
@@ -99,7 +99,6 @@
                 Object.keys(queueData).forEach((key) => {
                     if (!countersToShow.includes(key)) {
                         hiddenStatistics.push(queueData[key])
-
                     }
                 })
 
@@ -112,7 +111,22 @@
                     percentageText = '--'
                 }
 
-                return `<div class="text-2xl px-2">${OTHER_STATISTIC_LABEL}</div><div class="text-3xl">${percentageText} %</div>`
+                return {
+                    key: -1,
+                    label: OTHER_STATISTIC_LABEL,
+                    value: `${percentageText} %`,
+                    colors: {
+                        fonts: "var(--primary-color)",
+                        frames: "var(--primary-color)",
+                        background: "#ffffff"
+                    },
+                    layout: {
+                        maxWidth: 340,
+                        minWidth: 340,
+                        showText: true,
+                        showBorder: true
+                    }
+                }
             },
             getItemValue (item) {
                 if (!this.primaryCountersInPercentage.includes(item.key)) {
@@ -191,14 +205,6 @@
             },
             displayCounter (item) {
                 return this.countersToShow.length === statistics.length || this.countersToShow.includes(item.key)
-            },
-            onChange (styles, item) {
-                item.value = 0;
-                this.data.WidgetLayout.allStatistics[item.key] = {
-                    ...item,
-                    ...styles
-                }
-                this.$emit('on-update', this.data)
             },
             initStatistics () {
                 return {
