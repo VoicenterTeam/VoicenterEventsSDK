@@ -50,7 +50,9 @@
                 default: () => ({
                     plugins: ['alignment', 'fontcolor',  'imagemanager', 'textdirection','fontsize', 'customfontsize'],
                     imageResizable: true,
-                    imagePosition: true
+                    imagePosition: true,
+                    minHeight: '200px',
+                    focus: true,
                 }),
             }
         },

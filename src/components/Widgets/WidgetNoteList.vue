@@ -13,11 +13,14 @@
                 </el-tooltip>
             </div>
         </portal>
-        <div class="w-full py-2">
-            <html-editor
-                @on-update="addNote"
-                v-if="creationMode"/>
-        </div>
+        <modal :visible.sync="creationMode"
+               :width="dialogWidth">
+            <div class="pb-4">
+                <html-editor
+                    @on-update="addNote"
+                    v-if="creationMode"/>
+            </div>
+        </modal>
         <div class="flex flex-row justify-between" v-for="note in fetchNotes">
             <div class="border p-2 w-48 text-center">
                 {{getFormattedDate(note.date)}}
@@ -27,9 +30,9 @@
                     <html-editor
                         :value="note.text"
                         @on-update="(data) => updateNote(data, note)"
-                        v-if="noteToUpdate === note.date">
-                    </html-editor>
-                    <div v-else v-html="note.text"></div>
+                        v-if="noteToUpdate === note.date"
+                    />
+                    <div v-else v-html="note.text"/>
                 </div>
             </div>
             <div class="border p-2 w-32" v-if="showActions(note)">
@@ -37,15 +40,15 @@
                     <el-tooltip :content="$t('Display note on the list')" :open-delay="openDelay" class="item"
                                 effect="dark"
                                 placement="top">
-                        <eye-icon @click="displayNoteInList(true, note)"
+                        <eye-off-icon @click="displayNoteInList(true, note)"
                                   class="text-primary w-4 cursor-pointer"
-                                  v-if="!note.displayed"></eye-icon>
+                                  v-if="!note.displayed"></eye-off-icon>
                     </el-tooltip>
                     <el-tooltip :content="$t('Hide note from list')" :open-delay="openDelay" class="item"
                                 effect="dark" placement="top">
-                        <eye-off-icon @click="displayNoteInList(false, note)"
+                        <eye-icon @click="displayNoteInList(false, note)"
                                       class="text-primary w-4 cursor-pointer"
-                                      v-if="note.displayed"></eye-off-icon>
+                                      v-if="note.displayed"></eye-icon>
                     </el-tooltip>
                     <el-tooltip :content="$t('Open edit mode for this note')" :open-delay="openDelay"
                                 class="item" effect="dark"
@@ -64,6 +67,7 @@
     </div>
 </template>
 <script>
+    import Modal from '@/components/Common/Modal'
     import get from 'lodash/get'
     import format from 'date-fns/format'
     import {Switch, Tooltip} from 'element-ui'
@@ -81,6 +85,7 @@
             AddButton,
             HtmlEditor,
             EyeIcon,
+            Modal,
         },
         props: {
             data: {
@@ -89,26 +94,27 @@
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
         },
-        data () {
+        data() {
             return {
                 creationMode: false,
                 onEditMode: false,
                 noteToUpdate: null,
                 openDelay: 400,
+                dialogWidth: '90%',
             }
         },
         computed: {
-            fetchNotes () {
+            fetchNotes() {
                 let allNotes = get(this.data.WidgetLayout, 'Notes', [])
                 if (this.onEditMode) {
                     return allNotes
                 }
                 return allNotes.filter((note) => note.displayed)
             },
-            margins () {
+            margins() {
                 if (this.$rtl.isRTL) {
                     return this.editable ? 'ml-24' : 'ml-12'
                 } else {
@@ -117,16 +123,16 @@
             },
         },
         methods: {
-            getFormattedDate (date) {
+            getFormattedDate(date) {
                 return format(date, 'yy-MM-dd HH:mm')
             },
-            onAddNote () {
+            onAddNote() {
                 this.creationMode = !this.creationMode
             },
-            onEditNote (note) {
+            onEditNote(note) {
                 this.noteToUpdate = note.date
             },
-            addNote (val) {
+            addNote(val) {
                 this.creationMode = false
                 if (val) {
                     let note = this.newNoteObject()
@@ -136,7 +142,7 @@
                     this.emmitUpdate()
                 }
             },
-            removeNote (note) {
+            removeNote(note) {
                 this.$confirm(
                     this.$t('common.confirm.question', {
                         action: this.$t('to remove this note'),
@@ -149,38 +155,38 @@
                     this.emmitUpdate()
                 })
             },
-            displayNoteInList (state, note) {
+            displayNoteInList(state, note) {
                 note.displayed = state
                 this.fetchAndUpdate(note)
             },
-            updateNote (text, note) {
+            updateNote(text, note) {
                 note.text = text
                 this.fetchAndUpdate(note)
             },
-            fetchAndUpdate (note) {
+            fetchAndUpdate(note) {
                 let noteIndex = this.getNoteIndex(note)
                 this.data.WidgetLayout['Notes'][noteIndex] = note
                 this.emmitUpdate()
             },
-            newNoteObject () {
+            newNoteObject() {
                 return {
                     date: new Date().getTime(),
                     text: '',
                     displayed: true,
                 }
             },
-            getNoteIndex (note) {
+            getNoteIndex(note) {
                 return this.data.WidgetLayout['Notes'].findIndex((el) => el.date === note.date)
             },
-            emmitUpdate () {
+            emmitUpdate() {
                 this.$emit('on-update', this.data)
                 this.noteToUpdate = null
             },
-            showActions (note) {
-                return this.onEditMode && (!this.noteToUpdate || this.noteToUpdate !== note.date);
-            }
+            showActions(note) {
+                return this.onEditMode && (!this.noteToUpdate || this.noteToUpdate !== note.date)
+            },
         },
-        mounted () {
+        mounted() {
             if (!this.data.WidgetLayout['Notes']) {
                 this.data.WidgetLayout['Notes'] = []
             }
@@ -188,6 +194,6 @@
             if (!this.data.WidgetLayout.hasOwnProperty('displayWidgetTitle')) {
                 this.$set(this.data.WidgetLayout, 'displayWidgetTitle', false)
             }
-        }
+        },
     }
 </script>
