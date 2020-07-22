@@ -11,22 +11,26 @@
     </el-select>
 </template>
 <script>
-    import {Select, Option} from 'element-ui'
+    import {Option, Select} from 'element-ui'
 
     export default {
         components: {
             [Select.name]: Select,
-            [Option.name]: Option
+            [Option.name]: Option,
         },
         props: {
             model: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             widgetTimeOptions: {
                 type: Array,
-                default: () => []
-            }
+                default: () => [],
+            },
+        },
+        mounted() {
+            const dateInterval = this.model.WidgetTime.Date_interval
+            this.$set(this.model.WidgetTime, 'Date_interval', dateInterval.toString())
         },
     }
 </script>

@@ -73,8 +73,15 @@
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
     import {getWidgetDataType, getWidgetEndpoint, getWidgetRefreshInterval} from '@/helpers/widgetUtils'
 
+    const DEFAULT_WIDGET_TIME  = {
+        type: 'relative',
+        datedeff: '0',
+        Date_interval: '0',
+        label: 'widget.time.today'
+    }
+
     export default {
-        name: "widget",
+        name: 'widget',
         components: {
             WidgetCard,
             TimeLineChart,
@@ -104,22 +111,22 @@
         props: {
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             widget: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             layoutType: {
                 type: String,
-                default: () => ""
+                default: () => '',
             },
             inViewById: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
         },
-        data () {
+        data() {
             return {
                 showUpdateDialog: false,
                 loading: false,
@@ -133,7 +140,7 @@
             inView() {
                 return this.inViewById[this.widget.WidgetID] || true
             },
-            showDeleteButton () {
+            showDeleteButton() {
                 let exceptions = [
                     widgetDataTypes.COUNTER_TYPE_ID,
                     widgetDataTypes.HISTORY_COUNTERS,
@@ -144,15 +151,15 @@
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)
             },
-            getDialogComponent () {
+            getDialogComponent() {
                 if (this.widget.DataTypeID === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
                     return 'ConfigDialog'
                 }
                 return 'UpdateDialog'
             },
-            getStyles () {
-                let styles = {};
-                let colors = get(this.widget.WidgetLayout, 'colors') || defaultColors;
+            getStyles() {
+                let styles = {}
+                let colors = get(this.widget.WidgetLayout, 'colors') || defaultColors
 
                 styles = {
                     'background': colors.background,
@@ -164,27 +171,27 @@
                     styles = {
                         ...styles,
                         ...border,
-                        ...this.getPadding
+                        ...this.getPadding,
                     }
                 }
-                return styles;
+                return styles
             },
-            getClass () {
+            getClass() {
                 const DataTypeID = get(this.widget, 'DataTypeID', '0')
 
                 if (DataTypeID.toString() === this.TABLE_DATA_TYPE_ID) {
                     return 'has-margin'
                 }
-            }
+            },
         },
         methods: {
-            removeWidget (widget) {
+            removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
-            onUpdate (widget) {
+            onUpdate(widget) {
                 this.$emit('update-item', widget)
             },
-            getComponentTypeAndSetData (widget) {
+            getComponentTypeAndSetData(widget) {
                 let dataTypeId = getWidgetDataType(widget)
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
@@ -196,13 +203,19 @@
                 this.$set(widget, 'DefaultRefreshInterval', refreshInterval)
                 return componentType
             },
-            setComponentEndPoint (widget) {
+            setComponentEndPoint(widget) {
                 return getWidgetEndpoint(widget)
+            },
+             checkWidgetTimeConfig() {
+                if (!this.widget.WidgetTime.hasOwnProperty('datedeff')) {
+                    this.$set(this.widget, 'WidgetTime', DEFAULT_WIDGET_TIME)
+                }
             },
         },
         mounted() {
             this.getComponentTypeAndSetData(this.widget)
-        }
+            this.checkWidgetTimeConfig()
+        },
     }
 </script>
 <style lang="scss" scoped>
