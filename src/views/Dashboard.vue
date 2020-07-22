@@ -28,6 +28,7 @@
                             :layoutType="layoutType"
                             :widgetGroupList="activeDashboardData.WidgetGroupList"
                             @edit-group="onEditGroup"
+                            @add-new-group="addNewGroup"
                             @remove-widget-group="removeWidgetGroup"
                             @reset-dashboard="resetDashboard"
                             @save-dashboard="saveDashboard">
