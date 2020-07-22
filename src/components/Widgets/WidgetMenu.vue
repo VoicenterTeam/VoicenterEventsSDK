@@ -46,51 +46,48 @@
     export default {
         components: {
             WidgetCard,
-            [InputNumber.name]: InputNumber
+            [InputNumber.name]: InputNumber,
         },
-        data () {
+        data() {
             return {
                 search: '',
-                quantities: {}
+                quantities: {},
             }
         },
         props: {
             widgetTemplates: {
                 type: Array,
-                default: () => ([])
+                default: () => ([]),
             },
             widgetGroup: {
                 type: Object,
-                default: () => ({})
-            }
+                default: () => ({}),
+            },
         },
         computed: {
-            filteredWidgetTemplates () {
+            filteredWidgetTemplates() {
                 return this.widgetTemplates.filter((widgetTemplate) => {
                     const templateName = this.translateTemplateName(widgetTemplate.TemplateName)
-                    if (templateName) {
-                        return templateName.toLowerCase().includes(this.search.toLowerCase())
-                    }
-                    return false
+                    return widgetTemplate.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
                 })
             },
-            validForSubmit () {
+            validForSubmit() {
                 return Object.keys(this.quantities).filter(key => this.quantities[key] > 0).length
             },
         },
         methods: {
-            translateTemplateName (tName) {
-                return this.$t(tName)
+            translateTemplateName(tName) {
+                return this.$t(tName) || tName
             },
-            addAllWidgetsFromCategory () {
+            addAllWidgetsFromCategory() {
                 this.addWidgetsToGroup(this.widgetTemplates)
             },
-            getDefaultGridLayout () {
+            getDefaultGridLayout() {
                 let rowCount = 2
                 const gridStackContainer = document.getElementsByClassName('grid-stack')
 
                 if (gridStackContainer) {
-                    rowCount = gridStackContainer[0].getAttribute('data-gs-current-row');
+                    rowCount = gridStackContainer[0].getAttribute('data-gs-current-row')
                 }
 
                 return {
@@ -100,7 +97,7 @@
                     height: 2,
                 }
             },
-            addWidgets () {
+            addWidgets() {
 
                 let defaultLayout = this.getDefaultGridLayout()
 
@@ -118,7 +115,7 @@
                 this.addWidgetsToGroup(widgetTemplatesToAdd)
                 this.$set(this.widgetGroup, 'edit', !this.widgetGroup.edit)
             },
-            addWidgetsToGroup (widgetTemplatesToAdd) {
+            addWidgetsToGroup(widgetTemplatesToAdd) {
 
                 let defaultLayout = this.getDefaultGridLayout()
 
@@ -133,18 +130,18 @@
 
                 let objectToEmit = {
                     widgets: widgetTemplatesToAdd,
-                    group: this.widgetGroup
+                    group: this.widgetGroup,
                 }
                 this.$emit('addWidgetsToGroup', objectToEmit)
             },
-            addWidget (widgetTemplate) {
+            addWidget(widgetTemplate) {
                 let defaultLayout = this.getDefaultGridLayout()
 
                 widgetTemplate['WidgetLayout'] = {GridLayout: defaultLayout}
 
                 this.addWidgetsToGroup([widgetTemplate])
-            }
-        }
+            },
+        },
     }
 </script>
 <style lang="scss" scoped>
