@@ -21,12 +21,12 @@
                 <slot name="additional-data"/>
             </div>
         </portal>
-        <div class="bg-white rounded-lg mt-1 data-table w-full">
+        <div class="bg-transparent rounded-lg mt-1 data-table w-full">
             <el-table :data="rowsData"
                       :fit="fitWidth"
                       :id="tableId"
                       :key="tableKey"
-                      class="rounded-lg h-full"
+                      class="rounded-lg h-full bg-transparent"
                       ref="table"
                       row-key="id"
                       v-bind="$attrs"

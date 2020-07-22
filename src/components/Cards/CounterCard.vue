@@ -1,11 +1,11 @@
 <template>
-    <div class="w-full bg-white px-8 py-4 flex items-center justify-between rounded-lg shadow">
+    <div class="w-full bg-transparent px-8 py-4 flex items-center justify-between rounded-lg shadow">
         <div class="w-full flex flex-row items-center justify-between">
             <slot name="title">
                 <base-widget-title :title="data.Title"/>
             </slot>
             <slot name="content">
-                <h2 class="text-6xl font-bold mx-3 text-green">
+                <h2 class="text-6xl font-bold mx-3">
                     <div v-html="result"/>
                 </h2>
             </slot>
