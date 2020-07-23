@@ -1,5 +1,5 @@
 <template>
-    <div class="flex">
+    <div class="flex justify-center">
         {{maxWaitTime}}
     </div>
 </template>

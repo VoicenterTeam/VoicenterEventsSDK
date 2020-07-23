@@ -50,3 +50,7 @@ li.el-select-dropdown__item.hover, li.el-select-dropdown__item:hover {
         margin-right: 15px;
     }
 }
+
+.el-scrollbar__thumb {
+    display: none !important;
+}
