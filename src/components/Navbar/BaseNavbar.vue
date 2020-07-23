@@ -22,7 +22,7 @@
                                 </button>
                                 <fade-transition :duration="250">
                                     <div
-                                        class="bg-white shadow-lg rounded-lg mt-3 absolute w-64 origin-top-right mt-4 right-0 flex flex-col"
+                                        class="bg-white shadow-lg rounded-lg mt-3 absolute w-64 origin-top-right mt-4 right-0 flex flex-col max-h-screen overflow-auto"
                                         v-click-outside="onMenuClickOutside"
                                         v-if="showDashboardsMenu">
                                         <div
