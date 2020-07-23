@@ -13,23 +13,31 @@
             <div class="shadow-lg rounded-lg bg-white">
                 <div class="py-1">
                     <div class="px-3 py-2 text-center">{{$t('Select a widget group to edit')}}</div>
-                    <div class="px-4">
-                        <el-button
-                            class="w-56 shadow"
-                            @click="addNewGroup()"
-                            type="default">
-                            <div class="flex flex-row items-center justify-center">
-                                <IconPlus class="w-3 "/>
-                                <span class="text-main-sm px-2 font-bold ">{{$t('common.newGroup')}}</span>
-                            </div>
-                        </el-button>
-                    </div>
-                    <div class="px-4 mt-2" v-if="activeTabGroup">
-                        <el-button
-                            @click="onEditGroup(activeTabGroup)"
-                            class="w-56 truncate"
-                            type="default">{{`${$t('Current group')}: ${activeTabGroup.WidgetGroupTitle}`}}
-                        </el-button>
+                    <div class="px-1 flex flex-row items-center">
+                        <div class="flex w-1/2 mx-1" v-if="activeTabGroup">
+                            <el-tooltip
+                                :content="`${$t('Current group')}: ${activeTabGroup.WidgetGroupTitle}`" class="item"
+                                effect="dark"
+                                placement="top">
+                                <button
+                                    class="w-full border btn items-center p-2 shadow rounded bg-white text-gray-700 cursor-pointer text-main-xs font-semibold hover:bg-primary-100 hover:text-primary"
+                                    @click="onEditGroup(activeTabGroup)"
+                                    :class="{'w-full': !activeTabGroup}">
+                                    {{$t('Current group')}}
+                                </button>
+                            </el-tooltip>
+                        </div>
+                        <div class="flex w-1/2 mx-1" :class="{'w-full': !activeTabGroup}">
+                            <el-tooltip :content="$t('Click to add new group')" class="item" effect="dark"
+                                        placement="top">
+                                <button
+                                    class="w-full justify-center border btn flex items-center p-2 shadow rounded bg-white text-gray-700 cursor-pointer hover:bg-primary-100 hover:text-primary"
+                                    @click="addNewGroup()">
+                                    <IconPlus class="w-2 fill-current mx-1"/>
+                                    <span class="text-main-xs font-semibold">{{$t('common.newGroup')}}</span>
+                                </button>
+                            </el-tooltip>
+                        </div>
                     </div>
                     <div v-for="widgetGroup in widgetGroupList">
                         <div :key="widgetGroup.WidgetGroupID"
@@ -62,10 +70,10 @@
     </div>
 </template>
 <script>
-    import {Tooltip} from 'element-ui'
+    import { Tooltip } from 'element-ui'
     import NewGroupButton from './NewGroupButton'
-    import {CheckIcon, EditIcon, XIcon} from 'vue-feather-icons'
-    import {ACTIVE_WIDGET_GROUP_KEY, layoutTypes} from '@/enum/layout'
+    import { CheckIcon, EditIcon, XIcon } from 'vue-feather-icons'
+    import { ACTIVE_WIDGET_GROUP_KEY, layoutTypes } from '@/enum/layout'
 
     export default {
         inheritAttrs: false,
@@ -125,7 +133,7 @@
             addNewGroup() {
                 this.$emit('add-new-group')
                 this.showMenu = false
-            }
+            },
         },
     }
 </script>
