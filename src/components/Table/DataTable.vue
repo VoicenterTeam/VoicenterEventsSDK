@@ -114,12 +114,11 @@
 
     import get from 'lodash/get'
     import Sortable from 'sortablejs'
-    import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import {Dropdown, DropdownMenu, Table, TableColumn, Tooltip} from 'element-ui'
+    import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import ManageColumns from './ManageColumns'
     import HeaderActions from './Header/HeaderActions'
-    import {makeRandomID} from '@/helpers/util'
+    import { makeRandomID } from '@/helpers/util'
     import ExportDataDialog from './ExportData'
 
     export default {
@@ -201,21 +200,19 @@
             },
             tryInitSortable() {
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
+                if (!table) {
+                    return
+                }
                 const self = this
                 Sortable.create(table, {
                     group: 'description',
                     fallbackOnBody: true,
                     animation: 150,
-                    onChoose() {
-                        bus.$emit('sortable.childDragStart')
-                    },
-                    onEnd({newIndex, oldIndex}) {
-                        bus.$emit('sortable.childDragStop')
+                    onEnd({ newIndex, oldIndex }) {
                         const targetRow = get(self.availableColumns.splice(oldIndex, 1), '[0]')
                         self.availableColumns.splice(newIndex, 0, targetRow)
                         self.tableKey = self.availableColumns.map(c => c.prop).join('_')
                         self.updateLayout()
-                        self.$nextTick(self.tryInitSortable)
                     },
                 })
             },
@@ -228,7 +225,7 @@
                 this.updateLayout()
             },
             reorderColumn(data, onManageExport) {
-                let {element: column, newIndex: newIndex, oldIndex: oldIndex} = data
+                let { element: column, newIndex: newIndex, oldIndex: oldIndex } = data
 
                 oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
 
@@ -306,10 +303,17 @@
                     this.adaptColumnWidth(scale, value)
                 },
             },
+            widget: {
+                deep: true,
+                handler() {
+                    this.tryInitSortable()
+                }
+            }
         },
         mounted() {
             this.tryInitSortable()
         },
+
     }
 </script>
 <style lang="scss">

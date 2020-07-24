@@ -11,24 +11,23 @@
     </draggable>
 </template>
 <script>
-    import draggable from "vuedraggable";
-    import bus from '@/event-bus/EventBus'
+    import draggable from 'vuedraggable'
 
     export default {
         inheritAttrs: false,
         props: {
             enableTransition: {
                 type: Boolean,
-                default: true
+                default: true,
             },
-            disabled: Boolean
+            disabled: Boolean,
         },
         components: {
-            draggable
+            draggable,
         },
         data() {
             return {
-                dragDisabled: false
+                dragDisabled: false,
             }
         },
         computed: {
@@ -37,9 +36,9 @@
                     animation: 0,
                     fallbackTolerance: 10,
                     direction: 'horizontal',
-                    group: "description",
+                    group: 'description',
                     disabled: this.disabled || this.dragDisabled,
-                    ghostClass: "ghost"
+                    ghostClass: 'ghost',
                 }
             },
             attributes() {
@@ -47,19 +46,11 @@
                     ...this.dragOptions,
                     ...this.$attrs,
                 }
-            }
+            },
         },
-        mounted() {
-            bus.$on('sortable.childDragStart', () => {
-                this.dragDisabled = true
-            })
-            bus.$on('sortable.childDragStop', () => {
-                this.dragDisabled = false
-            })
-        }
     }
 </script>
-<style>
+<style lang="scss">
     .flip-list-move {
         transition: transform 0.5s;
     }
