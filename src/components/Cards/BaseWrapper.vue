@@ -26,6 +26,9 @@
             </div>
             <div :class="{'edit-mode': editable}" class="absolute flex action-icons">
                 <template v-if="editable">
+                    <el-tooltip :content="$t('Duplicate widget')" class="item" effect="dark" placement="top">
+                        <IconDuplicate @click="$emit('duplicate-widget')" class="flex cursor-pointer align-center w-6 h-8 py-2 text-blue-600"/>
+                    </el-tooltip>
                     <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
                         <trash-icon @click="$emit('remove-item')"
                                     class="flex cursor-pointer align-center w-6 h-8 py-2 text-red trash-icon"/>

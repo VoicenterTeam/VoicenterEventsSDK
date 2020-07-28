@@ -1,9 +1,9 @@
 <template>
-    <button v-if="!editMode" class="btn p-2 shadow rounded bg-white hover:bg-primary-100 mx-1"
+    <button v-if="!editMode" class="btn p-2 shadow rounded bg-white hover:bg-green-100 mx-1"
             :class="{'active-btn': editMode}"
             v-bind="$attrs"
             v-on="$listeners">
-        <EditIcon class="w-5 h-5 text-primary"/>
+        <EditIcon class="w-5 h-5 text-green"/>
     </button>
 </template>
 <script>

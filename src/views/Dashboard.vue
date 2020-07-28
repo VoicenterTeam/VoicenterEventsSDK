@@ -69,11 +69,13 @@
                             :widgetGroupList="groupsToDisplay"
                             :widgetTemplates="allWidgetTemplates"
                             @addWidgetsToGroup="addWidgetsToGroup"
+                            @duplicate-widget="duplicateWidget"
                             @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
                             @removeWidget="(data) => removeWidget(data.widget, data.group)"
                             @switch-tab="(tab) => switchTab(tab)"
                             @updateWidget="(data) => updateWidget(data.widget, data.group)">
                         </component>
+
                     </fade-transition>
                 </div>
             </div>
@@ -92,14 +94,15 @@
 <script>
     import map from 'lodash/map'
     import get from 'lodash/get'
-    import {Tooltip} from 'element-ui'
+    import { Tooltip } from 'element-ui'
     import orderBy from 'lodash/orderBy'
     import isEqual from 'lodash/isEqual'
     import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import {ListIcon} from 'vue-feather-icons'
+    import { WidgetApi } from '@/api/widgetApi'
+    import { ListIcon } from 'vue-feather-icons'
     import AddButton from '@/components/AddButton'
-    import {targets, types} from '@/enum/operations'
+    import { targets, types } from '@/enum/operations'
     import draggableEvents from '@/enum/draggableEvents'
     import pageSizeMixin from '@/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
@@ -107,18 +110,18 @@
     import Sidebar from '@/components/LayoutRendering/Sidebar'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
-    import {retrySocketConnection} from '@/plugins/initRealTimeSdk'
-    import {runDashboardOperations} from '@/services/dashboardService'
+    import { retrySocketConnection } from '@/plugins/initRealTimeSdk'
+    import { runDashboardOperations } from '@/services/dashboardService'
     import ListView from '@/components/LayoutRendering/Types/ListView'
     import SocketStatusAlert from '@/components/Common/SocketStatusAlert'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
-    import {dashboardOperation, widgetGroupModel} from '@/models/instances'
+    import { dashboardOperation, widgetGroupModel } from '@/models/instances'
     import SocketStatusButton from '@/components/Common/SocketStatusButton'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
-    import {createNewWidgets, removeDummyWidgets} from '@/services/widgetService'
-    import {ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes} from '@/enum/layout'
+    import { createNewWidgets, removeDummyWidgets } from '@/services/widgetService'
+    import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
 
     export default {
         components: {
@@ -153,7 +156,8 @@
                 activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
                 showReorderDataDialog: false,
                 groupToEdit: null,
-                storingData: false
+                storingData: false,
+                temporaryWidgetIds: [],
             }
         },
         computed: {
@@ -161,7 +165,7 @@
                 return this.$store.state.lang.language
             },
             loading() {
-                return this.$store.state.dashboards.loadingData;
+                return this.$store.state.dashboards.loadingData
             },
             dashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
@@ -175,7 +179,7 @@
                 }
             },
             showSidebar() {
-                return this.layoutType === layoutTypes.TABBED;
+                return this.layoutType === layoutTypes.TABBED
             },
             token() {
                 return this.$store.state.users.tokenString
@@ -197,7 +201,7 @@
                     return [this.groupToEdit]
                 }
                 return this.activeDashboardData.WidgetGroupList
-            }
+            },
         },
         methods: {
             retrySocketConnection,
@@ -207,13 +211,13 @@
                 this.operations = new DashboardOperations()
 
                 if (!widgetGroup) {
-                    this.groupToEdit = {...widgetGroupModel}
+                    this.groupToEdit = { ...widgetGroupModel }
                     this.activeDashboardData.WidgetGroupList = [this.groupToEdit]
                 }
             },
             async addWidgetsToGroup(data = {}) {
-                let {widgets: widgetTemplates} = data
-                let widgetGroup = {...this.groupToEdit}
+                let { widgets: widgetTemplates } = data
+                let widgetGroup = { ...this.groupToEdit }
 
                 let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
 
@@ -229,10 +233,38 @@
                 this.showWidgetMenu = false
                 this.groupToEdit = this.activeDashboardData.WidgetGroupList[index]
 
-                bus.$emit('added-widgets', createdWidgets);
+                bus.$emit('added-widgets', createdWidgets)
+            },
+            async duplicateWidget(widget) {
+                this.storingData = true
+
+                const widgetGroup = { ...this.groupToEdit }
+                const index = widgetGroup.WidgetList.findIndex(w => w.WidgetID.toString() === widget.WidgetID.toString())
+
+                if (index === -1) {
+                    this.storingData = false
+                    return
+                }
+
+                let newWidget = cloneDeep(widget)
+                newWidget.WidgetEntity = []
+
+                const yPosition = widget.WidgetLayout.GridLayout.y || 2
+                newWidget.WidgetLayout.GridLayout.y += yPosition
+
+                const duplicatedWidget = await WidgetApi.store(newWidget)
+
+                this.temporaryWidgetIds.push(duplicatedWidget.WidgetID)
+
+                this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, duplicatedWidget, widgetGroup.WidgetGroupID))
+
+                widgetGroup.WidgetList.splice(widgetGroup.WidgetList.length, 0, duplicatedWidget)
+
+                this.groupToEdit = widgetGroup
+                this.storingData = false
             },
             reorderWidgetGroup(data = {}) {
-                let {allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate, widgetsToUpdate: widgetsToUpdate} = data
+                let { allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate, widgetsToUpdate: widgetsToUpdate } = data
                 this.activeDashboardData.WidgetGroupList = allWidgetGroups
 
                 groupsToUpdate.forEach((group) => {
@@ -301,7 +333,7 @@
                 })
             },
             addNewGroup() {
-                const group = {...widgetGroupModel}
+                const group = { ...widgetGroupModel }
 
                 this.activeDashboardData.WidgetGroupList.splice(0, 0, group)
                 this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
@@ -355,7 +387,7 @@
                 const activeDashboardWidgets = group.WidgetList
                 window.grids.forEach(grid => {
                     grid.engine.nodes.forEach((node) => {
-                        let widget = activeDashboardWidgets.find((widget) => Number(widget.WidgetID) === Number(node.id));
+                        let widget = activeDashboardWidgets.find((widget) => Number(widget.WidgetID) === Number(node.id))
                         if (!widget) {
                             return
                         }
@@ -363,7 +395,7 @@
                             x: node.x,
                             y: node.y,
                             width: node.width,
-                            height: node.height
+                            height: node.height,
                         }
                         let widgetGridLayout = widget.WidgetLayout.GridLayout
 
@@ -379,8 +411,12 @@
             },
             resetDashboard() {
                 this.showWidgetMenu = false
+
+                removeDummyWidgets(this.temporaryWidgetIds)
+
                 this.editMode = false
                 let dashboard = this.$store.state.dashboards.activeDashboard
+
                 this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.operations = new DashboardOperations()
@@ -411,7 +447,7 @@
                         let WidgetList = orderBy(widgetGroup.WidgetList, 'WidgetLayout.Order', 'asc')
                         return {
                             ...widgetGroup,
-                            WidgetList
+                            WidgetList,
                         }
                     })
                     this.activeDashboardData = dashboard
@@ -421,7 +457,7 @@
             triggerReorderDataDialog() {
                 this.resetDashboard()
                 this.showReorderDataDialog = false
-            }
+            },
         },
         created() {
             window.grids = []
@@ -432,7 +468,7 @@
                 handler: function () {
                     let dashboard = cloneDeep(this.$store.getters['dashboards/getActiveDashboard'])
                     this.sortDashboardEntities(dashboard)
-                }
+                },
             },
             editMode(val) {
                 this.$store.commit('dashboards/SET_EDIT_MODE', val)
@@ -448,8 +484,8 @@
                 immediate: true,
                 handler(newVal) {
                     this.switchTab(newVal)
-                }
-            }
+                },
+            },
         },
     }
 </script>

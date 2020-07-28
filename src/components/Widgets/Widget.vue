@@ -4,6 +4,13 @@
             <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
             <portal-target :name="`widget-header__${widget.WidgetID}`" class="hidden lg:flex w-full justify-between"/>
             <div class="flex">
+                <div v-if="editable"
+                     @click="duplicateWidget(widget)"
+                     class="cursor-pointer btn p-2 shadow rounded bg-white hover:bg-blue-100 mx-1 border border-blue-500">
+                    <el-tooltip :content="$t('Duplicate widget')" class="item" effect="dark" placement="top">
+                        <IconDuplicate class="text-blue-600"/>
+                    </el-tooltip>
+                </div>
                 <div class="widget-delete__button" v-if="editable">
                     <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
                         <delete-button @click="removeWidget(widget)"/>
@@ -11,7 +18,7 @@
                 </div>
                 <div class="widget-edit__button">
                     <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
-                        <edit-button :class="{'border border-primary': editable}"
+                        <edit-button :class="{'border border-green-500': editable}"
                                      @click="showUpdateDialog = true">
                         </edit-button>
                     </el-tooltip>
@@ -26,6 +33,7 @@
                 :style="getStyles"
                 @on-update="(data) => onUpdate(data)"
                 @remove-item="removeWidget(widget)"
+                @duplicate-widget="duplicateWidget(widget)"
                 class="widget h-full"
                 v-bind="widget.WidgetLayout">
             </component>
@@ -44,7 +52,7 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {Tooltip} from 'element-ui'
+    import { Tooltip } from 'element-ui'
     import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
     import WidgetNoteList from './WidgetNoteList'
@@ -62,7 +70,7 @@
     import StatusCards from '@/components/Cards/StatusCards'
     import QueueDashboard from './Data/Queue/QueueDashboard'
     import QueueActiveCall from './Data/Queue/QueueActiveCall'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
+    import { defaultColors } from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
     import AverageCallDuration from '@/components/Widgets/Data/Queue/AverageCallDuration'
@@ -71,13 +79,13 @@
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
-    import {getWidgetDataType, getWidgetEndpoint, getWidgetRefreshInterval} from '@/helpers/widgetUtils'
+    import { getWidgetDataType, getWidgetEndpoint, getWidgetRefreshInterval } from '@/helpers/widgetUtils'
 
-    const DEFAULT_WIDGET_TIME  = {
+    const DEFAULT_WIDGET_TIME = {
         type: 'relative',
         datedeff: '0',
         Date_interval: '0',
-        label: 'widget.time.today'
+        label: 'widget.time.today',
     }
 
     export default {
@@ -167,7 +175,7 @@
                 }
 
                 if (this.showDeleteButton) {
-                    let border = {'border': '2px solid' + colors.frames}
+                    let border = { 'border': '2px solid' + colors.frames }
                     styles = {
                         ...styles,
                         ...border,
@@ -188,6 +196,9 @@
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
+            duplicateWidget(widget) {
+                this.$emit('duplicate-widget', widget)
+            },
             onUpdate(widget) {
                 this.$emit('update-item', widget)
             },
@@ -206,7 +217,7 @@
             setComponentEndPoint(widget) {
                 return getWidgetEndpoint(widget)
             },
-             checkWidgetTimeConfig() {
+            checkWidgetTimeConfig() {
                 if (!this.widget.WidgetTime.hasOwnProperty('datedeff')) {
                     this.$set(this.widget, 'WidgetTime', DEFAULT_WIDGET_TIME)
                 }

@@ -732,5 +732,6 @@
     "Avg Call Duration": "Avg Call Duration",
     "Total Call Duration": "Total Call Duration",
     "File Name": "File Name",
-    "Click to add new group": "Click to add new group"
+    "Click to add new group": "Click to add new group",
+    "Duplicate widget": "Duplicate widget (The widget will be added on the end of list)"
 }
