@@ -12,6 +12,7 @@ const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
   servers: defaultServers,
   token: null,
+  loginType: null,
   forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
@@ -40,8 +41,8 @@ class EventsSDK {
     this.argumentOptions = {
       ...options
     }
-    if (!this.options.token) {
-      throw new Error('A token property should be provided');
+    if (!this.options.loginType) {
+      throw new Error('A login type should be provided');
     }
     this.Logger = new Logger(this.options);
     this.servers = [];
@@ -170,6 +171,7 @@ class EventsSDK {
     }
   }
 
+  // TODO: remove _onLoginResponse function after the typed initialization finished
   _onLoginResponse(data) {
     if (data.ErrorCode === 0 && data.Token && !this.options.token) {
       this.options.token = data.Token
@@ -206,6 +208,7 @@ class EventsSDK {
     this._initSocketEvents();
     this._initKeepAlive();
     this._initReconnectDelays();
+    // TODO: remove login method call after the typed initialization finished
     this.login()
   }
 
@@ -224,7 +227,7 @@ class EventsSDK {
     this.socket = io(url, {
       ...this.options,
       query: {
-        token: this.options.token
+        token: this.token
       },
       debug: false
     });
@@ -322,7 +325,7 @@ class EventsSDK {
       if (this.options.serverType) {
         params.type = this.options.serverType
       }
-      let res = await fetch(`${this.options.url}/${this.options.token}`, params);
+      let res = await fetch(`${this.options.url}/${this.token}`, params);
       this.servers = await res.json();
     } catch (e) {
       this.servers = this.argumentOptions.servers || defaultServers;
@@ -352,6 +355,7 @@ class EventsSDK {
       [eventTypes.CONNECT_ERROR]: this._onConnectError,
       [eventTypes.CONNECT_TIMEOUT]: this._onConnectTimeout,
       [eventTypes.KEEP_ALIVE_RESPONSE]: this._onKeepAlive,
+      // TODO: remove handle of LOGIN_RESPONSE event after the typed initialization finished
       [eventTypes.LOGIN_RESPONSE]: this._onLoginResponse,
       [eventTypes.EXTENSION_UPDATED]: this._retryConnection,
       [eventTypes.QUEUES_UPDATED]: this._retryConnection,
@@ -385,12 +389,16 @@ class EventsSDK {
     if (this.socket) {
       this.emit(eventTypes.CLOSE)
     }
+    if (this.loginType !== 'token') {
+      await this._getToken();
+    }
     await this._getServers();
     this._connect();
     this._initReconnectDelays();
     return true
   }
 
+  // TODO: remove setToken function after the typed initialization finished
   /**
    * Sets the monitor code token
    * @param token
@@ -470,6 +478,17 @@ class EventsSDK {
     }
   }
 
+  _getToken() {
+    if (this.loginType === 'user') {
+
+    } else if (this.loginType === 'account') {
+
+    } else if (this.loginType === 'code') {
+
+    }
+  }
+
+  // TODO: Remove login function after the typed initialization finished
   /**
    * Login (logs in based on the token/credentials provided)
    * @param type (login type. Can be token/user/code/account)
