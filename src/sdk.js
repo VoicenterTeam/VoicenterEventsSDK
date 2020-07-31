@@ -389,9 +389,7 @@ class EventsSDK {
     if (this.socket) {
       this.emit(eventTypes.CLOSE)
     }
-    if (this.loginType !== 'token') {
-      await this._getToken();
-    }
+    await this._getToken();
     await this._getServers();
     this._connect();
     this._initReconnectDelays();
@@ -479,7 +477,13 @@ class EventsSDK {
   }
 
   _getToken() {
-    if (this.loginType === 'user') {
+    if (this.loginType === 'token') {
+      this.token = this.options.token;
+
+      if (!this.token) {
+        throw new Error('Token login type expects the token option to be provided')
+      }
+    } else if (this.loginType === 'user') {
 
     } else if (this.loginType === 'account') {
 
