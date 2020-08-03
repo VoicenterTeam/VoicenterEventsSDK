@@ -10,8 +10,13 @@ import { getServerWithHighestPriority } from './utils';
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
+  fallbackServer: {
+    Domain: 'monitor5.voicenter.co.il',
+    Priority: 0,
+  },
   servers: defaultServers,
   token: null,
+  loginType: 'token',
   forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
@@ -31,6 +36,7 @@ const defaultOptions = {
 
 let allConnections = [];
 let listenersMap = new Map();
+
 class EventsSDK {
   constructor(options = {}) {
     this.options = {
@@ -40,8 +46,8 @@ class EventsSDK {
     this.argumentOptions = {
       ...options
     }
-    if (!this.options.token) {
-      throw new Error('A token property should be provided');
+    if (!this.options.loginType) {
+      throw new Error('A login type should be provided');
     }
     this.Logger = new Logger(this.options);
     this.servers = [];
@@ -49,14 +55,17 @@ class EventsSDK {
     this.socket = null;
     this.connected = false;
     this.connectionEstablished = false;
-    this._lastEventTimestamp = new Date().getTime()
+    this._lastEventTimestamp = new Date().getTime();
     this._initReconnectOptions();
     this._listenersMap = listenersMap;
-    this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, { leading: true, trailing: false })
-    this._lastLoginTimestamp = null
-    this._handleLocalEvents = false
-    this._registerExtensionsModule()
-    this._registerQueueModule()
+    this._retryConnection = debounce(this._connect.bind(this), this.reconnectOptions.reconnectionDelay, {
+      leading: true,
+      trailing: false
+    });
+    this._lastLoginTimestamp = null;
+    this._handleLocalEvents = false;
+    this._registerExtensionsModule();
+    this._registerQueueModule();
   }
 
   getLastEventTimestamp() {
@@ -170,10 +179,27 @@ class EventsSDK {
     }
   }
 
-  _onLoginResponse(data) {
-    if (data.ErrorCode === 0 && data.Token && !this.options.token) {
-      this.options.token = data.Token
+  async _onLoginResponse(data) {
+    if (data.URL) {
+      this.server = {
+        Priority: 0,
+        Domain: data.URL.replace('https://', '')
+      }
     }
+    if (data.URLList && Array.isArray(data.URLList)) {
+      this.servers = data.URLList.map((url, index) => {
+        return {
+          Priority: index,
+          Domain: url.replace('https://', '')
+        }
+      })
+    }
+    if (data.ErrorCode === 0 && data.Token && !this.options.token) {
+      this.options.token = data.Token;
+      this.token = data.Token
+      await this._connect()
+    }
+
   }
 
   _parsePacket(packet) {
@@ -206,7 +232,7 @@ class EventsSDK {
     this._initSocketEvents();
     this._initKeepAlive();
     this._initReconnectDelays();
-    this.login()
+    this.login(this.options.loginType)
   }
 
   _checkInit() {
@@ -221,13 +247,16 @@ class EventsSDK {
     let url = `${protocol}://${domain}`;
     this.Logger.log('Connecting to..', url);
     this.closeAllConnections();
-    this.socket = io(url, {
+    const options = {
       ...this.options,
-      query: {
-        token: this.options.token
-      },
       debug: false
-    });
+    }
+    if (this.token) {
+      options.query = {
+        token: this.token
+      }
+    }
+    this.socket = io(url, options);
     allConnections.push(this.socket);
     this.connectionEstablished = true;
   }
@@ -244,7 +273,7 @@ class EventsSDK {
     if (this.idleInterval) {
       clearInterval((this.idleInterval))
     }
-    this.keepAliveInterval = setInterval(()=>{
+    this.keepAliveInterval = setInterval(() => {
       const now = new Date().getTime()
       const delta = this.options.keepAliveTimeout * 2
 
@@ -274,7 +303,7 @@ class EventsSDK {
     }
     this.server = server;
     if (!this.server) {
-      throw new Error('Could not find any server to establish connection with');
+      this.server = this.options.fallbackServer
     }
     return this.server;
   }
@@ -303,7 +332,7 @@ class EventsSDK {
   _findMaxPriorityServer() {
     this.Logger.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer');
     let maxPriorityServer = getServerWithHighestPriority(this.servers);
-    if(this.server && maxPriorityServer.Domain !== this.server.Domain) {
+    if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
       this.server = maxPriorityServer;
       this.Logger.log(`Fallback -> Trying to find previous server`, this.server);
       return this.server
@@ -322,7 +351,10 @@ class EventsSDK {
       if (this.options.serverType) {
         params.type = this.options.serverType
       }
-      let res = await fetch(`${this.options.url}/${this.options.token}`, params);
+      if (!this.token) {
+        return
+      }
+      let res = await fetch(`${this.options.url}/${this.token}`, params);
       this.servers = await res.json();
     } catch (e) {
       this.servers = this.argumentOptions.servers || defaultServers;
@@ -361,16 +393,16 @@ class EventsSDK {
           this._onConnect()
         }
       }
-    }
-    const eventHandler = eventMappings[evt.name]
+    };
+    const eventHandler = eventMappings[evt.name];
     if (eventHandler && typeof eventHandler === 'function') {
-      eventHandler.call(this, evt.data)
+      eventHandler.call(this, evt.data);
     }
     if (this._handleLocalEvents) {
       handleStoreEvents({
         eventData: evt,
         ...this.options
-      })
+      });
     }
   }
 
@@ -383,12 +415,13 @@ class EventsSDK {
       return true;
     }
     if (this.socket) {
-      this.emit(eventTypes.CLOSE)
+      this.emit(eventTypes.CLOSE);
     }
+    await this._getToken();
     await this._getServers();
     this._connect();
     this._initReconnectDelays();
-    return true
+    return true;
   }
 
   /**
@@ -400,6 +433,7 @@ class EventsSDK {
     this.disconnect()
     await this.init()
   }
+
   /**
    * Closes all existing connections
    */
@@ -414,6 +448,7 @@ class EventsSDK {
       this.socket = null
     }
   }
+
   /**
    * Disconnects the socket instance from the servers
    */
@@ -470,14 +505,24 @@ class EventsSDK {
     }
   }
 
+  _getToken() {
+    const { loginType } = this.options
+    this.token = this.options.token;
+    if (loginType === 'token') {
+      if (!this.token) {
+        throw new Error('Token login type expects the token option to be provided');
+      }
+    }
+  }
+
   /**
    * Login (logs in based on the token/credentials provided)
    * @param type (login type. Can be token/user/code/account)
    * @return {Promise<void>}
    */
-  login(type = 'login') {
+  login(type = 'token') {
     // throttle login for 1 second
-    const delay = 1000
+    const delay = 1000;
     if (this._lastLoginTimestamp + delay > new Date().getTime()) {
       return Promise.resolve()
     }
@@ -487,24 +532,33 @@ class EventsSDK {
     this._lastLoginTimestamp = new Date().getTime()
     return new Promise((resolve, reject) => {
       this.on(eventTypes.LOGIN_STATUS, data => {
-        if(_self.onLogin) _self.onLogin(data);
+        if (_self.onLogin) _self.onLogin(data);
         resolved = true;
         resolve(data)
       });
       this.socket.on(eventTypes.ERROR, err => {
-        if(_self.onError) _self.onError(err);
-        if(resolved === false) {
+        if (_self.onError) _self.onError(err);
+        if (resolved === false) {
           reject(err);
         }
       })
-      if (type === 'login') {
+      if (type === 'token') {
         this.emit(eventTypes.LOGIN, { token: this.options.token });
       } else if (type === 'user') {
-        this.emit(eventTypes.LOGIN_USER, { user: this.options.user, password: this.options.password });
+        this.emit(eventTypes.LOGIN_USER, {
+          user: this.options.user,
+          pass: this.options.password
+        });
       } else if (type === 'code') {
-        this.emit(eventTypes.LOGIN_CODE, { code: this.options.code, orgCode: this.options.organizationCode });
+        this.emit(eventTypes.LOGIN_CODE, {
+          code: this.options.code,
+          orgCode: this.options.organizationCode
+        });
       } else if (type === 'account') {
-        this.emit(eventTypes.LOGIN_USER, { user: this.options.user, password: this.options.password });
+        this.emit(eventTypes.LOGIN_USER, {
+          user: this.options.user,
+          pass: this.options.password
+        });
       }
     });
   }
