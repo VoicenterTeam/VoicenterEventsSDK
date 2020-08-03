@@ -464,8 +464,13 @@ function getServerWithHighestPriority(servers) {
 
 var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
+  fallbackServer: {
+    Domain: 'monitor5.voicenter.co.il',
+    Priority: 0
+  },
   servers: defaultServers,
   token: null,
+  loginType: 'token',
   forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
@@ -499,8 +504,8 @@ function () {
     this.options = Object.assign({}, defaultOptions, {}, options);
     this.argumentOptions = Object.assign({}, options);
 
-    if (!this.options.token) {
-      throw new Error('A token property should be provided');
+    if (!this.options.loginType) {
+      throw new Error('A login type should be provided');
     }
 
     this.Logger = new Logger(this.options);
@@ -673,9 +678,27 @@ function () {
     }
   }, {
     key: "_onLoginResponse",
-    value: function _onLoginResponse(data) {
+    value: async function _onLoginResponse(data) {
+      if (data.URL) {
+        this.server = {
+          Priority: 0,
+          Domain: data.URL.replace('https://', '')
+        };
+      }
+
+      if (data.URLList && Array.isArray(data.URLList)) {
+        this.servers = data.URLList.map(function (url, index) {
+          return {
+            Priority: index,
+            Domain: url.replace('https://', '')
+          };
+        });
+      }
+
       if (data.ErrorCode === 0 && data.Token && !this.options.token) {
         this.options.token = data.Token;
+        this.token = data.Token;
+        await this._connect();
       }
     }
   }, {
@@ -720,7 +743,7 @@ function () {
 
       this._initReconnectDelays();
 
-      this.login();
+      this.login(this.options.loginType);
     }
   }, {
     key: "_checkInit",
@@ -737,12 +760,17 @@ function () {
       var url = "".concat(protocol, "://").concat(domain);
       this.Logger.log('Connecting to..', url);
       this.closeAllConnections();
-      this.socket = io(url, Object.assign({}, this.options, {
-        query: {
-          token: this.options.token
-        },
+      var options = Object.assign({}, this.options, {
         debug: false
-      }));
+      });
+
+      if (this.token) {
+        options.query = {
+          token: this.token
+        };
+      }
+
+      this.socket = io(url, options);
       allConnections.push(this.socket);
       this.connectionEstablished = true;
     }
@@ -800,7 +828,7 @@ function () {
       this.server = server;
 
       if (!this.server) {
-        throw new Error('Could not find any server to establish connection with');
+        this.server = this.options.fallbackServer;
       }
 
       return this.server;
@@ -865,7 +893,11 @@ function () {
           params.type = this.options.serverType;
         }
 
-        var res = await fetch("".concat(this.options.url, "/").concat(this.options.token), params);
+        if (!this.token) {
+          return;
+        }
+
+        var res = await fetch("".concat(this.options.url, "/").concat(this.token), params);
         this.servers = await res.json();
       } catch (e) {
         this.servers = this.argumentOptions.servers || defaultServers;
@@ -927,6 +959,7 @@ function () {
         this.emit(eventTypes.CLOSE);
       }
 
+      await this._getToken();
       await this._getServers();
 
       this._connect();
@@ -1039,6 +1072,18 @@ function () {
         await this.init();
       }
     }
+  }, {
+    key: "_getToken",
+    value: function _getToken() {
+      var loginType = this.options.loginType;
+      this.token = this.options.token;
+
+      if (loginType === 'token') {
+        if (!this.token) {
+          throw new Error('Token login type expects the token option to be provided');
+        }
+      }
+    }
     /**
      * Login (logs in based on the token/credentials provided)
      * @param type (login type. Can be token/user/code/account)
@@ -1050,7 +1095,7 @@ function () {
     value: function login() {
       var _this3 = this;
 
-      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'login';
+      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'token';
       // throttle login for 1 second
       var delay = 1000;
 
@@ -1079,14 +1124,14 @@ function () {
           }
         });
 
-        if (type === 'login') {
+        if (type === 'token') {
           _this3.emit(eventTypes.LOGIN, {
             token: _this3.options.token
           });
         } else if (type === 'user') {
           _this3.emit(eventTypes.LOGIN_USER, {
             user: _this3.options.user,
-            password: _this3.options.password
+            pass: _this3.options.password
           });
         } else if (type === 'code') {
           _this3.emit(eventTypes.LOGIN_CODE, {
@@ -1096,7 +1141,7 @@ function () {
         } else if (type === 'account') {
           _this3.emit(eventTypes.LOGIN_USER, {
             user: _this3.options.user,
-            password: _this3.options.password
+            pass: _this3.options.password
           });
         }
       });
