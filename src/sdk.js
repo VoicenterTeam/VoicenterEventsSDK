@@ -6,7 +6,8 @@ import debounce from 'lodash/debounce'
 import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
-import { getServerWithHighestPriority } from './utils';
+import { getServerWithHighestPriority, isValidDate } from './utils';
+import { externalLogin, refreshToken } from './externalLogin';
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
@@ -14,6 +15,8 @@ const defaultOptions = {
     Domain: 'monitor5.voicenter.co.il',
     Priority: 0,
   },
+  loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
+  refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
   servers: defaultServers,
   token: null,
   loginType: 'token',
@@ -194,12 +197,31 @@ class EventsSDK {
         }
       })
     }
-    if (data.ErrorCode === 0 && data.Token && !this.options.token) {
+    if (data.Token) {
       this.options.token = data.Token;
       this.token = data.Token
       await this._connect()
     }
 
+    if (data.RefreshToken) {
+      this.options.refreshToken = data.RefreshToken
+      this._handleTokenExpiry()
+    }
+    if (data.TokenExpiry) {
+      this.options.tokenExpiry = data.TokenExpiry
+    }
+  }
+
+  _handleTokenExpiry() {
+    const date = new Date(this.options.tokenExpiry)
+    if (!isValidDate(date)) {
+      return
+    }
+    const timeout = date.getTime() - new Date().getTime() - 5000 // 5 seconds before expire
+    setTimeout(async () => {
+      const res = await refreshToken(this.options.refreshTokenUrl, this.options.refreshToken)
+      await this._onLoginResponse(res)
+    }, timeout)
   }
 
   _parsePacket(packet) {
@@ -530,7 +552,7 @@ class EventsSDK {
     this._checkInit();
     let resolved = false;
     this._lastLoginTimestamp = new Date().getTime()
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       this.on(eventTypes.LOGIN_STATUS, data => {
         if (_self.onLogin) _self.onLogin(data);
         resolved = true;
@@ -545,10 +567,12 @@ class EventsSDK {
       if (type === 'token') {
         this.emit(eventTypes.LOGIN, { token: this.options.token });
       } else if (type === 'user') {
-        this.emit(eventTypes.LOGIN_USER, {
-          user: this.options.user,
-          pass: this.options.password
-        });
+        const res = await externalLogin(this.options.loginUrl, {
+          email: this.options.email,
+          password: this.options.password
+        })
+        await this._onLoginResponse(res)
+        resolve(res)
       } else if (type === 'code') {
         this.emit(eventTypes.LOGIN_CODE, {
           code: this.options.code,
