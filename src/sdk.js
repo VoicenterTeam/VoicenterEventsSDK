@@ -197,7 +197,7 @@ class EventsSDK {
         }
       })
     }
-    if (data.ErrorCode === 0 && data.Token) {
+    if (data.Token) {
       this.options.token = data.Token;
       this.token = data.Token
       await this._connect()
@@ -572,6 +572,7 @@ class EventsSDK {
           password: this.options.password
         })
         await this._onLoginResponse(res)
+        resolve(res)
       } else if (type === 'code') {
         this.emit(eventTypes.LOGIN_CODE, {
           code: this.options.code,

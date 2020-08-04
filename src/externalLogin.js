@@ -9,7 +9,7 @@ export async function externalLogin(url, { email, password }) {
       pin: password
     })
   });
-  const data = res.json();
+  const data = await res.json();
   return data.Data.Socket;
 }
 
