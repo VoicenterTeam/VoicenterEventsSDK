@@ -7,6 +7,7 @@ import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
 import { getServerWithHighestPriority } from './utils';
+import { externalLogin } from './externalLogin';
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
@@ -14,6 +15,7 @@ const defaultOptions = {
     Domain: 'monitor5.voicenter.co.il',
     Priority: 0,
   },
+  loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
   servers: defaultServers,
   token: null,
   loginType: 'token',
@@ -530,7 +532,7 @@ class EventsSDK {
     this._checkInit();
     let resolved = false;
     this._lastLoginTimestamp = new Date().getTime()
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       this.on(eventTypes.LOGIN_STATUS, data => {
         if (_self.onLogin) _self.onLogin(data);
         resolved = true;
@@ -545,10 +547,11 @@ class EventsSDK {
       if (type === 'token') {
         this.emit(eventTypes.LOGIN, { token: this.options.token });
       } else if (type === 'user') {
-        this.emit(eventTypes.LOGIN_USER, {
-          user: this.options.user,
-          pass: this.options.password
-        });
+        const res = await externalLogin(this.options.loginUrl, {
+          email: this.options.email,
+          password: this.options.password
+        })
+        await this._onLoginResponse(res)
       } else if (type === 'code') {
         this.emit(eventTypes.LOGIN_CODE, {
           code: this.options.code,
