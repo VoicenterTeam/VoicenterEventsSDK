@@ -6,8 +6,8 @@ import debounce from 'lodash/debounce'
 import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
-import { getServerWithHighestPriority } from './utils';
-import { externalLogin } from './externalLogin';
+import { getServerWithHighestPriority, isValidDate } from './utils';
+import { externalLogin, refreshToken } from './externalLogin';
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
@@ -16,6 +16,7 @@ const defaultOptions = {
     Priority: 0,
   },
   loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
+  refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
   servers: defaultServers,
   token: null,
   loginType: 'token',
@@ -196,12 +197,31 @@ class EventsSDK {
         }
       })
     }
-    if (data.ErrorCode === 0 && data.Token && !this.options.token) {
+    if (data.ErrorCode === 0 && data.Token) {
       this.options.token = data.Token;
       this.token = data.Token
       await this._connect()
     }
 
+    if (data.RefreshToken) {
+      this.options.refreshToken = data.RefreshToken
+      this._handleTokenExpiry()
+    }
+    if (data.TokenExpiry) {
+      this.options.tokenExpiry = data.TokenExpiry
+    }
+  }
+
+  _handleTokenExpiry() {
+    const date = new Date(this.options.tokenExpiry)
+    if (!isValidDate(date)) {
+      return
+    }
+    const timeout = date.getTime() - new Date().getTime() - 5000 // 5 seconds before expire
+    setTimeout(async () => {
+      const res = await refreshToken(this.options.refreshTokenUrl, this.options.refreshToken)
+      await this._onLoginResponse(res)
+    }, timeout)
   }
 
   _parsePacket(packet) {

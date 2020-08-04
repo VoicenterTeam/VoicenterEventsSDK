@@ -9,3 +9,7 @@ export function getServerWithHighestPriority(servers) {
   })
   return chosenServer
 }
+
+export function isValidDate(date) {
+  return !isNaN(date.getTime())
+}
