@@ -10,7 +10,7 @@
                 @mousedown="onMousedown"
                 class="grid-stack-item"
                 v-bind="gridStackAttributes(widget)"
-                v-for="widget in widgets">
+                v-for="widget in widgets" :key="widget.WidgetID">
                 <WidgetErrorBoundary>
                     <Widget
                         :editable="editable"

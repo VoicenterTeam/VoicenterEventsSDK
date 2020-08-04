@@ -1,5 +1,5 @@
 <template>
-    <div :class="getClass" class="grid-stack-item-content relative mt-1">
+    <div :class="getClass" class="grid-stack-item-content relative mt-1" :key="widget.WidgetID">
         <div class="flex w-full flex-row items-center justify-between widget-header" v-if="showDeleteButton">
             <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
             <portal-target :name="`widget-header__${widget.WidgetID}`" class="hidden lg:flex w-full justify-between"/>
@@ -89,7 +89,6 @@
     }
 
     export default {
-        name: 'widget',
         components: {
             WidgetCard,
             TimeLineChart,
