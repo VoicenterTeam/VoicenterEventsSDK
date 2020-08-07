@@ -41,14 +41,14 @@
                                 effect="dark"
                                 placement="top">
                         <eye-off-icon @click="displayNoteInList(true, note)"
-                                  class="text-primary w-4 cursor-pointer"
-                                  v-if="!note.displayed"></eye-off-icon>
+                                      class="text-primary w-4 cursor-pointer"
+                                      v-if="!note.displayed"></eye-off-icon>
                     </el-tooltip>
                     <el-tooltip :content="$t('Hide note from list')" :open-delay="openDelay" class="item"
                                 effect="dark" placement="top">
                         <eye-icon @click="displayNoteInList(false, note)"
-                                      class="text-primary w-4 cursor-pointer"
-                                      v-if="note.displayed"></eye-icon>
+                                  class="text-primary w-4 cursor-pointer"
+                                  v-if="note.displayed"></eye-icon>
                     </el-tooltip>
                     <el-tooltip :content="$t('Open edit mode for this note')" :open-delay="openDelay"
                                 class="item" effect="dark"
@@ -70,10 +70,10 @@
     import Modal from '@/components/Common/Modal'
     import get from 'lodash/get'
     import format from 'date-fns/format'
-    import {Switch, Tooltip} from 'element-ui'
+    import { Switch, Tooltip } from 'element-ui'
     import AddButton from '@/components/AddButton'
     import HtmlEditor from '@/components/Html/HtmlEditor'
-    import {Edit3Icon, EyeIcon, EyeOffIcon, Trash2Icon} from 'vue-feather-icons'
+    import { Edit3Icon, EyeIcon, EyeOffIcon, Trash2Icon } from 'vue-feather-icons'
 
     export default {
         components: {
@@ -179,6 +179,7 @@
                 return this.data.WidgetLayout['Notes'].findIndex((el) => el.date === note.date)
             },
             emmitUpdate() {
+                this.data.WidgetLayout['onEditMode'] = this.onEditMode
                 this.$emit('on-update', this.data)
                 this.noteToUpdate = null
             },
@@ -194,6 +195,9 @@
             if (!this.data.WidgetLayout.hasOwnProperty('displayWidgetTitle')) {
                 this.$set(this.data.WidgetLayout, 'displayWidgetTitle', false)
             }
+            
+            const { onEditMode } = this.data.WidgetLayout || false
+            this.onEditMode = onEditMode
         },
     }
 </script>
