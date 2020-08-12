@@ -257,7 +257,7 @@
   "queue.agents.calls.on.hold": "נציגים בהמתנה",
   "user_id": "ID משתמש",
   "user_name": "שם משתמש",
-  "status_duration": "משך זמן נוכחי",
+  "status_duration": "משך מצב נוכחי",
   "status": "סטטוס",
   "OutgouingCallsCount": "סהכ יוצאות",
   "IncomingCallsCount": "סהכ נכנסות",
