@@ -465,6 +465,52 @@ function getServerWithHighestPriority(servers) {
   });
   return chosenServer;
 }
+function isValidDate(date) {
+  return !isNaN(date.getTime());
+}
+
+async function externalLogin(url, _ref) {
+  var email = _ref.email,
+      password = _ref.password,
+      token = _ref.token;
+  var body = null;
+
+  if (token) {
+    body = JSON.stringify({
+      token: token
+    });
+  } else {
+    body = JSON.stringify({
+      email: email,
+      pin: password
+    });
+  }
+
+  var res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: body
+  });
+  var data = await res.json();
+
+  if (data.error) {
+    throw new Error(data.error);
+  }
+
+  return data.Data.Socket;
+}
+async function refreshToken(url, oldRefreshToken) {
+  var res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer ".concat(oldRefreshToken)
+    }
+  });
+  return res.json();
+}
 
 var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
@@ -472,6 +518,8 @@ var defaultOptions = {
     Domain: 'monitor5.voicenter.co.il',
     Priority: 0
   },
+  loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
+  refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
   servers: defaultServers,
   token: null,
   loginType: 'token',
@@ -699,11 +747,39 @@ function () {
         });
       }
 
-      if (data.ErrorCode === 0 && data.Token && !this.options.token) {
+      if (data.Token) {
         this.options.token = data.Token;
         this.token = data.Token;
         await this._connect();
       }
+
+      if (data.RefreshToken) {
+        this.options.refreshToken = data.RefreshToken;
+
+        this._handleTokenExpiry();
+      }
+
+      if (data.TokenExpiry) {
+        this.options.tokenExpiry = data.TokenExpiry;
+      }
+    }
+  }, {
+    key: "_handleTokenExpiry",
+    value: function _handleTokenExpiry() {
+      var _this = this;
+
+      var date = new Date(this.options.tokenExpiry);
+
+      if (!isValidDate(date)) {
+        return;
+      }
+
+      var timeout = date.getTime() - new Date().getTime() - 5000; // 5 seconds before expire
+
+      setTimeout(async function () {
+        var res = await refreshToken(_this.options.refreshTokenUrl, _this.options.refreshToken);
+        await _this._onLoginResponse(res);
+      }, timeout);
     }
   }, {
     key: "_parsePacket",
@@ -721,7 +797,7 @@ function () {
     }
   }, {
     key: "_connect",
-    value: function _connect() {
+    value: async function _connect() {
       var server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
       var serverToConnect = null;
 
@@ -747,7 +823,7 @@ function () {
 
       this._initReconnectDelays();
 
-      this.login(this.options.loginType);
+      await this.login(this.options.loginType);
     }
   }, {
     key: "_checkInit",
@@ -786,7 +862,7 @@ function () {
   }, {
     key: "_initKeepAlive",
     value: function _initKeepAlive() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.keepAliveInterval) {
         clearInterval(this.keepAliveInterval);
@@ -798,26 +874,26 @@ function () {
 
       this.keepAliveInterval = setInterval(function () {
         var now = new Date().getTime();
-        var delta = _this.options.keepAliveTimeout * 2;
+        var delta = _this2.options.keepAliveTimeout * 2;
 
-        if (now > _this.getLastEventTimestamp() + delta) {
-          _this._connect('next');
-
-          return;
-        }
-
-        if (!_this.socket) {
-          _this._initSocketConnection();
+        if (now > _this2.getLastEventTimestamp() + delta) {
+          _this2._connect('next');
 
           return;
         }
 
-        if (now > _this.getLastEventTimestamp() + _this.options.keepAliveTimeout) {
-          _this.emit(eventTypes.KEEP_ALIVE, _this.options.token);
+        if (!_this2.socket) {
+          _this2._initSocketConnection();
+
+          return;
+        }
+
+        if (now > _this2.getLastEventTimestamp() + _this2.options.keepAliveTimeout) {
+          _this2.emit(eventTypes.KEEP_ALIVE, _this2.options.token);
         }
       }, this.options.keepAliveTimeout);
       this.idleInterval = setInterval(function () {
-        _this.reSync(false);
+        _this2.reSync(false);
       }, this.options.idleInterval);
     }
   }, {
@@ -890,6 +966,10 @@ function () {
         return;
       }
 
+      if (this.options.useLoginApi) {
+        return;
+      }
+
       try {
         var params = {};
 
@@ -910,7 +990,7 @@ function () {
   }, {
     key: "_onEvent",
     value: function _onEvent(packet) {
-      var _this2 = this,
+      var _this3 = this,
           _eventMappings;
 
       if (!packet.data) {
@@ -931,8 +1011,8 @@ function () {
       });
 
       var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
-        if (!_this2.connected) {
-          _this2._onConnect();
+        if (!_this3.connected) {
+          _this3._onConnect();
         }
       }), _eventMappings);
       var eventHandler = eventMappings[evt.name];
@@ -965,8 +1045,7 @@ function () {
 
       await this._getToken();
       await this._getServers();
-
-      this._connect();
+      await this._connect();
 
       this._initReconnectDelays();
 
@@ -1097,7 +1176,7 @@ function () {
   }, {
     key: "login",
     value: function login() {
-      var _this3 = this;
+      var _this4 = this;
 
       var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'token';
       // throttle login for 1 second
@@ -1113,14 +1192,14 @@ function () {
 
       var resolved = false;
       this._lastLoginTimestamp = new Date().getTime();
-      return new Promise(function (resolve, reject) {
-        _this3.on(eventTypes.LOGIN_STATUS, function (data) {
+      return new Promise(async function (resolve, reject) {
+        _this4.on(eventTypes.LOGIN_STATUS, function (data) {
           if (_self.onLogin) _self.onLogin(data);
           resolved = true;
           resolve(data);
         });
 
-        _this3.socket.on(eventTypes.ERROR, function (err) {
+        _this4.socket.on(eventTypes.ERROR, function (err) {
           if (_self.onError) _self.onError(err);
 
           if (resolved === false) {
@@ -1128,25 +1207,32 @@ function () {
           }
         });
 
-        if (type === 'token') {
-          _this3.emit(eventTypes.LOGIN, {
-            token: _this3.options.token
-          });
-        } else if (type === 'user') {
-          _this3.emit(eventTypes.LOGIN_USER, {
-            user: _this3.options.user,
-            pass: _this3.options.password
-          });
-        } else if (type === 'code') {
-          _this3.emit(eventTypes.LOGIN_CODE, {
-            code: _this3.options.code,
-            orgCode: _this3.options.organizationCode
-          });
-        } else if (type === 'account') {
-          _this3.emit(eventTypes.LOGIN_USER, {
-            user: _this3.options.user,
-            pass: _this3.options.password
-          });
+        try {
+          if (type === 'token' && !_this4.options.useLoginApi) {
+            _this4.emit(eventTypes.LOGIN, {
+              token: _this4.options.token
+            });
+
+            return;
+          }
+
+          if (type === 'token' || type === 'user' || type === 'account') {
+            var res = await externalLogin(_this4.options.loginUrl, {
+              token: _this4.options.token,
+              email: _this4.options.email,
+              password: _this4.options.password
+            });
+            await _this4._onLoginResponse(res);
+            resolve(res);
+          } else if (type === 'code') {
+            _this4.emit(eventTypes.LOGIN_CODE, {
+              code: _this4.options.code,
+              orgCode: _this4.options.organizationCode
+            });
+          }
+        } catch (err) {
+          _this4.servers = _this4.argumentOptions.servers || defaultServers;
+          reject(err);
         }
       });
     }

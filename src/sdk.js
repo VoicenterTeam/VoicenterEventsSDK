@@ -236,7 +236,7 @@ class EventsSDK {
     };
   }
 
-  _connect(server = 'default') {
+  async _connect(server = 'default') {
     let serverToConnect = null;
     if (server === 'default') {
       serverToConnect = this._findCurrentServer();
@@ -254,7 +254,7 @@ class EventsSDK {
     this._initSocketEvents();
     this._initKeepAlive();
     this._initReconnectDelays();
-    this.login(this.options.loginType)
+    await this.login(this.options.loginType)
   }
 
   _checkInit() {
@@ -368,6 +368,9 @@ class EventsSDK {
       this.servers = this.argumentOptions.servers
       return
     }
+    if (this.options.useLoginApi) {
+      return
+    }
     try {
       let params = {};
       if (this.options.serverType) {
@@ -441,7 +444,7 @@ class EventsSDK {
     }
     await this._getToken();
     await this._getServers();
-    this._connect();
+    await this._connect();
     this._initReconnectDelays();
     return true;
   }
@@ -564,25 +567,28 @@ class EventsSDK {
           reject(err);
         }
       })
-      if (type === 'token') {
-        this.emit(eventTypes.LOGIN, { token: this.options.token });
-      } else if (type === 'user') {
-        const res = await externalLogin(this.options.loginUrl, {
-          email: this.options.email,
-          password: this.options.password
-        })
-        await this._onLoginResponse(res)
-        resolve(res)
-      } else if (type === 'code') {
-        this.emit(eventTypes.LOGIN_CODE, {
-          code: this.options.code,
-          orgCode: this.options.organizationCode
-        });
-      } else if (type === 'account') {
-        this.emit(eventTypes.LOGIN_USER, {
-          user: this.options.user,
-          pass: this.options.password
-        });
+      try {
+        if (type === 'token' && !this.options.useLoginApi) {
+          this.emit(eventTypes.LOGIN, { token: this.options.token });
+          return
+        }
+        if (type === 'token' || type === 'user' || type === 'account') {
+          const res = await externalLogin(this.options.loginUrl, {
+            token: this.options.token,
+            email: this.options.email,
+            password: this.options.password
+          })
+          await this._onLoginResponse(res)
+          resolve(res)
+        } else if (type === 'code') {
+          this.emit(eventTypes.LOGIN_CODE, {
+            code: this.options.code,
+            orgCode: this.options.organizationCode
+          });
+        }
+      } catch (err) {
+        this.servers = this.argumentOptions.servers || defaultServers;
+        reject(err)
       }
     });
   }
