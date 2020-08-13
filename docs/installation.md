@@ -9,7 +9,7 @@ https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk
 Include voicenter-events-sdk after Vue and it will install itself automatically:
 
 ```html
-<script src="https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk.js"></script>
+<script src="https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk.umd.js"></script>
 ```
 
 ## NPM
