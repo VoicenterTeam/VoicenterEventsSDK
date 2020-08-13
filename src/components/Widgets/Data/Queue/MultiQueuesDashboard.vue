@@ -7,7 +7,7 @@
             :cell-style="getCellStyle"
             :columns="getAvailableColumns"
             :editable="editable"
-            :manageColumns="!displayQueueAsRows"
+            :manage-columns="!displayQueueAsRows"
             :row-style="getRowStyle"
             :showColumns="getVisibleColumns"
             :stripe="stripe"

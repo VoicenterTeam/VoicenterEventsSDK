@@ -199,10 +199,16 @@
                 return row[column.prop]
             },
             tryInitSortable() {
+                if (!this.manageColumns) {
+                    return
+                }
+                
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
+
                 if (!table) {
                     return
                 }
+
                 const self = this
                 Sortable.create(table, {
                     group: 'description',
@@ -307,8 +313,8 @@
                 deep: true,
                 handler() {
                     this.tryInitSortable()
-                }
-            }
+                },
+            },
         },
         mounted() {
             this.tryInitSortable()
