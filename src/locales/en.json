@@ -630,7 +630,6 @@
     "Absolute": "Absolute",
     "row(s)": "row(s)",
     "Maximum range value": "Maximum range value",
-    "Multi Queue real time table": "Multi Queue real time table",
     "Date": "Date",
     "Text": "Text",
     "Actions": "Actions",
@@ -733,5 +732,10 @@
     "Total Call Duration": "Total Call Duration",
     "File Name": "File Name",
     "Click to add new group": "Click to add new group",
-    "Duplicate widget": "Duplicate widget (The widget will be added on the end of list)"
+    "Duplicate widget": "Duplicate widget (The widget will be added on the end of list)",
+    "Hourly Area chart": "Hourly Area Chart",
+    "Multi Queue real time table": "Multi Queue Real Time Table",
+    "Average calls duration": "Average Calls Duration",
+    "Table - Queue Summary Per User": "Table - Queue Summary Per User",
+    "Table - User Break Status Summary": "Table - User Break Status Summary"
 }
