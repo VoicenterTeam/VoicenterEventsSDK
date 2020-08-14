@@ -4,14 +4,14 @@ import parseCatch from '@/helpers/handleErrors'
 const SUCCESS_STATUS = 'OK'
 
 export const WidgetApi = {
-    async find (id) {
+    async find(id) {
         try {
             return await $axios.get(`/Widgets/Get/${id}`)
         } catch (e) {
             parseCatch(e, true, 'Find Widget')
         }
     },
-    async update (data) {
+    async update(data) {
         try {
             if (!data.WidgetTime) {
                 data.WidgetTime = {}
@@ -27,7 +27,7 @@ export const WidgetApi = {
         }
     },
 
-    async store (data) {
+    async store(data) {
         try {
             let result = await $axios.post('/Widgets/Add/', data)
             return parseCustomErrorMessage(result, 'Add Widget')
@@ -36,14 +36,14 @@ export const WidgetApi = {
         }
     },
 
-    destroy (widgetId) {
+    destroy(widgetId) {
         return $axios.post(`/Widgets/Delete/${widgetId}`)
-    }
+    },
 }
 
-function parseCustomErrorMessage (result, prefixMessage) {
+function parseCustomErrorMessage(result, prefixMessage) {
     if (typeof result === 'string' && result !== SUCCESS_STATUS) {
-        let apiError = {message: result}
+        let apiError = { message: result }
         parseCatch(apiError, true, prefixMessage)
     }
     return result

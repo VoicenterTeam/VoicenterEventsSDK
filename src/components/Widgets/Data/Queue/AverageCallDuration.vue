@@ -18,22 +18,22 @@
     </div>
 </template>
 <script>
-    import get from "lodash/get";
-    import {getWidgetData} from "@/services/widgetService";
-    import {getDefaultTimeDelay} from "@/enum/generic";
+    import get from 'lodash/get'
+    import { getWidgetData } from '@/services/widgetService'
+    import { getDefaultTimeDelay } from '@/enum/generic'
 
     export default {
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
         },
-        data () {
+        data() {
             return {
                 fetchDataInterval: null,
                 counters: {
@@ -53,29 +53,29 @@
                     'Average duration of all calls': {
                         'color': '#003B4D',
                         'border': '2px solid #003B4D',
-                    }
-                }
+                    },
+                },
             }
         },
         computed: {
-            getTextFontSize () {
+            getTextFontSize() {
                 const fontSize = get(this.data, 'WidgetLayout.titleFontSize', '24')
                 return {
-                    'font-size': `${fontSize}px`
+                    'font-size': `${fontSize}px`,
                 }
             },
-            getValueFontSize () {
+            getValueFontSize() {
                 const fontSize = get(this.data, 'WidgetLayout.valueFontSize', '36')
                 return {
-                    'font-size': `${fontSize}px`
+                    'font-size': `${fontSize}px`,
                 }
             },
-            countersToDisplay () {
+            countersToDisplay() {
                 return get(this.data, 'WidgetLayout.showCounters', [])
             },
         },
         methods: {
-            async getWidgetData () {
+            async getWidgetData() {
                 try {
                     let data = await getWidgetData(this.data)
                     this.counters = data[0]
@@ -86,19 +86,18 @@
                         let refreshDelay = getDefaultTimeDelay()
                         this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
                     }
-                } finally {
                 }
             },
-            displayCounter (key) {
+            displayCounter(key) {
                 return this.countersToDisplay.includes(key)
             },
-            showDefaultCards () {
+            showDefaultCards() {
                 this.countersToDisplay.forEach((counter) => {
                     this.counters[counter] = '0:00:00'
                 })
-            }
+            },
         },
-        mounted () {
+        mounted() {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -116,16 +115,16 @@
                 immediate: true,
                 handler: function () {
                     this.getWidgetData()
-                }
+                },
             },
             editable: {
                 immediate: true,
                 handler: function () {
                     this.showDefaultCards()
-                }
-            }
+                },
+            },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }

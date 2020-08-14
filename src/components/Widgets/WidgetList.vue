@@ -6,6 +6,7 @@
              ref="widgetListContainer"
         >
             <div
+                v-loading="loading"
                 :data-id="widget.WidgetID"
                 @mousedown="onMousedown"
                 class="grid-stack-item"
@@ -17,7 +18,7 @@
                         :inViewById="inViewById"
                         :key="widget.WidgetID"
                         :widget="widget"
-                        @remove-item="removeWidget(widget)"
+                        @remove-item="removeWidget"
                         @update-item="(data) => updateWidget(data)"
                         v-on="$listeners">
                     </Widget>
@@ -52,7 +53,7 @@
     import Widget from './Widget'
     import WidgetEmptyCard from './WidgetEmptyCard'
     import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
-    import bus from "@/event-bus/EventBus";
+    import bus from '@/event-bus/EventBus'
 
     export default {
         components: {
@@ -60,55 +61,56 @@
             WidgetEmptyCard,
             WidgetErrorBoundary,
         },
-        data () {
+        data() {
             return {
                 grid: null,
-                inViewById: {}
+                inViewById: {},
+                loading: false,
             }
         },
         props: {
             widgetGroup: {
                 type: Object,
-                default: null
+                default: null,
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             widgets: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
         },
         computed: {
-            getClass () {
+            getClass() {
                 return `grid-stack grid-stack-instance-${this.widgetGroup.WidgetGroupID}`
             },
-            enabledRTL () {
+            enabledRTL() {
                 const currentLanguage = this.$store.state.lang.language
-                return currentLanguage !== 'en';
+                return currentLanguage !== 'en'
             },
-            gridId () {
+            gridId() {
                 return `grid-stack-${this.widgetGroup.WidgetGroupID}`
-            }
+            },
         },
         methods: {
-            gridStackAttributes (widget) {
+            gridStackAttributes(widget) {
                 return {
-                    id: get(widget, "WidgetID", "999"),
-                    "data-gs-id": get(widget, "WidgetID", "999"),
-                    "data-gs-x": get(widget, "WidgetLayout.GridLayout.x", 0),
-                    "data-gs-y": get(widget, "WidgetLayout.GridLayout.y", 2),
-                    "data-gs-width": get(widget, "WidgetLayout.GridLayout.width", 12),
-                    "data-gs-height": get(widget, "WidgetLayout.GridLayout.height", 2)
-                };
+                    id: get(widget, 'WidgetID', '999'),
+                    'data-gs-id': get(widget, 'WidgetID', '999'),
+                    'data-gs-x': get(widget, 'WidgetLayout.GridLayout.x', 0),
+                    'data-gs-y': get(widget, 'WidgetLayout.GridLayout.y', 2),
+                    'data-gs-width': get(widget, 'WidgetLayout.GridLayout.width', 12),
+                    'data-gs-height': get(widget, 'WidgetLayout.GridLayout.height', 2),
+                }
             },
-            addWidgetsToGroup (widget) {
+            addWidgetsToGroup(widget) {
                 const gridStackContainer = this.$refs.widgetListContainer
                 if (!gridStackContainer) {
                     return
                 }
-                const rowCount = gridStackContainer.getAttribute('data-gs-current-row');
+                const rowCount = gridStackContainer.getAttribute('data-gs-current-row')
 
                 let GridLayout = {
                     x: 0,
@@ -119,37 +121,37 @@
 
                 widget['WidgetLayout'] = {
                     ...widget['WidgetLayout'],
-                    GridLayout
+                    GridLayout,
                 }
 
                 let objectToEmit = {
                     widgets: [widget],
-                    group: this.widgetGroup
+                    group: this.widgetGroup,
                 }
 
                 this.$emit('addWidgetsToGroup', objectToEmit)
             },
-            removeWidget (widget) {
-                this.grid.removeWidget(`#${widget.WidgetID}`);
-                this.$emit('removeWidget', {'widget': widget, 'group': this.widgetGroup})
+            removeWidget(widget) {
+                this.grid.removeWidget(`#${widget.WidgetID}`)
+                this.$emit('removeWidget', { 'widget': widget, 'group': this.widgetGroup })
             },
-            updateWidget (val) {
-                this.$emit('updateWidget', {'widget': val, 'group': this.widgetGroup})
+            updateWidget(widget) {
+                this.$emit('updateWidget', { 'widget': widget, 'group': this.widgetGroup })
             },
-            findMatchingGrid () {
+            findMatchingGrid() {
                 const matchingGridIndex = window.grids.findIndex(grid => grid.el.id === this.gridId)
 
                 return {
                     grid: window.grids[matchingGridIndex],
-                    index: matchingGridIndex
+                    index: matchingGridIndex,
                 }
             },
-            nextTick () {
+            nextTick() {
                 return new Promise((resolve) => {
                     this.$nextTick(resolve)
                 })
             },
-            async initWindowGrid () {
+            async initWindowGrid() {
                 await this.nextTick()
                 this.tryDestroyGrid()
 
@@ -157,14 +159,14 @@
                     acceptWidgets: true,
                 }
 
-                this.grid = window.GridStack.init(gridOptions, this.$refs.widgetListContainer);
+                this.grid = window.GridStack.init(gridOptions, this.$refs.widgetListContainer)
 
                 if (!this.grid) {
                     return
                 }
 
-                this.grid.movable('.grid-stack-item', this.editable);
-                this.grid.resizable('.grid-stack-item', this.editable);
+                this.grid.movable('.grid-stack-item', this.editable)
+                this.grid.resizable('.grid-stack-item', this.editable)
 
                 window.grids.push(this.grid)
 
@@ -172,68 +174,68 @@
                 this.onDragStartEvent()
                 this.initIntersectionObserver()
             },
-            resizeEventEmitter () {
+            resizeEventEmitter() {
                 this.grid.on('gsresizestop', function (event, element) {
                     const widgetID = element.getAttribute('data-gs-id')
-                    bus.$emit('widget-resized', widgetID);
-                });
+                    bus.$emit('widget-resized', widgetID)
+                })
             },
-            tryDestroyGrid () {
-                const {grid, index} = this.findMatchingGrid()
+            tryDestroyGrid() {
+                const { grid, index } = this.findMatchingGrid()
                 if (!grid) {
                     return
                 }
                 grid.destroy()
                 window.grids.splice(index, 1)
             },
-            addWidgetsToGrid (widgets) {
+            addWidgetsToGrid(widgets) {
                 this.$nextTick(() => {
                     widgets.forEach((widget) => {
-                        this.inViewById[widget.WidgetID] = true;
+                        this.inViewById[widget.WidgetID] = true
                         const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
 
                         if (!isPresent) {
                             return
                         }
 
-                        this.grid.makeWidget(`#${widget.WidgetID}`);
+                        this.grid.makeWidget(`#${widget.WidgetID}`)
                     })
                 })
             },
-            onDragStartEvent () {
+            onDragStartEvent() {
                 this.grid.on('dragstart', () => {
                     this.onMousedown()
-                });
+                })
             },
-            onMousedown () {
-                let preventMovable = !!(this.isWidgetModalOpen() || !this.editable);
-                this.grid.movable('.grid-stack-item', !preventMovable);
+            onMousedown() {
+                let preventMovable = !!(this.isWidgetModalOpen() || !this.editable)
+                this.grid.movable('.grid-stack-item', !preventMovable)
             },
-            isWidgetModalOpen () {
-                let bodyElement = document.body;
-                return bodyElement.classList.contains("el-popup-parent--hidden")
+            isWidgetModalOpen() {
+                let bodyElement = document.body
+                return bodyElement.classList.contains('el-popup-parent--hidden')
             },
-            initIntersectionObserver () {
+            initIntersectionObserver() {
                 const sections = document.querySelectorAll('.grid-stack-item')
 
                 const options = {
                     root: null,
                     threshold: 0.1,
-                    rootMargin: '200px'
+                    rootMargin: '200px',
                 }
                 let inViewById = {}
                 let callback = (entries, observer) => {
                     entries.forEach((entry) => {
-                        let id = entry.target.dataset.id;
+                        let id = entry.target.dataset.id
                         if (!entry.isIntersecting) {
                             inViewById[id] = entry.isIntersecting
                         } else {
                             inViewById[id] = entry.isIntersecting
                             observer.unobserve(entry.target)
                         }
-                    });
+                    })
                     this.inViewById = inViewById
-                };
+                }
 
                 const observer = new IntersectionObserver(callback, options)
 
@@ -241,33 +243,38 @@
                     observer.observe(section)
                 })
 
-                this.observer = observer;
+                this.observer = observer
             },
         },
-        mounted () {
+        mounted() {
             this.initWindowGrid()
+
             bus.$on('added-widgets', (widgets) => {
                 this.addWidgetsToGrid(widgets)
-            });
+            })
+
+            bus.$on('on-loading-data', (state) => {
+                this.loading = state
+            })
         },
         watch: {
             editable: {
-                handler (state) {
-                    this.grid.movable('.grid-stack-item', state);
-                    this.grid.resizable('.grid-stack-item', state);
-                }
+                handler(state) {
+                    this.grid.movable('.grid-stack-item', state)
+                    this.grid.resizable('.grid-stack-item', state)
+                },
             },
             enabledRTL: {
-                handler (state) {
+                handler(state) {
                     this.grid.rtl = state
-                }
+                },
             },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             this.tryDestroyGrid()
             if (this.observer) {
-                this.observer.disconnect();
+                this.observer.disconnect()
             }
-        }
+        },
     }
 </script>

@@ -1,10 +1,12 @@
 import get from 'lodash/get'
 import store from '@/store/store'
-import {WidgetApi} from '@/api/widgetApi'
-import {widgetModel} from '@/models/instances'
-import {WidgetDataApi} from '@/api/widgetDataApi'
-import {getOptionsValues} from '@/helpers/entitiesList'
-import {isExternalDataWidget} from '@/helpers/widgetUtils'
+import bus from '@/event-bus/EventBus'
+import { WidgetApi } from '@/api/widgetApi'
+import { widgetModel } from '@/models/instances'
+import { WidgetDataApi } from '@/api/widgetDataApi'
+import { getOptionsValues } from '@/helpers/entitiesList'
+import { isExternalDataWidget } from '@/helpers/widgetUtils'
+
 
 const AUTO_COMPLETE_TYPE_KEY = 6
 
@@ -21,8 +23,8 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
 
         let widgetLayout = template.WidgetLayout
 
-        widgetLayout['GridLayout']['width'] = Math.ceil(12 * Number(templateWidth) / 100);
-        widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 80);
+        widgetLayout['GridLayout']['width'] = Math.ceil(12 * Number(templateWidth) / 100)
+        widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 80)
 
         let newWidget = widgetModel(template.TemplateID, template.TemplateName, {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,
@@ -41,7 +43,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
                     config.WidgetParameterValueJson = {
                         EntityPositive: options,
                         EntityNegative: [],
-                        AccountList: [store.state.entities.selectedAccountID]
+                        AccountList: [store.state.entities.selectedAccountID],
                     }
                     config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValueJson)
                 }
@@ -59,7 +61,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
         }
 
     }
-    return widgets;
+    return widgets
 }
 
 export function removeDummyWidgets(widgetIds) {
@@ -69,20 +71,28 @@ export function removeDummyWidgets(widgetIds) {
 }
 
 export async function getWidgetData(widget) {
-    if (isExternalDataWidget(widget)) {
-        return await WidgetDataApi.getExternalData(widget.EndPoint)
-    }
 
     if (isWidgetModalOpen() || isInEditMode()) {
-        return null;
+        return null
     }
 
-    return await WidgetDataApi.getData(widget.EndPoint);
+    bus.$emit('on-loading-data', true)
+
+    if (isExternalDataWidget(widget)) {
+        const data = await WidgetDataApi.getExternalData(widget.EndPoint)
+        bus.$emit('on-loading-data', false)
+        return data
+    }
+
+
+    const data = await WidgetDataApi.getData(widget.EndPoint)
+    bus.$emit('on-loading-data', false)
+    return data
 }
 
 export function isWidgetModalOpen() {
-    let bodyElement = document.body;
-    return bodyElement.classList.contains("el-popup-parent--hidden")
+    let bodyElement = document.body
+    return bodyElement.classList.contains('el-popup-parent--hidden')
 }
 
 export function isInEditMode() {

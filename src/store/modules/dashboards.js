@@ -20,14 +20,12 @@ const types = {
     SET_ACTIVE_DASHBOARD: 'SET_ACTIVE_DASHBOARD',
     ADD_DASHBOARD: 'ADD_DASHBOARD',
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD',
-    SET_LOADING: 'SET_LOADING',
     DELETE_DASHBOARD: 'DELETE_DASHBOARD',
     RESET_ACTIVE_DASHBOARD: 'RESET_ACTIVE_DASHBOARD'
 };
 const state = {
     allDashboards: [],
     activeDashboard: null,
-    loadingData: false,
     editMode: false,
 };
 
@@ -55,9 +53,6 @@ const mutations = {
         }
 
         localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
-    },
-    [types.SET_LOADING]: (state, loading) => {
-        state.loadingData = loading
     },
     [types.SET_EDIT_MODE]: (state, value) => {
         state.editMode = value
@@ -104,9 +99,6 @@ const actions = {
     async updateDashboard({commit}, dashboard) {
         commit(types.UPDATE_DASHBOARD, dashboard)
         commit(types.SET_LOADING, false)
-    },
-    setLoadingData({commit}, value) {
-        commit(types.SET_LOADING, value)
     },
     async deleteDashboard({commit}, dashboard) {
         await DashboardApi.destroy(dashboard.DashboardID)

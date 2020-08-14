@@ -6,13 +6,13 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {Chart} from 'highcharts-vue'
-    import Highcharts from "highcharts";
-    import {getWidgetData} from "@/services/widgetService";
-    import {getDefaultTimeDelay} from "@/enum/generic";
-    import Xrange from "highcharts/modules/xrange";
+    import { Chart } from 'highcharts-vue'
+    import Highcharts from 'highcharts'
+    import { getWidgetData } from '@/services/widgetService'
+    import { getDefaultTimeDelay } from '@/enum/generic'
+    import Xrange from 'highcharts/modules/xrange'
 
-    Xrange(Highcharts);
+    Xrange(Highcharts)
 
     export default {
         components: {
@@ -22,14 +22,14 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
         },
-        data () {
+        data() {
             return {
                 chartVisibility: true,
                 fetchDataInterval: null,
@@ -37,7 +37,7 @@
             }
         },
         methods: {
-            async getWidgetData () {
+            async getWidgetData() {
                 try {
                     let Data = await getWidgetData(this.data)
                     let chartData = get(Data, '0')
@@ -52,24 +52,29 @@
 
                     this.chartOptions = chartData
 
-                    this.chartOptions['chart'] = {
-                        type: 'xrange'
-                    }
-                    this.chartOptions['yAxis'] = {
-                        ...this.chartOptions['yAxis'],
-                        ...{
-                            title: {
-                                text: ''
+
+                    this.chartOptions = {
+                        ...this.chartOptions,
+                        chart: {
+                            type: 'xrange',
+                        },
+                        yAxis: {
+                            ...this.chartOptions['yAxis'],
+                            ...{
+                                title: {
+                                    text: '',
+                                },
+                                reversed: true,
                             },
-                            reversed: true
-                        }
+                        },
+                        plotOptions: {
+                            series: {
+                                pointPadding: 0.25,
+                            },
+                        },
                     }
-                    this.chartOptions['plotOptions'] = {
-                        series: {
-                            pointPadding: 0.25
-                        }
-                    },
-                        this.chartVisibility = false
+
+                    this.chartVisibility = false
                     this.$nextTick(() => {
                         this.chartVisibility = true
                     })
@@ -81,9 +86,9 @@
                         this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
                     }
                 }
-            }
+            },
         },
-        mounted () {
+        mounted() {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -95,10 +100,10 @@
                 immediate: true,
                 handler: function () {
                     this.getWidgetData()
-                }
-            }
+                },
+            },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }

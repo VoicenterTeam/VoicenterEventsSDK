@@ -91,14 +91,14 @@
     import cloneDeep from 'lodash/cloneDeep'
     import UpdateDialog from './UpdateDialog'
     import RefreshButton from '@/components/RefreshButton'
-    import {getWidgetData} from '@/services/widgetService'
-    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
-    import {Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip} from 'element-ui'
-    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
+    import { getWidgetData } from '@/services/widgetService'
+    import { defaultCardColors } from '@/enum/defaultWidgetSettings'
+    import { Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip } from 'element-ui'
+    import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
-    import TimeFrame from "@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame";
+    import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
 
     export default {
         mixins: [cardWidgetMixin],
@@ -122,18 +122,18 @@
             },
             showText: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             displayBorder: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             cardIcon: {
                 type: String,
-                default: 'IconTotalOutgoingCalls'
+                default: 'IconTotalOutgoingCalls',
             },
         },
-        data () {
+        data() {
             return {
                 fetchDataInterval: null,
                 cardValue: null,
@@ -151,16 +151,16 @@
             }
         },
         computed: {
-            autoCompletes () {
+            autoCompletes() {
                 return this.data.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
-            otherFilters () {
+            otherFilters() {
                 return this.data.WidgetConfig.filter(c => c.ParameterType && c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
         },
         methods: {
             get,
-            async getWidgetData () {
+            async getWidgetData() {
                 try {
                     let Data = await getWidgetData(this.data)
                     this.cardValue = get(Data, `[0][${this.DATA_KEY}]`)
@@ -168,10 +168,10 @@
                     console.log(e)
                 }
             },
-            onShowModal () {
+            onShowModal() {
                 this.showModal = true
             },
-            onChange () {
+            onChange() {
                 try {
                     this.model.WidgetConfig.forEach((config) => {
                         if (typeof config.WidgetParameterValueJson === 'object') {
@@ -189,7 +189,7 @@
                     let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                     this.model.WidgetTime = {
                         ...this.model.WidgetTime,
-                        ...widgetTime
+                        ...widgetTime,
                     }
                 }
 
@@ -204,28 +204,28 @@
                     ...this.layoutConfig,
                     colors: this.model.colors,
 
-                };
+                }
 
                 this.data.WidgetTime = this.model.WidgetTime
                 this.data.WidgetConfig = this.model.WidgetConfig
                 this.data.Title = this.model.Title
 
-                this.$emit('on-update', this.data);
-                this.showModal = false;
+                this.$emit('on-update', this.data)
+                this.showModal = false
             },
-            async refreshEntitiesList () {
+            async refreshEntitiesList() {
                 this.loadEntitiesList = true
                 await this.$store.dispatch('entities/getEntitiesList')
                 this.loadEntitiesList = false
             },
-            isAutoComplete (WidgetConfig) {
+            isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
-            isOtherFilters (WidgetConfig) {
+            isOtherFilters(WidgetConfig) {
                 return WidgetConfig.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE
             },
         },
-        mounted () {
+        mounted() {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -239,10 +239,10 @@
                     this.getWidgetData()
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
-                }
-            }
+                },
+            },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }

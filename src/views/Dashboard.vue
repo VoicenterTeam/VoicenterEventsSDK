@@ -52,7 +52,7 @@
                 </div>
             </template>
         </base-navbar>
-        <div class="dashboard" element-loading-background="transparent" v-loading="loading" :key="activeLanguage">
+        <div class="dashboard" v-loading="loading" :key="activeLanguage">
             <div class="dashboard-container min-h-screen pb-10" v-if="dashboard">
                 <sidebar :activeTab="activeTab"
                          :widgetGroupList="activeDashboardData.WidgetGroupList"
@@ -75,7 +75,6 @@
                             @switch-tab="(tab) => switchTab(tab)"
                             @updateWidget="(data) => updateWidget(data.widget, data.group)">
                         </component>
-
                     </fade-transition>
                 </div>
             </div>
@@ -143,6 +142,7 @@
         mixins: [pageSizeMixin],
         data() {
             return {
+                loading: false,
                 showWidgetMenu: false,
                 editMode: false,
                 activeDashboardData: null,
@@ -163,9 +163,6 @@
         computed: {
             activeLanguage() {
                 return this.$store.state.lang.language
-            },
-            loading() {
-                return this.$store.state.dashboards.loadingData
             },
             dashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
@@ -347,18 +344,21 @@
                     this.groupToEdit = group
                 })
             },
-            updateWidget(widget, widgetGroup) {
+            async updateWidget(widget, widgetGroup) {
                 let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
                 if (index !== -1) {
 
                     let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
+
                     if (widgetIndex !== -1 && !widgetGroup.IsNew) {
-                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
 
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, widget)
 
                         if (!this.editMode) {
-                            this.saveDashboard()
+                            bus.$emit('on-loading-data', true)
+                            await WidgetApi.update(widget)
+                            this.widget = await WidgetApi.find(widget)
+                            bus.$emit('on-loading-data', false)
                         } else {
                             this.groupToEdit = widgetGroup
                         }
@@ -366,6 +366,7 @@
                 }
             },
             async saveDashboard() {
+                this.loading = true
                 this.editMode = false
                 this.showWidgetMenu = false
                 this.storingData = true
@@ -376,12 +377,12 @@
                     await this.updateGridStacks(currentGroup)
                 }
 
-                //RunDashboardOperations
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
                 this.operations = new DashboardOperations()
                 this.storingData = false
                 this.groupToEdit = null
+                this.loading = false
             },
             updateGridStacks(group) {
                 const activeDashboardWidgets = group.WidgetList
@@ -410,6 +411,7 @@
                 })
             },
             resetDashboard() {
+                this.loading = true
                 this.showWidgetMenu = false
 
                 removeDummyWidgets(this.temporaryWidgetIds)
@@ -422,9 +424,12 @@
                 this.operations = new DashboardOperations()
 
                 this.storingData = true
+
                 this.$nextTick(() => {
                     this.storingData = false
                 })
+
+                this.loading = false
             },
             switchDashboardLayout(type) {
                 this.layoutType = type
@@ -435,10 +440,13 @@
             },
             saveActiveTab(tab) {
                 localStorage.setItem(ACTIVE_WIDGET_GROUP_KEY, tab)
+
             },
             switchTab(tab) {
+                this.loading = true
                 this.activeTab = tab
                 this.saveActiveTab(tab)
+                this.loading = false
             },
             sortDashboardEntities(dashboard) {
                 try {
@@ -518,4 +526,6 @@
     .dashboard > .el-loading-mask > .el-loading-spinner {
         @apply fixed;
     }
+
+
 </style>

@@ -42,7 +42,9 @@
                                     <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
                                     <div class="flex flex-row">
                                         <el-input size="mini" class="mx-1" v-model="customPageSize"></el-input>
-                                        <el-button size="mini" class="mx-1" @click="applyCustomPageSize">{{$t('Apply')}}</el-button>
+                                        <el-button size="mini" class="mx-1" @click="applyCustomPageSize">
+                                            {{$t('Apply')}}
+                                        </el-button>
                                     </div>
                                 </div>
                             </slot>
@@ -73,28 +75,29 @@
                     </div>
                 </template>
                 <template v-slot:additional-data>
-                    <p class="text-main-sm px-2" :style="getStyles">{{dataCounts}} / {{filteredDataLength}} {{$t('row(s)')}}</p>
+                    <p class="text-main-sm px-2" :style="getStyles">{{dataCounts}} / {{filteredDataLength}}
+                        {{$t('row(s)')}}</p>
                 </template>
             </data-table>
         </div>
     </div>
 </template>
 <script>
-    import RealTimeUserTable from "./RealTimeUserTable";
-    import TimeFrame from "./TimeFrame";
+    import RealTimeUserTable from './RealTimeUserTable'
+    import TimeFrame from './TimeFrame'
     import get from 'lodash/get'
-    import {format} from 'date-fns'
+    import { format } from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import {Option, Pagination, Select} from 'element-ui'
-    import AudioPlayer from "@/components/Audio/AudioPlayer";
+    import { Option, Pagination, Select } from 'element-ui'
+    import AudioPlayer from '@/components/Audio/AudioPlayer'
     import DataTable from '@/components/Table/DataTable'
-    import {isMultiQueuesDashboard, isRealtimeWidget} from '@/helpers/widgetUtils'
-    import {getDefaultTimeDelay} from '@/enum/generic'
-    import {getWidgetData} from "@/services/widgetService";
-    import MultiQueuesDashboard from "@/components/Widgets/Data/Queue/MultiQueuesDashboard";
-    import dataTableMixin from "@/mixins/dataTableMixin";
-    import {dynamicColumns} from "@/enum/realTimeTableConfigs";
+    import { isMultiQueuesDashboard, isRealtimeWidget } from '@/helpers/widgetUtils'
+    import { getDefaultTimeDelay } from '@/enum/generic'
+    import { getWidgetData } from '@/services/widgetService'
+    import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
+    import dataTableMixin from '@/mixins/dataTableMixin'
+    import { dynamicColumns } from '@/enum/realTimeTableConfigs'
 
     const DATE_FORMAT = 'dd-MM-yyyy'
     const DATE_TIME_FORMAT = 'HH:mm:ss dd-MM-yyyy'
@@ -114,14 +117,14 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
         },
-        data () {
+        data() {
             return {
                 tableData: [],
                 columns: [],
@@ -146,7 +149,7 @@
             getStyles() {
                 return this.$store.getters['layout/widgetTitleStyles']
             },
-            fetchTableData () {
+            fetchTableData() {
                 let tableData = this.tableData
 
                 if (this.filter && this.searchableFields.length > 0) {
@@ -155,7 +158,7 @@
                             if (c[field]) {
                                 return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
                             }
-                            return false;
+                            return false
                         })
                     })
                 }
@@ -166,14 +169,14 @@
                     return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
                 }
             },
-            isSimpleTable () {
-                return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data);
-            }
+            isSimpleTable() {
+                return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)
+            },
         },
         methods: {
             isMultiQueuesDashboard,
             isRealtimeWidget,
-            async getWidgetData () {
+            async getWidgetData() {
                 try {
                     let data = await getWidgetData(this.widget)
 
@@ -186,7 +189,7 @@
                         return
                     }
 
-                    let columns = [];
+                    let columns = []
                     let containsDate = false
                     let dateColumns = ['date']
                     let dateTimeColumns = ['date & time', 'call time', 'contacted time', 'starttime', 'endtime']
@@ -210,7 +213,7 @@
                                 fixed: false,
                                 align: 'center',
                                 label: this.$t(column) || startCase(column),
-                                className: containsDate ? 'direction-ltr' : ''
+                                className: containsDate ? 'direction-ltr' : '',
                             }
 
                             columns.push(columnData)
@@ -236,13 +239,12 @@
                         let refreshDelay = getDefaultTimeDelay()
                         this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
                     }
-                } finally {
                 }
             },
-            formatDateColumn (data, column, dateFormat) {
+            formatDateColumn(data, column, dateFormat) {
                 data.forEach(row => {
                     if (this.widget.TemplateID.toString() === this.QUEUE_STATISTICS_TEMPLATE.toString()) {
-                        row[column] = row[column].replace(/\//g,'-');
+                        row[column] = row[column].replace(/\//g, '-')
                         return
                     }
                     if (row[column]) {
@@ -250,14 +252,14 @@
                             // To prevent date-fns errors like: Invalid time value
                             row[column] = format(new Date(row[column]), dateFormat)
                         } catch (e) {
-                            row[column] = row[column].replace(/\//g,'-');
+                            row[column] = row[column].replace(/\//g, '-')
                             return row[column]
                         }
                     }
                 })
                 return data
             },
-            getRecordingUrl (recordingLink) {
+            getRecordingUrl(recordingLink) {
                 const div = document.createElement('div')
                 div.innerHTML = recordingLink
                 const anchor = div.querySelector('a')
@@ -266,7 +268,7 @@
                 }
                 return ''
             },
-            storePaginationSettings (pageSize) {
+            storePaginationSettings(pageSize) {
                 this.data.WidgetLayout['paginationSize'] = Number(pageSize)
                 this.$emit('on-update', this.data)
             },
@@ -277,9 +279,9 @@
             applyCustomPageSize() {
                 const pageSize = this.customPageSize
                 this.storePaginationSettings(pageSize)
-            }
+            },
         },
-        mounted () {
+        mounted() {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -288,7 +290,7 @@
 
         },
         watch: {
-            filter () {
+            filter() {
                 this.currentPage = 1
             },
             data: {
@@ -297,15 +299,15 @@
                 handler: function () {
                     this.getWidgetData()
                     this.applyPaginationSettings()
-                }
+                },
             },
             pageSize: {
                 handler: function (val) {
                     this.storePaginationSettings(val)
-                }
+                },
             },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }

@@ -7,12 +7,12 @@
 <script>
     import get from 'lodash/get'
     import Highcharts from 'highcharts'
-    import {Chart} from 'highcharts-vue'
+    import { Chart } from 'highcharts-vue'
     import chartConfig from './Configs/TimeLine'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import {getWidgetData} from '@/services/widgetService'
-    import {getDefaultTimeDelay} from "@/enum/generic";
-    import bus from "@/event-bus/EventBus";
+    import { getWidgetData } from '@/services/widgetService'
+    import { getDefaultTimeDelay } from '@/enum/generic'
+    import bus from '@/event-bus/EventBus'
 
     export default {
         name: 'TimeLineChart',
@@ -23,35 +23,39 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
         },
-        data () {
+        data() {
             return {
                 chartVisibility: true,
                 chartOptions: {},
-                fetchDataInterval: null
+                fetchDataInterval: null,
             }
         },
         methods: {
-            async getWidgetData () {
+            async getWidgetData() {
                 try {
                     let widgetDataType = this.data.DataTypeID
                     let Data = await getWidgetData(this.data)
+
                     if (!Data) {
                         return
                     }
-                    let chartData = get(Data, '0', {series: []})
+
+                    let chartData = get(Data, '0', { series: [] })
+
                     if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
-                        chartData = {series: Data}
+                        chartData = { series: Data }
                     } else {
-                        chartData = get(Data, '0', {series: []})
+                        chartData = get(Data, '0', { series: [] })
                     }
                     let chartType = ''
+
                     if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
                         chartType = 'line'
                     } else if (widgetDataType === widgetDataTypes.BARS_WITH_LINES_TYPE_ID) {
@@ -59,24 +63,24 @@
                     } else if (widgetDataType === widgetDataType.CHART_QUEUE) {
                         chartData = {
                             ...chartData,
-                            ...chartConfig.yAxisConfig
+                            ...chartConfig.yAxisConfig,
                         }
                     }
 
                     let data = {
-                        "Order": 6,
-                        "chart": {
-                            "type": chartType,
-                            "marginTop": 45
+                        Order: 6,
+                        chart: {
+                            type: chartType,
+                            marginTop: 45,
                         },
-                        "tooltip": {
-                            "formatter": function () {
+                        tooltip: {
+                            formatter: function () {
                                 return `<p style="font-size: 16px; color: ${this.point.color}; margin-top: 10px">${this.point.y}</p>`
                             },
-                            "backgroundColor": "#ffffff",
-                            "borderColor": "#ffffff",
-                            "boxShadow": "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
-                            "borderRadius": 10,
+                            backgroundColor: '#ffffff',
+                            borderColor: '#ffffff',
+                            boxShadow: '0 10px 15px 0 rgba(143, 149, 163, 0.38)',
+                            borderRadius: 10,
                         },
                         ...chartData,
                     }
@@ -93,32 +97,32 @@
                     }
                 }
             },
-            addLegendToChart (chart) {
+            addLegendToChart(chart) {
                 if (!chart.legend) {
                     chart.legend = {
-                        enabled: true
+                        enabled: true,
                     }
                 } else {
                     chart.legend.enabled = true
                 }
                 return chart
             },
-            triggerResizeEvent () {
+            triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
                     if (this.data.WidgetID.toString() !== widgetID.toString()) {
-                        return;
+                        return
                     }
                     this.reDrawChart()
-                });
+                })
             },
-            reDrawChart () {
+            reDrawChart() {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
-            }
+            },
         },
-        mounted () {
+        mounted() {
             if (this.data.DefaultRefreshInterval) {
                 this.fetchDataInterval = setInterval(() => {
                     this.getWidgetData()
@@ -131,10 +135,10 @@
                 immediate: true,
                 handler: function () {
                     this.getWidgetData()
-                }
-            }
+                },
+            },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }

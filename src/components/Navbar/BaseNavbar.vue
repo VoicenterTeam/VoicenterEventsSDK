@@ -229,11 +229,8 @@
             activeLanguage() {
                 return localStorage.getItem('locale') || this.$i18n.locale
             },
-            loadingData() {
-                return this.$store.state.dashboards.loadingData;
-            },
             accountNoData() {
-                return !this.activeDashboard && !this.loadingData;
+                return !this.activeDashboard
             },
             dashboardLayoutID() {
                 return get(this.activeDashboard, 'DashboardLayoutID', this.DEFAULT_LAYOUT_ID);

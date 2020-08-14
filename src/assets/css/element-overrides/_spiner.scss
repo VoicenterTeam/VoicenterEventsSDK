@@ -1,5 +1,5 @@
 body .el-loading-mask {
-    @apply relative;
+    @apply relative bg-transparent h-full;
     .el-loading-spinner {
         .circular {
             height: 60px;
@@ -12,4 +12,3 @@ body .el-loading-mask {
         }
     }
 }
-
