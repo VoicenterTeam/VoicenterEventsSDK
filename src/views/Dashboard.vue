@@ -355,10 +355,12 @@
                         this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, widget)
 
                         if (!this.editMode) {
-                            bus.$emit('on-loading-data', true)
+                            this.$set(widget, 'onLoading', true)
+                            
                             await WidgetApi.update(widget)
                             widget = await WidgetApi.find(widget.WidgetID)
-                            bus.$emit('on-loading-data', false)
+
+                            this.$set(widget, 'onLoading', false)
                         } else {
                             this.groupToEdit = widgetGroup
                         }

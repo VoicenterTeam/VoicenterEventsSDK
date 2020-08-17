@@ -6,7 +6,7 @@
              ref="widgetListContainer"
         >
             <div
-                v-loading="loading"
+                v-loading="widget.onLoading"
                 :data-id="widget.WidgetID"
                 @mousedown="onMousedown"
                 class="grid-stack-item"
@@ -251,10 +251,6 @@
 
             bus.$on('added-widgets', (widgets) => {
                 this.addWidgetsToGrid(widgets)
-            })
-
-            bus.$on('on-loading-data', (state) => {
-                this.loading = state
             })
         },
         watch: {

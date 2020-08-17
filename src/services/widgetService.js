@@ -1,6 +1,5 @@
 import get from 'lodash/get'
 import store from '@/store/store'
-import bus from '@/event-bus/EventBus'
 import { WidgetApi } from '@/api/widgetApi'
 import { widgetModel } from '@/models/instances'
 import { WidgetDataApi } from '@/api/widgetDataApi'
@@ -76,17 +75,17 @@ export async function getWidgetData(widget) {
         return null
     }
 
-    bus.$emit('on-loading-data', true)
+    this.$set(widget, 'onLoading', true)
 
     if (isExternalDataWidget(widget)) {
         const data = await WidgetDataApi.getExternalData(widget.EndPoint)
-        bus.$emit('on-loading-data', false)
+        this.$set(widget, 'onLoading', false)
         return data
     }
 
 
     const data = await WidgetDataApi.getData(widget.EndPoint)
-    bus.$emit('on-loading-data', false)
+    this.$set(widget, 'onLoading', false)
     return data
 }
 
