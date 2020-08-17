@@ -202,7 +202,7 @@
                 if (!this.manageColumns) {
                     return
                 }
-                
+
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
 
                 if (!table) {
@@ -215,12 +215,18 @@
                     fallbackOnBody: true,
                     animation: 150,
                     onEnd({ newIndex, oldIndex }) {
-                        const targetRow = get(self.availableColumns.splice(oldIndex, 1), '[0]')
-                        self.availableColumns.splice(newIndex, 0, targetRow)
                         self.tableKey = self.availableColumns.map(c => c.prop).join('_')
-                        self.updateLayout()
+                        self.composePayloadToUpdateLayout(newIndex, oldIndex)
                     },
                 })
+            },
+            composePayloadToUpdateLayout(newIndex, oldIndex) {
+                const targetRow = this.renderedColumns[oldIndex]
+
+                this.availableColumns.splice(oldIndex, 1)
+                this.availableColumns.splice(newIndex, 0, targetRow)
+
+                this.updateLayout()
             },
             updateColumnsVisibility(columns, onManageExport) {
                 if (onManageExport) {
