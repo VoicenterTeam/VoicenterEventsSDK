@@ -80,12 +80,6 @@
                 this.$emit('onChange', evt)
             },
         },
-        watch: {
-            availableColumns() {
-                this.allChecked = false
-                this.isIndeterminate = false;
-            }
-        }
     }
 </script>
 <style scoped lang="scss">
