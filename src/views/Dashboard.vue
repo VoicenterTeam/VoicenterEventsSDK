@@ -357,7 +357,7 @@
                         if (!this.editMode) {
                             bus.$emit('on-loading-data', true)
                             await WidgetApi.update(widget)
-                            this.widget = await WidgetApi.find(widget.WidgetID)
+                            widget = await WidgetApi.find(widget.WidgetID)
                             bus.$emit('on-loading-data', false)
                         } else {
                             this.groupToEdit = widgetGroup
