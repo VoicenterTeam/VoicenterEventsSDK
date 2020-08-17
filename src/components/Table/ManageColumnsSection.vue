@@ -82,7 +82,6 @@
         },
         watch: {
             availableColumns() {
-                this.checkedColumns = []
                 this.allChecked = false
                 this.isIndeterminate = false;
             }
