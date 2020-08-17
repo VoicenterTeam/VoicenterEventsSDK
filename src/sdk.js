@@ -7,7 +7,7 @@ import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
 import { getServerWithHighestPriority, isValidDate } from './utils';
-import { externalLogin, refreshToken } from './externalLogin';
+import { externalLogin, refreshToken, getExternalLoginUrl } from './externalLogin';
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
@@ -572,10 +572,12 @@ class EventsSDK {
           this.emit(eventTypes.LOGIN, { token: this.options.token });
           return
         }
+        let url = getExternalLoginUrl(this.options.loginUrl, type)
         if (type === 'token' || type === 'user' || type === 'account') {
-          const res = await externalLogin(this.options.loginUrl, {
+          const res = await externalLogin(url, {
             token: this.options.token,
             email: this.options.email,
+            username: this.options.username,
             password: this.options.password
           })
           await this._onLoginResponse(res)

@@ -1,7 +1,12 @@
-export async function externalLogin(url, { email, password, token }) {
+export async function externalLogin(url, { email, password, token, username }) {
   let body = null
   if (token) {
     body = JSON.stringify({ token })
+  } else if (username) {
+    body = JSON.stringify({
+      username,
+      password
+    })
   } else {
     body = JSON.stringify({
       email,
@@ -20,6 +25,17 @@ export async function externalLogin(url, { email, password, token }) {
     throw new Error(data.error)
   }
   return data.Data.Socket;
+}
+
+export function getExternalLoginUrl(baseUrl, loginType) {
+  if (loginType === 'user') {
+    return `${baseUrl}/User`
+  } else if (loginType === 'token') {
+    return `${baseUrl}/Token`
+  } else if (loginType === 'account') {
+    return `${baseUrl}/Account`
+  }
+  return baseUrl
 }
 
 export async function refreshToken(url, oldRefreshToken) {
