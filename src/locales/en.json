@@ -737,5 +737,6 @@
     "Multi Queue real time table": "Multi Queue Real Time Table",
     "Average calls duration": "Average Calls Duration",
     "Table - Queue Summary Per User": "Table - Queue Summary Per User",
-    "Table - User Break Status Summary": "Table - User Break Status Summary"
+    "Table - User Break Status Summary": "Table - User Break Status Summary",
+    "extension_name": "Extension Name"
 }

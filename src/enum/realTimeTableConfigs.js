@@ -9,16 +9,21 @@ export const dynamicColumns = [{
     align: 'center',
     label: 'User Name',
 }, {
+    prop: 'extension_name',
+    fixed: false,
+    align: 'center',
+    label: 'Extension Name',
+}, {
     prop: 'status',
     fixed: false,
     align: 'center',
-    label: 'Status'
+    label: 'Status',
 }, {
     prop: 'status_duration',
     fixed: false,
     align: 'center',
     label: 'Current Status Duration',
-    width: '250px'
+    width: '250px',
 }, {
     prop: 'caller_info',
     fixed: false,

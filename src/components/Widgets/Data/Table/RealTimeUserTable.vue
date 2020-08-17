@@ -19,13 +19,19 @@
                                  :settings="getSettings"
                                  v-if="userExtension(row.user_id) && drawRow">
                 </status-duration>
-                <span v-else>{{$t('N/A')}}</span>
+                <span v-else>---</span>
             </template>
             <template v-slot:status="{row}">
                 <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
                              :userId="row.user_id"
                              v-if="userExtension(row.user_id) && drawRow"/>
-                <span v-else>{{$t('N/A')}}</span>
+                <span v-else>---</span>
+            </template>
+            <template v-slot:extension_name="{row}">
+                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
+                            {{getExtensionName(row.user_id).ext_name}}
+                        </span>
+                <span v-else>---</span>
             </template>
             <template v-slot:user_name="{row}">
                         <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
@@ -38,14 +44,14 @@
                             :key="row.user_id"
                             :userId="row.user_id"
                             v-if="userExtension(row.user_id) && drawRow"/>
-                <span v-else>{{$t('N/A')}}</span>
+                <span v-else>---</span>
             </template>
             <template v-slot:caller_info="{row}">
                 <calls-info :extension="userExtension(row.user_id)" :hideCallInfo="true"
                             :key="row.user_id"
                             :userId="row.user_id"
                             v-if="userExtension(row.user_id) && drawRow"/>
-                <span v-else>{{$t('N/A')}}</span>
+                <span v-else>---</span>
             </template>
             <template v-slot:title>
                 <base-widget-title :title="data.Title"/>
@@ -70,18 +76,18 @@
     </div>
 </template>
 <script>
-    import TimeFrame from "./TimeFrame";
+    import TimeFrame from './TimeFrame'
     import get from 'lodash/get'
     import UserStatus from './UserStatus'
     import StatusDuration from './StatusDuration'
     import DataTable from '@/components/Table/DataTable'
-    import {extensionColor} from '@/util/extensionStyles'
-    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
-    import {realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {dynamicRows} from '@/enum/realTimeTableConfigs'
-    import dataTableMixin from "@/mixins/dataTableMixin";
-    import CallsInfo from "./CallsInfo";
-    import cloneDeep from "lodash/cloneDeep";
+    import { extensionColor } from '@/util/extensionStyles'
+    import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
+    import { realTimeSettings } from '@/enum/defaultWidgetSettings'
+    import { dynamicRows } from '@/enum/realTimeTableConfigs'
+    import dataTableMixin from '@/mixins/dataTableMixin'
+    import CallsInfo from './CallsInfo'
+    import cloneDeep from 'lodash/cloneDeep'
 
     export default {
         mixins: [dataTableMixin],
@@ -95,26 +101,26 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             tableData: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             columns: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             searchableFields: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
         },
-        data () {
+        data() {
             return {
                 filter: '',
                 border: true,
@@ -124,7 +130,7 @@
             }
         },
         computed: {
-            fetchTableData () {
+            fetchTableData() {
                 let tableData = this.tableData
 
                 let showLoggedOutUsers = get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
@@ -140,28 +146,32 @@
                             if (c[field]) {
                                 return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
                             }
-                            return false;
+                            return false
                         })
                     })
                 }
 
                 return tableData
             },
-            extensions () {
+            extensions() {
                 return this.$store.state.extensions.extensions
             },
-            loggedOutUserIds () {
+            loggedOutUserIds() {
                 return this.extensions.filter(e => e.representativeStatus === LOGOUT_STATUS).map((el) => el.userID)
             },
-            getSettings () {
+            getSettings() {
                 return this.data.WidgetLayout.settings || realTimeSettings
             },
         },
         methods: {
-            userExtension (userId) {
+            getExtensionName(userId) {
+                const extensionNumber = this.userExtension(userId)
+                return this.$store.getters['entities/getExtensionById'](extensionNumber.number)
+            },
+            userExtension(userId) {
                 return this.extensions.find(e => e.userID === userId)
             },
-            getCellStyle ({row, column}) {
+            getCellStyle({ row, column }) {
                 let color = 'transparent'
 
                 if (dynamicRows.includes(column.property)) {
@@ -170,9 +180,9 @@
                         color = extensionColor(extension)
                     }
                 }
-                return {'background-color': color}
+                return { 'background-color': color }
             },
-            getCellClassName ({column, row}) {
+            getCellClassName({ column, row }) {
                 let className = ''
                 let extension = this.userExtension(row.user_id)
 
@@ -182,7 +192,7 @@
 
                 return className
             },
-            sortChange () {
+            sortChange() {
                 this.drawRow = false
                 this.$nextTick(() => {
                     this.drawRow = true

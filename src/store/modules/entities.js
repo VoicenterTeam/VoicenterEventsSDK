@@ -58,6 +58,12 @@ const getters = {
         }
         return get(account, 'AccountBreaks', [])
     },
+    extensionList: state => {
+        return get(state, 'entitiesList.Extension', [])
+    },
+    getExtensionById: (state, getters) => id => {
+        return getters.extensionList.find(ext => ext.extension_id === id) || {ext_name: ''}
+    },
     getStatusById: (state, getters) => id => {
         return getters.accountStatuses.find(a => a.StatusID.toString() === id.toString()) || {Name: ''}
     },
