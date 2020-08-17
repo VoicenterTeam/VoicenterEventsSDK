@@ -23,7 +23,8 @@
                     group="columns"
                     @change="onChange">
                     <el-checkbox class="py-2 px-4" v-for="column in availableColumns" :label="column.prop"
-                                 :key="column.label"><i class="el-icon-rank text-primary font-bold"/> {{$t(column.label)}}
+                                 :key="column.label"><i class="el-icon-rank text-primary font-bold"/>
+                        {{$t(column.label)}}
                     </el-checkbox>
                 </draggable>
             </el-checkbox-group>
@@ -32,7 +33,7 @@
 </template>
 <script>
     import draggable from 'vuedraggable'
-    import {Checkbox, CheckboxGroup, Select, Option, Tooltip} from 'element-ui'
+    import { Checkbox, CheckboxGroup, Option, Select, Tooltip } from 'element-ui'
 
     export default {
         components: {
@@ -53,28 +54,28 @@
         props: {
             availableColumns: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
         },
         computed: {
             dragOptions() {
                 return {
                     animation: 200,
-                    ghostClass: "moving-columns",
+                    ghostClass: 'moving-columns',
                     swapThreshold: 0.8,
-                    drag: true
-                };
+                    drag: true,
+                }
             },
         },
         methods: {
             handleCheckAllChange(val) {
                 this.checkedColumns = val ? this.availableColumns.map(c => c.prop) : []
-                this.isIndeterminate = false;
+                this.isIndeterminate = false
             },
             handleCheckedColumnsChange(val) {
-                let checkedCount = val.length;
-                this.allChecked = checkedCount === this.availableColumns.length;
-                this.isIndeterminate = checkedCount > 0 && checkedCount < this.availableColumns.length;
+                let checkedCount = val.length
+                this.allChecked = checkedCount === this.availableColumns.length
+                this.isIndeterminate = checkedCount > 0 && checkedCount < this.availableColumns.length
             },
             onChange(evt) {
                 this.$emit('onChange', evt)
@@ -169,6 +170,7 @@
     .moving-columns {
         @apply opacity-50 bg-gray-100 border border-primary cursor-move;
     }
+
     .columns-section-container {
         min-height: 200px;
     }

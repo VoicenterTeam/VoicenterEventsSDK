@@ -1,13 +1,23 @@
 <template>
     <div>
-        <div class="flex items-center manage-columns-header" v-if="showHeaderContainer">{{$t('datatable.manage.columns.header')}}</div>
+        <div class="flex items-center manage-columns-header" v-if="showHeaderContainer">
+            {{$t('datatable.manage.columns.header')}}
+        </div>
         <div class="flex flex-col sm:flex-row">
             <manage-columns-section
-                :availableColumns="activeColumns"
+                key="TO_HIDE"
+                :availableColumns="showActiveColumns"
                 @onChange="(evt) => onColumnChange(evt , sectionsToManage.TO_HIDE)">
+                <template v-slot:search>
+                    <div class="w-4/6 mx-2">
+                        <el-input :placeholder="$t('datatable.manage.columns.search')"
+                                  v-model="filterActiveColumns"
+                                  suffix-icon="el-icon-search" class="search-columns"/>
+                    </div>
+                </template>
                 <template v-slot:button="{columns, allChecked}">
                     <div :class="getClass">
-                        <el-button :disabled="!activeColumns.length || !columns.length" class="w-24" type="danger"
+                        <el-button :disabled="!showActiveColumns.length || !columns.length" class="w-24" type="danger"
                                    size="small"
                                    @click="removeColumns(columns)">
                             {{allChecked ? $t('datatable.manage.columns.remove.all') :
@@ -17,19 +27,20 @@
                 </template>
             </manage-columns-section>
             <manage-columns-section
+                key="TO_SHOW"
                 :availableColumns="showAvailableColumns"
                 @onChange="(evt) => onColumnChange(evt , sectionsToManage.TO_SHOW)">
                 <template v-slot:search>
                     <div class="w-4/6 mx-2">
                         <el-input :placeholder="$t('datatable.manage.columns.search')"
-                                  v-model="filter"
+                                  v-model="filterAvailableColumns"
                                   suffix-icon="el-icon-search" class="search-columns"/>
                     </div>
                 </template>
                 <template v-slot:button="{columns, allChecked}">
                     <el-button :disabled="!showAvailableColumns.length || !columns.length" class="w-24" type="success"
                                size="small"
-                               @click="addColumns(columns)">
+                               @click="addColumnInBulk(columns)">
                         {{allChecked ? $t('datatable.manage.columns.add.all') : $t('datatable.manage.columns.add')}}
                     </el-button>
                 </template>
@@ -40,7 +51,7 @@
 <script>
     import xor from 'lodash/xor'
     import get from 'lodash/get'
-    import {sectionsToManage} from '@/enum/dataTable'
+    import { sectionsToManage } from '@/enum/dataTable'
     import draggableEvents from '@/enum/draggableEvents'
     import ManageColumnsSection from './ManageColumnsSection'
 
@@ -64,7 +75,8 @@
         },
         data() {
             return {
-                filter: '',
+                filterAvailableColumns: '',
+                filterActiveColumns: '',
                 allColumnsValue: [],
                 valueToRemove: [],
                 valueToAdd: [],
@@ -73,11 +85,12 @@
                 filteredColumns: [],
                 isIndeterminate: false,
                 sectionsToManage,
+                filteredAvailableColumns: [],
             }
         },
         computed: {
             showAvailableColumns() {
-                return this.filter ? this.filteredColumns : this.unselectedColumns
+                return this.filterAvailableColumns ? this.filteredColumns : this.unselectedColumns
             },
             getClass() {
                 if (this.activeColumns.length === 0) {
@@ -89,9 +102,12 @@
                 }
                 return ''
             },
+            showActiveColumns() {
+                return this.filterActiveColumns ? this.filteredAvailableColumns : this.activeColumns
+            },
         },
         methods: {
-            addColumns(columns) {
+            addColumnInBulk(columns) {
                 let itemToRemove = this.unselectedColumns.filter(c => columns.includes(c.prop))
                 let remainingItems = this.unselectedColumns.filter(c => !columns.includes(c.prop))
                 this.activeColumns = this.activeColumns.concat([...itemToRemove])
@@ -112,6 +128,15 @@
                 this.valueToRemove = this.activeColumns.map(c => c.prop)
 
                 let newColumns = this.activeColumns.map(c => c.prop)
+                this.$emit('on-change-visibility', newColumns)
+            },
+            addColumns(column) {
+                const columnProp = get(column, '[0].prop', '')
+                this.activeColumns = this.activeColumns.filter(c => c.prop !== columnProp)
+                this.valueToRemove = this.activeColumns.map(c => c.prop)
+
+                let newColumns = this.activeColumns.map(c => c.prop)
+
                 this.$emit('on-change-visibility', newColumns)
             },
             onColumnChange(evt, section) {
@@ -140,7 +165,7 @@
             },
         },
         watch: {
-            filter(value) {
+            filterAvailableColumns(value) {
                 let filteredData = []
                 this.unselectedColumns.forEach(el => {
                     if (el.label.toLowerCase().includes(value.toLowerCase())) {
@@ -157,6 +182,15 @@
             },
             availableColumns() {
                 this.initData()
+            },
+            filterActiveColumns(value) {
+                let filteredData = []
+                this.activeColumns.forEach(el => {
+                    if (el.label.toLowerCase().includes(value.toLowerCase())) {
+                        filteredData.push(el)
+                    }
+                })
+                this.filteredAvailableColumns = filteredData
             },
         },
     }
