@@ -27,7 +27,8 @@
             <div :class="{'edit-mode': editable}" class="absolute flex action-icons">
                 <template v-if="editable">
                     <el-tooltip :content="$t('Duplicate widget')" class="item" effect="dark" placement="top">
-                        <IconDuplicate @click="$emit('duplicate-widget')" class="flex cursor-pointer align-center w-6 h-8 py-2 text-blue-600"/>
+                        <IconDuplicate @click="$emit('duplicate-widget')"
+                                       class="flex cursor-pointer align-center w-6 h-8 py-2 text-blue-600"/>
                     </el-tooltip>
                     <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
                         <trash-icon @click="$emit('remove-item')"
@@ -52,8 +53,9 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {EditIcon, TrashIcon} from 'vue-feather-icons'
-    import {Tooltip} from "element-ui";
+    import { EditIcon, TrashIcon } from 'vue-feather-icons'
+    import { Tooltip } from 'element-ui'
+    import bus from '@/event-bus/EventBus'
 
     export default {
         components: {
@@ -93,53 +95,61 @@
             widget: {
                 type: Object,
                 default: () => ({}),
-            }
+            },
         },
-        data () {
+        data() {
             return {
                 isVertical: false,
             }
         },
         computed: {
-            mainColor () {
+            mainColor() {
                 return get(this.styles, 'color')
             },
-            cardTitleStyles () {
+            cardTitleStyles() {
                 return {
                     ...this.mainColor,
-                    fontSize: this.styles.titleFontSize
+                    fontSize: this.styles.titleFontSize,
                 }
             },
-            cardValueStyles () {
+            cardValueStyles() {
                 return {
                     ...this.mainColor,
-                    fontSize: this.styles.valueFontSize
+                    fontSize: this.styles.valueFontSize,
                 }
             },
         },
         methods: {
-            checkIfCardIsVertical (WidgetID) {
+            checkIfCardIsVertical(WidgetID) {
                 let wrapper = this.$refs[`wrapperContainer-${WidgetID}`]
                 if (!wrapper) {
                     return
                 }
-                this.isVertical = wrapper.clientWidth < 280;
+                this.isVertical = wrapper.clientWidth < 280
             },
-            showModal () {
+            showModal() {
                 this.$emit('show-modal')
-            }
+            },
+            triggerResizeEvent() {
+                bus.$on('widget-resized', (widgetID) => {
+                    this.checkIfCardIsVertical(widgetID)
+                })
+            },
+        },
+        mounted() {
+            this.triggerResizeEvent()
         },
         watch: {
             widget: {
                 deep: true,
-                immediate:true,
+                immediate: true,
                 handler(widget) {
                     this.$nextTick(() => {
                         this.checkIfCardIsVertical(widget.WidgetID)
                     })
-                }
-            }
-        }
+                },
+            },
+        },
     }
 </script>
 <style lang="scss" scoped>
