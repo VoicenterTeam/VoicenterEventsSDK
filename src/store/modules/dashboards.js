@@ -70,16 +70,13 @@ const mutations = {
 
 const actions = {
     async getDashboards({commit, state}) {
-        commit(types.SET_LOADING, true)
         let dashboards = await DashboardApi.getAll()
-        commit(types.SET_LOADING, false)
         commit(types.SET_ALL_DASHBOARDS, dashboards)
     },
     async selectDashboard({commit, state}, dashboard) {
         const previousDashboard = previousActiveDashboard()
         dashboard = dashboard || previousDashboard || state.allDashboards[0]
         if (dashboard) {
-            commit(types.SET_LOADING, true)
 
             if (!dashboard['DashboardLayoutID']) {
                 dashboard['DashboardLayoutID'] = DEFAULT_LAYOUT_ID
@@ -88,7 +85,6 @@ const actions = {
 
             dashboard = await DashboardApi.find(dashboard.DashboardID)
             commit(types.SET_ACTIVE_DASHBOARD, dashboard)
-            commit(types.SET_LOADING, false)
         }
     },
     async createDashboard({commit}, dashboard) {
@@ -98,7 +94,6 @@ const actions = {
     },
     async updateDashboard({commit}, dashboard) {
         commit(types.UPDATE_DASHBOARD, dashboard)
-        commit(types.SET_LOADING, false)
     },
     async deleteDashboard({commit}, dashboard) {
         await DashboardApi.destroy(dashboard.DashboardID)
