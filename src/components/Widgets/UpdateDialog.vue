@@ -154,7 +154,7 @@
                 </el-checkbox>
             </el-form-item>
             <el-form-item>
-                <div v-if="model.WidgetTime">
+                <div v-if="model.WidgetTime.datedeff">
                     <time-frame
                         :model="model"
                         :timeFrameType="model.WidgetTime.type"

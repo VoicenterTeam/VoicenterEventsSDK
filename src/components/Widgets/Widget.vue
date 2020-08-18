@@ -218,7 +218,7 @@
                 return getWidgetEndpoint(widget)
             },
             checkWidgetTimeConfig() {
-                if (!this.widget.WidgetTime.hasOwnProperty('datedeff')) {
+                if (this.widget.WidgetTime.hasOwnProperty('datedeff')) {
                     this.$set(this.widget, 'WidgetTime', DEFAULT_WIDGET_TIME)
                 }
             },
