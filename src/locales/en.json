@@ -738,5 +738,17 @@
     "Average calls duration": "Average Calls Duration",
     "Table - Queue Summary Per User": "Table - Queue Summary Per User",
     "Table - User Break Status Summary": "Table - User Break Status Summary",
-    "extension_name": "Extension Name"
+    "extension_name": "Extension Name",
+    "Current wait time": "Current wait time",
+    "Max Ring Time": "Max Ring Time",
+    "Avg Ring Time": "Avg Ring Time",
+    "IVR Exit": "IVR Exit",
+    "TimeOut Exit": "TimeOut Exit",
+    "Join Empty": "Join Empty",
+    "Leave Unavailable": "Leave Unavailable",
+    "Next Destination": "Next Destination",
+    "Join Unavailable": "Join Unavailable",
+    "In SLA Count": "In SLA Count",
+    "Call Count": "Call Count",
+    "Not in SLA Count": "Not in SLA Count"
 }

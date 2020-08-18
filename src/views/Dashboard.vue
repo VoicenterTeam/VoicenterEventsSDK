@@ -357,7 +357,6 @@
                         if (!this.editMode) {
                             this.$set(widget, 'onLoading', true)
                             await WidgetApi.update(widget)
-                            widget = await WidgetApi.find(widget.WidgetID)
                             this.$set(widget, 'onLoading', false)
                         } else {
                             this.groupToEdit = widgetGroup

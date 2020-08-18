@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import Vue from 'vue'
 import store from '@/store/store'
 import { WidgetApi } from '@/api/widgetApi'
 import { widgetModel } from '@/models/instances'
@@ -75,17 +76,17 @@ export async function getWidgetData(widget) {
         return null
     }
 
-    this.$set(widget, 'onLoading', true)
+    Vue.set(widget, 'onLoading', true)
 
     if (isExternalDataWidget(widget)) {
         const data = await WidgetDataApi.getExternalData(widget.EndPoint)
-        this.$set(widget, 'onLoading', false)
+        Vue.set(widget, 'onLoading', false)
         return data
     }
 
 
     const data = await WidgetDataApi.getData(widget.EndPoint)
-    this.$set(widget, 'onLoading', false)
+    Vue.set(widget, 'onLoading', false)
     return data
 }
 
