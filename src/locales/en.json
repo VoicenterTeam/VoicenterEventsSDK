@@ -750,5 +750,7 @@
     "Join Unavailable": "Join Unavailable",
     "In SLA Count": "In SLA Count",
     "Call Count": "Call Count",
-    "Not in SLA Count": "Not in SLA Count"
+    "Not in SLA Count": "Not in SLA Count",
+    "Go to Layout Management page": "Go to Layout Management page",
+    "Dashboard layout": "Dashboard layout"
 }

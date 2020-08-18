@@ -111,10 +111,6 @@ export function isAreaChartWidget (widget) {
     return widget.DataTypeID === widgetDataTypes.CHART_AREA_ID;
 }
 
-export function isAverageCallsWidget (widget) {
-    return widget.DataTypeID === widgetDataTypes.AVERAGE_CALLS_DURATION;
-}
-
 export function isHtmlEditor (widget) {
     return widget.DataTypeID === widgetDataTypes.RICH_TEXT_EDITOR_ID
 }

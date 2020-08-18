@@ -73,7 +73,7 @@
     import { defaultColors } from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
-    import AverageCallDuration from '@/components/Widgets/Data/Queue/AverageCallDuration'
+    import AverageCallDuration from '@/components/Cards/AverageCallDuration'
     import XaxisChart from '@/components/Charts/XaxisChart'
     import ExtensionCards from '@/components/Cards/ExtensionCards'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
@@ -154,6 +154,7 @@
                     widgetDataTypes.INFO_TYPE_ID,
                     widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
                     widgetDataTypes.TOTAL_OUTGOING_CALLS,
+                    widgetDataTypes.AVERAGE_CALLS_DURATION,
                 ]
                 let dataType = getWidgetDataType(this.widget)
                 return !exceptions.includes(dataType)

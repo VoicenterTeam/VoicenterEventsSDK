@@ -11,12 +11,6 @@
                     <el-input v-model="model.Title"/>
                 </div>
             </el-form-item>
-            <el-form-item v-if="isAverageCallsWidget(widget)">
-                <label>{{$t('Counters to display')}}</label>
-                <base-select
-                    :data="availableCounters"
-                    v-model="model.WidgetLayout.showCounters"/>
-            </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
@@ -109,7 +103,7 @@
                             {{$t('Display widget title')}}
                         </el-checkbox>
                     </el-form-item>
-                    <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget) || isAverageCallsWidget(widget)">
+                    <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
                         <div class="py-4">
                             <label>{{$t('Card title font size')}}</label>
                             <el-slider
@@ -216,12 +210,12 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Radio, RadioGroup, Slider} from 'element-ui'
-    import Modal from "@/components/Common/Modal";
+    import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Radio, RadioGroup, Slider } from 'element-ui'
+    import Modal from '@/components/Common/Modal'
     import queueMixin from '@/mixins/queueMixin'
-    import {allSeries} from '@/enum/queueConfigs'
+    import { allSeries } from '@/enum/queueConfigs'
     import RefreshButton from '@/components/RefreshButton'
-    import {realTimeWidgetRules} from '@/enum/widgetUpdateRules'
+    import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
     import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
@@ -229,12 +223,14 @@
     import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
     import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
-    import {widgetTimeOptions, widgetTimeTypes} from '@/enum/widgetTimeOptions'
-    import {defaultAreaChartColors, defaultColors, realTimeSettings} from '@/enum/defaultWidgetSettings'
-    import {statistics} from '@/enum/queueDashboardStatistics'
+    import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
+    import { defaultAreaChartColors, defaultColors, realTimeSettings } from '@/enum/defaultWidgetSettings'
+    import { statistics } from '@/enum/queueDashboardStatistics'
     import {
         isAreaChartWidget,
+        isHtmlEditor,
         isMultiQueuesDashboard,
+        isNoteListWidget,
         isPieWidget,
         isQueueActivityGauge,
         isQueueChart,
@@ -242,15 +238,11 @@
         isQueueGauge,
         isQueueTable,
         isRealtimeWidget,
-        isAverageCallsWidget,
-        isHtmlEditor,
-        isNoteListWidget,
     } from '@/helpers/widgetUtils'
-    import ActivityGaugeConfig from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig";
-    import {areaChartWidgetColors, defaultWidgetColors} from "@/enum/layout";
-    import values from "lodash/values";
-    import uniq from "lodash/uniq";
-    import {availableCounters} from "@/enum/queueCounters"
+    import ActivityGaugeConfig from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig'
+    import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
+    import values from 'lodash/values'
+    import uniq from 'lodash/uniq'
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -281,14 +273,13 @@
         props: {
             widget: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
         },
-        data () {
+        data() {
             return {
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
-                availableCounters,
                 model: {
                     settings: realTimeSettings,
                     colors: defaultColors,
@@ -300,7 +291,7 @@
                 AUTO_COMPLETE_PARAMETER_TYPE,
                 textFontSizes: {
                     min: 12,
-                    max: 64
+                    max: 64,
                 },
                 textSizeBestOptions: {
                     16: '16px',
@@ -312,7 +303,7 @@
                 },
                 cardTitleFontSizes: {
                     min: 12,
-                    max: 64
+                    max: 64,
                 },
                 cardTitleBestOptions: {
                     16: '16px',
@@ -323,7 +314,7 @@
                 },
                 cardValueFontSizes: {
                     min: 24,
-                    max: 128
+                    max: 128,
                 },
                 cardValueBestOptions: {
                     32: '32px',
@@ -336,26 +327,26 @@
             }
         },
         computed: {
-            availableColors () {
+            availableColors() {
                 if (!isAreaChartWidget(this.widget)) {
                     return defaultWidgetColors
                 }
                 return areaChartWidgetColors
             },
-            predefinedColors () {
+            predefinedColors() {
                 let options = values(this.$store.getters['layout/colors'])
                 return uniq(options)
             },
-            rules () {
+            rules() {
                 if (isRealtimeWidget(this.widget)) {
                     return realTimeWidgetRules(this.model)
                 }
                 return {}
             },
-            autoCompletes () {
+            autoCompletes() {
                 return this.widget.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
-            otherFilters () {
+            otherFilters() {
                 return this.widget.WidgetConfig.filter(c => c.ParameterType && c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
         },
@@ -369,31 +360,30 @@
             isQueueActivityGauge,
             isQueueDashboardWidget,
             isMultiQueuesDashboard,
-            isAverageCallsWidget,
             isNoteListWidget,
-            isAutoComplete (WidgetConfig) {
+            isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
-            isOtherFilters (WidgetConfig) {
+            isOtherFilters(WidgetConfig) {
                 return WidgetConfig.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE
             },
-            onChange () {
+            onChange() {
                 this.$refs.updateWidget.validate((valid) => {
 
-                    if (!valid) return;
+                    if (!valid) return
 
                     if (this.model.WidgetTime.type === 'relative') {
                         let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                         this.model.WidgetTime = {
                             ...this.model.WidgetTime,
-                            ...widgetTime
+                            ...widgetTime,
                         }
                     }
 
                     this.model.WidgetLayout = {
                         ...this.model.WidgetLayout,
-                        ...{settings: this.model.settings},
-                        ...{colors: this.model.colors},
+                        ...{ settings: this.model.settings },
+                        ...{ colors: this.model.colors },
                     }
 
                     try {
@@ -409,7 +399,7 @@
                             }
 
                             if (typeof config.WidgetParameterValueJson !== 'object') {
-                                return;
+                                return
                             }
 
                             if (config.WidgetParameterValueJson['EntityPositive'].length) {
@@ -424,25 +414,25 @@
                     }
 
                     this.$emit('on-update', this.model)
-                    this.toggleVisibility(false);
+                    this.toggleVisibility(false)
                 })
             },
-            toggleVisibility (value) {
+            toggleVisibility(value) {
                 this.$emit('update:visible', value)
             },
-            async refreshEntitiesList () {
+            async refreshEntitiesList() {
                 this.loadEntitiesList = true
                 await this.$store.dispatch('entities/getEntitiesList')
                 this.loadEntitiesList = false
-            }
+            },
         },
-        mounted () {
+        mounted() {
             this.model = cloneDeep(this.widget)
 
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
 
             if (isAreaChartWidget(this.widget)) {
-                this.model.colors = {...defaultAreaChartColors, ...this.model.WidgetLayout.colors}
+                this.model.colors = { ...defaultAreaChartColors, ...this.model.WidgetLayout.colors }
             }
 
             if (isRealtimeWidget(this.widget)) {

@@ -6,7 +6,7 @@
         <div :class="{'flex-col': isVertical}"
              class="w-full flex items-center justify-center">
             <slot name="icon">
-                <component :is="cardIcon" class="min-w-16 status-icon mx-1 text-primary"/>
+                <component :is="cardIcon" class="min-w-16 status-icon mx-1 text-primary" :style="mainColor"/>
             </slot>
             <slot name="text">
                 <el-tooltip :content="cardText" class="item" effect="dark" placement="top" v-if="showText">
