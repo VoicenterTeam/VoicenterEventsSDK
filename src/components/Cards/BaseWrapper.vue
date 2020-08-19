@@ -24,7 +24,7 @@
                     </p>
                 </slot>
             </div>
-            <div :class="{'edit-mode': editable}" class="absolute flex action-icons px-2">
+            <div :class="{'edit-mode': editable}" class="absolute flex action-icons px-2 right-2">
                 <template v-if="editable">
                     <el-tooltip :content="$t('Duplicate widget')" class="item" effect="dark" placement="top">
                         <IconDuplicate @click="$emit('duplicate-widget')"
@@ -159,10 +159,11 @@
 
     .action-icons {
         top: 40px;
-        right: 0px;
+        right: 20px;
 
         &.edit-mode {
             top: 0;
+            right: 0px;
         }
     }
 </style>
