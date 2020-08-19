@@ -52,7 +52,7 @@
                 </div>
             </template>
         </base-navbar>
-        <div class="dashboard" v-loading="loading" :key="activeLanguage">
+        <div class="dashboard" v-loading="loadingData" :key="activeLanguage">
             <div class="dashboard-container min-h-screen pb-10" v-if="dashboard">
                 <sidebar :activeTab="activeTab"
                          :widgetGroupList="activeDashboardData.WidgetGroupList"
@@ -161,6 +161,9 @@
             }
         },
         computed: {
+            loadingData() {
+                return this.$store.state.dashboards.loadingData || this.loading
+            },
             activeLanguage() {
                 return this.$store.state.lang.language
             },
