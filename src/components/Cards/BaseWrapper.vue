@@ -24,27 +24,27 @@
                     </p>
                 </slot>
             </div>
-            <div :class="{'edit-mode': editable}" class="absolute flex action-icons">
+            <div :class="{'edit-mode': editable}" class="absolute flex action-icons px-2">
                 <template v-if="editable">
                     <el-tooltip :content="$t('Duplicate widget')" class="item" effect="dark" placement="top">
                         <IconDuplicate @click="$emit('duplicate-widget')"
-                                       class="flex cursor-pointer align-center w-6 h-8 py-2 text-blue-600"/>
+                                       class="flex cursor-pointer align-center w-4 h-4 my-2 mx-1 text-blue-600"/>
                     </el-tooltip>
                     <el-tooltip :content="$t('tooltip.remove.widget')" class="item" effect="dark" placement="top">
                         <trash-icon @click="$emit('remove-item')"
-                                    class="flex cursor-pointer align-center w-6 h-8 py-2 text-red trash-icon"/>
+                                    class="flex cursor-pointer align-center w-4 h-4 my-2 mx-1  text-red trash-icon"/>
                     </el-tooltip>
                     <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
                         <edit-icon :style="mainColor"
                                    @click="showModal"
-                                   class="flex cursor-pointer align-center w-6 h-8 py-2 edit-icon text-primary"/>
+                                   class="flex cursor-pointer align-center w-4 h-4 my-2 mx-1  edit-icon text-primary"/>
                     </el-tooltip>
                 </template>
                 <template v-else>
                     <el-tooltip :content="$t('tooltip.edit.widget')" class="item" effect="dark" placement="top">
                         <edit-icon :style="mainColor"
                                    @click="showModal"
-                                   class="flex cursor-pointer align-center w-6 h-8 py-2 edit-card-icon text-primary"/>
+                                   class="flex cursor-pointer align-center w-4 h-4 my-2 edit-card-icon text-primary"/>
                     </el-tooltip>
                 </template>
             </div>
@@ -159,7 +159,7 @@
 
     .action-icons {
         top: 40px;
-        right: 20px;
+        right: 0px;
 
         &.edit-mode {
             top: 0;
