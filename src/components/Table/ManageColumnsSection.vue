@@ -108,7 +108,7 @@
     .manage-columns-section {
         max-height: 300px;
         min-width: 350px;
-        overflow-y: auto;
+        overflow-y: hidden;
     }
 
     .manage-columns-section + .manage-columns-section {

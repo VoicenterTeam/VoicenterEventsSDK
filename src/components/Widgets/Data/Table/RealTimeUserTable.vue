@@ -24,6 +24,7 @@
             <template v-slot:status="{row}">
                 <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
                              :userId="row.user_id"
+                             :ref="`user-status-${row.user_id}`"
                              v-if="userExtension(row.user_id) && drawRow"/>
                 <span v-else>---</span>
             </template>
@@ -88,6 +89,7 @@
     import dataTableMixin from '@/mixins/dataTableMixin'
     import CallsInfo from './CallsInfo'
     import cloneDeep from 'lodash/cloneDeep'
+    import { getInitialExtensionTime } from '@/util/timeUtils'
 
     export default {
         mixins: [dataTableMixin],
@@ -151,8 +153,25 @@
                     })
                 }
 
+                tableData = tableData.map((row) => {
+                    const extension = this.userExtension(row.user_id)
+
+                    if (!extension) {
+                        return row
+                    }
+
+                    return {
+                        ...row,
+                        user_name: extension.userName || '--',
+                        extension_name: this.getExtensionName(row.user_id).ext_name || '--',
+                        status: this.getExtensionStatusText(row.user_id),
+                        status_duration: getInitialExtensionTime(extension, this.getSettings),
+                    }
+                })
+
                 return tableData
             },
+
             extensions() {
                 return this.$store.state.extensions.extensions
             },
@@ -164,6 +183,14 @@
             },
         },
         methods: {
+            getExtensionStatusText(userID) {
+                const ref = this.$refs[`user-status-${userID}`]
+                if (!ref) {
+                    return '--'
+                }
+
+                return ref.statusText
+            },
             getExtensionName(userId) {
                 const extensionNumber = this.userExtension(userId)
                 return this.$store.getters['entities/getExtensionById'](extensionNumber.number)

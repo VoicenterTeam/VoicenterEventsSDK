@@ -751,6 +751,7 @@
     "In SLA Count": "In SLA Count",
     "Call Count": "Call Count",
     "Not in SLA Count": "Not in SLA Count",
+    "caller_info": "Caller Info",
     "Go to Layout Management page": "Go to Layout Management page",
     "Dashboard layout": "Dashboard layout"
 }

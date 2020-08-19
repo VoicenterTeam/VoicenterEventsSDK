@@ -232,7 +232,6 @@
 
                     this.tableData = data
                     this.columns = columns
-
                 } catch (e) {
                     let status = get(e, 'response.status')
                     if (status === 400) {

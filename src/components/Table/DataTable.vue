@@ -57,18 +57,6 @@
                                     </el-tooltip>
                                 </slot>
                             </div>
-                            <!-- This part is bulky from UI perspective. Has to be refined-->
-                            <header-actions
-                                :availableColumns="availableColumns"
-                                :currentColumn="column"
-                                :visibleColumns="visibleColumns"
-                                @on-change-columns-size="updateColumnsSize"
-                                @on-change-visibility="updateColumnsVisibility"
-                                @on-pin-column="(value) => pinColumn(value, index)"
-                                @on-reset-props="resetColumnsProps"
-                                v-if="false">
-                            </header-actions>
-                            <!-- This part is bulky from UI perspective. Has to be refined-->
                         </template>
                         <template slot-scope="{row, $index}">
                             <slot :index="$index"
@@ -111,13 +99,10 @@
     </div>
 </template>
 <script>
-
-    import get from 'lodash/get'
     import Sortable from 'sortablejs'
     import cloneDeep from 'lodash/cloneDeep'
     import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import ManageColumns from './ManageColumns'
-    import HeaderActions from './Header/HeaderActions'
     import { makeRandomID } from '@/helpers/util'
     import ExportDataDialog from './ExportData'
 
@@ -125,7 +110,6 @@
         inheritAttrs: false,
         components: {
             ManageColumns,
-            HeaderActions,
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
             [Dropdown.name]: Dropdown,
@@ -267,21 +251,6 @@
                 })
 
                 this.$emit('on-update-layout', objToEmit)
-            },
-            pinColumn(column, columnIndex) {
-                this.availableColumns[columnIndex] = column
-            },
-            updateColumnsSize(val) {
-                this.fitWidth = val
-                this.drawTable = false
-                this.$nextTick(() => {
-                    this.drawTable = true
-                })
-            },
-            resetColumnsProps() {
-                this.availableColumns = cloneDeep(this.columns)
-                this.visibleColumns = this.columns.map(c => c.prop)
-                this.updateLayout()
             },
             adaptColumnWidth(scale, pageWidth) {
                 if (scale == 0.9) {

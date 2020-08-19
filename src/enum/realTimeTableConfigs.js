@@ -29,9 +29,11 @@ export const dynamicColumns = [{
     fixed: false,
     align: 'center',
     label: 'Caller Info',
+    sortable: false,
 }, {
     prop: 'call_info',
     fixed: false,
     align: 'center',
     label: 'Call Info',
+    sortable: false,
 }]
