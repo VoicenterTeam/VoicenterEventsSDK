@@ -206,11 +206,14 @@
             },
             composePayloadToUpdateLayout(newIndex, oldIndex) {
                 const targetRow = this.renderedColumns[oldIndex]
+                const targetRowIndex = this.availableColumns.findIndex(column => column.prop.toString() === targetRow.prop.toString())
+                
+                if (targetRowIndex !== -1) {
+                    this.availableColumns.splice(targetRowIndex, 1)
+                    this.availableColumns.splice(newIndex, 0, targetRow)
 
-                this.availableColumns.splice(oldIndex, 1)
-                this.availableColumns.splice(newIndex, 0, targetRow)
-
-                this.updateLayout()
+                    this.updateLayout()
+                }
             },
             updateColumnsVisibility(columns, onManageExport) {
                 if (onManageExport) {
