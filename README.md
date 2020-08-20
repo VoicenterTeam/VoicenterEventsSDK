@@ -1,5 +1,5 @@
 # Voicenter Events SDK
-![Image of Yaktocat](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/SDK.png)
+![Image of Yaktocat](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/SDK.png)<br />
 Voicenter Events SDK aims to manage api and socket communication with Voicenter APIs and backends.
 You can use the SDK to send and receive real time data from and to voicenter servers.
 
