@@ -19,6 +19,7 @@ const sdk = new EventsSDK({
 });
 ```
 
+
 ### `3.Required params`
 As a required params of an options is loginType property (token/user/account) and authorization data:
 - `User loginType example:`
