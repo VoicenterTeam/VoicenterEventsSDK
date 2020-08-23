@@ -1,9 +1,9 @@
-import colors from "@/enum/colors";
+import colors from '@/enum/colors'
 import sumBy from 'lodash/sumBy'
 import groupBy from 'lodash/groupBy'
 
-import {timeFormatter} from "@/helpers/timeFormatter";
-import {ADDITIONAL_DATA_KEY, TOTAL_CALLS_KEY} from "@/enum/queueDashboardStatistics";
+import { timeFormatter } from '@/helpers/timeFormatter'
+import { ADDITIONAL_DATA_KEY, TOTAL_CALLS_KEY } from '@/enum/queueDashboardStatistics'
 
 export const queueDashboardColumnStyles = {
     'Answer': {
@@ -54,7 +54,7 @@ export const defaultVisibleColumns = [
     'AvgRingTime',
 ]
 
-export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsRows, showStatsInPercentage) {
+export function formatQueueDashboardsData(records, displayRowWithTotals, displayQueueAsRows, showStatsInPercentage) {
 
     if (displayQueueAsRows) {
         return queueAsRows(records, displayRowWithTotals)
@@ -63,18 +63,18 @@ export function formatQueueDashboardsData (records, displayRowWithTotals, displa
     return queueAsColumns(records, displayRowWithTotals, showStatsInPercentage)
 }
 
-function queueAsRows (records, displayRowWithTotals) {
+function queueAsRows(records, displayRowWithTotals) {
 
     let columns = {}
     let data = []
 
     records.forEach((column) => {
         const columnToAdd = {
-            [column['queue_id']]: ''
+            [column['queue_id']]: '',
         }
         columns = {
             ...columns,
-            ...columnToAdd
+            ...columnToAdd,
         }
     })
 
@@ -108,11 +108,11 @@ function queueAsRows (records, displayRowWithTotals) {
 
     return {
         columns: columns,
-        data: data
+        data: data,
     }
 }
 
-function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
+function queueAsColumns(records, displayRowWithTotals, showStatsInPercentage) {
 
     let billingCdrQueueTypes = {
         1: 'Answer',
@@ -128,50 +128,26 @@ function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
         11: 'NextDestination',
     }
 
-    let tableColumns = {
+    const tableColumns = {
         'queue_id': '',
         'Callers': '',
         'CurrentWaitTime': '',
-        'Answer': '0%',
-        'Abandoned': '0%',
-        'IVRExit': '0%',
-        'PickUp': '0%',
-        'TimeOutExit': '0%',
-        'JoinEmpty': '0%',
-        'LeaveEmpty': '0%',
-        'JoinUnavail': '0%',
-        'LeaveUnavail': '0%',
-        'Full': '0%',
-        'NextDestination': '0%',
+        'Answer': '0',
+        'Abandoned': '0',
+        'IVRExit': '0',
+        'PickUp': '0',
+        'TimeOutExit': '0',
+        'JoinEmpty': '0',
+        'LeaveEmpty': '0',
+        'JoinUnavail': '0',
+        'LeaveUnavail': '0',
+        'Full': '0',
+        'NextDestination': '0',
         'CallCount': 0,
         'MaxRingTime': 0,
         'NotInSLACount': 0,
         'InSLACount': 0,
         'AvgRingTime': 0,
-    }
-
-    if (!showStatsInPercentage) {
-        tableColumns = {
-            'queue_id': '',
-            'Callers': '',
-            'CurrentWaitTime': '',
-            'Answer': '0',
-            'Abandoned': '0',
-            'IVRExit': '0',
-            'PickUp': '0',
-            'TimeOutExit': '0',
-            'JoinEmpty': '0',
-            'LeaveEmpty': '0',
-            'JoinUnavail': '0',
-            'LeaveUnavail': '0',
-            'Full': '0',
-            'NextDestination': '0',
-            'CallCount': 0,
-            'MaxRingTime': 0,
-            'NotInSLACount': 0,
-            'InSLACount': 0,
-            'AvgRingTime': 0,
-        }
     }
 
     let data = []
@@ -185,7 +161,7 @@ function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
     records.forEach((column) => {
         let rowData = {
             ...tableColumns,
-            ...column
+            ...column,
         }
 
         const additionalData = column[ADDITIONAL_DATA_KEY]
@@ -202,7 +178,7 @@ function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
             const columnName = billingCdrQueueTypes[statistic['billing_cdr_queue_type']]
 
             if (showStatsInPercentage) {
-                rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)}%`
+                rowData[columnName] = ((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)
             } else {
                 rowData[columnName] = statistic['ExitTypeCount']
             }
@@ -233,7 +209,7 @@ function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
             const columnName = billingCdrQueueTypes[key]
             let value = sumBy(statistics[key], 'ExitTypeCount')
             if (showStatsInPercentage) {
-                queueTotals[columnName] = `${((Number(value) * 100) / allQueueCalls).toFixed(2)}%`
+                queueTotals[columnName] = ((Number(value) * 100) / allQueueCalls).toFixed(2)
             } else {
                 queueTotals[columnName] = value
             }
@@ -252,6 +228,6 @@ function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
 
     return {
         columns: tableColumns,
-        data: data
+        data: data,
     }
 }

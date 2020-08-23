@@ -179,10 +179,11 @@
         },
         methods: {
             formatCell(row, column) {
-                if (column.prop.indexOf('%') !== -1) {
-                    row[column.prop] = parseFloat(row[column.prop]).toFixed(2)
+                if (column.isPercentage || column.prop.indexOf('%') !== -1) {
+                    row[column.prop] = parseFloat(row[column.prop])
                     return `${row[column.prop]} %`
                 }
+
                 // can be used to format cells for all tables
                 return row[column.prop]
             },

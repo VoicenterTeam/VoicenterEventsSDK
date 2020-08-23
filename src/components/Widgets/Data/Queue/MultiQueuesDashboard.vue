@@ -69,22 +69,22 @@
     </div>
 </template>
 <script>
-    import TimeFrame from "../Table/TimeFrame";
+    import TimeFrame from '../Table/TimeFrame'
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import {Option, Pagination, Select, Tooltip} from 'element-ui'
+    import { Option, Pagination, Select, Tooltip } from 'element-ui'
     import DataTable from '@/components/Table/DataTable'
     import {
         defaultVisibleColumns,
         formatQueueDashboardsData,
-        queueDashboardColumnStyles
-    } from "@/helpers/multiQueueDashboard";
-    import dataTableMixin from "@/mixins/dataTableMixin";
-    import CallerCount from "./CallerCount";
-    import MaxWaitTime from "./MaxWaitTime";
-    import {mapOrder} from "@/helpers/util";
+        queueDashboardColumnStyles,
+    } from '@/helpers/multiQueueDashboard'
+    import dataTableMixin from '@/mixins/dataTableMixin'
+    import CallerCount from './CallerCount'
+    import MaxWaitTime from './MaxWaitTime'
+    import { mapOrder } from '@/helpers/util'
     import minBy from 'lodash/minBy'
-    import {getOptionsList} from "@/helpers/entitiesList";
+    import { getOptionsList } from '@/helpers/entitiesList'
 
     export default {
         name: 'queues-table',
@@ -102,22 +102,22 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             queuesData: {
                 type: Array,
-                default: []
+                default: [],
             },
             tableConfigs: {
                 type: Object,
-                default: () => ({})
-            }
+                default: () => ({}),
+            },
         },
-        data () {
+        data() {
             return {
                 tableData: [],
                 columns: [],
@@ -127,10 +127,23 @@
                 stripe: false,
                 widget: {},
                 QUEUE_LIST_KEY: '{|queue_list|}',
+                billingCdrQueueTypes: [
+                    'Answer',
+                    'Abandoned',
+                    'IVRExit',
+                    'PickUp',
+                    'TimeOutExit',
+                    'JoinEmpty',
+                    'LeaveEmpty',
+                    'JoinUnavail',
+                    'LeaveUnavail',
+                    'Full',
+                    'NextDestination',
+                ],
             }
         },
         computed: {
-            fetchTableData () {
+            fetchTableData() {
                 let tableData = this.tableData
 
                 if (this.displayQueueAsRows) {
@@ -145,28 +158,28 @@
                             if (c[field]) {
                                 return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
                             }
-                            return false;
+                            return false
                         })
                     })
                 }
                 return tableData
             },
-            allEntityQueues () {
+            allEntityQueues() {
                 return getOptionsList(`${this.QUEUE_LIST_KEY}`)
             },
-            displayQueueAsRows () {
+            displayQueueAsRows() {
                 return !get(this.data.WidgetLayout, 'displayQueuesAsRow', true)
             },
-            columnsAreManaged () {
-                return !!get(this.widget.WidgetLayout, 'Columns.visibleColumns');
+            columnsAreManaged() {
+                return !!get(this.widget.WidgetLayout, 'Columns.visibleColumns')
             },
-            getAvailableColumns () {
+            getAvailableColumns() {
                 if (this.displayQueueAsRows) {
                     return this.columns
                 }
                 return this.availableColumns
             },
-            getVisibleColumns () {
+            getVisibleColumns() {
                 if (this.displayQueueAsRows) {
                     return this.columns.map(el => el.prop)
                 }
@@ -177,10 +190,10 @@
 
                 return this.visibleColumns
             },
-            allQueueCalls () {
+            allQueueCalls() {
                 return this.$store.getters['queues/allQueueCalls']
             },
-            selectedQueues () {
+            selectedQueues() {
                 try {
                     const queueListConfig = this.data.WidgetConfig.filter((config) => config.ParameterName === this.QUEUE_LIST_KEY)
                     return get(queueListConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
@@ -188,10 +201,10 @@
                     return []
                 }
             },
-            queueWithActiveCalls () {
+            queueWithActiveCalls() {
                 return this.$store.getters['queues/queueWithActiveCalls']
             },
-            queueWithOldestCall () {
+            queueWithOldestCall() {
                 const allCalls = []
                 this.queueWithActiveCalls.forEach((queue) => {
                     let calls = queue.Calls || []
@@ -200,12 +213,12 @@
                     })
                     allCalls.push(...calls)
                 })
-                let oldestCall = minBy(allCalls, 'JoinTimeStamp');
+                let oldestCall = minBy(allCalls, 'JoinTimeStamp')
                 return get(oldestCall, 'QueueID', null)
             },
         },
         methods: {
-            getQueueName (queueID) {
+            getQueueName(queueID) {
                 if (queueID === 'All' || queueID === 'Stat type') {
                     return queueID
                 }
@@ -213,15 +226,15 @@
                 let queue = this.allEntityQueues.filter((queue) => queue.queue_id === Number(queueID))
                 return get(queue, '[0].q_name', '--')
             },
-            getCellStyle ({row, column}) {
+            getCellStyle({ row, column }) {
                 let color = get(queueDashboardColumnStyles[column.property], 'color', 'transparent')
-                return {'background-color': color}
+                return { 'background-color': color }
             },
-            getRowStyle ({row}) {
+            getRowStyle({ row }) {
                 let color = get(queueDashboardColumnStyles[row['Stat type']], 'color')
-                return {'background-color': color}
+                return { 'background-color': color }
             },
-            getCellClassName ({column, row}) {
+            getCellClassName({ column, row }) {
                 let className = ''
 
                 if (queueDashboardColumnStyles[column.property] || queueDashboardColumnStyles[row['Stat type']]) {
@@ -230,7 +243,7 @@
 
                 return className
             },
-            async getWidgetData () {
+            async getWidgetData() {
                 try {
 
                     const selectedEntityQueues = this.selectedQueues
@@ -262,7 +275,7 @@
                             'InSLACount': 0,
                             'MaxRingTime': 0,
                             'NotInSLACount': 0,
-                            'queue_id': Number(queueID)
+                            'queue_id': Number(queueID),
                         }
                         data.push(objectToAppend)
                     })
@@ -279,7 +292,15 @@
                             align: 'center',
                             minWidth: 130,
                             label: this.$t(column) || startCase(column),
+                            isPercentage: false,
                         }
+
+                        if (showStatsInPercentage) {
+                            if (this.billingCdrQueueTypes.includes(column)) {
+                                columnData['isPercentage'] = true
+                            }
+                        }
+
                         columns.push(columnData)
                         this.searchableFields.push(column)
                     }
@@ -291,32 +312,32 @@
                     console.warn(e)
                 }
             },
-            isCallersRealTimeCell (column, row) {
+            isCallersRealTimeCell(column, row) {
                 if (['All', 'Stat type'].includes(column.prop)) {
                     return
                 }
-                return row['Stat type'] === 'Callers';
+                return row['Stat type'] === 'Callers'
             },
-            isMaxWaitTimeRealTimeCell (column, row) {
+            isMaxWaitTimeRealTimeCell(column, row) {
                 if (['All', 'Stat type'].includes(column.prop)) {
                     return
                 }
-                return row['Stat type'] === 'CurrentWaitTime';
+                return row['Stat type'] === 'CurrentWaitTime'
             },
-            getColumnQueueID (column) {
+            getColumnQueueID(column) {
                 return Number(column.prop)
             },
-            isMaxWaitTimeRealTimeRow (row) {
-                return row['Stat type'] === 'CurrentWaitTime';
+            isMaxWaitTimeRealTimeRow(row) {
+                return row['Stat type'] === 'CurrentWaitTime'
             },
-            getQueueTotals (row) {
+            getQueueTotals(row) {
                 if (row['Stat type'] === 'Callers') {
                     return this.allQueueCalls.length
                 }
                 return row['All']
             },
         },
-        mounted () {
+        mounted() {
             if (!this.data.WidgetLayout.hasOwnProperty('displayQueuesAsRow')) {
                 this.$set(this.data.WidgetLayout, 'displayQueuesAsRow', true)
             }
@@ -333,18 +354,18 @@
             data: {
                 immediate: true,
                 deep: true,
-                handler (data) {
+                handler(data) {
                     this.widget = cloneDeep(data)
                     this.getWidgetData()
-                }
+                },
             },
             queuesData: {
                 immediate: true,
                 deep: true,
-                handler () {
+                handler() {
                     this.getWidgetData()
-                }
-            }
+                },
+            },
         },
     }
 </script>
