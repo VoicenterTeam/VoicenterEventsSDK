@@ -36,7 +36,7 @@
             </template>
             <template v-slot:user_name="{row}">
                         <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{userExtension(row.user_id).userName}}
+                            {{getUserName(row.user_id)}}
                         </span>
                 <span v-else>---</span>
             </template>
@@ -197,6 +197,13 @@
             },
             userExtension(userId) {
                 return this.extensions.find(e => e.userID === userId)
+            },
+            getUserName(userId) {
+                const extension = this.userExtension(userId)
+                if (!extension) {
+                    return '--'
+                }
+                return get(extension, 'summery.representative', extension.userName)
             },
             getCellStyle({ row, column }) {
                 let color = 'transparent'
