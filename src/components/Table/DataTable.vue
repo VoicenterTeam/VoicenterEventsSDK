@@ -179,6 +179,10 @@
         },
         methods: {
             formatCell(row, column) {
+                if (column.prop.indexOf('%') !== -1) {
+                    row[column.prop] = parseFloat(row[column.prop]).toFixed(2)
+                    return `${row[column.prop]} %`
+                }
                 // can be used to format cells for all tables
                 return row[column.prop]
             },
@@ -207,7 +211,7 @@
             composePayloadToUpdateLayout(newIndex, oldIndex) {
                 const targetRow = this.renderedColumns[oldIndex]
                 const targetRowIndex = this.availableColumns.findIndex(column => column.prop.toString() === targetRow.prop.toString())
-                
+
                 if (targetRowIndex !== -1) {
                     this.availableColumns.splice(targetRowIndex, 1)
                     this.availableColumns.splice(newIndex, 0, targetRow)
