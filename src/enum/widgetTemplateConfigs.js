@@ -80,6 +80,7 @@ export const filters = {
     '{|queue_list|}': queueListConfig,
     '{|distributor_id_id_list|}': accountListConfig,
     '{|campaign_list|}': campaignListConfig,
+    '{|automaticcampaign_list|}': campaignListConfig,
 }
 
 export const otherFilters = {
