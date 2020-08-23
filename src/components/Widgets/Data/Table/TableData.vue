@@ -172,6 +172,9 @@
             isSimpleTable() {
                 return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)
             },
+            columnsAreManaged () {
+                return !!get(this.data.WidgetLayout, 'Columns.visibleColumns');
+            },
         },
         methods: {
             isMultiQueuesDashboard,
@@ -224,8 +227,8 @@
 
                             this.searchableFields.push(column)
                         }
-
-                        if (isRealtimeWidget(this.data)) {
+                        
+                        if (isRealtimeWidget(this.data) && !this.columnsAreManaged) {
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2], dynamicColumns[3], dynamicColumns[4])
                         }
                     }
