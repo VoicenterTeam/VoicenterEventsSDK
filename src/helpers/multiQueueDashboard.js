@@ -232,7 +232,11 @@ function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
         for (let key in statistics) {
             const columnName = billingCdrQueueTypes[key]
             let value = sumBy(statistics[key], 'ExitTypeCount')
-            queueTotals[columnName] = `${((Number(value) * 100) / allQueueCalls).toFixed(2)}%`
+            if (showStatsInPercentage) {
+                queueTotals[columnName] = `${((Number(value) * 100) / allQueueCalls).toFixed(2)}%`
+            } else {
+                queueTotals[columnName] = value
+            }
         }
 
         queueTotals.queue_id = 'All'
