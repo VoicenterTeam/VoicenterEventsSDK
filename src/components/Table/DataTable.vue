@@ -209,6 +209,9 @@
                 })
             },
             composePayloadToUpdateLayout(newIndex, oldIndex) {
+                if (!this.manageColumns) {
+                    return
+                }
                 const targetRow = this.renderedColumns[oldIndex]
                 const targetRowIndex = this.availableColumns.findIndex(column => column.prop.toString() === targetRow.prop.toString())
 
@@ -297,6 +300,12 @@
                     this.tryInitSortable()
                 },
             },
+            manageColumns: {
+                deep: true,
+                handler() {
+                    this.tryInitSortable()
+                },
+            }
         },
         mounted() {
             this.tryInitSortable()
