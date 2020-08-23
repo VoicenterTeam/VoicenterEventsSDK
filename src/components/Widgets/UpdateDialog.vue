@@ -13,14 +13,17 @@
             </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
-                    <div class="flex lg:w-1/2">
-                        <div class="flex lg:w-1/2">
-                            <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueuesAsRow">
-                                {{$t('Display queues as rows')}}
-                            </el-checkbox>
-                        </div>
+                    <div class="flex lg:w-1/3">
+                        <el-checkbox class="pt-4" v-model="model.WidgetLayout.showStatsInPercentage">
+                            {{$t('Show Stats in Percentage')}}
+                        </el-checkbox>
                     </div>
-                    <div class="flex lg:w-1/2">
+                    <div class="flex lg:w-1/3">
+                        <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueuesAsRow">
+                            {{$t('Display queues as rows')}}
+                        </el-checkbox>
+                    </div>
+                    <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
                             {{$t('Display the row with totals')}}
                         </el-checkbox>

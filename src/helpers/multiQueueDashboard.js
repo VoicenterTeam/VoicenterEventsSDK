@@ -54,13 +54,13 @@ export const defaultVisibleColumns = [
     'AvgRingTime',
 ]
 
-export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsRows) {
+export function formatQueueDashboardsData (records, displayRowWithTotals, displayQueueAsRows, showStatsInPercentage) {
 
     if (displayQueueAsRows) {
         return queueAsRows(records, displayRowWithTotals)
     }
 
-    return queueAsColumns(records, displayRowWithTotals)
+    return queueAsColumns(records, displayRowWithTotals, showStatsInPercentage)
 }
 
 function queueAsRows (records, displayRowWithTotals) {
@@ -112,7 +112,7 @@ function queueAsRows (records, displayRowWithTotals) {
     }
 }
 
-function queueAsColumns (records, displayRowWithTotals) {
+function queueAsColumns (records, displayRowWithTotals, showStatsInPercentage) {
 
     let billingCdrQueueTypes = {
         1: 'Answer',
@@ -128,7 +128,7 @@ function queueAsColumns (records, displayRowWithTotals) {
         11: 'NextDestination',
     }
 
-    const tableColumns = {
+    let tableColumns = {
         'queue_id': '',
         'Callers': '',
         'CurrentWaitTime': '',
@@ -148,6 +148,30 @@ function queueAsColumns (records, displayRowWithTotals) {
         'NotInSLACount': 0,
         'InSLACount': 0,
         'AvgRingTime': 0,
+    }
+
+    if (!showStatsInPercentage) {
+        tableColumns = {
+            'queue_id': '',
+            'Callers': '',
+            'CurrentWaitTime': '',
+            'Answer': '0',
+            'Abandoned': '0',
+            'IVRExit': '0',
+            'PickUp': '0',
+            'TimeOutExit': '0',
+            'JoinEmpty': '0',
+            'LeaveEmpty': '0',
+            'JoinUnavail': '0',
+            'LeaveUnavail': '0',
+            'Full': '0',
+            'NextDestination': '0',
+            'CallCount': 0,
+            'MaxRingTime': 0,
+            'NotInSLACount': 0,
+            'InSLACount': 0,
+            'AvgRingTime': 0,
+        }
     }
 
     let data = []
@@ -177,7 +201,11 @@ function queueAsColumns (records, displayRowWithTotals) {
         for (let statistic of additionalData) {
             const columnName = billingCdrQueueTypes[statistic['billing_cdr_queue_type']]
 
-            rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)}%`
+            if (showStatsInPercentage) {
+                rowData[columnName] = `${((statistic['ExitTypeCount'] * 100) / qTotalCalls).toFixed(2)}%`
+            } else {
+                rowData[columnName] = statistic['ExitTypeCount']
+            }
 
             if (displayRowWithTotals) {
                 exitTypeCounts.push(statistic)
