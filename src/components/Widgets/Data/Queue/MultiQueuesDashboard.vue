@@ -247,6 +247,8 @@
                     let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
                     let displayQueueAsRows = this.displayQueueAsRows
 
+                    const showStatsInPercentage = get(this.data.WidgetLayout, 'showStatsInPercentage', true)
+
                     let queueIDsFromSocket = data.map((queue) => queue.queue_id)
 
                     selectedEntityQueues.forEach((queueID) => {
@@ -265,7 +267,7 @@
                         data.push(objectToAppend)
                     })
 
-                    let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsRows)
+                    let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsRows, showStatsInPercentage)
 
                     availableColumns = result.columns
                     data = result.data
@@ -321,6 +323,11 @@
             if (!this.data.WidgetLayout.hasOwnProperty('displayRowWithTotals')) {
                 this.$set(this.data.WidgetLayout, 'displayRowWithTotals', true)
             }
+            if (!this.data.WidgetLayout.hasOwnProperty('showStatsInPercentage')) {
+                this.$set(this.data.WidgetLayout, 'showStatsInPercentage', true)
+            }
+
+
         },
         watch: {
             data: {
