@@ -7,6 +7,7 @@
             <manage-columns-section
                 key="TO_HIDE"
                 :availableColumns="showActiveColumns"
+                :displayQueueAsRows="displayQueueAsRows"
                 @onChange="(evt) => onColumnChange(evt , sectionsToManage.TO_HIDE)">
                 <template v-slot:search>
                     <div class="w-4/6 mx-2">
@@ -29,6 +30,7 @@
             <manage-columns-section
                 key="TO_SHOW"
                 :availableColumns="showAvailableColumns"
+                :displayQueueAsRows="displayQueueAsRows"
                 @onChange="(evt) => onColumnChange(evt , sectionsToManage.TO_SHOW)">
                 <template v-slot:search>
                     <div class="w-4/6 mx-2">
@@ -71,6 +73,10 @@
             showHeaderContainer: {
                 type: Boolean,
                 default: true,
+            },
+            displayQueueAsRows: {
+                type: Boolean,
+                default: false,
             },
         },
         data() {

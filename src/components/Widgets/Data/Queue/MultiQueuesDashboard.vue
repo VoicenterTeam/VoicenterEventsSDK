@@ -7,8 +7,8 @@
             :cell-style="getCellStyle"
             :columns="getAvailableColumns"
             :editable="editable"
-            :manage-columns="!displayQueueAsRows"
             :row-style="getRowStyle"
+            :displayQueueAsRows="displayQueueAsRows"
             :showColumns="getVisibleColumns"
             :stripe="stripe"
             :tableData="fetchTableData"
@@ -149,7 +149,7 @@
                 if (this.displayQueueAsRows) {
                     let visibleRows = this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
                     tableData = tableData.filter(c => visibleRows.includes(c['Stat type']))
-                    tableData = mapOrder(tableData, visibleRows, 'Stat type')
+                    // tableData = mapOrder(tableData, visibleRows, 'Stat type')
                 }
 
                 if (this.filter && this.searchableFields.length > 0) {
@@ -175,20 +175,17 @@
             },
             getAvailableColumns() {
                 if (this.displayQueueAsRows) {
-                    return this.columns
+                    return get(this.widget.WidgetLayout, 'Columns.availableQueuesColumns') || this.columns
                 }
+
                 return this.availableColumns
             },
             getVisibleColumns() {
-                if (this.displayQueueAsRows) {
-                    return this.columns.map(el => el.prop)
+                if (!this.displayQueueAsRows) {
+                    return this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
                 }
 
-                if (!this.columnsAreManaged) {
-                    return defaultVisibleColumns
-                }
-
-                return this.visibleColumns
+                return get(this.widget.WidgetLayout, 'Columns.visibleQueuesColumns') || this.columns.map(c => c.prop)
             },
             allQueueCalls() {
                 return this.$store.getters['queues/allQueueCalls']
@@ -347,8 +344,6 @@
             if (!this.data.WidgetLayout.hasOwnProperty('showStatsInPercentage')) {
                 this.$set(this.data.WidgetLayout, 'showStatsInPercentage', true)
             }
-
-
         },
         watch: {
             data: {

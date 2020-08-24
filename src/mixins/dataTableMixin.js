@@ -1,38 +1,41 @@
-import get from "lodash/get";
-import {WidgetApi} from "@/api/widgetApi";
+import get from 'lodash/get'
+import { WidgetApi } from '@/api/widgetApi'
 
 export default {
     computed: {
-        dataCounts () {
+        dataCounts() {
             if (this.filteredDataLength) {
-                let from = this.pageSize * (this.currentPage - 1) + 1;
+                let from = this.pageSize * (this.currentPage - 1) + 1
                 let to = (this.pageSize * this.currentPage) < this.filteredDataLength ? (this.pageSize * this.currentPage) : this.filteredDataLength
                 return from + ' - ' + to
             }
             return 0 + ' - ' + 0
         },
-        availableColumns () {
+        availableColumns() {
             return get(this.widget.WidgetLayout, 'Columns.availableColumns') || this.columns
         },
-        visibleColumns () {
+        visibleColumns() {
             return get(this.widget.WidgetLayout, 'Columns.visibleColumns') || this.columns.map(c => c.prop)
         },
     },
     methods: {
-        handlePageChange (val) {
+        handlePageChange(val) {
             this.currentPage = val
         },
-        async onUpdateLayout (data) {
-            this.widget.WidgetLayout['Columns'] = data
+        async onUpdateLayout(data) {
+            this.widget.WidgetLayout['Columns'] = {
+                ...this.widget.WidgetLayout['Columns'],
+                ...data,
+            }
             await WidgetApi.update(this.widget)
             let updatedWidget = await WidgetApi.find(this.widget.WidgetID)
             this.widget = {
                 ...this.widget,
                 ...updatedWidget,
-                WidgetConfig: this.widget.WidgetConfig
+                WidgetConfig: this.widget.WidgetConfig,
             }
             this.data.WidgetLayout = updatedWidget.WidgetLayout || this.widget.WidgetLayout
         },
-    }
+    },
 
 }

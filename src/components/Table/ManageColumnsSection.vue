@@ -24,7 +24,7 @@
                     @change="onChange">
                     <el-checkbox class="py-2 px-4" v-for="column in availableColumns" :label="column.prop"
                                  :key="column.label"><i class="el-icon-rank text-primary font-bold"/>
-                        {{$t(column.label)}}
+                        {{composeColumnName(column)}}
                     </el-checkbox>
                 </draggable>
             </el-checkbox-group>
@@ -34,6 +34,8 @@
 <script>
     import draggable from 'vuedraggable'
     import { Checkbox, CheckboxGroup, Option, Select, Tooltip } from 'element-ui'
+    import get from 'lodash/get'
+    import { getOptionsList } from '@/helpers/entitiesList'
 
     export default {
         components: {
@@ -49,12 +51,17 @@
                 isIndeterminate: false,
                 checkedColumns: [],
                 allChecked: false,
+                QUEUE_LIST_KEY: '{|queue_list|}',
             }
         },
         props: {
             availableColumns: {
                 type: Array,
                 default: () => [],
+            },
+            displayQueueAsRows: {
+                type: Boolean,
+                default: false,
             },
         },
         computed: {
@@ -66,8 +73,26 @@
                     drag: true,
                 }
             },
+            allEntityQueues() {
+                return getOptionsList(`${this.QUEUE_LIST_KEY}`)
+            },
         },
         methods: {
+            composeColumnName(column) {
+                if (!this.displayQueueAsRows) {
+                    return this.$t(column.label)
+                }
+
+                return this.getQueueName(column.prop)
+            },
+            getQueueName(queueID) {
+                if (queueID === 'All' || queueID === 'Stat type') {
+                    return queueID
+                }
+
+                let queue = this.allEntityQueues.filter((queue) => queue.queue_id === Number(queueID))
+                return get(queue, '[0].q_name', '--')
+            },
             handleCheckAllChange(val) {
                 this.checkedColumns = val ? this.availableColumns.map(c => c.prop) : []
                 this.isIndeterminate = false

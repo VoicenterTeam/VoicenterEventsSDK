@@ -4,7 +4,7 @@
             <slot name="search-input"/>
             <slot name="time-frame"/>
             <div class="flex items-center table-row__count">
-                <el-dropdown class="px-2" size="mini" trigger="click" v-if="manageColumns">
+                <el-dropdown class="px-2" size="mini" trigger="click">
                     <el-button size="small" type="primary">
                         {{$t('datatable.manage.columns')}}
                         <i class="el-icon-arrow-down el-icon--right"/>
@@ -13,6 +13,7 @@
                         <manage-columns
                             :available-columns="availableColumns"
                             :visible-columns="visibleColumns"
+                            :displayQueueAsRows="displayQueueAsRows"
                             @on-change-visibility="updateColumnsVisibility"
                             @on-reorder-column="reorderColumn">
                         </manage-columns>
@@ -86,6 +87,7 @@
                             :show-header-container="!onManageExport"
                             :available-columns="availableColumns"
                             :visible-columns="visibleColumns"
+                            :displayQueueAsRows="displayQueueAsRows"
                             @on-change-visibility="(data) => updateColumnsVisibility(data, onManageExport)"
                             @on-reorder-column="(data) => reorderColumn(data, onManageExport)">
                         </manage-columns>
@@ -138,9 +140,9 @@
                 type: Boolean,
                 default: false,
             },
-            manageColumns: {
+            displayQueueAsRows: {
                 type: Boolean,
-                default: true,
+                default: false,
             },
         },
         data() {
@@ -188,9 +190,6 @@
                 return row[column.prop]
             },
             tryInitSortable() {
-                if (!this.manageColumns) {
-                    return
-                }
 
                 const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
 
@@ -210,9 +209,6 @@
                 })
             },
             composePayloadToUpdateLayout(newIndex, oldIndex) {
-                if (!this.manageColumns) {
-                    return
-                }
                 const targetRow = this.renderedColumns[oldIndex]
                 const targetRowIndex = this.availableColumns.findIndex(column => column.prop.toString() === targetRow.prop.toString())
 
@@ -251,9 +247,18 @@
                 this.updateLayout()
             },
             updateLayout(afterExport = false) {
-                let objToEmit = {
-                    visibleColumns: afterExport ? this.columnsToExport : this.visibleColumns,
-                    availableColumns: this.availableColumns,
+                let objToEmit = {}
+
+                if (!this.displayQueueAsRows) {
+                    objToEmit = {
+                        visibleColumns: afterExport ? this.columnsToExport : this.visibleColumns,
+                        availableColumns: this.availableColumns,
+                    }
+                } else {
+                    objToEmit = {
+                        visibleQueuesColumns: afterExport ? this.columnsToExport : this.visibleColumns,
+                        availableQueuesColumns: this.availableColumns,
+                    }
                 }
 
                 this.drawTable = false
@@ -284,9 +289,12 @@
             },
         },
         watch: {
-            columns(newColumns) {
-                this.visibleColumns = cloneDeep(this.showColumns)
-                this.availableColumns = cloneDeep(newColumns)
+            columns: {
+                immediate: true,
+                handler(newColumns) {
+                    this.visibleColumns = cloneDeep(this.showColumns)
+                    this.availableColumns = cloneDeep(newColumns)
+                },
             },
             pageWidth: {
                 immediate: true,
@@ -301,12 +309,6 @@
                     this.tryInitSortable()
                 },
             },
-            manageColumns: {
-                deep: true,
-                handler() {
-                    this.tryInitSortable()
-                },
-            }
         },
         mounted() {
             this.tryInitSortable()
