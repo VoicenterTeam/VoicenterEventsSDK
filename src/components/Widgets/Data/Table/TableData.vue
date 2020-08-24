@@ -223,7 +223,7 @@
                                 isPercentage: false,
                             }
 
-                            let rowValue = firstRecord[column].toString() || 'x'
+                            let rowValue = firstRecord[column] ? firstRecord[column].toString() : 'x'
 
                             if (rowValue && rowValue.indexOf('%') !== -1) {
                                 columnData.isPercentage = true
