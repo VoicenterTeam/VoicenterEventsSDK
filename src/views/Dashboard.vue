@@ -355,13 +355,14 @@
 
                     if (widgetIndex !== -1 && !widgetGroup.IsNew) {
 
-                        this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, widget)
-
                         if (!this.editMode) {
                             this.$set(widget, 'onLoading', true)
                             await WidgetApi.update(widget)
                             this.$set(widget, 'onLoading', false)
+                            let updatedWidget = await WidgetApi.find(widget.WidgetID)
+                            this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, updatedWidget)
                         } else {
+                            this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, widget)
                             this.groupToEdit = widgetGroup
                         }
                     }

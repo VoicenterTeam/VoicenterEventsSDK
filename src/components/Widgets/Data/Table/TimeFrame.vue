@@ -30,6 +30,6 @@
 
                 return `${format(start, 'dd/MM/yyyy')}  -  ${format(end, 'dd/MM/yyyy')}`
             }
-        }
+        },
     }
 </script>
