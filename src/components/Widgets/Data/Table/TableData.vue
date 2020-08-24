@@ -24,6 +24,7 @@
                 :allRecords="tableData"
                 :tableData="fetchTableData"
                 :widgetTitle="data.Title"
+                :columnsWithPercentage="columnsWithPercentage"
                 @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
@@ -143,6 +144,7 @@
                 stripe: true,
                 queuesTableData: [],
                 QUEUE_STATISTICS_TEMPLATE: 45,
+                columnsWithPercentage: [],
             }
         },
         computed: {
@@ -172,8 +174,8 @@
             isSimpleTable() {
                 return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)
             },
-            columnsAreManaged () {
-                return !!get(this.data.WidgetLayout, 'Columns.visibleColumns');
+            columnsAreManaged() {
+                return !!get(this.data.WidgetLayout, 'Columns.visibleColumns')
             },
         },
         methods: {
@@ -196,10 +198,11 @@
                     let containsDate = false
                     let dateColumns = ['date']
                     let dateTimeColumns = ['date & time', 'call time', 'contacted time', 'starttime', 'endtime']
+                    let percentageColumns = []
 
                     if (data.length) {
-
-                        for (let column in data[0]) {
+                        const firstRecord = data[0]
+                        for (let column in firstRecord) {
 
                             if (dateTimeColumns.includes(column.toLowerCase())) {
                                 containsDate = true
@@ -217,6 +220,14 @@
                                 align: 'center',
                                 label: this.$t(column) || startCase(column),
                                 className: containsDate ? 'direction-ltr' : '',
+                                isPercentage: false,
+                            }
+
+                            let rowValue = firstRecord[column].toString() || 'x'
+
+                            if (rowValue && rowValue.indexOf('%') !== -1) {
+                                columnData.isPercentage = true
+                                percentageColumns.push(column)
                             }
 
                             columns.push(columnData)
@@ -227,7 +238,7 @@
 
                             this.searchableFields.push(column)
                         }
-                        
+
                         if (isRealtimeWidget(this.data) && !this.columnsAreManaged) {
                             columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2], dynamicColumns[3], dynamicColumns[4])
                         }
@@ -235,6 +246,7 @@
 
                     this.tableData = data
                     this.columns = columns
+                    this.columnsWithPercentage = percentageColumns
                 } catch (e) {
                     let status = get(e, 'response.status')
                     if (status === 400) {
