@@ -468,12 +468,18 @@ function isValidDate(date) {
 async function externalLogin(url, _ref) {
   var email = _ref.email,
       password = _ref.password,
-      token = _ref.token;
+      token = _ref.token,
+      username = _ref.username;
   var body = null;
 
   if (token) {
     body = JSON.stringify({
       token: token
+    });
+  } else if (username) {
+    body = JSON.stringify({
+      username: username,
+      password: password
     });
   } else {
     body = JSON.stringify({
@@ -496,6 +502,17 @@ async function externalLogin(url, _ref) {
   }
 
   return data.Data.Socket;
+}
+function getExternalLoginUrl(baseUrl, loginType) {
+  if (loginType === 'user') {
+    return "".concat(baseUrl, "/User");
+  } else if (loginType === 'token') {
+    return "".concat(baseUrl, "/Token");
+  } else if (loginType === 'account') {
+    return "".concat(baseUrl, "/Account");
+  }
+
+  return baseUrl;
 }
 async function refreshToken(url, oldRefreshToken) {
   var res = await fetch(url, {
@@ -746,7 +763,7 @@ function () {
       if (data.Token) {
         this.options.token = data.Token;
         this.token = data.Token;
-        await this._connect();
+        await this._connect('default', true);
       }
 
       if (data.RefreshToken) {
@@ -795,6 +812,7 @@ function () {
     key: "_connect",
     value: async function _connect() {
       var server = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+      var skipLogin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var serverToConnect = null;
 
       if (server === 'default') {
@@ -818,6 +836,10 @@ function () {
       this._initKeepAlive();
 
       this._initReconnectDelays();
+
+      if (skipLogin) {
+        return;
+      }
 
       await this.login(this.options.loginType);
     }
@@ -1212,10 +1234,13 @@ function () {
             return;
           }
 
+          var url = getExternalLoginUrl(_this4.options.loginUrl, type);
+
           if (type === 'token' || type === 'user' || type === 'account') {
-            var res = await externalLogin(_this4.options.loginUrl, {
+            var res = await externalLogin(url, {
               token: _this4.options.token,
               email: _this4.options.email,
+              username: _this4.options.username,
               password: _this4.options.password
             });
             await _this4._onLoginResponse(res);
