@@ -296,18 +296,18 @@
                 return (this.screenWidth / pageWidth).toFixed(2) * 170
             },
             renderTableLayout(pageWidth) {
-                let tableContainer = document.getElementById(`${this.tableId}`)
-
-                if (this.isMultiQueueTable && tableContainer) {
-                    let table = tableContainer.querySelector('.is-scrolling-none')
-                    if (table) {
-                        let tableHeader = tableContainer.querySelector(`.el-table__header`)
-                        if (tableHeader) {
-                            tableHeader.setAttribute('class', 'auto-table__layout')
-                        }
-                        return
-                    }
-                }
+                // let tableContainer = document.getElementById(`${this.tableId}`)
+                //
+                // if (this.isMultiQueueTable && tableContainer) {
+                //     let table = tableContainer.querySelector('.is-scrolling-none')
+                //     if (table) {
+                //         let tableHeader = tableContainer.querySelector(`.el-table__header`)
+                //         if (tableHeader) {
+                //             tableHeader.setAttribute('class', 'auto-table__layout')
+                //         }
+                //         return
+                //     }
+                // }
 
                 const scale = (this.screenWidth / pageWidth).toFixed(2)
                 this.adaptColumnWidth(scale, pageWidth)
