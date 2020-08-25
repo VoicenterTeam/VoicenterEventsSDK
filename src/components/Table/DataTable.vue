@@ -22,7 +22,7 @@
                 <slot name="additional-data"/>
             </div>
         </portal>
-        <div class="bg-transparent rounded-lg mt-1 data-table w-full">
+        <div class="bg-transparent rounded-lg mt-1 data-table w-full" :id="tableId">
             <el-table :data="rowsData"
                       :fit="fitWidth"
                       :id="tableId"
@@ -147,7 +147,7 @@
             columnsWithPercentage: {
                 type: Array,
                 default: () => [],
-            }
+            },
         },
         data() {
             const tableId = makeRandomID()
@@ -291,6 +291,23 @@
                 }
                 return (this.screenWidth / pageWidth).toFixed(2) * 170
             },
+            renderTableLayout(pageWidth) {
+                let tableContainer = document.getElementById(`${this.tableId}`)
+
+                if (tableContainer) {
+                    let table = tableContainer.querySelector('.is-scrolling-none')
+                    if (table) {
+                        let tableHeader = tableContainer.querySelector(`.el-table__header`)
+                        if (tableHeader) {
+                            tableHeader.setAttribute('class', 'auto-table__layout')
+                        }
+                        return
+                    }
+                }
+
+                const scale = (this.screenWidth / pageWidth).toFixed(2)
+                this.adaptColumnWidth(scale, pageWidth)
+            },
         },
         watch: {
             columns: {
@@ -298,13 +315,17 @@
                 handler(newColumns) {
                     this.visibleColumns = cloneDeep(this.showColumns)
                     this.availableColumns = cloneDeep(newColumns)
+                    setTimeout(() => {
+                        this.renderTableLayout()
+                    }, 1000)
                 },
             },
             pageWidth: {
                 immediate: true,
                 handler(value) {
-                    const scale = (this.screenWidth / value).toFixed(2)
-                    this.adaptColumnWidth(scale, value)
+                    setTimeout(() => {
+                        this.renderTableLayout(value)
+                    }, 1000)
                 },
             },
             widget: {
@@ -338,6 +359,17 @@
         word-break: initial;
     }
 
+    .auto-table__layout {
+        table-layout: auto !important;
+        min-width: calc(100% + 8px) !important;
+    }
+
+    .is-scrolling-none {
+        .el-table__body, .el-table__footer .el-table__header {
+            table-layout: auto !important;
+            min-width: calc(100% + 8px) !important;
+        }
+    }
 </style>
 <style scoped lang="scss">
     .data-table /deep/ .sortable-ghost {
