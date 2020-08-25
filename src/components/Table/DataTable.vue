@@ -189,7 +189,7 @@
         },
         methods: {
             formatCell(row, column) {
-                if (column.isPercentage || column.prop.indexOf('%') !== -1 || this.columnsWithPercentage.includes(column.prop)) {
+                if (column.prop.indexOf('%') !== -1 || this.columnsWithPercentage.includes(column.prop)) {
                     row[column.prop] = parseFloat(row[column.prop])
                     return `${row[column.prop]} %`
                 }

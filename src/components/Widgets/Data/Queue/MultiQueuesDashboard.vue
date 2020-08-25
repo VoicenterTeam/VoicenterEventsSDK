@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :key="data.widgetID">
         <data-table
             :widget="data"
             :border="border"
@@ -11,6 +11,7 @@
             :row-style="getRowStyle"
             :displayQueueAsRows="displayQueueAsRows"
             :showColumns="getVisibleColumns"
+            :columnsWithPercentage="getColumnsWithPercentage"
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
@@ -83,7 +84,6 @@
     import dataTableMixin from '@/mixins/dataTableMixin'
     import CallerCount from './CallerCount'
     import MaxWaitTime from './MaxWaitTime'
-    import { mapOrder } from '@/helpers/util'
     import minBy from 'lodash/minBy'
     import { getOptionsList } from '@/helpers/entitiesList'
 
@@ -214,6 +214,16 @@
                 let oldestCall = minBy(allCalls, 'JoinTimeStamp')
                 return get(oldestCall, 'QueueID', null)
             },
+            getColumnsWithPercentage() {
+                if(!this.showStatsInPercentage && !this.displayQueueAsRows) {
+                    return []
+                }
+                return this.billingCdrQueueTypes
+            },
+            showStatsInPercentage() {
+                return get(this.data.WidgetLayout, 'showStatsInPercentage', true)
+            },
+
         },
         methods: {
             getQueueName(queueID) {
@@ -258,7 +268,7 @@
                     let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
                     let displayQueueAsRows = this.displayQueueAsRows
 
-                    const showStatsInPercentage = get(this.data.WidgetLayout, 'showStatsInPercentage', true)
+                    const showStatsInPercentage = this.showStatsInPercentage
 
                     let queueIDsFromSocket = data.map((queue) => queue.queue_id)
 
@@ -290,13 +300,6 @@
                             align: 'center',
                             minWidth: 130,
                             label: this.$t(column) || startCase(column),
-                            isPercentage: false,
-                        }
-
-                        if (showStatsInPercentage) {
-                            if (this.billingCdrQueueTypes.includes(column)) {
-                                columnData['isPercentage'] = true
-                            }
                         }
 
                         columns.push(columnData)

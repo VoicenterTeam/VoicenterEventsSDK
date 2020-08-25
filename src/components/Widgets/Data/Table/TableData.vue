@@ -220,14 +220,6 @@
                                 align: 'center',
                                 label: this.$t(column) || startCase(column),
                                 className: containsDate ? 'direction-ltr' : '',
-                                isPercentage: false,
-                            }
-
-                            let rowValue = firstRecord[column] ? firstRecord[column].toString() : 'x'
-
-                            if (rowValue && rowValue.indexOf('%') !== -1) {
-                                columnData.isPercentage = true
-                                percentageColumns.push(column)
                             }
 
                             columns.push(columnData)
