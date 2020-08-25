@@ -5,6 +5,7 @@
             :border="border"
             :cell-class-name="getCellClassName"
             :cell-style="getCellStyle"
+            :is-multi-queue-table="true"
             :columns="getAvailableColumns"
             :editable="editable"
             :row-style="getRowStyle"

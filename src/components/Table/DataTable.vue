@@ -148,6 +148,10 @@
                 type: Array,
                 default: () => [],
             },
+            isMultiQueueTable: {
+                type: Boolean,
+                default: false,
+            }
         },
         data() {
             const tableId = makeRandomID()
@@ -294,7 +298,7 @@
             renderTableLayout(pageWidth) {
                 let tableContainer = document.getElementById(`${this.tableId}`)
 
-                if (tableContainer) {
+                if (this.isMultiQueueTable && tableContainer) {
                     let table = tableContainer.querySelector('.is-scrolling-none')
                     if (table) {
                         let tableHeader = tableContainer.querySelector(`.el-table__header`)
