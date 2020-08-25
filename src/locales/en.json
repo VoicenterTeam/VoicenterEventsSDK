@@ -754,5 +754,8 @@
     "caller_info": "Caller Info",
     "Go to Layout Management page": "Go to Layout Management page",
     "Dashboard layout": "Dashboard layout",
-    "Show Stats in Percentage": "Show Stats in Percentage"
+    "Show Stats in Percentage": "Show Stats in Percentage",
+    "Invalid Logo": "Invalid Logo",
+    "Logo size should be less than 100kb": "Logo size should be less than 100kb"
+
 }
