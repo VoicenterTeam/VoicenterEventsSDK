@@ -200,7 +200,7 @@ class EventsSDK {
     if (data.Token) {
       this.options.token = data.Token;
       this.token = data.Token
-      await this._connect()
+      await this._connect('default', true)
     }
 
     if (data.RefreshToken) {
@@ -236,7 +236,7 @@ class EventsSDK {
     };
   }
 
-  async _connect(server = 'default') {
+  async _connect(server = 'default', skipLogin = false) {
     let serverToConnect = null;
     if (server === 'default') {
       serverToConnect = this._findCurrentServer();
@@ -254,6 +254,9 @@ class EventsSDK {
     this._initSocketEvents();
     this._initKeepAlive();
     this._initReconnectDelays();
+    if (skipLogin) {
+      return
+    }
     await this.login(this.options.loginType)
   }
 
