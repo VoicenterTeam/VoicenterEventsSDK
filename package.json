@@ -23,7 +23,7 @@
     "register-service-worker": "^1.6.2",
     "sortablejs": "^1.10.0-rc3",
     "tailwindcss": "^1.4.5",
-    "voicenter-events-sdk": "^0.7.15",
+    "voicenter-events-sdk": "^0.7.16",
     "vue": "^2.6.10",
     "vue-audio": "^0.0.12",
     "vue-feather-icons": "^4.22.0",
