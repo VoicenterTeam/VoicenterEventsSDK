@@ -1,6 +1,11 @@
-import i18n from '@/i18n'
 import $axios from './apiConnection'
 import parseCatch from '@/helpers/handleErrors'
+
+const initialTime = (new Date().getTime() / 1000).toFixed(0)
+
+function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 export const DashboardApi = {
     async getAll() {
@@ -8,12 +13,18 @@ export const DashboardApi = {
             let res = await $axios.get('/DashBoards/GetAll/')
             return res.DashBoards
         } catch (e) {
-            //TODO: redirect to login when status code = 401 (sync with back)
+
+            const currentTime = (new Date().getTime() / 1000).toFixed(0)
+
+            if (currentTime - initialTime < 11) {
+                await timeout(2000)
+                return await this.getAll()
+            }
+
             parseCatch(e, true)
-            //Show error for user
             setTimeout(() => {
                 window.location.href = process.env.VUE_APP_FALLBACK_URL
-            }, 2000)
+            }, 1000)
         }
     },
 
@@ -64,5 +75,5 @@ export const DashboardApi = {
         } catch (e) {
             parseCatch(e, true)
         }
-    }
+    },
 }

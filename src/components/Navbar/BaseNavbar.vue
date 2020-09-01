@@ -208,6 +208,9 @@
             }
         },
         computed: {
+            loadingData() {
+                return this.$store.state.dashboards.loadingData
+            },
             activeDashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
             },
@@ -230,7 +233,7 @@
                 return localStorage.getItem('locale') || this.$i18n.locale
             },
             accountNoData() {
-                return !this.activeDashboard
+                return !this.loadingData && !this.activeDashboard
             },
             dashboardLayoutID() {
                 return get(this.activeDashboard, 'DashboardLayoutID', this.DEFAULT_LAYOUT_ID);

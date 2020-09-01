@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { DashboardApi } from '@/api/dashboardApi'
 import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
+import get from 'lodash/get'
 
 const ACTIVE_DASHBOARD = 'active-dashboard'
 
@@ -82,7 +83,7 @@ const actions = {
     },
     async selectDashboard({ commit, state }, dashboard) {
         const previousDashboard = previousActiveDashboard()
-        dashboard = dashboard || previousDashboard || state.allDashboards[0]
+        dashboard = dashboard || previousDashboard || get(state, 'allDashboards.[0]', false)
         if (dashboard) {
             commit(types.SET_LOADING, true)
             if (!dashboard['DashboardLayoutID']) {

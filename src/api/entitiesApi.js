@@ -7,7 +7,7 @@ export const entitiesApi = {
             let res = await $axios.get('/Login/EntitiesList/')
             return res.Data
         } catch (e) {
-            parseCatch(e, true, 'Entities List')
+            parseCatch(e, false, 'Entities List')
         }
     }
 }
