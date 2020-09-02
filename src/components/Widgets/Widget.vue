@@ -3,7 +3,27 @@
         <div class="flex w-full flex-row items-center justify-between widget-header" v-if="showDeleteButton">
             <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
             <portal-target :name="`widget-header__${widget.WidgetID}`" class="hidden lg:flex w-full justify-between"/>
-            <div class="flex">
+            <div class="flex items-center">
+                <div v-if="isHtmlEditor(widget)">
+                    <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">
+                        <el-switch v-model="editMode"/>
+                    </el-tooltip>
+                </div>
+                <div v-if="isNoteListWidget(widget)"
+                     class="flex items-center">
+                    <el-tooltip :content="$t('Display hidden notes')"
+                                class="item"
+                                effect="dark"
+                                placement="top">
+                        <el-switch class="mx-2" v-model="editMode"/>
+                    </el-tooltip>
+                    <el-tooltip :content="$t('Add New Note')"
+                                class="item"
+                                effect="dark"
+                                placement="top">
+                        <AddButton @click="onAddNote"/>
+                    </el-tooltip>
+                </div>
                 <div v-if="editable"
                      @click="duplicateWidget(widget)"
                      class="cursor-pointer btn p-2 shadow rounded bg-white hover:bg-blue-100 mx-1 border border-blue-500">
@@ -31,9 +51,11 @@
                 :editable="editable"
                 :is="getComponentTypeAndSetData(widget)"
                 :style="getStyles"
+                :onEditMode="editMode"
                 @on-update="(data) => onUpdate(data)"
                 @remove-item="removeWidget(widget)"
                 @duplicate-widget="duplicateWidget(widget)"
+                ref="widget"
                 class="widget h-full"
                 v-bind="widget.WidgetLayout">
             </component>
@@ -52,11 +74,12 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import { Tooltip } from 'element-ui'
+    import { Switch, Tooltip } from 'element-ui'
     import WidgetCard from './WidgetCard'
     import UpdateDialog from './UpdateDialog'
     import WidgetNoteList from './WidgetNoteList'
     import TableData from './Data/Table/TableData'
+    import AddButton from '@/components/AddButton'
     import EditButton from '@/components/EditButton'
     import HtmlWidget from './ExternalData/HtmlWidget'
     import PieChart from '@/components/Charts/PieChart'
@@ -79,7 +102,13 @@
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import StatisticsCards from '@/components/Cards/StatisticsCards'
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
-    import { getWidgetDataType, getWidgetEndpoint, getWidgetRefreshInterval } from '@/helpers/widgetUtils'
+    import {
+        getWidgetDataType,
+        getWidgetEndpoint,
+        getWidgetRefreshInterval,
+        isHtmlEditor,
+        isNoteListWidget,
+    } from '@/helpers/widgetUtils'
 
     const DEFAULT_WIDGET_TIME = {
         type: 'relative',
@@ -90,6 +119,7 @@
 
     export default {
         components: {
+            AddButton,
             WidgetCard,
             TimeLineChart,
             ExtensionCards,
@@ -99,7 +129,6 @@
             DeleteButton,
             EditButton,
             UpdateDialog,
-            [Tooltip.name]: Tooltip,
             GaugeChart,
             QueueChart,
             QueueCards,
@@ -114,6 +143,8 @@
             AreaChart,
             WidgetNoteList,
             AverageCallDuration,
+            [Switch.name]: Switch,
+            [Tooltip.name]: Tooltip,
         },
         props: {
             editable: {
@@ -138,6 +169,7 @@
                 showUpdateDialog: false,
                 loading: false,
                 TABLE_DATA_TYPE_ID: '4',
+                editMode: false,
             }
         },
         computed: {
@@ -193,6 +225,8 @@
             },
         },
         methods: {
+            isHtmlEditor,
+            isNoteListWidget,
             removeWidget(widget) {
                 this.$emit('remove-item', widget)
             },
@@ -222,10 +256,20 @@
                     this.$set(this.widget, 'WidgetTime', DEFAULT_WIDGET_TIME)
                 }
             },
+            onAddNote() {
+                try {
+                    this.$refs.widget.onAddNote()
+                } catch (e) {
+                    console.log(e)
+                }
+            },
         },
         mounted() {
             this.getComponentTypeAndSetData(this.widget)
             this.checkWidgetTimeConfig()
+
+            const { editMode } = this.widget.WidgetLayout || false
+            this.editMode = editMode
         },
     }
 </script>

@@ -1,12 +1,5 @@
 <template>
     <div class="trix-widget">
-        <portal :to="`widget-header__${data.WidgetID}`">
-            <div class="flex w-full justify-end items-center mx-1">
-                <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">
-                    <el-switch v-model="editMode"/>
-                </el-tooltip>
-            </div>
-        </portal>
         <div :style="getStyles" class="bg-white rounded">
             <div
                 :style="getStyles"
@@ -23,79 +16,60 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import format from 'date-fns/format'
-    import parseISO from 'date-fns/parseISO'
     import HtmlEditor from '../../Html/HtmlEditor'
-    import {Switch, Tooltip} from 'element-ui'
-    import {defaultColors} from '@/enum/defaultWidgetSettings'
-    import WidgetNoteList from "@/components/Widgets/WidgetNoteList";
+    import { defaultColors } from '@/enum/defaultWidgetSettings'
+    import WidgetNoteList from '@/components/Widgets/WidgetNoteList'
 
     export default {
         components: {
             WidgetNoteList,
             HtmlEditor,
-            [Switch.name]: Switch,
-            [Tooltip.name]: Tooltip,
         },
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
+            },
+            onEditMode: {
+                type: Boolean,
+                default: false,
             },
         },
-        data () {
+        data() {
             return {
-                editMode: this.editable,
+                editMode: false,
             }
         },
         computed: {
-            displayLastUpdateDate() {
-                return get(this.data.WidgetLayout, 'showLastUpdateDate', true)
-            },
-            fetchData () {
+            fetchData() {
                 return this.data.WidgetLayout.htmlData || `<p>${this.$t('Click the switch to enable edit mode for this html')}</p>`
             },
-            margins () {
+            margins() {
                 if (this.$rtl.isRTL) {
                     return this.editable ? 'ml-24' : 'ml-12'
                 } else {
                     return this.editable ? 'mr-24' : 'mr-12'
                 }
             },
-            getStyles () {
-                let colors = get(this.data.WidgetLayout, 'colors') || defaultColors;
+            getStyles() {
+                let colors = get(this.data.WidgetLayout, 'colors') || defaultColors
                 return {
                     border: 0,
                     backgroundColor: colors.background,
                     color: colors.fonts,
-                    'margin-top': '10px'
+                    'margin-top': '10px',
                 }
             },
-            getInfo () {
-                if (!this.displayLastUpdateDate || !this.data.LastUpdate) {
-                    return this.data.Title
-                }
-
-                let date = this.data.LastUpdate
-
-                try {
-                    date = format(parseISO(this.data.LastUpdate), 'MMM dd HH:mm')
-                } catch (e) {
-                    console.warn(e)
-                }
-
-                return this.data.Title + ' / ' + date;
-            }
         },
         methods: {
-            onUpdate (val) {
+            onUpdate(val) {
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
-                    ...{htmlData: val}
+                    htmlData: val,
                 }
                 this.$emit('on-update', this.data)
                 this.editMode = false
@@ -108,9 +82,15 @@
         },
         watch: {
             editable: {
-                handler: function (state) {
+                handler(state) {
                     this.editMode = state
-                }
+                },
+            },
+            onEditMode: {
+                immediate: true,
+                handler(state) {
+                    this.editMode = state
+                },
             },
         },
     }

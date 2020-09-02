@@ -1,18 +1,5 @@
 <template>
     <div>
-        <portal :to="`widget-header__${data.WidgetID}`">
-            <div class="flex w-full justify-end items-center mx-1" v-if="!creationMode">
-                <el-tooltip :content="$t('Display hidden notes')" :open-delay="openDelay" class="item"
-                            effect="dark"
-                            placement="top">
-                    <el-switch class="mx-2" v-model="onEditMode"/>
-                </el-tooltip>
-                <el-tooltip :content="$t('Add New Note')" :open-delay="openDelay" class="item" effect="dark"
-                            placement="top">
-                    <AddButton @click="onAddNote"/>
-                </el-tooltip>
-            </div>
-        </portal>
         <modal :visible.sync="creationMode"
                :width="dialogWidth">
             <div class="pb-4">
@@ -70,19 +57,16 @@
     import Modal from '@/components/Common/Modal'
     import get from 'lodash/get'
     import format from 'date-fns/format'
-    import { Switch, Tooltip } from 'element-ui'
-    import AddButton from '@/components/AddButton'
+    import { Tooltip } from 'element-ui'
     import HtmlEditor from '@/components/Html/HtmlEditor'
     import { Edit3Icon, EyeIcon, EyeOffIcon, Trash2Icon } from 'vue-feather-icons'
 
     export default {
         components: {
             [Tooltip.name]: Tooltip,
-            [Switch.name]: Switch,
             EyeOffIcon,
             Trash2Icon,
             Edit3Icon,
-            AddButton,
             HtmlEditor,
             EyeIcon,
             Modal,
@@ -96,11 +80,15 @@
                 type: Boolean,
                 default: false,
             },
+            onEditMode: {
+                type: Boolean,
+                default: false,
+            },
         },
         data() {
             return {
                 creationMode: false,
-                onEditMode: false,
+                editMode: false,
                 noteToUpdate: null,
                 openDelay: 400,
                 dialogWidth: '90%',
@@ -109,7 +97,7 @@
         computed: {
             fetchNotes() {
                 let allNotes = get(this.data.WidgetLayout, 'Notes', [])
-                if (this.onEditMode) {
+                if (this.editMode) {
                     return allNotes
                 }
                 return allNotes.filter((note) => note.displayed)
@@ -179,12 +167,12 @@
                 return this.data.WidgetLayout['Notes'].findIndex((el) => el.date === note.date)
             },
             emmitUpdate() {
-                this.data.WidgetLayout['onEditMode'] = this.onEditMode
+                this.data.WidgetLayout['editMode'] = this.editMode
                 this.$emit('on-update', this.data)
                 this.noteToUpdate = null
             },
             showActions(note) {
-                return this.onEditMode && (!this.noteToUpdate || this.noteToUpdate !== note.date)
+                return this.editMode && (!this.noteToUpdate || this.noteToUpdate !== note.date)
             },
         },
         mounted() {
@@ -195,9 +183,15 @@
             if (!this.data.WidgetLayout.hasOwnProperty('displayWidgetTitle')) {
                 this.$set(this.data.WidgetLayout, 'displayWidgetTitle', false)
             }
-            
-            const { onEditMode } = this.data.WidgetLayout || false
-            this.onEditMode = onEditMode
+        },
+        watch: {
+            onEditMode: {
+                immediate: true,
+                handler(state) {
+                    console.log('onEditMode', state)
+                    this.editMode = state
+                },
+            },
         },
     }
 </script>
