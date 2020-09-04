@@ -391,6 +391,7 @@
 
                     try {
                         this.model.WidgetConfig.forEach((config) => {
+
                             if (config.ParameterType !== AUTO_COMPLETE_PARAMETER_TYPE) {
                                 delete config.WidgetParameterValueJson
                                 return
@@ -403,6 +404,12 @@
 
                             if (typeof config.WidgetParameterValueJson !== 'object') {
                                 return
+                            }
+
+                            const entityNegative = config.WidgetParameterValueJson['EntityNegative']
+                            
+                            if (entityNegative && entityNegative.length) {
+                                config.WidgetParameterValueJson['EntityPositive'] = config.WidgetParameterValueJson['EntityPositive'].filter((el) => !entityNegative.includes(el))
                             }
 
                             if (config.WidgetParameterValueJson['EntityPositive'].length) {
