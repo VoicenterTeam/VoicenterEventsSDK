@@ -166,12 +166,13 @@
                         extension_name: this.getExtensionName(row.user_id).ext_name || '--',
                         status: this.getExtensionStatusText(row.user_id),
                         status_duration: getInitialExtensionTime(extension, this.getSettings),
+                        caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
+                        call_info: extension.calls.length ? this.getCallInfo(extension) : '',
                     }
                 })
 
                 return tableData
             },
-
             extensions() {
                 return this.$store.state.extensions.extensions
             },
@@ -183,6 +184,13 @@
             },
         },
         methods: {
+            getCallerInfo(userExtension) {
+                let callerInfo = ''
+                userExtension.calls.forEach((call) => {
+                    callerInfo += call.callername
+                })
+                return callerInfo
+            },
             getExtensionStatusText(userID) {
                 const ref = this.$refs[`user-status-${userID}`]
                 if (!ref) {
@@ -194,6 +202,13 @@
             getExtensionName(userId) {
                 const extensionNumber = this.userExtension(userId)
                 return this.$store.getters['entities/getExtensionById'](extensionNumber.number)
+            },
+            getCallInfo(userExtension) {
+                let callInfo = 0
+                userExtension.calls.forEach((call) => {
+                    callInfo += Number(call.callStarted)
+                })
+                return callInfo
             },
             userExtension(userId) {
                 return this.extensions.find(e => e.userID === userId)

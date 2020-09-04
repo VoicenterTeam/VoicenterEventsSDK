@@ -232,7 +232,7 @@
                         }
 
                         if (isRealtimeWidget(this.data) && !this.columnsAreManaged) {
-                            columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2], dynamicColumns[3], dynamicColumns[4])
+                            columns.splice(3, 0, dynamicColumns[0], dynamicColumns[1], dynamicColumns[2], dynamicColumns[3], dynamicColumns[4], dynamicColumns[5])
                         }
                     }
 

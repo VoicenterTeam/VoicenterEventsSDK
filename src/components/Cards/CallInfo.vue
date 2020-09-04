@@ -1,8 +1,7 @@
 <template>
     <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col" v-if="!hideCallerInfo" :class="{'w-full': hideCallInfo}">
-            <span class="text-main-xs mr-2 text-gray-500">+{{call.callerphone}}</span>
-            <span v-if="call.callerphone !== call.callername" class="text-main-xs font-medium">{{call.callername}}</span>
+            <span class="text-main-xs mr-2 text-gray-500">{{callerName}}</span>
         </div>
         <template v-if="!hideCallInfo">
             <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
@@ -11,7 +10,7 @@
                 placement="top"
                 :open-delay="300"
                 :content="$t('status.hold')"
-                >
+            >
                 <icon-hold class="w-4 h-4"></icon-hold>
             </el-tooltip>
             <slot name="threshold" :statusThreshold="threshold"/>
@@ -21,21 +20,21 @@
 </template>
 <script>
     import Timer from '@/util/Timer'
-    import {getInitialTime} from '@/util/timeUtils'
     import { Tooltip } from 'element-ui'
+    import { getInitialTime } from '@/util/timeUtils'
 
     export default {
         components: {
-            [Tooltip.name]: Tooltip
+            [Tooltip.name]: Tooltip,
         },
         props: {
             call: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             settings: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             hideCallerInfo: {
                 type: Boolean,
@@ -51,25 +50,31 @@
 
             return {
                 timer: new Timer({
-                    initialTimeInSeconds
+                    initialTimeInSeconds,
                 }),
                 directionMappings: {
-                    "Outgoing": "IconDirectionOutgoing",
-                    "Incoming": "IconDirectionIncoming",
-                    "Click2Call": "IconDirectionIncoming",
+                    'Outgoing': 'IconDirectionOutgoing',
+                    'Incoming': 'IconDirectionIncoming',
+                    'Click2Call': 'IconDirectionIncoming',
                 },
             }
         },
         computed: {
+            callerName() {
+                if (!isNaN(Number(this.call.callername))) {
+                    return `+${this.call.callername}`
+                }
+                return this.call.callername
+            },
             threshold() {
-                let show = true;
-                let icon = 'IconYellowBulb';
+                let show = true
+                let icon = 'IconYellowBulb'
 
                 if (!this.settings.callThreshold) {
-                    show = false;
+                    show = false
                     return { show, icon }
                 }
-                let seconds = this.timer.state.seconds;
+                let seconds = this.timer.state.seconds
                 let minThreshold = this.settings.callThresholdLowValue
                 let maxThreshold = this.settings.callThresholdHeightValue
 
@@ -78,7 +83,7 @@
                 } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
                     icon = 'IconRedBulb'
                 }
-                return {show, icon}
+                return { show, icon }
             },
         },
         watch: {
@@ -87,21 +92,22 @@
                     const timerValue = getInitialTime(this.call.callStarted)
                     this.timer.setValue(timerValue)
                 }
-            }
+            },
         },
         mounted() {
             this.timer.start()
         },
         beforeDestroy() {
             this.timer.destroy()
-        }
+        },
     }
 </script>
 <style scoped lang="scss">
     .call-time {
         min-width: 48px;
     }
-    .rtl .direction-icon{
+
+    .rtl .direction-icon {
         transform: rotate(180deg);
     }
 </style>
