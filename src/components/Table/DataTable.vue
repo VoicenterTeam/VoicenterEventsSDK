@@ -151,7 +151,7 @@
             isMultiQueueTable: {
                 type: Boolean,
                 default: false,
-            }
+            },
         },
         data() {
             const tableId = makeRandomID()
@@ -295,23 +295,6 @@
                 }
                 return (this.screenWidth / pageWidth).toFixed(2) * 170
             },
-            renderTableLayout(pageWidth) {
-                // let tableContainer = document.getElementById(`${this.tableId}`)
-                //
-                // if (this.isMultiQueueTable && tableContainer) {
-                //     let table = tableContainer.querySelector('.is-scrolling-none')
-                //     if (table) {
-                //         let tableHeader = tableContainer.querySelector(`.el-table__header`)
-                //         if (tableHeader) {
-                //             tableHeader.setAttribute('class', 'auto-table__layout')
-                //         }
-                //         return
-                //     }
-                // }
-
-                const scale = (this.screenWidth / pageWidth).toFixed(2)
-                this.adaptColumnWidth(scale, pageWidth)
-            },
         },
         watch: {
             columns: {
@@ -319,17 +302,13 @@
                 handler(newColumns) {
                     this.visibleColumns = cloneDeep(this.showColumns)
                     this.availableColumns = cloneDeep(newColumns)
-                    setTimeout(() => {
-                        this.renderTableLayout()
-                    }, 1000)
                 },
             },
             pageWidth: {
                 immediate: true,
                 handler(value) {
-                    setTimeout(() => {
-                        this.renderTableLayout(value)
-                    }, 1000)
+                    const scale = (this.screenWidth / value).toFixed(2)
+                    this.adaptColumnWidth(scale, value)
                 },
             },
             widget: {
@@ -346,7 +325,9 @@
     }
 </script>
 <style lang="scss">
-
+    colgroup {
+        display: none !important;
+    }
     .el-dropdown-menu--mini {
         padding: 0;
 
@@ -361,18 +342,6 @@
 
     th > div.cell > span {
         word-break: initial;
-    }
-
-    .auto-table__layout {
-        table-layout: auto !important;
-        min-width: calc(100% + 8px) !important;
-    }
-
-    .is-scrolling-none {
-        .el-table__body, .el-table__footer .el-table__header {
-            table-layout: auto !important;
-            min-width: calc(100% + 8px) !important;
-        }
     }
 </style>
 <style scoped lang="scss">
