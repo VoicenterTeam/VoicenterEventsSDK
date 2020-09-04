@@ -22,7 +22,7 @@
                 <slot name="additional-data"/>
             </div>
         </portal>
-        <div class="bg-transparent rounded-lg mt-1 data-table w-full" :id="tableId">
+        <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
             <el-table :data="rowsData"
                       :fit="fitWidth"
                       :id="tableId"
