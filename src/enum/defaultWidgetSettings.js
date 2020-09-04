@@ -9,9 +9,9 @@ export const realTimeSettings = {
     resetIdleTime: true
 }
 export const defaultColors = {
-    background: "#edf2f7",
+    background: "#fff",
     frames: "#edf2f7",
-    fonts: '#000000'
+    fonts: '#000'
 }
 
 export const defaultAreaChartColors = {
