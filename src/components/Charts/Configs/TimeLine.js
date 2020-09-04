@@ -3,7 +3,7 @@ import i18n from '@/i18n'
 import config from '@/config'
 import Exporting from 'highcharts/modules/exporting'
 import noDataModule from 'highcharts/modules/no-data-to-display'
-import {timeFormatter} from "@/helpers/timeFormatter";
+import { timeFormatter } from '@/helpers/timeFormatter'
 
 Exporting(Highcharts)
 noDataModule(Highcharts)
@@ -16,30 +16,30 @@ const yLineConfig = {
         style: {
             color: config.colors.warm_grey,
             fontSize: config.fonts.base,
-            format: "{value} s"
-        }
-    }
+            format: '{value} s',
+        },
+    },
 }
 
 let yAxisConfig = {
     yAxis: [{
-        ...yLineConfig
+        ...yLineConfig,
     }, {
         linkedTo: 0,
         opposite: true,
-        ...yLineConfig
-    }]
+        ...yLineConfig,
+    }],
 }
 
 let queueChartYAxisConfig = {
     yAxis: [{
         ...yLineConfig,
-        ...{labels: {...yLineConfig.labels, ...{format: '{value} s'}}}
+        ...{ labels: { ...yLineConfig.labels, ...{ format: '{value} s' } } },
     }, {
         ...yLineConfig,
         opposite: true,
-        tickInterval: 1
-    }]
+        tickInterval: 1,
+    }],
 }
 
 Highcharts.setOptions({
@@ -48,7 +48,7 @@ Highcharts.setOptions({
         zoomType: 'x',
         panning: true,
         panKey: 'shift',
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
     },
     tooltip: {
         useHTML: true,
@@ -89,9 +89,9 @@ Highcharts.setOptions({
 
             return `<p style="font-size: config.fonts.base; color: ${this.point.color};">${this.series.name}: ${this.point.y}</p>`
         },
-        backgroundColor: "#ffffff",
-        borderColor: "#ffffff",
-        boxShadow: "0 10px 15px 0 rgba(143, 149, 163, 0.38)",
+        backgroundColor: '#ffffff',
+        borderColor: '#ffffff',
+        boxShadow: '0 10px 15px 0 rgba(143, 149, 163, 0.38)',
         borderRadius: 10,
     },
     colors: [
@@ -104,7 +104,7 @@ Highcharts.setOptions({
         '#ED64A6',
         '#667EEA',
         '#9F7AEA',
-        '#1CBBB4'
+        '#1CBBB4',
     ],
     lang: {
         viewFullscreen: i18n.t('chart.viewFullscreen'),
@@ -114,7 +114,7 @@ Highcharts.setOptions({
         downloadPNG: i18n.t('chart.downloadPNG'),
         downloadSVG: i18n.t('chart.downloadSVG'),
         loading: i18n.t('chart.loading'),
-        rangeSelectorZoom: ''
+        rangeSelectorZoom: '',
     },
     exporting: {
         buttons: {
@@ -129,12 +129,12 @@ Highcharts.setOptions({
                 symbolX: 10,
                 symbolY: 10,
                 menuItems: [
-                    "printChart",
-                    "separator",
-                    "downloadPNG",
-                    "downloadJPEG",
-                    "downloadPDF",
-                    "downloadSVG"
+                    'printChart',
+                    'separator',
+                    'downloadPNG',
+                    'downloadJPEG',
+                    'downloadPDF',
+                    'downloadSVG',
                 ],
                 theme: {
                     states: {
@@ -142,13 +142,13 @@ Highcharts.setOptions({
                         stroke: 'silver',
                         r: 0,
                         hover: {
-                            fill: 'white'
+                            fill: 'white',
                         },
                         select: {
-                            fill: 'white'
-                        }
-                    }
-                }
+                            fill: 'white',
+                        },
+                    },
+                },
             },
             viewFullscreen: {
                 symbol: 'url(/img/IconFullScreen.svg)',
@@ -157,13 +157,16 @@ Highcharts.setOptions({
                 symbolX: 19,
                 symbolY: 19,
                 onclick: function () {
-                    Highcharts.FullScreen.prototype.init(this.renderTo);
+                    Highcharts.FullScreen.prototype.init(this.renderTo)
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen()
+                    }
                 },
             },
-        }
+        },
     },
     credits: {
-        enabled: false
+        enabled: false,
     },
     xAxis: {
         lineWidth: 1,
@@ -173,17 +176,17 @@ Highcharts.setOptions({
             style: {
                 color: config.colors.warm_grey,
                 fontSize: config.fonts.base,
-            }
+            },
         },
     },
     legend: {
-        enabled: true
+        enabled: true,
     },
     plotOptions: {
         spline: {
             marker: {
-                enabled: false
-            }
+                enabled: false,
+            },
         },
     },
     title: {
@@ -191,8 +194,8 @@ Highcharts.setOptions({
         style: {
             color: config.colors.warm_grey,
             fontSize: config.fonts.base,
-        }
-    }
+        },
+    },
 })
 
 export default {
