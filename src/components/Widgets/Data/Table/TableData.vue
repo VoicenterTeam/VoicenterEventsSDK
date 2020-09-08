@@ -197,7 +197,7 @@
                     let columns = []
                     let containsDate = false
                     let dateColumns = ['date']
-                    let dateTimeColumns = ['date & time', 'call time', 'contacted time', 'starttime', 'endtime']
+                    let dateTimeColumns = ['date time', 'date & time', 'call time', 'contacted time', 'starttime', 'endtime']
                     let percentageColumns = []
 
                     if (data.length) {
