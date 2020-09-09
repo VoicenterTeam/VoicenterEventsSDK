@@ -55,7 +55,7 @@
                 directionMappings: {
                     'Outgoing': 'IconDirectionOutgoing',
                     'Incoming': 'IconDirectionIncoming',
-                    'Click2Call': 'IconDirectionIncoming',
+                    'Click2Call': 'IconDirectionOutgoing',
                 },
             }
         },

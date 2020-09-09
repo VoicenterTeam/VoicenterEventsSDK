@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 14">
     <g fill="none" fill-rule="evenodd">
-        <path fill="#FF4D4D" d="M7.2 5.1H24v3.4H7.2v2.686a1 1 0 0 1-1.707.707L1.107 7.507a1 1 0 0 1 0-1.414l4.386-4.386a1 1 0 0 1 1.707.707V5.1z"/>
-        <g transform="matrix(-1 0 0 1 31 0)">
-            <circle cx="7" cy="7" r="7" fill="#FFDFDF"/>
-            <circle cx="7" cy="7" r="4" fill="#FF4D4D" stroke="#FFF"/>
+        <path fill="green" d="M23.8 5.1H7v3.4h16.8v2.686a1 1 0 0 0 1.707.707l4.386-4.386a1 1 0 0 0 0-1.414l-4.386-4.386a1 1 0 0 0-1.707.707V5.1z"/>
+        <g>
+            <circle cx="7" cy="7" r="7" fill="#CEEAAE"/>
+            <circle cx="7" cy="7" r="4" fill="green" stroke="#FFF"/>
         </g>
     </g>
 </svg>
