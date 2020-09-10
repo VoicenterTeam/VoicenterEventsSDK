@@ -1,7 +1,9 @@
 <template>
     <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col" v-if="!hideCallerInfo" :class="{'w-full': hideCallInfo}">
-            <span class="text-main-xs mr-2 text-gray-500">{{callerName}}</span>
+            <span class="text-main-xs mr-2 text-gray-500">+{{call.callerphone}}</span>
+            <span v-if="call.callerphone !== call.callername"
+                  class="text-main-xs font-medium">{{call.callername}}</span>
         </div>
         <template v-if="!hideCallInfo">
             <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
@@ -60,12 +62,6 @@
             }
         },
         computed: {
-            callerName() {
-                if (!isNaN(Number(this.call.callername))) {
-                    return `+${this.call.callername}`
-                }
-                return this.call.callername
-            },
             threshold() {
                 let show = true
                 let icon = 'IconYellowBulb'
