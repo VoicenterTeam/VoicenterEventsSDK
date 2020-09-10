@@ -188,7 +188,6 @@
             onEditMode: {
                 immediate: true,
                 handler(state) {
-                    console.log('onEditMode', state)
                     this.editMode = state
                 },
             },
