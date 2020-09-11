@@ -90,7 +90,6 @@ The SDK constructor accepts multiple options when initializing which can be used
 | **code**  | string  | Code to be used for login with "code" type. Should be used with "organizationCode" code |
 | **organizationCode**  | string  | Organization code to be used for login with "code" type. Should be used with "organizationCode" code |
 | **debug**  | Boolean  | false |  When set to true, it will print debug information to console  |
-| **useLoginApi**  | Boolean  | false |  When set to true, it will use only the login api to login and retrieve the list of servers |
 | **reconnectionDelay**  | Number  | 10000 |  First reconnection delay in milliseconds. Defaults to 10 seconds and increases with each retry (retryCount * reconnectionDelay)  |
 | **timeout**  | Number  | 10000 |  Login timeout. Will throw an error if no event is sent back based on the emitted login event  |
 | **protocol**  | String  | https |  Protocol to use when connecting via sockets with the server  |

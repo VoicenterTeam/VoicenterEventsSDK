@@ -1,4 +1,3 @@
-import io from 'socket.io-client/socket.io';
 import eventTypes from './eventTypes';
 import { defaultServers } from './config';
 import Logger from './Logger';
@@ -7,7 +6,8 @@ import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
 import { getServerWithHighestPriority, isValidDate } from './utils';
-import { externalLogin, refreshToken, getExternalLoginUrl } from './externalLogin';
+import { externalLogin, refreshToken, getExternalLoginUrl } from './utils/externalLogin';
+import { loadExternalScript } from './utils/loadExternalScript'
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
@@ -183,6 +183,9 @@ class EventsSDK {
   }
 
   async _onLoginResponse(data) {
+    if (data.Client) {
+      await loadExternalScript(data.Client)
+    }
     if (data.URL) {
       this.server = {
         Priority: 0,
@@ -281,7 +284,7 @@ class EventsSDK {
         token: this.token
       }
     }
-    this.socket = io(url, options);
+    this.socket = window.io(url, options);
     allConnections.push(this.socket);
     this.connectionEstablished = true;
   }
@@ -369,23 +372,6 @@ class EventsSDK {
     // Ignore server fetch if we have a list of servers passed via options
     if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
       this.servers = this.argumentOptions.servers
-      return
-    }
-    if (this.options.useLoginApi) {
-      return
-    }
-    try {
-      let params = {};
-      if (this.options.serverType) {
-        params.type = this.options.serverType
-      }
-      if (!this.token) {
-        return
-      }
-      let res = await fetch(`${this.options.url}/${this.token}`, params);
-      this.servers = await res.json();
-    } catch (e) {
-      this.servers = this.argumentOptions.servers || defaultServers;
     }
   }
 
@@ -446,9 +432,8 @@ class EventsSDK {
       this.emit(eventTypes.CLOSE);
     }
     await this._getToken();
+    await this.login(this.options.loginType)
     await this._getServers();
-    await this._connect();
-    this._initReconnectDelays();
     return true;
   }
 
@@ -554,43 +539,18 @@ class EventsSDK {
     if (this._lastLoginTimestamp + delay > new Date().getTime()) {
       return Promise.resolve()
     }
-    let _self = this;
-    this._checkInit();
-    let resolved = false;
     this._lastLoginTimestamp = new Date().getTime()
     return new Promise(async (resolve, reject) => {
-      this.on(eventTypes.LOGIN_STATUS, data => {
-        if (_self.onLogin) _self.onLogin(data);
-        resolved = true;
-        resolve(data)
-      });
-      this.socket.on(eventTypes.ERROR, err => {
-        if (_self.onError) _self.onError(err);
-        if (resolved === false) {
-          reject(err);
-        }
-      })
       try {
-        if (type === 'token' && !this.options.useLoginApi) {
-          this.emit(eventTypes.LOGIN, { token: this.options.token });
-          return
-        }
         let url = getExternalLoginUrl(this.options.loginUrl, type)
-        if (type === 'token' || type === 'user' || type === 'account') {
-          const res = await externalLogin(url, {
-            token: this.options.token,
-            email: this.options.email,
-            username: this.options.username,
-            password: this.options.password
-          })
-          await this._onLoginResponse(res)
-          resolve(res)
-        } else if (type === 'code') {
-          this.emit(eventTypes.LOGIN_CODE, {
-            code: this.options.code,
-            orgCode: this.options.organizationCode
-          });
-        }
+        const res = await externalLogin(url, {
+          token: this.options.token,
+          email: this.options.email,
+          username: this.options.username,
+          password: this.options.password
+        })
+        await this._onLoginResponse(res)
+        resolve(res)
       } catch (err) {
         this.servers = this.argumentOptions.servers || defaultServers;
         reject(err)

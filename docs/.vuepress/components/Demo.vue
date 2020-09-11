@@ -36,7 +36,7 @@
   import EventsSdk from '../../../src';
   import TreeView from 'vue-json-tree-view';
   Vue.use(TreeView);
-  let token = process.env.NODE_ENV === 'development' ? 'Af6szccCRWwxlmjiFN4J5ld4jaSr4O77Xp6cxuaqMQEvWmnqumPGmLZfr2nxajXTgAoM7qmQtgM8vUTxUTEhwwjmitEnX0yFTUbF': ''
+  let token = process.env.NODE_ENV === 'development' ? 'ioc1xN7w5FNxJkxjYrsnkNY2iRd547gHlQ2BkcMnmMaAEtGFgpE9graqxzYgpcde7FW3wEu0NHjMTNaDISKiFRqLMYvcjeiQWOaY': ''
   export default {
     name: 'app',
     data() {
@@ -70,7 +70,6 @@
           let sdk = new EventsSdk({
             token: this.monitorCode,
             store: this.$store,
-            useLoginApi: true,
             debug: true,
           });
           window.sdk = sdk
