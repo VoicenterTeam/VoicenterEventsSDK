@@ -372,23 +372,6 @@ class EventsSDK {
     // Ignore server fetch if we have a list of servers passed via options
     if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
       this.servers = this.argumentOptions.servers
-      return
-    }
-    if (this.options.useLoginApi) {
-      return
-    }
-    try {
-      let params = {};
-      if (this.options.serverType) {
-        params.type = this.options.serverType
-      }
-      if (!this.token) {
-        return
-      }
-      let res = await fetch(`${this.options.url}/${this.token}`, params);
-      this.servers = await res.json();
-    } catch (e) {
-      this.servers = this.argumentOptions.servers || defaultServers;
     }
   }
 
