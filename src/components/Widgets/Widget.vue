@@ -253,7 +253,11 @@
             },
             checkWidgetTimeConfig() {
                 if (this.widget.WidgetTime.hasOwnProperty('datedeff')) {
-                    this.$set(this.widget, 'WidgetTime', DEFAULT_WIDGET_TIME)
+                    const timeConfig = {
+                        ...DEFAULT_WIDGET_TIME,
+                        ...this.widget.WidgetTime,
+                    }
+                    this.$set(this.widget, 'WidgetTime', timeConfig)
                 }
             },
             onAddNote() {
