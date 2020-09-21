@@ -3,6 +3,7 @@ import store from '@/store/store'
 import widgetDataTypes from '@/enum/widgetDataTypes'
 import { realTimeTableKey } from '@/enum/realTimeTableConfigs'
 import { queueActivityGaugeKey } from '@/enum/generic'
+import format from 'date-fns/format'
 
 // minimum refresh interval for real-time widgets - 10 seconds
 const MIN_REFRESH_INTERVAL = 10
@@ -122,4 +123,17 @@ export function isNoteListWidget(widget) {
 export function isARealtimeTableWidget(widget) {
     let isQueueWidgetType = [widgetDataTypes.QUEUE_DASHBOARD, widgetDataTypes.QUEUE_ACTIVE_CALL].includes(widget.DataTypeID)
     return isQueueWidgetType || isRealtimeWidget(widget) || isMultiQueuesDashboard(widget)
+}
+
+export function timeFilterToHuman(widget, toFormat = 'dd/MM/yyyy') {
+    let start = new Date()
+    let end = new Date()
+
+    const startDate = get(widget, 'WidgetTime.Date_interval', 0)
+    const dateInterval = get(widget, 'WidgetTime.datedeff', 0)
+
+    start.setDate(start.getDate() - startDate)
+    end.setDate(end.getDate() - (startDate - dateInterval))
+
+    return `${format(start, toFormat)}  -  ${format(end, toFormat)}`
 }

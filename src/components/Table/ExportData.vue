@@ -46,12 +46,11 @@
 </template>
 <script>
     import XLSX from 'xlsx'
-    import format from 'date-fns/format'
     import {Alert, Radio} from 'element-ui'
     import ManageColumns from './ManageColumns'
     import Modal from '@/components/Common/Modal'
-    import {isARealtimeTableWidget} from '@/helpers/widgetUtils'
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
+    import {isARealtimeTableWidget, timeFilterToHuman} from '@/helpers/widgetUtils'
     import StaticWidgetInfo from '@/components/Widgets/WidgetUpdateForm/StaticWidgetInfo'
 
     export default {
@@ -117,9 +116,9 @@
             },
             getFileName() {
                 let fileName = this.fileName || this.$t('widget.title')
-                let currentDate = format(new Date(), 'dd-MM-yyyy')
+                let timeRange = timeFilterToHuman(this.widget, 'dd-MM-yyyy')
 
-                return fileName + ' ' + currentDate + this.exportFormat
+                return fileName + ' ' + timeRange + this.exportFormat
             },
             exportTableData() {
                 this.loading = true

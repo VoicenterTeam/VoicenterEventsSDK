@@ -1,35 +1,26 @@
 <template>
-    <div class="text-main-2xl flex items-center font-semibold" :style="getStyles">
-        {{getDateInterval}}
+    <div :style="getStyles"
+         class="text-main-2xl flex items-center font-semibold">
+        {{ getDateInterval }}
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
-    import format from 'date-fns/format'
+import { timeFilterToHuman } from '@/helpers/widgetUtils'
 
-    export default {
-        props: {
-            widget: {
-                type: Object,
-                default: () => ({})
-            },
+export default {
+    props: {
+        widget: {
+            type: Object,
+            default: () => ({}),
         },
-        computed: {
-            getStyles() {
-              return this.$store.getters['layout/widgetTitleStyles']
-            },
-            getDateInterval () {
-                let start = new Date()
-                let end = new Date()
-
-                const startDate = get(this.widget, 'WidgetTime.Date_interval', 0)
-                const dateInterval = get(this.widget, 'WidgetTime.datedeff', 0)
-
-                start.setDate(start.getDate() - startDate)
-                end.setDate(end.getDate() - (startDate - dateInterval))
-
-                return `${format(start, 'dd/MM/yyyy')}  -  ${format(end, 'dd/MM/yyyy')}`
-            }
+    },
+    computed: {
+        getStyles() {
+            return this.$store.getters['layout/widgetTitleStyles']
         },
-    }
+        getDateInterval() {
+            return timeFilterToHuman(this.widget)
+        },
+    },
+}
 </script>
