@@ -100,9 +100,6 @@
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
 
-    const DATE_FORMAT = 'dd-MM-yyyy'
-    const DATE_TIME_FORMAT = 'HH:mm:ss dd-MM-yyyy'
-
     export default {
         mixins: [dataTableMixin],
         components: {
@@ -143,7 +140,6 @@
                 widget: cloneDeep(this.data),
                 stripe: true,
                 queuesTableData: [],
-                QUEUE_STATISTICS_TEMPLATE: 45,
                 columnsWithPercentage: [],
             }
         },
@@ -196,23 +192,11 @@
 
                     let columns = []
                     let containsDate = false
-                    let dateColumns = ['date']
-                    let dateTimeColumns = ['date time', 'date & time', 'call time', 'contacted time', 'starttime', 'endtime']
                     let percentageColumns = []
 
                     if (data.length) {
                         const firstRecord = data[0]
                         for (let column in firstRecord) {
-
-                            if (dateTimeColumns.includes(column.toLowerCase())) {
-                                containsDate = true
-                                this.formatDateColumn(data, column, DATE_TIME_FORMAT)
-                            }
-
-                            if (dateColumns.includes(column.toLowerCase())) {
-                                containsDate = true
-                                this.formatDateColumn(data, column, DATE_FORMAT)
-                            }
 
                             const columnData = {
                                 prop: column,
@@ -246,24 +230,6 @@
                         this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
                     }
                 }
-            },
-            formatDateColumn(data, column, dateFormat) {
-                data.forEach(row => {
-                    if (this.widget.TemplateID.toString() === this.QUEUE_STATISTICS_TEMPLATE.toString()) {
-                        row[column] = row[column].replace(/\//g, '-')
-                        return
-                    }
-                    if (row[column]) {
-                        try {
-                            // To prevent date-fns errors like: Invalid time value
-                            row[column] = format(new Date(row[column]), dateFormat)
-                        } catch (e) {
-                            row[column] = row[column].replace(/\//g, '-')
-                            return row[column]
-                        }
-                    }
-                })
-                return data
             },
             getRecordingUrl(recordingLink) {
                 const div = document.createElement('div')

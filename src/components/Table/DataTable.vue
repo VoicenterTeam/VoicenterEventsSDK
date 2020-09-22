@@ -103,10 +103,19 @@
 <script>
 import Sortable from 'sortablejs'
 import cloneDeep from 'lodash/cloneDeep'
-import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
 import ManageColumns from './ManageColumns'
-import { makeRandomID } from '@/helpers/util'
 import ExportDataDialog from './ExportData'
+import { makeRandomID } from '@/helpers/util'
+import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
+import { format } from 'date-fns'
+
+const DATE_COLUMNS = ['date']
+const DATE_TIME_COLUMNS = ['date time', 'date & time', 'call time', 'contacted time', 'starttime', 'endtime']
+
+const DATE_FORMAT = 'dd-MM-yyyy'
+const DATE_TIME_FORMAT = 'HH:mm:ss dd-MM-yyyy'
+
+const QUEUE_STATISTICS_TEMPLATE = 45
 
 export default {
     inheritAttrs: false,
@@ -194,8 +203,29 @@ export default {
                 return `${row[column.prop]} %`
             }
 
-            // can be used to format cells for all tables
+            if (DATE_TIME_COLUMNS.includes(column.prop.toLowerCase())) {
+                column['containsDate'] = true
+                return this.formatDateColumn(row, column.prop, DATE_TIME_FORMAT)
+            }
+
+            if (DATE_COLUMNS.includes(column.prop.toLowerCase())) {
+                column['containsDate'] = true
+                return this.formatDateColumn(row, column.prop, DATE_FORMAT)
+            }
+
             return row[column.prop]
+        },
+        formatDateColumn(row, column, dateFormat) {
+            if (this.widget.TemplateID.toString() ===QUEUE_STATISTICS_TEMPLATE.toString()) {
+                return row[column].replace(/\//g, '-')
+            }
+
+            try {
+                // To prevent date-fns errors like: Invalid time value
+                return format(new Date(row[column]), dateFormat)
+            } catch (e) {
+                return row[column].replace(/\//g, '-')
+            }
         },
         tryInitSortable() {
 
