@@ -216,7 +216,7 @@ export default {
             return row[column.prop]
         },
         formatDateColumn(row, column, dateFormat) {
-            if (this.widget.TemplateID.toString() ===QUEUE_STATISTICS_TEMPLATE.toString()) {
+            if (this.widget.TemplateID.toString() === QUEUE_STATISTICS_TEMPLATE.toString()) {
                 return row[column].replace(/\//g, '-')
             }
 
@@ -330,9 +330,14 @@ export default {
         columns: {
             immediate: true,
             handler(newColumns) {
-                this.visibleColumns = cloneDeep(this.showColumns)
                 this.availableColumns = cloneDeep(newColumns)
-                this.columnsToExport = cloneDeep(newColumns)
+            },
+        },
+        showColumns: {
+            immediate: true,
+            handler(columns) {
+                this.visibleColumns = cloneDeep(columns)
+                this.columnsToExport = cloneDeep(columns)
             },
         },
         pageWidth: {
