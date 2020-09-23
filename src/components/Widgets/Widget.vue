@@ -10,6 +10,8 @@
 
             </div>
             <div class="flex items-center absolute right-0"
+                 :key="widget.WidgetID"
+                 v-if="showDeleteButton"
                  :class="{'left-0 right-auto': $rtl.isRTL}">
                 <div v-if="isHtmlEditor(widget)">
                     <el-tooltip :content="$t('tooltip.set.edit.mode')" class="item" effect="dark" placement="top">

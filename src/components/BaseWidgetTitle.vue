@@ -1,5 +1,5 @@
 <template>
-    <div class="max-h-8 flex items-center">
+    <div class="min-h-8 flex items-center">
         <p v-if="title && showWidgetTitle" class="text-main-2xl font-semibold truncate"
            :style="widgetTitleStyles">
             <slot>
