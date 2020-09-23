@@ -67,7 +67,7 @@
                 v-bind="widget.WidgetLayout">
             </component>
             <portal-target :style="getFooterStyles"
-                           :class="{'h-16': showDeleteButton}"
+                           :class="{'h-14': showDeleteButton}"
                            :name="`widget-footer__${widget.WidgetID}`"/>
         </div>
         <component
