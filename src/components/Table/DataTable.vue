@@ -3,20 +3,20 @@
         <portal :to="`widget-header__${widget.WidgetID}`">
             <slot name="search-input"/>
             <slot name="time-frame"/>
-            <div class="flex items-center table-row__count">
+            <div class="flex items-center table-row__count"
+                 :key="`${widget.WidgetID} - ${activeLanguage}`">
                 <el-dropdown class="px-2" size="mini" trigger="click">
                     <el-button size="small" type="primary">
                         {{ $t('datatable.manage.columns') }}
                         <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
-                    <el-dropdown-menu slot="dropdown" :key="widget.WidgetID">
-                        <manage-columns
-                            :available-columns="availableColumns"
-                            :visible-columns="visibleColumns"
-                            :displayQueueAsRows="displayQueueAsRows"
-                            @on-change-visibility="updateColumnsVisibility"
-                            @on-reorder-column="reorderColumn">
-                        </manage-columns>
+                    <el-dropdown-menu slot="dropdown">
+                        <manage-columns :key="`${widget.WidgetID} - ${activeLanguage}`"
+                                        :available-columns="availableColumns"
+                                        :visible-columns="visibleColumns"
+                                        :displayQueueAsRows="displayQueueAsRows"
+                                        @on-change-visibility="updateColumnsVisibility"
+                                        @on-reorder-column="reorderColumn"/>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <slot name="additional-data"/>
@@ -178,6 +178,9 @@ export default {
         }
     },
     computed: {
+        activeLanguage() {
+            return this.$store.state.lang.language
+        },
         listeners() {
             return {
                 ...this.$listeners,
