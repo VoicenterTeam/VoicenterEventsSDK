@@ -199,7 +199,10 @@
             },
             fetchAdditionalCounts (queueData) {
                 queueData.forEach((option) => {
-                    this.queueStatistics[PERCENTAGE_TYPE][option['billing_cdr_queue_type']]['value'] += option['ExitTypeCount']
+                    let statistic = this.queueStatistics[PERCENTAGE_TYPE][option['billing_cdr_queue_type']]
+                    if (statistic) {
+                        statistic['value'] += option['ExitTypeCount']
+                    }
                 })
             },
             displayCounter (item) {
