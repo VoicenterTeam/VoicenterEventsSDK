@@ -1,6 +1,6 @@
 <template>
     <div :style="getStyles"
-         class="text-main-2xl flex items-center font-semibold">
+         class="text-main-2xl flex items-center font-semibold truncate">
         {{ getDateInterval }}
     </div>
 </template>

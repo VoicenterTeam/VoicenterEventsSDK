@@ -76,7 +76,7 @@
                     </div>
                 </template>
                 <template v-slot:additional-data>
-                    <p class="text-main-sm px-2" :style="getStyles">{{dataCounts}} / {{filteredDataLength}}
+                    <p class="text-main-sm px-2 truncate" :style="getStyles">{{dataCounts}} / {{filteredDataLength}}
                         {{$t('row(s)')}}</p>
                 </template>
             </data-table>
@@ -87,7 +87,6 @@
     import RealTimeUserTable from './RealTimeUserTable'
     import TimeFrame from './TimeFrame'
     import get from 'lodash/get'
-    import { format } from 'date-fns'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
     import { Option, Pagination, Select } from 'element-ui'
