@@ -27,7 +27,7 @@
                       :fit="fitWidth"
                       :id="tableId"
                       :key="tableKey"
-                      class="rounded-lg h-full bg-transparent"
+                      class="rounded-lg h-full bg-transparent ltr-direction"
                       ref="table"
                       row-key="id"
                       v-bind="$attrs"
