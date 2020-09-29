@@ -207,14 +207,17 @@ export default {
             }
 
             if (DATE_TIME_COLUMNS.includes(column.prop.toLowerCase())) {
-                column['containsDate'] = true
                 if (!row[column.prop]) {
                     return '--'
                 }
+                column['containsDate'] = true
                 return this.formatDateColumn(row, column.prop, DATE_TIME_FORMAT)
             }
 
             if (DATE_COLUMNS.includes(column.prop.toLowerCase())) {
+                if (!row[column.prop]) {
+                    return '--'
+                }
                 column['containsDate'] = true
                 return this.formatDateColumn(row, column.prop, DATE_FORMAT)
             }
