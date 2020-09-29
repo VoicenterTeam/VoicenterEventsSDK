@@ -208,6 +208,9 @@ export default {
 
             if (DATE_TIME_COLUMNS.includes(column.prop.toLowerCase())) {
                 column['containsDate'] = true
+                if (!row[column.prop]) {
+                    return '--'
+                }
                 return this.formatDateColumn(row, column.prop, DATE_TIME_FORMAT)
             }
 
