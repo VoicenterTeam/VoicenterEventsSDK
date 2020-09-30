@@ -12,7 +12,7 @@ The Events sdk should be used to communicate with Voicenter servers in order to 
 
 1. [Instalation](#instalation)
 2. [Usage](#usage)
-3. [Public methods](#public-methods)
+3. [Public methods](#use-the-public-methods-to-send-and-receive-events)
 4. [Pass vuex store](#pass-vuex-store)
 5. [Other Methods](#other-methods)
     1. [Set token](#set-token)
@@ -28,7 +28,7 @@ The Events sdk should be used to communicate with Voicenter servers in order to 
 9. [Events you can subscribe to](#events-you-can-subscribe-to)
 10. [HTML Example](#html-example)
 
-#### `Instalation` 
+## Instalation
 1. Direct Download / CDN:
 https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk
 [unpkg.com](https://unpkg.com/) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like https://unpkg.com/voicenter-events-sdk@0.8.0/dist/voicenter-events-sdk.js <br/>
@@ -51,7 +51,7 @@ https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk
     You don't need to do this when using global script tags.    
     
  
-#### `Usage` 
+## Usage 
 You can initialize it and use it to send and receive events to and from our servers.
 - Initialize the constructor with a monitorCode
 ```js
@@ -74,7 +74,7 @@ You can initialize it and use it to send and receive events to and from our serv
 ```
 This step is important as we have an algorithm that retrieves multiple servers and has a failover mechanism behind it. Skipping this step, will throw error(s) in the subsequent steps.
 
-#### `Use the public methods to send and receive events` 
+## Use the public methods to send and receive events 
 - Subscribe to all events
 ```js
    sdk.on('*', data => {
@@ -92,7 +92,7 @@ This step is important as we have an algorithm that retrieves multiple servers a
    sdk.emit('event name', { key: 'value' });
 ```
 
-#### `Pass vuex store` 
+## Pass vuex store
 Passing a vuex store will automatically register a vuex module and save extensions in it. This is useful if you use vuex and don't want to handle all the extension events yourself but rather use the sdk vuex module. [Open Vue Devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd?hl=en) and see the `sdkExtensions` vuex module and its state/getters.
 
 #### Options
@@ -131,7 +131,7 @@ Servers array format
     }]
 ```
 
-#### `Other Methods`
+## Other Methods
 ##### `Set token`
 Sets new token to be used. This also triggers a disconnect and reconnect with new token.
 ```js
@@ -222,7 +222,7 @@ Forcefully disconnects from the socket. This should be handled by the sdk most o
  
  
  
-#### `Initializing new instance` 
+## Initializing new instance
 ```js
 const sdk = new EventsSDK({
    ...options
@@ -230,7 +230,7 @@ const sdk = new EventsSDK({
 ```
 
 
-### `Required params`
+## Required params
 As a required params of an options is loginType property (token/user/account) and authorization data:
 - `User loginType example:`
   ```js
@@ -256,7 +256,7 @@ As a required params of an options is loginType property (token/user/account) an
        password: 'password',
     });
   ```  
-#### `Initing an instance` 
+## Initing an instance
 ```js
 sdk.init().then(function () {
    //...
@@ -276,7 +276,7 @@ After the instance is init the events subscription can be implemented
     })
   ```  
 
-#### `Events you can subscribe to` 
+## Events you can subscribe to 
 - `loginStatus`
 - `login`
 - `loginUser`
@@ -306,7 +306,7 @@ After the instance is init the events subscription can be implemented
 - `closeme`
 - `error`
 
-#### `HTML Example` 
+## HTML Example 
 ```html
 <html>
 <head></head>
