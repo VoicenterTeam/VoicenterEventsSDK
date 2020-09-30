@@ -1,5 +1,5 @@
 # Voicenter Events SDK
-![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/SDK_red.png)
+![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/SDK_red.png)<br/>
 Voicenter Events SDK aims to manage api and socket communication with Voicenter APIs and backends.
 You can use the SDK to send and receive real time data from and to voicenter servers.
 
@@ -14,15 +14,19 @@ The Events sdk should be used to communicate with Voicenter servers in order to 
 2. [Usage](#usage)
 3. [Public methods](#public-methods)
 4. [Pass vuex store](#pass-vuex-store)
-5. [Other Methods](#reporters)
-    1. [Set token](#configuring-reporters)
-    2. [Resync](#cli-reporter)
-    3. [Set monitor url](#json-reporter)
-    4. [Login with user](#junitxml-reporter)
-    5. [Login with account](#html-reporter)
-    6. [Login with code](#html-reporter)
-    7. [Disconnect](#html-reporter)
-
+5. [Other Methods](#other-methods)
+    1. [Set token](#set-token)
+    2. [Resync](#resync)
+    3. [Set monitor url](#set-monitor-url)
+    4. [Login with user](#login-with-user)
+    5. [Login with account](#login-with-account)
+    6. [Login with code](#login-with-code)
+    7. [Disconnect](#disconnect)
+6. [Initializing new instance](#initializing-new-instance)
+7. [Required params](#required-params)
+8. [Initing an instance](#initing-an-instance)
+9. [Events you can subscribe to](#events-you-can-subscribe-to)
+10. [HTML Example](#html-example)
 
 #### `Instalation` 
 1. Direct Download / CDN:
@@ -272,7 +276,7 @@ After the instance is init the events subscription can be implemented
     })
   ```  
 
-#### `Events you can subscribe to:` 
+#### `Events you can subscribe to` 
 - `loginStatus`
 - `login`
 - `loginUser`
