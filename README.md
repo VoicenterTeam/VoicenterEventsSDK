@@ -1,12 +1,12 @@
 # Voicenter Events SDK
 ![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/SDK_red.png)<br/>
-Voicenter Events SDK aims to manage api and socket communication with Voicenter APIs and backends.
-You can use the SDK to send and receive real time data from and to voicenter servers.
+Voicenter Events SDK aims to manage API and socket communication with Voicenter APIs and backends.
+You can use the SDK to send and receive real-time data from and to voicenter servers.
 
 
 ### Getting Started
 
-The Events sdk should be used to communicate with Voicenter servers in order to receive real time data via sockets. Underneath, the events sdk uses socket.io to send and receive events.
+The Events SDK should be used to communicate with Voicenter servers in order to receive real-time data via sockets. Underneath, the events SDK uses socket.io to send and receive events.
 
 ## Table of contents
 
@@ -52,7 +52,7 @@ https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk<br/><br/><br/>
     
  
 ## Usage 
-You can initialize it and use it to send and receive events to and from our servers.
+You can initialize and use it to send and receive events to and from our servers.
 - Initialize the constructor with a monitorCode
 ```js
     import EventsSDK from 'voicenter-events-sdk'
@@ -96,7 +96,7 @@ This step is important as we have an algorithm that retrieves multiple servers a
 Passing a vuex store will automatically register a vuex module and save extensions in it. This is useful if you use vuex and don't want to handle all the extension events yourself but rather use the sdk vuex module. [Open Vue Devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd?hl=en) and see the `sdkExtensions` vuex module and its state/getters.
 
 #### Options
-The SDK constructor accepts multiple options when initializing which can be used to configure/tweak the sdk behavior.
+The SDK constructor accepts multiple options when initializing which can be used to configure/tweak the SDK behaviour.
 
 | Option | Type | Default | Description |
 |-----------|---------------|---------------|---------------|
@@ -113,11 +113,11 @@ The SDK constructor accepts multiple options when initializing which can be used
 | idleInterval | Number | 60000 * 5 | Interval after which resync event is sent |
 | transports | Array | ['websocket'] | Available transports. It's desired to leave this setting as it is. |
 | upgrade | Boolean | false | Available transports. It's desired to leave this setting as it is. |
-| serverType | Number | Null | Optional parameter to be passed to api call that retrieves available servers. Can be 1 or 2. 2 should be used for chrome extension. |
+| serverType | Number | Null | Optional parameter to be passed to API call that retrieves available servers. Can be 1 or 2. 2 should be used for chrome extension. |
 | url | string | https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls | Url from which to get monitor urls. |
-| servers | Array | contains 5 default servers | Contains a list of real time servers with priorities and versions. Please check src/config.js file to see the exact format. |
+| servers | Array | contains 5 default servers | Contains a list of real-time servers with priorities and versions. Please check src/config.js file to see the exact format. |
 | serverFetchStrategy | string | Determines the strategy how monitor servers are initiated. Can be remote (server urls are retrieved from a remote url) or static where server urls are specified directly through config. In case remote call fails, it will fallback to the default list of servers or the ones passed through config. | |
-| store | object | Vuex store to use in order to register an extensions module. This should simplify the end usage of the sdk | |
+| store | object | Vuex store to use in order to register an extensions module. This should simplify the end usage of the SDK | |
 | extensionsModuleName | string | Vuex store extension module name. Defaults to `sdkExtensions` | |
 | queuesModuleName | string | Vuex store queue module name. Defaults to `sdkQueues` | |
 
@@ -145,7 +145,7 @@ Emits resync event to resync data.
 ```
 
 ##### `Set monitor url`
-Sets new monitor url. This will trigger an http call to get the socket servers based on the monitor url. Please not that providing an invalid url, will try to revert to the old values. In case that fails, you will have to init the sdk again.
+Sets new monitor url. This will trigger an http call to get the socket servers based on the monitor url. Please not that providing an invalid url, will try to revert to the old values. In case that fails, you will have to init the SDK again.
 ```js
   sdk.setMonitorUrl(newMonitorUrl)
 ```
