@@ -29,7 +29,7 @@ The Events sdk should be used to communicate with Voicenter servers in order to 
 10. [HTML Example](#html-example)
 
 ## Instalation
-1. Direct Download / CDN:
+1. Direct Download / CDN:<br/>
 https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk
 [unpkg.com](https://unpkg.com/) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like https://unpkg.com/voicenter-events-sdk@0.8.0/dist/voicenter-events-sdk.js <br/>
 
@@ -307,6 +307,8 @@ After the instance is init the events subscription can be implemented
 - `error`
 
 ## HTML Example 
+
+In case you have the socket-io client library available in window object EventsSDK library will work in front of that. If not - EventsSDK will include script tag with socket client relevant to ones that is used on server.
 ```html
 <html>
 <head></head>
