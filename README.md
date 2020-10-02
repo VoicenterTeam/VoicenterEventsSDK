@@ -30,12 +30,10 @@ The Events SDK should be used to communicate with Voicenter servers in order to 
 
 ## Instalation
 1. Direct Download / CDN:<br/>
-https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk<br/><br/><br/>
-[unpkg.com](https://unpkg.com/) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like https://unpkg.com/voicenter-events-sdk@0.8.0/dist/voicenter-events-sdk.js <br/>
 
     Include voicenter-events-sdk after Vue and it will install itself automatically:
     ```html
-    <script src="https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk.umd.js"></script>
+    <script src="https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/events-sdk/voicenter-events-sdk.umd.js"></script>
     ```
 2. NPM:
     ```sh
@@ -45,9 +43,6 @@ https://unpkg.com/voicenter-events-sdk/dist/voicenter-events-sdk<br/><br/><br/>
     ```sh
     $ yarn add voicenter-events-sdk
     ```    
-     ```js
-    import VoicenterEventsSDK from 'voicenter-events-sdk'
-    ```  
     You don't need to do this when using global script tags.    
     
  
