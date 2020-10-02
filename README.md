@@ -326,7 +326,7 @@ Status: <span id="status-txt">Disconnected</span>
 <script>
    let sdk = new EventsSDK({
        loginType: 'user',
-       email: 'Vovatest@voicenter.com',
+       email: 'test@voicenter.com',
        password: '11602082819',
    });
 
