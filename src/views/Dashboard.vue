@@ -529,6 +529,4 @@
     .dashboard > .el-loading-mask > .el-loading-spinner {
         @apply fixed;
     }
-
-
 </style>
