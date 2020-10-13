@@ -231,6 +231,7 @@ export default {
 
             try {
                 // To prevent date-fns errors like: Invalid time value
+                row[column] = row[column].replace('Z','')
                 return format(new Date(row[column]), dateFormat)
             } catch (e) {
                 return row[column].replace(/\//g, '-')
