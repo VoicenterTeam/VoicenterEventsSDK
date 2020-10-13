@@ -129,6 +129,7 @@
                 }, this.data.DefaultRefreshInterval)
             }
             this.triggerResizeEvent()
+            this.reDrawChart()
         },
         watch: {
             data: {

@@ -13,10 +13,10 @@ export function getOptionsList(ParameterName) {
     }
     
     options = options.filter(object => {
+        if (!(templateConfig.value in object) || !(templateConfig.label in object)) {
+            return false
+        }
         return Object.keys(object).every(field => {
-            if (!(templateConfig.value in object) || !(templateConfig.label in object)) {
-                return false
-            }
             if (!object[field]) {
                 return false
             }
