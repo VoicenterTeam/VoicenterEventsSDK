@@ -80,13 +80,13 @@ This step is important as we have an algorithm that retrieves multiple servers a
 ```js
    sdk.on('*', data => {
       // handle data here. Data format -> {name: 'event name', data: {}}
-    });
+   });
 ```
 - Subscribe to specific events
 ```js
    sdk.on('ExtensionEvent', data => {
       // handle ExtensionEvent here
-    });
+   });
 ```
 - Emit events
 ```js
