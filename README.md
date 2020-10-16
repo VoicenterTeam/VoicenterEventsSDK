@@ -43,7 +43,9 @@ The Events SDK should be used to communicate with Voicenter servers in order to 
     ```sh
     $ yarn add voicenter-events-sdk
     ```    
-    You don't need to do this when using global script tags.    
+    You don't need to do this when using global script tags.  
+
+<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step1.gif)<br/>  
     
  
 ## Usage 
@@ -56,6 +58,8 @@ You can initialize and use it to send and receive events to and from our servers
         // other options here
     });
 ```
+<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step2.gif)<br/>  
+
 - Alternatively when loaded directly via CDN
 ```js
     let sdk = new window.VoicenterEventsSDK({
@@ -67,6 +71,8 @@ You can initialize and use it to send and receive events to and from our servers
 ```js
    sdk.init().then(() => {}) //sdk is initialized after promise is fulfilled
 ```
+<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step3.gif)<br/>  
+
 This step is important as we have an algorithm that retrieves multiple servers and has a failover mechanism behind it. Skipping this step, will throw error(s) in the subsequent steps.
 
 ## Use the public methods to send and receive events 
