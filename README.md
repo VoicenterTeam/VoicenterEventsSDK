@@ -1,7 +1,7 @@
 # Voicenter Events SDK
 ![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/SDK_red.png)<br/>
 Voicenter Events SDK aims to manage API and socket communication with Voicenter APIs and backends.
-You can use the SDK to send and receive real-time data from and to voicenter servers..
+You can use the SDK to send and receive real-time data from and to voicenter servers.
 
 
 ### Getting Started
@@ -45,7 +45,7 @@ The Events SDK should be used to communicate with Voicenter servers in order to 
     ```    
     You don't need to do this when using global script tags.  
 
-<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step1.gif)<br/>  
+<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step1)<br/>  
     
  
 ## Usage 
@@ -58,7 +58,7 @@ You can initialize and use it to send and receive events to and from our servers
         // other options here
     });
 ```
-<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step2.gif)<br/>  
+<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step2)<br/>  
 
 - Alternatively when loaded directly via CDN
 ```js
@@ -71,7 +71,7 @@ You can initialize and use it to send and receive events to and from our servers
 ```js
    sdk.init().then(() => {}) //sdk is initialized after promise is fulfilled
 ```
-<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step3.gif)<br/>  
+<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step3)<br/>  
 
 This step is important as we have an algorithm that retrieves multiple servers and has a failover mechanism behind it. Skipping this step, will throw error(s) in the subsequent steps.
 
