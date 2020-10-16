@@ -45,7 +45,7 @@ The Events SDK should be used to communicate with Voicenter servers in order to 
     ```    
     You don't need to do this when using global script tags.  
 
-<br/>![Image of Voicenter SDK](AAA)<br/>  
+<br/>![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/step1.gif)<br/>  
     
  
 ## Usage 
