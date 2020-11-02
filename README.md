@@ -56,7 +56,6 @@ You can initialize and use it to send and receive events to and from our servers
         // other options here
     });
 ```
-<br/>![Image of Voicenter SDK](AAA)<br/>  
 
 - Alternatively when loaded directly via CDN
 ```js
@@ -69,7 +68,6 @@ You can initialize and use it to send and receive events to and from our servers
 ```js
    sdk.init().then(() => {}) //sdk is initialized after promise is fulfilled
 ```
-<br/>![Image of Voicenter SDK](AAA)<br/>  
 
 This step is important as we have an algorithm that retrieves multiple servers and has a failover mechanism behind it. Skipping this step, will throw error(s) in the subsequent steps.
 
