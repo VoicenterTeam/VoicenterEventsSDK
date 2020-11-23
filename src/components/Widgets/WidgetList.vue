@@ -1,6 +1,7 @@
 <template>
     <div :key="widgetGroup.WidgetGroupID"
-         class="flex flex-col h-full w-full grid-container">
+         class="flex flex-col h-full w-full"
+         :class="{'grid-container': editable}">
         <div :class="getClass"
              :id="gridId"
              :key="gridId"
