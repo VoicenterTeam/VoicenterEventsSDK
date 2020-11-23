@@ -19,6 +19,7 @@ const types = {
     SET_ALL_DASHBOARDS: 'SET_ALL_DASHBOARDS',
     SET_EDIT_MODE: 'SET_EDIT_MODE',
     SET_ACTIVE_DASHBOARD: 'SET_ACTIVE_DASHBOARD',
+    SET_ACTIVE_WIDGET_GROUP: 'SET_ACTIVE_WIDGET_GROUP',
     ADD_DASHBOARD: 'ADD_DASHBOARD',
     UPDATE_DASHBOARD: 'UPDATE_DASHBOARD',
     DELETE_DASHBOARD: 'DELETE_DASHBOARD',
@@ -28,6 +29,7 @@ const types = {
 const state = {
     allDashboards: [],
     activeDashboard: null,
+    activeWidgetGroup: null,
     editMode: false,
     loadingData: false,
 }
@@ -50,13 +52,17 @@ const mutations = {
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
-
+        
         if (!dashboard.DashboardLayoutID) {
             dashboard.DashboardLayoutID = DEFAULT_LAYOUT_ID
         }
-
+        
         localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
     },
+    [types.SET_ACTIVE_WIDGET_GROUP]: (state, group) => {
+        state.activeWidgetGroup = group
+    },
+    
     [types.SET_EDIT_MODE]: (state, value) => {
         state.editMode = value
     },
@@ -90,7 +96,7 @@ const actions = {
                 dashboard['DashboardLayoutID'] = DEFAULT_LAYOUT_ID
                 await DashboardApi.update(dashboard)
             }
-
+            
             dashboard = await DashboardApi.find(dashboard.DashboardID)
             commit(types.SET_ACTIVE_DASHBOARD, dashboard)
             commit(types.SET_LOADING, false)
@@ -112,11 +118,27 @@ const actions = {
         await DashboardApi.destroy(dashboard.DashboardID)
         commit(types.DELETE_DASHBOARD, dashboard)
     },
+    async setActiveGroup({ commit }, group) {
+        commit(types.SET_ACTIVE_WIDGET_GROUP, group)
+    },
+    async updateDashboardLayout({ commit, state }, LayoutID) {
+        let dashboard = state.activeDashboard
+        dashboard['DashboardLayoutID'] = LayoutID
+        await DashboardApi.update(dashboard)
+        commit(types.SET_ACTIVE_DASHBOARD, dashboard)
+    },
+    
 }
 
 const getters = {
     getActiveDashboard: state => {
         return state.activeDashboard
+    },
+    getEditModeState: state => {
+        return state.editMode
+    },
+    getActiveWidgetGroup: state => {
+        return state.activeWidgetGroup
     },
 }
 

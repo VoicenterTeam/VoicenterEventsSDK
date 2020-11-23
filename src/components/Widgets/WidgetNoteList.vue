@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="px-1">
         <modal :visible.sync="creationMode"
                :width="dialogWidth">
             <div class="pb-4">

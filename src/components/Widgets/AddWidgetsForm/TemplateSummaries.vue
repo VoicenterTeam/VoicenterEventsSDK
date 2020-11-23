@@ -1,0 +1,130 @@
+<template>
+    <div>
+        <portal to="redirect-action">
+          <span class="text-steel hover:text-primary redirect-action"
+                @click="goToSettings()">
+                <IconDirLeft class="mx-1"/>
+                {{ $t('Settings') }}
+            </span>
+        </portal>
+        <portal to="form-title">
+            {{ $t('Summary') }}
+        </portal>
+        <div class="-mx-4-5">
+            <div class="px-6 py-2 flex items-center justify-between text-gray-550"
+                 v-for="template in templates">
+                <div class="flex items-center">
+                    <el-checkbox @change="onChange($event, template)"
+                                 :checked="template.toStore"
+                                 :v-model="template.toStore"/>
+                    <component class="mx-2 text-primary"
+                               :is="getTemplateIcon(template.DataType.DataTypeID)"/>
+                    <span class="truncate">
+                    {{ template.TemplateName }}
+                </span>
+                </div>
+                <div class="flex items-center cursor-pointer hover:text-primary"
+                     @click="onEditTemplate(template)">
+                <span class="mx-1">
+                    {{ $t('Edit') }}
+                </span>
+                    <IconShape/>
+                </div>
+            </div>
+        </div>
+        <portal to="form-footer">
+            <div class="border-t-2 border-gray-300 py-4 flex items-center justify-between">
+                <div class="px-6">
+                    <p class="text-xs leading-4 text-gray-900 font-bold mb-1">{{ summaryActions }}</p>
+                    <p class="text-xs leading-4 text-gray-900">
+                        <span v-for="(tQuantity, tName) in getSummary">
+                            {{ tName }}
+                            <b> {{ $t('x') }}{{ tQuantity }}</b>;
+                        </span>
+                    </p>
+                </div>
+                <slot>
+                    <div class="px-10">
+                        <el-button @click="onSubmit"
+                                   class="font-bold"
+                                   type="primary">
+                            {{ $t('Save') }}
+                        </el-button>
+                    </div>
+                </slot>
+            </div>
+        </portal>
+    </div>
+</template>
+<script>
+    import get from 'lodash/get'
+    import times from 'lodash/times'
+    import { Checkbox } from 'element-ui'
+    import { getDefaultGridLayout } from '@/helpers/util'
+    import { templateIcons } from '@/enum/widgetDataTypes'
+    
+    export default {
+        components: {
+            [Checkbox.name]: Checkbox,
+        },
+        props: {
+            summaryActions: String,
+        },
+        data() {
+            return {
+                templates: [],
+            }
+        },
+        computed: {
+            getSummary() {
+                return get(this.$store.getters['widgetCreation/getSummaries'], 'summaryText')
+            },
+            getDataToSetup() {
+                return this.$store.getters['widgetCreation/getTemplatesToSetup']
+            },
+            getTemplatesToSetup() {
+                let templates = this.getDataToSetup
+                return Object.values(templates)
+            },
+        },
+        methods: {
+            onSubmit() {
+                this.$emit('on-submit', this.templates)
+            },
+            getTemplateIcon(templateDataTypeID) {
+                return templateIcons[templateDataTypeID]
+            },
+            onChange(state, widget) {
+                this.$set(widget, 'toStore', state)
+            },
+            async onEditTemplate(template) {
+                await this.$store.dispatch('widgetCreation/editTemplate', template)
+            },
+            async goToSettings() {
+                await this.$store.dispatch('widgetCreation/goToSetupTemplates', false)
+            },
+            composeData() {
+                const templates = this.getTemplatesToSetup
+                
+                let widgetTemplatesToAdd = []
+                let defaultLayout = getDefaultGridLayout()
+                
+                templates.forEach((template) => {
+                    template['WidgetLayout'] = { GridLayout: defaultLayout }
+                    return times(template.quantity, () => {
+                        template['toStore'] = true
+                        widgetTemplatesToAdd.push(template)
+                    })
+                })
+                this.templates = widgetTemplatesToAdd
+            },
+            async updateStore() {
+                await this.$store.dispatch('widgetCreation/editTemplate', false)
+            },
+        },
+        async mounted() {
+            await this.composeData()
+            await this.updateStore()
+        },
+    }
+</script>

@@ -1,20 +1,24 @@
 <template>
-    <div class="rounded-lg pt-2" v-if="chartVisibility">
+    <div class="rounded-lg pt-2"
+         v-if="chartVisibility">
         <highcharts :options="chartOptions"
+                    :callback="onInitChartCallback"
                     class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
     import get from 'lodash/get'
-    import { Chart } from 'highcharts-vue'
     import Highcharts from 'highcharts'
-    import { getWidgetData } from '@/services/widgetService'
-    import { getDefaultTimeDelay } from '@/enum/generic'
+    import { Chart } from 'highcharts-vue'
     import Xrange from 'highcharts/modules/xrange'
-
+    import { getDefaultTimeDelay } from '@/enum/generic'
+    import { getWidgetData } from '@/services/widgetService'
+    import actionMixin from '@/components/Charts/Configs/actionMixin'
+    
     Xrange(Highcharts)
-
+    
     export default {
+        mixins: [actionMixin],
         components: {
             Highcharts,
             highcharts: Chart,
@@ -34,25 +38,36 @@
                 chartVisibility: true,
                 fetchDataInterval: null,
                 chartOptions: {},
+                chartInstance: false,
             }
         },
         methods: {
+            onInitChartCallback(chart) {
+                this.chartInstance = chart
+            },
+            tryPrintChart() {
+                this.chartInstance.print()
+            },
+            tryDownloadChart(type) {
+                this.chartInstance.exportChart({
+                    type: type,
+                })
+            },
             async getWidgetData() {
                 try {
                     let Data = await getWidgetData(this.data)
                     let chartData = get(Data, '0')
-
+                    
                     let series = chartData['series']
                     series.forEach((serie) => {
                         serie['pointWidth'] = 10
                         serie['data'].map((el) => el['x2'] = el['end'])
                     })
-
+                    
                     chartData['series'] = series
-
+                    
                     this.chartOptions = chartData
-
-
+                    
                     this.chartOptions = {
                         ...this.chartOptions,
                         chart: {
@@ -73,7 +88,7 @@
                             },
                         },
                     }
-
+                    
                     this.chartVisibility = false
                     this.$nextTick(() => {
                         this.chartVisibility = true
@@ -111,7 +126,7 @@
     }
 </script>
 <style lang="scss" scoped>
-    .chart-content_wrapper {
-        max-height: 400px;
-    }
+.chart-content_wrapper {
+    max-height: 400px;
+}
 </style>

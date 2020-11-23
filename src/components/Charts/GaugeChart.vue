@@ -1,27 +1,30 @@
 <template>
-    <div class="bg-transparent pt-2 rounded-lg" v-if="chartVisibility">
-        <highcharts :options="chartData"/>
+    <div class="bg-transparent pt-2 rounded-lg"
+         v-if="chartVisibility">
+        <highcharts :options="chartData"
+                    :callback="onInitChartCallback"/>
     </div>
 </template>
 <script>
     import get from 'lodash/get'
-    import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
-    import {Chart} from 'highcharts-vue'
-    import {TrashIcon} from 'vue-feather-icons'
+    import { Tooltip } from 'element-ui'
+    import { Chart } from 'highcharts-vue'
+    import bus from '@/event-bus/EventBus'
     import queueMixin from '@/mixins/queueMixin'
+    import { TrashIcon } from 'vue-feather-icons'
     import gaugeChartConfig from './Configs/Gauge'
-    import {WidgetDataApi} from '@/api/widgetDataApi'
+    import { WidgetDataApi } from '@/api/widgetDataApi'
     import highchartsMoreInit from 'highcharts/highcharts-more'
     import solidGaugeInit from 'highcharts/modules/solid-gauge'
-    import {isExternalDataWidget} from '@/helpers/widgetUtils'
-    import bus from "@/event-bus/EventBus";
-
+    import { isExternalDataWidget } from '@/helpers/widgetUtils'
+    import actionMixin from '@/components/Charts/Configs/actionMixin'
+    
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
-
+    
     export default {
-        mixins: [queueMixin],
+        mixins: [queueMixin, actionMixin],
         components: {
             TrashIcon,
             highcharts: Chart,
@@ -30,54 +33,66 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: true
+                default: true,
             },
         },
-        data () {
+        data() {
             return {
                 chartVisibility: true,
                 chartData: {},
+                chartInstance: false,
             }
         },
         computed: {
-            getMaximumRange () {
+            getMaximumRange() {
                 return get(this.data, 'WidgetLayout.maximumRange', 0)
             },
-            getLabelFontSize () {
+            getLabelFontSize() {
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
-            }
+            },
         },
         methods: {
-            async chartOptions () {
+            onInitChartCallback(chart) {
+                this.chartInstance = chart
+            },
+            tryPrintChart() {
+                this.chartInstance.print()
+            },
+            tryDownloadChart(type) {
+                this.chartInstance.exportChart({
+                    type: type,
+                })
+            },
+            async chartOptions() {
                 if (isExternalDataWidget(this.data)) {
                     let data = await WidgetDataApi.getExternalData(this.data.EndPoint)
-                    this.chartData = {...gaugeChartConfig, ...{series: data}}
+                    this.chartData = { ...gaugeChartConfig, ...{ series: data } }
                 } else {
                     this.chartData = this.getAgentsData()
                 }
-
+                
                 this.reDrawChart()
             },
-            getAgentsData () {
+            getAgentsData() {
                 let queuesCount = this.getMaximumRange || this.allQueues.length
-
+                
                 let range = {
                     min: 0,
-                    max: queuesCount
+                    max: queuesCount,
                 }
-
+                
                 let stops = [
                     [0, '#55BF3B'],
                     [queuesCount / 2 + 0.1, '#DDDF0D'],
                     [queuesCount, '#DF5353'],
                 ]
-
+                
                 const labelFontSize = this.getLabelFontSize
-
+                
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
@@ -86,32 +101,32 @@
                     labels: {
                         y: labelFontSize * 0.8,
                         style: {
-                            fontSize: labelFontSize
-                        }
+                            fontSize: labelFontSize,
+                        },
                     },
                 }
-
+                
                 const allQueueCalls = this.allQueueCalls.length
-
+                
                 const labelStyle = `style="font-size:${labelFontSize}px"`
-
+                
                 this.data.series = [{
                     data: [allQueueCalls],
                     dataLabels: {
                         style: {
-                            fontSize: labelFontSize
+                            fontSize: labelFontSize,
                         },
                         y: -35,
                         format:
                             '<div style="text-align:center">' +
                             `<span ${labelStyle}>{y}</span><br/>` +
-                            '</div>'
+                            '</div>',
                     },
                 }]
-
-                return {...gaugeChartConfig, ...this.data, ...{yAxis: yAxisConfig}}
+                
+                return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig } }
             },
-            triggerResizeEvent () {
+            triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
                     if (this.data.WidgetID.toString() !== widgetID.toString()) {
                         return;
@@ -119,25 +134,25 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart () {
+            reDrawChart() {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
-            }
+            },
         },
         watch: {
             data: {
                 immediate: true,
                 handler: function () {
                     this.chartOptions()
-                }
+                },
             },
-            allQueues () {
+            allQueues() {
                 this.chartOptions()
-            }
+            },
         },
-        mounted () {
+        mounted() {
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
@@ -146,7 +161,7 @@
     }
 </script>
 <style>
-    .gouge-wrapper {
-        max-height: 300px;
-    }
+.gouge-wrapper {
+    max-height: 300px;
+}
 </style>

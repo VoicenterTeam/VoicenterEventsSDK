@@ -1,13 +1,15 @@
 <template>
     <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners">
-        <div class="flex flex-row items-center">
-            <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{$t('widget.update')}}</h3>
-            <static-widget-info :widget="widget" class="px-2"/>
-        </div>
+        <template v-slot:title>
+            <div class="flex flex-row items-center">
+                <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('widget.update') }}</h3>
+                <static-widget-info :widget="widget" class="px-2"/>
+            </div>
+        </template>
         <el-form :model="model" :rules="rules" @submit.native.prevent="onChange" ref="updateWidget">
             <el-form-item>
                 <div>
-                    <label>{{$t('widget.title')}}</label>
+                    <label>{{ $t('widget.title') }}</label>
                     <el-input v-model="model.Title"/>
                 </div>
             </el-form-item>
@@ -15,30 +17,30 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.showStatsInPercentage">
-                            {{$t('Show Stats in Percentage')}}
+                            {{ $t('Show Stats in Percentage') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueuesAsRow">
-                            {{$t('Display queues as rows')}}
+                            {{ $t('Display queues as rows') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
-                            {{$t('Display the row with totals')}}
+                            {{ $t('Display the row with totals') }}
                         </el-checkbox>
                     </div>
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueGauge(widget)">
                 <div class="pt-4 flex justify-between">
-                    <label>{{$t('Maximum range value')}}</label>
+                    <label>{{ $t('Maximum range value') }}</label>
                     <el-input-number :max="1000" :min="1" :step="2" type="number"
                                      v-model="model.WidgetLayout.maximumRange"/>
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueTable(widget) || isQueueGauge(widget)">
-                <label>{{$t('queues.to.display')}}</label>
+                <label>{{ $t('queues.to.display') }}</label>
                 <base-select
                     :data="allQueues"
                     :labelKey="'QueueName'"
@@ -69,7 +71,7 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueDashboardWidget(widget)">
-                <label>{{$t('statistics.to.display')}}</label>
+                <label>{{ $t('statistics.to.display') }}</label>
                 <base-select
                     :data="statistics"
                     v-model="model.WidgetLayout.ShowStatistics"
@@ -77,12 +79,12 @@
                 <div class="flex w-full flex-col lg:flex-row pt-4">
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
-                            {{$t('Display % of Others value')}}
+                            {{ $t('Display % of Others value') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.AbsoluteNumbers">
-                            {{$t('Display absolute numbers')}}
+                            {{ $t('Display absolute numbers') }}
                         </el-checkbox>
                     </div>
                 </div>
@@ -98,17 +100,17 @@
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item v-if="isHtmlEditor(widget)">
                         <el-checkbox v-model="model.WidgetLayout.showLastUpdateDate">
-                            {{$t('Display last update date')}}
+                            {{ $t('Display last update date') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item v-if="isNoteListWidget(widget)">
                         <el-checkbox v-model="model.WidgetLayout.displayWidgetTitle">
-                            {{$t('Display widget title')}}
+                            {{ $t('Display widget title') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
                         <div class="py-4">
-                            <label>{{$t('Card title font size')}}</label>
+                            <label>{{ $t('Card title font size') }}</label>
                             <el-slider
                                 :marks="cardTitleBestOptions"
                                 :max="cardTitleFontSizes.max"
@@ -118,7 +120,7 @@
                             </el-slider>
                         </div>
                         <div class="py-4">
-                            <label>{{$t('Card value font size')}}</label>
+                            <label>{{ $t('Card value font size') }}</label>
                             <el-slider
                                 :marks="cardValueBestOptions"
                                 :max="cardValueFontSizes.max"
@@ -129,7 +131,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
-                        <label>{{$t('Status label font size')}}</label>
+                        <label>{{ $t('Status label font size') }}</label>
                         <el-slider
                             :marks="textSizeBestOptions"
                             :max="textFontSizes.max"
@@ -138,7 +140,7 @@
                             v-model="model.WidgetLayout.labelFontSize">
                         </el-slider>
                         <div class="flex flex-row items-center pt-10">
-                            <label>{{$t('Data labels color')}}</label>
+                            <label>{{ $t('Data labels color') }}</label>
                             <el-color-picker
                                 :predefine="predefinedColors"
                                 class="mx-4"
@@ -153,7 +155,7 @@
             </el-collapse>
             <el-form-item v-if="isPieWidget(widget)">
                 <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">
-                    {{$t('Don`t count logged out agents')}}
+                    {{ $t('Don`t count logged out agents') }}
                 </el-checkbox>
             </el-form-item>
             <el-form-item>
@@ -166,7 +168,7 @@
                             <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
                                 <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
                                           v-for="widgetTimeType in widgetTimeTypes">
-                                    {{$t(widgetTimeType.text)}}
+                                    {{ $t(widgetTimeType.text) }}
                                 </el-radio>
                             </el-radio-group>
                         </template>
@@ -179,7 +181,7 @@
                 v-if="isRealtimeWidget(widget) && model.settings">
             </real-time-settings>
             <div class="flex items-center text-main-base" v-if="autoCompletes.length">
-                {{$t('tooltip.refresh.entities.list')}}
+                {{ $t('tooltip.refresh.entities.list') }}
                 <RefreshButton
                     :disabled="loadEntitiesList"
                     :loading="loadEntitiesList"
@@ -205,9 +207,11 @@
                 </el-collapse-item>
             </el-collapse>
         </el-form>
-        <template slot="footer">
-            <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
-            <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
+        <template v-slot:footer>
+            <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
+                <el-button @click="toggleVisibility(false)">{{ $t('common.cancel') }}</el-button>
+                <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+            </div>
         </template>
     </modal>
 </template>
@@ -246,9 +250,9 @@
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
-
+    
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
-
+    
     export default {
         inheritAttrs: false,
         mixins: [queueMixin],
@@ -372,9 +376,9 @@
             },
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {
-
+                    
                     if (!valid) return
-
+                    
                     if (this.model.WidgetTime.type === 'relative') {
                         let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                         this.model.WidgetTime = {
@@ -382,47 +386,47 @@
                             ...widgetTime,
                         }
                     }
-
+                    
                     this.model.WidgetLayout = {
                         ...this.model.WidgetLayout,
                         ...{ settings: this.model.settings },
                         ...{ colors: this.model.colors },
                     }
-
+                    
                     try {
                         this.model.WidgetConfig.forEach((config) => {
-
+                            
                             if (config.ParameterType !== AUTO_COMPLETE_PARAMETER_TYPE) {
                                 delete config.WidgetParameterValueJson
                                 return
                             }
-
+                            
                             if (typeof config.WidgetParameterValue === 'object') {
                                 config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
                                 config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
                             }
-
+                            
                             if (typeof config.WidgetParameterValueJson !== 'object') {
                                 return
                             }
-
+                            
                             const entityNegative = config.WidgetParameterValueJson['EntityNegative']
                             
                             if (entityNegative && entityNegative.length) {
                                 config.WidgetParameterValueJson['EntityPositive'] = config.WidgetParameterValueJson['EntityPositive'].filter((el) => !entityNegative.includes(el))
                             }
-
+                            
                             if (config.WidgetParameterValueJson['EntityPositive'].length) {
                                 config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
                             } else {
                                 config.WidgetParameterValueJson['AccountList'] = []
                             }
-
+                            
                         })
                     } catch (e) {
                         console.warn(e)
                     }
-
+                    
                     this.$emit('on-update', this.model)
                     this.toggleVisibility(false)
                 })
@@ -438,21 +442,21 @@
         },
         mounted() {
             this.model = cloneDeep(this.widget)
-
+            
             this.model.colors = this.model.WidgetLayout.colors || defaultColors
-
+            
             if (isAreaChartWidget(this.widget)) {
                 this.model.colors = { ...defaultAreaChartColors, ...this.model.WidgetLayout.colors }
             }
-
+            
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
-
+            
             if (isPieWidget(this.widget)) {
                 this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
             }
-
+            
             if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                 this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]
@@ -463,10 +467,10 @@
 </script>
 
 <style lang="scss">
-    .el-form-item {
+.el-form-item {
+    @apply w-full;
+    .el-select {
         @apply w-full;
-        .el-select {
-            @apply w-full;
-        }
     }
+}
 </style>

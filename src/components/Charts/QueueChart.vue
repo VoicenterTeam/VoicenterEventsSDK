@@ -1,20 +1,24 @@
 <template>
-    <div class="rounded-lg pt-2" v-if="chartVisibility">
-        <highcharts :options="chartOptions" class="chart-content_wrapper"/>
+    <div class="rounded-lg pt-2"
+         v-if="chartVisibility">
+        <highcharts :options="chartOptions"
+                    :callback="onInitChartCallback"
+                    class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
     import colors from '@/enum/colors'
-    import {Chart} from 'highcharts-vue'
-    import {Dialog} from 'element-ui'
-    import chartConfig from './Configs/TimeLine'
+    import { Dialog } from 'element-ui'
+    import { Chart } from 'highcharts-vue'
+    import bus from '@/event-bus/EventBus'
     import queueMixin from '@/mixins/queueMixin'
-    import {getServerTimeOffset} from '@/enum/generic'
-    import {administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS} from '@/enum/extensionStatuses'
-    import bus from "@/event-bus/EventBus";
-
+    import chartConfig from './Configs/TimeLine'
+    import { getServerTimeOffset } from '@/enum/generic'
+    import actionMixin from '@/components/Charts/Configs/actionMixin'
+    import { administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS } from '@/enum/extensionStatuses'
+    
     export default {
-        mixins: [queueMixin],
+        mixins: [queueMixin, actionMixin],
         components: {
             highcharts: Chart,
             [Dialog.name]: Dialog,
@@ -22,19 +26,20 @@
         props: {
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
         },
-        data () {
+        data() {
             return {
+                chartInstance: false,
                 chartVisibility: true,
                 fetchDataInterval: null,
                 chartTitle: this.$t('queue.chart.title'),
-                HOLD_STATUS: "Hold",
+                HOLD_STATUS: 'Hold',
                 chartData: {
                     title: {
                         text: this.$t('queue.chart.title'),
@@ -45,8 +50,8 @@
                     ...chartConfig.queueChartYAxisConfig,
                     plotOptions: {
                         column: {
-                            stacking: 'normal'
-                        }
+                            stacking: 'normal',
+                        },
                     },
                     series: [
                         {
@@ -108,35 +113,35 @@
                     ],
                     legend: {
                         enabled: false,
-                    }
+                    },
                 },
                 showManageQueuesDialog: false,
                 width: '50%',
             };
         },
         computed: {
-            agentsOnline () {
+            agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
             },
-            chartOptions () {
+            chartOptions() {
                 if (this.fetchDataInterval) {
                     clearInterval(this.fetchDataInterval)
                 }
                 this.fetchDataInterval = setInterval(() => {
                     this.updateChartData()
                 }, 5000)
-
+                
                 if (this.data.WidgetLayout.showSeries) {
                     this.chartData.series.forEach((serie, index) => {
                         this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
                     })
                 }
                 this.chartData.legend = {
-                    enabled: true
+                    enabled: true,
                 }
                 return this.chartData
             },
-            responsiveClass () {
+            responsiveClass() {
                 if (this.editable && this.$rtl.isRTL) {
                     return 'pl-24'
                 }
@@ -149,12 +154,23 @@
             },
         },
         methods: {
-            updateChartData () {
+            onInitChartCallback(chart) {
+                this.chartInstance = chart
+            },
+            tryPrintChart() {
+                this.chartInstance.print()
+            },
+            tryDownloadChart(type) {
+                this.chartInstance.exportChart({
+                    type: type,
+                })
+            },
+            updateChartData() {
                 let queues = this.filteredQueues
-
+                
                 let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
                 let queueCalls = 0
-
+                
                 queues.forEach((queue) => {
                     queue.Calls.forEach((call) => {
                         if (call.JoinTimeStamp < minJoinTimeStamp) {
@@ -163,31 +179,31 @@
                         }
                     })
                 })
-
+                
                 let agentsOnline = this.agentsOnline
                 let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
-
+                
                 let currentTime = (new Date()).getTime() + getServerTimeOffset();
-
+                
                 if (this.chartData.series[0].data.length > 11) {
                     this.chartData.xAxis = {
                         ...this.chartData.xAxis,
                         ...{
                             min: new Date().setMinutes(new Date().getMinutes() - 1) + getServerTimeOffset(),
                             max: new Date().getTime() + getServerTimeOffset(),
-                        }
+                        },
                     }
                 }
-
+                
                 let agentsInCall = []
                 let agentsWithACallInHold = []
-
+                
                 let agentsAvailable = []
                 let agentsInAdministrativeBreak = []
                 let agentsInBreak = []
-
+                
                 agentsOnline.forEach((agent) => {
-
+                    
                     if (agent.calls.length > 0) {
                         if (agent.calls.filter((call) => call.answered && call.callstatus !== this.HOLD_STATUS).length) {
                             agentsInCall.push(agent)
@@ -207,20 +223,20 @@
                         }
                     }
                 });
-
+                
                 this.chartData.series[0].data.push({
                     x: currentTime,
                     y: maxWaitingTime,
                     toTime: maxWaitingTime,
                 });
-
+                
                 [
                     queueCalls,
                     agentsAvailable,
                     agentsInCall,
                     agentsInAdministrativeBreak,
                     agentsInBreak,
-                    agentsWithACallInHold
+                    agentsWithACallInHold,
                 ].forEach((agents, index) => {
                     this.chartData.series[index + 1].data.push({
                         x: currentTime,
@@ -229,7 +245,7 @@
                     });
                 })
             },
-            triggerResizeEvent () {
+            triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
                     if (this.data.WidgetID.toString() !== widgetID.toString()) {
                         return;
@@ -237,19 +253,19 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart () {
+            reDrawChart() {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
-            }
+            },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             if (this.fetchDataInterval) {
                 clearInterval(this.fetchDataInterval)
             }
         },
-        mounted () {
+        mounted() {
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
@@ -257,17 +273,17 @@
             this.triggerResizeEvent()
         },
         watch: {
-            data () {
+            data() {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
-            }
+            },
         },
     }
 </script>
 <style lang="scss" scoped>
-    .chart-content_wrapper {
-        max-height: 400px;
-    }
+.chart-content_wrapper {
+    max-height: 400px;
+}
 </style>

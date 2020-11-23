@@ -1,49 +1,38 @@
 <template>
-    <div :key="widgetGroup.WidgetGroupID" class="flex flex-col h-full w-full">
+    <div :key="widgetGroup.WidgetGroupID"
+         class="flex flex-col h-full w-full grid-container">
         <div :class="getClass"
              :id="gridId"
              :key="gridId"
              ref="widgetListContainer"
         >
-            <div
-                v-loading="widget.onLoading"
-                :data-id="widget.WidgetID"
-                @mousedown="onMousedown"
-                class="grid-stack-item"
-                v-bind="gridStackAttributes(widget)"
-                v-for="widget in widgets" :key="widget.WidgetID">
+            <div v-loading="widget.onLoading"
+                 :data-id="widget.WidgetID"
+                 @mousedown="onMousedown"
+                 class="grid-stack-item"
+                 v-bind="gridStackAttributes(widget)"
+                 v-for="widget in widgets"
+                 :key="widget.WidgetID">
                 <WidgetErrorBoundary>
-                    <Widget
-                        :editable="editable"
-                        :inViewById="inViewById"
-                        :key="widget.WidgetID"
-                        :widget="widget"
-                        @remove-item="removeWidget"
-                        @update-item="(data) => updateWidget(data)"
-                        v-on="$listeners">
+                    <Widget :editable="editable"
+                            :inViewById="inViewById"
+                            :key="widget.WidgetID"
+                            :widget="widget"
+                            @remove-item="removeWidget"
+                            @update-item="(data) => updateWidget(data)"
+                            v-on="$listeners">
                     </Widget>
                 </WidgetErrorBoundary>
             </div>
         </div>
-        <div :key="`empty-card-${widgetGroup.WidgetGroupID}`" class="w-full flex justify-center">
-            <widget-empty-card
-                :widgetGroup="widgetGroup"
-                @add-widget="(value) => addWidgetsToGroup(value)"
-                key="-1"
-                v-bind="$attrs"
-                v-if="editable"
-                v-on="$listeners">
-            </widget-empty-card>
-        </div>
         <div :key="`no-data-${widgetGroup.WidgetGroupID}`"
              class="w-full flex flex-col items-center mt-20"
              v-if="widgets.length === 0">
-            <div class="flex flex-col items-center" v-if="!editable">
+            <div class="flex flex-col items-center">
                 <IconNoData class="h-56 w-56"/>
-                <p class="text-gray-600 max-w-lg text-center">{{$t('Dashboard no Data')}}</p>
-            </div>
-            <div v-else>
-                <p class="text-gray-600 max-w-lg text-center">{{$t('WidgetGroup no Data')}}</p>
+                <p class="text-gray-600 max-w-lg text-center">
+                    {{ $t('WidgetGroup no Data') }}
+                </p>
             </div>
         </div>
     </div>
@@ -51,14 +40,12 @@
 <script>
     import get from 'lodash/get'
     import Widget from './Widget'
-    import WidgetEmptyCard from './WidgetEmptyCard'
-    import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
     import bus from '@/event-bus/EventBus'
-
+    import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
+    
     export default {
         components: {
             Widget,
-            WidgetEmptyCard,
             WidgetErrorBoundary,
         },
         data() {
@@ -111,36 +98,36 @@
                     return
                 }
                 const rowCount = gridStackContainer.getAttribute('data-gs-current-row')
-
+                
                 let GridLayout = {
                     x: 0,
                     y: Number(rowCount),
                     width: 12,
                     height: 2,
                 }
-
+                
                 widget['WidgetLayout'] = {
                     ...widget['WidgetLayout'],
                     GridLayout,
                 }
-
+                
                 let objectToEmit = {
                     widgets: [widget],
                     group: this.widgetGroup,
                 }
-
-                this.$emit('addWidgetsToGroup', objectToEmit)
+                
+                this.$emit('add-widgets-to-group', objectToEmit)
             },
             removeWidget(widget) {
                 this.grid.removeWidget(`#${widget.WidgetID}`)
-                this.$emit('removeWidget', { 'widget': widget, 'group': this.widgetGroup })
+                this.$emit('remove-widget', { 'widget': widget, 'group': this.widgetGroup })
             },
             updateWidget(widget) {
-                this.$emit('updateWidget', { 'widget': widget, 'group': this.widgetGroup })
+                this.$emit('update-widget', { 'widget': widget, 'group': this.widgetGroup })
             },
             findMatchingGrid() {
                 const matchingGridIndex = window.grids.findIndex(grid => grid.el.id === this.gridId)
-
+                
                 return {
                     grid: window.grids[matchingGridIndex],
                     index: matchingGridIndex,
@@ -154,22 +141,22 @@
             async initWindowGrid() {
                 await this.nextTick()
                 this.tryDestroyGrid()
-
+                
                 const gridOptions = {
                     acceptWidgets: true,
                 }
-
+                
                 this.grid = window.GridStack.init(gridOptions, this.$refs.widgetListContainer)
-
+                
                 if (!this.grid) {
                     return
                 }
-
+                
                 this.grid.movable('.grid-stack-item', this.editable)
                 this.grid.resizable('.grid-stack-item', this.editable)
-
+                
                 window.grids.push(this.grid)
-
+                
                 this.resizeEventEmitter()
                 this.onDragStartEvent()
                 this.initIntersectionObserver()
@@ -193,11 +180,11 @@
                     widgets.forEach((widget) => {
                         this.inViewById[widget.WidgetID] = true
                         const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
-
+                        
                         if (!isPresent) {
                             return
                         }
-
+                        
                         this.grid.makeWidget(`#${widget.WidgetID}`)
                     })
                 })
@@ -217,7 +204,7 @@
             },
             initIntersectionObserver() {
                 const sections = document.querySelectorAll('.grid-stack-item')
-
+                
                 const options = {
                     root: null,
                     threshold: 0.1,
@@ -236,19 +223,19 @@
                     })
                     this.inViewById = inViewById
                 }
-
+                
                 const observer = new IntersectionObserver(callback, options)
-
+                
                 sections.forEach((section) => {
                     observer.observe(section)
                 })
-
+                
                 this.observer = observer
             },
         },
         mounted() {
             this.initWindowGrid()
-
+            
             bus.$on('added-widgets', (widgets) => {
                 this.addWidgetsToGrid(widgets)
             })
@@ -274,3 +261,10 @@
         },
     }
 </script>
+<style lang="scss">
+.grid-container {
+    background-image: radial-gradient(var(--primary-color) 1px, transparent 0);
+    background-size: 40px 40px;
+    background-position: -9px -5px;
+}
+</style>

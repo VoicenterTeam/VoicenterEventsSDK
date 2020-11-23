@@ -27,3 +27,5 @@ export const getDefaultTimeDelay = () => {
 export const queueActivityGaugeKey = 'GetQueuesGaugeById'
 
 export const DEFAULT_LAYOUT_ID = 1
+
+export const ESCAPE_KEY_CODE = 'Escape'

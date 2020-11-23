@@ -13,9 +13,19 @@ export default new Router({
             component: () => import(/* webpackChunkName: "home" */ './views/Dashboard.vue')
         },
         {
-            path: '/layout-management',
-            name: 'layout-management',
-            component: () => import(/* webpackChunkName: "home" */ './views/LayoutManagement/LayoutManagement.vue')
+            path: '/dashboard-settings',
+            name: 'dashboard-settings',
+            component: () => import(/* webpackChunkName: "home" */ './views/DashboardSettings/DashboardSettings.vue')
+        },
+        {
+            path: '/layout-settings',
+            name: 'layout-settings',
+            component: () => import(/* webpackChunkName: "home" */ './views/LayoutSettings/LayoutSettings.vue')
+        },
+        {
+            path: '/dashboard-creation',
+            name: 'dashboard-creation',
+            component: () => import(/* webpackChunkName: "home" */ './views/DashboardCreation/DashboardCreation.vue')
         },
     ]
 })

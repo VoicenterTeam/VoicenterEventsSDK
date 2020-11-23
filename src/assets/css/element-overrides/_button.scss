@@ -1,6 +1,7 @@
 .el-button {
     &.el-button--primary {
         background-color: var(--primary-color);
+        border: 2px solid var(--primary-color);
         border-color: var(--primary-color);
 
         &:hover, &:focus {
@@ -16,14 +17,53 @@
         }
     }
 
+    &.el-button--default {
+        border: 2px solid var(--gray-550);
+        color: var(--gray-550);
+    }
+
     &.el-button--default:hover {
-        background-color: rgba(var(--primary_rgba-color), 0.15);
-        border-color: var(--primary-color);
-        color: var(--primary-color);
+        background-color: var(--gray-200);
+        border-color: var(--gray-550);
+        color: var(--gray-550);
+    }
+
+    &.el-button--danger {
+        background-color: var(--red);
+        color: var(--red);
+    }
+
+    &.el-button--danger:hover,
+    &.el-button--danger:focus {
+        background-color: var(--red-focus);
+        border-color: var(--red-focus);
+        color: var(--red-focus);
     }
 
     &.el-button--small {
         @apply h-9;
     }
 
+    &.el-button--_primary {
+        background-color: transparent;
+        border: 1px solid var(--primary-color);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 600;
+
+        &:hover, &:focus {
+            background-color: rgba(var(--primary_rgba-color), 0.50);
+            border-color: var(--primary-color);
+            color: white;
+            outline: none;
+        }
+
+        &.is-disabled,
+        &.is-disabled:hover,
+        &.is-disabled:focus {
+            background-color: transparent;
+            border-color: rgba(var(--primary_rgba-color), 0.20);
+            color: var(--primary-color);
+        }
+    }
 }

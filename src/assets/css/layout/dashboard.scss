@@ -1,16 +1,13 @@
 body {
     @apply font-montserrat font-semibold;
     font-size: var(--font-size-base);
-    background: var(--background-color);
-    border: 1px solid var(--frames-color);
-    border-bottom: none;
-    min-width: 320px;
-}
 
-.widget--group_section, .editable-widgets {
-    @apply p-2 rounded-lg;
-    background: var(--widgetGroupBackground-color);
-    border: 2px solid var(--widgetGroupFrames-color);
+    .dashboard-wrapper {
+        background: var(--background-color);
+        border: 1px solid var(--frames-color);
+        border-bottom: none;
+        min-width: 320px;
+    }
 }
 
 input, .el-dropdown .el-button, .el-button .el-checkbox,

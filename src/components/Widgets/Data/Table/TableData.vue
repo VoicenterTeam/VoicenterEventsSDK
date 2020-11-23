@@ -39,7 +39,7 @@
                             v-model="pageSize">
                             <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
                             <slot>
-                                <div class="w-28 mx-2">
+                                <div class="w-40 mx-2">
                                     <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
                                     <div class="flex flex-row">
                                         <el-input size="mini" class="mx-1" v-model="customPageSize"></el-input>

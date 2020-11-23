@@ -16,18 +16,18 @@ export default {
     fields: {
         jitter: {
             min: 0,
-            max: 20
+            max: 20,
         },
         mos: {
             min: 0,
-            max: 4.15
+            max: 4.15,
         },
         packetLoss: {
             min: 0,
-            max: 20
-        }
+            max: 20,
+        },
     },
     fonts: {
         base: 'var(--font-size-base)',
-    }
+    },
 }

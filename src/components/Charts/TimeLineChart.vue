@@ -1,23 +1,25 @@
 <template>
     <div class="rounded-lg pt-2" v-if="chartVisibility">
         <highcharts :options="chartOptions"
-                    class="chart-content_wrapper"/>
+                    :callback="onInitChartCallback"
+                    class="chart-content_wrapper"
+        />
     </div>
 </template>
 <script>
     import get from 'lodash/get'
-    import Highcharts from 'highcharts'
     import { Chart } from 'highcharts-vue'
+    import bus from '@/event-bus/EventBus'
     import chartConfig from './Configs/TimeLine'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import { getWidgetData } from '@/services/widgetService'
     import { getDefaultTimeDelay } from '@/enum/generic'
-    import bus from '@/event-bus/EventBus'
-
+    import { getWidgetData } from '@/services/widgetService'
+    import actionMixin from '@/components/Charts/Configs/actionMixin'
+    
     export default {
+        mixins: [actionMixin],
         name: 'TimeLineChart',
         components: {
-            Highcharts,
             highcharts: Chart,
         },
         props: {
@@ -35,27 +37,39 @@
                 chartVisibility: true,
                 chartOptions: {},
                 fetchDataInterval: null,
+                chartInstance: false,
             }
         },
         methods: {
+            onInitChartCallback(chart) {
+                this.chartInstance = chart
+            },
+            tryPrintChart() {
+                this.chartInstance.print()
+            },
+            tryDownloadChart(type) {
+                this.chartInstance.exportChart({
+                    type: type,
+                })
+            },
             async getWidgetData() {
                 try {
                     let widgetDataType = this.data.DataTypeID
                     let Data = await getWidgetData(this.data)
-
+                    
                     if (!Data) {
                         return
                     }
-
+                    
                     let chartData = get(Data, '0', { series: [] })
-
+                    
                     if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
                         chartData = { series: Data }
                     } else {
                         chartData = get(Data, '0', { series: [] })
                     }
                     let chartType = ''
-
+                    
                     if (widgetDataType === widgetDataTypes.LINES_TYPE_ID) {
                         chartType = 'line'
                     } else if (widgetDataType === widgetDataTypes.BARS_WITH_LINES_TYPE_ID) {
@@ -66,7 +80,7 @@
                             ...chartConfig.yAxisConfig,
                         }
                     }
-
+                    
                     let data = {
                         Order: 6,
                         chart: {
@@ -84,7 +98,7 @@
                         },
                         ...chartData,
                     }
-
+                    
                     this.addLegendToChart(data)
                     this.chartOptions = data
                     this.reDrawChart()
@@ -129,6 +143,7 @@
                 }, this.data.DefaultRefreshInterval)
             }
             this.triggerResizeEvent()
+            this.reDrawChart()
         },
         watch: {
             data: {
@@ -146,7 +161,7 @@
     }
 </script>
 <style lang="scss" scoped>
-    .chart-content_wrapper {
-        max-height: 400px;
-    }
+.chart-content_wrapper {
+    max-height: 400px;
+}
 </style>

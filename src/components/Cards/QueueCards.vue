@@ -36,10 +36,10 @@
                     </el-form-item>
                     <div class="py-4 flex">
                         <el-checkbox v-model="showStatusText">
-                            {{$t('status.show.text')}}
+                            {{ $t('status.show.text') }}
                         </el-checkbox>
                         <el-checkbox class="px-4" v-model="displayItemBorder">
-                            {{$t('status.display.border')}}
+                            {{ $t('status.display.border') }}
                         </el-checkbox>
                     </div>
                 </el-form>
@@ -56,50 +56,52 @@
                 </el-collapse>
             </template>
             <template v-slot:footer>
-                <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
-                <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
+                <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
+                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
+                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                </div>
             </template>
         </update-dialog>
     </div>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Checkbox, Option, Select, Tooltip, Collapse, CollapseItem,} from 'element-ui'
+    import { Checkbox, Option, Select, Tooltip, Collapse, CollapseItem } from 'element-ui'
     import UpdateDialog from './UpdateDialog'
-    import {typeKeys, typeNames, types} from '@/enum/queueCounters'
-    import {EditIcon, MoreVerticalIcon, TrashIcon} from 'vue-feather-icons'
-    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
+    import { typeKeys, typeNames, types } from '@/enum/queueCounters'
+    import { EditIcon, MoreVerticalIcon, TrashIcon } from 'vue-feather-icons'
+    import { defaultCardColors } from '@/enum/defaultWidgetSettings'
     import queueMixin from '@/mixins/queueMixin'
-    import {getInitialTime} from '@/util/timeUtils'
-    import Timer from "@/util/Timer";
+    import { getInitialTime } from '@/util/timeUtils'
+    import Timer from '@/util/Timer';
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
-    import {getOptionsList} from "@/helpers/entitiesList";
-    import get from "lodash/get";
+    import { getOptionsList } from '@/helpers/entitiesList';
+    import get from 'lodash/get';
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
-
+    
     export default {
         mixins: [queueMixin, cardWidgetMixin],
         props: {
             queues: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             queueType: {
                 type: Number,
-                default: () => 0
+                default: () => 0,
             },
             showText: {
                 type: Boolean,
-                default: () => true
+                default: () => true,
             },
             displayBorder: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             data: {
                 type: Object,
-                default: () => ({})
-            }
+                default: () => ({}),
+            },
         },
         components: {
             TrashIcon,
@@ -114,7 +116,7 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
         },
-        data () {
+        data() {
             return {
                 showModal: false,
                 selectedType: this.queueType,
@@ -130,33 +132,33 @@
             }
         },
         computed: {
-            autoCompletes () {
+            autoCompletes() {
                 return this.data.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
-            allEntityQueues () {
+            allEntityQueues() {
                 return getOptionsList('{|queue_list|}')
             },
-            queueToDisplay () {
+            queueToDisplay() {
                 return get(this.data.WidgetConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
             },
-            filteredQueue () {
+            filteredQueue() {
                 return this.allQueues.filter(e => this.queueToDisplay.includes(e.QueueID))
             },
-            cardValue () {
+            cardValue() {
                 if (this.selectedType === typeKeys.CALLERS_ID) {
                     return this.getQueueStats().queueCalls
                 }
                 return this.timer.displayTime
             },
-            cardIcon () {
+            cardIcon() {
                 return types[this.queueType].icon
             },
-            cardText () {
+            cardText() {
                 return this.$t(types[this.queueType].text)
             },
         },
         methods: {
-            getQueueStats () {
+            getQueueStats() {
                 let minJoinTimeStamp = new Date().getTime() * 10000
                 let queueCalls = 0
                 this.filteredQueue.forEach((queue) => {
@@ -167,20 +169,20 @@
                         queueCalls++
                     })
                 })
-                return {queueCalls, minJoinTimeStamp}
+                return { queueCalls, minJoinTimeStamp }
             },
-            getInitialQueueTime () {
+            getInitialQueueTime() {
                 if (this.selectedType !== typeKeys.MAXIMUM_WAITING_ID) {
                     return 0
                 }
-
+                
                 const queueStats = this.getQueueStats()
                 if (queueStats.queueCalls === 0) {
                     return 0
                 }
                 return getInitialTime(queueStats.minJoinTimeStamp)
             },
-            onChange () {
+            onChange() {
                 try {
                     this.model.WidgetConfig.forEach((config) => {
                         if (typeof config.WidgetParameterValueJson === 'object') {
@@ -194,29 +196,29 @@
                 } catch (e) {
                     console.warn(e)
                 }
-
+                
                 let data = {
                     queueType: this.selectedType,
                     showText: this.showStatusText,
                     displayBorder: this.displayItemBorder,
                 }
-
+                
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
-                    colors: this.model.colors
+                    colors: this.model.colors,
                 }
-
+                
                 this.data.WidgetConfig = this.model.WidgetConfig
-
+                
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },
-            onShowModal () {
+            onShowModal() {
                 this.showModal = true
             },
-            setCounterState () {
+            setCounterState() {
                 let callCount = this.getQueueStats().queueCalls
                 this.timer.stop()
                 this.timer.setValue(this.getInitialQueueTime())
@@ -224,48 +226,48 @@
                     this.timer.start()
                 }
             },
-            isAutoComplete (WidgetConfig) {
+            isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
         },
-        beforeDestroy () {
+        beforeDestroy() {
             this.timer.destroy()
         },
         watch: {
             data: {
                 deep: true,
                 immediate: true,
-                handler (widget) {
+                handler(widget) {
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
-                }
+                },
             },
             selectedType: {
                 immediate: true,
-                handler () {
+                handler() {
                     this.setCounterState()
-                }
+                },
             },
-            filteredQueue () {
+            filteredQueue() {
                 this.setCounterState()
-            }
+            },
         },
     }
 </script>
 <style lang="scss" scoped>
-    .el-form-item {
+.el-form-item {
+    @apply w-full;
+    .el-select {
         @apply w-full;
-        .el-select {
-            @apply w-full;
-        }
     }
+}
 
-    .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
-        color: var(--primary-color);
-    }
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+    color: var(--primary-color);
+}
 
-    .queue-card /deep/ .card-value {
-        min-width: 80px;
-        @apply flex justify-center;
-    }
+.queue-card /deep/ .card-value {
+    min-width: 80px;
+    @apply flex justify-center;
+}
 </style>

@@ -1,18 +1,17 @@
+import i18n from '@/i18n'
 import $axios from './apiConnection'
+import { Notification } from 'element-ui'
 import parseCatch from '@/helpers/handleErrors'
-import {Notification} from "element-ui";
-import i18n from "@/i18n";
 
 export const LayoutApi = {
     async get(data) {
         try {
-            const result = await $axios.post('/Layout/List/', data)
-            return result.Data
+            const { Data } = await $axios.post('/Layout/List/', data)
+            return Data
         } catch (e) {
             parseCatch(e, true, 'Get Layouts')
         }
     },
-
     async update(data) {
         try {
             const result = await $axios.post('/Layout/Upsert/', data)

@@ -1,23 +1,27 @@
 <template>
-    <div class="bg-transparent rounded-lg pt-2" v-if="chartVisibility">
-        <highcharts :options="chartData" class="chart-content_wrapper"/>
+    <div class="bg-transparent rounded-lg pt-2"
+         v-if="chartVisibility">
+        <highcharts :options="chartData"
+                    :callback="onInitChartCallback"
+                    class="chart-content_wrapper"/>
     </div>
 </template>
 <script>
     import get from 'lodash/get'
-    import {Tooltip} from 'element-ui'
     import Highcharts from 'highcharts'
-    import {Chart} from 'highcharts-vue'
     import groupBy from 'lodash/groupBy'
-    import {TrashIcon} from 'vue-feather-icons'
-    import {WidgetDataApi} from '@/api/widgetDataApi'
+    import { Tooltip } from 'element-ui'
+    import bus from '@/event-bus/EventBus'
+    import { Chart } from 'highcharts-vue'
     import statusTypes from '@/enum/statusTypes'
-    import {isExternalDataWidget} from '@/helpers/widgetUtils'
+    import { TrashIcon } from 'vue-feather-icons'
+    import { WidgetDataApi } from '@/api/widgetDataApi'
     import extensionMixin from '@/mixins/extensionMixin'
-    import bus from "@/event-bus/EventBus";
-
+    import actionMixin from '@/components/Charts/Configs/actionMixin'
+    import { isExternalDataWidget } from '@/helpers/widgetUtils'
+    
     export default {
-        mixins: [extensionMixin],
+        mixins: [extensionMixin, actionMixin],
         components: {
             TrashIcon,
             highcharts: Chart,
@@ -26,39 +30,50 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: true
+                default: true,
             },
         },
-        data () {
+        data() {
             return {
                 chartVisibility: true,
                 chartData: {},
-                HOLD_STATUS: "Hold",
+                HOLD_STATUS: 'Hold',
+                chartInstance: false,
             }
         },
         computed: {
-            getLabelFontSize () {
+            getLabelFontSize() {
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
             },
-            getDataLabelsColor () {
+            getDataLabelsColor() {
                 return get(this.data, 'WidgetLayout.dataLabelsColor', '#000000')
             },
         },
         methods: {
-            async chartOptions () {
-
-                let {series, colors} = await this.getChartSeriesData()
-
+            onInitChartCallback(chart) {
+                this.chartInstance = chart
+            },
+            tryPrintChart() {
+                this.chartInstance.print()
+            },
+            tryDownloadChart(type) {
+                this.chartInstance.exportChart({
+                    type: type,
+                })
+            },
+            async chartOptions() {
+                let { series, colors } = await this.getChartSeriesData()
+                
                 this.chartData = {
                     chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
                         plotShadow: false,
-                        type: 'pie'
+                        type: 'pie',
                     },
                     plotOptions: {
                         pie: {
@@ -69,18 +84,18 @@
                                 format: this.$rtl.isRTL ? '{point.percentage:.1f}% : <b>{point.name}</b>' : '<b>{point.name}</b>: {point.percentage:.1f} %',
                                 style: {
                                     color: 'black',
-                                    textOutline: 'none'
-                                }
-                            }
-                        }
+                                    textOutline: 'none',
+                                },
+                            },
+                        },
                     },
                     series,
                     colors,
                 };
-
+                
                 this.reDrawChart()
             },
-            async getChartSeriesData () {
+            async getChartSeriesData() {
                 let data = []
                 const initialColors = []
                 if (isExternalDataWidget(this.data)) {
@@ -93,10 +108,10 @@
                     delete el.color
                     return el
                 });
-
+                
                 const labelFontSize = this.getLabelFontSize
                 const dataLabelsColor = this.getDataLabelsColor
-
+                
                 const series = [{
                     name: this.$t('Agents'),
                     colorByPoint: true,
@@ -105,45 +120,45 @@
                         style: {
                             fontSize: labelFontSize,
                             color: dataLabelsColor,
-                        }
+                        },
                     },
                 }]
                 const colors = this.getColorOptions(initialColors)
                 return {
                     data,
                     series,
-                    colors
+                    colors,
                 }
             },
-            async updateChartSeries () {
-                const {colors, series} = await this.getChartSeriesData()
+            async updateChartSeries() {
+                const { colors, series } = await this.getChartSeriesData()
                 this.$set(this.chartData, 'colors', colors)
                 this.$set(this.chartData, 'series', series)
             },
-            getColorOptions (colors) {
+            getColorOptions(colors) {
                 return Highcharts.map(colors, function (color) {
                     return {
                         radialGradient: {
                             cx: 0.5,
                             cy: 0.3,
-                            r: 0.7
+                            r: 0.7,
                         },
                         stops: [
                             [0, color],
-                            [1, Highcharts.color(color).brighten(-0.3).get('rgb')] // darken
-                        ]
+                            [1, Highcharts.color(color).brighten(-0.3).get('rgb')], // darken
+                        ],
                     };
                 })
             },
-            getExtensionsData () {
+            getExtensionsData() {
                 let data = []
                 let statusData = []
                 let extensions = this.extensionWithCalls
-
+                
                 if (extensions.length) {
                     statusData = groupBy(extensions, 'representativeStatus')
                 }
-
+                
                 for (let status in statusData) {
                     let statusType = statusTypes[status]
                     const statusText = this.$store.getters['entities/getStatusTextById'](status)
@@ -152,18 +167,18 @@
                         name: this.$t(statusText),
                         y: statusData[status].length,
                     }
-
+                    
                     if (!data.length) {
                         sliceObject.sliced = true
                         sliceObject.selected = true
                     }
-
+                    
                     data.push(sliceObject);
                 }
-
+                
                 return data
             },
-            triggerResizeEvent () {
+            triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
                     if (this.data.WidgetID.toString() !== widgetID.toString()) {
                         return;
@@ -171,14 +186,14 @@
                     this.reDrawChart()
                 });
             },
-            reDrawChart () {
+            reDrawChart() {
                 this.chartVisibility = false
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
-            }
+            },
         },
-        mounted () {
+        mounted() {
             this.triggerResizeEvent()
         },
         watch: {
@@ -186,22 +201,22 @@
                 immediate: true,
                 handler: function () {
                     this.chartOptions()
-                }
+                },
             },
             extensionWithCalls: {
                 deep: true,
-                handler () {
+                handler() {
                     if (isExternalDataWidget(this.data)) {
                         return
                     }
                     this.$nextTick(this.updateChartSeries)
-                }
-            }
+                },
+            },
         },
     }
 </script>
 <style lang="scss" scoped>
-    .chart-content_wrapper {
-        max-height: 390px;
-    }
+.chart-content_wrapper {
+    max-height: 390px;
+}
 </style>

@@ -30,7 +30,8 @@ const userListConfig = {
     EndPoint: '/User/List/',
     label: 'user_name',
     value: 'user_id',
-    EntitiesListKey: 'Users'
+    EntitiesListKey: 'Users',
+    icon: 'IconUsers'
 }
 
 const campaignListConfig = {
@@ -38,7 +39,8 @@ const campaignListConfig = {
     EndPoint: '/User/List/',
     label: 'camp_name',
     value: 'camp_id',
-    EntitiesListKey: 'Campaigns'
+    EntitiesListKey: 'Campaigns',
+    icon: 'IconCampaigns'
 }
 
 const extensionListConfig = {
@@ -46,7 +48,8 @@ const extensionListConfig = {
     EndPoint: '/Extension/List/',
     label: 'ext_name',
     value: 'extension_id',
-    EntitiesListKey: 'Extension'
+    EntitiesListKey: 'Extension',
+    icon: 'IconExtension'
 }
 
 export const didListConfig = {
@@ -54,7 +57,8 @@ export const didListConfig = {
     EndPoint: '/DID/List/',
     label: 'did_name',
     value: 'user_did_id',
-    EntitiesListKey: 'DIDs'
+    EntitiesListKey: 'DIDs',
+    icon: 'IconDids'
 }
 
 const queueListConfig = {
@@ -62,7 +66,8 @@ const queueListConfig = {
     EndPoint: '/Queue/List/',
     label: 'q_name',
     value: 'queue_id',
-    EntitiesListKey: 'Queues'
+    EntitiesListKey: 'Queues',
+    icon: 'IconQueues'
 }
 
 const accountListConfig = {
@@ -70,7 +75,8 @@ const accountListConfig = {
     EndPoint: '​/AccountIp/List/',
     label: 'dist_name',
     value: 'distributor_id',
-    EntitiesListKey: 'Accounts'
+    EntitiesListKey: 'Accounts',
+    icon: 'IconAccounts'
 }
 
 export const filters = {

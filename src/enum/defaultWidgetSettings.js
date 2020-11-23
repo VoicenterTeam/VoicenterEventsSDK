@@ -9,8 +9,8 @@ export const realTimeSettings = {
     resetIdleTime: true
 }
 export const defaultColors = {
-    background: "#fff",
-    frames: "#edf2f7",
+    background: "#F7FAFC",
+    frames: "#F7FAFC",
     fonts: '#000'
 }
 

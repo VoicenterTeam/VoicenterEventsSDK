@@ -1,45 +1,71 @@
 <template>
     <div class="flex items-center">
-        <div class="flex">
-            <p class="text-main-sm">{{$t('switcher.title')}}</p>
-        </div>
-        <div class="flex">
-            <el-tooltip class="item" effect="dark" :content="$t('tooltip.select.tabbed.view')" placement="top">
-                <button class="btn shadow rounded bg-white mx-1 text-gray-300 hover:bg-primary-100 hover:text-primary"
+        <template v-if="!editMode">
+            <el-tooltip effect="dark"
+                        :content="$t('tooltip.select.tabbed.view')"
+                        :open-delay="openDelay"
+                        placement="top">
+                <button class="focus:outline-none mx-1 text-gray-300 hover:text-primary"
                         @click="switching('tabbed')"
                         :class="{'text-primary': activeType === 'tabbed'}">
                     <IconTabbedView/>
                 </button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :content="$t('tooltip.select.list.view')" placement="top">
-                <button class="btn shadow rounded bg-white mx-1 text-gray-300 hover:bg-primary-100 hover:text-primary"
+            <el-tooltip effect="dark"
+                        :content="$t('tooltip.select.list.view')"
+                        :open-delay="openDelay"
+                        placement="top">
+                <button class="focus:outline-none mx-1 text-gray-300 hover:text-primary"
                         @click="switching('list')"
                         :class="{'text-primary': activeType === 'list'}">
                     <IconListView/>
                 </button>
             </el-tooltip>
-        </div>
+            <IconHorisontalLine class="py-2-5 mx-4"/>
+            <el-tooltip effect="dark"
+                        :content="$t('On full screen mode')"
+                        placement="top">
+                <button class="focus:outline-none mx-1 text-gray-300 hover:text-primary"
+                        @click="onFullScreen">
+                    <IconFullScreen/>
+                </button>
+            </el-tooltip>
+        </template>
     </div>
 </template>
 <script>
-    import {Tooltip} from 'element-ui'
-
+    import { Tooltip } from 'element-ui'
+    import { EditIcon } from 'vue-feather-icons'
+    
     export default {
         name: 'layout-switcher',
         inheritAttrs: false,
         components: {
-            [Tooltip.name]: Tooltip
+            EditIcon,
+            [Tooltip.name]: Tooltip,
         },
         props: {
             activeType: {
                 type: String,
-                default: 'list'
+                default: 'list',
+            },
+            editMode: {
+                type: Boolean,
+                default: false,
+            },
+        },
+        data() {
+            return {
+                openDelay: 200,
             }
         },
         methods: {
             switching(type) {
                 this.$emit('switch-layout', type)
-            }
-        }
+            },
+            onFullScreen() {
+                this.$emit('on-fullscreen')
+            },
+        },
     }
 </script>

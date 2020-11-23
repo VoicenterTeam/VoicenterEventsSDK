@@ -21,7 +21,7 @@
             <template v-slot:header>
                 <div class="flex items-center pt-4">
                     <component :is="selectedIcon" class="w-8 mx-1"/>
-                    <p class="text-main-lg font-semibold text-gray-700" slot="title">{{$t(selectedOption.text)}}</p>
+                    <p class="text-main-lg font-semibold text-gray-700" slot="title">{{ $t(selectedOption.text) }}</p>
                 </div>
             </template>
             <template v-slot:content>
@@ -38,16 +38,16 @@
                         v-for="option in statuses">
                         <div class="flex">
                             <component :is="option.icon" class="w-5 mx-1 text-primary"/>
-                            <span class="w-16 mx-1">{{$t(option.text)}}</span>
+                            <span class="w-16 mx-1">{{ $t(option.text) }}</span>
                         </div>
                     </el-option>
                 </el-select>
                 <div class="py-4 flex">
                     <el-checkbox v-model="showStatusText">
-                        {{$t('status.show.text')}}
+                        {{ $t('status.show.text') }}
                     </el-checkbox>
                     <el-checkbox class="px-4" v-model="displayItemBorder">
-                        {{$t('status.display.border')}}
+                        {{ $t('status.display.border') }}
                     </el-checkbox>
                 </div>
             </template>
@@ -63,8 +63,10 @@
                 </el-collapse>
             </template>
             <template v-slot:footer>
-                <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
-                <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
+                <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
+                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
+                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                </div>
             </template>
         </update-dialog>
     </div>
@@ -74,31 +76,31 @@
     import cloneDeep from 'lodash/cloneDeep'
     import UpdateDialog from './UpdateDialog'
     import extensionMixin from '@/mixins/extensionMixin'
-    import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
-    import {defaultCardColors} from '@/enum/defaultWidgetSettings'
-    import {Checkbox, Collapse, CollapseItem, Option, Select, Tooltip} from 'element-ui'
-    import statusTypes, {callStatuses, otherStatuses} from '@/enum/statusTypes'
+    import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
+    import { defaultCardColors } from '@/enum/defaultWidgetSettings'
+    import { Checkbox, Collapse, CollapseItem, Option, Select, Tooltip } from 'element-ui'
+    import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
-
+    
     export default {
         mixins: [extensionMixin, cardWidgetMixin],
         props: {
             status: {
                 type: Number,
-                default: 3
+                default: 3,
             },
             showText: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             displayBorder: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
         },
         components: {
@@ -111,7 +113,7 @@
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
         },
-        data () {
+        data() {
             return {
                 showModal: false,
                 selectedStatus: '',
@@ -127,14 +129,14 @@
             }
         },
         computed: {
-            autoCompletes () {
+            autoCompletes() {
                 return this.model.WidgetConfig.filter(c => c.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
-            statuses () {
+            statuses() {
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
                 let finalStatuses = []
-
+                
                 if (storeStatuses.length) {
                     finalStatuses = this.getStoreStatuses()
                 } else {
@@ -142,44 +144,44 @@
                         const statusText = this.$store.getters['entities/getStatusTextById'](status.value)
                         return {
                             ...status,
-                            text: statusText
+                            text: statusText,
                         }
                     })
                 }
-
+                
                 finalStatuses.push(statusTypes[callStatuses.CALLING])
                 finalStatuses.push(statusTypes[callStatuses.HOLD])
                 finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
-
+                
                 return finalStatuses
             },
-            userToDisplay () {
+            userToDisplay() {
                 return get(this.data.WidgetConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
             },
-            cardValue () {
+            cardValue() {
                 const userToDisplay = this.userToDisplay
-
+                
                 if (this.status === otherStatuses.AT_WORK) {
                     return this.extensionWithCalls.filter(el => el.representativeStatus !== LOGOUT_STATUS && userToDisplay.includes(el.userID)).length || '0'
                 }
-
+                
                 return this.extensionWithCalls.filter(el => el.representativeStatus === this.status && userToDisplay.includes(el.userID)).length || '0'
             },
-            cardIcon () {
+            cardIcon() {
                 return statusTypes[this.status].icon
             },
-            cardText () {
+            cardText() {
                 return this.$t(this.$store.getters['entities/getStatusTextById'](this.status))
             },
-            textColor () {
+            textColor() {
                 let color = statusTypes[this.status].color
                 return {
-                    color: `${color}`
+                    color: `${color}`,
                 }
             },
         },
         methods: {
-            getStoreStatuses () {
+            getStoreStatuses() {
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
                 return storeStatuses.map(status => {
@@ -193,7 +195,7 @@
                     }
                 })
             },
-            onChange () {
+            onChange() {
                 try {
                     this.model.WidgetConfig.forEach((config) => {
                         if (typeof config.WidgetParameterValueJson === 'object') {
@@ -207,39 +209,39 @@
                 } catch (e) {
                     console.warn(e)
                 }
-
+                
                 let data = {
                     status: this.selectedStatus,
                     showText: this.showStatusText,
                     displayBorder: this.displayItemBorder,
                 }
-
+                
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
-                    colors: this.model.colors
+                    colors: this.model.colors,
                 };
-
+                
                 this.data.WidgetConfig = this.model.WidgetConfig
-
+                
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },
-            onStatusChange (value) {
+            onStatusChange(value) {
                 let option = statusTypes[value];
                 this.selectedOption = option;
                 this.selectedStatus = option.value;
                 this.selectedIcon = option.icon;
             },
-            onShowModal () {
+            onShowModal() {
                 this.showModal = true
             },
-            isAutoComplete (WidgetConfig) {
+            isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
         },
-        mounted () {
+        mounted() {
             this.selectedStatus = this.status;
             this.selectedOption = statusTypes[this.status];
             this.selectedIcon = this.selectedOption.icon;
@@ -250,8 +252,8 @@
                 handler: function (widget) {
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
-                }
+                },
             },
-        }
+        },
     }
 </script>

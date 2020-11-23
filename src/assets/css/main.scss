@@ -8,11 +8,23 @@
     --steel: #888f9d;
     --bg-grey-modal: #f0f2f4;
     --color: 240, 240, 240;
+    --primary-color-opacity-50: rgba(var(--primary_rgba-color), 0.1);
     --primary-color-opacity: rgba(var(--primary_rgba-color), 0.15);
-    --primary-color-opacity-200: rgba(var(--primary_rgba-color), 0.05);
+    --primary-color-opacity-200: rgba(var(--primary_rgba-color), 0.65);
+    --primary-color-opacity-300: rgba(var(--primary_rgba-color), 0.5);
     --dark: #110f24;
     --cool-grey: #899398;
     --pale-grey: #f0f2f4;
+    --gray-150: #F5F6FA;
+    --gray-200: #F1F2F4;
+    --gray-300: #EBEBEB;
+    --gray-350: #E0E2E5;
+    --gray-400: #E0E2E6;
+    --gray-550: #BEC2C9;
+    --gray-650: #C4C4C4;
+    --orange-350: #FAB11E;
+    --red: #FF4D4D;
+    --red-focus: #FF3636;
 }
 
 @import "tailwind";
