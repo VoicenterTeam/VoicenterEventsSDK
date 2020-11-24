@@ -22,7 +22,9 @@
                 </div>
             </template>
         </base-navbar>
-        <div class="dashboard" v-loading="loadingData" :key="activeLanguage">
+        <div class="dashboard"
+             v-loading="loadingData"
+             :key="activeLanguage">
             <div class="dashboard-container min-h-screen mb-10"
                  v-if="dashboard">
                 <fade-transition :duration="150" mode="out-in">
@@ -211,18 +213,16 @@
                 this.loading = true
                 this.activeTab = tab
                 this.saveActiveTab(tab)
-                this.resetProgress()
                 this.loading = false
-            },
-            resetProgress() {
-                this.operations = new DashboardOperations()
             },
             triggerFullScreenMode() {
                 this.onFullScreen = !this.onFullScreen
             },
             onEditWidgetGroup(group) {
-                this.groupToEdit = group
-                this.editMode = true
+                this.$nextTick(() => {
+                    this.editMode = true
+                    this.groupToEdit = group
+                })
             },
             async onSetEditMode() {
                 this.groupToEdit = this.activeDashboardData.WidgetGroupList[0]
