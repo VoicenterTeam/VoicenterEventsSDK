@@ -12,6 +12,7 @@
             <div class="template grid grid-cols-3 col-gap-3">
                 <Template v-for="(template, index) in dashboardCategory.DashboardTemplateList"
                           :key="`template-${index}`"
+                          v-on="$listeners"
                           :template="template"
                 />
             </div>

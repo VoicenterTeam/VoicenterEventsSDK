@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex items-center justify-between mb-4"
-             v-if="havePreview">
+             v-if="havePreview && headerCaption">
             {{ $t('Preview') }}
             <div class="flex items-center text-primary-300 hover:text-primary cursor-pointer"
                  @click="triggerRealTimePreview">
@@ -59,15 +59,19 @@
                 type: Boolean,
                 default: true,
             },
-            fixedZoom: {
+            defaultZoom: {
                 type: Number,
                 default: 1,
+            },
+            headerCaption: {
+                type: Boolean,
+                default: true,
             },
         },
         data() {
             return {
                 realTimePreview: true,
-                zoom: this.fixedZoom,
+                zoom: this.defaultZoom,
                 fullScreenMode: false,
             }
         },
@@ -148,6 +152,7 @@
             },
         },
         mounted() {
+            console.log('handleDragToScroll')
             document.addEventListener('keyup', this.handleEscape)
             this.handleDragToScroll()
         },
@@ -159,10 +164,9 @@
 <style lang="scss">
 .preview-wrapper {
     @apply overflow-hidden;
-    height: calc(100vh - 350px);
+    height: calc(100vh - 300px);
     
     .content {
-        //@apply min-w-screen;
         zoom: 0.5;
     }
 }

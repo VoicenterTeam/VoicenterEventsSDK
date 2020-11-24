@@ -8,37 +8,50 @@
             <div class="items-center flex justify-start h-23 text-2xl text-gray-950 leading-7">
                 {{ $t('Dashboard Creation') }}
             </div>
-            <el-form class="flex flex-row items-center my-8">
-                <div class="flex flex-col lg:flex-row lg:items-center">
-                    <label class="label-input">
-                        {{ $t('Set the Name') }}
-                    </label>
-                    <div class="w-64 lg:mx-4">
-                        <el-input v-model="model.DashboardTitle"/>
+            <transition-group name="flip-list">
+                <template v-if="!templateForDetailedView">
+                    <el-form class="flex flex-row items-center my-8"
+                        key="el-form">
+                        <div class="flex flex-col lg:flex-row lg:items-center">
+                            <label class="label-input">
+                                {{ $t('Set the Name') }}
+                            </label>
+                            <div class="w-64 lg:mx-4">
+                                <el-input v-model="model.DashboardTitle"/>
+                            </div>
+                        </div>
+                        <div class="flex flex-col lg:flex-row lg:items-center mx-6 lg:mx-0">
+                        <span class="label-input block">
+                            {{ $t('Choose Layout') }}
+                        </span>
+                            <div>
+                                <LayoutSelect class="w-64 lg:mx-4"
+                                              @on-chose-layout="onChoseLayout"
+                                              :display-label="false"
+                                />
+                            </div>
+                        </div>
+                    </el-form>
+                    <div class="grid grid-cols-4 col-gap-5"
+                        key="TemplateCategories">
+                        <TemplateCategories class="col-span-1"
+                                            key="categories"
+                                            :categories="dashboardTemplateCategories"
+                                            @on-choose-category="onChooseCategory"/>
+                        <fade-transition mode="out-in" :duration="transitionDuration">
+                            <TemplatesPreview class="col-span-3"
+                                              key="TemplatesPreview"
+                                              @on-detailed-view="onDetailedView"
+                                              v-if="dashboardTemplateCategory"
+                                              :dashboard-category="selectedCategory"/>
+                        </fade-transition>
                     </div>
-                </div>
-                <div class="flex flex-col lg:flex-row lg:items-center mx-6 lg:mx-0">
-                    <span class="label-input block">
-                        {{ $t('Choose Layout') }}
-                    </span>
-                    <div>
-                        <LayoutSelect class="w-64 lg:mx-4"
-                                      @on-chose-layout="onChoseLayout"
-                                      :display-label="false"
-                        />
-                    </div>
-                </div>
-            </el-form>
-            <div class="grid grid-cols-4 col-gap-5">
-                <TemplateCategories class="col-span-1"
-                                    :categories="dashboardTemplateCategories"
-                                    @on-choose-category="onChooseCategory"/>
-                <fade-transition mode="out-in" :duration="transitionDuration">
-                    <TemplatesPreview class="col-span-3"
-                                      v-if="dashboardTemplateCategory"
-                                      :dashboard-category="selectedCategory"/>
-                </fade-transition>
-            </div>
+                </template>
+                <template v-else>
+                    <TemplateDetailedPreview key="to-preview"
+                        :template="templateForDetailedView"/>
+                </template>
+            </transition-group>
         </div>
         <div class="border-t border-gray-300 flex w-full items-center h-23-5">
             <div class="mx-4 lg:mx-32 xl:mx-64 flex w-full justify-between items-center">
@@ -74,9 +87,11 @@
     import { getLayoutsWithPrimaryColor } from '@/helpers/layoutUtil'
     import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
     import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
+    import TemplateDetailedPreview from '@/views/DashboardCreation/components/TemplateDetailedPreview'
     
     export default {
         components: {
+            TemplateDetailedPreview,
             TemplateCategories,
             TemplatesPreview,
             LayoutSelect,
@@ -93,6 +108,7 @@
                 accountLayouts: [],
                 dashboardTemplateCategories: [],
                 dashboardTemplateCategory: null,
+                templateForDetailedView: false,
             }
         },
         computed: {
@@ -112,6 +128,9 @@
         methods: {
             onChoseLayout(layout) {
                 this.model.DashboardLayoutID = layout.LayoutID
+            },
+            onDetailedView(template) {
+                this.templateForDetailedView = template
             },
             onChooseCategory(category) {
                 this.dashboardTemplateCategory = category
@@ -175,5 +194,8 @@
         height: 100%;
         left: 0%;
     }
+}
+.flip-list-move {
+    transition: transform 0.5s;
 }
 </style>

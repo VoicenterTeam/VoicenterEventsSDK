@@ -3,7 +3,8 @@
         <div class="h-56 overflow-hidden relative">
             <TemplateWrapper :template="template"/>
         </div>
-        <div class="template-footer border-t h-8 flex items-center justify-between px-3 py-1">
+        <div class="template-footer border-t h-8 flex items-center justify-between px-3 py-1"
+             @click="onDetailedView(template)">
             <span class="text-xs text-gray-900">{{ template.DashboardTemplateName }}</span>
             <el-popover placement="top"
                         trigger="hover"
@@ -18,6 +19,7 @@
     import TemplateWrapper from '@/views/DashboardCreation/components/TemplateWrapper'
     
     export default {
+        inheritAttrs: false,
         components: {
             TemplateWrapper,
             [Popover.name]: Popover,
@@ -26,6 +28,11 @@
             template: {
                 type: Object,
                 default: () => ({}),
+            },
+        },
+        methods: {
+            onDetailedView(template) {
+                this.$emit('on-detailed-view', template)
             },
         },
     }

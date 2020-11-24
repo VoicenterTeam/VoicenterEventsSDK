@@ -2,7 +2,7 @@
     <div class="relative">
         <LayoutPreview
             :have-preview="false"
-            :fixed-zoom="fixedZoom"
+            :default-zoom="defaultZoom"
         >
             <WidgetList :widget-group="widgetGroup"
                         :editable="editable"
@@ -43,7 +43,7 @@
         data() {
             return {
                 editable: false,
-                fixedZoom: 0.3,
+                defaultZoom: 0.3,
             }
         },
     }
