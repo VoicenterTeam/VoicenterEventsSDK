@@ -5,7 +5,7 @@
         <div class="absolute h-0-25 w-full bg-gray-300 mt-39"/>
         <div class="flex-1 overflow-auto px-4 lg:px-32 xl:px-64"
              :class="{'opacity-50': loading}">
-            <div class="items-center flex justify-start h-23">
+            <div class="items-center flex justify-start h-23 text-2xl text-gray-950 leading-7">
                 {{ $t('Dashboard Creation') }}
             </div>
             <el-form class="flex flex-row items-center my-8">
