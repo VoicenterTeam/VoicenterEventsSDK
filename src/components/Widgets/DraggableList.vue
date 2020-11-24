@@ -56,7 +56,7 @@
     }
 
     .ghost {
-        @apply bg-primary-200 rounded-lg opacity-25;
+        @apply border border-primary bg-primary-50 rounded-lg opacity-25;
         opacity: 0.3;
     }
 </style>

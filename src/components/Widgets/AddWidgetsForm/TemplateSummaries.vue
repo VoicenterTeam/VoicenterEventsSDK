@@ -105,7 +105,6 @@
             },
             composeData() {
                 const templates = this.getTemplatesToSetup
-                
                 let widgetTemplatesToAdd = []
                 let defaultLayout = getDefaultGridLayout()
                 

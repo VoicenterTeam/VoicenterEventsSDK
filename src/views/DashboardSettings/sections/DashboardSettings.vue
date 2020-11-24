@@ -91,9 +91,10 @@
                 </div>
             </div>
         </div>
-        <WidgetGroupManagement v-if="false"
+        <WidgetGroupManagement v-if="currentDashboard.WidgetGroupList"
                                class="w-full mt-12"
-                               v-bind="$attrs"/>
+                               :widget-group-list="currentDashboard.WidgetGroupList"
+        />
     </div>
 </template>
 <script>
@@ -114,6 +115,10 @@
         },
         props: {
             value: {
+                type: Object,
+                default: () => ({}),
+            },
+            currentDashboard: {
                 type: Object,
                 default: () => ({}),
             },

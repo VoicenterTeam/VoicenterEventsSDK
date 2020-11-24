@@ -200,7 +200,7 @@ const getters = {
     getLogo: state => {
         try {
             const logo = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'DashboardLogo')
-            return get(logo, `[0]['ValueText']`, DEFAULT_LOGO);
+            return get(logo, `[0]['ValueText']`, DEFAULT_LOGO) || DEFAULT_LOGO
         } catch (e) {
             console.warn(e)
             return DEFAULT_LOGO

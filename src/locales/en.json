@@ -662,7 +662,7 @@
     "to delete this widget group": "to delete this widget group",
     "Delete Widget Group": "Delete Widget Group",
     "Dashboard no Data": "This dashboard contains no data. Click on the Pen to enter Edit mode.",
-    "WidgetGroup no Data": "This widget group contains no data. Activate edit mode to add new widgets.",
+    "WidgetGroup no Data": "This widget group contains no data. Click on the right button to add new widgets.",
     "Display queues as rows": "Display queues as rows",
     "Counters to display": "Counters to display",
     "Average duration of all calls": "Average duration of all calls",
@@ -813,5 +813,6 @@
     "Search": "Search",
     "Set up Widgets": "Set up Widgets",
     "x": "x",
-    "Reorder Widget Groups": "Reorder Widget Groups"
+    "Reorder Widget Groups": "Reorder Widget Groups",
+    "Widget Group Management": "Widget Group Management"
 }

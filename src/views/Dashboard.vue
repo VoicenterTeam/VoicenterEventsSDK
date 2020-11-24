@@ -170,9 +170,7 @@
                 this.storingData = true
                 
                 if (this.groupToEdit) {
-                    const currentGroup = this.groupToEdit
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, currentGroup))
-                    await this.updateGridStacks(currentGroup)
+                    await this.updateGridStacks(this.groupToEdit)
                 }
                 
                 await this.validateOrderedGroups()
@@ -188,7 +186,8 @@
                 const currentGroups = this.activeDashboardData.WidgetGroupList
                 currentGroups.forEach((group, index) => {
                     group['Order'] = +index
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, group))
+                    const operationType = group.IsNew ? types.ADD : types.UPDATE
+                    this.operations.add(dashboardOperation(operationType, targets.WIDGET_GROUP, group))
                 })
             },
             switchDashboardLayout(type) {

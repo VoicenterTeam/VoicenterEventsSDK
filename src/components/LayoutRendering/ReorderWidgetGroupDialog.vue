@@ -47,7 +47,6 @@
     </modal>
 </template>
 <script>
-    import cloneDeep from 'lodash/cloneDeep'
     import Modal from '@/components/Common/Modal'
     import draggableEvents from '@/enum/draggableEvents'
     import DraggableList from '@/components/Widgets/DraggableList'
@@ -76,7 +75,13 @@
         },
         methods: {
             onSubmit() {
+                this.updateGroupOrder()
                 this.$emit('on-submit', this.widgetGroups)
+            },
+            updateGroupOrder() {
+                this.widgetGroups.forEach((group, index) => {
+                    this.$set(group, 'Order', index)
+                })
             },
             onGroupListChange(ev) {
                 let eventData = ev[draggableEvents.MOVED]
@@ -90,7 +95,7 @@
                 deep: true,
                 immediate: true,
                 handler(value) {
-                    this.widgetGroups = cloneDeep(value)
+                    this.widgetGroups = value
                 },
             },
         },

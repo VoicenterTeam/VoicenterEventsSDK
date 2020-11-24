@@ -83,11 +83,13 @@
                     widgets: widgetTemplatesToAdd,
                     group: this.widgetGroup,
                 }
+                
                 this.$emit('add-widgets-to-group', objToEmit)
                 this.resetState()
             },
             resetState() {
                 this.$store.dispatch('widgetCreation/resetState')
+                this.$emit('on-submit')
             },
         },
     }

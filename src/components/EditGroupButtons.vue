@@ -41,7 +41,7 @@
                              :widget-group="widgetGroup"
                              v-on="$listeners"
                              @try-store-category="tryAddAllWidgetsFromCategory"
-                             @add-widgets-to-group="addWidgets"
+                             @on-submit="showAddWidgetDialog = false"
                              @on-cancel="showAddWidgetDialog = false"
             />
         </div>
@@ -79,7 +79,7 @@
                                   :widget-group-list="activeDashboardData.WidgetGroupList"
                                   :visible.sync="showReorderLayoutDialog"
                                   @on-cancel="showReorderLayoutDialog = false"
-                                  @on-submit="onReorderWidgetGroups"
+                                  @on-submit="showReorderLayoutDialog = false"
         />
     </div>
 </template>
@@ -162,12 +162,6 @@
             tryReorderWidgetGroups() {
                 this.showReorderLayoutDialog = !this.showReorderLayoutDialog
             },
-            onReorderWidgetGroups(groups) {
-            
-            }
         },
-        mounted() {
-            console.log(this.$listeners)
-        }
     }
 </script>

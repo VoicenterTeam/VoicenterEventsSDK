@@ -29,6 +29,7 @@ module.exports = {
                     550: 'var(--gray-550)',
                     650: 'var(--gray-650)',
                     900: 'var(--gray-900)',
+                    950: 'var(--gray-950)',
                 },
                 blue: {
                     ...defaultTheme.colors.blue,

@@ -45,7 +45,7 @@
             </div>
             <div class="w-full px-4 mt-6 lg:px-32 xl:px-64">
                 <DashboardSettings v-model="model"
-                                   :active-dashboard="activeDashboard"/>
+                                   :current-dashboard="currentDashboard"/>
             </div>
         </div>
     </div>
@@ -60,6 +60,7 @@
     import DeleteLayout from '@/views/common/DeleteLayout'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
+    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
     
     export default {
         components: {
@@ -72,6 +73,7 @@
         data() {
             return {
                 model: {},
+                currentDashboard: {},
                 loading: false,
             }
         },
@@ -91,19 +93,35 @@
         },
         methods: {
             onDiscard(goBack = false) {
-                this.layoutSettings = cloneDeep(this.storedDashboardLayout)
-                this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
+                this.discardLayoutChanges()
+                this.discardGroupsManagement()
                 if (goBack) {
                     this.$router.push('/')
                 }
+            },
+            discardLayoutChanges() {
+                this.layoutSettings = cloneDeep(this.storedDashboardLayout)
+                this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
+            },
+            discardGroupsManagement() {
+                this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
+                this.currentDashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
             },
             async onSubmit() {
                 try {
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
+                    const toUpdatePromises = this.currentDashboard.WidgetGroupList.map((group, index) => {
+                        return WidgetGroupsApi.update({
+                            ...group,
+                            Order: index,
+                        })
+                    })
                     
                     await DashboardApi.update(this.model)
                     await LayoutApi.update(this.activeLayout)
+                    await Promise.all(toUpdatePromises)
+                    
                     this.$store.commit('layout/SET_ACTIVE_LAYOUT', this.activeLayout)
                 } catch (e) {
                     console.warn(e)
@@ -117,7 +135,8 @@
                 immediate: true,
                 deep: true,
                 handler(dashboard) {
-                    this.model = dashboard
+                    this.model = cloneDeep(dashboard)
+                    this.currentDashboard = cloneDeep(dashboard)
                 },
             },
         },
