@@ -13,6 +13,9 @@
             :widgetTitle="data.Title"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
+            <template v-slot:user_id="{row}">
+                {{getOnlineUserID(row.user_id)}}
+            </template>
             <template v-slot:status_duration="{row}">
                 <status-duration :extension="userExtension(row.user_id)"
                                  :key="row.user_id"
@@ -30,7 +33,7 @@
             </template>
             <template v-slot:extension_name="{row}">
                         <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{getExtensionName(row.user_id).ext_name}}
+                            {{getExtensionName(row.user_id)}}
                         </span>
                 <span v-else>---</span>
             </template>
@@ -200,8 +203,11 @@
                 return ref.statusText
             },
             getExtensionName(userId) {
-                const extensionNumber = this.userExtension(userId)
-                return this.$store.getters['entities/getExtensionById'](extensionNumber.number)
+                const extension = this.userExtension(userId)
+                if (!extension) {
+                    return '--'
+                }
+                return get(extension, 'userName', '--')
             },
             getCallInfo(userExtension) {
                 let callInfo = 0
@@ -219,6 +225,13 @@
                     return '--'
                 }
                 return get(extension, 'summery.representative', extension.userName)
+            },
+            getOnlineUserID(userId) {
+                const extension = this.userExtension(userId)
+                if (!extension) {
+                    return userId
+                }
+                return get(extension, 'onlineUserID', userId)
             },
             getCellStyle({ row, column }) {
                 let color = 'transparent'
