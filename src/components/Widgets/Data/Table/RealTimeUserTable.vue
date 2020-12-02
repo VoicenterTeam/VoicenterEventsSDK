@@ -135,14 +135,14 @@
             }
         },
         computed: {
+            showLoggedOutUsers() {
+                return get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
+            },
             fetchTableData() {
                 let tableData = this.tableData
-
-                let showLoggedOutUsers = get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
-
-                if (!showLoggedOutUsers) {
-                    let userIds = this.loggedOutUserIds
-                    tableData = tableData.filter((user) => user.user_id !== undefined && !userIds.includes(user.user_id) && this.userExtension(user.user_id))
+                if (!this.showLoggedOutUsers) {
+                    let userIds = this.onlineUserIds
+                    tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
                 }
 
                 if (this.filter && this.searchableFields.length > 0) {
@@ -166,7 +166,7 @@
                     return {
                         ...row,
                         user_name: extension.userName || '--',
-                        extension_name: this.getExtensionName(row.user_id).ext_name || '--',
+                        extension_name: this.getExtensionName(row.user_id) || '--',
                         status: this.getExtensionStatusText(row.user_id),
                         status_duration: getInitialExtensionTime(extension, this.getSettings),
                         caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
@@ -179,8 +179,11 @@
             extensions() {
                 return this.$store.state.extensions.extensions
             },
-            loggedOutUserIds() {
-                return this.extensions.filter(e => e.representativeStatus === LOGOUT_STATUS).map((el) => el.userID)
+            onlineUserIds() {
+                return this.onlineExtensions.map((el) => el.representative)
+            },
+            onlineExtensions() {
+                return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
             },
             getSettings() {
                 return this.data.WidgetLayout.settings || realTimeSettings
@@ -217,6 +220,9 @@
                 return callInfo
             },
             userExtension(userId) {
+                if (!this.showLoggedOutUsers) {
+                    return this.onlineExtensions.find(e => e.representative === userId)
+                }
                 return this.extensions.find(e => e.userID === userId || e.onlineUserID === userId)
             },
             getUserName(userId) {
