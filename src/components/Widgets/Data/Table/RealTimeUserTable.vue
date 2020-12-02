@@ -217,7 +217,7 @@
                 return callInfo
             },
             userExtension(userId) {
-                return this.extensions.find(e => e.userID === userId)
+                return this.extensions.find(e => e.userID === userId || e.onlineUserID === userId)
             },
             getUserName(userId) {
                 const extension = this.userExtension(userId)
