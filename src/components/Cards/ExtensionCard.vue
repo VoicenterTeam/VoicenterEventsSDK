@@ -11,7 +11,7 @@
                     </component>
                 </el-tooltip>
             </fade-transition>
-            <span class="text-main-xl font-medium leading-tight mx-2">{{extension.userName}}</span>
+            <span class="text-main-xl font-medium leading-tight mx-2">{{getRepresentativeSummery}}</span>
         </div>
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
@@ -33,12 +33,12 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import CallInfo from './CallInfo'
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
-    import { getInitialExtensionTime, getInitialTime } from '@/util/timeUtils'
-    import {sdkEventReasons} from '@/enum/sdkEvents'
+    import { getInitialExtensionTime } from '@/util/timeUtils'
     import {extensionColor} from '@/util/extensionStyles'
 
     export default {
@@ -67,6 +67,9 @@
             }
         },
         computed: {
+            getRepresentativeSummery() {
+              return get(this.extension, 'summery.representative', 'userName')
+            },
             threshold() {
                 let show = true;
                 let icon = 'IconYellowBulb';
