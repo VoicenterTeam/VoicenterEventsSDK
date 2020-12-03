@@ -64,6 +64,7 @@
     import {LOGOUT_STATUS} from '@/enum/extensionStatuses'
     import ExtensionCard from '@/components/Cards/ExtensionCard'
     import {realTimeSettings} from '@/enum/defaultWidgetSettings'
+    import { ADMIN_USER_ID, displayUsersRelatedWithAdmin } from '@/helpers/util'
 
     const cardWidth = 256;
 
@@ -119,18 +120,24 @@
             }
         },
         computed: {
-            token () {
-                return this.$store.state.users.tokenString
+            adminSelected() {
+                return displayUsersRelatedWithAdmin(this.data.WidgetConfig)
             },
             extensions () {
                 return this.$store.state.extensions.extensions
             },
+            filteredExtensions() {
+                if (this.adminSelected) {
+                    return this.extensions
+                }
+                return this.extensions.filter(ext => ext.userID !== ADMIN_USER_ID)
+            },
             onlineExtensions () {
                 let showLoggedOutUsers = get(this.data.WidgetLayout.settings, 'showLoggedOutUsers')
                 if (!showLoggedOutUsers) {
-                    return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
+                    return this.filteredExtensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
                 }
-                return this.extensions
+                return this.filteredExtensions
             },
             extensionToDisplay () {
                 return get(this.data.WidgetConfig, '[0].WidgetParameterValueJson.EntityPositive', [])

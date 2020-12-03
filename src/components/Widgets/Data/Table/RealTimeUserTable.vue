@@ -14,7 +14,28 @@
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
             <template v-slot:user_id="{row}">
-                {{getOnlineUserID(row.user_id)}}
+                {{ row.user_id }}
+            </template>
+            <template v-slot:online_user_id="{row}">
+                {{ getOnlineUserID(row.user_id) }}
+            </template>
+            <template v-slot:representant="{row}">
+                {{ row.representant }}
+            </template>
+            <template v-slot:extension_id="{row}">
+                {{ row.extension_id }}
+            </template>
+            <template v-slot:extension_name="{row}">
+                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
+                            {{ getExtensionName(row.user_id) }}
+                        </span>
+                <span v-else>---</span>
+            </template>
+            <template v-slot:user_name="{row}">
+                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
+                            {{ getUserName(row.user_id) }}
+                        </span>
+                <span v-else>---</span>
             </template>
             <template v-slot:status_duration="{row}">
                 <status-duration :extension="userExtension(row.user_id)"
@@ -29,18 +50,6 @@
                              :userId="row.user_id"
                              :ref="`user-status-${row.user_id}`"
                              v-if="userExtension(row.user_id) && drawRow"/>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:extension_name="{row}">
-                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{getExtensionName(row.user_id)}}
-                        </span>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:user_name="{row}">
-                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{getUserName(row.user_id)}}
-                        </span>
                 <span v-else>---</span>
             </template>
             <template v-slot:call_info="{row}">
@@ -74,26 +83,27 @@
                 </div>
             </template>
             <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{fetchTableData.length}} {{$t('row(s)')}}</p>
+                <p class="text-main-sm px-2">{{ fetchTableData.length }} {{ $t('row(s)') }}</p>
             </template>
         </data-table>
     </div>
 </template>
 <script>
-    import TimeFrame from './TimeFrame'
     import get from 'lodash/get'
+    import TimeFrame from './TimeFrame'
+    import CallsInfo from './CallsInfo'
     import UserStatus from './UserStatus'
+    import cloneDeep from 'lodash/cloneDeep'
     import StatusDuration from './StatusDuration'
+    import dataTableMixin from '@/mixins/dataTableMixin'
     import DataTable from '@/components/Table/DataTable'
     import { extensionColor } from '@/util/extensionStyles'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
-    import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { dynamicRows } from '@/enum/realTimeTableConfigs'
-    import dataTableMixin from '@/mixins/dataTableMixin'
-    import CallsInfo from './CallsInfo'
-    import cloneDeep from 'lodash/cloneDeep'
     import { getInitialExtensionTime } from '@/util/timeUtils'
-
+    import { realTimeSettings } from '@/enum/defaultWidgetSettings'
+    import { displayUsersRelatedWithAdmin, ADMIN_USER_ID } from '@/helpers/util'
+    
     export default {
         mixins: [dataTableMixin],
         components: {
@@ -135,6 +145,9 @@
             }
         },
         computed: {
+            adminSelected() {
+                return displayUsersRelatedWithAdmin(this.data.WidgetConfig)
+            },
             showLoggedOutUsers() {
                 return get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
             },
@@ -144,7 +157,7 @@
                     let userIds = this.onlineUserIds
                     tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
                 }
-
+                
                 if (this.filter && this.searchableFields.length > 0) {
                     tableData = tableData.filter(c => {
                         return this.searchableFields.some(field => {
@@ -155,16 +168,19 @@
                         })
                     })
                 }
-
+                
                 tableData = tableData.map((row) => {
                     const extension = this.userExtension(row.user_id)
-
+                    
                     if (!extension) {
                         return row
                     }
-
+                    
                     return {
                         ...row,
+                        online_user_id: extension.onlineUserID || '--',
+                        representant: `${extension.userID} - ${get(extension, 'summery.representative', '-')}`,
+                        extension_id: extension.number || '--',
                         user_name: extension.userName || '--',
                         extension_name: this.getExtensionName(row.user_id) || '--',
                         status: this.getExtensionStatusText(row.user_id),
@@ -173,17 +189,23 @@
                         call_info: extension.calls.length ? this.getCallInfo(extension) : '',
                     }
                 })
-
+                
                 return tableData
             },
             extensions() {
                 return this.$store.state.extensions.extensions
             },
+            filteredExtensions() {
+                if (this.adminSelected) {
+                    return this.extensions
+                }
+                return this.extensions.filter(ext => ext.userID !== ADMIN_USER_ID)
+            },
             onlineUserIds() {
                 return this.onlineExtensions.map((el) => el.representative)
             },
             onlineExtensions() {
-                return this.extensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
+                return this.filteredExtensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
             },
             getSettings() {
                 return this.data.WidgetLayout.settings || realTimeSettings
@@ -202,7 +224,7 @@
                 if (!ref) {
                     return '--'
                 }
-
+                
                 return ref.statusText
             },
             getExtensionName(userId) {
@@ -223,7 +245,7 @@
                 if (!this.showLoggedOutUsers) {
                     return this.onlineExtensions.find(e => e.representative === userId)
                 }
-                return this.extensions.find(e => e.userID === userId || e.onlineUserID === userId)
+                return this.filteredExtensions.find(e => e.userID === userId || e.onlineUserID === userId)
             },
             getUserName(userId) {
                 const extension = this.userExtension(userId)
@@ -241,7 +263,7 @@
             },
             getCellStyle({ row, column }) {
                 let color = 'transparent'
-
+                
                 if (dynamicRows.includes(column.property)) {
                     let extension = this.userExtension(row.user_id)
                     if (extension) {
@@ -253,11 +275,11 @@
             getCellClassName({ column, row }) {
                 let className = ''
                 let extension = this.userExtension(row.user_id)
-
+                
                 if (dynamicRows.includes(column.property) && extension) {
                     className = 'text-white'
                 }
-
+                
                 return className
             },
             sortChange() {
@@ -270,7 +292,7 @@
     }
 </script>
 <style lang="scss">
-    td.text-white > .cell {
-        color: white;
-    }
+td.text-white > .cell {
+    color: white;
+}
 </style>

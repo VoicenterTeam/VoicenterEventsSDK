@@ -1,4 +1,5 @@
 import store from '@/store/store'
+
 // Time zone in Israel (GMT+2)
 export const ISRAEL_TIMEZONE_OFFSET = 120 * 60 * 1000;
 
@@ -19,8 +20,7 @@ export const DEFAULT_TIME_DELAY = 30
 
 export const getDefaultTimeDelay = () => {
     let minutes = store.getters['layout/refreshDelay'] || DEFAULT_TIME_DELAY;
-    let miliSeconds = minutes * 60 * 100;
-    return miliSeconds
+    return minutes * 60 * 100
 }
 
 //Queue Activity Gauge suggestive word/key

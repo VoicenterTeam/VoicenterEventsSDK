@@ -4,6 +4,16 @@ export const dynamicRows = ['status', 'status_duration']
 export const realTimeTableKey = 'GetDataByUser'
 
 export const dynamicColumns = [{
+    prop: 'online_user_id',
+    fixed: false,
+    align: 'center',
+    label: 'Online User ID',
+}, {
+    prop: 'representant',
+    fixed: false,
+    align: 'center',
+    label: 'Representant',
+}, {
     prop: 'user_name',
     fixed: false,
     align: 'center',
@@ -13,6 +23,11 @@ export const dynamicColumns = [{
     fixed: false,
     align: 'center',
     label: 'Extension Name',
+}, {
+    prop: 'extension_id',
+    fixed: false,
+    align: 'center',
+    label: 'Number',
 }, {
     prop: 'status',
     fixed: false,

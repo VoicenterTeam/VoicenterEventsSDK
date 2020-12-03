@@ -1,3 +1,5 @@
+export const USER_LIST_PARAMETER_NAME = '{|user_id_id_list|}'
+
 export const componentTypes = {
     1: {
         name: 'Input',
@@ -26,7 +28,7 @@ export const componentTypes = {
 };
 
 const userListConfig = {
-    ParameterName: '{|user_id_id_list|}',
+    ParameterName: USER_LIST_PARAMETER_NAME,
     EndPoint: '/User/List/',
     label: 'user_name',
     value: 'user_id',
@@ -74,7 +76,7 @@ const accountListConfig = {
 }
 
 export const filters = {
-    '{|user_id_id_list|}': userListConfig,
+    [USER_LIST_PARAMETER_NAME]: userListConfig,
     '{|extension_list|}': extensionListConfig,
     '{|did_list|}': didListConfig,
     '{|queue_list|}': queueListConfig,

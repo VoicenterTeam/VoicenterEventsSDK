@@ -757,5 +757,8 @@
     "Show Stats in Percentage": "Show Stats in Percentage",
     "Invalid Logo": "Invalid Logo",
     "Logo size should be less than 100kb": "Logo size should be less than 100kb",
-    "call_info": "Call Info"
+    "call_info": "Call Info",
+    "online_user_id": "Online User ID",
+    "extension_id": "Number",
+    "Representant": "Representant"
 }
