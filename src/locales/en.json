@@ -814,5 +814,7 @@
     "Set up Widgets": "Set up Widgets",
     "x": "x",
     "Reorder Widget Groups": "Reorder Widget Groups",
-    "Widget Group Management": "Widget Group Management"
+    "Widget Group Management": "Widget Group Management",
+    "online_user_id": "Online User ID",
+    "extension_id": "Number"
 }
