@@ -27,7 +27,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item v-if="model && isPieWidget(model)">
-                <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-4">
+                <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-2">
                     {{$t('Don`t count logged out agents')}}
                 </el-checkbox>
             </el-form-item>
@@ -44,7 +44,7 @@
                         sort></json-viewer>
                 </el-collapse-item>
             </el-collapse>
-            <el-collapse v-model="activeCollapse" class="pt-4">
+            <el-collapse v-model="activeCollapse" class="pt-2">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item>
                         <widget-padding :model="model"/>

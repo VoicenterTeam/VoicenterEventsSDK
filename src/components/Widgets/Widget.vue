@@ -23,7 +23,7 @@
                           @on-remove="removeWidget"
                           @on-show-update-dialog="showUpdateDialog = true"/>
         </div>
-        <div class="flex w-full flex-col widget-container"
+        <div class="flex w-full flex-col widget-container mt-1"
              :class="getWidgetHeightClass"
              v-if="inView">
             <component
@@ -283,6 +283,6 @@
     }
 }
 .h-container {
-    height: calc(100% - 2rem);
+    height: calc(100% - 2.5rem);
 }
 </style>

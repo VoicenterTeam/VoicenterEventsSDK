@@ -38,8 +38,8 @@
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
-    import { getInitialExtensionTime } from '@/util/timeUtils'
     import {extensionColor} from '@/util/extensionStyles'
+    import { getInitialExtensionTime } from '@/util/timeUtils'
 
     export default {
         components: {

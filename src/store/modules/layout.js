@@ -207,7 +207,9 @@ const getters = {
         }
     },
     
-    getActiveLayout: state => state.activeLayout,
+    getActiveLayout: state => {
+        return state.activeLayout || defaultLayout
+    },
     getAllLayouts: state => state.activeLayout,
     getActiveLayouts: state => {
         return state.data.filter(layout => layout.LayoutStatusID.toString() === ENABLED_STATUS_ID.toString())

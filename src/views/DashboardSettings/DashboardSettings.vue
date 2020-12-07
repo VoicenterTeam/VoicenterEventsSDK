@@ -93,11 +93,12 @@
         },
         methods: {
             onDiscard(goBack = false) {
-                this.discardLayoutChanges()
-                this.discardGroupsManagement()
                 if (goBack) {
                     this.$router.push('/')
+                    return
                 }
+                this.discardLayoutChanges()
+                this.discardGroupsManagement()
             },
             discardLayoutChanges() {
                 this.layoutSettings = cloneDeep(this.storedDashboardLayout)

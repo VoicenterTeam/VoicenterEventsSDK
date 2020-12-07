@@ -8,11 +8,11 @@ export default {
         async updateWidget(widget, widgetGroup) {
             let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
             if (index !== -1) {
-            
-                let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
-            
-                if (widgetIndex !== -1 && !widgetGroup.IsNew) {
                 
+                let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
+                
+                if (widgetIndex !== -1 && !widgetGroup.IsNew) {
+                    
                     if (!this.editMode) {
                         this.$set(widget, 'onLoading', true)
                         await WidgetApi.update(widget)
@@ -26,9 +26,9 @@ export default {
                 }
             }
         },
-        updateGridStacks(group) {
+        updateGridStacks(group, grids) {
             const activeDashboardWidgets = group.WidgetList
-            window.grids.forEach(grid => {
+            grids.forEach(grid => {
                 grid.engine.nodes.forEach((node) => {
                     let widget = activeDashboardWidgets.find((widget) => Number(widget.WidgetID) === Number(node.id))
                     if (!widget) {
@@ -41,31 +41,31 @@ export default {
                         height: node.height,
                     }
                     let widgetGridLayout = widget.WidgetLayout.GridLayout
-                
+                    
                     if (isEqual(widgetGridLayout, nodeLayout)) {
                         return
                     }
-                
+                    
                     widget.WidgetLayout.GridLayout = nodeLayout
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, group))
+                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, group.WidgetGroupID))
                 })
             })
         },
         onReorderWidgetGroup(data = {}) {
             let { direction: direction, widgetGroup: widgetGroup } = data
-        
+            
             let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID.toString() === widgetGroup.WidgetGroupID.toString())
             let newIndex = index;
-        
+            
             if (direction === 'up') {
                 newIndex = index - 1;
             } else {
                 newIndex = index + 1;
             }
-        
+            
             let originGroup = this.activeDashboardData.WidgetGroupList[index]
             let destinationGroup = this.activeDashboardData.WidgetGroupList[newIndex]
-        
+            
             if (newIndex < 0) {
                 let selectedGroup = this.activeDashboardData.WidgetGroupList[0]
                 this.activeDashboardData.WidgetGroupList.splice(0, 1)
@@ -80,5 +80,5 @@ export default {
                 this.activeDashboardData.WidgetGroupList.splice(index, 1, destinationGroup)
             }
         },
-    }
+    },
 }

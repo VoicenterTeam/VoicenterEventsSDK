@@ -37,7 +37,6 @@ const types = {
     VIEW_SUMMARY: 'VIEW_SUMMARY',
     GO_TO_SELECTED_CATEGORY: 'GO_TO_SELECTED_CATEGORY',
     TEMPLATE_SETUP: 'TEMPLATE_SETUP',
-    
 }
 
 const state = {
@@ -58,8 +57,12 @@ const mutations = {
         state.step = TEMPLATE_CATEGORIES
         state.summaries = false
     },
-    [types.PREVIEW_TEMPLATE]: (state, template) => {
-        state.templateToPreview = template
+    [types.PREVIEW_TEMPLATE]: (state, data) => {
+        state.templateToPreview = {
+            ...state,
+            ...data
+        }
+        console.log({state})
         state.step = TEMPLATE_PREVIEW
     },
     [types.GO_TO_SELECTED_CATEGORY]: (state) => {
@@ -94,8 +97,8 @@ const actions = {
     async resetState({ commit }) {
         await commit(types.RESET_STATE)
     },
-    async previewTemplate({ commit }, template) {
-        await commit(types.PREVIEW_TEMPLATE, template)
+    async previewTemplate({ commit }, data) {
+        await commit(types.PREVIEW_TEMPLATE, data)
     },
     async goToCategory({ commit }) {
         await commit(types.GO_TO_SELECTED_CATEGORY)

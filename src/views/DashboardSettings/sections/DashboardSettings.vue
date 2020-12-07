@@ -46,7 +46,8 @@
                 <LayoutManagementSelect/>
             </div>
             <div class="col-span-3">
-                <div class="shadow-base w-full px-5 py-4 rounded-lg" v-if="activeLayout">
+                <div class="shadow-base w-full px-5 py-4 rounded-lg"
+                     v-if="activeLayout">
                     <div class="flex justify-between">
                         <div class="flex flex-col">
                             <div class="flex items-center mb-2">
@@ -147,7 +148,6 @@
             getTimeSettings() {
                 const MinRefreshInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'MinRefreshInterval')
                 const ReportInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportInterval')
-                
                 return `${this.$t('Refresh interval')}: ${MinRefreshInterval.Value}s,   ${this.$t('Switch category every')}: ${ReportInterval.Value}s`
             },
             getReportSettings() {

@@ -172,8 +172,6 @@
             await this.newDashboard()
             await this.getDashboardTemplates()
             this.loading = false
-        },
-        created() {
             window.grids = []
         },
         watch: {

@@ -124,7 +124,7 @@
                         
                         for (const dashboard of dashboardsWithThisLayout) {
                             this.layoutID = this.layoutToReplace
-                            dashboard['DashboardLayoutID'] = this.layoutToReplace
+                            dashboard['DashboardLayoutID'] = this.layoutToReplace.LayoutID
                             await DashboardApi.update(dashboard)
                         }
                     }

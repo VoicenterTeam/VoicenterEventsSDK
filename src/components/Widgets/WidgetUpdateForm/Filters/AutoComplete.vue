@@ -1,5 +1,6 @@
 <template>
-    <div v-if="!loading">
+    <div v-if="!loading"
+         class="filter-items -mx-2 px-2">
         <el-radio-group class="pb-4" v-model="entityType">
             <el-radio v-for="option in SELECTIONS"
                       v-bind="option"
@@ -122,5 +123,9 @@
 <style lang="scss" scoped>
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
     color: var(--primary-color);
+}
+
+.filter-items:not(:last-child) {
+    @apply mb-4 border-b;
 }
 </style>

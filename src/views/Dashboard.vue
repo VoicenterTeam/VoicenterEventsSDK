@@ -31,7 +31,7 @@
                     <sidebar v-if="(showTabs || editMode) && !onFullScreen"
                              :active-tab="activeTab"
                              :widget-group-list="activeDashboardData.WidgetGroupList"
-                             @switch-tab="(tab) => switchTab(tab)"
+                             @switch-tab="(tab) => switchTab(tab, resetProgress)"
                              @add-new-group="addNewGroup"
                              :show-tabs="showTabs"
                              :edit-mode="editMode"
@@ -80,6 +80,7 @@
     import { targets, types } from '@/enum/operations'
     import pageSizeMixin from '@/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
+    import { dashboardOperation } from '@/models/instances'
     import Sidebar from '@/components/LayoutRendering/Sidebar'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import Switcher from '@/components/LayoutRendering/Switcher'
@@ -89,13 +90,12 @@
     import ListView from '@/components/LayoutRendering/Types/ListView'
     import SocketStatusAlert from '@/components/Common/SocketStatusAlert'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
-    import { dashboardOperation } from '@/models/instances'
     import SocketStatusButton from '@/components/Common/SocketStatusButton'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
-    import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
     import addEntitiesMixin from '@/mixins/dashobardOperation/addEntitiesMixin'
     import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
+    import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
     
     export default {
         components: {
@@ -170,18 +170,18 @@
                 this.loading = true
                 this.editMode = false
                 this.storingData = true
-                
-                await this.validateOrderedGroups()
+                const wGrids = window.grids
                 
                 if (this.groupToEdit) {
                     const currentGroup = this.groupToEdit
-                    const operationType = currentGroup.IsNew ? types.ADD : types.UPDATE
-                    this.operations.add(dashboardOperation(operationType, targets.WIDGET_GROUP, currentGroup))
-                    await this.updateGridStacks(currentGroup)
+                    await this.updateGridStacks(currentGroup, wGrids)
                 }
+                
+                await this.validateOrderedGroups()
                 
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
+                
                 this.operations = new DashboardOperations()
                 this.storingData = false
                 this.groupToEdit = null
@@ -209,11 +209,14 @@
             saveActiveTab(tab) {
                 localStorage.setItem(ACTIVE_WIDGET_GROUP_KEY, tab)
             },
-            switchTab(tab) {
+            switchTab(tab, resetProgress) {
                 this.loading = true
                 this.activeTab = tab
                 this.saveActiveTab(tab)
                 this.loading = false
+                if (resetProgress) {
+                    this.resetProgress()
+                }
             },
             triggerFullScreenMode() {
                 this.onFullScreen = !this.onFullScreen

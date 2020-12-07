@@ -1,6 +1,6 @@
 <template>
     <div :key="widgetGroup.WidgetGroupID"
-         class="flex flex-col h-full w-full"
+         class="flex flex-col h-full w-full pb-2"
          :class="{'grid-container': editable}">
         <div :class="getClass"
              :id="gridId"
@@ -155,7 +155,6 @@
                 
                 this.grid.movable('.grid-stack-item', this.editable)
                 this.grid.resizable('.grid-stack-item', this.editable)
-                
                 window.grids.push(this.grid)
                 
                 this.resizeEventEmitter()

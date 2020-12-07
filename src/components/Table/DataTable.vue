@@ -76,8 +76,7 @@
             </el-table>
         </div>
         <portal :to="`widget-footer__${widget.WidgetID}`">
-            <div class="flex items-center justify-between -mx-1 widget-footer"
-                 v-if="tableData.length">
+            <div class="flex items-center justify-between -mx-1 widget-footer" v-if="tableData.length">
                 <export-data :tableId="tableId"
                              :widget="widget"
                              @on-update-layout="updateLayout"

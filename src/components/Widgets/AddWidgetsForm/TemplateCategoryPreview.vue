@@ -169,20 +169,26 @@
                 }
             },
             async onPreviewTemplate(template) {
-                await this.$store.dispatch('widgetCreation/previewTemplate', template)
+                const objectToStore = {
+                    template,
+                    data: this.composeSummary()
+                }
+                await this.$store.dispatch('widgetCreation/previewTemplate', objectToStore)
             },
             async allTemplateCategories() {
                 await this.$store.dispatch('widgetCreation/resetState')
             },
-            async onSetupWidgets() {
-                const data = {
+            composeSummary() {
+                return {
                     templates: this.templates,
                     summaries: {
                         summaryText: this.summaries,
                         quantities: this.quantities,
                     },
                 }
-                await this.$store.dispatch('widgetCreation/goToSetupTemplates', data)
+            },
+            async onSetupWidgets() {
+                const data = this.composeSummary()
                 await this.$store.dispatch('widgetCreation/goToSetupTemplates', data)
             },
             fillProgress() {

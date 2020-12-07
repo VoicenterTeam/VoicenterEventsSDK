@@ -13,7 +13,7 @@ export default {
     },
     methods: {
         async addWidgetsToGroup(data = {}) {
-            this.storingData = true
+            this.loading = true
             let { widgets: widgetTemplates } = data
             let widgetGroup = { ...this.groupToEdit }
             
@@ -31,16 +31,16 @@ export default {
             this.groupToEdit = this.activeDashboardData.WidgetGroupList[index]
             
             bus.$emit('added-widgets', createdWidgets)
-            this.storingData = false
+            this.loading = false
         },
         async duplicateWidget(widget) {
-            this.storingData = true
+            this.loading = true
             
             const widgetGroup = { ...this.groupToEdit }
             const index = widgetGroup.WidgetList.findIndex(w => w.WidgetID.toString() === widget.WidgetID.toString())
             
             if (index === -1) {
-                this.storingData = false
+                this.loading = false
                 return
             }
             
@@ -59,7 +59,7 @@ export default {
             widgetGroup.WidgetList.splice(widgetGroup.WidgetList.length, 0, duplicatedWidget)
             
             this.groupToEdit = widgetGroup
-            this.storingData = false
+            this.loading = false
         },
         addNewGroup() {
             const group = { ...widgetGroupModel }

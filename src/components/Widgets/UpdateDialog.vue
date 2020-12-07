@@ -1,17 +1,18 @@
 <template>
-    <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners">
+    <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners"
+           class="update-dialog_wrapper">
         <template v-slot:title>
             <div class="flex flex-row items-center">
                 <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('widget.update') }}</h3>
                 <static-widget-info :widget="widget" class="px-2"/>
             </div>
         </template>
-        <el-form :model="model" :rules="rules" @submit.native.prevent="onChange" ref="updateWidget">
+        <el-form :model="model" :rules="rules"
+                 class="mb-4"
+                 @submit.native.prevent="onChange" ref="updateWidget">
             <el-form-item>
-                <div>
-                    <label>{{ $t('widget.title') }}</label>
-                    <el-input v-model="model.Title"/>
-                </div>
+                <label>{{ $t('widget.title') }}</label>
+                <el-input v-model="model.Title"/>
             </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
@@ -33,7 +34,7 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueGauge(widget)">
-                <div class="pt-4 flex justify-between">
+                <div class="flex justify-between">
                     <label>{{ $t('Maximum range value') }}</label>
                     <el-input-number :max="1000" :min="1" :step="2" type="number"
                                      v-model="model.WidgetLayout.maximumRange"/>
@@ -76,7 +77,7 @@
                     :data="statistics"
                     v-model="model.WidgetLayout.ShowStatistics"
                     valueKey="key"/>
-                <div class="flex w-full flex-col lg:flex-row pt-4">
+                <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
                             {{ $t('Display % of Others value') }}
@@ -90,13 +91,13 @@
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueActivityGauge(widget)">
-                <el-collapse class="pt-4" v-model="activeCollapse">
+                <el-collapse v-model="activeCollapse">
                     <el-collapse-item :title="$t('widget.config')" name="queueActivity">
                         <ActivityGaugeConfig :model="model"></ActivityGaugeConfig>
                     </el-collapse-item>
                 </el-collapse>
             </el-form-item>
-            <el-collapse class="pt-4" v-model="activeCollapse">
+            <el-collapse v-model="activeCollapse">
                 <el-collapse-item :title="$t('widget.layout')" name="layout">
                     <el-form-item v-if="isHtmlEditor(widget)">
                         <el-checkbox v-model="model.WidgetLayout.showLastUpdateDate">
@@ -180,7 +181,8 @@
                 :model="model"
                 v-if="isRealtimeWidget(widget) && model.settings">
             </real-time-settings>
-            <div class="flex items-center text-main-base" v-if="autoCompletes.length">
+            <div class="flex items-center text-main-base my-4"
+                 v-if="autoCompletes.length">
                 {{ $t('tooltip.refresh.entities.list') }}
                 <RefreshButton
                     :disabled="loadEntitiesList"
@@ -188,7 +190,7 @@
                     @click.native="refreshEntitiesList"
                     class="mx-2"/>
             </div>
-            <el-collapse class="pt-4" v-if="autoCompletes.length" v-model="activeCollapse">
+            <el-collapse v-if="autoCompletes.length" v-model="activeCollapse">
                 <el-collapse-item :title="$t('settings.filters')" name="filters">
                     <auto-complete
                         :key="index"
@@ -197,7 +199,7 @@
                         v-if="isAutoComplete(filter)"/>
                 </el-collapse-item>
             </el-collapse>
-            <el-collapse class="pt-4" v-if="otherFilters.length" v-model="activeCollapse">
+            <el-collapse v-if="otherFilters.length" v-model="activeCollapse">
                 <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
                     <other-filters
                         :key="index"
@@ -466,11 +468,13 @@
     }
 </script>
 
-<style lang="scss">
-.el-form-item {
-    @apply w-full;
-    .el-select {
-        @apply w-full;
+<style lang="scss" scoped>
+.update-dialog_wrapper ::v-deep {
+    .el-form-item {
+        @apply w-full mb-2;
+        .el-select {
+            @apply w-full;
+        }
     }
 }
 </style>
