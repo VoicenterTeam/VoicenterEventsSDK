@@ -62,7 +62,6 @@ const mutations = {
             ...state,
             ...data
         }
-        console.log({state})
         state.step = TEMPLATE_PREVIEW
     },
     [types.GO_TO_SELECTED_CATEGORY]: (state) => {
