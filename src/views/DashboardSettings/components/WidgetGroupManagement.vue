@@ -10,7 +10,7 @@
                        @change="(ev) => onGroupListChange(ev)"
                        group="widgets">
             <div :key="widgetGroup.WidgetGroupID"
-                 class="flex w-full items-center py-6 border-b border-gray-300"
+                 class="flex w-full items-center py-6 border-b border-gray-300 md:px-2"
                  v-for="widgetGroup in widgetGroups">
                 <div class="flex items-center justify-between w-full hover:text-primary">
                     <div class="flex items-center">
@@ -21,7 +21,7 @@
                         </span>
                     </div>
                     <div class="flex cursor-pointer">
-                        <IconShape class="text-gray-500 hover:text-primary"/>
+                        <IconDragAndDrop class="text-gray-500 hover:text-primary"/>
                     </div>
                 </div>
             </div>
