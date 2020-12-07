@@ -11,7 +11,7 @@
                     </component>
                 </el-tooltip>
             </fade-transition>
-            <span class="text-main-xl font-medium leading-tight mx-2">{{getRepresentativeSummery}}</span>
+            <span class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal">{{getRepresentativeSummery}}</span>
         </div>
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
