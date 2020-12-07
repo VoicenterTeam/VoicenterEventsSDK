@@ -176,7 +176,6 @@
                     const currentGroup = this.groupToEdit
                     await this.updateGridStacks(currentGroup, wGrids)
                 }
-                
                 await this.validateOrderedGroups()
                 
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
@@ -189,11 +188,7 @@
             },
             async validateOrderedGroups() {
                 const currentGroups = this.activeDashboardData.WidgetGroupList
-                const groupID = this.groupToEdit ? this.groupToEdit.WidgetGroupID : -1
                 currentGroups.forEach((group, index) => {
-                    if (+group.WidgetGroupID === +groupID) {
-                        return
-                    }
                     group['Order'] = +index
                     const operationType = group.IsNew ? types.ADD : types.UPDATE
                     this.operations.add(dashboardOperation(operationType, targets.WIDGET_GROUP, group))
