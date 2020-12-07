@@ -68,7 +68,7 @@
         },
         computed: {
             getRepresentativeSummery() {
-              return `${get(this.extension, 'summery.representative', 'userName')} (${this.extension.userID})`
+              return get(this.extension, 'summery.representative', 'userName')
             },
             threshold() {
                 let show = true;
