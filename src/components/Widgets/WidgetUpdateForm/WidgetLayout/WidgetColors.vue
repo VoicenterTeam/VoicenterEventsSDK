@@ -13,7 +13,7 @@
                     {{ $t('widget.settings.color.' + option) }}
                 </span>
                 <color-picker
-                    class="mx-2 mt-1"
+                    class="mx-2 mt-1-5"
                     show-alpha
                     v-model="model.colors[option]"
                     :predefine="predefinedColors"/>
