@@ -11,7 +11,7 @@
             <transition-group name="flip-list">
                 <template v-if="!templateForDetailedView">
                     <el-form class="flex flex-row items-center my-8"
-                        key="el-form">
+                             key="el-form">
                         <div class="flex flex-col lg:flex-row lg:items-center">
                             <label class="label-input">
                                 {{ $t('Set the Name') }}
@@ -33,7 +33,7 @@
                         </div>
                     </el-form>
                     <div class="grid grid-cols-4 col-gap-5"
-                        key="TemplateCategories">
+                         key="TemplateCategories">
                         <TemplateCategories class="col-span-1"
                                             key="categories"
                                             :categories="dashboardTemplateCategories"
@@ -41,6 +41,7 @@
                         <fade-transition mode="out-in" :duration="transitionDuration">
                             <TemplatesPreview class="col-span-3"
                                               key="TemplatesPreview"
+                                              @on-submit="tryAddDashboard"
                                               @on-detailed-view="onDetailedView"
                                               v-if="dashboardTemplateCategory"
                                               :dashboard-category="selectedCategory"/>
@@ -49,7 +50,7 @@
                 </template>
                 <template v-else>
                     <TemplateDetailedPreview key="to-preview"
-                        :template="templateForDetailedView"/>
+                                             :template="templateForDetailedView"/>
                 </template>
             </transition-group>
         </div>
@@ -66,7 +67,7 @@
                 </base-button>
                 <base-button fixed-width="w-37"
                              :loading="loading"
-                             @click="onSubmit">
+                             @click="tryAddDashboard">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
@@ -74,6 +75,30 @@
                 </base-button>
             </div>
         </div>
+        <ConfirmDialog :visible.sync="showConfirmDialog"
+                       title="Add Dashboard"
+                       description="Please confirm you action?"
+        >
+            <template v-slot:footer-actions>
+                <slot name="footer-actions">
+                    <base-button class="mx-4"
+                                 @click="showConfirmDialog = false"
+                                 variant="discard"
+                                 fixed-width="w-37">
+                        <div class="flex items-center">
+                            <IconDiscard class="mx-1"/>
+                            <span class="mx-1 text-base font-bold">
+                                {{ 'Cancel' }}
+                            </span>
+                        </div>
+                    </base-button>
+                    <base-button @click="onSubmit"
+                                 key="store">
+                        {{ $t('Confirm') }}
+                    </base-button>
+                </slot>
+            </template>
+        </ConfirmDialog>
     </div>
 </template>
 <script>
@@ -84,6 +109,7 @@
     import { templateApi } from '@/api/templateApi'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import LayoutSelect from '@/views/common/LayoutSelect'
+    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import { getLayoutsWithPrimaryColor } from '@/helpers/layoutUtil'
     import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
     import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
@@ -94,6 +120,7 @@
             TemplateDetailedPreview,
             TemplateCategories,
             TemplatesPreview,
+            ConfirmDialog,
             LayoutSelect,
             NavBar,
         },
@@ -109,6 +136,7 @@
                 dashboardTemplateCategories: [],
                 dashboardTemplateCategory: null,
                 templateForDetailedView: false,
+                showConfirmDialog: false,
             }
         },
         computed: {
@@ -153,8 +181,12 @@
             onCancel() {
                 return this.$router.push('/')
             },
+            tryAddDashboard() {
+              this.showConfirmDialog = true
+            },
             async onSubmit() {
                 this.loading = true
+                this.showConfirmDialog = false
                 await this.$store.dispatch('dashboards/createDashboard', {
                     ...this.model,
                     AccountID: this.currentAccountId,
@@ -193,6 +225,7 @@
         left: 0%;
     }
 }
+
 .flip-list-move {
     transition: transform 0.5s;
 }
