@@ -45,6 +45,9 @@
             categories: {
                 immediate: true,
                 handler(options) {
+                    if(!options[0]) {
+                        return
+                    }
                     this.$nextTick(() => {
                         this.onChooseCategory(options[0])
                     })

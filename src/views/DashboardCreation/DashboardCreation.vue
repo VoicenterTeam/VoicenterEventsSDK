@@ -131,6 +131,10 @@
     import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
     import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
     import TemplateDetailedPreview from '@/views/DashboardCreation/components/TemplateDetailedPreview'
+    import { widgetGroupModel } from '@/models/instances'
+    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
+    import { DashboardApi } from '@/api/dashboardApi'
+    import { WidgetApi } from '@/api/widgetApi'
     
     export default {
         components: {
@@ -152,7 +156,7 @@
                 accountLayouts: [],
                 dashboardTemplateCategories: [],
                 dashboardTemplateCategory: null,
-                selectedTemplate: {},
+                selectedTemplate: false,
                 showConfirmDialog: false,
                 onViewTemplate: false,
             }
@@ -176,7 +180,7 @@
                 this.$router.push('/')
             },
             onDiscard() {
-                this.selectedTemplate = {}
+                this.selectedTemplate = false
                 this.onViewTemplate = false
             },
             onChoseLayout(layout) {
@@ -192,7 +196,7 @@
             },
             onChooseCategory(category) {
                 this.dashboardTemplateCategory = category
-                this.selectedTemplate = {}
+                this.selectedTemplate = false
                 this.onViewTemplate = false
             },
             async getDashboardTemplates() {
@@ -214,14 +218,48 @@
                 this.showConfirmDialog = true
             },
             async onSubmit() {
-                this.loading = true
-                this.showConfirmDialog = false
-                await this.$store.dispatch('dashboards/createDashboard', {
-                    ...this.model,
-                    AccountID: this.currentAccountId,
-                })
-                Notification.success(i18n.t('Dashboard added with success.'))
-                this.loading = false
+                try {
+                    this.loading = true
+                    this.showConfirmDialog = false
+                    
+                    const dashboard = await DashboardApi.store({
+                        ...this.model,
+                        AccountID: this.currentAccountId,
+                    })
+                    this.$store.dispatch('dashboards/getDashboards')
+                    await this.$store.dispatch('dashboards/selectDashboard', dashboard)
+                    await this.addEntities(dashboard.DashboardID)
+                    
+                    Notification.success('Dashboard added with success.')
+                } catch (e) {
+                    console.warn(e)
+                    Notification.error('Something went wrong please try again.')
+                } finally {
+                    this.loading = false
+                }
+            },
+            async addEntities(DashboardID) {
+                if (!this.selectedTemplate.WidgetTemplateList) {
+                    return
+                }
+                
+                let widgetList = []
+                const widgets = this.selectedTemplate.WidgetTemplateList
+                
+                for (let i = 0; i < widgets.length; i++) {
+                    const payload = {
+                        ...widgets[i],
+                        TemplateID: widgets[i]['WidgetTemplateID'],
+                    }
+                    const newWidget = await WidgetApi.store(payload)
+                    widgetList.push(newWidget)
+                }
+                
+                let newGroup = { ...widgetGroupModel }
+                newGroup['WidgetList'] = widgetList
+                
+                const { WidgetGroupID } = await WidgetGroupsApi.store(newGroup)
+                await DashboardApi.addWidgetGroup(DashboardID, +WidgetGroupID)
             },
             newDashboard() {
                 this.getAccountLayouts()

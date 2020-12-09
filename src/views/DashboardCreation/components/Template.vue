@@ -31,10 +31,7 @@
                 type: Object,
                 default: () => ({}),
             },
-            selectedTemplate: {
-                type: Object,
-                default: () => ({}),
-            },
+            selectedTemplate: [Object, Boolean],
         },
         methods: {
             onDetailedView(template) {
