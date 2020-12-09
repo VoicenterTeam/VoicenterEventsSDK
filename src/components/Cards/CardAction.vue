@@ -1,5 +1,5 @@
 <template>
-    <div class="relative px-2 py-1-5 rounded hover:bg-primary-100 cursor-pointer shadow-base"
+    <div class="relative px-2 py-1-5 rounded hover:bg-primary-100 cursor-pointer"
          @click.stop="triggerMenu"
          :class="{'bg-primary-100': showActionsMenu}">
         <IconOptions class="w-1 h-3 text-gray-500 hover:text-primary"/>
