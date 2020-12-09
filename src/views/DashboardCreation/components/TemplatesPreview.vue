@@ -13,6 +13,7 @@
                 <Template v-for="(template, index) in dashboardCategory.DashboardTemplateList"
                           :key="`template-${index}`"
                           v-on="$listeners"
+                          v-bind="$attrs"
                           :template="template"
                 />
             </div>

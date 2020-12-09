@@ -16,10 +16,10 @@
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect width="1" height="88" fill="#EBEBEB"/>
                             </svg>
-                        </span>
-                            <span class="text-xl font-bold text-gray-900">
-                            {{ $t('Dashboard Settings') }}
-                        </span>
+                            </span>
+                                <span class="text-xl font-bold text-gray-900">
+                                {{ $t('Dashboard Settings') }}
+                            </span>
                         </div>
                         <div class="flex flex-row items-center">
                             <base-button class="mx-4"

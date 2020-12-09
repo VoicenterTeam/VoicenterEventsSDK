@@ -73,7 +73,9 @@
                         </div>
                         <div class="flex flex-col">
                             <div class="flex items-center mb-2">
-                                <IconTimer class="text-primary"/>
+                                <i>
+                                    <IconTimer class="text-primary"/>
+                                </i>
                                 <span class="mx-1">{{ $t('Time Settings') }}</span>
                             </div>
                             <div class="text-xs text-gray-900">

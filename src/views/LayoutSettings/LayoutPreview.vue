@@ -152,7 +152,6 @@
             },
         },
         mounted() {
-            console.log('handleDragToScroll')
             document.addEventListener('keyup', this.handleEscape)
             this.handleDragToScroll()
         },

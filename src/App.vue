@@ -20,7 +20,7 @@ export default {
         await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
         await this.$store.dispatch('dashboards/selectDashboard')
         await this.$store.dispatch('layout/setupActiveLayout')
-        this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
+        await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
         this.$store.dispatch('layout/setupLayouts')
         this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
     },

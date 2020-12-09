@@ -3,7 +3,7 @@
         <div class="overflow-hidden h-8 w-full bg-transparent px-4" v-if="onFullScreen">
             <div @click="triggerFullScreenMode"
                  :class="$rtl.isRTL ? 'mr-auto' : 'right-0'"
-                 class="flex w-full justify-end items-center cursor-pointer h-10 focus:outline-none text-gray-550 hover:text-primary">
+                 class="flex w-full justify-end items-center cursor-pointer h-8 focus:outline-none text-gray-550 hover:text-primary">
                 <IconExitFullScreen class="mx-2"/>
                 {{ $t('Exit Full Screen') }}
             </div>
@@ -26,12 +26,13 @@
              v-loading="loadingData"
              :key="activeLanguage">
             <div class="dashboard-container min-h-screen mb-10"
-                 v-if="dashboard">
+                 v-if="dashboard"
+            >
                 <fade-transition :duration="150" mode="out-in">
-                    <sidebar v-if="(showTabs || editMode) && !onFullScreen"
+                    <sidebar v-if="(showTabs || editMode) && showSidebar"
                              :active-tab="activeTab"
                              :widget-group-list="activeDashboardData.WidgetGroupList"
-                             @switch-tab="(tab) => switchTab(tab, resetProgress)"
+                             @switch-tab="(tab) => switchTab(tab)"
                              @add-new-group="addNewGroup"
                              :show-tabs="showTabs"
                              :edit-mode="editMode"
@@ -41,8 +42,13 @@
                              @on-remove-widget-group="(widgetGroup) => tryRemoveWidgetGroup(widgetGroup)"
                     />
                 </fade-transition>
-                <div class="p-2"
-                     :class="{'p-2 md:p-6': !onFullScreen}"
+                <div class="flex w-full justify-center cursor-pointer hover:text-primary"
+                     @click="toggleSidebarState"
+                     v-if="showTabs">
+                    <IconMinimize/>
+                </div>
+                <div class="p-1"
+                     :class="{'px-2 md:p-6': !onFullScreen}"
                      :key="activeDashboardData.DashboardID">
                     <fade-transition :duration="250" mode="out-in">
                         <component :active-tab="activeTab"
@@ -132,6 +138,7 @@
                 groupToEdit: null,
                 storingData: false,
                 onFullScreen: false,
+                showSidebar: true,
             }
         },
         computed: {
@@ -204,14 +211,11 @@
             saveActiveTab(tab) {
                 localStorage.setItem(ACTIVE_WIDGET_GROUP_KEY, tab)
             },
-            switchTab(tab, resetProgress) {
+            switchTab(tab) {
                 this.loading = true
                 this.activeTab = tab
                 this.saveActiveTab(tab)
                 this.loading = false
-                if (resetProgress) {
-                    this.resetProgress()
-                }
             },
             triggerFullScreenMode() {
                 this.onFullScreen = !this.onFullScreen
@@ -240,6 +244,9 @@
                     this.activeDashboardData = dashboard
                 } catch (e) {
                 }
+            },
+            toggleSidebarState() {
+                this.showSidebar = !this.showSidebar
             },
         },
         created() {
@@ -291,4 +298,5 @@
 .transition {
     transition: all 0.3s ease-in;
 }
+
 </style>

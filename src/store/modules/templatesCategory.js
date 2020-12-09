@@ -31,7 +31,7 @@ const actions = {
 
 const getters = {
     getHelpByWidgetsTemplateID: state => TemplateID => {
-        return state.allWidgetTemplates.find(t => t.TemplateID.toString() === TemplateID.toString())
+        return state.dictionaries.find(t => t.TemplateID.toString() === TemplateID.toString())
     },
 }
 

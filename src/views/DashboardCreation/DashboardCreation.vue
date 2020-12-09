@@ -1,15 +1,27 @@
 <template>
-    <div class="w-full flex flex-col min-h-screen relative dashboard-creation"
-         v-loading="loading">
+    <div class="w-full flex flex-col min-h-screen relative dashboard-creation">
         <NavBar/>
         <div class="absolute h-0-25 w-full bg-gray-300 mt-39"/>
         <div class="flex-1 overflow-auto px-4 lg:px-32 xl:px-64"
              :class="{'opacity-50': loading}">
-            <div class="items-center flex justify-start h-23 text-2xl text-gray-950 leading-7">
-                {{ $t('Dashboard Creation') }}
+            <div class="flex items-center -mx-24">
+                <div @click="onBack()"
+                     class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
+                    <IconDirLeft/>
+                    <span class="mx-1">{{ $t('Back') }}</span>
+                </div>
+                <span class="mx-8">
+                    <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <rect width="1" height="88" fill="#EBEBEB"/>
+                    </svg>
+                </span>
+                <span class="text-xl font-bold text-gray-900">
+                    {{ $t('Dashboard Creation') }}
+                </span>
             </div>
-            <transition-group name="flip-list">
-                <template v-if="!templateForDetailedView">
+            <transition-group name="flip">
+                <template v-if="!onViewTemplate">
                     <el-form class="flex flex-row items-center my-8"
                              key="el-form">
                         <div class="flex flex-col lg:flex-row lg:items-center">
@@ -38,10 +50,13 @@
                                             key="categories"
                                             :categories="dashboardTemplateCategories"
                                             @on-choose-category="onChooseCategory"/>
-                        <fade-transition mode="out-in" :duration="transitionDuration">
+                        <fade-transition mode="out-in"
+                                         :duration="transitionDuration">
                             <TemplatesPreview class="col-span-3"
                                               key="TemplatesPreview"
                                               @on-submit="tryAddDashboard"
+                                              :selected-template="selectedTemplate"
+                                              @on-select-template="onSelectTemplate"
                                               @on-detailed-view="onDetailedView"
                                               v-if="dashboardTemplateCategory"
                                               :dashboard-category="selectedCategory"/>
@@ -50,23 +65,24 @@
                 </template>
                 <template v-else>
                     <TemplateDetailedPreview key="to-preview"
-                                             :template="templateForDetailedView"/>
+                                             :template="selectedTemplate"/>
                 </template>
             </transition-group>
         </div>
         <div class="border-t border-gray-300 flex w-full items-center h-23-5">
             <div class="mx-4 lg:mx-32 xl:mx-64 flex w-full justify-between items-center">
                 <base-button class="mx-4"
-                             @click="onCancel"
+                             @click="onDiscard"
                              variant="discard"
                 >
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"
                              :loading="loading"
+                             :disabled="!selectedTemplate"
                              @click="tryAddDashboard">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
@@ -93,6 +109,7 @@
                         </div>
                     </base-button>
                     <base-button @click="onSubmit"
+                                 fixed-width="w-37"
                                  key="store">
                         {{ $t('Confirm') }}
                     </base-button>
@@ -135,8 +152,9 @@
                 accountLayouts: [],
                 dashboardTemplateCategories: [],
                 dashboardTemplateCategory: null,
-                templateForDetailedView: false,
+                selectedTemplate: {},
                 showConfirmDialog: false,
+                onViewTemplate: false,
             }
         },
         computed: {
@@ -144,7 +162,7 @@
                 return this.dashboardTemplateCategories.find(category => category.DashboardTemplateCategoryID.toString() === this.dashboardTemplateCategory.DashboardTemplateCategoryID.toString())
             },
             dashboardLayoutID() {
-                return get(this.activeDashboard, 'DashboardLayoutID', DEFAULT_LAYOUT_ID);
+                return get(this.activeDashboard, 'DashboardLayoutID', DEFAULT_LAYOUT_ID)
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
@@ -154,14 +172,28 @@
             },
         },
         methods: {
+            onBack() {
+                this.$router.push('/')
+            },
+            onDiscard() {
+                this.selectedTemplate = {}
+                this.onViewTemplate = false
+            },
             onChoseLayout(layout) {
                 this.model.DashboardLayoutID = layout.LayoutID
             },
+            onSelectTemplate(template) {
+                this.selectedTemplate = template
+                this.model.DashboardTemplateID = template.DashboardTemplateID
+            },
             onDetailedView(template) {
-                this.templateForDetailedView = template
+                this.onViewTemplate = !this.onViewTemplate
+                return this.onSelectTemplate(template)
             },
             onChooseCategory(category) {
                 this.dashboardTemplateCategory = category
+                this.selectedTemplate = {}
+                this.onViewTemplate = false
             },
             async getDashboardTemplates() {
                 try {
@@ -178,11 +210,8 @@
                     console.warn(e)
                 }
             },
-            onCancel() {
-                return this.$router.push('/')
-            },
             tryAddDashboard() {
-              this.showConfirmDialog = true
+                this.showConfirmDialog = true
             },
             async onSubmit() {
                 this.loading = true
@@ -216,17 +245,5 @@
 <style lang="scss" scoped>
 .label-input {
     @apply whitespace-no-wrap text-gray-900 text-main-sm font-medium truncate;
-}
-
-.dashboard-creation ::v-deep {
-    .el-loading-mask {
-        position: absolute;
-        height: 100%;
-        left: 0%;
-    }
-}
-
-.flip-list-move {
-    transition: transform 0.5s;
 }
 </style>

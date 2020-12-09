@@ -42,10 +42,13 @@
             },
         },
         watch: {
-            categories(options) {
-                this.$nextTick(() => {
-                    this.selectedCategory = get(options, '[0].DashboardTemplateCategoryID')
-                })
+            categories: {
+                immediate: true,
+                handler(options) {
+                    this.$nextTick(() => {
+                        this.onChooseCategory(options[0])
+                    })
+                },
             },
         },
     }
