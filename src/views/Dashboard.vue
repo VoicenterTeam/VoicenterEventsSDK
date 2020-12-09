@@ -42,7 +42,7 @@
                              @on-remove-widget-group="(widgetGroup) => tryRemoveWidgetGroup(widgetGroup)"
                     />
                 </fade-transition>
-                <div class="flex w-full justify-center cursor-pointer hover:text-primary"
+                <div class="flex w-full justify-center cursor-pointer text-gray-600 hover:text-primary"
                      @click="toggleSidebarState"
                      v-if="showTabs">
                     <IconMinimize/>
