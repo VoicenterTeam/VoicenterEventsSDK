@@ -1,17 +1,20 @@
 <template>
     <div class="navbar-wrapper px-4 lg:px-12">
-        <nav class="navbar h-16 w-full py-3 flex items-center justify-between z-10">
-            <div class="flex items-center h-16">
+        <nav
+            class="navbar h-auto lg:h-16 w-full xl:py-3 items-center justify-between z-10 hidden sm:flex sm:flex-col lg:flex-row">
+            <div class="flex items-center h-16 sm:justify-between sm:w-full lg:w-auto border-b">
                 <img :src="getLogo"
                      alt="Logo"
                      class="h-10 object-cover">
-                <IconHorisontalLine class="mx-4 lg:mx-12"/>
+                <IconHorisontalLine class="hidden  mx-4 xl:mx-12"/>
                 <DashboardMenu/>
             </div>
-            <div class="flex items-center px-2">
+            <div class="flex items-center px-2 sm:justify-between sm:w-full lg:w-auto">
                 <slot name="dashboard-operations"/>
-                <LanguageSwitcher class="mx-5"/>
-                <AccountMenu/>
+                <div class="flex items-center">
+                    <LanguageSwitcher class="mx-5"/>
+                    <AccountMenu/>
+                </div>
             </div>
         </nav>
     </div>

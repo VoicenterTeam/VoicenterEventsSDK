@@ -62,8 +62,14 @@
                         />
                     </template>
                     <template v-slot:template-preview>
+                        <el-tooltip :content="$t('Template Dictionary')"
+                                    :open-delay="openDelay"
+                                    class="item"
+                                    effect="dark"
+                                    placement="top">
                         <IconInfo class="cursor-help text-steel hover:text-primary"
                                   @click="onPreviewTemplate(template)"/>
+                        </el-tooltip>
                     </template>
                 </TemplateCard>
             </div>
@@ -98,12 +104,13 @@
     import sum from 'lodash/sum'
     import isEmpty from 'lodash/isEmpty'
     import cloneDeep from 'lodash/cloneDeep'
-    import { InputNumber } from 'element-ui'
+    import { InputNumber, Tooltip } from 'element-ui'
     import TemplateCard from '@/components/Widgets/AddWidgetsForm/TemplateCard'
     
     export default {
         components: {
             TemplateCard,
+            [Tooltip.name]: Tooltip,
             [InputNumber.name]: InputNumber,
         },
         props: {
@@ -118,6 +125,7 @@
                 quantities: {},
                 templates: {},
                 summaries: {},
+                openDelay: 200,
             }
         },
         computed: {
@@ -171,7 +179,7 @@
             async onPreviewTemplate(template) {
                 const objectToStore = {
                     template,
-                    data: this.composeSummary()
+                    data: this.composeSummary(),
                 }
                 await this.$store.dispatch('widgetCreation/previewTemplate', objectToStore)
             },

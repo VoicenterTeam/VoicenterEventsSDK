@@ -8,45 +8,45 @@
             </span>
         </portal>
         <portal to="form-title">
-            {{getTemplate.TemplateName}}
+            {{ getTemplate.TemplateName }}
         </portal>
         <div class="grid grid-cols-7 col-gap-4 template-preview"
-         v-loading="loading">
-        <div class="col-span-5 bg-gray-150">
-            <div class="flex items-center justify-center h-full">
-                <div class="w-64 my-20 rounded p-2 relative">
-                    <div v-for="item in templateHelp.Items">
-                        <div class="absolute z-50 cursor-help"
-                             :style="getStyle(item)">
-                            <div class="ellipse-wrapper flex items-center justify-center"
-                                 @mouseover="onEllipseMouseOver(item.ItemNumber)"
-                                 @mouseleave="onEllipseMouseLeave()">
-                                <div
-                                    class="ellipse-outer bg-primary-300 text-white flex items-center justify-center">
-                                    <div class="ellipse-inner text-white flex items-center justify-center">
-                                        <span>{{ item.ItemNumber }}</span>
+             v-loading="loading">
+            <div class="col-span-5 bg-gray-150">
+                <div class="flex items-center justify-center h-full">
+                    <div class="w-64 my-20 rounded p-2 relative">
+                        <div v-for="item in templateHelp.Items">
+                            <div class="absolute z-50 cursor-help"
+                                 :style="getStyle(item)">
+                                <div class="ellipse-wrapper flex items-center justify-center"
+                                     @mouseover="onEllipseMouseOver(item.ItemNumber)"
+                                     @mouseleave="onEllipseMouseLeave()">
+                                    <div
+                                        class="ellipse-outer bg-primary-300 text-white flex items-center justify-center">
+                                        <div class="ellipse-inner text-white flex items-center justify-center">
+                                            <span>{{ item.ItemNumber }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <component :is="templateHelp.WidgetHelpPicture"
+                                   class="w-64 h-48"
+                        />
                     </div>
-                    <component :is="templateHelp.WidgetHelpPicture"
-                               class="w-64 h-48"
-                    />
+                </div>
+            </div>
+            <div class="col-span-2 px-2">
+                <div v-for="item in templateHelp.Items">
+                    <p class="text-gray-800 my-2">{{ item.ItemName }}</p>
+                    <div class="flex break-normal p-1"
+                         :class="{'bg-primary-100 rounded': item.ItemNumber === activeItemNumber}">
+                        <b>{{ item.ItemNumber }}</b>.
+                        <span class="mx-1 text-xs">{{ item.ItemDescription }}</span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-span-2">
-            <div v-for="item in templateHelp.Items">
-                <p class="text-gray-800 my-2">{{ item.ItemName }}</p>
-                <div class="flex break-normal p-1"
-                     :class="{'bg-primary-100 rounded': item.ItemNumber === activeItemNumber}">
-                    <b>{{ item.ItemNumber }}</b>.
-                    <span class="mx-1 text-xs">{{ item.ItemDescription }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 </template>
 <script>

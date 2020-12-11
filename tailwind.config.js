@@ -118,9 +118,10 @@ module.exports = {
             screens: {
                 xs: 0,
                 sm: '640px',
-                md: '769px',
+                md: '767px',
                 lg: '1024px',
                 xl: '1280px',
+                xxl: '1380px',
             },
             lineHeight: {
                 ...defaultTheme.lineHeight,

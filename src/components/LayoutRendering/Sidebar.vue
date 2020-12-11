@@ -30,7 +30,7 @@
                 {{ $t('Edit Mode') }}
             </div>
         </div>
-        <div class="flex items-center px-14">
+        <div class="flex items-center px-14 hidden md:flex">
             <div class="flex items-center">
                 <div @click="addNewGroup"
                      class="w-32 cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7">

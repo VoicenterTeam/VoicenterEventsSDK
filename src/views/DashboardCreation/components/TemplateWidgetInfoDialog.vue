@@ -5,7 +5,7 @@
         <template v-slot:title>
             {{ $t(template.DashboardTemplateName) }}
         </template>
-        <div class="dialog-container grid grid-cols-7">
+        <div class="dialog-container grid grid-cols-7 -mx-4 my-1">
             <div class="col-span-5 bg-gray-150">
                 <div class="flex items-center justify-center h-full">
                     <div class="w-64 my-20 rounded p-2 relative">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-2">
+            <div class="col-span-2 px-2">
                 <div v-for="item in templateHelp">
                     <p class="text-gray-800 my-2">{{ item.ItemName }}</p>
                     <div class="flex break-normal p-1"

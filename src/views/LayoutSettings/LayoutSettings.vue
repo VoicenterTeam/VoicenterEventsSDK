@@ -2,7 +2,7 @@
     <div class="flex w-full flex-col relative layout-settings">
         <div class="w-full flex flex-col relative">
             <NavBar/>
-            <div class="w-full px-4 lg:px-32 xl:px-64 border-b border-gray-300">
+            <div class="w-full px-4 lg:px-20 xl:px-32 xxl:px-64 border-b border-gray-300">
                 <div class="items-center flex justify-between h-23-5 relative">
                     <div class="flex items-center">
                         <IconColorPicker class="w-10 h-10 text-primary"/>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full px-4 mt-6 lg:px-32 xl:px-64">
+            <div class="w-full px-4 mt-6 lg:px-20 xl:px-32 xxl:px-64">
                 <div class="grid grid-cols-5 col-gap-8">
                     <div class="col-span-2">
                         <LayoutWrapper v-model="layoutSettings"/>

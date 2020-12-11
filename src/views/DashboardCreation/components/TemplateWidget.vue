@@ -6,7 +6,7 @@
                            class="text-primary"
                 />
             </i>
-            <div class="flex flex-col mx-1 lg:mx-4">
+            <div class="flex flex-col mx-3 lg:mx-4">
                 <p class="mb-1">
                     {{ $t(widget.DefaultWidgetTitle) }}
                 </p>

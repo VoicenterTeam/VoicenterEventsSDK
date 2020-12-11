@@ -1,14 +1,14 @@
 <template>
     <div class="navbar-wrapper px-4 lg:px-12">
         <nav class="navbar h-16 w-full py-3 flex items-center justify-between z-10">
-            <div class="flex items-center h-16 cursor-pointer">
+            <div class="flex items-center h-16 cursor-pointer hidden md:flex">
                 <img :src="getLogo"
                      @click="onClickLogo"
                      alt="Logo"
                      class="h-10 object-cover">
             </div>
-            <div class="flex items-center">
-                <LanguageSwitcher class="mx-6"/>
+            <div class="flex items-center justify-between w-full">
+                <LanguageSwitcher class="md:mx-6"/>
                 <AccountMenu class="mx-0"/>
             </div>
         </nav>

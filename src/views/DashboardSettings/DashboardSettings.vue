@@ -2,10 +2,10 @@
     <div class="flex w-full flex-col dashboard-settings">
         <div class="w-full flex flex-col relative">
             <NavBar/>
-            <div class="w-full px-4 lg:px-32 xl:px-64 border-b border-gray-300">
+            <div class="w-full px-4 lg:px-32 xxl:px-64 border-b border-gray-300">
                 <slot>
                     <div class="items-center flex justify-between h-23-5">
-                        <div class="flex items-center -mx-24">
+                        <div class="flex items-center xl:-mx-24 w-full">
                             <div @click="onDiscard(true)"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                                 <IconDirLeft/>
@@ -17,11 +17,32 @@
                                 <rect width="1" height="88" fill="#EBEBEB"/>
                             </svg>
                             </span>
+                            <div class="flex flex-col w-full flex-1">
                                 <span class="text-xl font-bold text-gray-900">
-                                {{ $t('Dashboard Settings') }}
-                            </span>
+                                    {{ $t('Dashboard Settings') }}
+                                </span>
+                                <div class="flex justify-end w-full md:hidden">
+                                    <base-button class="mx-4"
+                                                 @click="onDiscard()"
+                                                 variant="discard"
+                                                 fixed-width="w-37">
+                                        <div class="flex items-center">
+                                            <IconDiscard class="mx-1"/>
+                                            <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
+                                        </div>
+                                    </base-button>
+                                    <base-button fixed-width="w-37"
+                                                 :loading="loading"
+                                                 @click="onSubmit()">
+                                        <div class="flex items-center">
+                                            <IconSave class="mx-1"/>
+                                            <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
+                                        </div>
+                                    </base-button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex flex-row items-center">
+                        <div class="flex-row items-center hidden md:flex">
                             <base-button class="mx-4"
                                          @click="onDiscard()"
                                          variant="discard"
@@ -43,7 +64,7 @@
                     </div>
                 </slot>
             </div>
-            <div class="w-full px-4 mt-6 lg:px-32 xl:px-64">
+            <div class="w-full px-4 mt-6 lg:px-32 xxl:px-64">
                 <DashboardSettings v-model="model"
                                    :current-dashboard="currentDashboard"/>
             </div>

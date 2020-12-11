@@ -88,8 +88,10 @@
                 type: Boolean,
                 default: true,
             },
-            width: String,
-            fullscreen: Boolean,
+            width: {
+                type: String,
+                default: '60%'
+            },
             customClass: {
                 type: String,
                 default: '',
@@ -109,6 +111,7 @@
             return {
                 closed: false,
                 key: 0,
+                fullscreen: false,
             };
         },
         watch: {
@@ -133,6 +136,15 @@
                     }
                 }
             },
+            isSmallScreen: {
+                immediate: true,
+                handler(value) {
+                    this.fullscreen = value
+                    this.$nextTick(() => {
+                        this.key++;
+                    })
+                },
+            },
         },
         computed: {
             style() {
@@ -145,6 +157,12 @@
                 }
                 style.borderRadius = '0.375rem'
                 return style;
+            },
+            isSmallScreen() {
+                return this.$store.getters['utils/isSmallScreen']
+            },
+            pageWidth() {
+                return this.$store.getters['utils/pageWidth']
             },
         },
         methods: {
@@ -199,7 +217,7 @@
                 this.$el.parentNode.removeChild(this.$el);
             }
         },
-    };
+    }
 </script>
 <style>
 .modal-header__wrapper {

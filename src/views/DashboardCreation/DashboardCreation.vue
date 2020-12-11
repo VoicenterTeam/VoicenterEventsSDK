@@ -2,9 +2,9 @@
     <div class="w-full flex flex-col min-h-screen relative dashboard-creation">
         <NavBar/>
         <div class="absolute h-0-25 w-full bg-gray-300 mt-39"/>
-        <div class="flex-1 overflow-auto px-4 lg:px-32 xl:px-64"
+        <div class="flex-1 overflow-auto px-4 xl:px-32 xxl:px-64"
              :class="{'opacity-50': loading}">
-            <div class="flex items-center -mx-24">
+            <div class="flex items-center xl:-mx-24">
                 <div @click="onBack()"
                      class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                     <IconDirLeft/>
@@ -49,7 +49,8 @@
                         <TemplateCategories class="col-span-1"
                                             key="categories"
                                             :categories="dashboardTemplateCategories"
-                                            @on-choose-category="onChooseCategory"/>
+                                            @on-choose-category="onChooseCategory"
+                        />
                         <fade-transition mode="out-in"
                                          :duration="transitionDuration">
                             <TemplatesPreview class="col-span-3"
@@ -120,21 +121,21 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import i18n from '@/i18n'
     import { Notification } from 'element-ui'
     import NavBar from '@/views/common/NavBar'
+    import { WidgetApi } from '@/api/widgetApi'
     import { templateApi } from '@/api/templateApi'
+    import { DashboardApi } from '@/api/dashboardApi'
+    import pageSizeMixin from '@/mixins/pageSizeMixin'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
+    import { widgetGroupModel } from '@/models/instances'
+    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
     import LayoutSelect from '@/views/common/LayoutSelect'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import { getLayoutsWithPrimaryColor } from '@/helpers/layoutUtil'
     import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
     import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
     import TemplateDetailedPreview from '@/views/DashboardCreation/components/TemplateDetailedPreview'
-    import { widgetGroupModel } from '@/models/instances'
-    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
-    import { DashboardApi } from '@/api/dashboardApi'
-    import { WidgetApi } from '@/api/widgetApi'
     
     export default {
         components: {
@@ -145,6 +146,7 @@
             LayoutSelect,
             NavBar,
         },
+        mixins: [pageSizeMixin],
         data() {
             return {
                 transitionDuration: 250,

@@ -42,10 +42,10 @@
             </div>
         </div>
         <div class="grid grid-cols-4 col-gap-12 mt-12">
-            <div class="col-span-1">
+            <div class="col-span-4 md:col-span-1 mb-4 md:mb-0">
                 <LayoutManagementSelect/>
             </div>
-            <div class="col-span-3">
+            <div class="col-span-4 md:col-span-3">
                 <div class="shadow-base w-full px-5 py-4 rounded-lg"
                      v-if="activeLayout">
                     <div class="flex justify-between">

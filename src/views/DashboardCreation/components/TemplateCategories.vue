@@ -1,24 +1,29 @@
 <template>
-    <div class="w-64">
+    <div class="xl:w-64">
         <div v-for="category in categories"
              @click="onChooseCategory(category)"
              class="w-full h-12 p-4 flex items-center category-wrapper mb-2 mx-1 hover:text-primary cursor-pointer"
              :class="category.DashboardTemplateCategoryID == selectedCategoryID ? 'text-primary border border-primary': 'text-steel'">
             <component :is="fillCategoryIcon(category)"
                        class="w-4 h-4"/>
-            <span class="mx-2 truncate">
-                {{ $t(category.DashboardTemplateCategoryName) }}
-            </span>
+            <el-tooltip :content="$t(category.DashboardTemplateCategoryName)"
+                        :open-delay="200"
+                        placement="top">
+                <span class="mx-2 truncate">
+                    {{ $t(category.DashboardTemplateCategoryName) }}
+                </span>
+            </el-tooltip>
         </div>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
+    import { Tooltip } from 'element-ui'
     import Template from '@/views/DashboardCreation/components/Template'
     
     export default {
         components: {
             Template,
+            [Tooltip.name]: Tooltip,
         },
         props: {
             categories: {
@@ -45,7 +50,7 @@
             categories: {
                 immediate: true,
                 handler(options) {
-                    if(!options[0]) {
+                    if (!options[0]) {
                         return
                     }
                     this.$nextTick(() => {
