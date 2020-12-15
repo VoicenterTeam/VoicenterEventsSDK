@@ -108,12 +108,7 @@ import ExportDataDialog from './ExportData'
 import { makeRandomID } from '@/helpers/util'
 import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
 import { format } from 'date-fns'
-
-const DATE_COLUMNS = ['date']
-const DATE_TIME_COLUMNS = ['date time', 'date & time', 'call time', 'contacted time', 'starttime', 'endtime']
-
-const DATE_FORMAT = 'dd-MM-yyyy'
-const DATE_TIME_FORMAT = 'HH:mm:ss dd-MM-yyyy'
+import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
 
 const QUEUE_STATISTICS_TEMPLATE = 45
 
