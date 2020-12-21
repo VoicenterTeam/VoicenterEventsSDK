@@ -15,7 +15,7 @@
             <el-option v-if="multiple && data.length" :label="$t('select.clear')" :disabled="noValueSelected" value="none"/>
             <el-option v-for="(option, key) in data"
                        :key="key"
-                       :label="option[labelKey]"
+                       :label="composeLabel(option)"
                        :value="option[valueKey]"/>
         </slot>
     </el-select>
@@ -50,6 +50,10 @@
                 type: String,
                 default: 'label'
             },
+            secondLabelKey: {
+                type: String,
+                default: 'second_label'
+            },
             valueKey: {
                 type: String,
                 default: 'value'
@@ -74,6 +78,12 @@
             }
         },
         methods: {
+            composeLabel(option) {
+                if (!this.secondLabelKey) {
+                    return option[this.labelKey]
+                }
+                return `${option[this.labelKey]} (${option[this.secondLabelKey]})`
+            },
             onChange(value) {
                 if (this.multiple && Array.isArray(value)) {
                     if (value.includes('all')) {
