@@ -1,4 +1,3 @@
-import io from 'socket.io-client/socket.io';
 import debounce from 'lodash/debounce';
 
 function _typeof(obj) {
@@ -525,6 +524,23 @@ async function refreshToken(url, oldRefreshToken) {
   return res.json();
 }
 
+function loadExternalScript(url) {
+  return new Promise(function (resolve) {
+    var script = document.createElement('script');
+    script.src = url;
+
+    script.onload = function () {
+      resolve();
+    };
+
+    script.onerror = function () {
+      reject();
+    };
+
+    document.body.append(script);
+  });
+}
+
 var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
   fallbackServer: {
@@ -600,6 +616,13 @@ function () {
     key: "getLastEventTimestamp",
     value: function getLastEventTimestamp() {
       return this._lastEventTimestamp;
+    }
+  }, {
+    key: "_reSync",
+    value: function _reSync() {
+      this.emit(eventTypes.RESYNC, {
+        cache: false
+      });
     }
   }, {
     key: "_registerExtensionsModule",
@@ -744,6 +767,10 @@ function () {
   }, {
     key: "_onLoginResponse",
     value: async function _onLoginResponse(data) {
+      if (data.Client) {
+        await loadExternalScript(data.Client);
+      }
+
       if (data.URL) {
         this.server = {
           Priority: 0,
@@ -868,7 +895,7 @@ function () {
         };
       }
 
-      this.socket = io(url, options);
+      this.socket = window.io(url, options);
       allConnections.push(this.socket);
       this.connectionEstablished = true;
     }
@@ -981,28 +1008,6 @@ function () {
       // Ignore server fetch if we have a list of servers passed via options
       if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
         this.servers = this.argumentOptions.servers;
-        return;
-      }
-
-      if (this.options.useLoginApi) {
-        return;
-      }
-
-      try {
-        var params = {};
-
-        if (this.options.serverType) {
-          params.type = this.options.serverType;
-        }
-
-        if (!this.token) {
-          return;
-        }
-
-        var res = await fetch("".concat(this.options.url, "/").concat(this.token), params);
-        this.servers = await res.json();
-      } catch (e) {
-        this.servers = this.argumentOptions.servers || defaultServers;
       }
     }
   }, {
@@ -1028,7 +1033,7 @@ function () {
         }
       });
 
-      var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._retryConnection), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
+      var eventMappings = (_eventMappings = {}, _defineProperty(_eventMappings, eventTypes.RECONNECT_ATTEMPT, this._onReconnectAttempt), _defineProperty(_eventMappings, eventTypes.RECONNECT_FAILED, this._onReconnectFailed), _defineProperty(_eventMappings, eventTypes.CONNECT, this._onConnect), _defineProperty(_eventMappings, eventTypes.DISCONNECT, this._onDisconnect), _defineProperty(_eventMappings, eventTypes.ERROR, this._onError), _defineProperty(_eventMappings, eventTypes.CONNECT_ERROR, this._onConnectError), _defineProperty(_eventMappings, eventTypes.CONNECT_TIMEOUT, this._onConnectTimeout), _defineProperty(_eventMappings, eventTypes.KEEP_ALIVE_RESPONSE, this._onKeepAlive), _defineProperty(_eventMappings, eventTypes.LOGIN_RESPONSE, this._onLoginResponse), _defineProperty(_eventMappings, eventTypes.EXTENSION_UPDATED, this._reSync), _defineProperty(_eventMappings, eventTypes.QUEUES_UPDATED, this._reSync), _defineProperty(_eventMappings, eventTypes.DIALERS_UPDATED, this._reSync), _defineProperty(_eventMappings, eventTypes.LOGIN_STATUS, function () {
         if (!_this3.connected) {
           _this3._onConnect();
         }
@@ -1062,11 +1067,8 @@ function () {
       }
 
       await this._getToken();
+      await this.login(this.options.loginType);
       await this._getServers();
-      await this._connect();
-
-      this._initReconnectDelays();
-
       return true;
     }
     /**
@@ -1204,53 +1206,18 @@ function () {
         return Promise.resolve();
       }
 
-      var _self = this;
-
-      this._checkInit();
-
-      var resolved = false;
       this._lastLoginTimestamp = new Date().getTime();
       return new Promise(async function (resolve, reject) {
-        _this4.on(eventTypes.LOGIN_STATUS, function (data) {
-          if (_self.onLogin) _self.onLogin(data);
-          resolved = true;
-          resolve(data);
-        });
-
-        _this4.socket.on(eventTypes.ERROR, function (err) {
-          if (_self.onError) _self.onError(err);
-
-          if (resolved === false) {
-            reject(err);
-          }
-        });
-
         try {
-          if (type === 'token' && !_this4.options.useLoginApi) {
-            _this4.emit(eventTypes.LOGIN, {
-              token: _this4.options.token
-            });
-
-            return;
-          }
-
           var url = getExternalLoginUrl(_this4.options.loginUrl, type);
-
-          if (type === 'token' || type === 'user' || type === 'account') {
-            var res = await externalLogin(url, {
-              token: _this4.options.token,
-              email: _this4.options.email,
-              username: _this4.options.username,
-              password: _this4.options.password
-            });
-            await _this4._onLoginResponse(res);
-            resolve(res);
-          } else if (type === 'code') {
-            _this4.emit(eventTypes.LOGIN_CODE, {
-              code: _this4.options.code,
-              orgCode: _this4.options.organizationCode
-            });
-          }
+          var res = await externalLogin(url, {
+            token: _this4.options.token,
+            email: _this4.options.email,
+            username: _this4.options.username,
+            password: _this4.options.password
+          });
+          await _this4._onLoginResponse(res);
+          resolve(res);
         } catch (err) {
           _this4.servers = _this4.argumentOptions.servers || defaultServers;
           reject(err);
