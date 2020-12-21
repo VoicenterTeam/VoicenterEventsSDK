@@ -70,11 +70,15 @@ class EventsSDK {
     this._registerExtensionsModule();
     this._registerQueueModule();
   }
-
+  
   getLastEventTimestamp() {
     return this._lastEventTimestamp
   }
-
+  _reSync () {
+    this.emit(eventTypes.RESYNC, {
+      cache: false
+    });
+  }
   _registerExtensionsModule() {
     const moduleName = this.options.extensionsModuleName || 'sdkExtensions'
     if (!this._validateStoreModule(moduleName)) {
@@ -399,9 +403,9 @@ class EventsSDK {
       [eventTypes.CONNECT_TIMEOUT]: this._onConnectTimeout,
       [eventTypes.KEEP_ALIVE_RESPONSE]: this._onKeepAlive,
       [eventTypes.LOGIN_RESPONSE]: this._onLoginResponse,
-      [eventTypes.EXTENSION_UPDATED]: this._retryConnection,
-      [eventTypes.QUEUES_UPDATED]: this._retryConnection,
-      [eventTypes.DIALERS_UPDATED]: this._retryConnection,
+      [eventTypes.EXTENSION_UPDATED]: this._reSync,
+      [eventTypes.QUEUES_UPDATED]: this._reSync,
+      [eventTypes.DIALERS_UPDATED]: this._reSync,
       [eventTypes.LOGIN_STATUS]: () => {
         if (!this.connected) {
           this._onConnect()
