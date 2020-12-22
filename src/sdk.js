@@ -331,7 +331,7 @@ class EventsSDK {
   _findCurrentServer() {
     let server = null;
     if (this.servers.length) {
-      server = this.servers[0];
+      server = this._findMaxPriorityServer() || this.servers[0];
     }
     this.server = server;
     if (!this.server) {
@@ -343,27 +343,32 @@ class EventsSDK {
   _findNextAvailableServer() {
     let currentServerPriority = this.server.Priority;
     this.Logger.log(`Failover -> Trying to find another server`);
-    if (currentServerPriority > 0) {
-      let nextServerPriority = currentServerPriority - 1;
-      let nextServer = this.servers.find(server => server.Priority === nextServerPriority);
-      if (!nextServer) {
-        nextServer = this._findMaxPriorityServer();
-        if (!nextServer) {
-          return
-        }
-      }
-      if (this.server.Domain !== nextServer.Domain) {
-        this.server = nextServer;
-        return this.server
-      }
-      this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server);
+    if (currentServerPriority === 0) {
+      return this._findMaxPriorityServer()
     }
+    let nextServerPriority = currentServerPriority - 1
+    let nextServer = this.servers.find(server => server.Priority === nextServerPriority);
+    if (!nextServer) {
+      nextServer = this._findMaxPriorityServer();
+      if (!nextServer) {
+        return
+      }
+    }
+    if (this.server.Domain !== nextServer.Domain) {
+      this.server = nextServer;
+      return this.server
+    }
+    this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server);
     return null
   }
 
   _findMaxPriorityServer() {
     this.Logger.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer');
     let maxPriorityServer = getServerWithHighestPriority(this.servers);
+    if (!this.server) {
+      this.server = maxPriorityServer;
+      return this.server
+    }
     if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
       this.server = maxPriorityServer;
       this.Logger.log(`Fallback -> Trying to find previous server`, this.server);
