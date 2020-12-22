@@ -1,8 +1,9 @@
 export function getServerWithHighestPriority(servers) {
+  // Highest priority server is the one with lowest Priority value
   let chosenServer = null
-  let maxPriority = -1
+  let maxPriority = Number.MAX_SAFE_INTEGER
   servers.forEach(server => {
-    if (server.Priority > maxPriority) {
+    if (server.Priority < maxPriority) {
       maxPriority = server.Priority
       chosenServer = server
     }

@@ -331,7 +331,7 @@ class EventsSDK {
   _findCurrentServer() {
     let server = null;
     if (this.servers.length) {
-      server = this._findMaxPriorityServer() || this.servers[0];
+      server = this.servers[0];
     }
     this.server = server;
     if (!this.server) {
@@ -343,10 +343,10 @@ class EventsSDK {
   _findNextAvailableServer() {
     let currentServerPriority = this.server.Priority;
     this.Logger.log(`Failover -> Trying to find another server`);
-    if (currentServerPriority === 0) {
+    if (currentServerPriority === this.servers.length - 1) {
       return this._findMaxPriorityServer()
     }
-    let nextServerPriority = currentServerPriority - 1
+    let nextServerPriority = currentServerPriority + 1
     let nextServer = this.servers.find(server => server.Priority === nextServerPriority);
     if (!nextServer) {
       nextServer = this._findMaxPriorityServer();

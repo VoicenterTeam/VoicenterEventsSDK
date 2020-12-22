@@ -11,6 +11,7 @@ export default {
   EXTENSION_EVENT: 'ExtensionEvent',
   EXTENSION_UPDATED: 'ExtensionsUpdated',
   ALL_EXTENSION_STATUS: 'AllExtensionsStatus',
+  CONNECT: 'connect',
   CONNECT_ERROR: 'connect_error',
   CONNECT_TIMEOUT: 'connect_timeout',
   DISCONNECT: 'disconnect',
