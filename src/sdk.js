@@ -70,7 +70,7 @@ class EventsSDK {
     this._registerExtensionsModule();
     this._registerQueueModule();
   }
-  
+
   getLastEventTimestamp() {
     return this._lastEventTimestamp
   }
@@ -305,12 +305,12 @@ class EventsSDK {
     if (this.idleInterval) {
       clearInterval((this.idleInterval))
     }
-    this.keepAliveInterval = setInterval(() => {
+    this.keepAliveInterval = setInterval(async () => {
       const now = new Date().getTime()
       const delta = this.options.keepAliveTimeout * 2
 
       if (now > this.getLastEventTimestamp() + delta) {
-        this._connect('next')
+        await this._connect('next', true)
         return
       }
       if (!this.socket) {
