@@ -921,13 +921,12 @@ function () {
         clearInterval(this.idleInterval);
       }
 
-      this.keepAliveInterval = setInterval(function () {
+      this.keepAliveInterval = setInterval(async function () {
         var now = new Date().getTime();
         var delta = _this2.options.keepAliveTimeout * 2;
 
         if (now > _this2.getLastEventTimestamp() + delta) {
-          _this2._connect('next');
-
+          await _this2._connect('next', true);
           return;
         }
 
@@ -951,7 +950,7 @@ function () {
       var server = null;
 
       if (this.servers.length) {
-        server = this.servers[0];
+        server = this._findMaxPriorityServer() || this.servers[0];
       }
 
       this.server = server;
@@ -968,28 +967,29 @@ function () {
       var currentServerPriority = this.server.Priority;
       this.Logger.log("Failover -> Trying to find another server");
 
-      if (currentServerPriority > 0) {
-        var nextServerPriority = currentServerPriority - 1;
-        var nextServer = this.servers.find(function (server) {
-          return server.Priority === nextServerPriority;
-        });
-
-        if (!nextServer) {
-          nextServer = this._findMaxPriorityServer();
-
-          if (!nextServer) {
-            return;
-          }
-        }
-
-        if (this.server.Domain !== nextServer.Domain) {
-          this.server = nextServer;
-          return this.server;
-        }
-
-        this.Logger.log("Failover -> Found new server. Connecting to it...", this.server);
+      if (currentServerPriority === 0) {
+        return this._findMaxPriorityServer();
       }
 
+      var nextServerPriority = currentServerPriority - 1;
+      var nextServer = this.servers.find(function (server) {
+        return server.Priority === nextServerPriority;
+      });
+
+      if (!nextServer) {
+        nextServer = this._findMaxPriorityServer();
+
+        if (!nextServer) {
+          return;
+        }
+      }
+
+      if (this.server.Domain !== nextServer.Domain) {
+        this.server = nextServer;
+        return this.server;
+      }
+
+      this.Logger.log("Failover -> Found new server. Connecting to it...", this.server);
       return null;
     }
   }, {
@@ -997,6 +997,11 @@ function () {
     value: function _findMaxPriorityServer() {
       this.Logger.log("Fallback -> Trying to find previous server", '_findMaxPriorityServer');
       var maxPriorityServer = getServerWithHighestPriority(this.servers);
+
+      if (!this.server) {
+        this.server = maxPriorityServer;
+        return this.server;
+      }
 
       if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
         this.server = maxPriorityServer;
