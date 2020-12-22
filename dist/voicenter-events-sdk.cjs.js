@@ -88,6 +88,7 @@ var eventTypes = {
   EXTENSION_EVENT: 'ExtensionEvent',
   EXTENSION_UPDATED: 'ExtensionsUpdated',
   ALL_EXTENSION_STATUS: 'AllExtensionsStatus',
+  CONNECT: 'connect',
   CONNECT_ERROR: 'connect_error',
   CONNECT_TIMEOUT: 'connect_timeout',
   DISCONNECT: 'disconnect',
@@ -454,10 +455,11 @@ var queuesModule = {
 };
 
 function getServerWithHighestPriority(servers) {
+  // Highest priority server is the one with lowest Priority value
   var chosenServer = null;
-  var maxPriority = -1;
+  var maxPriority = Number.MAX_SAFE_INTEGER;
   servers.forEach(function (server) {
-    if (server.Priority > maxPriority) {
+    if (server.Priority < maxPriority) {
       maxPriority = server.Priority;
       chosenServer = server;
     }
@@ -950,7 +952,7 @@ function () {
       var server = null;
 
       if (this.servers.length) {
-        server = this._findMaxPriorityServer() || this.servers[0];
+        server = this.servers[0];
       }
 
       this.server = server;
@@ -967,11 +969,11 @@ function () {
       var currentServerPriority = this.server.Priority;
       this.Logger.log("Failover -> Trying to find another server");
 
-      if (currentServerPriority === 0) {
+      if (currentServerPriority === this.servers.length - 1) {
         return this._findMaxPriorityServer();
       }
 
-      var nextServerPriority = currentServerPriority - 1;
+      var nextServerPriority = currentServerPriority + 1;
       var nextServer = this.servers.find(function (server) {
         return server.Priority === nextServerPriority;
       });
