@@ -68,9 +68,10 @@
       async initSdk() {
         try {
           let sdk = new EventsSdk({
-            token: this.monitorCode,
-            store: this.$store,
-            debug: true,
+            loginType: 'user',
+            email: 'IPPhone3@eran.eran',
+            password: '10314093302',
+            debug: true
           });
           window.sdk = sdk
           this.sdk = sdk
