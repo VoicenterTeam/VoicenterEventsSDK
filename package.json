@@ -11,7 +11,8 @@
     "start": "npm run docs"
   },
   "dependencies": {
-    "core-js": "^2.6.5"
+    "core-js": "^2.6.5",
+    "js-md5": "^0.7.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
