@@ -8,6 +8,8 @@ import queuesModule from './store/queues'
 import { getServerWithHighestPriority, isValidDate } from './utils';
 import { externalLogin, refreshToken, getExternalLoginUrl } from './utils/externalLogin';
 import { loadExternalScript } from './utils/loadExternalScript'
+import md5 from "js-md5";
+
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
@@ -441,6 +443,7 @@ class EventsSDK {
       this.emit(eventTypes.CLOSE);
     }
     await this._getToken();
+    await this._getTabsSession();
     await this.login(this.options.loginType)
     await this._getServers();
     return true;
@@ -536,6 +539,28 @@ class EventsSDK {
       }
     }
   }
+  _getTabsSession(){
+      if (!window.sessionStorage.length) {
+        // Ask other tabs for session storage
+        localStorage.setItem('getSessionStorage', Date.now());
+      };
+      window.addEventListener('storage', (event) => {
+        //console.log('storage event', event);
+        if (event.key == 'getSessionStorage') {
+          // Some tab asked for the sessionStorage -> send it
+          localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
+          localStorage.removeItem('sessionStorage');
+        } else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+          // sessionStorage is empty -> fill it
+          var data = JSON.parse(event.newValue),
+                value;
+          for (let key in data) {
+            window.sessionStorage.setItem(key, data[key]);
+          }
+        }
+      })
+      return new Promise(resolve => setTimeout((resolve), 500))
+  }
 
   /**
    * Login (logs in based on the token/credentials provided)
@@ -544,21 +569,37 @@ class EventsSDK {
    */
   login(type = 'token') {
     // throttle login for 1 second
+    let payload = {
+      token: this.options.token,
+      email: this.options.email,
+      username: this.options.username,
+      password: this.options.password
+    }
+    let key = md5(JSON.stringify(payload))
     const delay = 1000;
     if (this._lastLoginTimestamp + delay > new Date().getTime()) {
       return Promise.resolve()
     }
-    this._lastLoginTimestamp = new Date().getTime()
+    this._lastLoginTimestamp = new Date().getTime()  
     return new Promise(async (resolve, reject) => {
+      try{     
+        let loginSession = window.sessionStorage.getItem(key);
+        if(loginSession){
+          loginSession = JSON.parse(loginSession)
+          this.Logger.log('got data from session', loginSession);
+          await this._onLoginResponse(loginSession)
+          return resolve(loginSession);
+        }
+      }catch(err){
+        this.Logger.log('Error on getting session',err)
+      }
       try {
         let url = getExternalLoginUrl(this.options.loginUrl, type)
-        const res = await externalLogin(url, {
-          token: this.options.token,
-          email: this.options.email,
-          username: this.options.username,
-          password: this.options.password
-        })
+        const res = await externalLogin(url,payload)
         await this._onLoginResponse(res)
+        
+        window.sessionStorage.setItem(key, JSON.stringify(res));
+
         resolve(res)
       } catch (err) {
         this.servers = this.argumentOptions.servers || defaultServers;
