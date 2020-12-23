@@ -559,7 +559,7 @@ class EventsSDK {
           }
         }
       })
-      return new Promise(resolve => setTimeout((resolve), 500))
+      return new Promise(resolve => setTimeout((resolve), 200))
   }
 
   /**
@@ -580,9 +580,9 @@ class EventsSDK {
     if (this._lastLoginTimestamp + delay > new Date().getTime()) {
       return Promise.resolve()
     }
-    this._lastLoginTimestamp = new Date().getTime()  
+    this._lastLoginTimestamp = new Date().getTime()
     return new Promise(async (resolve, reject) => {
-      try{     
+      try{
         let loginSession = window.sessionStorage.getItem(key);
         if(loginSession){
           loginSession = JSON.parse(loginSession)
@@ -597,7 +597,7 @@ class EventsSDK {
         let url = getExternalLoginUrl(this.options.loginUrl, type)
         const res = await externalLogin(url,payload)
         await this._onLoginResponse(res)
-        
+
         window.sessionStorage.setItem(key, JSON.stringify(res));
 
         resolve(res)
