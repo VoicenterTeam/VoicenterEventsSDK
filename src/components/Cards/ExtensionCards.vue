@@ -144,7 +144,7 @@
             },
             sortedExtensions () {
                 let extensionToDisplay = this.extensionToDisplay
-                let onlineExtensions = this.onlineExtensions.filter((el) => extensionToDisplay.includes(el.userID) || extensionToDisplay.includes(el.number))
+                let onlineExtensions = this.onlineExtensions.filter((el) => extensionToDisplay.includes(el.number))
                 return orderBy(onlineExtensions, this.sortBy, 'asc')
             },
             renderColumns () {
