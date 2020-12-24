@@ -52,7 +52,7 @@
             },
             secondLabelKey: {
                 type: String,
-                default: 'second_label'
+                default: ''
             },
             valueKey: {
                 type: String,
