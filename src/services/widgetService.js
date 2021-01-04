@@ -7,7 +7,6 @@ import { WidgetDataApi } from '@/api/widgetDataApi'
 import { getOptionsValues } from '@/helpers/entitiesList'
 import { isExternalDataWidget } from '@/helpers/widgetUtils'
 
-
 const AUTO_COMPLETE_TYPE_KEY = 6
 
 // Create new widgets from Widget Templates
@@ -80,14 +79,18 @@ export async function getWidgetData(widget) {
 
     if (isExternalDataWidget(widget)) {
         const data = await WidgetDataApi.getExternalData(widget.EndPoint)
+        console.log('here1')
         Vue.set(widget, 'onLoading', false)
         return data
     }
-
-
-    const data = await WidgetDataApi.getData(widget.EndPoint)
-    Vue.set(widget, 'onLoading', false)
-    return data
+    
+    try {
+        return await WidgetDataApi.getData(widget.EndPoint)
+    } catch (e) {
+        console.log('here4')
+    } finally {
+        Vue.set(widget, 'onLoading', false)
+    }
 }
 
 export function isWidgetModalOpen() {

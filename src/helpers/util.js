@@ -45,7 +45,7 @@ export function makeRandomID (length = 12) {
 export const ADMIN_USER_ID = 71459
 
 export function displayUsersRelatedWithAdmin (widgetConfig) {
-    const userListConfig = widgetConfig.filter(config => config.ParameterName.toLowerCase() === USER_LIST_PARAMETER_NAME)
+    const userListConfig = widgetConfig.filter(config => config.ParameterName && config.ParameterName.toLowerCase() === USER_LIST_PARAMETER_NAME)
     const entityPositive = get(userListConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
     return entityPositive.includes(ADMIN_USER_ID)
 }
