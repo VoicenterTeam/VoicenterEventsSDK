@@ -52,6 +52,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
         
         newWidget.WidgetConfig = WidgetConfig
         newWidget.WidgetTime = template.DefaultWidgetTime || {}
+        
         newWidget = await WidgetApi.store(newWidget)
         
         if (typeof newWidget !== 'string') {
@@ -69,29 +70,19 @@ export function removeDummyWidgets(widgetIds) {
 }
 
 export async function getWidgetData(widget) {
-    try {
-        if (isWidgetModalOpen() || isInEditMode()) {
-            return null
-        }
-        
-        Vue.set(widget, 'onLoading', true)
-        
-        if (isExternalDataWidget(widget)) {
-            const data = await WidgetDataApi.getExternalData(widget.EndPoint)
-            Vue.set(widget, 'onLoading', false)
-            return data
-        }
-        
-        const data = await WidgetDataApi.getData(widget.EndPoint)
+    
+    if (isWidgetModalOpen() || isInEditMode()) {
+        return null
+    }
+    
+    Vue.set(widget, 'onLoading', true)
+    
+    if (isExternalDataWidget(widget)) {
+        const data = await WidgetDataApi.getExternalData(widget.EndPoint)
         Vue.set(widget, 'onLoading', false)
         return data
-    } catch (e) {
-        console.warn(e)
-    } finally {
-        setTimeout(() => {
-            Vue.set(widget, 'onLoading', false)
-        }, 1000)
     }
+    
     try {
         return await WidgetDataApi.getData(widget.EndPoint)
     } catch (e) {
