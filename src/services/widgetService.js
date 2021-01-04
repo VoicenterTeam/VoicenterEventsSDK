@@ -79,7 +79,6 @@ export async function getWidgetData(widget) {
 
     if (isExternalDataWidget(widget)) {
         const data = await WidgetDataApi.getExternalData(widget.EndPoint)
-        console.log('here1')
         Vue.set(widget, 'onLoading', false)
         return data
     }
@@ -87,7 +86,7 @@ export async function getWidgetData(widget) {
     try {
         return await WidgetDataApi.getData(widget.EndPoint)
     } catch (e) {
-        console.log('here4')
+        console.warn(e)
     } finally {
         Vue.set(widget, 'onLoading', false)
     }
