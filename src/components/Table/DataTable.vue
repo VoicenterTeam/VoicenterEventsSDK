@@ -108,12 +108,7 @@
     import { makeRandomID } from '@/helpers/util'
     import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import { format } from 'date-fns'
-    
-    const DATE_COLUMNS = ['date']
-    const DATE_TIME_COLUMNS = ['date time', 'date & time', 'call time', 'contacted time', 'starttime', 'endtime']
-    
-    const DATE_FORMAT = 'dd-MM-yyyy'
-    const DATE_TIME_FORMAT = 'HH:mm:ss dd-MM-yyyy'
+    import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
     
     const QUEUE_STATISTICS_TEMPLATE = 45
     
@@ -157,7 +152,7 @@
                 type: Array,
                 default: () => [],
             },
-            isMultiQueueTable: {
+            canSortRows: {
                 type: Boolean,
                 default: false,
             },
@@ -237,17 +232,37 @@
                     return row[column].replace(/\//g, '-')
                 }
             },
-            tryInitSortable() {
-                
-                const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
-                
+            tryInitSortableRows() {
+                const table = this.$el.querySelector('.el-table__body-wrapper tbody')
                 if (!table) {
                     return
                 }
-                
                 const self = this
                 Sortable.create(table, {
-                    group: 'description',
+                    group: 'rows',
+                    fallbackOnBody: true,
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    onEnd({ newIndex, oldIndex }) {
+                        self.tableKey = self.availableColumns.map(c => c.prop).join('_')
+                        self.composePayloadToReorderRows(newIndex, oldIndex)
+                    },
+                })
+            },
+            composePayloadToReorderRows(newIndex, oldIndex) {
+                this.$emit('on-reorder-rows', {
+                    newIndex,
+                    oldIndex,
+                })
+            },
+            tryInitSortable() {
+                const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
+                if (!table) {
+                    return
+                }
+                const self = this
+                Sortable.create(table, {
+                    group: 'sortable-ghost',
                     fallbackOnBody: true,
                     animation: 150,
                     onEnd({ newIndex, oldIndex }) {
@@ -255,6 +270,10 @@
                         self.composePayloadToUpdateLayout(newIndex, oldIndex)
                     },
                 })
+                if (!this.canSortRows) {
+                    return
+                }
+                this.tryInitSortableRows()
             },
             composePayloadToUpdateLayout(newIndex, oldIndex) {
                 const targetRow = this.renderedColumns[oldIndex]
@@ -391,12 +410,16 @@ th > div.cell > span {
 }
 </style>
 <style scoped lang="scss">
-.data-table /deep/ .sortable-ghost {
+.data-table ::v-deep .sortable-ghost {
     opacity: 0.3;
-    @apply bg-gray-300 rounded text-primary;
+    @apply bg-gray-300 rounded text-primary cursor-pointer;
+    td:hover {
+        @apply bg-gray-100;
+        @apply cursor-pointer;
+    }
 }
 
-.data-table /deep/ .el-table td.direction-ltr {
+.data-table ::v-deep .el-table td.direction-ltr {
     direction: ltr;
 }
 </style>

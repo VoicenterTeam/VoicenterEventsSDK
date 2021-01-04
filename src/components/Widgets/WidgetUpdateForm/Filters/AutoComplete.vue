@@ -26,6 +26,7 @@
                          @change="onAutocompleteChange"
                          :data="options"
                          :label-key="templateConfig.label"
+                         :second-label-key="templateConfig.second_label"
                          :value-key="templateConfig.value">
             </base-select>
         </div>

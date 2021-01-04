@@ -59,8 +59,8 @@ export function getDefaultGridLayout() {
     }
 }
 
-export function displayUsersRelatedWithAdmin(widgetConfig) {
-    const userListConfig = widgetConfig.filter(config => config.ParameterName.toLowerCase() === USER_LIST_PARAMETER_NAME)
+export function displayUsersRelatedWithAdmin (widgetConfig) {
+    const userListConfig = widgetConfig.filter(config => config.ParameterName && config.ParameterName.toLowerCase() === USER_LIST_PARAMETER_NAME)
     const entityPositive = get(userListConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
     return entityPositive.includes(ADMIN_USER_ID)
 }

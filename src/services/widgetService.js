@@ -6,7 +6,6 @@ import { widgetModel } from '@/models/instances'
 import { WidgetDataApi } from '@/api/widgetDataApi'
 import { getOptionsValues } from '@/helpers/entitiesList'
 import { isExternalDataWidget } from '@/helpers/widgetUtils'
-import de from 'element-ui/src/locale/lang/de'
 
 const AUTO_COMPLETE_TYPE_KEY = 6
 
@@ -92,6 +91,13 @@ export async function getWidgetData(widget) {
         setTimeout(() => {
             Vue.set(widget, 'onLoading', false)
         }, 1000)
+    }
+    try {
+        return await WidgetDataApi.getData(widget.EndPoint)
+    } catch (e) {
+        console.warn(e)
+    } finally {
+        Vue.set(widget, 'onLoading', false)
     }
 }
 
