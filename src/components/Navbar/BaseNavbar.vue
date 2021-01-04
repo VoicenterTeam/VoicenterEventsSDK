@@ -5,8 +5,8 @@
             <div class="flex items-center h-16 sm:justify-between sm:w-full lg:w-auto border-b">
                 <img :src="getLogo"
                      alt="Logo"
-                     class="h-10 object-cover">
-                <IconHorisontalLine class="hidden  mx-4 xl:mx-12"/>
+                     class="h-10">
+                <IconHorisontalLine class="hidden lg:flex mx-4 xl:mx-12"/>
                 <DashboardMenu/>
             </div>
             <div class="flex items-center px-2 sm:justify-between sm:w-full lg:w-auto">
