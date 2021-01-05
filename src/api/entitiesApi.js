@@ -9,7 +9,6 @@ export const entitiesApi = {
             if (Data && Data.Extension) {
                  Data.Extension.splice(0, 0, ADMIN_USER_EXTENSION_CONFIG)
             }
-            console.log(Data)
             return Data
         } catch (e) {
             parseCatch(e, false, 'Entities List')
