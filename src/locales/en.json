@@ -117,6 +117,8 @@
     "status.show.text": "Show status text",
     "status.display.border": "Display card border",
     "status.atWork": "At work",
+    "extensions.sort.static": "Static",
+    "extensions.sort.extension": "Extension",
     "extensions.sort.default": "Default",
     "extensions.sort.userName": "User name",
     "extensions.sort.activeTime": "Active time",

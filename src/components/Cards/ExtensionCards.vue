@@ -43,7 +43,7 @@
                     <div :key="index"
                          class="px-1"
                          v-for="(extension, index) in sortedExtensions">
-                        <extension-card :key="index" :extension="extension" :settings="getSettings"/>
+                        <extension-card :key="extension.number" :extension="extension" :settings="getSettings"/>
                     </div>
                     <div class="flex flex-col w-full items-center"
                          key="no-data"
@@ -101,15 +101,15 @@
                     13: 'IconBrief',
                 },
                 timer: 0,
-                sortBy: 'userID',
+                sortBy: 'number',
                 sortByOptions: [
                     {
-                        label: this.$t('extensions.sort.default'),
-                        value: 'userID',
+                        label: this.$t('extensions.sort.static'),
+                        value: 'number',
                     },
                     {
-                        label: this.$t('extensions.sort.userName'),
-                        value: 'userName',
+                        label: this.$t('extensions.sort.extension'),
+                        value: 'extenUser',
                     },
                     {
                         label: this.$t('extensions.sort.activeTime'),
@@ -148,7 +148,7 @@
             sortedExtensions() {
                 let extensionToDisplay = this.extensionToDisplay
                 let onlineExtensions = this.onlineExtensions.filter((el) => extensionToDisplay.includes(el.number))
-                return orderBy(onlineExtensions, this.sortBy, 'asc')
+                return orderBy(onlineExtensions, `${this.sortBy}`, 'asc')
             },
             renderColumns() {
                 let columns = ''
