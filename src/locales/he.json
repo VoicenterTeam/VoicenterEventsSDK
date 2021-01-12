@@ -79,7 +79,7 @@
   "status.training": "בהכשרה",
   "status.teamMeeting": "פגישת צוות",
   "status.brief": "תקציר",
-  "status.calling": "מתקשר...",
+  "status.calling": "...מתקשר",
   "status.talking": "בשיחה",
   "extensions.sort.default": "ברירת מחדל",
   "extensions.sort.userName": "שם משתמש",
