@@ -1,5 +1,4 @@
 export const USER_LIST_PARAMETER_NAME = '{|user_id_id_list|}'
-export const EXTENSION_LIST_PARAMETER_NAME = '{|extension_list|}'
 
 export const componentTypes = {
     1: {
@@ -45,7 +44,7 @@ const campaignListConfig = {
 }
 
 const extensionListConfig = {
-    ParameterName: EXTENSION_LIST_PARAMETER_NAME,
+    ParameterName: '{|extension_list|}',
     EndPoint: '/Extension/List/',
     label: 'extension_id',
     second_label: 'ext_name',

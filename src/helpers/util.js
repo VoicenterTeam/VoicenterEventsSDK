@@ -1,6 +1,5 @@
-import { EXTENSION_LIST_PARAMETER_NAME, USER_LIST_PARAMETER_NAME } from '@/enum/widgetTemplateConfigs'
+import { USER_LIST_PARAMETER_NAME } from '@/enum/widgetTemplateConfigs'
 import get from 'lodash/get'
-import i18n from '@/i18n'
 
 export function capitalizeFirstLetter (str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
@@ -44,15 +43,9 @@ export function makeRandomID (length = 12) {
 }
 
 export const ADMIN_USER_ID = 71459
-const ADMIN_USER_NAME = i18n.t('Admin User שירות לקוחות')
-
-export const ADMIN_USER_EXTENSION_CONFIG = {
-    ext_name: ADMIN_USER_NAME,
-    extension_id: ADMIN_USER_ID,
-}
 
 export function displayUsersRelatedWithAdmin (widgetConfig) {
-    const userListConfig = widgetConfig.filter(config => config.ParameterName && config.ParameterName.toLowerCase() === USER_LIST_PARAMETER_NAME || config.ParameterName.toLowerCase() === EXTENSION_LIST_PARAMETER_NAME)
+    const userListConfig = widgetConfig.filter(config => config.ParameterName && config.ParameterName.toLowerCase() === USER_LIST_PARAMETER_NAME)
     const entityPositive = get(userListConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
     return entityPositive.includes(ADMIN_USER_ID)
 }
