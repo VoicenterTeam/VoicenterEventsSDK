@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-unfetch';
+
 export async function externalLogin(url, { email, password, token, username }) {
   let body = null
   if (token) {

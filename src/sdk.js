@@ -1,3 +1,4 @@
+import io from 'socket.io-client';
 import eventTypes from './eventTypes';
 import { defaultServers } from './config';
 import Logger from './Logger';
@@ -7,9 +8,8 @@ import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
 import { getServerWithHighestPriority, isValidDate } from './utils';
 import { externalLogin, refreshToken, getExternalLoginUrl } from './utils/externalLogin';
-import { loadExternalScript } from './utils/loadExternalScript'
+// import { loadExternalScript } from './utils/loadExternalScript'
 import md5 from "js-md5";
-
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
@@ -189,9 +189,9 @@ class EventsSDK {
   }
 
   async _onLoginResponse(data) {
-    if (data.Client) {
-      await loadExternalScript(data.Client)
-    }
+    // if (data.Client) {
+    //   await loadExternalScript(data.Client)
+    // }
     if (data.URL) {
       this.server = {
         Priority: 0,
@@ -290,7 +290,11 @@ class EventsSDK {
         token: this.token
       }
     }
-    this.socket = window.io(url, options);
+    // if(window) {
+    //   this.socket = window.io(url, options);
+    // } else {
+      this.socket = io(url,options);
+    // }
     allConnections.push(this.socket);
     this.connectionEstablished = true;
   }
@@ -443,7 +447,9 @@ class EventsSDK {
       this.emit(eventTypes.CLOSE);
     }
     await this._getToken();
-    await this._getTabsSession();
+    // if(window){
+    //   await this._getTabsSession();
+    // }
     await this.login(this.options.loginType)
     await this._getServers();
     return true;
@@ -453,10 +459,10 @@ class EventsSDK {
    * Sets the monitor code token
    * @param token
    */
-  async setToken(token) {
+  setToken(token) {
     this.options.token = token
     this.disconnect()
-    await this.init()
+    return this.init()
   }
 
   /**
@@ -521,13 +527,12 @@ class EventsSDK {
       }
       this.options.url = url
       this.options.serverFetchStrategy = 'remote'
-      await this.init()
     } catch (err) {
       this._onError(err)
       this.options.url = oldUrl
       this.options.serverFetchStrategy = oldStrategy
-      await this.init()
     }
+    await this.init()
   }
 
   _getToken() {
@@ -543,14 +548,14 @@ class EventsSDK {
       if (!window.sessionStorage.length) {
         // Ask other tabs for session storage
         localStorage.setItem('getSessionStorage', Date.now());
-      };
+      }
       window.addEventListener('storage', (event) => {
         //console.log('storage event', event);
-        if (event.key == 'getSessionStorage') {
+        if (event.key === 'getSessionStorage') {
           // Some tab asked for the sessionStorage -> send it
           localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
           localStorage.removeItem('sessionStorage');
-        } else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+        } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
           // sessionStorage is empty -> fill it
           var data = JSON.parse(event.newValue),
                 value;
@@ -582,32 +587,31 @@ class EventsSDK {
     }
     this._lastLoginTimestamp = new Date().getTime()
     return new Promise(async (resolve, reject) => {
-      try{
-        let loginSession = window.sessionStorage.getItem(key);
-        if(loginSession){
-          loginSession = JSON.parse(loginSession)
-          this.Logger.log('got data from session', loginSession);
-          await this._onLoginResponse(loginSession)
-          return resolve(loginSession);
-        }
-      }catch(err){
-        this.Logger.log('Error on getting session',err)
-      }
+      // try{
+      //   if(window) {
+      //     let loginSession = window.sessionStorage.getItem(key);
+      //     if (loginSession) {
+      //       loginSession = JSON.parse(loginSession)
+      //       this.Logger.log('got data from session', loginSession);
+      //       await this._onLoginResponse(loginSession)
+      //       return resolve(loginSession);
+      //     }
+      //   }
+      //   }catch(err){
+      //     this.Logger.log('Error on getting session',err)
+      //   }
       try {
         let url = getExternalLoginUrl(this.options.loginUrl, type)
         const res = await externalLogin(url,payload)
         await this._onLoginResponse(res)
-
-        window.sessionStorage.setItem(key, JSON.stringify(res));
-
-        resolve(res)
+        //if(window) window.sessionStorage.setItem(key, JSON.stringify(res));
+        return resolve(res)
       } catch (err) {
         this.servers = this.argumentOptions.servers || defaultServers;
-        reject(err)
+        return reject(err)
       }
     });
   }
-
 }
 
 export default EventsSDK;

@@ -1,5 +1,5 @@
 export function loadExternalScript(url) {
-  return new Promise((resolve) => {
+  return new Promise((resolve,reject) => {
     const script = document.createElement('script');
     script.src = url;
     script.onload = () => {

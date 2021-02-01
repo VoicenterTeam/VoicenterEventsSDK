@@ -1,6 +1,11 @@
+import io from 'socket.io-client';
 import debounce from 'lodash/debounce';
+import fetch from 'isomorphic-unfetch';
+import md5 from 'js-md5';
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -52,23 +57,36 @@ function _defineProperty(obj, key, value) {
 }
 
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
 }
 
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 var eventTypes = {
@@ -128,9 +146,7 @@ var defaultServers = [{
   'Domain': 'monitor5.voicenter.co.il'
 }];
 
-var Logger =
-/*#__PURE__*/
-function () {
+var Logger = /*#__PURE__*/function () {
   function Logger() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -272,9 +288,6 @@ function onNewEvent(_ref) {
         });
       }
 
-      break;
-
-    default:
       break;
   }
 }
@@ -526,23 +539,6 @@ async function refreshToken(url, oldRefreshToken) {
   return res.json();
 }
 
-function loadExternalScript(url) {
-  return new Promise(function (resolve) {
-    var script = document.createElement('script');
-    script.src = url;
-
-    script.onload = function () {
-      resolve();
-    };
-
-    script.onerror = function () {
-      reject();
-    };
-
-    document.body.append(script);
-  });
-}
-
 var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
   fallbackServer: {
@@ -576,15 +572,13 @@ var defaultOptions = {
 var allConnections = [];
 var listenersMap = new Map();
 
-var EventsSDK =
-/*#__PURE__*/
-function () {
+var EventsSDK = /*#__PURE__*/function () {
   function EventsSDK() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, EventsSDK);
 
-    this.options = Object.assign({}, defaultOptions, {}, options);
+    this.options = Object.assign({}, defaultOptions, options);
     this.argumentOptions = Object.assign({}, options);
 
     if (!this.options.loginType) {
@@ -769,10 +763,9 @@ function () {
   }, {
     key: "_onLoginResponse",
     value: async function _onLoginResponse(data) {
-      if (data.Client) {
-        await loadExternalScript(data.Client);
-      }
-
+      // if (data.Client) {
+      //   await loadExternalScript(data.Client)
+      // }
       if (data.URL) {
         this.server = {
           Priority: 0,
@@ -895,9 +888,13 @@ function () {
         options.query = {
           token: this.token
         };
-      }
+      } // if(window) {
+      //   this.socket = window.io(url, options);
+      // } else {
 
-      this.socket = window.io(url, options);
+
+      this.socket = io(url, options); // }
+
       allConnections.push(this.socket);
       this.connectionEstablished = true;
     }
@@ -1073,7 +1070,10 @@ function () {
         this.emit(eventTypes.CLOSE);
       }
 
-      await this._getToken();
+      await this._getToken(); // if(window){
+      //   await this._getTabsSession();
+      // }
+
       await this.login(this.options.loginType);
       await this._getServers();
       return true;
@@ -1085,10 +1085,10 @@ function () {
 
   }, {
     key: "setToken",
-    value: async function setToken(token) {
+    value: function setToken(token) {
       this.options.token = token;
       this.disconnect();
-      await this.init();
+      return this.init();
     }
     /**
      * Closes all existing connections
@@ -1173,14 +1173,14 @@ function () {
 
         this.options.url = url;
         this.options.serverFetchStrategy = 'remote';
-        await this.init();
       } catch (err) {
         this._onError(err);
 
         this.options.url = oldUrl;
         this.options.serverFetchStrategy = oldStrategy;
-        await this.init();
       }
+
+      await this.init();
     }
   }, {
     key: "_getToken",
@@ -1193,6 +1193,33 @@ function () {
           throw new Error('Token login type expects the token option to be provided');
         }
       }
+    }
+  }, {
+    key: "_getTabsSession",
+    value: function _getTabsSession() {
+      if (!window.sessionStorage.length) {
+        // Ask other tabs for session storage
+        localStorage.setItem('getSessionStorage', Date.now());
+      }
+
+      window.addEventListener('storage', function (event) {
+        //console.log('storage event', event);
+        if (event.key === 'getSessionStorage') {
+          // Some tab asked for the sessionStorage -> send it
+          localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
+          localStorage.removeItem('sessionStorage');
+        } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
+          // sessionStorage is empty -> fill it
+          var data = JSON.parse(event.newValue);
+
+          for (var key in data) {
+            window.sessionStorage.setItem(key, data[key]);
+          }
+        }
+      });
+      return new Promise(function (resolve) {
+        return setTimeout(resolve, 200);
+      });
     }
     /**
      * Login (logs in based on the token/credentials provided)
@@ -1207,6 +1234,13 @@ function () {
 
       var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'token';
       // throttle login for 1 second
+      var payload = {
+        token: this.options.token,
+        email: this.options.email,
+        username: this.options.username,
+        password: this.options.password
+      };
+      var key = md5(JSON.stringify(payload));
       var delay = 1000;
 
       if (this._lastLoginTimestamp + delay > new Date().getTime()) {
@@ -1215,19 +1249,28 @@ function () {
 
       this._lastLoginTimestamp = new Date().getTime();
       return new Promise(async function (resolve, reject) {
+        // try{
+        //   if(window) {
+        //     let loginSession = window.sessionStorage.getItem(key);
+        //     if (loginSession) {
+        //       loginSession = JSON.parse(loginSession)
+        //       this.Logger.log('got data from session', loginSession);
+        //       await this._onLoginResponse(loginSession)
+        //       return resolve(loginSession);
+        //     }
+        //   }
+        //   }catch(err){
+        //     this.Logger.log('Error on getting session',err)
+        //   }
         try {
           var url = getExternalLoginUrl(_this4.options.loginUrl, type);
-          var res = await externalLogin(url, {
-            token: _this4.options.token,
-            email: _this4.options.email,
-            username: _this4.options.username,
-            password: _this4.options.password
-          });
-          await _this4._onLoginResponse(res);
-          resolve(res);
+          var res = await externalLogin(url, payload);
+          await _this4._onLoginResponse(res); //if(window) window.sessionStorage.setItem(key, JSON.stringify(res));
+
+          return resolve(res);
         } catch (err) {
           _this4.servers = _this4.argumentOptions.servers || defaultServers;
-          reject(err);
+          return reject(err);
         }
       });
     }
@@ -1235,10 +1278,5 @@ function () {
 
   return EventsSDK;
 }();
-
-if (typeof window !== 'undefined') {
-  // Make it available on window
-  window.EventsSDK = EventsSDK;
-}
 
 export default EventsSDK;

@@ -12,7 +12,12 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
-    "js-md5": "^0.7.3"
+    "cross-fetch": "^3.0.6",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^3.0.0",
+    "isomorphic-unfetch": "^3.1.0",
+    "js-md5": "^0.7.3",
+    "socket.io-client": "2.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
