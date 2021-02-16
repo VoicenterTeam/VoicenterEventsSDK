@@ -162,6 +162,9 @@
                 this.showExportDialog = false
             },
             tryFormatCellTypeDate(record, key) {
+                if (!record[key]) {
+                    return ''
+                }
                 if (DATE_FORMAT.includes(key.toLowerCase())) {
                     try {
                         // To prevent date-fns errors like: Invalid time value
