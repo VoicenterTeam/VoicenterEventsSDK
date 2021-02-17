@@ -26,7 +26,7 @@
             <el-table :data="rowsData"
                       :fit="fitWidth"
                       :id="tableId"
-                      :key="tableKey"
+                      :key="tableId"
                       class="rounded-lg h-full bg-transparent ltr-direction"
                       ref="table"
                       row-key="id"

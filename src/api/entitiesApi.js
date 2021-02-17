@@ -4,8 +4,8 @@ import parseCatch from '@/helpers/handleErrors'
 export const entitiesApi = {
     async getList() {
         try {
-            let res = await $axios.get('/Login/EntitiesList/')
-            return res.Data
+            let { Data } = await $axios.get('/Login/EntitiesList/')
+            return Data
         } catch (e) {
             parseCatch(e, false, 'Entities List')
         }
