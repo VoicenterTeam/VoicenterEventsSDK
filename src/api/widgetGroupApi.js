@@ -9,6 +9,9 @@ export const WidgetGroupsApi = {
                 if (!widget.WidgetTime) {
                     widget.WidgetTime = {}
                 }
+                if (!widget.WidgetConfig) {
+                    widget.WidgetConfig = []
+                }
             })
             if (data.Order === null) {
                 data.Order = 0
