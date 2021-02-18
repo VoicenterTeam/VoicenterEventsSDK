@@ -95,7 +95,7 @@
                 try {
                     this.options = getOptionsList(this.model.ParameterName)
                     if (typeof this.model.WidgetParameterValue === 'string') {
-                        this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
+                        this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || ''
                     }
                     if (!this.model.WidgetParameterValueJson) {
                         this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
