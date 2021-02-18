@@ -19,7 +19,9 @@ export const WidgetApi = {
             if (data.Order === null) {
                 data.Order = 0
             }
-
+            if (!data.WidgetConfig) {
+                data.WidgetConfig = []
+            }
             let result = await $axios.post(`/Widgets/Update/`, data)
             return parseCustomErrorMessage(result, 'Update Widget')
         } catch (e) {
@@ -29,6 +31,9 @@ export const WidgetApi = {
 
     async store(data) {
         try {
+            if (!data.WidgetConfig) {
+                data.WidgetConfig = []
+            }
             let result = await $axios.post('/Widgets/Add/', data)
             return parseCustomErrorMessage(result, 'Add Widget')
         } catch (e) {
