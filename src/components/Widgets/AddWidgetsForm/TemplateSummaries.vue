@@ -37,7 +37,7 @@
                 <div class="px-6">
                     <p class="text-xs leading-4 text-gray-900 font-bold mb-1">{{ summaryActions }}</p>
                     <p class="text-xs leading-4 text-gray-900">
-                        <span v-for="(tQuantity, tName) in getSummary">
+                        <span v-for="(tQuantity, tName) in getSummaryTexts">
                             {{ tName }}
                             <b> {{ $t('x') }}{{ tQuantity }}</b>;
                         </span>
@@ -60,6 +60,7 @@
     import get from 'lodash/get'
     import times from 'lodash/times'
     import { Checkbox } from 'element-ui'
+    import cloneDeep from 'lodash/cloneDeep'
     import { getDefaultGridLayout } from '@/helpers/util'
     import { templateIcons } from '@/enum/widgetDataTypes'
     
@@ -77,7 +78,10 @@
         },
         computed: {
             getSummary() {
-                return get(this.$store.getters['widgetCreation/getSummaries'], 'summaryText')
+                return this.$store.getters['widgetCreation/getSummaries']
+            },
+            getSummaryTexts() {
+                return get(this.getSummary, 'summaryText')
             },
             getDataToSetup() {
                 return this.$store.getters['widgetCreation/getTemplatesToSetup']
@@ -96,6 +100,26 @@
             },
             onChange(state, widget) {
                 this.$set(widget, 'toStore', state)
+                this.updateSummaries(state, widget)
+            },
+            async updateSummaries(state, widget) {
+                let summaries = cloneDeep(this.getSummary)
+
+                const tName = widget.TemplateName
+                const tID = widget.TemplateID
+
+                let summaryText = summaries.summaryText
+                let summaryQuantity = summaries.quantities
+
+                summaryText[tName] = state ? ++summaryText[tName] : --summaryText[tName]
+                summaryQuantity[tID] = state ? ++summaryQuantity[tID] : --summaryQuantity[tID]
+
+                summaries = {
+                    quantities: summaryQuantity,
+                    summaryText: summaryText,
+                }
+
+                await this.$store.dispatch('widgetCreation/updateSummaries', summaries)
             },
             async onEditTemplate(template) {
                 await this.$store.dispatch('widgetCreation/editTemplate', template)

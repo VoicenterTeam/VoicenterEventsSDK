@@ -27,15 +27,15 @@
     </modal>
 </template>
 <script>
+    import get from 'lodash/get'
+    import sum from 'lodash/sum'
     import Modal from '@/components/Common/Modal'
     import TemplatePreview from '@/components/Widgets/AddWidgetsForm/TemplatePreview'
     import TemplateSummaries from '@/components/Widgets/AddWidgetsForm/TemplateSummaries'
     import TemplateCategories from '@/components/Widgets/AddWidgetsForm/TemplateCategories'
     import TemplatesSettingSetup from '@/components/Widgets/AddWidgetsForm/TemplatesSettingSetup'
     import TemplateCategoryPreview from '@/components/Widgets/AddWidgetsForm/TemplateCategoryPreview'
-    import get from 'lodash/get'
-    import sum from 'lodash/sum'
-    
+
     export default {
         components: {
             Modal,

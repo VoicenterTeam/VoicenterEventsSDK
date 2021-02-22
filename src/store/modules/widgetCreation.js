@@ -3,6 +3,7 @@ const CATEGORY_PREVIEW = 'CATEGORY_PREVIEW'
 const TEMPLATE_PREVIEW = 'TEMPLATE_PREVIEW'
 const TEMPLATES_SETUP = 'TEMPLATES_SETUP'
 const TEMPLATES_SUMMARY = 'TEMPLATES_SUMMARY'
+const UPDATE_SUMMARY = 'UPDATE_SUMMARY'
 
 const emptyState = {
     step: 'TEMPLATE_CATEGORIES',
@@ -37,6 +38,7 @@ const types = {
     VIEW_SUMMARY: 'VIEW_SUMMARY',
     GO_TO_SELECTED_CATEGORY: 'GO_TO_SELECTED_CATEGORY',
     TEMPLATE_SETUP: 'TEMPLATE_SETUP',
+    UPDATE_SUMMARY: 'UPDATE_SUMMARY',
 }
 
 const state = {
@@ -87,6 +89,9 @@ const mutations = {
         }
         state.step = TEMPLATES_SETUP
     },
+    [types.UPDATE_SUMMARY]: (state, summary) => {
+        state.summaries = summary
+    }
 }
 
 const actions = {
@@ -111,6 +116,9 @@ const actions = {
     async editTemplate({ commit }, template) {
         await commit(types.TEMPLATE_SETUP, template)
     },
+    async updateSummaries({ commit   }, summary) {
+        await commit(types.UPDATE_SUMMARY, summary)
+    }
 }
 
 const getters = {
