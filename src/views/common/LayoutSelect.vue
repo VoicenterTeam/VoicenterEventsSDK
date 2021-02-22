@@ -15,7 +15,7 @@
                    class="layout-select flex items-center text-sm font-medium w-full"
         >
             <div class="options-wrapper">
-                <el-option v-for="layout in activeAccountLayouts"
+                <el-option v-for="layout in filteredLayouts"
                            class="flex items-center justify-between"
                            :value="layout.LayoutID"
                            :label="layout.LayoutName"
@@ -62,6 +62,10 @@
                 type: Boolean,
                 default: true,
             },
+            hideLayoutId: {
+                type: Number,
+                default: 0,
+            },
         },
         data() {
             return {
@@ -73,6 +77,14 @@
             activeAccountLayouts() {
                 return this.$store.getters['layout/getActiveLayouts']
             },
+            filteredLayouts() {
+                console.log('fdsf', this.hideLayoutId)
+                if (!this.hideLayoutId) {
+                    return this.activeAccountLayouts
+                }
+                const result = this.activeAccountLayouts.filter(layout => layout.LayoutID.toString() !== this.hideLayoutId.toString())
+                return result
+            }
         },
         methods: {
             onChooseLayout(layout) {

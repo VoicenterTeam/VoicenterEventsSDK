@@ -10,15 +10,18 @@ export const globalAccountSettings = {
 export const ENABLED_STATUS_ID = 1;
 export const DELETED_STATUS_ID = 2;
 
+export const ENABLED_STATUS_NAME = 'Enable';
+export const DELETED_STATUS_NAME = 'Deleted';
+
 export const availableLayouts = [{
     label: i18n.t('Active Layouts'),
     statusID: ENABLED_STATUS_ID,
-    statusName: 'Enable',
+    statusName: ENABLED_STATUS_NAME,
     name: 'enabledLayouts',
 }, {
     label: i18n.t('Recycle Bin'),
     statusID: DELETED_STATUS_ID,
-    statusName: 'Deleted',
+    statusName: DELETED_STATUS_NAME,
     name: 'deletedLayouts',
 }]
 

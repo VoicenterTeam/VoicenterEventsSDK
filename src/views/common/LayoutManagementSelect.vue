@@ -55,7 +55,7 @@
                                                             <IconPencil class="w-4-5 h-4-5"/>
                                                         </el-tooltip>
                                                     </div>
-                                                    <div @click.stop="tryDeleteLayout"
+                                                    <div @click.stop="tryDeleteLayout(layout)"
                                                          class="edit-justify-end items-center flex text-red-300">
                                                         <el-tooltip class="item" effect="dark"
                                                                     :content="$t('Move layout to bin')"
@@ -126,7 +126,7 @@
         <DeleteLayout v-if="showDeleteDialog"
                       @on-close="showDeleteDialog = false"
                       :visible.sync="showDeleteDialog"
-                      :active-layout="selectedLayout"/>
+                      :active-layout="layoutToRemove"/>
     </div>
 </template>
 <script>
@@ -165,6 +165,7 @@
                 layoutToRestore: null,
                 showConfirmDialog: false,
                 showDeleteDialog: false,
+                layoutToRemove: false,
             }
         },
         computed: {
@@ -183,8 +184,9 @@
                 this.layoutToRestore = layout
                 this.showConfirmDialog = true
             },
-            tryDeleteLayout() {
+            tryDeleteLayout(layout) {
                 this.showDeleteDialog = true
+                this.layoutToRemove = layout
             },
             onChangeLayoutType(state) {
                 this.activeLayouts = state

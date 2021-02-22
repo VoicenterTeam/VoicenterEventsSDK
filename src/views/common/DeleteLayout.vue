@@ -21,6 +21,7 @@
                 <div v-html="getMessage"/>
             </el-alert>
             <LayoutSelect class="mt-4"
+                          :hide-layout-id="activeLayout.LayoutID"
                           @on-chose-layout="onChoseLayout"/>
         </div>
         <template v-slot:footer>
@@ -73,6 +74,10 @@
                 type: Number,
                 default: 2,
             },
+            statusNameToSet: {
+                type: String,
+                default: 'Deleted',
+            },
             closable: {
                 type: Boolean,
                 default: false,
@@ -99,6 +104,8 @@
                 return this.$store.state.dashboards.allDashboards
             },
             dashboardsWithThisLayout() {
+                console.log(this.allDashboards.filter(dashboard => dashboard.DashboardLayoutID.toString() === this.layoutID.toString()))
+                console.log('layoutID', this.layoutID)
                 return this.allDashboards.filter(dashboard => dashboard.DashboardLayoutID.toString() === this.layoutID.toString())
             },
             isDisabled() {
@@ -132,6 +139,7 @@
                     const layoutSettings = {
                         ...this.activeLayout,
                         LayoutStatusID: this.statusToSet,
+                        LayoutStatusName: this.statusNameToSet,
                     }
                     
                     await LayoutApi.update(layoutSettings)

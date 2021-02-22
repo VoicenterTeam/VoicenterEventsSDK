@@ -46,14 +46,14 @@
                                             placement="top">
                                             <Trash2Icon
                                                 class="text-red w-4 mx-1 "
-                                                @click.stop="tryChangeLayoutStatus(layoutConfig, DELETED_STATUS_ID)"/>
+                                                @click.stop="tryChangeLayoutStatus(layoutConfig, DELETED_STATUS_ID, DELETED_STATUS_NAME)"/>
                                         </el-tooltip>
                                         <el-tooltip
                                             v-if="layout.statusID === DELETED_STATUS_ID" class="item" effect="dark"
                                             :content="$t('Restore layout')"
                                             placement="top">
                                             <RotateCcwIcon class="text-primary w-4 mx-2"
-                                                           @click.stop="tryChangeLayoutStatus(layoutConfig, ENABLED_STATUS_ID)"></RotateCcwIcon>
+                                                           @click.stop="tryChangeLayoutStatus(layoutConfig, ENABLED_STATUS_ID, ENABLED_STATUS_NAME)"></RotateCcwIcon>
                                         </el-tooltip>
                                     </div>
                                 </div>
@@ -111,6 +111,7 @@
             v-if="showUpdateStatusDialog"
             :statusToSet="statusToSet"
             :layoutConfig="layoutToUpdate"
+            :status-name-to-set="statusNameToSet"
             :currentAccountId="currentAccountId"
             :visible.sync="showUpdateStatusDialog"
             @on-update="onUpdateStatus"
@@ -126,8 +127,8 @@
     import UpdateLayoutStatusDialog from 'src/views/DashboardSettings/LayoutManagement/components/UpdateLayoutStatusDialog'
     import { CheckCircleIcon, CopyIcon, RotateCcwIcon, Trash2Icon } from 'vue-feather-icons'
     import { Collapse, CollapseItem, Notification, TabPane, Tabs, Tooltip } from 'element-ui'
-    import { availableLayouts, DELETED_STATUS_ID, ENABLED_STATUS_ID } from 'src/views/DashboardSettings/LayoutManagement/layout-management'
-    import UpdateStatus from "@/views/DashboardSettings/LayoutManagement/components/UpdateLayoutStatusDialog";
+    import { availableLayouts, DELETED_STATUS_ID, ENABLED_STATUS_ID, ENABLED_STATUS_NAME, DELETED_STATUS_NAME } from 'src/views/DashboardSettings/LayoutManagement/layout-management'
+    import UpdateStatus from '@/views/DashboardSettings/LayoutManagement/components/UpdateLayoutStatusDialog'
 
     export default {
         components: {
@@ -168,8 +169,11 @@
                 storingData: false,
                 ENABLED_STATUS_ID,
                 DELETED_STATUS_ID,
+                ENABLED_STATUS_NAME,
+                DELETED_STATUS_NAME,
                 showUpdateStatusDialog: false,
                 statusToSet: '',
+                statusNameToSet: '',
                 layoutToUpdate: '',
             }
         },
@@ -225,9 +229,10 @@
                     this.storingData = false
                 }
             },
-            async tryChangeLayoutStatus(layoutConfig, status) {
+            async tryChangeLayoutStatus(layoutConfig, status, statusName) {
                 this.layoutToUpdate = layoutConfig
                 this.statusToSet = status
+                this.statusNameToSet = statusName
                 this.showUpdateStatusDialog = true
             },
             async onUpdateStatus({LayoutID, status}) {
@@ -236,6 +241,7 @@
                     let data = {
                         LayoutID: LayoutID,
                         LayoutStatus: status,
+                        LayoutStatusName: this.statusNameToSet,
                         LayoutAccountID: this.currentAccountId,
                     }
 
