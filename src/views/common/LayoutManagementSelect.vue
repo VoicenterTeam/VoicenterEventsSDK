@@ -70,8 +70,7 @@
                                             <el-tooltip
                                                 :content="$t('This is a default config, please add a new one if you want to edit it')"
                                                 placement="top">
-                                                <AlertTriangleIcon class="text-orange-500 cursor-help"
-                                                                   slot="reference"/>
+                                                <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
                                             </el-tooltip>
                                         </template>
                                     </div>
