@@ -165,7 +165,9 @@
             },
             groupsToDisplay() {
                 if (this.editMode) {
-                    return [this.groupToEdit]
+                    this.$nextTick(() => {
+                        return [this.groupToEdit]
+                    })
                 }
                 return this.activeDashboardData.WidgetGroupList
             },
