@@ -164,7 +164,7 @@
                 return this.$store.getters['layout/storedDashboardLayout'](this.getActiveDashboardLayoutID)
             },
             isDefaultLayout() {
-                return this.layoutSettings.LayoutID === DEFAULT_LAYOUT_ID || false
+                return this.layoutSettings.LayoutID === DEFAULT_LAYOUT_ID
             },
             getPromptDescription() {
                 if (this.isDefaultLayout) {
