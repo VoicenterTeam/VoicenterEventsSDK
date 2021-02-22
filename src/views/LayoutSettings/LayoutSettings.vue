@@ -2,9 +2,20 @@
     <div class="flex w-full flex-col relative layout-settings">
         <div class="w-full flex flex-col relative">
             <NavBar/>
-            <div class="w-full px-4 lg:px-20 xl:px-32 xxl:px-64 border-b border-gray-300">
+            <div class="w-full px-4 lg:px-32 xxl:px-64 border-b border-gray-300">
                 <div class="items-center flex justify-between h-23-5 relative">
-                    <div class="flex items-center">
+                    <div class="flex items-center xl:-mx-24 w-full">
+                        <div @click="onDiscard(true)"
+                             class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
+                            <IconDirLeft/>
+                            <span class="mx-1">{{ $t('Back') }}</span>
+                        </div>
+                        <span class="mx-8">
+                            <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <rect width="1" height="88" fill="#EBEBEB"/>
+                            </svg>
+                        </span>
                         <IconColorPicker class="w-10 h-10 text-primary"/>
                         <div class="flex flex-col mx-2"
                              v-if="!editableTitle">
@@ -43,12 +54,7 @@
                     <div class="col-span-3">
                         <LayoutPreview @on-real-time-preview="onRealTimePreview">
                             <template v-slot:actions>
-                                <div class="grid grid-cols-2 mt-8">
-                                    <div @click="onDiscard(true)"
-                                         class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
-                                        <IconDirLeft/>
-                                        <span class="mx-1">{{ $t('Back') }}</span>
-                                    </div>
+                                <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
                                         <base-button @click="onDiscard()"
                                                      variant="discard"
