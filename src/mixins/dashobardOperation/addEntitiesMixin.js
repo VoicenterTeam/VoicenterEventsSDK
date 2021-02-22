@@ -46,7 +46,7 @@ export default {
             
             let newWidget = cloneDeep(widget)
             newWidget.WidgetEntity = []
-            
+
             const yPosition = widget.WidgetLayout.GridLayout.y || 2
             newWidget.WidgetLayout.GridLayout.y += yPosition
             
@@ -57,8 +57,15 @@ export default {
             this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, duplicatedWidget, widgetGroup.WidgetGroupID))
             
             widgetGroup.WidgetList.splice(widgetGroup.WidgetList.length, 0, duplicatedWidget)
-            
+
             this.groupToEdit = widgetGroup
+            bus.$emit('added-widgets', [duplicatedWidget])
+
+            this.editMode = false
+            this.$nextTick(() => {
+                this.editMode = true
+            })
+
             this.loading = false
         },
         addNewGroup() {

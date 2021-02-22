@@ -22,6 +22,9 @@ const actions = {
 
 const getters = {
     getWidgetTemplate: state => templateId => {
+        if (!templateId) {
+            return
+        }
         return state.allWidgetTemplates.find(t => t.TemplateID.toString() === templateId.toString())
     }
 }
