@@ -67,34 +67,21 @@
                                     class="item"
                                     effect="dark"
                                     placement="top">
-                        <IconInfo class="cursor-help text-steel hover:text-primary"
-                                  @click="onPreviewTemplate(template)"/>
+                            <IconInfo class="cursor-help text-steel hover:text-primary"
+                                      @click="onPreviewTemplate(template)"/>
                         </el-tooltip>
                     </template>
                 </TemplateCard>
             </div>
         </div>
         <portal to="form-footer">
-            <div class="border-t-2 border-gray-300 py-4 flex items-center justify-between">
-                <div class="px-6">
-                    <p class="text-xs leading-4 text-gray-900 font-bold mb-1">{{ getSummaryActions }}</p>
-                    <p class="text-xs leading-4 text-gray-900">
-                        <span v-for="(tQuantity, tName) in summaries">
-                            {{ tName }}
-                            <b> {{ $t('x') }}{{ tQuantity }}</b>;
-                        </span>
-                    </p>
-                </div>
-                <slot>
-                    <div class="px-10">
-                        <el-button @click="onSetupWidgets"
-                                   :disabled="isEmpty(this.summaries)"
-                                   class="font-bold"
-                                   type="primary">
-                            {{ $t('Set up Widgets') }}
-                        </el-button>
-                    </div>
-                </slot>
+            <div class="px-10">
+                <el-button @click="onSetupWidgets"
+                           :disabled="submitDisabled"
+                           class="font-bold"
+                           type="primary">
+                    {{ $t('Set up Widgets') }}
+                </el-button>
             </div>
         </portal>
     </div>
@@ -102,11 +89,10 @@
 <script>
     import get from 'lodash/get'
     import sum from 'lodash/sum'
-    import isEmpty from 'lodash/isEmpty'
     import cloneDeep from 'lodash/cloneDeep'
-    import { InputNumber, Tooltip } from 'element-ui'
+    import {InputNumber, Tooltip} from 'element-ui'
     import TemplateCard from '@/components/Widgets/AddWidgetsForm/TemplateCard'
-    
+
     export default {
         components: {
             TemplateCard,
@@ -118,6 +104,10 @@
                 type: Object,
                 default: () => ({}),
             },
+            submitDisabled: {
+                type: Boolean,
+                default: true
+            }
         },
         data() {
             return {
@@ -161,7 +151,6 @@
             },
         },
         methods: {
-            isEmpty,
             translateTemplateName(tName) {
                 return this.$t(tName) || tName
             },
@@ -169,9 +158,9 @@
                 this.quantities[template.TemplateID] = value
                 this.summaries[template.TemplateName] = value
                 template['quantity'] = value
-                
+
                 this.templates[`${template.TemplateID}`] = template
-                
+
                 if (!value) {
                     delete this.summaries[template.TemplateName]
                 }
@@ -211,19 +200,34 @@
             tryAddAllWidgetsFromCategory() {
                 this.$emit('try-store-category', this.templateCategory)
             },
+            tryUpdateSummary() {
+                const summaries = {
+                    summaryText: this.summaries,
+                    quantities: this.quantities,
+                }
+                this.$emit('on-update-summary', summaries)
+            },
         },
         mounted() {
             this.fillProgress()
         },
+        watch: {
+            quantities: {
+                deep: true,
+                handler() {
+                    this.tryUpdateSummary()
+                }
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
-.widget-menu-footer {
-    border-top: solid 1px var(--silver-color);
-}
+    .widget-menu-footer {
+        border-top: solid 1px var(--silver-color);
+    }
 
-.text-main-xs {
-    font-size: 11px;
-    color: var(--cool-grey);
-}
+    .text-main-xs {
+        font-size: 11px;
+        color: var(--cool-grey);
+    }
 </style>

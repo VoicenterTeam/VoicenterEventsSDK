@@ -23,25 +23,12 @@
             </div>
         </div>
         <portal to="form-footer">
-            <div class="border-t-2 border-gray-300 py-4 flex items-center justify-between">
-                <div class="px-6">
-                    <p class="text-xs leading-4 text-gray-900 font-bold mb-1">{{ summaryActions }}</p>
-                    <p class="text-xs leading-4 text-gray-900">
-                        <span v-for="(tQuantity, tName) in getSummary">
-                            {{ tName }}
-                            <b> {{ $t('x') }}{{ tQuantity }}</b>;
-                        </span>
-                    </p>
-                </div>
-                <slot>
-                    <div class="px-10">
-                        <el-button @click="onViewSummary"
-                                   class="font-bold"
-                                   type="primary">
-                            {{ $t('Next') }}
-                        </el-button>
-                    </div>
-                </slot>
+            <div class="px-10">
+                <el-button @click="onViewSummary"
+                           class="font-bold"
+                           type="primary">
+                    {{ $t('Next') }}
+                </el-button>
             </div>
         </portal>
     </div>
@@ -80,9 +67,6 @@
                 let templates = uniqBy(this.getTemplateConfigs, 'ParameterName')
                 return orderBy(templates[0], ['ParameterType'], ['desc']);
             },
-            getSummary() {
-                return get(this.$store.getters['widgetCreation/getSummaries'], 'summaryText')
-            }
         },
         methods: {
             isAutoCompleteConfig(config) {

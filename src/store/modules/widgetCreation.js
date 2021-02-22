@@ -18,15 +18,19 @@ const allSteps = {
     },
     [CATEGORY_PREVIEW]: {
         component: 'TemplateCategoryPreview',
+        hasSummary: true,
     },
     [TEMPLATE_PREVIEW]: {
         component: 'TemplatePreview',
+        hasSummary: true,
     },
     [TEMPLATES_SETUP]: {
         component: 'TemplatesSettingSetup',
+        hasSummary: true,
     },
     [TEMPLATES_SUMMARY]: {
         component: 'TemplateSummaries',
+        hasSummary: true,
     },
 }
 
@@ -74,7 +78,6 @@ const mutations = {
             state.templates = ''
             setTimeout(() => {
                 state.templates = data.templates
-                state.summaries = data.summaries
             }, 250)
         }
         state.step = TEMPLATES_SETUP
@@ -123,6 +126,7 @@ const actions = {
 
 const getters = {
     getComponent: state => allSteps[state.step].component,
+    componentHasSummary: state => allSteps[state.step].hasSummary,
     getCategoryTemplates: state => state.category,
     getTemplateToPreview: state => state.templateToPreview,
     getTemplatesToSetup: state => state.templates,
