@@ -78,7 +78,6 @@
                 return this.$store.getters['layout/getActiveLayouts']
             },
             filteredLayouts() {
-                console.log('fdsf', this.hideLayoutId)
                 if (!this.hideLayoutId) {
                     return this.activeAccountLayouts
                 }

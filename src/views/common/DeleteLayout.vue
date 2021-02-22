@@ -104,8 +104,6 @@
                 return this.$store.state.dashboards.allDashboards
             },
             dashboardsWithThisLayout() {
-                console.log(this.allDashboards.filter(dashboard => dashboard.DashboardLayoutID.toString() === this.layoutID.toString()))
-                console.log('layoutID', this.layoutID)
                 return this.allDashboards.filter(dashboard => dashboard.DashboardLayoutID.toString() === this.layoutID.toString())
             },
             isDisabled() {
