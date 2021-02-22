@@ -80,30 +80,40 @@
                 </div>
             </div>
         </div>
-        <ConfirmDialog :visible.sync="showConfirmDialog">
+        <ConfirmDialog :visible.sync="showConfirmDialog"
+                       :description="getPromptDescription">
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Save Changes') }}
+                    {{ isDefaultLayout ? $t('Save Layout') : $t('Save Changes') }}
                 </h3>
             </template>
-            <div class="flex justify-center w-full">
-                <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p">
-                    {{ $t('Do you want to save changes in the existing theme or save as a new?') }}
-                </div>
-            </div>
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
+                    <base-button class="mx-4"
+                                 v-if="isDefaultLayout"
+                                 @click="showConfirmDialog = false"
+                                 variant="discard"
+                                 fixed-width="w-37">
+                        <div class="flex items-center">
+                            <IconDiscard class="mx-1"/>
+                            <span class="font-semibold">{{ 'Cancel' }}</span>
+                        </div>
+                    </base-button>
                     <base-button @click="onNewLayout"
                                  key="new-layout"
-                                 variant="white"
+                                 fixed-width="w-37"
+                                 :variant="isDefaultLayout ? white: ''"
                                  :loading="storingData">
-                        {{ $t('Save as New') }}
+                        <span class="font-semibold">{{ $t('Save as New') }}</span>
                     </base-button>
-                    <base-button @click="onUpdateLayout"
-                                 key="update-layout"
-                                 :loading="updatingData">
-                        {{ $t('Save Changes') }}
-                    </base-button>
+                    <template v-if="!isDefaultLayout">
+                        <base-button @click="onUpdateLayout"
+                                     key="update-layout"
+                                     fixed-width="w-37"
+                                     :loading="updatingData">
+                            <span class="font-semibold">{{ $t('Save Changes') }}</span>
+                        </base-button>
+                    </template>
                 </slot>
             </template>
         </ConfirmDialog>
@@ -112,14 +122,15 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import { LayoutApi } from '@/api/layoutApi'
+    import {LayoutApi} from '@/api/layoutApi'
     import NavBar from '@/views/common/NavBar'
+    import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import DeleteLayout from '@/views/common/DeleteLayout'
     import LayoutSelect from '@/views/common/LayoutSelect'
     import LayoutPreview from '@/views/LayoutSettings/LayoutPreview'
     import LayoutWrapper from '@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'
-    
+
     export default {
         components: {
             NavBar,
@@ -152,6 +163,15 @@
             storedDashboardLayout() {
                 return this.$store.getters['layout/storedDashboardLayout'](this.getActiveDashboardLayoutID)
             },
+            isDefaultLayout() {
+                return this.layoutSettings.LayoutID === DEFAULT_LAYOUT_ID || false
+            },
+            getPromptDescription() {
+                if (this.isDefaultLayout) {
+                    return this.$t('Are you sure you want to create new Layout?')
+                }
+                return this.$t('Do you want to save changes in the existing theme or save as a new?')
+            }
         },
         methods: {
             onChoseLayout(layout) {
@@ -173,7 +193,7 @@
                 }
             },
             composePayload() {
-                const payload= {
+                const payload = {
                     ...this.layoutSettings,
                     LayoutStatusID: 1,
                     LayoutStatusName: 'Enable',

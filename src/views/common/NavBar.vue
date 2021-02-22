@@ -5,7 +5,7 @@
                 <img :src="getLogo"
                      @click="onClickLogo"
                      alt="Logo"
-                     class="h-10 object-cover">
+                     class="h-10">
             </div>
             <div class="flex items-center justify-between w-full">
                 <LanguageSwitcher class="md:mx-6"/>
