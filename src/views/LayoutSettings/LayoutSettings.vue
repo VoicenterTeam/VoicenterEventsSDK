@@ -166,21 +166,32 @@
                     this.$router.push('dashboard-settings')
                 }
             },
+            composePayload() {
+                const payload= {
+                    ...this.layoutSettings,
+                    LayoutStatusID: 1,
+                    LayoutStatusName: 'Enable',
+                    LayoutAccountID: this.currentAccountId,
+                }
+                return payload
+            },
             async onUpdateLayout() {
                 try {
                     this.updatingData = true
-                    await LayoutApi.update(this.layoutSettings)
-                    await this.updateDashboardLayout(this.layoutSettings)
+                    const payload = this.composePayload()
+                    await LayoutApi.update(payload)
+                    await this.updateDashboardLayout(payload)
                 } catch (e) {
                     console.warn(e)
                 } finally {
                     this.updatingData = false
+                    this.showConfirmDialog = false
                 }
             },
             async onNewLayout() {
                 try {
                     this.storingData = true
-                    let payload = { ...this.layoutSettings }
+                    let payload = this.composePayload()
                     delete payload.LayoutID
                     await LayoutApi.update(payload)
                     await this.getAccountLayouts()
@@ -188,6 +199,7 @@
                     console.warn(e)
                 } finally {
                     this.storingData = false
+                    this.showConfirmDialog = false
                 }
             },
             async getAccountLayouts() {

@@ -15,7 +15,11 @@ export const LayoutApi = {
     async update(data) {
         try {
             const result = await $axios.post('/Layout/Upsert/', data)
-            Notification.success(i18n.t('Layout updated with success'))
+            if (data.LayoutID) {
+                Notification.success(i18n.t('Layout updated with success'))
+            } else {
+                Notification.success(i18n.t('Layout added with success'))
+            }
             return result
         } catch (e) {
             parseCatch(e, true, 'Update Account Layout')
