@@ -97,6 +97,7 @@
                 model: {},
                 currentDashboard: {},
                 loading: false,
+                initialLayout: {},
             }
         },
         computed: {
@@ -124,8 +125,7 @@
                 this.discardGroupsManagement()
             },
             discardLayoutChanges() {
-                this.layoutSettings = cloneDeep(this.storedDashboardLayout)
-                this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
+                this.$store.dispatch('layout/updateActiveLayout', this.initialLayout)
             },
             discardGroupsManagement() {
                 this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
@@ -157,6 +157,12 @@
                 this.currentDashboard['DashboardLayoutID'] = layout.LayoutID
                 await this.$store.dispatch('dashboards/updateDashboard', this.currentDashboard)
             },
+            keepInitialLayout() {
+                this.initialLayout = cloneDeep(this.activeLayout)
+            }
+        },
+        mounted() {
+            this.keepInitialLayout()
         },
         watch: {
             activeDashboard: {
