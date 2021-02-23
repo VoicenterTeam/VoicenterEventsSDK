@@ -102,7 +102,7 @@
                     <base-button @click="onNewLayout"
                                  key="new-layout"
                                  fixed-width="w-37"
-                                 :variant="isDefaultLayout ? white: ''"
+                                 :variant="isDefaultLayout ? 'white': 'discard'"
                                  :loading="storingData">
                         <span class="font-semibold">
                             {{ isDefaultLayout ? $t('Save') : $t('Save as New') }}

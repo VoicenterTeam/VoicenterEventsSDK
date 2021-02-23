@@ -66,6 +66,10 @@
                 type: Number,
                 default: 0,
             },
+            selectedValue: {
+                type: Number,
+                default: 0,
+            }
         },
         data() {
             return {

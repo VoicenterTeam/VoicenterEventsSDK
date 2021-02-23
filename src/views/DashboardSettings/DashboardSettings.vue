@@ -73,16 +73,16 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import { Popover } from 'element-ui'
+    import {Popover} from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
     import NavBar from '@/views/common/NavBar'
-    import { LayoutApi } from '@/api/layoutApi'
-    import { DashboardApi } from '@/api/dashboardApi'
+    import {LayoutApi} from '@/api/layoutApi'
+    import {DashboardApi} from '@/api/dashboardApi'
     import DeleteLayout from '@/views/common/DeleteLayout'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
-    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
-    
+    import {WidgetGroupsApi} from '@/api/widgetGroupApi'
+
     export default {
         components: {
             NavBar,
@@ -113,8 +113,9 @@
             },
         },
         methods: {
-            onDiscard(goBack = false) {
+            async onDiscard(goBack = false) {
                 if (goBack) {
+                    await this.$store.dispatch('dashboards/getDashboards')
                     this.$router.push('/')
                     return
                 }
@@ -139,11 +140,11 @@
                             Order: index,
                         })
                     })
-                    
+
                     await DashboardApi.update(this.model)
                     await LayoutApi.update(this.activeLayout)
                     await Promise.all(toUpdatePromises)
-                    
+
                     this.$store.commit('layout/SET_ACTIVE_LAYOUT', this.activeLayout)
                 } catch (e) {
                     console.warn(e)

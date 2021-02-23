@@ -21,6 +21,7 @@
                 <div v-html="getMessage"/>
             </el-alert>
             <LayoutSelect class="mt-4"
+                          :selected-value="globalLayout"
                           :hide-layout-id="activeLayout.LayoutID"
                           @on-chose-layout="onChoseLayout"/>
         </div>
@@ -85,6 +86,7 @@
         },
         data() {
             return {
+                globalLayout: 1,
                 modalWidth: '500px',
                 accountLayouts: [],
                 layoutToReplace: null,
@@ -142,6 +144,7 @@
                     
                     await LayoutApi.update(layoutSettings)
                     await this.$store.dispatch('layout/setupLayouts')
+                    await this.$store.dispatch('layout/getGlobalLayouts')
                     this.$emit('on-close')
                 } catch (e) {
                     console.warn(e)

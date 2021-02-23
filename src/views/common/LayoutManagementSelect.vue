@@ -239,6 +239,7 @@
                     
                     await LayoutApi.update(payload)
                     await this.$store.dispatch('layout/setupLayouts')
+                    await this.$store.dispatch('layout/getGlobalLayouts')
                 } catch (e) {
                     console.warn(e)
                 } finally {
