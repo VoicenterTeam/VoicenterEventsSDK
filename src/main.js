@@ -26,7 +26,6 @@ new Vue({
     render: h => h(App)
 }).$mount('#app')
 
-
 initRealTimeSdk().then(() => {
     console.log('Real time SDK Initialized')
 })

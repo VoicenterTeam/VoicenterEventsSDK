@@ -13,24 +13,23 @@
                            :is="group.ParameterTypeName"
                            v-model="group.Value"
                 />
-                <logo
-                    v-else
-                    v-bind="group"
-                    :key="group.LayoutParameterValueID"
-                    v-model="group.ValueText"/>
+                <logo v-else
+                      v-bind="group"
+                      :key="group.LayoutParameterValueID"
+                      v-model="group.ValueText"/>
             </div>
         </CollapseWrapper>
     </div>
 </template>
 <script>
-    import { mapOrder } from '@/helpers/util'
+    import {mapOrder} from '@/helpers/util'
     import CollapseWrapper from '@/views/common/CollapseWrapper'
     import ColorParameterType from '../components/ColorParameterType'
     import ImageParameterType from '../components/ImageParameterType'
     import IntegerParameterType from '../components/IntegerParameterType'
     import BooleanParameterType from '../components/BooleanParameterType'
-    import { DEFAULT_GROUP_KEYS, DEFAULT_LAYOUT_GROUPS, DEFAULT_SELECTED_GROUP } from '../layout-management'
-    
+    import {DEFAULT_GROUP_KEYS, DEFAULT_LAYOUT_GROUPS, DEFAULT_SELECTED_GROUP} from '../layout-management'
+
     export default {
         inheritAttrs: false,
         components: {
@@ -69,7 +68,6 @@
                 }],
             }
         },
-        computed: {},
         methods: {
             groupedParameters(section) {
                 const group = this.groupKeys[section]
@@ -88,16 +86,16 @@
     }
 </script>
 <style lang="scss">
-.rtl {
-    .layout-wrapper /deep/ {
-        
-        .el-button--primary {
-            margin-left: 10px;
-        }
-        
-        .el-button--default {
-            margin-left: 10px;
+    .rtl {
+        .layout-wrapper /deep/ {
+
+            .el-button--primary {
+                margin-left: 10px;
+            }
+
+            .el-button--default {
+                margin-left: 10px;
+            }
         }
     }
-}
 </style>
