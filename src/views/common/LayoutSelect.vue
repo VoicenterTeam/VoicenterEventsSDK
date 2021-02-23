@@ -66,11 +66,15 @@
                 type: Number,
                 default: 0,
             },
+            defaultLayout: {
+                type: Number,
+                default: null,
+            }
         },
         data() {
             return {
                 groupKeys: DEFAULT_GROUP_KEYS,
-                selectedLayout: null,
+                selectedLayout: this.defaultLayout,
             }
         },
         computed: {

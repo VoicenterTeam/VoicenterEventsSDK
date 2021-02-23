@@ -21,6 +21,7 @@
                 <div v-html="getMessage"/>
             </el-alert>
             <LayoutSelect class="mt-4"
+                          :default-layout="globalLayout"
                           :hide-layout-id="activeLayout.LayoutID"
                           @on-chose-layout="onChoseLayout"/>
         </div>
@@ -85,9 +86,10 @@
         },
         data() {
             return {
+                globalLayout: 1,
                 modalWidth: '500px',
                 accountLayouts: [],
-                layoutToReplace: null,
+                layoutToReplace: 1,
                 loading: false,
                 layoutID: this.activeLayout.LayoutID,
                 LayoutName: this.activeLayout.LayoutName,
@@ -128,9 +130,9 @@
                         const dashboardsWithThisLayout = this.dashboardsWithThisLayout
                         
                         for (const dashboard of dashboardsWithThisLayout) {
-                            this.layoutID = this.layoutToReplace
-                            dashboard['DashboardLayoutID'] = this.layoutToReplace.LayoutID
+                            dashboard['DashboardLayoutID'] = this.layoutToReplace === 1 ? this.layoutToReplace: this.layoutToReplace.LayoutID
                             await DashboardApi.update(dashboard)
+                            this.layoutID = this.layoutToReplace
                         }
                     }
                     
