@@ -104,7 +104,9 @@
                                  fixed-width="w-37"
                                  :variant="isDefaultLayout ? white: ''"
                                  :loading="storingData">
-                        <span class="font-semibold">{{ $t('Save as New') }}</span>
+                        <span class="font-semibold">
+                            {{ isDefaultLayout ? $t('Save') : $t('Save as New') }}
+                        </span>
                     </base-button>
                     <template v-if="!isDefaultLayout">
                         <base-button @click="onUpdateLayout"

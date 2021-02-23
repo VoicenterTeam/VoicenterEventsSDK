@@ -81,8 +81,7 @@
                 if (!this.hideLayoutId) {
                     return this.activeAccountLayouts
                 }
-                const result = this.activeAccountLayouts.filter(layout => layout.LayoutID.toString() !== this.hideLayoutId.toString())
-                return result
+                return this.activeAccountLayouts.filter(layout => layout.LayoutID.toString() !== this.hideLayoutId.toString())
             }
         },
         methods: {
