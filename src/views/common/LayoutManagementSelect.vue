@@ -123,9 +123,10 @@
             </template>
         </ConfirmDialog>
         <DeleteLayout v-if="showDeleteDialog"
+                      :is-active-layout="tryingDeleteActiveLayout"
                       @on-close="showDeleteDialog = false"
                       :visible.sync="showDeleteDialog"
-                      :active-layout="layoutToRemove"/>
+                      :layout-to-remove="layoutToRemove"/>
     </div>
 </template>
 <script>
@@ -168,6 +169,9 @@
             }
         },
         computed: {
+            tryingDeleteActiveLayout() {
+                return this.layoutToRemove.LayoutID.toString() === this.selectedLayout.LayoutID.toString()
+            },
             selectedLayout() {
                 return this.$store.state.layout.activeLayout
             },

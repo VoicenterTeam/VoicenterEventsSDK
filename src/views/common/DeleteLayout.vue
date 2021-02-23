@@ -22,7 +22,7 @@
             </el-alert>
             <LayoutSelect class="mt-4"
                           :default-layout="globalLayout"
-                          :hide-layout-id="activeLayout.LayoutID"
+                          :hide-layout-id="layoutToRemove.LayoutID"
                           @on-chose-layout="onChoseLayout"/>
         </div>
         <template v-slot:footer>
@@ -67,7 +67,11 @@
             [Option.name]: Option,
         },
         props: {
-            activeLayout: {
+            isActiveLayout: {
+                type: Boolean,
+                default: false,
+            },
+            layoutToRemove: {
                 type: Object,
                 default: () => ({}),
             },
@@ -91,8 +95,8 @@
                 accountLayouts: [],
                 layoutToReplace: 1,
                 loading: false,
-                layoutID: this.activeLayout.LayoutID,
-                LayoutName: this.activeLayout.LayoutName,
+                layoutID: this.layoutToRemove.LayoutID,
+                LayoutName: this.layoutToRemove.LayoutName,
             }
         },
         computed: {
@@ -118,10 +122,16 @@
                 })
                 return `${this.$t('You must select another configuration for these dashboards:')} <br> <strong> ${dashboards} </strong>`
             },
+            getAccountLayouts() {
+                return this.$store.state.layout.data || []
+            },
         },
         methods: {
             onChoseLayout(id) {
                 this.layoutToReplace = id
+            },
+            getLayoutToReplace(LayoutID) {
+                return this.getAccountLayouts.filter(layout => layout.LayoutID.toString() === LayoutID.toString())
             },
             async onDelete() {
                 try {
@@ -129,15 +139,25 @@
                     if (this.layoutID) {
                         const dashboardsWithThisLayout = this.dashboardsWithThisLayout
                         
+                        const newLayoutID = this.layoutToReplace === 1 ? this.layoutToReplace: this.layoutToReplace.LayoutID
+
                         for (const dashboard of dashboardsWithThisLayout) {
-                            dashboard['DashboardLayoutID'] = this.layoutToReplace === 1 ? this.layoutToReplace: this.layoutToReplace.LayoutID
+                            dashboard['DashboardLayoutID'] = newLayoutID
                             await DashboardApi.update(dashboard)
-                            this.layoutID = this.layoutToReplace
+                            this.layoutID = newLayoutID
+                        }
+
+                        if (this.isActiveLayout) {
+                            const layout = this.getLayoutToReplace(newLayoutID)
+                            if (!layout.length) {
+                                return
+                            }
+                            await this.$store.dispatch('layout/updateActiveLayout', layout[0])
                         }
                     }
                     
                     const layoutSettings = {
-                        ...this.activeLayout,
+                        ...this.layoutToRemove,
                         LayoutStatusID: this.statusToSet,
                         LayoutStatusName: this.statusNameToSet,
                     }
