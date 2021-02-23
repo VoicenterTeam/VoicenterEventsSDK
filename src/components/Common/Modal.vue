@@ -199,7 +199,7 @@
                 this.$emit('opened');
             },
             afterLeave() {
-                this.$emit('closed');
+                this.$emit('close');
             },
         },
         mounted() {

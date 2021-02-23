@@ -2,6 +2,7 @@
     <modal :append-to-body="true"
            v-bind="$attrs"
            v-on="$listeners"
+           @close="onCloseDialog"
            :width="modalWidth">
         <template v-slot:redirect-action>
             <portal-target name="redirect-action"/>
@@ -109,6 +110,9 @@
             },
         },
         methods: {
+            onCloseDialog() {
+                this.$store.dispatch('widgetCreation/resetState')
+            },
             addWidgetsToGroup(templates) {
                 const widgetTemplatesToAdd = templates.filter(template => template.toStore)
                 const objToEmit = {
