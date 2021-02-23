@@ -66,6 +66,7 @@
             </div>
             <div class="w-full px-4 mt-6 lg:px-32 xxl:px-64">
                 <DashboardSettings v-model="model"
+                                   @on-change-layout="onChangeLayout"
                                    :current-dashboard="currentDashboard"/>
             </div>
         </div>
@@ -151,6 +152,10 @@
                 } finally {
                     this.loading = false
                 }
+            },
+            async onChangeLayout(layout) {
+                this.currentDashboard['DashboardLayoutID'] = layout.LayoutID
+                await this.$store.dispatch('dashboards/updateDashboard', this.currentDashboard)
             },
         },
         watch: {

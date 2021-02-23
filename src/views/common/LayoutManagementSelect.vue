@@ -208,6 +208,7 @@
                     return
                 }
                 this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
+                this.$emit('on-change-layout', layout)
                 this.showMenu = false
             },
             getIndicatorStyles(config) {
