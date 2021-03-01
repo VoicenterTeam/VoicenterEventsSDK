@@ -85,7 +85,7 @@
                 if (group.IsNew) {
                     return this.$t('Group') + ' ' + (index + 1)
                 }
-                return group.WidgetGroupTitle || group.WidgetGroupID
+                return group.WidgetGroupTitle || this.$t('Group ID') + ': ' + group.WidgetGroupID
             },
             switchTab(group) {
                 if (this.editMode) {
