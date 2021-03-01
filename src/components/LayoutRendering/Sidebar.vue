@@ -3,20 +3,20 @@
         <div class="w-full flex items-center overflow-x-auto">
             <div v-if="showTabs"
                  class="tab-wrapper px-3 lg:px-10 text-main-lg cursor-pointer"
-                 v-for="group in widgetGroupList">
+                 v-for="(group, index) in widgetGroupList">
                 <div></div>
                 <div class="flex justify-between w-full items-center"
                      :key="`edit-${group.WidgetGroupID}`">
                     <div @click="switchTab(group)"
                          class="whitespace-no-wrap tab-name"
                          :class="[{'active': isActiveGroup(group)}, $rtl.isRTL ? 'ml-4' : 'mr-4']">
-                        {{ group.WidgetGroupTitle || $t('Group ID') + ': ' + group.WidgetGroupID }}
+                        {{ widgetGroupName(group, index) }}
                     </div>
                     <ActionsTabbedView :edit-mode="editMode"
-                                        @on-remove-widget-group="onRemoveWidgetGroup(group)"
-                                        @on-edit-widget-group="onEditWidgetGroup(group)"
-                                        :key="`group-${group.WidgetGroupID}`"
-                                        :is-active-group="isActiveGroup(group)"
+                                       @on-remove-widget-group="onRemoveWidgetGroup(group)"
+                                       @on-edit-widget-group="onEditWidgetGroup(group)"
+                                       :key="`group-${group.WidgetGroupID}`"
+                                       :is-active-group="isActiveGroup(group)"
                     />
                 </div>
                 <fade-transition mode="out-in" :duration="250">
@@ -81,6 +81,12 @@
             onFullScreen: {},
         },
         methods: {
+            widgetGroupName(group, index) {
+                if (group.IsNew) {
+                    return this.$t('Group') + ' ' + (index + 1)
+                }
+                return group.WidgetGroupTitle || group.WidgetGroupID
+            },
             switchTab(group) {
                 if (this.editMode) {
                     this.onEditWidgetGroup(group)
