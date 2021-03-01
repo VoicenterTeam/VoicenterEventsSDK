@@ -81,6 +81,7 @@ export default {
             this.$nextTick(() => {
                 this.editMode = true
                 this.groupToEdit = group
+                this.switchTab(group.WidgetGroupID)
             })
         },
     },
