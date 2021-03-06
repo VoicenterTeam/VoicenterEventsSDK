@@ -2,7 +2,7 @@
     <div class="w-full flex flex-col min-h-screen relative dashboard-creation">
         <NavBar/>
         <div class="absolute h-0-25 w-full bg-gray-300 mt-39"/>
-        <div class="flex-1 overflow-auto px-4 xl:px-32 2xl:px-64"
+        <div class="flex-1 overflow-auto px-4 lg:16 2xl:px-40 3xl:px-64"
              :class="{'opacity-50': loading}">
             <div class="flex items-center xl:-mx-24">
                 <div @click="onBack()"
@@ -24,18 +24,19 @@
                 <template v-if="!onViewTemplate">
                     <el-form class="flex flex-row items-center my-8"
                              key="el-form">
-                        <div class="flex flex-col lg:flex-row lg:items-center">
-                            <label class="label-input">
+                        <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
+                            <span class="label-input">
                                 {{ $t('Set the Name') }}
-                            </label>
-                            <div class="w-64 lg:mx-4">
+                            </span>
+                            <div class="lg:w-64 lg:mx-4">
                                 <el-input v-model="model.DashboardTitle"/>
                             </div>
                         </div>
-                        <div class="flex flex-col lg:flex-row lg:items-center mx-6 lg:mx-0">
-                        <span class="label-input block">
-                            {{ $t('Choose Layout') }}
-                        </span>
+                        <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
+                            class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto">
+                            <span class="label-input flex-wrap">
+                                {{ $t('Choose Layout') }}
+                            </span>
                             <div>
                                 <LayoutSelect class="w-64 lg:mx-4"
                                               @on-chose-layout="onChoseLayout"
@@ -44,7 +45,7 @@
                             </div>
                         </div>
                     </el-form>
-                    <div class="grid grid-cols-4 col-gap-5"
+                    <div class="lg:grid lg:grid-cols-4 col-gap-5"
                          key="TemplateCategories">
                         <TemplateCategories class="col-span-1"
                                             key="categories"
@@ -71,7 +72,7 @@
             </transition-group>
         </div>
         <div class="border-t border-gray-300 flex w-full items-center h-23-5">
-            <div class="mx-4 lg:mx-32 xl:mx-64 flex w-full justify-between items-center">
+            <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
                 <base-button class="mx-4"
                              @click="onDiscard"
                              variant="discard"

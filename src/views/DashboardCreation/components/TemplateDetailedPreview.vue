@@ -1,8 +1,9 @@
 <template>
-    <div class="grid grid-cols-6 gap-6 my-6 template-preview_wrapper">
+    <div class="md:grid md:grid-cols-6 gap-6 my-6 template-preview_wrapper">
         <div class="col-span-4 border rounded shadow-base">
             <img src="/img/IconDashboardTemplate.png" alt="template">
         </div>
+        <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
         <div class="col-span-2">
             <div class="flex items-center mb-2">
                 <i>
@@ -15,6 +16,7 @@
             <p>
                 {{ $t(template.DashboardTemplateDescription) }}
             </p>
+            <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
             <div class="flex items-center mt-4 mb-2">
                 <i>
                     <IconTimerSm class="text-primary"/>
@@ -25,6 +27,7 @@
             </div>
             <div v-html="getReportSettings"/>
             <div v-html="getTimeSettings"/>
+            <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
             <div class="flex items-center mt-4 mb-2">
                 <IconDashboardColor class="text-primary"/>
                 <span class="mx-1">{{ $t('Colors') }}</span>
@@ -42,7 +45,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-6 lg:col-span-3"
+        <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
+        <div class="col-span-6 lg:col-span-3 mb-3 md:mb-0"
              v-for="widget in template.WidgetTemplateList"
              :key="template.DashboardTemplateWidgetID">
             <TemplateWidget :widget="widget"

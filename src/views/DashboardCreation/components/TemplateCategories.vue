@@ -1,5 +1,5 @@
 <template>
-    <div class="xl:w-64">
+    <div class="xl:w-64 flex flex-row lg:flex-col">
         <div v-for="category in categories"
              @click="onChooseCategory(category)"
              class="w-full h-12 p-4 flex items-center category-wrapper mb-2 mx-1 hover:text-primary cursor-pointer"
