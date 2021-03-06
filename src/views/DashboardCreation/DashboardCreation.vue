@@ -1,25 +1,28 @@
 <template>
     <div class="w-full flex flex-col min-h-screen relative dashboard-creation">
         <NavBar/>
-        <div class="absolute h-0-25 w-full bg-gray-300 mt-39"/>
-        <div class="flex-1 overflow-auto px-4 lg:16 2xl:px-40 3xl:px-64"
+        <div class="w-full px-4 lg:16 2xl:px-40 3xl:px-64 border-b border-gray-300"
              :class="{'opacity-50': loading}">
-            <div class="flex items-center xl:-mx-24">
-                <div @click="onBack()"
-                     class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
-                    <IconDirLeft/>
-                    <span class="mx-1">{{ $t('Back') }}</span>
-                </div>
-                <span class="mx-8">
+            <div class="items-center flex justify-between h-23-5">
+                <div class="flex items-center xl:-mx-24 w-full">
+                    <div @click="onBack()"
+                         class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
+                        <IconDirLeft/>
+                        <span class="mx-1">{{ $t('Back') }}</span>
+                    </div>
+                    <span class="mx-8">
                     <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                         <rect width="1" height="88" fill="#EBEBEB"/>
                     </svg>
                 </span>
-                <span class="text-xl font-bold text-gray-900">
+                    <span class="text-xl font-bold text-gray-900">
                     {{ $t('Dashboard Creation') }}
                 </span>
+                </div>
             </div>
+        </div>
+        <div class="w-full px-4 mt-6 lg:px-16 2xl:px-40 3xl:px-64">
             <transition-group name="flip">
                 <template v-if="!onViewTemplate">
                     <el-form class="flex flex-row items-center my-8"
@@ -33,7 +36,7 @@
                             </div>
                         </div>
                         <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
-                            class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto">
+                             class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto">
                             <span class="label-input flex-wrap">
                                 {{ $t('Choose Layout') }}
                             </span>
@@ -71,7 +74,7 @@
                 </template>
             </transition-group>
         </div>
-        <div class="border-t border-gray-300 flex w-full items-center h-23-5">
+        <div class="flex w-full items-center">
             <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
                 <base-button class="mx-4"
                              @click="onDiscard"
