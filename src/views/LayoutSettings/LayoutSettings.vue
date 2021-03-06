@@ -2,52 +2,59 @@
     <div class="flex w-full flex-col relative layout-settings">
         <div class="w-full flex flex-col relative">
             <NavBar/>
-            <div class="w-full px-4 lg:px-32 2xl:px-64 border-b border-gray-300">
+            <div class="w-full px-4 lg:16 2xl:px-40 3xl:px-64 border-b border-gray-300">
                 <div class="items-center flex justify-between h-23-5 relative">
                     <div class="flex items-center xl:-mx-24 w-full">
-                        <div @click="onDiscard(true)"
-                             class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
-                            <IconDirLeft/>
-                            <span class="mx-1">{{ $t('Back') }}</span>
-                        </div>
-                        <span class="mx-8">
+                        <div class="flex items-center">
+                            <div @click="onDiscard(true)"
+                                 class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
+                                <IconDirLeft/>
+                                <span class="mx-1">{{ $t('Back') }}</span>
+                            </div>
+                            <span class="mx-8">
                             <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect width="1" height="88" fill="#EBEBEB"/>
                             </svg>
                         </span>
-                        <IconColorPicker class="w-10 h-10 text-primary"/>
-                        <div class="flex flex-col mx-2"
-                             v-if="!editableTitle">
+                            <IconColorPicker class="w-10 h-10 text-primary"/>
+                            <div class="flex flex-col mx-2"
+                                 v-if="!editableTitle">
                             <span class="text-xl font-bold text-gray-900">
                                 {{ layoutSettings.LayoutName }}
                             </span>
-                            <div class="flex items-center text-primary-300 hover:text-primary cursor-pointer"
-                                 @click="onEditLayoutTitle">
-                                <IconPencil class="w-4 h-4"/>
-                                <span class="text-sm mx-1">{{ $t('Edit') }}</span>
+                                <div class="flex items-center text-primary-300 hover:text-primary cursor-pointer"
+                                     @click="onEditLayoutTitle">
+                                    <IconPencil class="w-4 h-4"/>
+                                    <span class="text-sm mx-1">{{ $t('Edit') }}</span>
+                                </div>
+                            </div>
+                            <div v-else
+                                 class="flex flex-col mx-2">
+                                <base-input id="layout_name"
+                                            class="text-xl font-bold"
+                                            @on-enter="onEditLayoutTitle"
+                                            v-model="layoutSettings.LayoutName">
+                                    <IconCheck class="hover:text-primary cursor-pointer"
+                                               @click="onEditLayoutTitle"/>
+                                </base-input>
                             </div>
                         </div>
-                        <div v-else
-                             class="flex flex-col mx-2">
-                            <base-input id="layout_name"
-                                        class="text-xl font-bold"
-                                        @on-enter="onEditLayoutTitle"
-                                        v-model="layoutSettings.LayoutName">
-                                <IconCheck class="hover:text-primary cursor-pointer"
-                                           @click="onEditLayoutTitle"/>
-                            </base-input>
-                        </div>
                     </div>
-                    <div class="flex flex-row items-center w-64">
+                    <div class="hidden sm:flex flex-row items-center w-64">
                         <LayoutSelect :active-layout="selectedLayout"
                                       :display-label="false"
                                       @on-chose-layout="onChoseLayout"/>
                     </div>
                 </div>
             </div>
-            <div class="w-full px-4 mt-6 lg:px-20 xl:px-32 2xl:px-64">
-                <div class="grid grid-cols-5 col-gap-8">
+            <div class="w-full mt-6 px-4 lg:16 2xl:px-40 3xl:px-64">
+                <div class="flex flex-row items-center w-full md:hidden mb-6">
+                    <LayoutSelect :active-layout="selectedLayout"
+                                  :display-label="false"
+                                  @on-chose-layout="onChoseLayout"/>
+                </div>
+                <div class="lg:grid lg:grid-cols-5 col-gap-8">
                     <div class="col-span-2">
                         <LayoutWrapper v-model="layoutSettings"/>
                     </div>
@@ -124,15 +131,15 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import {LayoutApi} from '@/api/layoutApi'
+    import { LayoutApi } from '@/api/layoutApi'
     import NavBar from '@/views/common/NavBar'
-    import {DEFAULT_LAYOUT_ID} from '@/enum/generic'
+    import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import DeleteLayout from '@/views/common/DeleteLayout'
     import LayoutSelect from '@/views/common/LayoutSelect'
     import LayoutPreview from '@/views/LayoutSettings/LayoutPreview'
     import LayoutWrapper from '@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'
-
+    
     export default {
         components: {
             NavBar,
@@ -173,7 +180,7 @@
                     return this.$t('Are you sure you want to create new Layout?')
                 }
                 return this.$t('Do you want to save changes in the existing theme or save as a new?')
-            }
+            },
         },
         methods: {
             onChoseLayout(layout) {
