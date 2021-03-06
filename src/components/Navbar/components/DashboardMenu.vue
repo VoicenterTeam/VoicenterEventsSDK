@@ -18,7 +18,7 @@
                 <div class="py-3 px-4 text-gray-500 hover:text-primary cursor-pointer flex items-center"
                      @click="newDashboard">
                     <IconAddDashboard class="focus:outline-none"/>
-                    <span class="mx-2">{{ $t('common.newDashboard') }}</span>
+                    <span class="mx-2 mt-1">{{ $t('common.newDashboard') }}</span>
                 </div>
                 <div class="dashboards">
                     <div @click="chooseDashboard(dashboard)"

@@ -2,7 +2,7 @@
     <div class="flex w-full flex-col dashboard-settings">
         <div class="w-full flex flex-col relative">
             <NavBar/>
-            <div class="w-full px-4 lg:px-32 xxl:px-64 border-b border-gray-300">
+            <div class="w-full px-4 lg:16 2xl:px-40 3xl:px-64 border-b border-gray-300">
                 <slot>
                     <div class="items-center flex justify-between h-23-5">
                         <div class="flex items-center xl:-mx-24 w-full">
@@ -11,7 +11,7 @@
                                 <IconDirLeft/>
                                 <span class="mx-1">{{ $t('Back') }}</span>
                             </div>
-                            <span class="mx-8">
+                            <span class="mx-4 lg:mx-8">
                             <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect width="1" height="88" fill="#EBEBEB"/>
@@ -21,8 +21,8 @@
                                 <span class="text-xl font-bold text-gray-900">
                                     {{ $t('Dashboard Settings') }}
                                 </span>
-                                <div class="flex justify-end w-full md:hidden">
-                                    <base-button class="mx-4"
+                                <div class="flex justify-center w-full md:hidden">
+                                    <base-button :class="$rtl.isRTL ? 'ml-2' : 'mr-2'"
                                                  @click="onDiscard()"
                                                  variant="discard"
                                                  fixed-width="w-37">
@@ -64,7 +64,7 @@
                     </div>
                 </slot>
             </div>
-            <div class="w-full px-4 mt-6 lg:px-32 xxl:px-64">
+            <div class="w-full px-4 mt-6 lg:px-16 2xl:px-40 3xl:px-64">
                 <DashboardSettings v-model="model"
                                    @on-change-layout="onChangeLayout"
                                    :current-dashboard="currentDashboard"/>

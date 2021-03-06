@@ -2,7 +2,7 @@
     <div class="w-full flex flex-col min-h-screen relative dashboard-creation">
         <NavBar/>
         <div class="absolute h-0-25 w-full bg-gray-300 mt-39"/>
-        <div class="flex-1 overflow-auto px-4 xl:px-32 xxl:px-64"
+        <div class="flex-1 overflow-auto px-4 xl:px-32 2xl:px-64"
              :class="{'opacity-50': loading}">
             <div class="flex items-center xl:-mx-24">
                 <div @click="onBack()"

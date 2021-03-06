@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-click-outside="onMenuClickOutside"
-             class="w-full relative layout-selection">
+             class="w-full relative layout-selection border-b sm:border-none pb-6 sm:pb-0">
             <div class="flex items-center mb-3 justify-between">
                 <div class="flex">
                     <IconLayoutSelection class="text-primary"/>
@@ -17,7 +17,7 @@
             </div>
             <button @click.stop="triggerMenu"
                     class="border h-10 border-gray-550 flex w-full items-center rounded cursor-pointer focus:outline-none justify-between px-4">
-                <span class="mx-2">{{ selectedLayout.LayoutName }}</span>
+                <span class="mx-2 truncate">{{ selectedLayout.LayoutName }}</span>
                 <div class="flex">
                     <IconArrowDown class="text-gray-500 transition"
                                    :class="{'is-expanded': showMenu}"/>

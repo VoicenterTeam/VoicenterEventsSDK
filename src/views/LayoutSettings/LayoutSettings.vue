@@ -2,7 +2,7 @@
     <div class="flex w-full flex-col relative layout-settings">
         <div class="w-full flex flex-col relative">
             <NavBar/>
-            <div class="w-full px-4 lg:px-32 xxl:px-64 border-b border-gray-300">
+            <div class="w-full px-4 lg:px-32 2xl:px-64 border-b border-gray-300">
                 <div class="items-center flex justify-between h-23-5 relative">
                     <div class="flex items-center xl:-mx-24 w-full">
                         <div @click="onDiscard(true)"
@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full px-4 mt-6 lg:px-20 xl:px-32 xxl:px-64">
+            <div class="w-full px-4 mt-6 lg:px-20 xl:px-32 2xl:px-64">
                 <div class="grid grid-cols-5 col-gap-8">
                     <div class="col-span-2">
                         <LayoutWrapper v-model="layoutSettings"/>

@@ -16,7 +16,7 @@
         >
             <div class="options-wrapper">
                 <el-option v-for="layout in filteredLayouts"
-                           class="flex items-center justify-between"
+                           class="flex items-center justify-between truncate"
                            :value="layout.LayoutID"
                            :label="layout.LayoutName"
                            :key="layout.LayoutID">

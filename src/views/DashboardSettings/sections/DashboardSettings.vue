@@ -1,6 +1,6 @@
 <template>
     <div class="text-gray-900">
-        <div class="grid grid-cols-4 md:col-gap-12 dashboard-settings">
+        <div class="grid grid-cols-4 col-gap-6 lg:col-gap-12 dashboard-settings">
             <div class="col-span-4 border-b pb-3 md:pb-0 md:border-none md:col-span-1">
                 <div class="flex items-center mb-3">
                     <div class="flex">
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-4 col-gap-12 mt-12">
+        <div class="grid grid-cols-4 col-gap-6 lg:col-gap-12 mt-6 sm:mt-12">
             <div class="col-span-4 md:col-span-1 mb-4 md:mb-0">
                 <LayoutManagementSelect v-on="$listeners"/>
             </div>
@@ -71,7 +71,7 @@
                                 {{ getFontInfos }}
                             </div>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="hidden flex-col lg:flex">
                             <div class="flex items-center mb-2">
                                 <i>
                                     <IconTimer class="text-primary"/>
@@ -89,6 +89,18 @@
                                 <IconPencil class="w-4 h-4"/>
                                 <div>{{ $t('Edit') }}</div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col lg:hidden mt-4">
+                        <div class="flex items-center mb-2">
+                            <i>
+                                <IconTimer class="text-primary"/>
+                            </i>
+                            <span class="mx-1">{{ $t('Time Settings') }}</span>
+                        </div>
+                        <div class="text-xs text-gray-900">
+                            {{ getTimeSettings }} <br>
+                            {{ getReportSettings }}
                         </div>
                     </div>
                 </div>
