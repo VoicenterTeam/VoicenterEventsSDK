@@ -9,7 +9,7 @@
             </div>
         </div>
         <socket-status-alert @retry="retrySocketConnection"/>
-        <base-navbar v-if="!onFullScreen && activeDashboardData"
+        <base-navbar v-if="!onFullScreen"
                      key="base-navbar">
             <template v-slot:dashboard-operations>
                 <div class="flex items-center">
@@ -22,7 +22,9 @@
                 </div>
             </template>
         </base-navbar>
+        <AccountNoData v-if="accountNoData"/>
         <div class="dashboard"
+             v-else
              v-loading="loadingData"
              :key="activeLanguage">
             <div class="dashboard-container min-h-screen mb-10"
@@ -83,6 +85,7 @@
     import get from 'lodash/get'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
+    import AccountNoData from '@/views/AccountNoData'
     import { targets, types } from '@/enum/operations'
     import pageSizeMixin from '@/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
@@ -105,6 +108,7 @@
     
     export default {
         components: {
+            AccountNoData,
             ManageDashboardButtons,
             [Switcher.name]: Switcher,
             NewGroupButton,
@@ -118,6 +122,10 @@
         mixins: [pageSizeMixin, removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
         props: {
             showLoadingIndicator: {
+                type: Boolean,
+                default: true,
+            },
+            accountNoData: {
                 type: Boolean,
                 default: true,
             },

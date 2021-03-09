@@ -52,12 +52,13 @@ const mutations = {
     },
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
-        
+        localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
+        if (!dashboard) {
+            return
+        }
         if (!dashboard.DashboardLayoutID) {
             dashboard.DashboardLayoutID = DEFAULT_LAYOUT_ID
         }
-        
-        localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
     },
     [types.SET_ACTIVE_WIDGET_GROUP]: (state, group) => {
         state.activeWidgetGroup = group
@@ -90,17 +91,18 @@ const actions = {
     async selectDashboard({ commit, state }, dashboard) {
         const previousDashboard = previousActiveDashboard()
         dashboard = dashboard || previousDashboard || get(state, 'allDashboards.[0]', false)
-        if (dashboard) {
-            commit(types.SET_LOADING, true)
-            if (!dashboard['DashboardLayoutID']) {
-                dashboard['DashboardLayoutID'] = DEFAULT_LAYOUT_ID
-                await DashboardApi.update(dashboard)
-            }
-            
-            dashboard = await DashboardApi.find(dashboard.DashboardID)
-            commit(types.SET_ACTIVE_DASHBOARD, dashboard)
-            commit(types.SET_LOADING, false)
+        if (!dashboard) {
+            return commit(types.SET_ACTIVE_DASHBOARD, '')
         }
+        commit(types.SET_LOADING, true)
+        if (!dashboard['DashboardLayoutID']) {
+            dashboard['DashboardLayoutID'] = DEFAULT_LAYOUT_ID
+            await DashboardApi.update(dashboard)
+        }
+        
+        dashboard = await DashboardApi.find(dashboard.DashboardID)
+        commit(types.SET_ACTIVE_DASHBOARD, dashboard)
+        commit(types.SET_LOADING, false)
     },
     async createDashboard({ commit }, dashboard) {
         dashboard = await DashboardApi.store(dashboard)

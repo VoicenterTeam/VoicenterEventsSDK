@@ -1,5 +1,10 @@
 import $axios from './apiConnection'
+import store from '@/store/store'
 import parseCatch from '@/helpers/handleErrors'
+
+function currentAccountId () {
+    return store.state.entities.selectedAccountID
+}
 
 const initialTime = (new Date().getTime() / 1000).toFixed(0)
 
@@ -7,11 +12,16 @@ function timeout(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+async function userDashboards(dashboards) {
+    const currentAccount = currentAccountId()
+    return dashboards.filter(dashboard => dashboard.AccountID.toString() === currentAccount.toString())
+}
+
 export const DashboardApi = {
     async getAll() {
         try {
-            let res = await $axios.get('/DashBoards/GetAll/')
-            return res.DashBoards
+            let {DashBoards} = await $axios.get('/DashBoards/GetAll/')
+            return await userDashboards(DashBoards)
         } catch (e) {
 
             const currentTime = (new Date().getTime() / 1000).toFixed(0)

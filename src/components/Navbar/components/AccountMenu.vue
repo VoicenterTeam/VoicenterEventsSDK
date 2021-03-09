@@ -60,6 +60,15 @@ export default {
         chooseAccount(account) {
             this.$store.commit('entities/SET_SELECTED_ACCOUNT_ID', account.ID)
             this.showMenu = false
+            this.getUserDashboards()
+        },
+        resetOldActiveDashboard() {
+          localStorage.removeItem('active-dashboard')
+        },
+        async getUserDashboards() {
+            this.resetOldActiveDashboard()
+            await this.$store.dispatch('dashboards/getDashboards')
+            await this.$store.dispatch('dashboards/selectDashboard')
         },
         logout() {
             localStorage.clear()
