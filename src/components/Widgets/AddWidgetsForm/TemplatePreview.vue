@@ -10,7 +10,7 @@
         <portal to="form-title">
             {{ getTemplate.TemplateName }}
         </portal>
-        <div class="grid grid-cols-7 col-gap-4 template-preview"
+        <div class="grid grid-cols-7 col-gap-4 template-preview -mx-4-5"
              v-loading="loading">
             <div class="col-span-5 bg-gray-150">
                 <div class="flex items-center justify-center h-full">
