@@ -246,34 +246,55 @@
                 }
             },
             async addEntities(dashboard) {
-                const { DashboardID, WidgetGroupList} = dashboard
+                const { DashboardID, WidgetGroupList } = dashboard
                 if (!this.selectedTemplate.WidgetTemplateList) {
                     return
                 }
                 
+                const widgetList = await this.storeDashboardWidgets()
+                const WidgetGroupID = await this.storeGroup(widgetList, WidgetGroupList)
+                if (!WidgetGroupID) {
+                    return
+                }
+                await DashboardApi.addWidgetGroup(DashboardID, +WidgetGroupID)
+            },
+            getWidgetTemplate(templateID) {
+                return this.$store.getters['widgetTemplate/getWidgetTemplate'](templateID)
+            },
+            async storeDashboardWidgets() {
                 let widgetList = []
                 const widgets = this.selectedTemplate.WidgetTemplateList
                 
                 for (let i = 0; i < widgets.length; i++) {
+                    const templateData = this.getWidgetTemplate(widgets[i]['WidgetTemplateID'])
                     const payload = {
                         ...widgets[i],
+                        WidgetConfig: templateData.DefaultWidgetConfig || [],
                         TemplateID: widgets[i]['WidgetTemplateID'],
                     }
                     const newWidget = await WidgetApi.store(payload)
                     widgetList.push(newWidget)
                 }
-                
-                let newGroup ={}
-                if (!WidgetGroupList || WidgetGroupList.length) {
+                return widgetList
+            },
+            async storeGroup(widgets, widgetGroupList) {
+                let newGroup = {}
+                if (!widgetGroupList || !widgetGroupList.length) {
                     newGroup = { ...widgetGroupModel }
+                    newGroup['WidgetList'] = widgets
+                    const { WidgetGroupID } = await WidgetGroupsApi.store(newGroup)
+                    return WidgetGroupID
                 } else {
-                    newGroup = WidgetGroupList[0]
+                    newGroup = widgetGroupList[0]
+                    newGroup['WidgetList'] = widgets
+                    await WidgetGroupsApi.update(newGroup)
+                    const groupID = +newGroup.WidgetGroupID
+                    const savePromises = widgets.map(widget =>
+                        WidgetGroupsApi.addWidget(groupID, +widget.WidgetID)
+                    )
+                    await Promise.all(savePromises)
+                    return false
                 }
-                
-                newGroup['WidgetList'] = widgetList
-                
-                const { WidgetGroupID } = await WidgetGroupsApi.store(newGroup)
-                await DashboardApi.addWidgetGroup(DashboardID, +WidgetGroupID)
             },
             newDashboard() {
                 this.getAccountLayouts()
