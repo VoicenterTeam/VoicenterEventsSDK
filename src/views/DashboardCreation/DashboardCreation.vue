@@ -232,9 +232,10 @@
                         ...this.model,
                         AccountID: this.currentAccountId,
                     })
-                    this.$store.dispatch('dashboards/getDashboards')
+                    
+                    await this.addEntities(dashboard)
+                    await this.$store.dispatch('dashboards/getDashboards')
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
-                    await this.addEntities(dashboard.DashboardID)
                     
                     Notification.success('Dashboard added with success.')
                 } catch (e) {
@@ -244,7 +245,8 @@
                     this.loading = false
                 }
             },
-            async addEntities(DashboardID) {
+            async addEntities(dashboard) {
+                const { DashboardID, WidgetGroupList} = dashboard
                 if (!this.selectedTemplate.WidgetTemplateList) {
                     return
                 }
@@ -261,7 +263,13 @@
                     widgetList.push(newWidget)
                 }
                 
-                let newGroup = { ...widgetGroupModel }
+                let newGroup ={}
+                if (!WidgetGroupList || WidgetGroupList.length) {
+                    newGroup = { ...widgetGroupModel }
+                } else {
+                    newGroup = WidgetGroupList[0]
+                }
+                
                 newGroup['WidgetList'] = widgetList
                 
                 const { WidgetGroupID } = await WidgetGroupsApi.store(newGroup)
