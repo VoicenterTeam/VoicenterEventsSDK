@@ -48,7 +48,7 @@
                             </div>
                         </div>
                     </el-form>
-                    <div class="lg:grid lg:grid-cols-4 col-gap-5"
+                    <div class="lg:grid lg:grid-cols-4 col-gap-5 mb-4"
                          key="TemplateCategories">
                         <TemplateCategories class="col-span-1"
                                             key="categories"
