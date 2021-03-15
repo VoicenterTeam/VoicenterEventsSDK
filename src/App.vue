@@ -7,10 +7,12 @@
 </div>
 </template>
 <script>
+import globalMixin from '@/mixins/globalMixin'
 import { defaultFontSize } from '@/enum/defaultDashboardSettings'
 import NetworkStatusAlert from '@/components/Common/NetworkStatusAlert'
 
 export default {
+    mixins: [globalMixin],
     components: {
         NetworkStatusAlert,
     },
