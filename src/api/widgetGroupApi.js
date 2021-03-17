@@ -12,6 +12,12 @@ export const WidgetGroupsApi = {
                 if (!widget.WidgetConfig) {
                     widget.WidgetConfig = []
                 }
+                widget.WidgetConfig.forEach(config => {
+                    if (config.WidgetParameterValue === "{}") {
+                        config.WidgetParameterValue = ''
+                    }
+                })
+
             })
             if (data.Order === null) {
                 data.Order = 0

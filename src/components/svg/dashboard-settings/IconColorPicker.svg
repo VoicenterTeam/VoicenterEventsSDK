@@ -1,0 +1,5 @@
+<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="16" fill="#BEC2C9"/>
+    <circle cx="16" cy="16" r="15" fill="white"/>
+    <circle cx="16" cy="16" r="13" fill="currentColor"/>
+</svg>

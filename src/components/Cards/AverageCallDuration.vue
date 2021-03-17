@@ -21,7 +21,7 @@
             <template v-slot:content>
                 <el-form @submit.native.prevent="onChange">
                     <el-form-item>
-                        <label>{{$t('Counters to display')}}</label>
+                        <label>{{ $t('Counters to display') }}</label>
                         <base-select
                             :multiple="false"
                             :data="availableCounters"
@@ -30,10 +30,10 @@
                     <el-form-item>
                         <div class="py-2 flex">
                             <el-checkbox v-model="displayCardText">
-                                {{$t('status.show.text')}}
+                                {{ $t('status.show.text') }}
                             </el-checkbox>
                             <el-checkbox class="px-4" v-model="displayCardBorder">
-                                {{$t('status.display.border')}}
+                                {{ $t('status.display.border') }}
                             </el-checkbox>
                         </div>
                     </el-form-item>
@@ -49,13 +49,13 @@
                         <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
                             <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
                                       v-for="widgetTimeType in widgetTimeTypes">
-                                {{$t(widgetTimeType.text)}}
+                                {{ $t(widgetTimeType.text) }}
                             </el-radio>
                         </el-radio-group>
                     </template>
                 </time-frame>
                 <div class="flex items-center justify-between text-main-base" v-if="autoCompletes.length">
-                    {{$t('tooltip.refresh.entities.list')}}
+                    {{ $t('tooltip.refresh.entities.list') }}
                     <RefreshButton
                         :disabled="loadEntitiesList"
                         :loading="loadEntitiesList"
@@ -81,14 +81,16 @@
                 </el-collapse>
             </template>
             <template v-slot:footer>
-                <el-button @click="showModal = false">{{$t('common.cancel')}}</el-button>
-                <el-button @click="onChange" type="primary">{{$t('common.save')}}</el-button>
+                <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
+                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
+                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                </div>
             </template>
         </update-dialog>
     </div>
 </template>
 <script>
-
+    
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import UpdateDialog from './UpdateDialog'
@@ -102,7 +104,7 @@
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import { Checkbox, Collapse, CollapseItem, Option, Radio, RadioGroup, Select, Tooltip } from 'element-ui'
-
+    
     export default {
         mixins: [cardWidgetMixin],
         components: {
@@ -195,7 +197,7 @@
                     })
                 } catch (e) {
                 }
-
+                
                 if (this.model.WidgetTime.type === 'relative') {
                     let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                     this.model.WidgetTime = {
@@ -203,23 +205,23 @@
                         ...widgetTime,
                     }
                 }
-
+                
                 let data = {
                     showText: this.displayCardText,
                     displayBorder: this.displayCardBorder,
                 }
-
+                
                 this.data.WidgetLayout = {
                     ...this.model.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
                     colors: this.model.colors,
-
+                    
                 }
-
+                
                 this.data.WidgetTime = this.model.WidgetTime
                 this.data.WidgetConfig = this.model.WidgetConfig
-
+                
                 this.$emit('on-update', this.data)
                 this.showModal = false
             },

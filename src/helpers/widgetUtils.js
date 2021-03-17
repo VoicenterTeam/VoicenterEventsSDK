@@ -1,13 +1,22 @@
 import get from 'lodash/get'
 import store from '@/store/store'
-import widgetDataTypes from '@/enum/widgetDataTypes'
-import { realTimeTableKey } from '@/enum/realTimeTableConfigs'
-import { queueActivityGaugeKey } from '@/enum/generic'
 import format from 'date-fns/format'
+import widgetDataTypes from '@/enum/widgetDataTypes'
+import { queueActivityGaugeKey } from '@/enum/generic'
+import { realTimeTableKey } from '@/enum/realTimeTableConfigs'
 
 // minimum refresh interval for real-time widgets - 10 seconds
 const MIN_REFRESH_INTERVAL = 10
 const MULTI_QUEUES_DASHBOARD_KEY = 'GetMultiQueuesDashboard'
+
+const CHART_DATA_TYPE_IDS = [
+    widgetDataTypes.LINES_TYPE_ID,
+    widgetDataTypes.BARS_WITH_LINES_TYPE_ID,
+    widgetDataTypes.X_AXIS_TYPE_ID,
+    widgetDataTypes.CHART_QUEUE,
+    widgetDataTypes.PIE_TYPE_ID,
+    widgetDataTypes.CHART_AREA_ID,
+]
 
 const minRefreshInterval = () => {
     return store.getters['layout/minRefreshInterval'] || MIN_REFRESH_INTERVAL
@@ -19,10 +28,10 @@ export function getWidgetRefreshInterval(widget) {
         let widgetTemplate = getWidgetTemplate(widget)
         refreshInterval = get(widgetTemplate, 'DefaultRefreshInterval', '')
     }
-
+    
     let minInterval = minRefreshInterval()
     refreshInterval = Number(refreshInterval) <= minInterval ? minInterval : Number(refreshInterval)
-
+    
     return Number(refreshInterval) * 1000
 }
 
@@ -128,12 +137,17 @@ export function isARealtimeTableWidget(widget) {
 export function timeFilterToHuman(widget, toFormat = 'dd/MM/yyyy') {
     let start = new Date()
     let end = new Date()
-
+    
     const startDate = get(widget, 'WidgetTime.Date_interval', 0)
     const dateInterval = get(widget, 'WidgetTime.datedeff', 0)
-
+    
     start.setDate(start.getDate() - startDate)
     end.setDate(end.getDate() - (startDate - dateInterval))
-
+    
     return `${format(start, toFormat)}  -  ${format(end, toFormat)}`
 }
+
+export function isChartWidget(widget) {
+    return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget)
+}
+

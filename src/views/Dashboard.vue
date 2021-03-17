@@ -1,112 +1,97 @@
 <template>
-    <div>
+    <div class="transition flex relative flex-col dashboard-wrapper">
+        <div class="overflow-hidden h-8 w-full bg-transparent px-4" v-if="onFullScreen">
+            <div @click="triggerFullScreenMode"
+                 :class="$rtl.isRTL ? 'mr-auto' : 'right-0'"
+                 class="flex w-full justify-end items-center cursor-pointer h-8 focus:outline-none text-gray-550 hover:text-primary">
+                <IconExitFullScreen class="mx-2"/>
+                {{ $t('Exit Full Screen') }}
+            </div>
+        </div>
         <socket-status-alert @retry="retrySocketConnection"/>
-        <base-navbar>
+        <base-navbar v-if="!onFullScreen"
+                     key="base-navbar">
             <template v-slot:dashboard-operations>
-                <div class="flex">
-                    <div class="my-3 flex items-center">
-                        <div class="flex items-center">
-                            <socket-status-button @click="retrySocketConnection" class="mx-2"/>
-                        </div>
-                        <div @click="showReorderDataDialog = true" class="mx-1 cursor-pointer" v-if="!editMode">
-                            <el-tooltip :content="$t('tooltip.reorder.dashboard.layout')" class="item" effect="dark"
-                                        placement="bottom">
-                                <button class="btn p-2 shadow rounded bg-white hover:bg-primary-100">
-                                    <ListIcon class="w-5 h-5 text-primary"/>
-                                </button>
-                            </el-tooltip>
-                        </div>
-                        <new-group-button
-                            @click.native="addNewGroup"
-                            v-if="editMode">
-                        </new-group-button>
-                        <AddButton @click.stop="showWidgetMenu = !showWidgetMenu" class="mx-1"
-                                   v-if="editMode && firstWidgetGroup">
-                        </AddButton>
-                        <manage-dashboard-buttons
-                            :edit-mode="editMode"
-                            :layoutType="layoutType"
-                            :widgetGroupList="activeDashboardData.WidgetGroupList"
-                            @edit-group="onEditGroup"
-                            @add-new-group="addNewGroup"
-                            @remove-widget-group="removeWidgetGroup"
-                            @reset-dashboard="resetDashboard"
-                            @save-dashboard="saveDashboard">
-                        </manage-dashboard-buttons>
-                    </div>
-                    <fade-transition>
-                        <templates-category
-                            :widgetGroup="firstWidgetGroup"
-                            :widgetTemplates="allWidgetTemplates"
-                            @addWidgetsToGroup="addWidgetsToGroup"
-                            class="mt-16"
-                            v-click-outside="onWidgetMenuClickOutside"
-                            v-if="showWidgetMenu">
-                        </templates-category>
-                    </fade-transition>
-                    <layout-switcher
-                        :activeType="layoutType"
-                        @switch-layout="(type) => switchDashboardLayout(type)"
-                        v-if="!editMode">
-                    </layout-switcher>
+                <div class="flex items-center">
+                    <layout-switcher :active-type="layoutType"
+                                     :edit-mode="editMode"
+                                     @set-edit-mode="onSetEditMode"
+                                     @on-fullscreen="triggerFullScreenMode"
+                                     @switch-layout="(type) => switchDashboardLayout(type)"
+                    />
                 </div>
             </template>
         </base-navbar>
-        <div class="dashboard" v-loading="loadingData" :key="activeLanguage">
-            <div class="dashboard-container min-h-screen pb-10" v-if="dashboard">
-                <sidebar :activeTab="activeTab"
-                         :widgetGroupList="activeDashboardData.WidgetGroupList"
-                         @switch-tab="(tab) => switchTab(tab)"
-                         v-if="showSidebar"/>
-                <div :class="getClass" :key="activeDashboardData.DashboardID" class="pt-12 px-6 md:px-12">
+        <AccountNoData v-if="accountNoData"/>
+        <div class="dashboard"
+             v-else
+             v-loading="loadingData"
+             :key="activeLanguage">
+            <div class="dashboard-container min-h-screen mb-10"
+                 v-if="dashboard"
+            >
+                <fade-transition :duration="150" mode="out-in">
+                    <sidebar v-if="(showTabs || editMode) && showSidebar"
+                             :active-tab="activeTab"
+                             :widget-group-list="activeDashboardData.WidgetGroupList"
+                             @switch-tab="(tab) => switchTab(tab)"
+                             @add-new-group="addNewGroup"
+                             :show-tabs="showTabs"
+                             :edit-mode="editMode"
+                             @exit-edit-mode="resetDashboard"
+                             @save-dashboard="saveDashboard"
+                             @on-edit-widget-group="onEditWidgetGroup"
+                             @on-remove-widget-group="(widgetGroup) => tryRemoveWidgetGroup(widgetGroup)"
+                    />
+                </fade-transition>
+                <div class="flex w-full justify-center cursor-pointer text-gray-600 hover:text-primary"
+                     @click="toggleSidebarState"
+                     v-if="showTabs">
+                    <IconMinimize/>
+                </div>
+                <div class="p-1"
+                     :class="{'px-2 md:p-6': !onFullScreen}"
+                     :key="activeDashboardData.DashboardID">
                     <fade-transition :duration="250" mode="out-in">
-                        <component
-                            :activeTab="activeTab"
-                            :editMode="editMode"
-                            :is="layoutTypes[layoutType]"
-                            :layoutType="layoutType"
-                            :storingData="storingData"
-                            :widgetGroupList="groupsToDisplay"
-                            :widgetTemplates="allWidgetTemplates"
-                            @addWidgetsToGroup="addWidgetsToGroup"
-                            @duplicate-widget="duplicateWidget"
-                            @removeGroup="(widgetGroup) => removeWidgetGroup(widgetGroup)"
-                            @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                            @switch-tab="(tab) => switchTab(tab)"
-                            @updateWidget="(data) => updateWidget(data.widget, data.group)">
-                        </component>
+                        <component :active-tab="activeTab"
+                                   :edit-mode="editMode"
+                                   :is="layoutTypes[layoutType]"
+                                   :active-dashboard-data="activeDashboardData"
+                                   :layout-type="layoutType"
+                                   :storing-data="storingData"
+                                   :widget-group-list="groupsToDisplay"
+                                   :widget-templates="allWidgetTemplates"
+                                   @add-widgets-to-group="addWidgetsToGroup"
+                                   @duplicate-widget="duplicateWidget"
+                                   @on-edit-widget-group="onEditWidgetGroup"
+                                   @remove-group="(widgetGroup) => tryRemoveWidgetGroup(widgetGroup)"
+                                   @remove-widget="(data) => removeWidget(data.widget, data.group)"
+                                   @switch-tab="(tab) => switchTab(tab)"
+                                   @update-widget="(data) => updateWidget(data.widget, data.group)"
+                                   @on-reorder-widget-group="onReorderWidgetGroup"
+                        />
                     </fade-transition>
                 </div>
             </div>
-            <reorder-layout-dialog
-                :visible.sync="showReorderDataDialog"
-                :widgetGroupList="activeDashboardData.WidgetGroupList"
-                :width="'50%'"
-                @on-cancel="triggerReorderDataDialog"
-                @on-submit="reorderWidgetGroup"
-                @removeWidget="(data) => removeWidget(data.widget, data.group)"
-                v-if="showReorderDataDialog"
-            />
         </div>
+        <ConfirmDialog :visible.sync="showConfirmDialog"
+                       :description="`Are you sure that you want to delete this Widget Group #${get(groupToRemove, 'WidgetGroupID', '- -')}?`"
+                       @on-cancel="showConfirmDialog = false"
+                       @on-confirm="removeWidgetGroup"
+        />
     </div>
 </template>
 <script>
-    import map from 'lodash/map'
     import get from 'lodash/get'
-    import { Tooltip } from 'element-ui'
     import orderBy from 'lodash/orderBy'
-    import isEqual from 'lodash/isEqual'
-    import bus from '@/event-bus/EventBus'
     import cloneDeep from 'lodash/cloneDeep'
-    import { WidgetApi } from '@/api/widgetApi'
-    import { ListIcon } from 'vue-feather-icons'
-    import AddButton from '@/components/AddButton'
+    import AccountNoData from '@/views/AccountNoData'
     import { targets, types } from '@/enum/operations'
-    import draggableEvents from '@/enum/draggableEvents'
     import pageSizeMixin from '@/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
-    import WidgetMenu from '@/components/Widgets/WidgetMenu'
+    import { dashboardOperation } from '@/models/instances'
     import Sidebar from '@/components/LayoutRendering/Sidebar'
+    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
     import { retrySocketConnection } from '@/plugins/initRealTimeSdk'
@@ -114,36 +99,40 @@
     import ListView from '@/components/LayoutRendering/Types/ListView'
     import SocketStatusAlert from '@/components/Common/SocketStatusAlert'
     import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
-    import TemplatesCategory from '@/components/Widgets/TemplatesCategory'
-    import { dashboardOperation, widgetGroupModel } from '@/models/instances'
     import SocketStatusButton from '@/components/Common/SocketStatusButton'
     import ManageDashboardButtons from '@/components/ManageDashboardButtons'
-    import ReorderLayoutDialog from '@/components/Common/ReorderLayoutDialog'
-    import { createNewWidgets, removeDummyWidgets } from '@/services/widgetService'
+    import addEntitiesMixin from '@/mixins/dashobardOperation/addEntitiesMixin'
+    import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
+    import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
     import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
-
+    
     export default {
         components: {
+            AccountNoData,
             ManageDashboardButtons,
             [Switcher.name]: Switcher,
             NewGroupButton,
-            AddButton,
-            WidgetMenu,
             ListView,
             TabbedView,
             Sidebar,
             SocketStatusButton,
-            TemplatesCategory,
             SocketStatusAlert,
-            ReorderLayoutDialog,
-            [Tooltip.name]: Tooltip,
-            ListIcon,
+            ConfirmDialog,
         },
-        mixins: [pageSizeMixin],
+        mixins: [pageSizeMixin, removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
+        props: {
+            showLoadingIndicator: {
+                type: Boolean,
+                default: true,
+            },
+            accountNoData: {
+                type: Boolean,
+                default: true,
+            },
+        },
         data() {
             return {
                 loading: false,
-                showWidgetMenu: false,
                 editMode: false,
                 activeDashboardData: null,
                 layoutTypes: {
@@ -154,14 +143,17 @@
                 previousLayoutType: '',
                 operations: new DashboardOperations(),
                 activeTab: localStorage.getItem(ACTIVE_WIDGET_GROUP_KEY) || '',
-                showReorderDataDialog: false,
                 groupToEdit: null,
                 storingData: false,
-                temporaryWidgetIds: [],
+                onFullScreen: false,
+                showSidebar: true,
             }
         },
         computed: {
             loadingData() {
+                if (!this.showLoadingIndicator) {
+                    return false
+                }
                 return this.$store.state.dashboards.loadingData || this.loading
             },
             activeLanguage() {
@@ -173,266 +165,51 @@
             allWidgetTemplates() {
                 return this.$store.state.widgetTemplate.allWidgetTemplates
             },
-            getClass() {
-                if (this.layoutType === layoutTypes.TABBED) {
-                    return 'pt-24'
-                }
-            },
-            showSidebar() {
+            showTabs() {
                 return this.layoutType === layoutTypes.TABBED
-            },
-            token() {
-                return this.$store.state.users.tokenString
-            },
-            extensions() {
-                return this.$store.state.extensions.extensions
-            },
-            queues() {
-                return this.$store.state.queues.all
-            },
-            firstWidgetGroup() {
-                return this.activeDashboardData.WidgetGroupList[0]
             },
             activeWidgetGroupID() {
                 return this.activeTab || get(this.$store.state.dashboards.activeDashboard, 'WidgetGroupList[0].WidgetGroupID')
             },
             groupsToDisplay() {
                 if (this.editMode) {
-                    return [this.groupToEdit]
+                    this.$nextTick(() => {
+                        return [this.groupToEdit]
+                    })
                 }
                 return this.activeDashboardData.WidgetGroupList
             },
         },
         methods: {
+            get,
             retrySocketConnection,
-            onEditGroup(widgetGroup) {
-                this.groupToEdit = widgetGroup
-                this.editMode = true
-                this.operations = new DashboardOperations()
-
-                if (!widgetGroup) {
-                    this.groupToEdit = { ...widgetGroupModel }
-                    this.activeDashboardData.WidgetGroupList = [this.groupToEdit]
-                }
-            },
-            async addWidgetsToGroup(data = {}) {
-                let { widgets: widgetTemplates } = data
-                let widgetGroup = { ...this.groupToEdit }
-
-                let createdWidgets = await createNewWidgets(widgetTemplates, widgetGroup)
-
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-
-                if (!widgetGroup.IsNew) {
-                    for (let widget of createdWidgets) {
-                        this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
-                    }
-                }
-
-                this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
-                this.showWidgetMenu = false
-                this.groupToEdit = this.activeDashboardData.WidgetGroupList[index]
-
-                bus.$emit('added-widgets', createdWidgets)
-            },
-            async duplicateWidget(widget) {
-                this.storingData = true
-
-                const widgetGroup = { ...this.groupToEdit }
-                const index = widgetGroup.WidgetList.findIndex(w => w.WidgetID.toString() === widget.WidgetID.toString())
-
-                if (index === -1) {
-                    this.storingData = false
-                    return
-                }
-
-                let newWidget = cloneDeep(widget)
-                newWidget.WidgetEntity = []
-
-                const yPosition = widget.WidgetLayout.GridLayout.y || 2
-                newWidget.WidgetLayout.GridLayout.y += yPosition
-
-                const duplicatedWidget = await WidgetApi.store(newWidget)
-
-                this.temporaryWidgetIds.push(duplicatedWidget.WidgetID)
-
-                this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, duplicatedWidget, widgetGroup.WidgetGroupID))
-
-                widgetGroup.WidgetList.splice(widgetGroup.WidgetList.length, 0, duplicatedWidget)
-
-                this.groupToEdit = widgetGroup
-                this.storingData = false
-            },
-            reorderWidgetGroup(data = {}) {
-                let { allGroups: allWidgetGroups, groupsToUpdate: groupsToUpdate, widgetsToUpdate: widgetsToUpdate } = data
-                this.activeDashboardData.WidgetGroupList = allWidgetGroups
-
-                groupsToUpdate.forEach((group) => {
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, group))
-                })
-
-                widgetsToUpdate.forEach((widget) => {
-                    if (!widget.operation) {
-                        this.operations.add(dashboardOperation(types.MOVED, targets.WIDGET, widget))
-                    } else {
-                        switch (widget.operation.type) {
-                            case draggableEvents.ADDED:
-                                delete widget.WidgetLayout.GridLayout
-                                this.operations.add(dashboardOperation(types.MOVED_IN, targets.WIDGET, widget, widget.operation.parentID))
-                                break
-                            case draggableEvents.REMOVED:
-                                this.operations.add(dashboardOperation(types.MOVED_OUT, targets.WIDGET, widget, widget.operation.parentID))
-                                break
-                        }
-                    }
-                })
-
-                this.showReorderDataDialog = false
-                this.saveDashboard()
-            },
-            onWidgetMenuClickOutside() {
-                this.showWidgetMenu = false
-            },
-            removeWidget(widget, widgetGroup) {
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                if (index !== -1) {
-                    let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
-                    if (widgetIndex !== -1) {
-                        this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1)
-                        this.groupToEdit = this.activeDashboardData.WidgetGroupList[index]
-                        if (!widgetGroup.IsNew) {
-                            this.operations.add(dashboardOperation(types.REMOVE, targets.WIDGET, widget, widgetGroup.WidgetGroupID))
-                        } else {
-                            removeDummyWidgets([widget.WidgetID])
-                        }
-                    }
-                }
-            },
-            async removeWidgetGroup(widgetGroup) {
-                await this.$confirm(
-                    this.$t('common.confirm.question', {
-                        action: this.$t('to delete this widget group'),
-                    }), this.$t('Delete Widget Group'), {
-                        cancelButtonText: this.$t('common.cancel'),
-                        confirmButtonText: this.$t('common.confirm'),
-                    }).then(() => {
-
-                    let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-
-                    if (index !== -1) {
-                        this.activeDashboardData.WidgetGroupList.splice(index, 1)
-                        let widgetIds = map(widgetGroup.WidgetList, 'WidgetID')
-                        removeDummyWidgets(widgetIds)
-
-                        if (!widgetGroup.IsNew) {
-                            this.operations.removeGroup(dashboardOperation(types.REMOVE, targets.WIDGET_GROUP, widgetGroup))
-                            this.saveDashboard()
-                        }
-                    }
-                    this.editMode = false
-                })
-            },
-            addNewGroup() {
-                const group = { ...widgetGroupModel }
-
-                this.activeDashboardData.WidgetGroupList.splice(0, 0, group)
-                this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
-                    group.Order = index
-                })
-
-                this.editMode = false
-
-                this.$nextTick(() => {
-                    this.editMode = true
-                    this.groupToEdit = group
-                })
-            },
-            async updateWidget(widget, widgetGroup) {
-                let index = this.activeDashboardData.WidgetGroupList.findIndex(group => group.WidgetGroupID === widgetGroup.WidgetGroupID)
-                if (index !== -1) {
-
-                    let widgetIndex = this.activeDashboardData.WidgetGroupList[index].WidgetList.findIndex(widgetItem => widgetItem.WidgetID === widget.WidgetID)
-
-                    if (widgetIndex !== -1 && !widgetGroup.IsNew) {
-
-                        if (!this.editMode) {
-                            this.$set(widget, 'onLoading', true)
-                            await WidgetApi.update(widget)
-                            this.$set(widget, 'onLoading', false)
-                            let updatedWidget = await WidgetApi.find(widget.WidgetID)
-                            this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, updatedWidget)
-                        } else {
-                            this.activeDashboardData.WidgetGroupList[index].WidgetList.splice(widgetIndex, 1, widget)
-                            this.groupToEdit = widgetGroup
-                        }
-                    }
-                }
-            },
             async saveDashboard() {
                 this.loading = true
                 this.editMode = false
-                this.showWidgetMenu = false
                 this.storingData = true
-
+                const wGrids = window.grids
+                
                 if (this.groupToEdit) {
                     const currentGroup = this.groupToEdit
-                    this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET_GROUP, currentGroup))
-                    await this.updateGridStacks(currentGroup)
+                    await this.updateGridStacks(currentGroup, wGrids)
                 }
-
+                await this.validateOrderedGroups()
+                
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
+                
                 this.operations = new DashboardOperations()
                 this.storingData = false
                 this.groupToEdit = null
                 this.loading = false
             },
-            updateGridStacks(group) {
-                const activeDashboardWidgets = group.WidgetList
-                window.grids.forEach(grid => {
-                    grid.engine.nodes.forEach((node) => {
-                        let widget = activeDashboardWidgets.find((widget) => Number(widget.WidgetID) === Number(node.id))
-                        if (!widget) {
-                            return
-                        }
-                        let nodeLayout = {
-                            x: node.x,
-                            y: node.y,
-                            width: node.width,
-                            height: node.height,
-                        }
-                        let widgetGridLayout = widget.WidgetLayout.GridLayout
-
-                        if (isEqual(widgetGridLayout, nodeLayout)) {
-                            return
-                        }
-
-                        widget.WidgetLayout.GridLayout = nodeLayout
-                        this.operations.add(dashboardOperation(types.UPDATE, targets.WIDGET, widget, group))
-                    })
-
+            async validateOrderedGroups() {
+                const currentGroups = this.activeDashboardData.WidgetGroupList
+                currentGroups.forEach((group, index) => {
+                    group['Order'] = +index
+                    const operationType = group.IsNew ? types.ADD : types.UPDATE
+                    this.operations.add(dashboardOperation(operationType, targets.WIDGET_GROUP, group))
                 })
-            },
-            resetDashboard() {
-                this.loading = true
-                this.showWidgetMenu = false
-
-                removeDummyWidgets(this.temporaryWidgetIds)
-
-                this.editMode = false
-                let dashboard = this.$store.state.dashboards.activeDashboard
-
-                this.$store.dispatch('dashboards/updateDashboard', dashboard)
-                this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
-                this.operations = new DashboardOperations()
-
-                this.storingData = true
-
-                this.$nextTick(() => {
-                    this.storingData = false
-                })
-
-                this.loading = false
             },
             switchDashboardLayout(type) {
                 this.layoutType = type
@@ -443,13 +220,26 @@
             },
             saveActiveTab(tab) {
                 localStorage.setItem(ACTIVE_WIDGET_GROUP_KEY, tab)
-
             },
             switchTab(tab) {
                 this.loading = true
                 this.activeTab = tab
                 this.saveActiveTab(tab)
                 this.loading = false
+            },
+            triggerFullScreenMode() {
+                this.onFullScreen = !this.onFullScreen
+            },
+            onEditWidgetGroup(group) {
+                this.$nextTick(() => {
+                    this.editMode = true
+                    this.groupToEdit = group
+                })
+            },
+            async onSetEditMode() {
+                this.groupToEdit = this.activeDashboardData.WidgetGroupList[0]
+                await this.$store.dispatch('dashboards/setActiveGroup', this.groupToEdit)
+                this.editMode = true
             },
             sortDashboardEntities(dashboard) {
                 try {
@@ -465,9 +255,8 @@
                 } catch (e) {
                 }
             },
-            triggerReorderDataDialog() {
-                this.resetDashboard()
-                this.showReorderDataDialog = false
+            toggleSidebarState() {
+                this.showSidebar = !this.showSidebar
             },
         },
         created() {
@@ -481,16 +270,6 @@
                     this.sortDashboardEntities(dashboard)
                 },
             },
-            editMode(val) {
-                this.$store.commit('dashboards/SET_EDIT_MODE', val)
-                if (val) {
-                    this.previousLayoutType = this.layoutType
-                    this.layoutType = layoutTypes.LIST
-                } else {
-                    this.layoutType = this.previousLayoutType
-                }
-                this.saveLayoutType(this.layoutType)
-            },
             activeWidgetGroupID: {
                 immediate: true,
                 handler(newVal) {
@@ -501,34 +280,33 @@
     }
 </script>
 <style lang="scss">
-    .editable-widgets {
-        @apply rounded-lg;
-        @apply shadow;
-        @apply py-8;
-        border-radius: 10px;
-        min-width: 310px;
-    }
+.dashboard-wrapper {
+    @apply w-full;
+}
 
-    .flip-list-move {
-        transition: transform 0.5s;
-    }
+.flip-list-move {
+    transition: transform 0.5s;
+}
 
-    .el-table__row .cell {
-        @apply text-gray-500;
-    }
+.el-table__row .cell {
+    @apply text-gray-500;
+}
 
-    .rtl .el-dialog__headerbtn {
-        left: 20px;
-        right: auto;
-    }
+.rtl .el-dialog__headerbtn {
+    left: 20px;
+    right: auto;
+}
 
-    .rtl .el-button--default {
-        margin-left: 10px;
-    }
+.rtl .el-button--default {
+    margin-left: 10px;
+}
 
-    .dashboard > .el-loading-mask > .el-loading-spinner {
-        @apply fixed;
-    }
+.dashboard > .el-loading-mask > .el-loading-spinner {
+    @apply fixed;
+}
 
+.transition {
+    transition: all 0.3s ease-in;
+}
 
 </style>

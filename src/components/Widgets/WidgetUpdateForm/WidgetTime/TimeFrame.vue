@@ -1,5 +1,5 @@
 <template>
-    <el-collapse v-model="activeCollapse" class="pt-4">
+    <el-collapse v-model="activeCollapse" class="pt-2">
         <el-collapse-item :title="$t('settings.time.frame')" name="timeFrame">
             <slot name="frame-types"/>
             <div>

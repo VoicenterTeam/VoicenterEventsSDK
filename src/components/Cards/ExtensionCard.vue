@@ -11,15 +11,15 @@
                     </component>
                 </el-tooltip>
             </fade-transition>
-            <span class="text-main-xl font-medium leading-tight mx-2">{{getRepresentativeSummery}}</span>
+            <span class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal">{{getRepresentativeSummery}}</span>
         </div>
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
-                <span class="text-center text-main-xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
+                <span class="text-center text-main-3xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
                 <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"/>
             </div>
             <call-info
-                v-for="(call, index) in extension.calls"
+                v-for="call in extension.calls"
                 :key="call.ivrid"
                 :status-threshold="threshold"
                 :call="call"
@@ -38,8 +38,8 @@
     import Timer from '@/util/Timer'
     import {Tooltip} from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
-    import { getInitialExtensionTime } from '@/util/timeUtils'
     import {extensionColor} from '@/util/extensionStyles'
+    import { getInitialExtensionTime } from '@/util/timeUtils'
 
     export default {
         components: {

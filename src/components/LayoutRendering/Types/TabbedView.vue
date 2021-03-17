@@ -1,7 +1,16 @@
 <template>
-    <div v-if="tabs.length && !storingData">
+    <div v-if="tabs.length && !storingData" class="w-full">
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
-            <template v-slot="{tab, activeTab}">
+            <template v-slot="{tab, activeTab, index}">
+                <div v-if="editMode"
+                     :key="tab.WidgetGroupID"
+                     class="flex items-center justify-between px-2 pb-2">
+                    <base-input v-model="tab.WidgetGroupTitle"/>
+                    <edit-group-buttons :widget-groups="tabs"
+                                        :widget-group="tab"
+                                        v-on="$listeners">
+                    </edit-group-buttons>
+                </div>
                 <widget-list
                     :editable="editMode"
                     :widget-group="tab"
@@ -18,28 +27,30 @@
 <script>
     import Tabs from '@/components/Tabs'
     import WidgetList from '@/components/Widgets/WidgetList'
-
+    import EditGroupButtons from '@/components/EditGroupButtons'
+    
     export default {
         components: {
+            EditGroupButtons,
             WidgetList,
-            Tabs
+            Tabs,
         },
         props: {
             storingData: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             widgetTemplates: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             widgetGroupList: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             editMode: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             activeTab: [String, Number],
         },

@@ -2,7 +2,7 @@
     <div>
         <portal :to="`widget-header__${data.WidgetID}`">
             <div class="flex  w-full justify-end">
-                <div class="mx-1 -my-1 cursor-pointer hidden lg:block">
+                <div class="-my-1 cursor-pointer hidden lg:block">
                     <div>
                         <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"/>
                     </div>
@@ -23,7 +23,7 @@
                         </div>
                     </fade-transition>
                 </div>
-                <el-select placeholder="Sort by" v-model="sortBy">
+                <el-select :placeholder="$t('Sort by')" v-model="sortBy">
                     <template v-slot:prefix>
                     <span class="h-full flex items-center">
                         <i class="el-icon-d-caret"/>

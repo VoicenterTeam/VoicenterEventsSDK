@@ -11,20 +11,20 @@ const AUTO_COMPLETE_TYPE_KEY = 6
 
 // Create new widgets from Widget Templates
 export async function createNewWidgets(templates, widgetGroup, Order = false) {
-
+    
     let widgets = []
     let index = 0
-
+    
     for (let template of templates) {
-
+        
         const templateWidth = get(template, 'TemplateSettings.DefaultWidthPrecentage', '100')
         const templateHeight = get(template, 'TemplateSettings.DefaultHeightPixels', '160')
-
+        
         let widgetLayout = template.WidgetLayout
-
+        
         widgetLayout['GridLayout']['width'] = Math.ceil(12 * Number(templateWidth) / 100)
         widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 80)
-
+        
         let newWidget = widgetModel(template.TemplateID, template.TemplateName, {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,
             DataTypeID: template.DataType.DataTypeID,
@@ -32,9 +32,9 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
             DefaultRefreshInterval: template.DefaultRefreshInterval,
             ...widgetLayout,
         })
-
+        
         let WidgetConfig = []
-
+        
         if (template.DefaultWidgetConfig.length) {
             for (let config of template.DefaultWidgetConfig) {
                 if (config.ParameterType === AUTO_COMPLETE_TYPE_KEY) {
@@ -49,16 +49,16 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
                 WidgetConfig.push(config)
             }
         }
-
+        
         newWidget.WidgetConfig = WidgetConfig
         newWidget.WidgetTime = template.DefaultWidgetTime || {}
-
+        
         newWidget = await WidgetApi.store(newWidget)
-
+        
         if (typeof newWidget !== 'string') {
             widgets.push(newWidget)
         }
-
+        
     }
     return widgets
 }
@@ -70,13 +70,13 @@ export function removeDummyWidgets(widgetIds) {
 }
 
 export async function getWidgetData(widget) {
-
+    
     if (isWidgetModalOpen() || isInEditMode()) {
         return null
     }
-
+    
     Vue.set(widget, 'onLoading', true)
-
+    
     if (isExternalDataWidget(widget)) {
         const data = await WidgetDataApi.getExternalData(widget.EndPoint)
         Vue.set(widget, 'onLoading', false)

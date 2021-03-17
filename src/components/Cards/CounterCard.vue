@@ -13,20 +13,20 @@
     </div>
 </template>
 <script>
-    import {WidgetDataApi} from '@/api/widgetDataApi'
-    import BaseWidgetTitle from "@/components/BaseWidgetTitle";
-
+    import { WidgetDataApi } from '@/api/widgetDataApi'
+    import BaseWidgetTitle from '@/components/BaseWidgetTitle';
+    
     export default {
         components: { BaseWidgetTitle },
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
-            }
+                default: false,
+            },
         },
         data() {
             return {
@@ -40,15 +40,15 @@
                 } catch (e) {
                     console.warn(e)
                 }
-            }
+            },
         },
         watch: {
             data: {
                 immediate: true,
                 handler: function () {
                     this.getData()
-                }
-            }
+                },
+            },
         },
     }
 </script>

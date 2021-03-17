@@ -1,5 +1,5 @@
 <template>
-    <el-collapse v-model="activeCollapse" class="pt-4">
+    <el-collapse v-model="activeCollapse" class="pt-2">
         <el-collapse-item :title="$t('settings.threshold')" name="threshold">
             <div class="flex flex-col">
                 <div class="flex my-2">

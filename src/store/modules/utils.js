@@ -63,6 +63,7 @@ const mutations = {
 const getters = {
     isMobile: state => state.viewPort.name === 'mobile',
     isTablet: state => state.viewPort.name === 'tablet',
+    isSmallScreen: state => state.page.width < 900,
 
     isMobileOrTablet: state => {
         let {viewPort} = state;

@@ -21,10 +21,10 @@ export const settings = {
     colors: {
         primary: storageColors.primary || "#2575FF",
         primary_rgba: storageColors.primary_rgba || "37, 117, 255",
-        background: storageColors.background || "#fff",
-        frames: storageColors.frames || "#fff",
-        widgetGroupBackground: storageColors.widgetGroupBackground || "#fff",
-        widgetGroupFrames: storageColors.widgetGroupFrames || "#fff",
+        background: storageColors.background || "#F7FAFC",
+        frames: storageColors.frames || "#F7FAFC",
+        widgetGroupBackground: storageColors.widgetGroupBackground || "#F7FAFC",
+        widgetGroupFrames: storageColors.widgetGroupFrames || "#F7FAFC",
         widgetGroupTitles: storageColors.widgetGroupTitles || '#000000'
     },
     showWidgetTitles: true,

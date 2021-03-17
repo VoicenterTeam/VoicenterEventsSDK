@@ -1,37 +1,46 @@
 <template>
     <transition
-            name="dialog-fade"
-            @after-enter="afterEnter"
-            @after-leave="afterLeave">
+        name="dialog-fade"
+        @after-enter="afterEnter"
+        @after-leave="afterLeave">
         <div
-                v-show="visible"
-                class="el-dialog__wrapper"
-                @mousedown.self="handleWrapperClick">
-            <div
-                    role="dialog"
-                    :key="key"
-                    aria-modal="true"
-                    :aria-label="title || 'dialog'"
-                    :class="['el-dialog', { 'is-fullscreen': fullscreen, 'el-dialog--center': center }, customClass]"
-                    ref="dialog"
-                    :style="style">
-                <div class="el-dialog__header">
-                    <slot name="title">
-                        <span class="el-dialog__title">{{ title }}</span>
-                    </slot>
-                    <button
-                            type="button"
-                            class="el-dialog__headerbtn"
+            v-show="visible"
+            class="el-dialog__wrapper"
+            @mousedown.self="handleWrapperClick">
+            <div role="dialog"
+                 :key="key"
+                 aria-modal="true"
+                 :aria-label="title || 'dialog'"
+                 :class="['el-dialog', { 'is-fullscreen': fullscreen, 'el-dialog--center': center }, customClass]"
+                 ref="dialog"
+                 :style="style">
+                <div class="flex items-center modal-header__wrapper overflow-hidden">
+                    <slot name="redirect-action"/>
+                    <IconVerticalLine v-if="$slots['redirect-action']"
+                                      class="h-14"/>
+                    <div class="header-title border-gray-300 truncate flex-1 py-3 px-6 overflow-hidden"
+                         :class="$rtl.isRTL ? 'border-l-2' : 'border-r-2'">
+                        <div class="flex items-center justify-between">
+                            <slot name="title">
+                                <span class="el-dialog__title">{{ title }}</span>
+                            </slot>
+                            <slot name="additional-action"/>
+                        </div>
+                    </div>
+                    <button type="button"
+                            class="flex text-steel hover:text-primary mx-6"
                             aria-label="Close"
                             v-if="showClose"
                             @click="handleClose">
-                        <i class="el-dialog__close el-icon el-icon-close"></i>
+                        <IconClose class="w-4 h-4"/>
                     </button>
                 </div>
-                <div class="el-dialog__body" v-if="rendered"><slot></slot></div>
-                <div class="el-dialog__footer" v-if="$slots.footer">
-                    <slot name="footer"></slot>
+                <div class="el-dialog__body"
+                     v-bind="$attrs"
+                     v-if="rendered">
+                    <slot/>
                 </div>
+                <slot name="footer"/>
             </div>
         </div>
     </transition>
@@ -42,63 +51,67 @@
     import Migrating from 'element-ui/src/mixins/migrating';
     import emitter from 'element-ui/src/mixins/emitter';
     import 'element-ui/lib/theme-chalk/dialog.css'
+    
     export default {
         name: 'Modal',
         mixins: [Popup, emitter, Migrating],
         props: {
             title: {
                 type: String,
-                default: ''
+                default: '',
             },
             modal: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             modalAppendToBody: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             appendToBody: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             lockScroll: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             closeOnClickModal: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             closeOnPressEscape: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             showClose: {
                 type: Boolean,
-                default: true
+                default: true,
             },
-            width: String,
-            fullscreen: Boolean,
+            width: {
+                type: String,
+                default: '60%'
+            },
             customClass: {
                 type: String,
-                default: ''
+                default: '',
             },
             top: {
                 type: String,
-                default: '15vh'
+                default: '15vh',
             },
             beforeClose: Function,
             center: {
                 type: Boolean,
-                default: false
+                default: false,
             },
-            destroyOnClose: Boolean
+            destroyOnClose: Boolean,
         },
         data() {
             return {
                 closed: false,
-                key: 0
+                key: 0,
+                fullscreen: false,
             };
         },
         watch: {
@@ -122,7 +135,16 @@
                         });
                     }
                 }
-            }
+            },
+            isSmallScreen: {
+                immediate: true,
+                handler(value) {
+                    this.fullscreen = value
+                    this.$nextTick(() => {
+                        this.key++;
+                    })
+                },
+            },
         },
         computed: {
             style() {
@@ -133,15 +155,22 @@
                         style.width = this.width;
                     }
                 }
+                style.borderRadius = '0.375rem'
                 return style;
-            }
+            },
+            isSmallScreen() {
+                return this.$store.getters['utils/isSmallScreen']
+            },
+            pageWidth() {
+                return this.$store.getters['utils/pageWidth']
+            },
         },
         methods: {
             getMigratingConfig() {
                 return {
                     props: {
-                        'size': 'size is removed.'
-                    }
+                        'size': 'size is removed.',
+                    },
                 };
             },
             handleWrapperClick() {
@@ -170,8 +199,8 @@
                 this.$emit('opened');
             },
             afterLeave() {
-                this.$emit('closed');
-            }
+                this.$emit('close');
+            },
         },
         mounted() {
             if (this.visible) {
@@ -187,6 +216,11 @@
             if (this.appendToBody && this.$el && this.$el.parentNode) {
                 this.$el.parentNode.removeChild(this.$el);
             }
-        }
-    };
+        },
+    }
 </script>
+<style>
+.modal-header__wrapper {
+    @apply border-b-2 border-gray-300;
+}
+</style>

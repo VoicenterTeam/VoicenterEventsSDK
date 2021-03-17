@@ -1,16 +1,21 @@
 <template>
-    <div v-if="!loading">
+    <div v-if="!loading"
+         class="filter-items -mx-2 px-2">
         <el-radio-group class="pb-4" v-model="entityType">
             <el-radio v-for="option in SELECTIONS"
                       v-bind="option"
                       :key="option.label">
-                {{option.text}}
+                {{ option.text }}
             </el-radio>
         </el-radio-group>
         <div>
-            <label>
-                {{model.ParameterPrettyName}}
-            </label>
+            <div class="flex">
+                <component class="w-4-5 h-4-5 text-primary"
+                           :is="getEntityIcon"/>
+                <span class="mx-1">
+                    {{ model.ParameterPrettyName }}
+                </span>
+            </div>
             <base-select class="w-full py-2"
                          filterable
                          :loading="loading"
@@ -30,15 +35,16 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import {Option, Radio, RadioGroup, Select} from 'element-ui'
-    import {getOptionsList, getTemplateConfig} from '@/helpers/entitiesList'
-
+    import { filters } from '@/enum/widgetTemplateConfigs'
+    import { Option, Radio, RadioGroup, Select } from 'element-ui'
+    import { getOptionsList, getTemplateConfig } from '@/helpers/entitiesList'
+    
     const ENTITY_POSITIVE_KEY = 'EntityPositive'
     const ENTITY_NEGATIVE_KEY = 'EntityNegative'
     const defaultParameterJson = {
         EntityPositive: [],
         EntityNegative: [],
-        AccountList: []
+        AccountList: [],
     }
     export default {
         components: {
@@ -50,7 +56,7 @@
         props: {
             model: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
         },
         data() {
@@ -78,7 +84,10 @@
                     return this.model.WidgetParameterValueJson[this.entityType]
                 }
                 return get(this.model.WidgetParameterValue, this.entityType, [])
-            }
+            },
+            getEntityIcon() {
+                return filters[this.model.ParameterName.toLowerCase()].icon
+            },
         },
         methods: {
             get,
@@ -86,7 +95,7 @@
                 try {
                     this.options = getOptionsList(this.model.ParameterName)
                     if (typeof this.model.WidgetParameterValue === 'string') {
-                        this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || {}
+                        this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || ''
                     }
                     if (!this.model.WidgetParameterValueJson) {
                         this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
@@ -105,15 +114,19 @@
                     this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
                 }
                 this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
-            }
+            },
         },
         mounted() {
             this.getData()
-        }
+        },
     }
 </script>
 <style lang="scss" scoped>
-    .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
-        color: var(--primary-color);
-    }
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+    color: var(--primary-color);
+}
+
+.filter-items:not(:last-child) {
+    @apply mb-4 border-b;
+}
 </style>

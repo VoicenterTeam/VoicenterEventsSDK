@@ -8,13 +8,14 @@ import layout from './modules/layout'
 import entities from './modules/entities'
 import dashboards from './modules/dashboards'
 import widgetTemplate from './modules/widgetTemplate'
+import widgetCreation from '@/store/modules/widgetCreation'
 import templatesCategory from './modules/templatesCategory'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     plugins: [createPersistedState({
-        paths: ['users', 'dashboards.activeDashboard', 'dashboards.editMode', 'layout']
+        paths: ['users', 'dashboards.activeDashboard', 'dashboards.editMode', 'layout'],
     })],
     modules: {
         lang,
@@ -24,6 +25,7 @@ export default new Vuex.Store({
         entities,
         dashboards,
         widgetTemplate,
+        widgetCreation,
         templatesCategory,
-    }
+    },
 })
