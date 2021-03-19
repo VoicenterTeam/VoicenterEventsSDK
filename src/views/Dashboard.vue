@@ -44,10 +44,13 @@
                              @on-remove-widget-group="(widgetGroup) => tryRemoveWidgetGroup(widgetGroup)"
                     />
                 </fade-transition>
-                <div class="flex w-full justify-center cursor-pointer text-gray-600 hover:text-primary"
-                     @click="toggleSidebarState"
-                     v-if="showTabs">
-                    <IconMinimize/>
+                <div class="flex justify-center w-full">
+                    <div v-if="showTabs || editMode"
+                         class="w-20 bg-gray-400 text-gray-600 hover:text-primary h-3 w-20 rounded-b-2xl text-white cursor-pointer flex items-center justify-center"
+                         @click="toggleSidebarState">
+                        <IconArrowUp v-if="showSidebar"/>
+                        <IconArrowDown v-else/>
+                    </div>
                 </div>
                 <div class="p-1"
                      :class="{'px-2 md:p-6': !onFullScreen}"
@@ -309,4 +312,8 @@
     transition: all 0.3s ease-in;
 }
 
+.rounded-b-2xl {
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
 </style>
