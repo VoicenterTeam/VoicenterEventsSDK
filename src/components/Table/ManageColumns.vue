@@ -21,8 +21,10 @@
                         <el-button :disabled="!showActiveColumns.length || !columns.length" class="w-24" type="danger"
                                    size="small"
                                    @click="removeColumns(columns)">
-                            {{allChecked ? $t('datatable.manage.columns.remove.all') :
-                            $t('datatable.manage.columns.remove')}}
+                            <span class="text-white">
+                                {{allChecked ? $t('datatable.manage.columns.remove.all') :
+                                $t('datatable.manage.columns.remove')}}
+                            </span>
                         </el-button>
                     </div>
                 </template>
