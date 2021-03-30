@@ -386,7 +386,6 @@
             widget: {
                 deep: true,
                 handler() {
-                    console.log('widgets')
                     this.toggleManageColumns()
                     this.tryInitSortable()
                 },
