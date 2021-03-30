@@ -4,6 +4,7 @@
             <slot name="search-input"/>
             <slot name="time-frame"/>
             <div class="flex items-center table-row__count"
+                 v-if="showManageColumns"
                  :key="`${widget.WidgetID} - ${activeLanguage}`">
                 <el-dropdown class="px-2" size="mini" trigger="click">
                     <el-button size="small" type="primary">
@@ -83,14 +84,13 @@
                              v-bind="$attrs"
                              :columns-to-export="columnsToExport">
                     <template v-slot="{onManageExport}">
-                        <manage-columns
-                            :show-header-container="!onManageExport"
-                            :available-columns="availableColumns"
-                            :visible-columns="visibleColumns"
-                            :displayQueueAsRows="displayQueueAsRows"
-                            @on-change-visibility="(data) => updateColumnsVisibility(data, onManageExport)"
-                            @on-reorder-column="(data) => reorderColumn(data, onManageExport)">
-                        </manage-columns>
+                        <manage-columns :show-header-container="!onManageExport"
+                                        :available-columns="availableColumns"
+                                        v-if="showManageColumns"
+                                        :visible-columns="visibleColumns"
+                                        :displayQueueAsRows="displayQueueAsRows"
+                                        @on-change-visibility="(data) => updateColumnsVisibility(data, onManageExport)"
+                                        @on-reorder-column="(data) => reorderColumn(data, onManageExport)"/>
                     </template>
                 </export-data>
                 <div class="flex">
@@ -170,6 +170,7 @@
                 tableId,
                 columnMinWidth: '170px',
                 screenWidth: screen.width,
+                showManageColumns: true,
             }
         },
         computed: {
@@ -313,6 +314,12 @@
                 
                 this.updateLayout()
             },
+            toggleManageColumns() {
+                this.showManageColumns = false
+                this.$nextTick(() => {
+                    this.showManageColumns = true
+                })
+            },
             updateLayout(afterExport = false) {
                 let objToEmit = {}
                 
@@ -379,6 +386,8 @@
             widget: {
                 deep: true,
                 handler() {
+                    console.log('widgets')
+                    this.toggleManageColumns()
                     this.tryInitSortable()
                 },
             },
