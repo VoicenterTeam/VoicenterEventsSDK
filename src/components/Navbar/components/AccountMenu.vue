@@ -2,10 +2,6 @@
     <div class="flex relative items-center"
          v-bind="$attrs">
         <div class="flex h-10 relative">
-            <div class="flex relative">
-                <IconAvatar/>
-                <div class="circle-indicator absolute right-0"/>
-            </div>
             <button @click.stop="triggerMenu"
                     class="flex items-center px-1 rounded-lg cursor-pointer focus:outline-none">
                 <span class="mx-1 text-main-sm md:text-main-lg text-gray-500 w-40 truncate">
