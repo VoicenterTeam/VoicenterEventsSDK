@@ -52,7 +52,16 @@
                 let eventData = ev[draggableEvents.MOVED]
                 let { newIndex: newIndex, oldIndex: oldIndex } = eventData
                 this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0])
+                this.$nextTick(() => {
+                    this.updateGroupOrder()
+                })
             },
+            updateGroupOrder() {
+                this.widgetGroups.forEach((group, index) => {
+                    this.$set(group, 'Order', index)
+                })
+                this.$emit('on-update-groups', this.widgetGroups)
+            }
         },
         watch: {
             widgetGroupList: {

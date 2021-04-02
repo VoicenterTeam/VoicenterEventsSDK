@@ -1,5 +1,5 @@
 import $axios from './apiConnection'
-import parseCatch from "../helpers/handleErrors";
+import parseCatch from '../helpers/handleErrors';
 
 export const WidgetGroupsApi = {
 
@@ -17,7 +17,6 @@ export const WidgetGroupsApi = {
                         config.WidgetParameterValue = ''
                     }
                 })
-
             })
             if (data.Order === null) {
                 data.Order = 0

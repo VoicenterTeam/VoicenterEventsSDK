@@ -261,16 +261,22 @@
             toggleSidebarState() {
                 this.showSidebar = !this.showSidebar
             },
+            renderDashboard() {
+                let dashboard = cloneDeep(this.$store.getters['dashboards/getActiveDashboard'])
+                this.sortDashboardEntities(dashboard)
+            },
         },
         created() {
             window.grids = []
         },
+        mounted() {
+            this.renderDashboard()
+        },
         watch: {
             dashboard: {
                 immediate: true,
-                handler: function () {
-                    let dashboard = cloneDeep(this.$store.getters['dashboards/getActiveDashboard'])
-                    this.sortDashboardEntities(dashboard)
+                handler() {
+                    this.renderDashboard()
                 },
             },
             activeWidgetGroupID: {

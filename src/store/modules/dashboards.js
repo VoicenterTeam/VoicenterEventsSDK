@@ -25,6 +25,7 @@ const types = {
     DELETE_DASHBOARD: 'DELETE_DASHBOARD',
     RESET_ACTIVE_DASHBOARD: 'RESET_ACTIVE_DASHBOARD',
     SET_LOADING: 'SET_LOADING',
+    UPDATE_CURRENT_DASHBOARD: 'UPDATE_CURRENT_DASHBOARD',
 }
 const state = {
     allDashboards: [],
@@ -79,6 +80,9 @@ const mutations = {
     [types.SET_LOADING]: (state, loading) => {
         state.loadingData = loading
     },
+    [types.UPDATE_CURRENT_DASHBOARD]: (state, dashboard) => {
+        state.activeDashboard = dashboard
+    },
 }
 
 const actions = {
@@ -129,7 +133,9 @@ const actions = {
         await DashboardApi.update(dashboard)
         commit(types.SET_ACTIVE_DASHBOARD, dashboard)
     },
-    
+    async updateCurrentDashboard({ commit }, dashboard) {
+        commit(types.UPDATE_CURRENT_DASHBOARD, dashboard)
+    },
 }
 
 const getters = {

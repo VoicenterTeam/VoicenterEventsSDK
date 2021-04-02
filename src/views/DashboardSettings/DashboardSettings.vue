@@ -66,6 +66,7 @@
             </div>
             <div class="w-full px-4 mt-6 lg:px-16 2xl:px-40 3xl:px-64">
                 <DashboardSettings v-model="model"
+                                   @on-update-groups="onUpdateGroups"
                                    @on-change-layout="onChangeLayout"
                                    :current-dashboard="currentDashboard"/>
             </div>
@@ -74,16 +75,16 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import {Popover} from 'element-ui'
+    import { Popover } from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
     import NavBar from '@/views/common/NavBar'
-    import {LayoutApi} from '@/api/layoutApi'
-    import {DashboardApi} from '@/api/dashboardApi'
+    import { LayoutApi } from '@/api/layoutApi'
+    import { DashboardApi } from '@/api/dashboardApi'
     import DeleteLayout from '@/views/common/DeleteLayout'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
-    import {WidgetGroupsApi} from '@/api/widgetGroupApi'
-
+    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
+    
     export default {
         components: {
             NavBar,
@@ -118,7 +119,7 @@
             async onDiscard(goBack = false) {
                 if (goBack) {
                     await this.$store.dispatch('dashboards/getDashboards')
-                    this.$router.push('/')
+                    await this.$router.push('/')
                     return
                 }
                 this.discardLayoutChanges()
@@ -141,12 +142,14 @@
                             Order: index,
                         })
                     })
-
+                    
                     await DashboardApi.update(this.model)
                     await LayoutApi.update(this.activeLayout)
                     await Promise.all(toUpdatePromises)
-
-                    this.$store.commit('layout/SET_ACTIVE_LAYOUT', this.activeLayout)
+                    
+                    const { DashboardID } = this.model
+                    const dashboard = await DashboardApi.find(DashboardID)
+                    await this.updateState(dashboard)
                 } catch (e) {
                     console.warn(e)
                 } finally {
@@ -155,11 +158,19 @@
             },
             async onChangeLayout(layout) {
                 this.currentDashboard['DashboardLayoutID'] = layout.LayoutID
-                await this.$store.dispatch('dashboards/updateDashboard', this.currentDashboard)
+                await this.$store.dispatch('dashboards/updateDashboard', this.model)
             },
             keepInitialLayout() {
                 this.initialLayout = cloneDeep(this.activeLayout)
-            }
+            },
+            async updateState(dashboard) {
+                this.$store.commit('layout/SET_ACTIVE_LAYOUT', this.activeLayout)
+                await this.$store.dispatch('dashboards/updateCurrentDashboard', dashboard)
+            },
+            onUpdateGroups(groups) {
+                this.currentDashboard.WidgetGroupList = groups
+                this.model.WidgetGroupList = groups
+            },
         },
         mounted() {
             this.keepInitialLayout()

@@ -108,6 +108,7 @@
         </div>
         <WidgetGroupManagement v-if="currentDashboard.WidgetGroupList"
                                class="w-full mt-12"
+                               v-on="$listeners"
                                :widget-group-list="currentDashboard.WidgetGroupList"
         />
     </div>
