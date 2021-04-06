@@ -1,31 +1,28 @@
-import {widgetTemplateApi} from '@/api/widgetTemplateApi'
 import templatesCategory from '@/store/modules/templatesCategory'
 
 const types = {
-    SET_ALL_WIDGET_TEMPLATES: 'SET_ALL_WIDGET_TEMPLATES'
+    SET_ALL_WIDGET_TEMPLATES: 'SET_ALL_WIDGET_TEMPLATES',
 };
 const state = {
-    allWidgetTemplates: []
+    allWidgetTemplates: [],
 };
 
 const mutations = {
     [types.SET_ALL_WIDGET_TEMPLATES]: (state, value) => {
         state.allWidgetTemplates = value;
-    }
+    },
 };
 
 const actions = {
-    async getAllWidgetTemplates({commit}) {
-        let TemplateID = []
+    async getAllWidgetTemplates({ commit }) {
+        let templates = []
         try {
-            const templates = templatesCategory.state.all[0] || []
-            TemplateID = templates.TemplatesList.map(template => template.TemplateID)
-        }catch (e) {
+            templates = templatesCategory.state.all[0] || []
+        } catch (e) {
             console.warn(e)
         }
-        const widgetTemplates = await widgetTemplateApi.getAll({ TemplateID })
-        commit(types.SET_ALL_WIDGET_TEMPLATES, widgetTemplates)
-    }
+        commit(types.SET_ALL_WIDGET_TEMPLATES, templates)
+    },
 };
 
 const getters = {
@@ -34,7 +31,7 @@ const getters = {
             return
         }
         return state.allWidgetTemplates.find(t => t.TemplateID.toString() === templateId.toString())
-    }
+    },
 }
 
 export default {
