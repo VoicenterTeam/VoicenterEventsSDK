@@ -1,4 +1,5 @@
 import {widgetTemplateApi} from '@/api/widgetTemplateApi'
+import templatesCategory from '@/store/modules/templatesCategory'
 
 const types = {
     SET_ALL_WIDGET_TEMPLATES: 'SET_ALL_WIDGET_TEMPLATES'
@@ -15,7 +16,14 @@ const mutations = {
 
 const actions = {
     async getAllWidgetTemplates({commit}) {
-        const widgetTemplates = await widgetTemplateApi.getAll()
+        let TemplateID = []
+        try {
+            const templates = templatesCategory.state.all[0] || []
+            TemplateID = templates.TemplatesList.map(template => template.TemplateID)
+        }catch (e) {
+            console.warn(e)
+        }
+        const widgetTemplates = await widgetTemplateApi.getAll({ TemplateID })
         commit(types.SET_ALL_WIDGET_TEMPLATES, widgetTemplates)
     }
 };
