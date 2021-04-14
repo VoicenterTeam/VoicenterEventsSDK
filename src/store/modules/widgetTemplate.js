@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import templatesCategory from '@/store/modules/templatesCategory'
 
 const types = {
@@ -17,7 +18,7 @@ const actions = {
     async getAllWidgetTemplates({ commit }) {
         let templates = []
         try {
-            templates = templatesCategory.state.all[0] || []
+            templates = get(templatesCategory.state, 'all[0].TemplatesList', [])
         } catch (e) {
             console.warn(e)
         }

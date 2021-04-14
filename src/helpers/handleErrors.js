@@ -1,16 +1,17 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import get from 'lodash/get';
-import i18n from "@/i18n";
-import EventBus from "@/event-bus/EventBus";
-import { sdkEventTypes } from "@/enum/sdkEvents";
+import i18n from '@/i18n';
+import EventBus from '@/event-bus/EventBus';
+import { sdkEventTypes } from '@/enum/sdkEvents';
+
 const sdkMessages = {
     missingToken: 'A token property should be provided',
-    serverConnectionError: 'Could not find any server to establish connection with'
+    serverConnectionError: 'Could not find any server to establish connection with',
 }
 
 const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '') => {
     let message;
-
+    
     if (get(apiError.response, 'data')) {
         message = apiError.response.data.message
     } else if (apiError.message) {
@@ -29,7 +30,7 @@ const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '')
     if (showAxiosErrorMessage && message && shouldDisplayNotification(apiError)) {
         const messageConfig = {
             message: `${messagePrefix} ${message}`,
-            title
+            title,
         }
         Notification.error(messageConfig);
     }
@@ -38,13 +39,13 @@ const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '')
 EventBus.$on(sdkEventTypes.CONNECT_ERROR, () => {
     Notification.error({
         title: i18n.t('errors.realtime.connection.title'),
-        message: i18n.t('errors.realtime.connection.message2')
+        message: i18n.t('errors.realtime.connection.message2'),
     });
 })
 EventBus.$on(sdkEventTypes.CONNECT_TIMEOUT, () => {
     Notification.error({
         title: i18n.t('errors.realtime.timeout.title'),
-        message: i18n.t('errors.realtime.timeout.description')
+        message: i18n.t('errors.realtime.timeout.description'),
     });
 })
 const messagesToSkip = [sdkMessages.missingToken, 'Network Error'] // These are already handled in other places
