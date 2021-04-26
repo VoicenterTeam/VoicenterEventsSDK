@@ -113,3 +113,12 @@
     }
 }
 </style>
+<style lang="scss">
+.rtl {
+    .el-color-dropdown__main-wrapper {
+        .el-color-hue-slider {
+            float: left !important;
+        }
+    }
+}
+</style>
