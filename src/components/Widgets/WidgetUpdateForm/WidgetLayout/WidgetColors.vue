@@ -115,9 +115,19 @@
 </style>
 <style lang="scss">
 .rtl {
+    .el-color-picker__panel .el-color-predefine {
+        .el-color-predefine__color-selector {
+            @apply mx-1;
+        }
+    }
     .el-color-dropdown__main-wrapper {
         .el-color-hue-slider {
             float: left !important;
+        }
+    }
+    .el-color-dropdown__btns {
+        .el-button--default {
+            @apply mx-2;
         }
     }
 }
