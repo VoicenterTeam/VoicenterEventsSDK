@@ -63,7 +63,7 @@
                                               :selected-template="selectedTemplate"
                                               @on-select-template="onSelectTemplate"
                                               @on-detailed-view="onDetailedView"
-                                              v-if="dashboardTemplateCategory"
+                                              v-if="dashboardTemplateCategory && dashboardTemplateCategories"
                                               :dashboard-category="selectedCategory"/>
                         </fade-transition>
                     </div>

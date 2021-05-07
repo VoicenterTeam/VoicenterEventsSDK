@@ -22,6 +22,8 @@ export const templateApi = {
             return DashboardTemplateCategoryList
         } catch (e) {
             parseCatch(e, true, 'Get Dashboard Templates')
+            const { DashboardTemplateCategoryList } = await $axios.get('DashboardTemplate/DashboardTemplateList/1')
+            return DashboardTemplateCategoryList
         }
     },
     async getHelpByWidgetsTemplateID(templateID, LanguageID) {
