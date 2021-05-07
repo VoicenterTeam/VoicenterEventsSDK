@@ -35,13 +35,12 @@ const actions = {
     async setupActiveLayout({ commit }) {
         const dashboard = store.state.dashboards.activeDashboard
         if (dashboard) {
-            const dashboardLayoutID = dashboard.DashboardLayoutID
+            const { DashboardLayoutID } = dashboard
             const data = {
-                LayoutID: dashboardLayoutID,
+                LayoutID: DashboardLayoutID,
             }
             const layouts = await LayoutApi.get(data)
             commit(types.SET_ACTIVE_LAYOUT, layouts[0])
-            
             return;
         }
         const layout = defaultLayout(null)
@@ -86,7 +85,7 @@ const getters = {
         
         result['primary_rgba'] = convertHex(result.primary);
         
-        if (!state.activeLayout || !state.activeLayout.LayoutParametersList.length) {
+        if (!get(state, 'activeLayout.LayoutParametersList.length', false)) {
             return result
         }
         

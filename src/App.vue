@@ -73,6 +73,9 @@ export default {
             deep: true,
             immediate: true,
             handler: function (values) {
+                if (!values) {
+                    return
+                }
                 this.initMainColorsVars(values)
             },
         },
@@ -83,6 +86,7 @@ export default {
             },
         },
         activeDashboard: {
+            immediate: true,
             deep: true,
             handler: async function () {
                 await this.$store.dispatch('layout/setupActiveLayout')

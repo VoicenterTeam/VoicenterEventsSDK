@@ -157,7 +157,7 @@
                 }
             },
             async onChangeLayout(layout) {
-                this.currentDashboard['DashboardLayoutID'] = layout.LayoutID
+                this.model['DashboardLayoutID'] = layout.LayoutID
                 await this.$store.dispatch('dashboards/updateDashboard', this.model)
             },
             keepInitialLayout() {
