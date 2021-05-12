@@ -21,10 +21,16 @@
                 </div>
                 <div class="flex flex-row items-center -mt-3">
                     <ColorParameterType v-bind="primaryColorSettings"
+                                        v-if="!defaultLayout"
                                         :display-label="false"
                                         v-model="primaryColorSettings.Value">
                         <IconColorPicker class="w-6 h-6 text-primary"/>
                     </ColorParameterType>
+                    <div v-else
+                         class="mt-4">
+                        <IconColorPicker class="w-6 h-6 text-primary"
+                        />
+                    </div>
                 </div>
             </div>
             <div class="col-span-4 md:col-span-1 pt-4 border-b pb-3 md:pb-0 md:border-none md:pt-0">
@@ -37,7 +43,8 @@
                 <div class="flex flex-row items-center">
                     <img :src="getLogo" alt="Logo"
                          class="h-6 object-cover">
-                    <LayoutLogo class="mx-2"/>
+                    <LayoutLogo class="mx-2"
+                                :disabled="defaultLayout"/>
                 </div>
             </div>
         </div>
@@ -84,6 +91,7 @@
                             </div>
                         </div>
                         <div class="cursor-pointer text-primary-300 hover:text-primary"
+                             v-if="!defaultLayout"
                              @click="onEditLayout">
                             <div class="flex items-center">
                                 <IconPencil class="w-4 h-4"/>
@@ -116,6 +124,7 @@
 <script>
     import { PenToolIcon } from 'vue-feather-icons'
     import LayoutLogo from '@/views/common/LayoutLogo'
+    import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import LayoutManagementSelect from '@/views/common/LayoutManagementSelect'
     import WidgetGroupManagement from '@/views/DashboardSettings/components/WidgetGroupManagement'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
@@ -145,6 +154,9 @@
             }
         },
         computed: {
+            defaultLayout() {
+                return this.activeLayout.LayoutID === DEFAULT_LAYOUT_ID
+            },
             getLogo() {
                 return this.$store.getters['layout/getLogo']
             },

@@ -9,6 +9,7 @@
             :on-change="onFileChange"
         >
             <base-button class="mx-1"
+                         v-if="!disabled"
                          size="xs"
                          fixed-width="w-20"
                          variant="discard">
@@ -29,6 +30,10 @@
         },
         name: 'Logo',
         props: {
+            disabled: {
+                type: Boolean,
+                default: false,
+            },
             LayoutParameterValueID: {
                 type: [String, Number],
                 default: '',
