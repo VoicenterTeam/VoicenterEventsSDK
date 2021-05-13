@@ -61,6 +61,13 @@
                     <div class="col-span-3">
                         <LayoutPreview @on-real-time-preview="onRealTimePreview">
                             <template v-slot:actions>
+                                <div v-if="layoutNameAlreadyUsed && isDefaultLayout"
+                                     class="w-full border rounded-md my-2 flex p-2 items-center text-orange-600">
+                                    <AlertTriangleIcon class="w-5 h-5"/>
+                                    <span class="mx-1">
+                                        {{ $t('Layout name already used, please use another name.') }}
+                                    </span>
+                                </div>
                                 <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
                                         <base-button @click="onDiscard()"
@@ -73,6 +80,7 @@
                                         </base-button>
                                         <div class="mx-2"></div>
                                         <base-button fixed-width="w-37"
+                                                     :disabled="layoutNameAlreadyUsed"
                                                      @click="onApply()">
                                             <div class="flex items-center">
                                                 <IconSave class="mx-1"/>
@@ -134,9 +142,10 @@
     import { LayoutApi } from '@/api/layoutApi'
     import NavBar from '@/views/common/NavBar'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
+    import { AlertTriangleIcon } from 'vue-feather-icons'
     import DeleteLayout from '@/views/common/DeleteLayout'
     import LayoutSelect from '@/views/common/LayoutSelect'
+    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import LayoutPreview from '@/views/LayoutSettings/LayoutPreview'
     import LayoutWrapper from '@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'
     
@@ -148,6 +157,7 @@
             DeleteLayout,
             LayoutPreview,
             LayoutWrapper,
+            AlertTriangleIcon,
         },
         data() {
             return {
@@ -162,6 +172,15 @@
         computed: {
             selectedLayout() {
                 return this.$store.getters['layout/getActiveLayout']
+            },
+            allLayouts() {
+                return this.$store.getters['layout/getAllLayouts']
+            },
+            layoutNames() {
+                return this.allLayouts.map(layout => layout.LayoutName)
+            },
+            layoutNameAlreadyUsed() {
+                return this.layoutNames.includes(this.layoutSettings.LayoutName)
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
