@@ -24,7 +24,7 @@ export default {
         await this.$store.dispatch('layout/setupActiveLayout')
         await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
         await this.$store.dispatch('layout/setupLayouts')
-        await this.$store.dispatch('layout/getGlobalLayouts')
+        await this.$store.dispatch('layout/getGlobalLayout')
         this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
     },
     computed: {

@@ -9,11 +9,12 @@ const types = {
     SET_ALL_LAYOUTS: 'SET_ALL_LAYOUTS',
     SET_ACTIVE_LAYOUT: 'SET_ACTIVE_LAYOUT',
     UPDATE_ACTIVE_LAYOUT: 'UPDATE_ACTIVE_LAYOUT',
-    GET_GLOBAL_LAYOUT: 'GET_GLOBAL_LAYOUT'
+    SET_GLOBAL_LAYOUT: 'SET_GLOBAL_LAYOUT'
 };
 const state = {
     data: [],
     activeLayout: {},
+    globalLayout: defaultLayout(null),
 };
 
 const mutations = {
@@ -26,8 +27,9 @@ const mutations = {
     [types.UPDATE_ACTIVE_LAYOUT]: (state, layout) => {
         state.activeLayout = layout;
     },
-    [types.GET_GLOBAL_LAYOUT]: (state, value) => {
+    [types.SET_GLOBAL_LAYOUT]: (state, value) => {
         state.data.splice(0, 0, value)
+        state.globalLayout = value
     }
 };
 
@@ -41,7 +43,7 @@ const actions = {
             }
             const layouts = await LayoutApi.get(data)
             commit(types.SET_ACTIVE_LAYOUT, layouts[0])
-            return;
+            return
         }
         const layout = defaultLayout(null)
         commit(types.SET_ACTIVE_LAYOUT, layout)
@@ -51,12 +53,12 @@ const actions = {
         const layouts = await LayoutApi.get({ LayoutAccountID: accountID })
         commit(types.SET_ALL_LAYOUTS, layouts)
     },
-    async getGlobalLayouts({ commit }) {
+    async getGlobalLayout({ commit }) {
         const layout = await LayoutApi.get(globalAccountSettings)
         if (!layout[0]) {
             return
         }
-        commit(types.GET_GLOBAL_LAYOUT, layout[0])
+        commit(types.SET_GLOBAL_LAYOUT, layout[0])
     },
     async updateActiveLayout({ commit }, layout) {
         commit(types.UPDATE_ACTIVE_LAYOUT, layout)

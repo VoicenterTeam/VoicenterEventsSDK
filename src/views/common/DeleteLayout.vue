@@ -164,7 +164,7 @@
                     
                     await LayoutApi.update(layoutSettings)
                     await this.$store.dispatch('layout/setupLayouts')
-                    await this.$store.dispatch('layout/getGlobalLayouts')
+                    await this.$store.dispatch('layout/getGlobalLayout')
                     this.$emit('on-close')
                 } catch (e) {
                     console.warn(e)

@@ -826,5 +826,7 @@
     "Template Dictionary": "Template Dictionary",
     "Admin User שירות לקוחות": "Admin User שירות לקוחות",
     "Layout name already used, please use another name.": "Layout name already used, please use another name.",
-    "This is a default config, please add a new one/select if you want to edit it": "This is a default config, please add a new one/select if you want to edit it"
+    "This is a default config, please add a new one/select if you want to edit it": "This is a default config, please add a new one/select if you want to edit it",
+    "Are you sure you want to create new Layout? A copy of default layout.": "Are you sure you want to create new Layout? A copy of default layout.",
+    "This is a default layout, you will not be able to update, just create a copy": "This is a default layout, you will not be able to update, just create a copy"
 }

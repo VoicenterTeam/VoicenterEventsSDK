@@ -2,13 +2,13 @@ import { LayoutApi } from '@/api/layoutApi';
 import { ENABLED_STATUS_ID, globalAccountSettings } from '@/views/DashboardSettings/LayoutManagement/layout-management';
 import get from 'lodash/get';
 
-async function getDefaultLayout() {
+async function getGlobalLayout() {
     return await LayoutApi.get(globalAccountSettings)
 }
 
 export async function getAllActiveLayouts(currentAccountId) {
     
-    let defaultLayout = await getDefaultLayout()
+    let defaultLayout = await getGlobalLayout()
     
     let accountSettings = {
         LayoutAccountID: currentAccountId,

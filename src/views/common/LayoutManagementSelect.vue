@@ -175,11 +175,22 @@
             selectedLayout() {
                 return this.$store.state.layout.activeLayout
             },
+            globalLayout() {
+                return this.$store.state.layout.globalLayout
+            },
             getAccountLayouts() {
                 return this.$store.state.layout.data || []
             },
+            allActiveLayouts() {
+                return this.getAccountLayouts.filter(layout => layout.LayoutStatusID === ENABLED_STATUS_ID)
+            },
             filteredLayouts() {
-                return this.getAccountLayouts.filter(layout => layout.LayoutStatusID === MAP_LAYOUT_STATUSES[this.activeLayouts])
+                const result = this.allActiveLayouts
+                const globalLayoutIndex = result.findIndex(layout => layout.LayoutID.toString() === DEFAULT_LAYOUT_ID.toString())
+                if (globalLayoutIndex === -1) {
+                    return result.splice(0, 0, this.globalLayout)
+                }
+                return result
             },
         },
         methods: {

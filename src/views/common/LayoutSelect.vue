@@ -24,7 +24,14 @@
                         class="truncate flex justify-between h-13 shadow-base w-full px-2 rounded border border-transparent hover:border-primary">
                         <div @click="onChooseLayout(layout)"
                              class="flex flex-col flex-1">
-                            <p class="-mt-1 text-md truncate">{{ layout.LayoutName }}</p>
+                            <p class="-mt-1 text-md truncate flex items-center">
+                                <el-tooltip :content="$t('This is a default layout, you will not be able to update, just clone')"
+                                            v-if="layout.LayoutID === DEFAULT_LAYOUT_ID"
+                                            placement="top">
+                                    <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5 mx-2"/>
+                                </el-tooltip>
+                                {{ layout.LayoutName }}
+                            </p>
                             <div class="flex w-full flex-row pb-2 items-center">
                                 <div v-for="group in getColorParameters(layout)"
                                      class="w-1/3 h-2"
@@ -42,10 +49,13 @@
 </template>
 <script>
     import { Option, Select } from 'element-ui'
+    import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
+    import { AlertTriangleIcon } from 'vue-feather-icons'
     import { DEFAULT_GROUP_KEYS } from '@/views/DashboardSettings/LayoutManagement/layout-management'
     
     export default {
         components: {
+            AlertTriangleIcon,
             [Select.name]: Select,
             [Option.name]: Option,
         },
@@ -69,12 +79,13 @@
             defaultLayout: {
                 type: Number,
                 default: null,
-            }
+            },
         },
         data() {
             return {
                 groupKeys: DEFAULT_GROUP_KEYS,
                 selectedLayout: this.defaultLayout,
+                DEFAULT_LAYOUT_ID,
             }
         },
         computed: {
@@ -86,7 +97,7 @@
                     return this.activeAccountLayouts
                 }
                 return this.activeAccountLayouts.filter(layout => layout.LayoutID.toString() !== this.hideLayoutId.toString())
-            }
+            },
         },
         methods: {
             onChooseLayout(layout) {

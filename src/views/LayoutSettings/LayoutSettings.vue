@@ -128,10 +128,9 @@
                                  fixed-width="w-37"
                                  :loading="storingData">
                         <span class="font-semibold">
-                            {{ isDefaultLayout ? $t('Save') : $t('Save as New') }}
+                            {{ isDefaultLayout ? $t('Confirm') : $t('Save as New') }}
                         </span>
                     </base-button>
-                    
                 </slot>
             </template>
         </ConfirmDialog>
@@ -200,14 +199,14 @@
             },
             getPromptDescription() {
                 if (this.isDefaultLayout) {
-                    return this.$t('Are you sure you want to create new Layout?')
+                    return this.$t('Are you sure you want to create new Layout? A copy of default layout.')
                 }
                 return this.$t('Do you want to save changes in the existing theme or save as a new?')
             },
         },
         methods: {
             onChoseLayout(layout) {
-                this.layoutSettings = layout
+                this.layoutSettings = cloneDeep(layout)
                 this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
             },
             onRealTimePreview(state) {
@@ -221,17 +220,18 @@
                 this.layoutSettings = cloneDeep(this.storedDashboardLayout)
                 this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
                 if (goBack) {
-                    this.$router.push('dashboard-settings')
+                    this.$nextTick(() => {
+                        this.$router.push('dashboard-settings')
+                    })
                 }
             },
             composePayload() {
-                const payload = {
+                return {
                     ...this.layoutSettings,
                     LayoutStatusID: 1,
                     LayoutStatusName: 'Enable',
                     LayoutAccountID: this.currentAccountId,
                 }
-                return payload
             },
             async onUpdateLayout() {
                 try {
