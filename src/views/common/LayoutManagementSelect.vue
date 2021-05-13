@@ -66,6 +66,13 @@
                                                 </div>
                                             </template>
                                         </template>
+                                        <template v-else>
+                                             <el-tooltip
+                                                    :content="$t('This is a default config, please add a new one if you want to edit it')"
+                                                    placement="top">
+                                                    <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
+                                                </el-tooltip>
+                                            </template>
                                     </div>
                                 </div>
                                 <template v-if="!activeLayouts">
@@ -127,6 +134,7 @@
     import { LayoutApi } from '@/api/layoutApi'
     import { RotateCcwIcon } from 'vue-feather-icons'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
+    import { AlertTriangleIcon } from 'vue-feather-icons'
     import DeleteLayout from '@/views/common/DeleteLayout'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import { DEFAULT_GROUP_KEYS } from '@/views/DashboardSettings/LayoutManagement/layout-management'
@@ -142,6 +150,7 @@
             DeleteLayout,
             RotateCcwIcon,
             ConfirmDialog,
+            AlertTriangleIcon,
             [Switch.name]: Switch,
         },
         data() {

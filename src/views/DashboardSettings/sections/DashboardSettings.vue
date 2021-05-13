@@ -98,6 +98,11 @@
                                 <div>{{ $t('Edit') }}</div>
                             </div>
                         </div>
+                        <el-tooltip v-else
+                                    :content="$t('This is a default config, please add a new one if you want to edit it')"
+                                    placement="top">
+                            <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
+                        </el-tooltip>
                     </div>
                     <div class="flex flex-col lg:hidden mt-4">
                         <div class="flex items-center mb-2">
@@ -125,6 +130,7 @@
     import { PenToolIcon } from 'vue-feather-icons'
     import LayoutLogo from '@/views/common/LayoutLogo'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
+    import { AlertTriangleIcon } from 'vue-feather-icons'
     import LayoutManagementSelect from '@/views/common/LayoutManagementSelect'
     import WidgetGroupManagement from '@/views/DashboardSettings/components/WidgetGroupManagement'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
@@ -132,11 +138,12 @@
     
     export default {
         components: {
-            PenToolIcon,
             LayoutLogo,
-            LayoutManagementSelect,
+            PenToolIcon,
+            AlertTriangleIcon,
             ColorParameterType,
             WidgetGroupManagement,
+            LayoutManagementSelect,
         },
         props: {
             value: {
