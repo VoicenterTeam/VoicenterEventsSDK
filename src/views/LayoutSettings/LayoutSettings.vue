@@ -226,6 +226,9 @@
                 }
             },
             composePayload() {
+                if (this.isDefaultLayout) {
+                    delete this.layoutSettings.LayoutID
+                }
                 return {
                     ...this.layoutSettings,
                     LayoutStatusID: 1,
@@ -279,6 +282,7 @@
                 this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
                 this.showConfirmDialog = false
                 this.$store.dispatch('layout/setupLayouts')
+                this.$store.dispatch('layout/getGlobalLayout')
             },
             onEditLayoutTitle() {
                 this.editableTitle = !this.editableTitle
