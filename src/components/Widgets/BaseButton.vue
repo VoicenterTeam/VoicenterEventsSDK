@@ -23,7 +23,7 @@
                   'text-red-600 hover:text-red-900': variant === 'danger-link',
                   'text-primary-700 bg-primary-100 hover:bg-primary-50 focus:border-primary-300 active:bg-primary-200': variant === 'secondary',
                   'text-red-700 border-red-300 hover:bg-red-50 focus:border-red-300 active:bg-red-400': variant === 'danger-secondary',
-                  'border-gray-300 text-gray-700 bg-white hover:text-primary hover:border-primary focus:primary focus:shadow-outline-blue active:text-primary active:bg-primary-100': variant === 'white',
+                  'border-gray-550 border-2 text-gray-550 bg-white hover:text-primary hover:border-primary focus:primary focus:shadow-outline-blue active:text-primary active:bg-primary-100': variant === 'white',
                   'border-gray-550 text-gray-550 bg-white hover:bg-gray-200 focus:bg-gray-400': variant === 'discard',
                   'text-xs px-2.5 py-1-5 leading-4': size === 'xs',
                   'text-sm px-3 py-2 leading-4': size === 'sm',

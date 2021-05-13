@@ -78,7 +78,7 @@
                                                 <span class="mx-1 text-base font-bold">{{ 'Discard' }}</span>
                                             </div>
                                         </base-button>
-                                        <div class="mx-2"></div>
+                                        <div class="mx-2"/>
                                         <base-button fixed-width="w-37"
                                                      :disabled="layoutNameAlreadyUsed"
                                                      @click="onApply()">
@@ -114,23 +114,24 @@
                             <span class="font-semibold">{{ 'Cancel' }}</span>
                         </div>
                     </base-button>
-                    <base-button @click="onNewLayout"
-                                 key="new-layout"
-                                 fixed-width="w-37"
-                                 :variant="isDefaultLayout ? 'white': 'discard'"
-                                 :loading="storingData">
-                        <span class="font-semibold">
-                            {{ isDefaultLayout ? $t('Save') : $t('Save as New') }}
-                        </span>
-                    </base-button>
                     <template v-if="!isDefaultLayout">
                         <base-button @click="onUpdateLayout"
                                      key="update-layout"
+                                     variant="white"
                                      fixed-width="w-37"
                                      :loading="updatingData">
                             <span class="font-semibold">{{ $t('Save Changes') }}</span>
                         </base-button>
                     </template>
+                    <base-button @click="onNewLayout"
+                                 key="new-layout"
+                                 fixed-width="w-37"
+                                 :loading="storingData">
+                        <span class="font-semibold">
+                            {{ isDefaultLayout ? $t('Save') : $t('Save as New') }}
+                        </span>
+                    </base-button>
+                    
                 </slot>
             </template>
         </ConfirmDialog>
@@ -176,8 +177,11 @@
             allLayouts() {
                 return this.$store.getters['layout/getAllLayouts']
             },
+            additionalLayouts() {
+              return this.allLayouts.filter(layout => layout.LayoutID !== this.layoutSettings.LayoutID)
+            },
             layoutNames() {
-                return this.allLayouts.map(layout => layout.LayoutName)
+                return this.additionalLayouts.map(layout => layout.LayoutName)
             },
             layoutNameAlreadyUsed() {
                 return this.layoutNames.includes(this.layoutSettings.LayoutName)
@@ -240,6 +244,7 @@
                 } finally {
                     this.updatingData = false
                     this.showConfirmDialog = false
+                    this.editableTitle = false
                 }
             },
             async onNewLayout() {
@@ -254,6 +259,7 @@
                 } finally {
                     this.storingData = false
                     this.showConfirmDialog = false
+                    this.editableTitle = false
                 }
             },
             async getAccountLayouts() {
