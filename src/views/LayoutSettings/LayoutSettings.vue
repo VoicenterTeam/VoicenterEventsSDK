@@ -61,7 +61,7 @@
                     <div class="col-span-3">
                         <LayoutPreview @on-real-time-preview="onRealTimePreview">
                             <template v-slot:actions>
-                                <div v-if="layoutNameAlreadyUsed && isDefaultLayout"
+                                <div v-if="layoutNameAlreadyUsed"
                                      class="w-full border rounded-md my-2 flex p-2 items-center text-orange-600">
                                     <AlertTriangleIcon class="w-5 h-5"/>
                                     <span class="mx-1">
