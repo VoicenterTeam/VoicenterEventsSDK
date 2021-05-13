@@ -825,5 +825,6 @@
     "Something went wrong please try again.": "Something went wrong please try again.",
     "Template Dictionary": "Template Dictionary",
     "Admin User שירות לקוחות": "Admin User שירות לקוחות",
-    "Layout name already used, please use another name.": "Layout name already used, please use another name."
+    "Layout name already used, please use another name.": "Layout name already used, please use another name.",
+    "This is a default config, please add a new one/select if you want to edit it": "This is a default config, please add a new one/select if you want to edit it"
 }

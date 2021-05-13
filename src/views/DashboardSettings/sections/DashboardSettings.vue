@@ -27,9 +27,12 @@
                         <IconColorPicker class="w-6 h-6 text-primary"/>
                     </ColorParameterType>
                     <div v-else
-                         class="mt-4">
-                        <IconColorPicker class="w-6 h-6 text-primary"
-                        />
+                         class="mt-4 flex items-center">
+                        <IconColorPicker class="w-6 h-6 text-primary"/>
+                        <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                                    placement="top">
+                            <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5 mx-2"/>
+                        </el-tooltip>
                     </div>
                 </div>
             </div>
@@ -45,6 +48,11 @@
                          class="h-6 object-cover">
                     <LayoutLogo class="mx-2"
                                 :disabled="defaultLayout"/>
+                    <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                                v-if="defaultLayout"
+                                placement="top">
+                        <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
+                    </el-tooltip>
                 </div>
             </div>
         </div>
@@ -98,8 +106,10 @@
                                 <div>{{ $t('Edit') }}</div>
                             </div>
                         </div>
-                        <el-tooltip :content="$t('This is a default config, please add a new one if you want to edit it')"
-                                    placement="top">
+                        <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                                    placement="top"
+                                    v-if="defaultLayout"
+                        >
                             <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
                         </el-tooltip>
                     </div>
