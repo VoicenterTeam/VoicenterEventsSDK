@@ -67,12 +67,12 @@
                                             </template>
                                         </template>
                                         <template v-else>
-                                             <el-tooltip
-                                                    :content="$t('This is a default config, please add a new one if you want to edit it')"
-                                                    placement="top">
-                                                    <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
-                                                </el-tooltip>
-                                            </template>
+                                            <el-tooltip
+                                                :content="$t('This is a default config, please add a new one if you want to edit it')"
+                                                placement="top">
+                                                <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
+                                            </el-tooltip>
+                                        </template>
                                     </div>
                                 </div>
                                 <template v-if="!activeLayouts">
@@ -137,7 +137,16 @@
     import { AlertTriangleIcon } from 'vue-feather-icons'
     import DeleteLayout from '@/views/common/DeleteLayout'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import { DEFAULT_GROUP_KEYS, ENABLED_STATUS_ID } from '@/views/DashboardSettings/LayoutManagement/layout-management'
+    import {
+        DEFAULT_GROUP_KEYS,
+        ENABLED_STATUS_ID,
+        DELETED_STATUS_ID,
+    } from '@/views/DashboardSettings/LayoutManagement/layout-management'
+    
+    const MAP_LAYOUT_STATUSES = {
+        true: ENABLED_STATUS_ID,
+        false: DELETED_STATUS_ID,
+    }
     
     export default {
         components: {
@@ -175,11 +184,14 @@
             getAccountLayouts() {
                 return this.$store.state.layout.data || []
             },
-            allActiveLayouts() {
-                return this.getAccountLayouts.filter(layout => layout.LayoutStatusID === ENABLED_STATUS_ID)
+            layoutsByStatus() {
+                return this.getAccountLayouts.filter(layout => layout.LayoutStatusID === MAP_LAYOUT_STATUSES[this.activeLayouts])
             },
             filteredLayouts() {
-                const result = this.allActiveLayouts
+                const result = this.layoutsByStatus
+                if (!this.activeLayouts) {
+                    return result
+                }
                 const globalLayoutIndex = result.findIndex(layout => layout.LayoutID.toString() === DEFAULT_LAYOUT_ID.toString())
                 if (globalLayoutIndex === -1) {
                     result.splice(0, 0, this.globalLayout)
