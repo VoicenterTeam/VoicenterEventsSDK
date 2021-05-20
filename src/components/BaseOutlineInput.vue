@@ -14,7 +14,7 @@
 
 <script>
     export default {
-        name: "base-input",
+        name: "base-outline-input",
         props:{
             value: {
                 type: [String, Number],

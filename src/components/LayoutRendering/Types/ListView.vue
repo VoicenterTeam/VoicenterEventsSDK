@@ -9,7 +9,7 @@
                 <div class="p-2">
                     <div v-if="editMode"
                          class="flex items-center justify-between pb-2">
-                        <base-input v-model="widgetGroup.WidgetGroupTitle"/>
+                        <base-outline-input v-model="widgetGroup.WidgetGroupTitle"/>
                         <edit-group-buttons :widgetGroup="widgetGroup"
                                             v-bind="$attrs"
                                             v-on="$listeners">

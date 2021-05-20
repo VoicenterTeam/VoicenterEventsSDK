@@ -1,3 +1,4 @@
+//Date range picker
 .el-picker-panel {
   .el-date-table td.end-date span, .el-date-table td.start-date span {
     background-color: var(--primary-color);
@@ -19,4 +20,16 @@
   .el-range-editor.is-active, .el-range-editor.is-active:hover {
     border-color: var(--primary-color);
   }
+}
+//Date picker
+.el-picker-panel__body-wrapper > .el-picker-panel__body {
+    .el-date-table td.available.current span {
+        @apply text-white bg-primary border border-gray-300;
+    }
+
+    .el-date-table td.available {
+        span:hover {
+            @apply text-white bg-primary opacity-50 border border-gray-300;
+        }
+    }
 }

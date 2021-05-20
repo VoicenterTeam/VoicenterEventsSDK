@@ -25,6 +25,6 @@
 
     .btn:focus {
         outline: none;
-        @apply shadow-outline;
+        @apply ring;
     }
 </style>

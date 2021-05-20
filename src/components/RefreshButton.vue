@@ -34,7 +34,7 @@
 
     .btn:focus {
         outline: none;
-        @apply shadow-outline;
+        @apply ring;
         @apply bg-blue-200;
     }
 

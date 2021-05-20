@@ -1,13 +1,18 @@
-import {sdkEventTypes} from "@/enum/sdkEvents";
-import store from "@/store/store";
-import EventsSDK from "voicenter-events-sdk";
-import parseCatch from "@/helpers/handleErrors";
-import EventBus from "@/event-bus/EventBus";
-import {Notification} from "element-ui";
+import Vue from 'vue'
+import store from '@/store/store';
+import EventBus from '@/event-bus/EventBus';
+import EventsSDK from 'voicenter-events-sdk';
+import { sdkEventTypes } from '@/enum/sdkEvents';
+import parseCatch from '@/helpers/handleErrors';
+import NotificationsPlugin from '@/components/NotificationPlugin';
+
+Vue.use(NotificationsPlugin)
+const app = new Vue({})
+const $notify = app.$notify
 
 let sdk = null
 
-function onNewEvent (eventData) {
+function onNewEvent(eventData) {
     switch (eventData.name) {
         case sdkEventTypes.CONNECT_ERROR:
             EventBus.$emit(sdkEventTypes.CONNECT_ERROR)
@@ -20,7 +25,7 @@ function onNewEvent (eventData) {
     }
 }
 
-export default async function initRealTimeSdk () {
+export default async function initRealTimeSdk() {
     try {
         if (sdk) {
             sdk.emit(sdkEventTypes.CLOSE)
@@ -49,7 +54,7 @@ export default async function initRealTimeSdk () {
             }
             config = {
                 ...config,
-                ...newOptions
+                ...newOptions,
             }
         }
         if (typeof config.servers === 'string') {
@@ -63,22 +68,34 @@ export default async function initRealTimeSdk () {
     }
 }
 
-export async function reSyncSdk () {
+export async function reSyncSdk() {
     if (!sdk) {
         return
     }
     await initRealTimeSdk()
 }
 
-export async function setToken (token) {
+export async function setToken(token) {
     if (!sdk) {
         return
     }
     await sdk.setToken(token)
 }
 
-export async function retrySocketConnection () {
-    Notification.info(this.$t('common.socketAttemptSync'));
+export async function retrySocketConnection() {
+    $notify({
+        type: 'info',
+        icon: true,
+        title: 'errors.realtime.connection.title',
+        message: 'common.socketAttemptSync',
+    })
+    
     await reSyncSdk()
-    Notification.success(this.$t('common.socketSynced'));
+    
+    $notify({
+        type: 'success',
+        icon: true,
+        title: 'RealTime SDK',
+        message: 'common.socketSynced',
+    })
 }

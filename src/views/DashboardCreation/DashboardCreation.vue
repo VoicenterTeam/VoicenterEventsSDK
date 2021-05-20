@@ -48,7 +48,7 @@
                             </div>
                         </div>
                     </el-form>
-                    <div class="lg:grid lg:grid-cols-4 col-gap-5 mb-4"
+                    <div class="lg:grid lg:grid-cols-4 gap-5 mb-4"
                          key="TemplateCategories">
                         <TemplateCategories class="col-span-1"
                                             key="categories"
@@ -317,6 +317,6 @@
 </script>
 <style lang="scss" scoped>
 .label-input {
-    @apply whitespace-no-wrap text-gray-900 text-main-sm font-medium truncate;
+    @apply whitespace-nowrap text-gray-900 text-main-sm font-medium truncate;
 }
 </style>

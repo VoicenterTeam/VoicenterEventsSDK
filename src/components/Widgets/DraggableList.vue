@@ -5,7 +5,7 @@
                v-on="$listeners">
         <transition-group type="transition" :name="enableTransition ? 'flip-list': ''"
                           class="flex justify-center flex-wrap w-full"
-                          :class="{'cursor-move': !dragOptions.disabled }">
+                          :class="{'cursor-grabbing': !dragOptions.disabled }">
             <slot></slot>
         </transition-group>
     </draggable>

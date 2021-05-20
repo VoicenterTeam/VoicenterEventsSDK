@@ -48,7 +48,7 @@
 <script>
     import Dashboard from '@/views/Dashboard'
     import { EyeIcon } from 'vue-feather-icons'
-    
+
     export default {
         components: {
             Dashboard,
@@ -113,13 +113,13 @@
             handleDragToScroll() {
                 const ele = document.querySelector('.preview-wrapper')
                 ele.style.cursor = 'grab';
-                
+
                 let pos = { top: 0, left: 0, x: 0, y: 0 };
-                
+
                 const mouseDownHandler = function (e) {
                     ele.style.cursor = 'grabbing';
                     ele.style.userSelect = 'none';
-                    
+
                     pos = {
                         left: ele.scrollLeft,
                         top: ele.scrollTop,
@@ -127,11 +127,11 @@
                         x: e.clientX,
                         y: e.clientY,
                     };
-                    
+
                     document.addEventListener('mousemove', mouseMoveHandler);
                     document.addEventListener('mouseup', mouseUpHandler);
                 };
-                
+
                 const mouseMoveHandler = function (e) {
                     // How far the mouse has been moved
                     const dx = e.clientX - pos.x;
@@ -143,7 +143,7 @@
                 const mouseUpHandler = function () {
                     ele.style.cursor = 'grab';
                     ele.style.removeProperty('user-select');
-                    
+
                     document.removeEventListener('mousemove', mouseMoveHandler);
                     document.removeEventListener('mouseup', mouseUpHandler);
                 };
@@ -164,7 +164,7 @@
 .preview-wrapper {
     @apply overflow-hidden;
     height: calc(100vh - 300px);
-    
+
     .content {
         zoom: 0.5;
     }
@@ -177,7 +177,7 @@
     width: 100vw;
     height: 100vh;
     z-index: 99999;
-    
+
     .preview-wrapper {
         height: 100vh;
         overflow: auto;

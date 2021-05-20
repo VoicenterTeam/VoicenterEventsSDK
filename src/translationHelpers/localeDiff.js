@@ -16,7 +16,6 @@ function diff(obj1, obj2) {
       diff[key] = obj1[key]
     }
   }
-  console.log(diff)
   return diff
 }
 

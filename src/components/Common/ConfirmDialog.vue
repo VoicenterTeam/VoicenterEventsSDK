@@ -23,8 +23,7 @@
         <template v-slot:footer>
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                 <slot name="footer-actions">
-                    <base-button class="mx-4"
-                                 @click="onCancel"
+                    <base-button @click="onCancel"
                                  variant="discard"
                                  fixed-width="w-37">
                         <div class="flex items-center">

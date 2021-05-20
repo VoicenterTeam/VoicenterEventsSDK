@@ -124,6 +124,10 @@
             [ExportDataDialog.name]: ExportDataDialog,
         },
         props: {
+            columnsToDisplay: {
+              type:Number,
+              default: 0,
+            },
             widget: {
                 type: Object,
                 default: () => ({}),
@@ -156,6 +160,10 @@
                 type: Boolean,
                 default: false,
             },
+            columnMinWidth: {
+                type: Number || String,
+                default: 170,
+            }
         },
         data() {
             const tableId = makeRandomID()
@@ -168,7 +176,6 @@
                 fitWidth: true,
                 drawTable: true,
                 tableId,
-                columnMinWidth: '170px',
                 screenWidth: screen.width,
                 showManageColumns: true,
             }
@@ -183,7 +190,11 @@
                 }
             },
             renderedColumns() {
-                return this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
+                const columns = this.availableColumns.filter(c => this.visibleColumns.includes(c.prop))
+                if (!this.columnsToDisplay) {
+                    return columns
+                }
+                return columns.slice(0, this.columnsToDisplay)
             },
             rowsData() {
                 return this.tableData

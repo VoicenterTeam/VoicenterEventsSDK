@@ -31,13 +31,13 @@
                             </div>
                             <div v-else
                                  class="flex flex-col mx-2">
-                                <base-input id="layout_name"
+                                <base-outline-input id="layout_name"
                                             class="text-xl font-bold"
                                             @on-enter="onEditLayoutTitle"
                                             v-model="layoutSettings.LayoutName">
                                     <IconCheck class="hover:text-primary cursor-pointer"
                                                @click="onEditLayoutTitle"/>
-                                </base-input>
+                                </base-outline-input>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                                   :display-label="false"
                                   @on-chose-layout="onChoseLayout"/>
                 </div>
-                <div class="lg:grid lg:grid-cols-5 col-gap-8">
+                <div class="lg:grid lg:grid-cols-5 gap-8">
                     <div class="col-span-2">
                         <LayoutWrapper v-model="layoutSettings"/>
                     </div>
@@ -148,7 +148,7 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import LayoutPreview from '@/views/LayoutSettings/LayoutPreview'
     import LayoutWrapper from '@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'
-    
+
     export default {
         components: {
             NavBar,

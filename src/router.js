@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '@/store/store'
 
 Vue.use(Router)
 
@@ -8,22 +7,59 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import(/* webpackChunkName: "home" */ './views/DashboardPage.vue'),
+        component: () => import(/* webpackChunkName: "view" */ './views/DashboardPage.vue'),
     },
     {
         path: '/dashboard-settings',
         name: 'dashboard-settings',
-        component: () => import(/* webpackChunkName: "home" */ './views/DashboardSettings/DashboardSettings.vue'),
+        component: () => import(/* webpackChunkName: "view" */ './views/DashboardSettings/DashboardSettings.vue'),
     },
     {
         path: '/layout-settings',
         name: 'layout-settings',
-        component: () => import(/* webpackChunkName: "home" */ './views/LayoutSettings/LayoutSettings.vue'),
+        component: () => import(/* webpackChunkName: "view" */ './views/LayoutSettings/LayoutSettings.vue'),
     },
     {
         path: '/dashboard-creation',
         name: 'dashboard-creation',
-        component: () => import(/* webpackChunkName: "home" */ './views/DashboardCreation/DashboardCreation.vue'),
+        component: () => import(/* webpackChunkName: "view" */ './views/DashboardCreation/DashboardCreation.vue'),
+    },
+    {
+        path: '/reports',
+        name: 'reports',
+        redirect: 'reports',
+        component: () => import(/* webpackChunkName: "modules" */'@/modules/reports/ReportLayout'),
+        children: [
+            {
+                path: '',
+                name: 'reports-list',
+                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/reports-list'),
+            },
+            {
+                path: 'edit/:id',
+                name: 'reports-edit',
+                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/reports-edit'),
+            },
+            {
+                path: 'create',
+                name: 'reports-create',
+                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/reports-create'),
+            },
+        ],
+    },
+    {
+        path: '/generate-pdf',
+        name: 'generate-pdf',
+        component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/types/pdf/pdf-wrapper'),
+    },
+    {
+        path: '*',
+        name: 'Not Found',
+        meta: {
+            skipOrganizationCheck: true,
+            productionReady: true,
+        },
+        component: () => import(/* webpackChunkName: "modules" */ '@/modules/404.vue'),
     },
 ]
 

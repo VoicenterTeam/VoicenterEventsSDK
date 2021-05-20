@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-2 col-gap-20 w-full py-2 items-center color-picker">
+    <div class="grid grid-cols-2 gap-20 w-full py-2 items-center color-picker">
         <div class="col-span-1"
              v-if="displayLabel">
             <span class="text-main-sm">

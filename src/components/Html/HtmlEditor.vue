@@ -1,7 +1,8 @@
 <template>
     <div class="relative w-full">
         <textarea ref="redactor" :name="name" :placeholder="placeholder" :value="value"/>
-        <div class="flex save-buttons">
+        <div class="flex save-buttons"
+             v-if="hasButtons">
             <el-tooltip class="item" effect="dark" :content="$t('common.revert.changes')" placement="top">
                 <XIcon class="w-6 h-6 text-red cursor-pointer mx-2" @click="onRevert()"/>
             </el-tooltip>
@@ -15,7 +16,7 @@
     import { Tooltip } from 'element-ui'
     import { CheckIcon, XIcon } from 'vue-feather-icons'
     import '@/assets/vendor/redactor/_scss/redactor.scss'
-
+    
     export default {
         name: 'html-editor',
         redactor: false,
@@ -26,39 +27,43 @@
         },
         model: {
             prop: 'value',
-            event: 'change'
+            event: 'change',
         },
         props: {
+            hasButtons: {
+                type: Boolean,
+                default: true,
+            },
             value: {
                 type: String,
                 default: '',
             },
             placeholder: {
                 type: String,
-                default: null
+                default: null,
             },
             name: {
                 type: String,
-                default: null
+                default: null,
             },
             editMode: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             config: {
                 type: Object,
                 default: () => ({
-                    plugins: ['alignment', 'fontcolor',  'imagemanager', 'textdirection','fontsize', 'customfontsize'],
+                    plugins: ['alignment', 'fontcolor', 'imagemanager', 'textdirection', 'fontsize', 'customfontsize'],
                     imageResizable: true,
                     imagePosition: true,
                     minHeight: '200px',
                     focus: true,
                 }),
-            }
+            },
         },
         data() {
             return {
-                currentContent: this.value
+                currentContent: this.value,
             }
         },
         watch: {
@@ -70,7 +75,7 @@
                 if (editor.isFocus() || editor.isSourceMode()) {
                     return
                 }
-
+                
                 this.redactor.source.setCode(newValue || '')
             },
             '$rtl.isRTL'(isRTL) {
@@ -80,7 +85,7 @@
                 }
                 window.$R(this.$refs.redactor, 'destroy')
                 this.init()
-            }
+            },
         },
         async mounted() {
             await import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/redactor')
@@ -116,7 +121,7 @@
                         image: {
                             uploadError: (response) => {
                                 console.warn(response.message);
-                            }
+                            },
                         },
                     };
                     const target = document.querySelector('#block-settings-sidebar .sidebar__content')
@@ -136,16 +141,16 @@
                                 upload.complete({
                                     file: {
                                         url: imgSrc,
-                                        id: imgSrc
-                                    }
+                                        id: imgSrc,
+                                    },
                                 })
                             } catch (e) {
                                 upload.complete({
                                     error: true,
-                                    message: this.$t('html.editor.image.upload.error')
+                                    message: this.$t('html.editor.image.upload.error'),
                                 })
                             }
-                        }
+                        },
                     }
                     // in case the target doesn't exist, delete it
                     if (!target) {
@@ -170,18 +175,19 @@
                 const content = this.currentContent || this.value
                 this.$emit('on-update', content);
             },
-        }
+        },
     }
 </script>
 <style scoped>
-    .save-buttons {
-        @apply absolute;
-        right: 10px;
-        top: 15px;
-        z-index: 100;
-    }
-    .rtl .save-buttons {
-        left: 10px;
-        right: inherit;
-    }
+.save-buttons {
+    @apply absolute;
+    right: 10px;
+    top: 15px;
+    z-index: 100;
+}
+
+.rtl .save-buttons {
+    left: 10px;
+    right: inherit;
+}
 </style>

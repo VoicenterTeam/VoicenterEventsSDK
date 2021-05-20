@@ -11,7 +11,7 @@
                 :disabled="disabled || loading"
                 v-on="$listeners"
                 ref="button"
-                class="items-center justify-center border-2 border-transparent font-medium focus:outline-none focus:shadow-outline-blue transition ease-in-out duration-150 relative"
+                class="items-center justify-center border-2 border-transparent font-medium focus:outline-none focus:ring-blue transition ease-in-out duration-50 relative"
                 :class="[{
                   'rounded': !rounded,
                   'rounded-full': rounded,
@@ -20,16 +20,17 @@
                   'text-green-600 hover:text-green-900': variant === 'green-link',
                   'text-gray-600 hover:text-gray-900': variant === 'gray-link',
                   'text-white bg-red-600 hover:bg-red-500 focus:border-red-700 active:bg-red-700': variant === 'danger',
-                  'text-red-600 hover:text-red-900': variant === 'danger-link',
+                  'text-red-600 hover:bg-red-200 hover:text-red-700': variant === 'danger-link',
                   'text-primary-700 bg-primary-100 hover:bg-primary-50 focus:border-primary-300 active:bg-primary-200': variant === 'secondary',
                   'text-red-700 border-red-300 hover:bg-red-50 focus:border-red-300 active:bg-red-400': variant === 'danger-secondary',
                   'border-gray-550 border-2 text-gray-550 bg-white hover:text-primary hover:border-primary focus:primary focus:shadow-outline-blue active:text-primary active:bg-primary-100': variant === 'white',
                   'border-gray-550 text-gray-550 bg-white hover:bg-gray-200 focus:bg-gray-400': variant === 'discard',
                   'text-xs px-2.5 py-1-5 leading-4': size === 'xs',
-                  'text-sm px-3 py-2 leading-4': size === 'sm',
-                  'text-sm px-4 py-2 leading-5': size === 'md',
+                  'text-sm px-3 py-1-5 leading-4': size === 'sm',
+                  'text-sm px-4 py-1-5 leading-4': size === 'md',
                   'text-base px-6 py-2 leading-6': size === 'lg',
                   'text-base px-8 py-3 leading-6': size === 'xl',
+                  'p-0 leading-0': size === 'full',
                   'opacity-50 cursor-not-allowed': disabled || localLoading,
                   'inline-flex': !block,
                   'w-full flex justify-center': block,
@@ -56,7 +57,7 @@
 </template>
 <script>
     import { LoaderIcon } from 'vue-feather-icons'
-    
+
     export default {
         inheritAttrs: false,
         components: {

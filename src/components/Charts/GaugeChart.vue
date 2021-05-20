@@ -2,6 +2,7 @@
     <div class="bg-transparent pt-2 rounded-lg"
          v-if="chartVisibility">
         <highcharts :options="chartData"
+                    class="chart-content_wrapper"
                     :callback="onInitChartCallback"/>
     </div>
 </template>
@@ -160,7 +161,7 @@
         },
     }
 </script>
-<style>
+<style lang="scss">
 .gouge-wrapper {
     max-height: 300px;
 }

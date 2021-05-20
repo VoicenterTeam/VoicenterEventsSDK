@@ -1,4 +1,4 @@
-.el-dialog__wrapper {
+.el-dialog__wrapper :not(.full-height, .reorder-widgets) {
     .el-dialog__body {
         padding-top: 0;
         padding-bottom: 0;
@@ -8,6 +8,19 @@
 
     .el-dialog__header {
         padding: 15px 20px;
+    }
+}
+
+.el-dialog__wrapper.full-height {
+    .el-dialog__body {
+        padding-top: 0;
+        padding-bottom: 0;
+        max-height: 90vh;
+        overflow: auto;
+    }
+
+    .el-dialog__header {
+        padding: 0 !important;
     }
 }
 

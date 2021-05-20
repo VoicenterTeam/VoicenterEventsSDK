@@ -1,6 +1,6 @@
 <template>
-    <el-select filterable
-               collapse-tags
+    <el-select :filterable="filterable"
+               :collapse-tags="collapseTags"
                :clearable="multiple"
                :multiple="multiple"
                :value="value"
@@ -11,63 +11,83 @@
             <slot name="prefix"/>
         </template>
         <slot>
-            <el-option v-if="multiple && data.length" :label="$t('select.all')" :disabled="allValuesSelected" value="all"/>
-            <el-option v-if="multiple && data.length" :label="$t('select.clear')" :disabled="noValueSelected" value="none"/>
+            <el-option v-if="multiple && data.length" :label="$t('select.all')" :disabled="allValuesSelected"
+                       value="all"/>
+            <el-option v-if="multiple && data.length" :label="$t('select.clear')" :disabled="noValueSelected"
+                       value="none"/>
             <el-option v-for="(option, key) in data"
                        :key="key"
                        :label="composeLabel(option)"
-                       :value="option[valueKey]"/>
+                       :value="option[valueKey]">
+                <div class="flex items-center"
+                     :key="key">
+                    <component v-if="option.icon"
+                               :is="option.icon"
+                               class="text-primary w-4 h-4"
+                               :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"
+                    />
+                    {{ composeLabel(option) }}
+                </div>
+            </el-option>
         </slot>
     </el-select>
 </template>
 
 <script>
-    import {Option, Select} from 'element-ui'
-
+    import { Option, Select } from 'element-ui'
+    
     export default {
         components: {
             [Select.name]: Select,
-            [Option.name]: Option
+            [Option.name]: Option,
         },
         props: {
+            collapseTags: {
+                type: Boolean,
+                default: true,
+            },
+            filterable: {
+                type: Boolean,
+                default: true,
+            },
             value: {
                 type: [Array, Object, String, Number],
-                default: () => []
+                default: () => [],
             },
             data: {
                 type: Array,
-                default: () => []
+                default: () => [],
             },
             multiple: {
                 type: Boolean,
-                default: true
+                default: true,
             },
             loading: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             labelKey: {
                 type: String,
-                default: 'label'
+                default: 'label',
             },
             secondLabelKey: {
                 type: String,
-                default: ''
+                default: '',
             },
             valueKey: {
                 type: String,
-                default: 'value'
-            }
+                default: 'value',
+            },
         },
         model: {
             prop: 'value',
-            event: 'change'
+            event: 'change',
         },
         computed: {
             listeners() {
                 return {
                     ...this.$listeners,
-                    change: this.onChange
+                    change: this.onChange,
                 }
             },
             allValuesSelected() {
@@ -75,7 +95,7 @@
             },
             noValueSelected() {
                 return Array.isArray(this.value) && this.value.length === 0
-            }
+            },
         },
         methods: {
             composeLabel(option) {
@@ -105,13 +125,13 @@
                 this.$nextTick(() => {
                     this.$emit('change', []);
                 })
-            }
+            },
         },
     }
 </script>
 
 <style lang="scss">
-    .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
-        color: var(--primary-color) !important;
-    }
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+    color: var(--primary-color) !important;
+}
 </style>

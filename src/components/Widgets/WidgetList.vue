@@ -10,7 +10,8 @@
             <div v-loading="widget.onLoading"
                  :data-id="widget.WidgetID"
                  @mousedown="onMousedown"
-                 class="grid-stack-item"
+                 class="grid-stack-item overflow-hidden"
+                 :id="`widget-${widget.WidgetID}`"
                  v-bind="gridStackAttributes(widget)"
                  v-for="widget in widgets"
                  :key="widget.WidgetID">
@@ -232,6 +233,7 @@
                 
                 this.observer = observer
             },
+            
         },
         mounted() {
             this.initWindowGrid()
