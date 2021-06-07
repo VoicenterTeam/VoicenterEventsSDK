@@ -1,104 +1,105 @@
 <template>
-    <ConfirmDialog v-bind="$attrs"
-                   v-on="$listeners"
-                   :modal-width="modalWidth"
-    >
-        <template v-slot:title>
-            <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
-                {{$t('Duplicate Report')}}
-            </h3>
-        </template>
-        <el-form @submit.native.prevent="onDuplicate"
-                 ref="duplicateForm"
-                 :model="model"
-                 class="p-10"
+    <ValidationObserver v-slot="{ handleSubmit, valid }" ref="observer">
+        <base-form layout="vertical"
+                   class="mb-10 -mt-8"
         >
-            <el-form-item class="mx-20">
-                <label for="name"
-                       class="flex items-center">
-                    <IconReportColumn class="text-primary"/>
-                    <span class="mx-1">
-                        {{ $t('Report Name') }}
-                    </span>
-                </label>
-                <el-input id="name"
-                          v-model="model.ReportName"/>
-            </el-form-item>
-            <el-form-item>
-                <div class="flex w-full item-center">
-                    <el-checkbox v-model="model.duplicateSettings">
-                        <span class="truncate">
-                            {{ $t('Duplicate Schedule settings') }}
-                        </span>
-                    </el-checkbox>
-                    <el-checkbox v-model="model.duplicateWidgets">
-                        <span class="truncate">
-                        {{ $t('Duplicate Widget settings') }}
-                        </span>
-                    </el-checkbox>
+            <ConfirmDialog v-bind="$attrs"
+                           v-on="$listeners"
+                           :modal-width="modalWidth"
+            >
+                <template v-slot:title>
+                    <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
+                        {{ $t('Duplicate Report') }}
+                    </h3>
+                </template>
+                <div class="mx-20 my-8">
+                    <base-input rules="required"
+                                :name="$t('Report Name')"
+                                :label="$t('Report Name')"
+                                label-icon="IconReportName"
+                                v-model="model.ReportName"
+                                id="ReportTypeName"
+                    />
                 </div>
-            </el-form-item>
-        </el-form>
-        <template v-slot:footer-actions>
-            <slot name="footer-actions">
-                <base-button @click="onCancel()"
-                             variant="discard"
-                             fixed-width="w-37">
-                    <div class="flex items-center">
-                        <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">
+                <template v-slot:footer-actions>
+                    <base-button @click="onCancel()"
+                                 variant="discard"
+                                 fixed-width="w-37">
+                        <div class="flex items-center">
+                            <IconDiscard class="mx-1"/>
+                            <span class="mx-1 text-base font-bold">
                                 {{ 'Cancel' }}
                             </span>
-                    </div>
-                </base-button>
-                <base-button fixed-width="w-37"
-                             @click="onDuplicate()">
-                    <div class="flex items-center">
-                        <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">
+                        </div>
+                    </base-button>
+                    <base-button fixed-width="w-37"
+                                 @click="handleSubmit(onDuplicate)">
+                        <div class="flex items-center">
+                            <IconSave class="mx-1"/>
+                            <span class="mx-1 text-base font-bold">
                             {{ $t('Save') }}
                         </span>
-                    </div>
-                </base-button>
-            </slot>
-        </template>
-    </ConfirmDialog>
+                        </div>
+                    </base-button>
+                </template>
+            </ConfirmDialog>
+        </base-form>
+    </ValidationObserver>
 </template>
 <script>
     import { Checkbox } from 'element-ui'
+    import cloneDeep from 'lodash/cloneDeep'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
+    import BaseForm from '@/modules/common/components/form/BaseForm'
+    import BaseInput from '@/modules/common/components/form/BaseInput'
     
     export default {
+        components: {
+            BaseForm,
+            BaseInput,
+            ConfirmDialog,
+            [Checkbox.name]: Checkbox,
+        },
         props: {
             report: {
                 type: Object,
                 default: () => ({}),
             },
         },
-        components: {
-            ConfirmDialog,
-            [Checkbox.name]: Checkbox,
-        },
         data() {
             return {
                 modalWidth: '600px',
                 model: {
                     ReportName: '',
-                    duplicateWidgets: true,
-                    duplicateSettings: true,
                 },
             }
         },
         methods: {
             onDuplicate() {
-                this.$emit('on-confirm', this.model)
+                const objToEmit = {
+                    model: this.model,
+                    report: this.report,
+                }
+                this.$emit('on-confirm', objToEmit)
             },
             onCancel() {
                 this.$emit('on-cancel')
             },
         },
-        mounted() {
-            this.model.ReportName = this.report.ReportName
+        watch: {
+            '$attrs.visible': {
+                handler(value) {
+                    if (!value) {
+                        return
+                    }
+                    this.model.ReportName = cloneDeep(this.report.ReportName)
+                },
+            },
         },
     }
 </script>
+<style lang="scss">
+.el-dialog__body {
+    @apply py-4 h-40;
+}
+</style>

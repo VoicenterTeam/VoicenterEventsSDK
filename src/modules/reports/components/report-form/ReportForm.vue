@@ -1,82 +1,84 @@
 <template>
     <div>
-        <el-form @submit.native.prevent="onSubmit"
-                 v-loading="loading">
-            <div class="flex w-full items-center justify-between my-10">
-                <span class="text-xl font-bold text-gray-900">
-                    {{ model.ReportID ? `${$t('Edit Report')} #${model.ReportID }`: $t('Report Creation')}}
-                </span>
-                <div class="flex">
-                    <base-button :class="$rtl.isRTL ? 'mx-4' : 'mx-4'"
-                                 @click="onCancel()"
-                                 variant="discard"
-                                 fixed-width="w-37">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-semibold">{{ $t('Cancel') }}</span>
-                        </div>
-                    </base-button>
-                    <base-button
-                        :loading="loading"
-                        @click="onSubmit()">
-                        <div class="flex items-center">
-                            <IconSave class="mx-1"/>
-                            <span class="mx-1 text-base font-semibold">{{ $t('Save Changes') }}</span>
-                        </div>
-                    </base-button>
-                </div>
+        <base-form layout="vertical"
+                   class="mb-10 -mt-8"
+        >
+            <div class="col-span-3 md:col-span-1">
+                <base-input rules="required"
+                            :name="$t('Report Name')"
+                            :label="$t('Report Name')"
+                            label-icon="IconReportName"
+                            v-model="model.ReportName"
+                            id="ReportTypeName"
+                />
             </div>
-            <div class="form-header rounded-md p-8 md:grid md:grid-cols-3 gap-6 shadow-base text">
-                <div class="col-span-1">
-                    <label class="flex items-center mb-2">
-                        <IconReportName class="text-primary mb-0-5"/>
-                        <span class="mx-1 text-main-sm text-gray-950">
-                            {{ $t('Report Name') }}
-                        </span>
-                    </label>
-                    <el-input v-model="model.ReportName"
-                              :placeholder="$t('Report Name')"
-                              id="name"/>
-                </div>
-                <div class="col-span-1 flex-1 w-full">
-                    <label for="type-name" class="flex items-center mb-2">
-                        <IconReportColumn class="w-4 h-4 text-primary"/>
-                        <span class="mx-1 text-main-sm text-gray-950">
-                            {{ $t('Report Type Name') }}
-                        </span>
-                    </label>
-                    <el-input v-model="model.ReportTypeName"
-                              :placeholder="$t('Report Type Name')"
-                              id="type-name"/>
-                </div>
-                <div class="col-span-1 flex-1 w-full">
-                    <label class="flex items-center mb-4">
-                        <IconCondition class="w-4 h-4 text-primary"/>
-                        <span class="mx-1 text-main-sm text-gray-950">
-                            {{ $t('Report Status') }}
-                        </span>
-                    </label>
-                    <el-switch :value="reportStatus()"
-                               active-color="var(--primary-color)"
-                               inactive-color="var(--steel)"
-                               @change="onChangeReportStatus($event)"
-                    />
-                </div>
+            <div class="col-span-3 md:col-span-1">
+                <base-input rules="required"
+                            :name="$t('Report Type Name')"
+                            :label="$t('Report Type Name')"
+                            label-icon="IconReportName"
+                            v-model="model.ReportTypeName"
+                            id="ReportName"
+                />
             </div>
-        </el-form>
-        <ReportElements :report="report"/>
+            <div class="col-span-3 md:col-span-1">
+                <label class="flex items-center mb-4">
+                    <IconCondition class="w-4 h-4 text-primary"/>
+                    <span class="mx-1 text-main-sm text-gray-950">
+                        {{ $t('Report Status') }}
+                    </span>
+                </label>
+                <el-switch :value="reportStatus()"
+                           active-color="var(--primary-color)"
+                           inactive-color="var(--steel)"
+                           @change="onChangeReportStatus($event)"
+                />
+            </div>
+            <template v-slot:header="{valid, handleSubmit}">
+                <div class="flex items-center justify-between mb-10">
+                    <span class="text-xl font-bold text-gray-900">
+                        {{ model.ReportID ? `${$t('Edit Report')} #${model.ReportID}` : $t('Report Creation') }}
+                    </span>
+                    <div class="flex">
+                        <base-button :class="$rtl.isRTL ? 'mx-4' : 'mx-4'"
+                                     @click="onCancel()"
+                                     variant="discard"
+                                     fixed-width="w-37">
+                            <div class="flex items-center">
+                                <IconDiscard class="mx-1"/>
+                                <span class="mx-1 text-base font-semibold">{{ $t('Cancel') }}</span>
+                            </div>
+                        </base-button>
+                        <base-button :loading="loading"
+                                     @click="handleSubmit(onSubmit)">
+                            <div class="flex items-center">
+                                <IconSave class="mx-1"/>
+                                <span class="mx-1 text-base font-semibold">{{ $t('Save Changes') }}</span>
+                            </div>
+                        </base-button>
+                    </div>
+                </div>
+            </template>
+        </base-form>
+        <ReportElements @item-upsert="onItemUpsert"
+                        @schedules-upsert="onSchedulesUpsert"
+                        @update-operation="onUpdateOperation"
+                        :report="report"/>
     </div>
 </template>
 <script>
-    import { Switch } from 'element-ui'
+    import { delay } from '@/helpers/util'
+    import BaseForm from '@/modules/common/components/form/BaseForm'
+    import BaseInput from '@/modules/common/components/form/BaseInput'
     import { reportApi } from '@/modules/reports/services/reportService'
     import ReportElements from '@/modules/reports/components/report-form/ReportElements'
     import { STATUS_IDS, STATUS_NAMES, STATUS_VALUES } from '@/modules/reports/enum/report'
     
     export default {
         components: {
+            BaseForm,
+            BaseInput,
             ReportElements,
-            [Switch.name]: Switch,
         },
         props: {
             report: {
@@ -88,12 +90,13 @@
             return {
                 loading: false,
                 model: {
-                    ReportName: '',
+                    ReportName: this.$t('New Report'),
                     ReportStatusID: 1,
                     ReportTypeID: 1, //Check available options
                     ReportTypeName: '',
                     ReportItemList: [],
-                    ReportTriggerList: [],
+                    ReportTriggerLis: [],
+                    ReportTriggerRecipient: [],
                 },
             }
         },
@@ -107,16 +110,29 @@
                 try {
                     this.loading = true
                     if (this.model.ReportID) {
-                        return await reportApi.update(this.model)
+                        const payload = {
+                            ReportID: this.model.ReportID,
+                            ReportName: this.model.ReportName,
+                            ReportStatusID: this.model.ReportStatusID,
+                            ReportTypeName: this.model.ReportTypeName,
+                        }
+                        await reportApi.update(payload)
+                    } else {
+                        this.model['AccountID'] = this.currentAccountId
+                        const { ReportID } = await reportApi.store(this.model)
+                        console.log({ ReportID })
                     }
-                    this.model['AccountID'] = this.currentAccountId
-                    const { ReportID } = await reportApi.store(this.model)
-                    console.log({ ReportID })
                 } catch (e) {
                     console.warn(e)
                 } finally {
+                    await delay(1000)
                     this.loading = false
                 }
+            },
+            onUpdateOperation() {
+            
+            },
+            onSchedulesUpsert(schedules) {
             },
             onCancel() {
                 this.$emit('reset-state')
@@ -132,6 +148,14 @@
             },
             reportStatus() {
                 return STATUS_VALUES[this.model.ReportStatusID]
+            },
+            onItemUpsert(items) {
+                debugger
+                console.log('here')
+                this.model.ReportTriggerList = items
+                this.$emit('on-update', {
+                    ReportTriggerList: items
+                })
             },
         },
         watch: {

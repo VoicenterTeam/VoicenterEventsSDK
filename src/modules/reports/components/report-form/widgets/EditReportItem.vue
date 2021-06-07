@@ -2,6 +2,7 @@
     <ConfirmDialog :title="$t('Edit Report Item')"
                    v-bind="$attrs"
                    v-on="$listeners"
+                   @close="onCancel()"
                    :modal-width="modalWidth"
                    :title-centered="true">
         <el-form @submit.native.prevent="onSubmit"
@@ -51,7 +52,7 @@
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
                                 {{ 'Cancel' }}
-                            </span>
+                        </span>
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"

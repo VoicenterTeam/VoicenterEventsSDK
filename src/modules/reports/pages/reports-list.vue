@@ -12,7 +12,7 @@
         >
             <template v-slot:title>
                 <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
-                    {{$t('Delete Confirmation')}}
+                    {{ $t('Delete Confirmation') }}
                 </h3>
             </template>
             <div class="mt-10 mb-8 flex flex-col items-center justify-center">
@@ -36,6 +36,7 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import ReportsTable from '@/modules/reports/components/ReportsTable'
     import DuplicateReportDialog from '@/modules/reports/components/report-form/DuplicateReportDialog'
+    import { reportApi } from '@/modules/reports/services/reportService'
     
     export default {
         components: {
@@ -78,8 +79,23 @@
                 this.reportToDelete = {}
                 this.reportToDuplicate = {}
             },
-            onDuplicateReport(data) {
-                this.onCloseDialog()
+            async onDuplicateReport(data = {}) {
+                try {
+                    this.onCloseDialog()
+                    this.loading = true
+                    let { model: newReport, report: report } = data
+                    newReport = {
+                        ...report,
+                        ...newReport,
+                        AccountID: 1
+                    }
+                    await reportApi.store(newReport)
+                    await this.$store.dispatch('report/getReports')
+                } catch (e) {
+                    console.warn(e)
+                } finally {
+                    this.loading = false
+                }
             },
             onDeleteReport() {
                 this.onCloseDialog()
@@ -87,6 +103,6 @@
         },
         mounted() {
             this.$store.dispatch('report/setReport', null)
-        }
+        },
     }
 </script>

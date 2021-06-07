@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="cursor-pointer text-primary-300 hover:text-primary"
-             @click="showDialog = true">
+             @click="openDialog">
             <div class="flex items-center">
                 <i class="w-4 h-4 mx-2">
                     <IconAddReport/>
@@ -16,7 +16,9 @@
                width="50%"
                :title-centered="true"
                v-show="showDialog">
-            <div class="min-h-40">
+            <div class="min-h-40 dialog-wrapper"
+                 v-if="showDialog"
+                 v-loading="localLoading">
                 <div class="flex w-full justify-center py-4-5">
                     <div class="w-1/2">
                         <el-input :placeholder="$t('Search')"
@@ -27,11 +29,12 @@
                 </div>
                 <div v-for="(item, index) in filteredItems"
                      :key="`report-item-${item.WidgetID}`"
-                     :index="index"
                 >
                     <div class="flex items-center justify-between h-20">
                         <div class="flex items-center">
                             <el-checkbox :value="item.selected"
+                                         :id="`item-${index}`"
+                                         :key="`item-${index}`"
                                          @change="onTrigger($event, item)"
                             />
                             <component class="mx-3 text-primary"
@@ -43,8 +46,8 @@
                         <div class="flex items-center text-primary">
                             <AlertCircleIcon class="w-5 h-5"/>
                             <span class="mx-2 text-sm">
-                                {{ $t('Help') }}
-                            </span>
+                                    {{ $t('Help') }}
+                                </span>
                         </div>
                     </div>
                 </div>
@@ -101,6 +104,7 @@
                 steps: {},
                 search: '',
                 reportItems: [],
+                localLoading: true,
             }
         },
         computed: {
@@ -117,40 +121,59 @@
             },
             onTrigger(evt, widget) {
                 widget.selected = evt
+                this.$set(widget, 'selected', evt)
             },
             onSubmit() {
-                alert('on submit')
+                const items = this.reportItems.filter(item => item.selected).map((el, index) => {
+                    return {
+                        WidgetID: el.WidgetID,
+                        ReportItemName: el.Title,
+                        ReportItemStatusID: 1,
+                        ReportItemOrder: index,
+                        ReportItemExport: [
+                            {
+                                ReportExportTypeID: 3,
+                            },
+                        ],
+                    }
+                })
+                this.$emit('submit', items)
+                this.showDialog = false
             },
-            formatItems(items) {
-                this.reportItems = items.map(el => {
-                    this.findItem(el, (r) => {
-                        if (!r) {
-                            return
-                        }
-                        return {
-                            el,
-                            selected: r['ReportItemStatusID'] === 1
-                        }
-                    })
+            stopLoadingProgress() {
+                this.$nextTick(() => {
+                    this.localLoading = false
                 })
             },
+            formatItems(items) {
+                this.localLoading = true
+                if (!this.report.ReportID) {
+                    this.reportItems = items
+                    return this.stopLoadingProgress()
+                }
+                this.reportItems = items.map(el => {
+                    this.findItem(el, (r) => {
+                        if (r) {
+                            el.selected = r['ReportItemStatusID'] === 1
+                        }
+                    })
+                    return el
+                })
+                this.stopLoadingProgress()
+            },
             findItem(item, callback) {
-                const result = this.report.ReportItemList.find(el => el.WidgetID.toString() === item.WidgetID.toString())
+                const result = this.report.ReportItemList.find(el => el.WidgetID.toString() === item.WidgetID.toString()) || false
                 return callback(result)
             },
-        },
-        watch: {
-            widgets: {
-                immediate: true,
-                deep: true,
-                handler(data) {
-                    //console.log({ data })
-                    if (!data) {
-                        return
-                    }
-                    this.formatItems(data)
-                },
+            openDialog() {
+                this.formatItems(this.widgets)
+                this.showDialog = true
             },
         },
     }
 </script>
+<style lang="scss">
+.dialog-wrapper > .el-loading-mask > .el-loading-spinner {
+    @apply fixed left-0;
+}
+</style>

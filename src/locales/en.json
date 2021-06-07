@@ -959,5 +959,14 @@
     "Save Layout": "Save Layout",
     "Save as New": "Save as New",
     "Email Subject": "Email Subject",
-    "Select a tab": "Select a tab"
+    "Select a tab": "Select a tab",
+    "Schedules": "Schedules",
+    "General validation": "The {field} value is not valid",
+    "Validation max value": "The {field} must be {max} or less",
+    "Validation min value": "The {field} must be {min} or more",
+    "Validation required": "The {field} is required",
+    "Report Item Upsert": "Report Item Upsert",
+    "Report Recipient Upsert": "Report Recipient Upsert",
+    "Report Item Status Upsert": "Report Item Status Upsert",
+    "New Report": "New Report"
 }

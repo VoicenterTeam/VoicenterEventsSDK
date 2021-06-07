@@ -8,6 +8,7 @@
                 <fade-transition mode="out-in" :duration="150">
                     <component :key="activeSection"
                                v-bind="$attrs"
+                               v-on="$listeners"
                                :is="activeSection"/>
                 </fade-transition>
             </div>
@@ -27,15 +28,15 @@
         },
         data() {
             return {
-                activeSection: 'Schedules',
+                activeSection: 'Widgets',
                 sections: [
                     {
                         label: this.$t('Widgets'),
                         key: 'Widgets',
-                        icon: 'IconWidgetName',
+                        icon: 'IconWidget',
                     },
                     {
-                        label: 'Schedules',
+                        label: this.$t('Schedules'),
                         key: 'Schedules',
                         icon: 'IconSettings',
                     },

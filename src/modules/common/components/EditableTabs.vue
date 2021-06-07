@@ -1,5 +1,5 @@
 <template>
-    <div class="border-b border-gray-200 mb-12">
+    <div class="border-b border-gray-400 mb-12">
         <nav class="-mb-px flex space-x-8"
              aria-label="Tabs">
             <transition-group enter-active-class="transform transition ease-in-out duration-200"
@@ -19,15 +19,27 @@
                            :class="[tab.name === activeTab ? 'text-primary' : 'text-gray-400 group-hover:text-gray-500', 'mx-2 h-4-5 w-4-5']"
                            aria-hidden="true"/>
                 <span>{{ tab.title }}</span>
+            
+                <XCircleIcon v-if="tab.name !== tabListName"
+                             @click.prevent.stop="$emit('on-tab-remove')"
+                             class="w-3 h-3 mx-2 hover:text-red"/>
             </span>
             </transition-group>
         </nav>
     </div>
 </template>
 <script>
+    import { XCircleIcon } from 'vue-feather-icons'
     
     export default {
+        components: {
+            XCircleIcon,
+        },
         props: {
+            tabListName: {
+                type: String,
+                default: 'list',
+            },
             activeTab: {
                 type: [String, Number],
                 default: 0,

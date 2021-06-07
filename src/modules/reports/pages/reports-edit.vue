@@ -4,11 +4,11 @@
     >
         <ReportForm v-if="report"
                     :report="report"
+                    @on-update="onUpdateReport"
                     v-on="$listeners"/>
     </div>
 </template>
 <script>
-    import { reportApi } from '@/modules/reports/services/reportService'
     import ReportForm from '@/modules/reports/components/report-form/ReportForm'
     
     export default {
@@ -33,6 +33,14 @@
                 }
                 const { ReportName } = this.report
                 this.$emit('on-update-tabs', ReportName)
+            },
+            async onUpdateReport(data = {}) {
+                console.log({data})
+                this.report = {
+                    ...this.report,
+                    ...data
+                }
+                //await this.$store.dispatch('report/setReport', this.report)
             },
         },
         mounted() {

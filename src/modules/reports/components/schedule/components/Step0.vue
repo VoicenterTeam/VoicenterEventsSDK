@@ -13,7 +13,7 @@
                                  size="small"
                                  :multiple="false"
                                  :filterable="false"
-                                 :data="frequencyOptions"
+                                 :options="frequencyOptions"
                                  @change="onChangeFrequency">
                         <template v-slot:prefix>
                             <component class="text-primary w-4 h-4 mt-1-5"
@@ -239,24 +239,28 @@
 .el-time-range-picker {
     .el-time-panel__footer {
         height: 40px !important;
+        
         .el-time-panel__btn.confirm {
-            color: white!important;
+            color: white !important;
             background: var(--primary-color) !important;
             border: 1px solid var(--primary-color) !important;
             border-radius: 4px !important;
             padding-left: 16px !important;
             padding-right: 16px !important;
+            
             &:hover {
                 opacity: 0.75 !important;
             }
         }
+        
         .el-time-panel__btn.cancel {
             border: 2px solid var(--gray-550) !important;
             border-radius: 4px !important;
             padding-left: 16px !important;
-            font-weight: 700!important;
+            font-weight: 700 !important;
             color: var(--gray-550) !important;
             padding-right: 16px !important;
+            
             &:hover {
                 background: var(--gray-200) !important;
             }

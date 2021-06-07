@@ -165,6 +165,18 @@ const getters = {
     getAllWidgets: state => {
         return state.allWidgets
     },
+    //ParameterType: 2
+    getWidgetsWithColumnTypeInt: state => {
+        const {allWidgets: widgets = []} = state
+        if (!widgets.length) {
+            return []
+        }
+        const result = []
+        widgets.forEach(widget => {
+        
+        })
+        return result
+    }
 }
 
 export default {

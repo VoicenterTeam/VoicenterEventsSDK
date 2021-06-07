@@ -9,7 +9,7 @@
 </template>
 <script>
     import Tag from '@/modules/reports/components/Tag'
-
+    
     export default {
         components: {
             Tag,
@@ -18,6 +18,6 @@
             name: String,
             icon: String,
             item: [Object, String],
-        }
+        },
     }
 </script>

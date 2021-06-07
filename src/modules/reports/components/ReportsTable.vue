@@ -114,7 +114,6 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import { Switch } from 'element-ui'
     import { makeRandomID } from '@/helpers/util'
     import Tag from '@/modules/reports/components/Tag'
     import RecItem from '@/modules/reports/components/RecItem'
@@ -135,7 +134,6 @@
             PageLimit,
             DelimitedList,
             ExpandContent,
-            [Switch.name]: Switch,
         },
         data() {
             let tableId = makeRandomID()
@@ -184,7 +182,7 @@
                         icon: 'IconScheduleColumn',
                     },
                     {
-                        label: this.$t('Status'),
+                        label: this.$t('Active'),
                         prop: 'status',
                         align: 'center',
                         minWidth: 40,
@@ -222,8 +220,7 @@
             async getReports() {
                 try {
                     this.loadingData = true
-                    this.tableData = await reportApi.list()
-                    
+                    this.tableData = await this.$store.dispatch('report/getReports')
                 } catch (e) {
                     console.warn(e)
                 } finally {

@@ -74,20 +74,16 @@
                 const tabRoute = AVAILABLE_ROUTES[name]
                 this.$router.push(tabRoute)
             },
-            onRemoveTab(tabName) {
-                const index = this.availableTabs.findIndex(el => el.name === tabName)
+            onRemoveTab() {
                 this.goToList()
-                this.availableTabs.splice(index, 1)
             },
             setListTab() {
-                this.activeTab = 'list'
                 this.availableTabs = [REPORT_LIST_TAB]
+                this.activeTab = 'list'
             },
             goToList() {
                 this.setListTab()
-                this.$nextTick(() => {
-                    this.$router.push('/reports')
-                })
+                this.$router.push('/reports')
             },
             parseRouteData(route) {
                 const { name } = route

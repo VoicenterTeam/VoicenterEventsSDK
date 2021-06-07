@@ -1,33 +1,46 @@
+import {reportApi} from '@/modules/reports/services/reportService'
+
 const types = {
-    SET_REPORT: 'SET_REPORT',
+    RESET_DATA: 'RESET_DATA',
+    SET_REPORTS: 'SET_REPORTS',
     UPDATE_REPORT: 'UPDATE_REPORT',
 }
 
 const state = {
-    data: null,
+    all: null,
+    current: null,
 }
 
 const mutations = {
-    [types.SET_REPORT]: (state, report) => {
-        state.data = report
+    [types.SET_REPORTS]: (state, reports) => {
+        state.all = reports
     },
     [types.UPDATE_REPORT]: (state, report) => {
-        state.data = report
+        state.current = report
     },
 }
 
 const actions = {
-    async updateReportData({ commit }, report) {
+    async updateReport({ commit, state }, report) {
         commit(types.UPDATE_REPORT, report)
     },
     async setReport({ commit }, report) {
         commit(types.UPDATE_REPORT, report)
     },
+    async getReports({ commit }) {
+        try {
+            const reports = await reportApi.list()
+            commit(types.SET_REPORTS, reports)
+            return reports
+        } catch (e) {
+            console.warn(e)
+        }
+    }
 }
 
 const getters = {
     getReportData: state => {
-        return state.data
+        return state.current
     },
 }
 

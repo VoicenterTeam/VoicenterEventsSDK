@@ -6,16 +6,17 @@
                          :multiple="false"
                          :placeholder="$t('Select Widget')"
                          :data="parameterOptions"
-                         v-model="model.parameter"
+                         v-model="model.ReportTriggerConditionID"
                          id="parameter"
             />
         </div>
         <div class="flex w-1/4 lg:mx-6">
             <base-select class="w-full"
                          :multiple="false"
+                         :disabled="!model.ReportTriggerConditionID"
                          :placeholder="$t('Widget Column')"
                          :data="parameterOptions"
-                         v-model="model.parameter"
+                         v-model="model.ConditionFilterColumnType"
                          id="parameter"
             />
         </div>
@@ -25,12 +26,12 @@
                          :multiple="false"
                          :placeholder="$t('Select Aggregation')"
                          :data="operatorOptions"
-                         v-model="model.operator"
+                         v-model="model.ConditionFilterOperatorSymbol"
                          id="operator"
             />
         </div>
         <div class="flex w-1/4">
-            <el-input v-model="model.value"
+            <el-input v-model="model.ConditionFilterValue"
                       :placeholder="$t('Value')"
                       type="number"
                       id="value"
@@ -47,9 +48,10 @@
         data() {
             return {
                 model: {
-                    parameter: '',
-                    operator: '',
-                    value: '',
+                    ReportTriggerConditionID: null,
+                    ConditionFilterColumnType: null,
+                    ConditionFilterOperatorSymbol: '',
+                    ConditionFilterValue: null,
                 },
                 parameterOptions: [
                     {
@@ -76,6 +78,14 @@
                     },
                 ],
             }
+        },
+        computed: {
+            widgets() {
+                return this.$store.getters['dashboards/getAllWidgets']
+            },
+            filteredWidgets() {
+                return this.widgets
+            },
         },
         methods: {
             onDeleteCondition() {

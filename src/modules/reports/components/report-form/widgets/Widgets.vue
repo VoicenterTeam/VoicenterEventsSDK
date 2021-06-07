@@ -8,8 +8,10 @@
                    wrapper-class="shadow-light rounded-md w-full overflow-auto">
             <template v-slot:header-actions>
                 <div class="flex items-center">
-                    <ReorderWidgetsDialog :report="report"/>
-<!--                    <ManageWidgetDialog :report="report"/>-->
+                    <ReorderWidgetsDialog @submit="updateItems"
+                                          :report="report"/>
+                    <ManageWidgetDialog :report="report"
+                                        @submit="updateItems"/>
                 </div>
             </template>
             <template v-slot:status="{row}">
@@ -115,9 +117,9 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import { Checkbox, Switch } from 'element-ui'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
+    import { Checkbox } from 'element-ui'
     import PageLimit from '@/modules/common/components/PageLimit'
+    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import DataTable from '@/modules/common/components/DataTable'
     import {
         STATUS_IDS,
@@ -128,7 +130,7 @@
         BOTH_EXPORT_TYPE_ID,
     } from '@/modules/reports/enum/report'
     import EditReportItem from '@/modules/reports/components/report-form/widgets/EditReportItem'
-    //import ManageWidgetDialog from '@/modules/reports/components/report-form/widgets/ManageWidgetDialog'
+    import ManageWidgetDialog from '@/modules/reports/components/report-form/widgets/ManageWidgetDialog'
     import ReorderWidgetsDialog from '@/modules/reports/components/report-form/widgets/ReorderWidgetsDialog'
     
     const PDF = 'pdf'
@@ -140,9 +142,8 @@
             DataTable,
             ConfirmDialog,
             EditReportItem,
-            //ManageWidgetDialog,
+            ManageWidgetDialog,
             ReorderWidgetsDialog,
-            [Switch.name]: Switch,
             [Checkbox.name]: Checkbox,
         },
         props: {
@@ -197,7 +198,15 @@
                         icon: 'IconSpreadsheet',
                     },
                     {
-                        label: this.$t('Status'),
+                        label: this.$t('Spreadsheet'),
+                        prop: 'spreadsheet',
+                        align: 'center',
+                        minWidth: 70,
+                        maxWidth: 70,
+                        icon: 'IconEmailBody',
+                    },
+                    {
+                        label: this.$t('Active'),
                         prop: 'status',
                         align: 'center',
                         minWidth: 40,
@@ -212,8 +221,9 @@
                         minWidth: 100,
                     },
                     {
-                        label: this.$t('Remove'),
+                        label: this.$t('Action'),
                         prop: 'actions',
+                        icon: 'IconActions',
                         align: 'center',
                         minWidth: 30,
                         maxWidth: 30,
@@ -299,17 +309,20 @@
             onCloseEditDialog() {
                 this.widgetToEdit = null
                 this.showEditWidgetDialog = false
+                this.fetchReportItems()
             },
             onCloseDeleteDialog() {
                 this.showDeleteDialog = false
                 this.widgetToDeleteIndex = null
             },
             onDeleteWidget() {
-                this.report.splice(this.widgetToDeleteIndex, 1)
+                this.tableData.splice(this.widgetToDeleteIndex, 1)
                 this.onCloseDeleteDialog()
             },
             onEditWidget(data) {
-                this.onCloseEditDialog()
+                const ReportExportTypeID = get(data, 'ReportItemExport[0].ReportExportTypeID', 3)
+                data.ReportItemExport = [{ ReportExportTypeID }]
+                this.showEditWidgetDialog = false
             },
             onSelectBulk(state, exportType) {
                 this.drawTable = false
@@ -338,15 +351,23 @@
                 })
                 return row
             },
+            updateItems(data) {
+                this.tableData = data
+                this.$emit('item-upsert', this.tableData)
+            },
+            fetchReportItems() {
+                this.tableData = cloneDeep(this.report.ReportItemList) || []
+                this.tableData = this.tableData.map(item => {
+                    if (!item.ReportItemExport) {
+                        item['ReportItemExport'] = []
+                    }
+                    return item
+                })
+            },
         },
         mounted() {
-            this.tableData = cloneDeep(this.report.ReportItemList)
-            this.tableData = this.tableData.map(item => {
-                if (!item.ReportItemExport) {
-                    item['ReportItemExport'] = []
-                }
-                return item
-            })
+            this.fetchReportItems()
+            //console.log('$listeners', this.$listeners)
         },
     }
 </script>

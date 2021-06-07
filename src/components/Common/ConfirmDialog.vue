@@ -61,6 +61,10 @@
                 type: String,
                 default: 'Are you sure that you want to delete this Dashboard?',
             },
+            showButtons: {
+                type: Boolean,
+                default: true,
+            }
         },
         methods: {
             onConfirm() {

@@ -28,9 +28,35 @@ export const reportApi = {
     },
     async changeStatus(payload) {
         try {
-            await $axios.post('/Report/ChangeStatus/', payload)
+            const { Data } = await $axios.post('/Report/ChangeStatus/', payload)
+            return Data
         } catch (e) {
             parseCatch(e, true, 'Change Status')
         }
     },
+    async itemUpsert(item) {
+        try {
+            const { Data } = await $axios.post('/Report/ItemUpsert/', item)
+            return Data
+        } catch (e) {
+            parseCatch(e, true, 'Report Item Upsert')
+        }
+    },
+    async recipientUpsert(recipient) {
+        try {
+            const { Data } = await $axios.post('/Report/RecipientUpsert/', recipient)
+            return Data
+        } catch (e) {
+            parseCatch(e, true, 'Report Recipient Upsert')
+        }
+    },
+    async itemChangeStatus(payload) {
+        try {
+            const { Data } = await $axios.post('/Report/ItemChangeStatus/', payload)
+            return Data
+        } catch (e) {
+            parseCatch(e, true, 'Report Item Status Upsert')
+        }
+    },
+    
 }

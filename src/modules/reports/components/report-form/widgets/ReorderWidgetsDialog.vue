@@ -14,6 +14,7 @@
                top="15vh"
                wrapper-classes="reorder-widgets"
                :title-centered="true"
+               @close="onCloseModal"
                v-show="showDialog">
             <div class="py-6 px-5">
                 <tabs :options="sections"
@@ -23,13 +24,13 @@
                 />
                 <div class="border-2 rounded-md bg-white content-wrapper transition ease-in-out duration-50"
                      :class="$rtl.isRTL  ? 'rounded-tr-none' : 'rounded-tl-none'">
-                    <DraggableList :value="reportItemList"
+                    <DraggableList :value="filteredItems"
                                    v-if="showDragList"
                                    @change="(ev) => onListChange(ev)"
                                    group="widgets">
-                        <div :key="`${activeSection}-${item.WidgetID}`"
+                        <div :key="`${activeSection}-${item.WidgetID}-${index}`"
                              class="flex w-full items-center py-4 border-b border-gray-300 px-6 mx-2 cursor-move"
-                             v-for="item in reportItemList">
+                             v-for="(item, index) in filteredItems">
                             <div class="flex items-center justify-between w-full item-wrapper">
                                 <div class="flex items-center">
                                     <IconTemplateDefault class=""/>
@@ -54,7 +55,7 @@
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                     <slot name="footer-actions">
                         <base-button class="mx-4"
-                                     @click="showDialog = false"
+                                     @click="onCloseModal"
                                      variant="discard"
                                      fixed-width="w-37">
                             <div class="flex items-center">
@@ -80,6 +81,7 @@
     import Tabs from '@/modules/common/components/Tabs'
     import DraggableList from '@/components/Widgets/DraggableList'
     import { BOTH_EXPORT_TYPE_ID } from '@/modules/reports/enum/report'
+    import cloneDeep from 'lodash/cloneDeep'
     
     export default {
         components: {
@@ -112,19 +114,35 @@
                 activeSection: 2,
                 showDialog: false,
                 showDragList: true,
+                reportItems: [],
             }
         },
         computed: {
-            reportItemList() {
-                return this.report.ReportItemList.filter(item => item.ReportItemExport[0]['ReportExportTypeID'] === this.activeSection || BOTH_EXPORT_TYPE_ID)
+            filteredItems() {
+                return this.reportItems.filter(item => [this.activeSection, BOTH_EXPORT_TYPE_ID].includes(item.ReportItemExport[0]['ReportExportTypeID']))
             },
         },
         methods: {
-            onSubmit() {
-                console.log('onSubmit')
+            onCloseModal() {
+                this.resetProgress()
+                this.showDialog = false
             },
-            onListChange(evt) {
-                console.log({ evt })
+            resetProgress() {
+                this.fetchReportItems()
+            },
+            onSubmit() {
+                this.$emit('submit', this.reportItems)
+                this.showDialog = false
+            },
+            onListChange(evt = { moved: {} }) {
+                const { newIndex, oldIndex } = evt['moved']
+                this.reportItems.splice(newIndex, 0, this.reportItems.splice(oldIndex, 1)[0])
+                this.updateOrderField()
+            },
+            updateOrderField() {
+                this.reportItems.forEach((el, index) => {
+                    this.$set(el, 'ReportItemExport[0].ReportExportOrder', index)
+                })
             },
             onChangeSection(section) {
                 this.showDragList = false
@@ -132,7 +150,13 @@
                 setTimeout(() => {
                     this.showDragList = true
                 }, 200)
-            }
+            },
+            fetchReportItems() {
+                this.reportItems = cloneDeep(this.report.ReportItemList) || []
+            },
+        },
+        mounted() {
+            this.fetchReportItems()
         },
     }
 </script>
