@@ -12,7 +12,7 @@
                         {{ $t('Duplicate Report') }}
                     </h3>
                 </template>
-                <div class="mx-20 my-8">
+                <div class="mx-20 mt-8 mb-20">
                     <base-input rules="required"
                                 :name="$t('Report Name')"
                                 :label="$t('Report Name')"
@@ -98,8 +98,3 @@
         },
     }
 </script>
-<style lang="scss">
-.el-dialog__body {
-    @apply py-4 h-40;
-}
-</style>
