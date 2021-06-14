@@ -54,6 +54,25 @@
                     {{ $t(column.label) }}
                 </div>
             </template>
+    
+            <template v-slot:html-header="{column, index}">
+                <el-checkbox :value="allToHtml"
+                             :disabled="!widgetsExists"
+                             :indeterminate="indeterminateHtml"
+                             :key="`csv-header-${index}`"
+                             :id="`csv-header-${index}`"
+                             @change="onSelectBulk($event, HTML_EXPORT_TYPE_ID)"/>
+                <div class="font-medium uppercase flex items-center text-primary">
+                    <i class="mx-2">
+                        <component v-if="column.icon"
+                                   class="w-4 h-4"
+                                   :is="column.icon"
+                        />
+                    </i>
+                    {{ $t(column.label) }}
+                </div>
+            </template>
+            
             <template v-slot:index="{row, index}">
                 {{ index }}
             </template>
@@ -66,6 +85,11 @@
                 <el-checkbox :value="exportToCsv(row)"
                              :key="`to-csv-${index}`"
                              @change="triggerExportType(row, $event, CSV_EXPORT_TYPE_ID)"/>
+            </template>
+            <template v-slot:pdf="{row, index}">
+                <el-checkbox :value="exportToPdf(row)"
+                             :key="`to-html-${index}`"
+                             @change="triggerExportType(row, $event, HTML_EXPORT_TYPE_ID)"/>
             </template>
             <template v-slot:actions="{row, index}">
                 <div class="flex items-center justify-center"
@@ -116,8 +140,8 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox } from 'element-ui'
+    import cloneDeep from 'lodash/cloneDeep'
     import PageLimit from '@/modules/common/components/PageLimit'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import DataTable from '@/modules/common/components/DataTable'
@@ -127,6 +151,7 @@
         STATUS_NAMES,
         CSV_EXPORT_TYPE_ID,
         PDF_EXPORT_TYPE_ID,
+        HTML_EXPORT_TYPE_ID,
         BOTH_EXPORT_TYPE_ID,
     } from '@/modules/reports/enum/report'
     import EditReportItem from '@/modules/reports/components/report-form/widgets/EditReportItem'
@@ -198,8 +223,8 @@
                         icon: 'IconSpreadsheet',
                     },
                     {
-                        label: this.$t('Spreadsheet'),
-                        prop: 'spreadsheet',
+                        label: this.$t('Email Body'),
+                        prop: 'html',
                         align: 'center',
                         minWidth: 70,
                         maxWidth: 70,
@@ -225,13 +250,14 @@
                         prop: 'actions',
                         icon: 'IconActions',
                         align: 'center',
-                        minWidth: 30,
-                        maxWidth: 30,
+                        minWidth: 50,
+                        maxWidth: 50,
                     },
                 ],
                 CSV_EXPORT_TYPE_ID,
                 PDF_EXPORT_TYPE_ID,
                 BOTH_EXPORT_TYPE_ID,
+                HTML_EXPORT_TYPE_ID,
             }
         },
         computed: {
@@ -249,6 +275,12 @@
                     return false
                 }
                 return this.tableData.every(r => [1, 3].includes(+r.ReportItemExport[0].ReportExportTypeID))
+            },
+            allToHtml() {
+                if (!this.widgetsExists) {
+                    return false
+                }
+                return this.tableData.every(r => +r.ReportItemExport[0].ReportExportTypeID > 3)
             },
             indeterminatePdf() {
                 if (!this.widgetsExists) {
@@ -270,6 +302,16 @@
                 }
                 return !this.allToCsv && !countOfSelected.length
             },
+            indeterminateHtml() {
+                if (!this.widgetsExists) {
+                    return false
+                }
+                const selections = this.tableData.some(r => +r.ReportItemExport[0].ReportExportTypeID > 3)
+                if (!selections) {
+                    return false
+                }
+                return !this.allToHtml() && !selections.length
+            }
         },
         methods: {
             exportToPdf(row) {

@@ -2,7 +2,7 @@
     <el-tooltip :content="$t('Manage Reports')"
                 v-if="showButton"
                 placement="bottom">
-        <router-link to="/reports">
+        <a href="/reports">
             <div class="text-gray-400 hover:text-primary mx-3 focus:outline-none"
                  role="button">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
@@ -15,7 +15,7 @@
                         fill="currentColor"/>
                 </svg>
             </div>
-        </router-link>
+        </a>
     </el-tooltip>
 </template>
 <script>

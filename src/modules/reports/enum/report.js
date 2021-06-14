@@ -26,6 +26,7 @@ export const triggerObject = () => ({})
 export const CSV_EXPORT_TYPE_ID = 1
 export const PDF_EXPORT_TYPE_ID = 2
 export const BOTH_EXPORT_TYPE_ID = 3
+export const HTML_EXPORT_TYPE_ID = 4
 
 export const exportTypes = {
     [CSV_EXPORT_TYPE_ID]: {
