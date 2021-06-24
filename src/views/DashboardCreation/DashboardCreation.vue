@@ -5,7 +5,7 @@
              :class="{'opacity-50': loading}">
             <div class="items-center flex justify-between h-23-5">
                 <div class="flex items-center xl:-mx-24 w-full">
-                    <div @click="onBack()"
+                    <div @click="redirectBack()"
                          class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                         <IconDirLeft/>
                         <span class="mx-1">{{ $t('Back') }}</span>
@@ -182,7 +182,7 @@
             },
         },
         methods: {
-            onBack() {
+            redirectBack() {
                 this.$router.push('/')
             },
             onDiscard() {
@@ -238,6 +238,7 @@
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
                     
                     Notification.success('Dashboard added with success.')
+                    this.redirectBack()
                 } catch (e) {
                     console.warn(e)
                     Notification.error('Something went wrong please try again.')
