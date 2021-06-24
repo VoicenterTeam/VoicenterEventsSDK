@@ -14,6 +14,9 @@
                 <label>{{ $t('widget.title') }}</label>
                 <el-input v-model="model.Title"/>
             </el-form-item>
+            <el-form-item v-if="'DefaultRefreshInterval' in model">
+                <WidgetRefreshInterval :model="model"/>
+            </el-form-item>
             <el-form-item>
                 <label>{{ $t('Widget external endpoint') }}</label>
                 <el-input v-model="model.WidgetLayout.Endpoint"/>
@@ -68,6 +71,7 @@
     import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
     import JsonViewer from 'vue-json-viewer'
+    import WidgetRefreshInterval from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'
     
     export default {
         components: {
@@ -82,6 +86,7 @@
             WidgetColors,
             WidgetPadding,
             StaticWidgetInfo,
+            WidgetRefreshInterval,
         },
         props: {
             widget: {
