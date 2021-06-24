@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div v-if="!data.WidgetLayout.ComponentTypeID" class="w-full bg-white p-6 -my-4 text-center rounded">
-            {{$t('Select a widget type')}}
+        <div v-if="!data.WidgetLayout.ComponentTypeID"
+             class="w-full bg-white p-6 -my-4 text-center rounded">
+            {{ $t('Select a widget type') }}
         </div>
         <component
             v-else
@@ -18,10 +19,10 @@
     import PieChart from '@/components/Charts/PieChart'
     import GaugeChart from '@/components/Charts/GaugeChart'
     import CounterCard from '@/components/Cards/CounterCard'
+    import { defaultColors } from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
-    import {defaultColors} from "../../../enum/defaultWidgetSettings";
-
+    
     export default {
         components: {
             CounterCard,
@@ -33,25 +34,25 @@
         props: {
             data: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             editable: {
                 type: Boolean,
-                default: false
+                default: false,
             },
         },
         computed: {
             getComponentType() {
                 return widgetComponentTypes[this.data.WidgetLayout.ComponentTypeID]
-            }
+            },
         },
         watch: {
             data: {
                 immediate: true,
                 handler: function (widget) {
                     this.data.colors = widget.WidgetLayout.colors || defaultColors
-                }
-            }
-        }
+                },
+            },
+        },
     }
 </script>

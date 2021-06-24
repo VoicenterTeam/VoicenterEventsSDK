@@ -1,11 +1,8 @@
 <template>
     <div class="w-full bg-transparent px-8 py-4 flex items-center justify-between rounded-lg shadow">
         <div class="w-full flex flex-row items-center justify-between">
-            <slot name="title">
-                <base-widget-title :title="data.Title"/>
-            </slot>
             <slot name="content">
-                <h2 class="text-6xl font-bold mx-3">
+                <h2 class="flex w-full justify-end text-6xl font-bold mx-3">
                     <div v-html="result"/>
                 </h2>
             </slot>
@@ -31,6 +28,7 @@
         data() {
             return {
                 result: '',
+                fetchDataInterval: null,
             }
         },
         methods: {
@@ -41,6 +39,18 @@
                     console.warn(e)
                 }
             },
+        },
+        mounted() {
+            if (this.data.DefaultRefreshInterval) {
+                this.fetchDataInterval = setInterval(() => {
+                    this.getData()
+                }, this.data.DefaultRefreshInterval)
+            }
+        },
+        beforeDestroy() {
+            if (this.fetchDataInterval) {
+                clearInterval(this.fetchDataInterval)
+            }
         },
         watch: {
             data: {

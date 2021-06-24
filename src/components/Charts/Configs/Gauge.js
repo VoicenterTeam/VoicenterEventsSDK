@@ -12,7 +12,7 @@ export default {
         endAngle: 90,
         background: {
             backgroundColor: '#EEEE',
-            innerRadius: '60%',
+            innerRadius: '50%',
             outerRadius: '100%',
             shape: 'arc'
         }
