@@ -1,21 +1,25 @@
 <template>
     <modal v-bind="$attrs" v-on="$listeners">
-        <div class="flex flex-row items-center">
-            <h3 slot="title" class="text-main-2xl font-semibold text-gray-700">{{$t('widget.update')}}</h3>
-            <static-widget-info class="px-2" :widget="widget"/>
-        </div>
-        <el-form @submit.native.prevent="onChange" :rules="rules" ref="updateWidget" :model="model"
+        <template v-slot:title>
+            <div class="flex flex-row items-center">
+                <h3 class="text-main-2xl font-semibold text-gray-700">{{ $t('widget.update') }}</h3>
+                <static-widget-info class="px-2" :widget="widget"/>
+            </div>
+        </template>
+        <el-form @submit.native.prevent="onChange"
+                 :model="model"
+                 class="py-6"
                  v-if="model.WidgetLayout">
             <el-form-item>
-                <label>{{$t('widget.title')}}</label>
+                <label>{{ $t('widget.title') }}</label>
                 <el-input v-model="model.Title"/>
             </el-form-item>
             <el-form-item>
-                <label>{{$t('Widget external endpoint')}}</label>
+                <label>{{ $t('Widget external endpoint') }}</label>
                 <el-input v-model="model.WidgetLayout.Endpoint"/>
             </el-form-item>
             <el-form-item>
-                <label>{{$t('Widget type')}}</label>
+                <label>{{ $t('Widget type') }}</label>
                 <el-select v-model="model.WidgetLayout.ComponentTypeID"
                            placeholder="Select"
                            class="w-full pt-2">
@@ -28,13 +32,12 @@
             </el-form-item>
             <el-form-item v-if="model && isPieWidget(model)">
                 <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-2">
-                    {{$t('Don`t count logged out agents')}}
+                    {{ $t('Don`t count logged out agents') }}
                 </el-checkbox>
             </el-form-item>
             <br>
-            <el-collapse
-                v-if="model.WidgetLayout.ComponentTypeID"
-                v-model="activeCollapse">
+            <el-collapse v-if="model.WidgetLayout.ComponentTypeID"
+                         v-model="activeCollapse">
                 <el-collapse-item :title="$t('Dictionary')" name="dictionary">
                     <json-viewer
                         :value="dictionary[model.WidgetLayout.ComponentTypeID]"
@@ -54,22 +57,24 @@
             </el-collapse>
         </el-form>
         <template slot="footer">
-            <el-button @click="toggleVisibility(false)">{{$t('common.cancel')}}</el-button>
-            <el-button type="primary" @click="onChange">{{$t('common.save')}}</el-button>
+            <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
+                <el-button @click="toggleVisibility(false)">{{ $t('common.cancel') }}</el-button>
+                <el-button type="primary" @click="onChange">{{ $t('common.save') }}</el-button>
+            </div>
         </template>
     </modal>
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import {Alert, Checkbox, Collapse, CollapseItem, Option, Select} from 'element-ui'
-    import Modal from "@/components/Common/Modal";
-    import {isPieWidget} from '@/helpers/widgetUtils'
-    import {dictionary, options} from '@/enum/externalDataWidgetConfig'
+    import { Alert, Checkbox, Collapse, CollapseItem, Option, Select } from 'element-ui'
+    import Modal from '@/components/Common/Modal';
+    import { isPieWidget } from '@/helpers/widgetUtils'
+    import { dictionary, options } from '@/enum/externalDataWidgetConfig'
     import WidgetColors from '../WidgetUpdateForm/WidgetLayout/WidgetColors'
     import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
     import JsonViewer from 'vue-json-viewer'
-
+    
     export default {
         components: {
             [Checkbox.name]: Checkbox,
@@ -82,12 +87,12 @@
             JsonViewer,
             WidgetColors,
             WidgetPadding,
-            StaticWidgetInfo
+            StaticWidgetInfo,
         },
         props: {
             widget: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
         },
         data() {
@@ -95,13 +100,8 @@
                 model: {},
                 options,
                 dictionary,
-                activeCollapse: [ 'layout' ],
+                activeCollapse: ['layout'],
             }
-        },
-        computed: {
-            rules() {
-                return {}
-            },
         },
         methods: {
             isPieWidget,
@@ -135,6 +135,6 @@
         },
         mounted() {
             this.model = cloneDeep(this.widget)
-        }
+        },
     }
 </script>

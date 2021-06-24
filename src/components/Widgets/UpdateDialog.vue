@@ -8,7 +8,7 @@
             </div>
         </template>
         <el-form :model="model" :rules="rules"
-                 class="mb-4"
+                 class="py-6"
                  @submit.native.prevent="onChange"
                  ref="updateWidget">
             <el-form-item>
