@@ -139,10 +139,10 @@ export const DEFAULT_GROUP_KEYS = {
         'FontSize',
         'WidgetTitlesFontSize',
         'WidgetGroupTitlesFontSize',
-        'MinRefreshInterval',
-        'RefreshRealTimeDataDelay',
     ],
     'Timers': [
+        'MinRefreshInterval',
+        'RefreshRealTimeDataDelay',
         'ReportInterval',
         'ReportSwitching',
         'ReportRefresh'
