@@ -158,11 +158,11 @@
                     <widget-colors :availableColors="availableColors" :model="model"/>
                 </el-collapse-item>
             </el-collapse>
-            <el-form-item v-if="isPieWidget(widget)">
-                <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">
-                    {{ $t('Don`t count logged out agents') }}
-                </el-checkbox>
-            </el-form-item>
+<!--            <el-form-item v-if="isPieWidget(widget)">-->
+<!--                <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">-->
+<!--                    {{ $t('Don`t count logged out agents') }}-->
+<!--                </el-checkbox>-->
+<!--            </el-form-item>-->
             <el-form-item>
                 <div v-if="model.WidgetTime.type">
                     <time-frame
@@ -459,10 +459,6 @@
             
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
-            }
-            
-            if (isPieWidget(this.widget)) {
-                this.model.hideLoggedOutUsers = this.widget.WidgetLayout.hideLoggedOutUsers || true
             }
             
             if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {

@@ -30,12 +30,6 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="model && isPieWidget(model)">
-                <el-checkbox v-model="model.WidgetLayout.hideLoggedOutUsers" class="pt-2">
-                    {{ $t('Don`t count logged out agents') }}
-                </el-checkbox>
-            </el-form-item>
-            <br>
             <el-collapse v-if="model.WidgetLayout.ComponentTypeID"
                          v-model="activeCollapse">
                 <el-collapse-item :title="$t('Dictionary')" name="dictionary">
