@@ -3,6 +3,7 @@
          class="grid-stack-item-content relative rounded-lg"
          :key="widget.WidgetID"
          :style="getStyles">
+        {{widget.DefaultRefreshInterval}}
         <div class="flex relative items-center">
             <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header"
                  v-if="showDeleteButton"
