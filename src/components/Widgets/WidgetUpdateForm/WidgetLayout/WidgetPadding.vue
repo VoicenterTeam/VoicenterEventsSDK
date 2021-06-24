@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label>{{$t('Widget padding')}}</label>
+        <label>{{ $t('Widget padding') }}</label>
         <el-slider
             class="px-1"
             :step="step"
@@ -9,23 +9,22 @@
         </el-slider>
     </div>
 </template>
-
 <script>
-    import {Slider} from 'element-ui'
-
+    import { Slider } from 'element-ui'
+    
     export default {
         components: {
-            [Slider.name]: Slider
+            [Slider.name]: Slider,
         },
         props: {
             model: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             step: {
                 type: Number,
-                default: 2
-            }
+                default: 2,
+            },
         },
     }
 </script>

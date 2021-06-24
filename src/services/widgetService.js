@@ -31,6 +31,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
             Endpoint: template.Endpoint,
             DefaultRefreshInterval: template.DefaultRefreshInterval,
             ...widgetLayout,
+            TemplateSettings: template.TemplateSettings,
         })
         
         let WidgetConfig = []

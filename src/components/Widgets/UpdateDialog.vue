@@ -9,10 +9,14 @@
         </template>
         <el-form :model="model" :rules="rules"
                  class="mb-4"
-                 @submit.native.prevent="onChange" ref="updateWidget">
+                 @submit.native.prevent="onChange"
+                 ref="updateWidget">
             <el-form-item>
                 <label>{{ $t('widget.title') }}</label>
                 <el-input v-model="model.Title"/>
+            </el-form-item>
+            <el-form-item v-if="'DefaultRefreshInterval' in model">
+                <WidgetRefreshInterval :model="model"/>
             </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
@@ -98,7 +102,7 @@
                 </el-collapse>
             </el-form-item>
             <el-collapse v-model="activeCollapse">
-                <el-collapse-item :title="$t('widget.layout')" name="layout">
+                <el-collapse-item class="py-4" :title="$t('widget.layout')" name="layout">
                     <el-form-item v-if="isHtmlEditor(widget)">
                         <el-checkbox v-model="model.WidgetLayout.showLastUpdateDate">
                             {{ $t('Display last update date') }}
@@ -199,7 +203,7 @@
                         v-if="isAutoComplete(filter)"/>
                 </el-collapse-item>
             </el-collapse>
-            <el-collapse v-if="otherFilters.length" v-model="activeCollapse">
+            <el-collapse class="pt-6" v-if="otherFilters.length" v-model="activeCollapse">
                 <el-collapse-item :title="$t('settings.other.filters')" name="otherFilters">
                     <other-filters
                         :key="index"
@@ -224,6 +228,7 @@
     import queueMixin from '@/mixins/queueMixin'
     import { allSeries } from '@/enum/queueConfigs'
     import RefreshButton from '@/components/RefreshButton'
+    import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
     import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
@@ -234,7 +239,7 @@
     import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import { defaultAreaChartColors, defaultColors, realTimeSettings } from '@/enum/defaultWidgetSettings'
-    import { statistics } from '@/enum/queueDashboardStatistics'
+    import WidgetRefreshInterval from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'
     import {
         isAreaChartWidget,
         isHtmlEditor,
@@ -278,6 +283,7 @@
             RefreshButton,
             StaticWidgetInfo,
             ActivityGaugeConfig,
+            WidgetRefreshInterval,
         },
         props: {
             widget: {
