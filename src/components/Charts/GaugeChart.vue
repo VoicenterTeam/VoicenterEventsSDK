@@ -45,6 +45,7 @@
                 chartVisibility: true,
                 chartData: {},
                 chartInstance: false,
+                fetchDataInterval: null,
             }
         },
         computed: {
@@ -157,6 +158,16 @@
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
             this.triggerResizeEvent()
+            if (this.data.DefaultRefreshInterval) {
+                this.fetchDataInterval = setInterval(() => {
+                    this.chartOptions()
+                }, this.data.DefaultRefreshInterval)
+            }
+        },
+        beforeDestroy() {
+            if (this.fetchDataInterval) {
+                clearInterval(this.fetchDataInterval)
+            }
         },
     }
 </script>

@@ -43,6 +43,7 @@
                 chartData: {},
                 HOLD_STATUS: 'Hold',
                 chartInstance: false,
+                fetchDataInterval: null,
             }
         },
         computed: {
@@ -194,6 +195,11 @@
             },
         },
         mounted() {
+            if (this.data.DefaultRefreshInterval) {
+                this.fetchDataInterval = setInterval(() => {
+                    this.chartOptions()
+                }, this.data.DefaultRefreshInterval)
+            }
             this.triggerResizeEvent()
         },
         watch: {
@@ -212,6 +218,11 @@
                     this.$nextTick(this.updateChartSeries)
                 },
             },
+        },
+        beforeDestroy() {
+            if (this.fetchDataInterval) {
+                clearInterval(this.fetchDataInterval)
+            }
         },
     }
 </script>

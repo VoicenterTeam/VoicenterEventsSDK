@@ -53,6 +53,7 @@
                         fontSize: 24, // 24px
                     },
                 },
+                fetchDataInterval: null,
             }
         },
         methods: {
@@ -255,6 +256,16 @@
         mounted() {
             this.initWidgetConfig()
             this.triggerResizeEvent()
+            if (this.data.DefaultRefreshInterval) {
+                this.fetchDataInterval = setInterval(() => {
+                    this.chartOptions()
+                }, this.data.DefaultRefreshInterval)
+            }
+        },
+        beforeDestroy() {
+            if (this.fetchDataInterval) {
+                clearInterval(this.fetchDataInterval)
+            }
         },
     }
 </script>
