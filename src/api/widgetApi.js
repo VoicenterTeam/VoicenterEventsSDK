@@ -19,9 +19,13 @@ export const WidgetApi = {
             if (data.Order === null) {
                 data.Order = 0
             }
+            
             if (!data.WidgetConfig) {
                 data.WidgetConfig = []
+            } else {
+                data.WidgetConfig = data.WidgetConfig.filter(config => config.ParameterID)
             }
+            
             let result = await $axios.post(`/Widgets/Update/`, data)
             return parseCustomErrorMessage(result, 'Update Widget')
         } catch (e) {
