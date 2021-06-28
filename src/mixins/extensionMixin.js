@@ -4,7 +4,7 @@ export default {
             return this.$store.state.extensions.extensions
         },
         extensionWithCalls () {
-            return this.$store.getters['extensions/extensionsWithCalls'] || []
+            return this.$store.getters['extensions/extensionsWithCalls'](false) || []
         },
     }
 }
