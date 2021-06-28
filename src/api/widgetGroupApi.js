@@ -2,10 +2,11 @@ import $axios from './apiConnection'
 import parseCatch from '../helpers/handleErrors';
 
 export const WidgetGroupsApi = {
-
+    
     async update(data) {
         try {
             data.WidgetList.forEach(widget => {
+                widget.WidgetConfig = widget.WidgetConfig.filter(config => config.ParameterID)
                 if (!widget.WidgetTime) {
                     widget.WidgetTime = {}
                 }
@@ -13,7 +14,7 @@ export const WidgetGroupsApi = {
                     widget.WidgetConfig = []
                 }
                 widget.WidgetConfig.forEach(config => {
-                    if (config.WidgetParameterValue === "{}") {
+                    if (config.WidgetParameterValue === '{}') {
                         config.WidgetParameterValue = ''
                     }
                 })
@@ -26,16 +27,17 @@ export const WidgetGroupsApi = {
             parseCatch(e, true, 'Update Widget Groups')
         }
     },
-
+    
     async store(data) {
         try {
             delete data.WidgetGroupID
-            return await $axios.post('/WidgetsGroups/Add/', data)
+            const { Data } = await $axios.post('/WidgetsGroups/Add/', data)
+            return Data
         } catch (e) {
             parseCatch(e, true, 'Add Widget Group')
         }
     },
-
+    
     async addWidget(groupID, widgetID, data) {
         try {
             return await $axios.post(`/WidgetsGroups/AddWidget/${groupID}/${widgetID}`, data || {})
@@ -43,7 +45,7 @@ export const WidgetGroupsApi = {
             parseCatch(e, true, 'Add Widget to Widget Group')
         }
     },
-
+    
     async removeWidget(groupID, widgetID) {
         try {
             return await $axios.post(`/WidgetsGroups/RemoveWidget/${groupID}/${widgetID}`)

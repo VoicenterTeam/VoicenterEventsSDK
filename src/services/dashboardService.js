@@ -16,8 +16,8 @@ export async function runDashboardOperations(operations, dashboard) {
                         switch (operation.type) {
                             case types.ADD:
                                 delete operation.payload.IsNew
-                                let newGroup = await WidgetGroupsApi.store(operation.payload)
-                                await DashboardApi.addWidgetGroup(dashboardID, newGroup.WidgetGroupID)
+                                const { WidgetGroupID } = await WidgetGroupsApi.store(operation.payload)
+                                await DashboardApi.addWidgetGroup(dashboardID, WidgetGroupID)
                                 break;
                             case types.UPDATE:
                                 await WidgetGroupsApi.update(operation.payload)
