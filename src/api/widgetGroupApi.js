@@ -29,6 +29,7 @@ export const WidgetGroupsApi = {
 
     async store(data) {
         try {
+            delete data.WidgetGroupID
             return await $axios.post('/WidgetsGroups/Add/', data)
         } catch (e) {
             parseCatch(e, true, 'Add Widget Group')

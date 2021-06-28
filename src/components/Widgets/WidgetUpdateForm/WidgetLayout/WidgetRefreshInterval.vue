@@ -41,7 +41,7 @@
                 })
             },
             minValue() {
-                return this.templateSettings.MinimumRefreshInterval
+                return Number(this.templateSettings.MinimumRefreshInterval)
             },
             maxValue() {
                 return Number(this.templateSettings.MaximumRefreshInterval) + 1
