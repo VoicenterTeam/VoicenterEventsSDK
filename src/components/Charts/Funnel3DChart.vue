@@ -75,17 +75,7 @@
                                 height: "80%"
                             }
                         },
-                        series: [
-                            {
-                                name: 'Unique users',
-                                data: [
-                                    ['Website visits', 15654],
-                                    ['Downloads', 4064],
-                                    ['Requested price list', 1987],
-                                    ['Finalized', 846],
-                                ],
-                            },
-                        ],
+                        series: Data,
                         chart: {
                             type: 'funnel3d',
                             options3d: {
