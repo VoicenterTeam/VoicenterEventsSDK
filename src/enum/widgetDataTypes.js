@@ -18,6 +18,7 @@ const CHART_AREA_ID = 18
 const RICH_TEXT_EDITOR_LIST = 19
 const AVERAGE_CALLS_DURATION = 20
 const INFO_TYPE_ID = 22
+const FUNNEL_3D_TYPE_ID = 33
 
 export default {
     LINES_TYPE_ID,
@@ -40,6 +41,7 @@ export default {
     RICH_TEXT_EDITOR_LIST,
     AVERAGE_CALLS_DURATION,
     INFO_TYPE_ID,
+    FUNNEL_3D_TYPE_ID,
 }
 
 export const templateIcons = {
@@ -63,5 +65,6 @@ export const templateIcons = {
     [CHART_AREA_ID]: 'IconTemplatePie',
     [RICH_TEXT_EDITOR_LIST]: 'IconTemplateDefault',
     [AVERAGE_CALLS_DURATION]: 'IconTemplateCounter',
+    [FUNNEL_3D_TYPE_ID]: 'IconTemplatePie',
 }
 

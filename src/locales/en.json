@@ -830,5 +830,6 @@
     "Are you sure you want to create new Layout? A copy of default layout.": "Are you sure you want to create new Layout? A copy of default layout.",
     "This is a default layout, you will not be able to update, just create a copy": "This is a default layout, you will not be able to update, just create a copy",
     "Widget refresh interval": "Widget refresh interval",
-    "Set the interval when widget data will be reloaded automatically (in seconds)": "Set the interval when widget data will be reloaded automatically (in seconds)"
+    "Set the interval when widget data will be reloaded automatically (in seconds)": "Set the interval when widget data will be reloaded automatically (in seconds)",
+    "3D Funnel": "3D Funnel"
 }

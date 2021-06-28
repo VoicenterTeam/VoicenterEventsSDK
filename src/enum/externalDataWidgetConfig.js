@@ -6,7 +6,8 @@ export const types = {
     SPEEDOMETER: widgetDataTypes.CHART_SPEEDOMETER,
     TABLE: widgetDataTypes.TABLE_TYPE_ID,
     LINES: widgetDataTypes.LINES_TYPE_ID,
-    PIE: widgetDataTypes.PIE_TYPE_ID
+    PIE: widgetDataTypes.PIE_TYPE_ID,
+    FUNNEL: widgetDataTypes.FUNNEL_3D_TYPE_ID,
 };
 
 export const options = [
@@ -29,6 +30,10 @@ export const options = [
     {
         label: i18n.t('Pie'),
         value: types.PIE
+    },
+    {
+        label: i18n.t('3D Funnel'),
+        value: types.FUNNEL
     },
 ];
 
@@ -197,4 +202,18 @@ export const dictionary = {
             }
         ]
     },
+    [types.FUNNEL]: {
+        Data:[
+            {
+                name: 'Unique users',
+                data: [
+                    ['Website visits', 15654],
+                    ['Downloads', 4064],
+                    ['Requested price list', 1987],
+                    ['Invoice sent', 976],
+                    ['Finalized', 846],
+                ],
+            },
+        ]
+    }
 };

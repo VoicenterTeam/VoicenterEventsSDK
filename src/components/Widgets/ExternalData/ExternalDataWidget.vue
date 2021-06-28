@@ -21,10 +21,12 @@
     import CounterCard from '@/components/Cards/CounterCard'
     import { defaultColors } from '@/enum/defaultWidgetSettings'
     import TimeLineChart from '@/components/Charts/TimeLineChart'
+    import Funnel3DChart from '@/components/Charts/Funnel3DChart'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     
     export default {
         components: {
+            Funnel3DChart,
             CounterCard,
             GaugeChart,
             TableData,
