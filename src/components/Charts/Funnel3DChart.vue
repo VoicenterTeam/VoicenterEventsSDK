@@ -13,7 +13,7 @@
     import Highcharts3d from 'highcharts/highcharts-3d'
     import { getWidgetData } from '@/services/widgetService'
     import HighchartsCylinder from 'highcharts/modules/cylinder'
-    import funnel3D from '@/components/Charts/Configs/funnel3D'
+    import funnel3dConfig from '@/components/Charts/Configs/funnel3D'
     import HighchartsFunnel3d from 'highcharts/modules/funnel3d'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     
@@ -63,7 +63,7 @@
 
                     this.chartOptions = {
                         series: Data,
-                        ...funnel3D,
+                        ...funnel3dConfig,
                     }
                     this.reDrawChart()
                 } catch (e) {
