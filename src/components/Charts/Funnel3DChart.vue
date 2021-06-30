@@ -8,13 +8,14 @@
 </template>
 <script>
     import Highcharts from 'highcharts'
-    import { Chart } from 'highcharts-vue'
-    import { getWidgetData } from '@/services/widgetService'
-    import actionMixin from '@/components/Charts/Configs/actionMixin'
-    import Highcharts3d from 'highcharts/highcharts-3d'
-    import HighchartsCylinder from 'highcharts/modules/cylinder'
-    import HighchartsFunnel3d from 'highcharts/modules/funnel3d'
     import bus from '@/event-bus/EventBus'
+    import { Chart } from 'highcharts-vue'
+    import Highcharts3d from 'highcharts/highcharts-3d'
+    import { getWidgetData } from '@/services/widgetService'
+    import HighchartsCylinder from 'highcharts/modules/cylinder'
+    import funnel3D from '@/components/Charts/Configs/funnel3D'
+    import HighchartsFunnel3d from 'highcharts/modules/funnel3d'
+    import actionMixin from '@/components/Charts/Configs/actionMixin'
     
     Highcharts3d(Highcharts)
     HighchartsCylinder(Highcharts)
@@ -58,39 +59,13 @@
             },
             async getWidgetData() {
                 try {
-                    const { Data } = await getWidgetData(this.data)
-                    
+                    const Data = await getWidgetData(this.data)
+
                     this.chartOptions = {
-                        plotOptions: {
-                            series: {
-                                dataLabels: {
-                                    enabled: true,
-                                    format: `<b>{point.name}</b> ({point.y:,.0f})`,
-                                    allowOverlap: true,
-                                    y: 10
-                                },
-                                neckWidth: "30%",
-                                neckHeight: "25%",
-                                width: "80%",
-                                height: "80%"
-                            }
-                        },
                         series: Data,
-                        chart: {
-                            type: 'funnel3d',
-                            options3d: {
-                                enabled: true,
-                                alpha: 10,
-                                depth: 50,
-                                viewDistance: 50,
-                            },
-                        },
+                        ...funnel3D,
                     }
-                    
-                    this.chartVisibility = false
-                    this.$nextTick(() => {
-                        this.chartVisibility = true
-                    })
+                    this.reDrawChart()
                 } catch (e) {
                     console.warn(e)
                 }
