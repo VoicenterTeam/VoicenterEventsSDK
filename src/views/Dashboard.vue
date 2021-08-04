@@ -78,7 +78,7 @@
             </div>
         </div>
         <ConfirmDialog :visible.sync="showConfirmDialog"
-                       :description="`Are you sure that you want to delete this Widget Group #${get(groupToRemove, 'WidgetGroupID', '- -')}?`"
+                       description="Are you sure that you want to delete this Widget Group"
                        @on-cancel="showConfirmDialog = false"
                        @on-confirm="removeWidgetGroup"
         />
