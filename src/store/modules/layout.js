@@ -1,15 +1,19 @@
 import get from 'lodash/get'
 import { LayoutApi } from '@/api/layoutApi'
 import store from '@/store/store'
-import { defaultLayout } from '@/enum/default-layout'
+import { defaultLayout, extensionThresholdKeys, defaultExtensionThresholdConfig } from '@/enum/default-layout-config'
 import { convertHex } from '@/helpers/convertHex'
-import { DEFAULT_LOGO, ENABLED_STATUS_ID, globalAccountSettings } from '@/views/DashboardSettings/LayoutManagement/layout-management'
+import {
+    DEFAULT_LOGO,
+    ENABLED_STATUS_ID,
+    globalAccountSettings,
+} from '@/views/DashboardSettings/LayoutManagement/layout-management'
 
 const types = {
     SET_ALL_LAYOUTS: 'SET_ALL_LAYOUTS',
     SET_ACTIVE_LAYOUT: 'SET_ACTIVE_LAYOUT',
     UPDATE_ACTIVE_LAYOUT: 'UPDATE_ACTIVE_LAYOUT',
-    SET_GLOBAL_LAYOUT: 'SET_GLOBAL_LAYOUT'
+    SET_GLOBAL_LAYOUT: 'SET_GLOBAL_LAYOUT',
 };
 const state = {
     data: [],
@@ -30,7 +34,7 @@ const mutations = {
     [types.SET_GLOBAL_LAYOUT]: (state, value) => {
         state.data.splice(0, 0, value)
         state.globalLayout = value
-    }
+    },
 };
 
 const actions = {
@@ -229,6 +233,21 @@ const getters = {
     storedDashboardLayout: state => LayoutID => {
         return state.data.find(layout => layout.LayoutID.toString() === LayoutID.toString())
     },
+    getThresholdConfig: state => {
+        const { LayoutParametersList } = state.activeLayout || {}
+        
+        if (!LayoutParametersList) {
+            return defaultExtensionThresholdConfig
+        }
+        
+        let config = {}
+        LayoutParametersList.forEach(el => {
+            if (extensionThresholdKeys.includes(el.LayoutParameterName)) {
+                config[el.LayoutParameterName] = el.Value
+            }
+        })
+        return config
+    },
 }
 
 export default {
@@ -238,3 +257,5 @@ export default {
     getters,
     actions,
 };
+
+

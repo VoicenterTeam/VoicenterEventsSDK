@@ -11,12 +11,17 @@
                     </component>
                 </el-tooltip>
             </fade-transition>
-            <span class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal">{{getRepresentativeSummery}}</span>
+            <span
+                class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal">
+                {{ getRepresentativeSummery }}</span>
         </div>
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
-                <span class="text-center text-main-3xl ml-2 mt-3 font-mono">{{timer.displayTime}}</span>
-                <component v-if="threshold.show" :is="threshold.icon" class="w-6 mt-2 mx-2"/>
+                <span class="text-center text-main-3xl ml-2 mt-3 font-mono">{{ timer.displayTime }}</span>
+                <IconThreshold v-if="threshold.show"
+                               v-bind="threshold.styles"
+                               class="w-6 mt-2 mx-2"
+                />
             </div>
             <call-info
                 v-for="call in extension.calls"
@@ -26,7 +31,9 @@
                 :settings="settings"
             >
                 <template v-slot:threshold="{statusThreshold}">
-                    <component v-if="statusThreshold.show" :is="statusThreshold.icon" class="w-6 mb-1 mx-2"/>
+                    <IconThreshold v-if="statusThreshold.show"
+                                   v-bind="statusThreshold.styles"
+                                   class="w-6 mb-1 mx-2"/>
                 </template>
             </call-info>
         </div>
@@ -36,64 +43,75 @@
     import get from 'lodash/get'
     import CallInfo from './CallInfo'
     import Timer from '@/util/Timer'
-    import {Tooltip} from 'element-ui'
+    import { Tooltip } from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
-    import {extensionColor} from '@/util/extensionStyles'
+    import { extensionColor } from '@/util/extensionStyles'
     import { getInitialExtensionTime } from '@/util/timeUtils'
-
+    
     export default {
         components: {
             CallInfo,
-            [Tooltip.name]: Tooltip
+            [Tooltip.name]: Tooltip,
         },
         props: {
             extension: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             settings: {
                 type: Object,
-                default: () => ({})
-            }
+                default: () => ({}),
+            },
+            thresholdConfig: {
+                type: Object,
+                default: () => ({}),
+            },
         },
         data() {
             let initialTimeInSeconds = getInitialExtensionTime(this.extension, this.settings)
-
+            
             return {
                 timer: new Timer({
-                    initialTimeInSeconds
+                    initialTimeInSeconds,
                 }),
                 statusMappings: statusTypes,
             }
         },
         computed: {
             getRepresentativeSummery() {
-              return get(this.extension, 'summery.representative', 'userName')
+                return get(this.extension, 'summery.representative', 'userName')
             },
             threshold() {
-                let show = true;
-                let icon = 'IconYellowBulb';
-                let seconds = this.timer.state.seconds;
-                let minThreshold = this.statusInfo.WarningSecLimit
-                let maxThreshold = this.statusInfo.AlertSecLimit
-
-                if (!minThreshold && !maxThreshold || (this.extension.calls.length && this.settings.callThreshold)) {
+                let show = true
+                let seconds = this.timer.state.seconds
+                let thresholdColor = this.thresholdConfig.HoldTimeWarningColor
+                
+                const { HoldTimeWarning, HoldTimeLimit } = this.thresholdConfig
+                
+                if (!HoldTimeWarning && !HoldTimeLimit || (this.extension.calls.length && this.settings.callThreshold)) {
                     return {
                         show: false,
-                        icon
+                        styles: {
+                            color: thresholdColor,
+                        },
                     }
                 }
-                if (minThreshold > seconds) {
+                if (HoldTimeWarning > seconds) {
                     show = false
-                } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
-                    icon = 'IconRedBulb'
+                } else if (seconds > HoldTimeLimit && HoldTimeWarning < HoldTimeLimit) {
+                    thresholdColor = this.thresholdConfig.HoldTimeLimitColor
                 }
-                return {show, icon}
+                return {
+                    show,
+                    styles: {
+                        color: thresholdColor,
+                    },
+                }
             },
             cardStyles() {
                 let color = extensionColor(this.extension)
                 return {
-                    border: `2px solid ${color}`
+                    border: `2px solid ${color}`,
                 }
             },
             statusText() {
@@ -107,7 +125,7 @@
                 return this.$t(text)
             },
             statusIcon() {
-                let data = this.statusMappings[this.extension.representativeStatus] || {icon: 'IconOther'}
+                let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }
                 if (this.extension.calls.length > 0) {
                     return 'IconIncomingCall'
                 }
@@ -125,15 +143,12 @@
                 }
                 return this.extension.calls.every(c => c.callAnswered !== 0)
             },
-            statusInfo() {
-                return this.$store.getters['entities/getStatusById'](this.extension.representativeStatus) || {}
-            }
         },
         methods: {
             setTimerValue() {
                 const timerValue = getInitialExtensionTime(this.extension, this.settings)
                 this.timer.setValue(timerValue)
-            }
+            },
         },
         watch: {
             'extension.representativeStatus'(newStatus, oldStatus) {
@@ -147,14 +162,14 @@
                     if (newVal !== oldVal) {
                         return;
                     }
-
+                    
                     if (!this.settings.resetIdleTime || !oldVal.length) {
                         this.timer.reset()
                         return;
                     }
-
+                    
                     let oldCall = oldVal.find((call) => call.answered)
-
+                    
                     if (oldCall && this.settings.resetIdleTime) {
                         this.timer.reset()
                     } else {
@@ -166,47 +181,47 @@
                 if (newVal !== oldVal) {
                     this.setTimerValue()
                 }
-            }
+            },
         },
         mounted() {
             this.timer.start()
         },
         beforeDestroy() {
             this.timer.destroy()
-        }
+        },
     }
 </script>
 <style scoped>
-    .extension-card {
-        min-height: 200px;
-        transition: all .2s;
-    }
+.extension-card {
+    min-height: 200px;
+    transition: all .2s;
+}
 
-    .extension-card-icon {
-        max-width: 48px;
-        min-width: 48px;
-    }
+.extension-card-icon {
+    max-width: 48px;
+    min-width: 48px;
+}
 </style>
 <style lang="scss">
-    @keyframes fade {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
+@keyframes fade {
+    0% {
+        opacity: 0;
     }
-
-    .extension-card-icon.is-calling {
-        path:first-child {
-            animation: fade 1s;
-        }
-
-        path:last-child {
-            opacity: 0;
-            animation: fade 1s infinite;
-            animation-direction: alternate;
-            animation-delay: 1s;
-        }
+    100% {
+        opacity: 1;
     }
+}
+
+.extension-card-icon.is-calling {
+    path:first-child {
+        animation: fade 1s;
+    }
+    
+    path:last-child {
+        opacity: 0;
+        animation: fade 1s infinite;
+        animation-direction: alternate;
+        animation-delay: 1s;
+    }
+}
 </style>

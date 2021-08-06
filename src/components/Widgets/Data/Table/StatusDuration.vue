@@ -1,7 +1,9 @@
 <template>
     <div class="flex items-center justify-center">
         <span class="font-mono">{{timer.displayTime}}</span>
-        <component v-if="threshold.show" :is="threshold.icon" class="w-6 mb-1 mx-2"/>
+        <IconThreshold v-if="threshold.show"
+                       v-bind="threshold.styles"
+                       class="w-6 mb-1 mx-2"/>
     </div>
 </template>
 <script>
@@ -29,28 +31,35 @@
         },
         computed: {
             threshold() {
-                let show = true;
-                let icon = 'IconYellowBulb';
-                let seconds = this.timer.state.seconds;
-                let minThreshold = this.statusInfo.WarningSecLimit
-                let maxThreshold = this.statusInfo.AlertSecLimit
+                let show = true
+                let thresholdColor = this.thresholdConfig.HoldTimeWarningColor
+                
+                let seconds = this.timer.state.seconds
+                const { HoldTimeWarning, HoldTimeLimit } = this.thresholdConfig
 
-                if (!minThreshold && !maxThreshold || (this.extension.calls.length && this.settings.callThreshold)) {
+                if (!HoldTimeWarning && !HoldTimeLimit || this.extension.calls.length) {
                     return {
                         show: false,
-                        icon
+                        styles: {
+                            color: thresholdColor,
+                        },
                     }
                 }
-                if (minThreshold > seconds) {
+                if (HoldTimeWarning > seconds) {
                     show = false
-                } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
-                    icon = 'IconRedBulb'
+                } else if (seconds > HoldTimeLimit && HoldTimeWarning < HoldTimeLimit) {
+                    thresholdColor =  this.thresholdConfig.HoldTimeLimitColor
                 }
-                return { show, icon }
+                return {
+                    show,
+                    styles: {
+                        color: thresholdColor
+                    }
+                }
             },
-            statusInfo() {
-                return this.$store.getters['entities/getStatusById'](this.extension.representativeStatus) || {}
-            }
+            thresholdConfig() {
+                return this.$store.getters['layout/getThresholdConfig']
+            },
         },
         methods: {
           setTimerValue() {

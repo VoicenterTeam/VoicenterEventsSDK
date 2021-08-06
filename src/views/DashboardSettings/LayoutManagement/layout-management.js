@@ -96,6 +96,58 @@ export const sliderOptionConfigs = {
             800: '800s',
         },
     },
+    ActiveCallWarning: {
+        min: 1,
+        max: 7200,
+        step: 5,
+        marks: {
+            900: '15min',
+            1800: '30min',
+            2700: '45min',
+            3600: '1h',
+            4700: '1:30h',
+            6300: '1:45h',
+        },
+    },
+    ActiveCallLimit: {
+        min: 1,
+        max: 7200,
+        step: 5,
+        marks: {
+            900: '15min',
+            1800: '30min',
+            2700: '45min',
+            3600: '1h',
+            4700: '1:30h',
+            6300: '1:45h',
+        },
+    },
+    HoldTimeWarning: {
+        min: 1,
+        max: 7200,
+        step: 5,
+        marks: {
+            900: '15min',
+            1800: '30min',
+            2700: '45min',
+            3600: '1h',
+            4700: '1:30h',
+            6300: '1:45h',
+        },
+    },
+    HoldTimeLimit: {
+        min: 1,
+        max: 7200,
+        step: 5,
+        marks: {
+            900: '15min',
+            1800: '30min',
+            2700: '45min',
+            3600: '1h',
+            4700: '1:30h',
+            6300: '1:45h',
+        },
+    },
 }
 
 export const predefinedColors = [
@@ -132,6 +184,12 @@ export const DEFAULT_GROUP_KEYS = {
         'ColorWidgetGroupBackground',
         'ColorWidgetGroupFrames',
         'ColorWidgetGroupTitles',
+        
+        'ActiveCallWarningColor',
+        'ActiveCallLimitColor',
+        'HoldTimeWarningColor',
+        'HoldTimeLimitColor',
+        
         'DashboardLogo',
     ],
     'Fonts': [
@@ -145,7 +203,12 @@ export const DEFAULT_GROUP_KEYS = {
         'RefreshRealTimeDataDelay',
         'ReportInterval',
         'ReportSwitching',
-        'ReportRefresh'
+        'ReportRefresh',
+        
+        'ActiveCallWarning',
+        'ActiveCallLimit',
+        'HoldTimeWarning',
+        'HoldTimeLimit',
     ],
 }
 

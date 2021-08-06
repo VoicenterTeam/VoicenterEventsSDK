@@ -43,7 +43,10 @@
                     <div :key="index"
                          class="px-1"
                          v-for="(extension, index) in sortedExtensions">
-                        <extension-card :key="extension.number" :extension="extension" :settings="getSettings"/>
+                        <extension-card :key="extension.number"
+                                        :extension="extension"
+                                        :threshold-config="getThresholdConfig"
+                                        :settings="getSettings"/>
                     </div>
                     <div class="flex flex-col w-full items-center"
                          key="no-data"
@@ -122,6 +125,9 @@
             }
         },
         computed: {
+            getThresholdConfig() {
+                return this.$store.getters['layout/getThresholdConfig']
+            },
             adminSelected() {
                 return displayUsersRelatedWithAdmin(this.data.WidgetConfig)
             },

@@ -56,6 +56,7 @@
                 <calls-info :extension="userExtension(row.user_id)" :hideCallerInfo="true"
                             :key="row.user_id"
                             :userId="row.user_id"
+                            :settings="getSettings"
                             v-if="userExtension(row.user_id) && drawRow"/>
                 <span v-else>---</span>
             </template>

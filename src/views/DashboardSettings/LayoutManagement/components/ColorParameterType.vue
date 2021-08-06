@@ -7,7 +7,7 @@
             </span>
         </div>
         <div class="flex items-center"
-             :class="displayLabel ? 'col-span-1 justify-center': 'col-span-2'">
+             :class="displayLabel ? 'col-span-1 justify-end': 'col-span-2'">
             <slot>
                 <IconColorPicker class="w-8 h-8"
                                  :style="getIndicatorStyles"/>
