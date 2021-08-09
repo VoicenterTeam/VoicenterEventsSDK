@@ -217,7 +217,9 @@
                     column['containsDate'] = true
                     return this.formatDateColumn(row, column.prop, DATE_FORMAT)
                 }
-                
+                if (column.prop === 'Stat type') {
+                    return  this.$t(row[column.prop])
+                }
                 return row[column.prop]
             },
             formatDateColumn(row, column, dateFormat) {
