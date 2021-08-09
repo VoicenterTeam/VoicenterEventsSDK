@@ -49,7 +49,7 @@
                         v-bind="column"
                         v-for="(column, index) in renderedColumns">
                         <template slot="header">
-                            <div class="truncate">
+                            <div class="flex flex-1 w-full break-normal">
                                 <slot :column="column" name="header_title">
                                     <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300"
                                                 placement="top">
