@@ -2,9 +2,9 @@
     <div class="flex w-full flex-col dashboard-settings">
         <div class="w-full flex flex-col relative">
             <NavBar/>
-            <div class="w-full px-4 lg:16 2xl:px-40 3xl:px-64 border-b border-gray-300">
+            <div class="w-full px-4 2xl:px-40 3xl:px-64 border-b border-gray-300">
                 <slot>
-                    <div class="items-center flex justify-between h-23-5">
+                    <div class="items-center flex justify-between md:h-23-5">
                         <div class="flex items-center xl:-mx-24 w-full">
                             <div @click="onDiscard(true)"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
@@ -21,9 +21,10 @@
                                 <span class="text-xl font-bold text-gray-900">
                                     {{ $t('Dashboard Settings') }}
                                 </span>
-                                <div class="flex justify-center w-full md:hidden">
-                                    <base-button :class="$rtl.isRTL ? 'ml-2' : 'mr-2'"
-                                                 @click="onDiscard()"
+                                <div class="flex justify-center items-center w-full md:hidden flex-col">
+                                    <CopyDashboard :dashboard="activeDashboard"/>
+                                    <base-button class="my-2"
+                                        @click="onDiscard()"
                                                  variant="discard"
                                                  fixed-width="w-37">
                                         <div class="flex items-center">
@@ -43,6 +44,7 @@
                             </div>
                         </div>
                         <div class="flex-row items-center hidden md:flex">
+                            <CopyDashboard :dashboard="activeDashboard"/>
                             <base-button class="mx-4"
                                          @click="onDiscard()"
                                          variant="discard"
@@ -80,15 +82,17 @@
     import NavBar from '@/views/common/NavBar'
     import { LayoutApi } from '@/api/layoutApi'
     import { DashboardApi } from '@/api/dashboardApi'
+    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
     import DeleteLayout from '@/views/common/DeleteLayout'
+    import CopyDashboard from '@/views/DashboardSettings/sections/CopyDashboard'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
-    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
     
     export default {
         components: {
             NavBar,
             DeleteLayout,
+            CopyDashboard,
             ColorParameterType,
             DashboardSettings,
             [Popover.name]: Popover,
