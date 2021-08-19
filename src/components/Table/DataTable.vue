@@ -53,7 +53,7 @@
                                 <slot :column="column" name="header_title">
                                     <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300"
                                                 placement="top">
-                                    <span class="font-medium uppercase">
+                                    <span class="font-bold flex w-full justify-center uppercase">
                                         {{ $t(column.prop) || column.label }}
                                     </span>
                                     </el-tooltip>
