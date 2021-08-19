@@ -21,15 +21,15 @@
                 </h3>
             </template>
             <div class="py-5">
-                <label>
+                <p class="mb-4">
                     {{ $t('Account') }}
                     ({{ $t('copy dashboard into selected account') }})
-                </label>
+                </p>
                 <base-select :data="allAccounts"
                              labelKey="name"
                              valueKey="ID"
                              :multiple="false"
-                             class="w-full"
+                             class="w-full mb-2"
                              v-model="account"/>
                 <el-collapse v-model="activeCollapse"
                              class="mt-3">
@@ -86,6 +86,7 @@
     </div>
 </template>
 <script>
+    import get from 'lodash/get'
     import pick from 'lodash/pick'
     import { CopyIcon } from 'vue-feather-icons'
     import Modal from '@/components/Common/Modal'
@@ -148,9 +149,16 @@
             async onCopy() {
                 try {
                     this.loading = true
-                    const payload = pick(this.dashboard, ['AccountID', 'GroupTransitionTimer', 'DashboardTitle', 'DashboardLayoutID', 'DashboardLayout', 'DashBoardsPermission', 'DashBoardsUserPermission'])
-                    const { DashboardID } = await DashboardApi.store(payload)
+                    let payload = pick(this.dashboard, ['GroupTransitionTimer', 'DashboardTitle', 'DashboardLayoutID', 'DashboardLayout', 'DashBoardsPermission', 'DashBoardsUserPermission'])
+                    payload.AccountID = this.account
+                    payload.DashboardTitle = `${payload.DashboardTitle} - copy`
+                    const newDashboardData = await DashboardApi.store(payload)
+                    const { DashboardID } = newDashboardData
                     await this.addWidgetGroups(DashboardID)
+                    let WidgetGroupID = get(newDashboardData.WidgetGroupList, '[0].WidgetGroupID' ,false)
+                    if (WidgetGroupID) {
+                        await DashboardApi.removeWidgetGroup(DashboardID, WidgetGroupID)
+                    }
                 } catch (e) {
                     console.warn(e)
                 } finally {
@@ -184,7 +192,7 @@
                     }
                     const payload = {
                         ...widget,
-                        WidgetEntity: []
+                        WidgetEntity: [],
                     }
                     delete payload.WidgetID
                     delete payload.LastUpdate
