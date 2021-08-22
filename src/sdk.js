@@ -191,7 +191,7 @@ class EventsSDK {
 
   async _onLoginResponse(data) {
     if (data.Client) {
-      await loadExternalScript('https://loginapidev.voicenter.co.il/monitorAPI/GetSocketClient?v=2.4.0')
+      await loadExternalScript('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=2.4.0')
     }
     if (data.URL) {
       this.server = {
