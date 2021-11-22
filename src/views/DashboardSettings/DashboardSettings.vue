@@ -87,7 +87,6 @@
     import CopyDashboard from '@/views/DashboardSettings/sections/CopyDashboard'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
-    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
 
     export default {
         components: {
