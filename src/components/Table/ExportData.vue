@@ -48,6 +48,7 @@
 </template>
 <script>
     import XLSX from 'xlsx'
+    import { format } from 'date-fns'
     import { Alert, Radio } from 'element-ui'
     import ManageColumns from './ManageColumns'
     import Modal from '@/components/Common/Modal'
@@ -55,7 +56,6 @@
     import { isARealtimeTableWidget, timeFilterToHuman } from '@/helpers/widgetUtils'
     import StaticWidgetInfo from '@/components/Widgets/WidgetUpdateForm/StaticWidgetInfo'
     import { DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
-    import { format } from "date-fns"
     
     export default {
         inheritAttrs: false,
@@ -170,7 +170,7 @@
                 if (DATE_FORMAT.includes(key.toLowerCase())) {
                     try {
                         // To prevent date-fns errors like: Invalid time value
-                        record[key] = record[key].replace('Z','')
+                        record[key] = record[key].replace('Z', '')
                         return format(new Date(record[key]), DATE_FORMAT)
                     } catch (e) {
                         return record[key].replace(/\//g, '-')
@@ -179,14 +179,14 @@
                 if (DATE_TIME_COLUMNS.includes(key.toLowerCase())) {
                     try {
                         // To prevent date-fns errors like: Invalid time value
-                        record[key] = record[key].replace('Z','')
+                        record[key] = record[key].replace('Z', '')
                         return format(new Date(record[key]), DATE_TIME_FORMAT)
                     } catch (e) {
                         return record[key].replace(/\//g, '-')
                     }
                 }
                 return record[key]
-            }
+            },
         },
     }
 </script>

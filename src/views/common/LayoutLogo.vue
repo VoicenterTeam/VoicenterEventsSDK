@@ -19,9 +19,8 @@
     </div>
 </template>
 <script>
-    import i18n from '@/i18n'
     import { getBase64 } from '@/helpers/util'
-    import { Notification, Upload } from 'element-ui'
+    import { Upload } from 'element-ui'
     
     export default {
         inheritAttrs: false,
@@ -46,11 +45,13 @@
         methods: {
             async onFileChange() {
                 const file = event.target.files[0]
-                //100 kb
+                // 100 kb
                 if (file && file.size > 100000) {
-                    Notification.error({
-                        title: i18n.t('Invalid Logo'),
-                        message: i18n.t('Logo size should be less than 100kb'),
+                    this.$notify({
+                        type: 'danger',
+                        icon: true,
+                        title: 'Invalid Logo',
+                        message: 'Logo size should be less than 100kb',
                     })
                     return
                 }

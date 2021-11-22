@@ -21,7 +21,7 @@
                  v-show="expanded">
                 <div class="px-6 w-full">
                     <slot>
-                    
+
                     </slot>
                 </div>
             </div>
@@ -59,16 +59,16 @@
     .header {
         @apply h-16 border-b border-gray-300 flex flex-row justify-between cursor-pointer;
     }
-    
+
     .content {
         @apply flex w-full;
     }
-    
+
     .is-expanded {
         transition: all 0.3s ease-in;
         transform: rotate(-90deg);
     }
-    
+
     .is-collapsed {
         transition: all 0.3s ease-in;
         transform: rotate(90deg);

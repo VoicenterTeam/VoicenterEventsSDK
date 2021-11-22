@@ -19,7 +19,7 @@
 <script>
     import { Tooltip } from 'element-ui'
     import Template from '@/views/DashboardCreation/components/Template'
-    
+
     export default {
         components: {
             Template,

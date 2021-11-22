@@ -15,6 +15,7 @@
         </div>
         <div v-if="isSimpleTable">
             <data-table
+                v-bind="$attrs"
                 :widget="data"
                 :border="border"
                 :columns="availableColumns"

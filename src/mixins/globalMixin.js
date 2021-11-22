@@ -1,8 +1,23 @@
+import { delay } from '@/helpers/util'
+
 export default {
     methods: {
-        addTokenToUrl() {
+        async addTokenToUrl() {
+            await delay()
+            if (this.$route && this.$route.name === 'generate-pdf') {
+                return
+            }
             let activeTokens = this.$store.getters['users/activeTokens']
-            this.$router.push({ query: { token: activeTokens } }).catch(() => {
+            const urlQuery = this.$route.query
+            this.$router.push(
+                {
+                    query: {
+                        ...urlQuery,
+                        token: activeTokens,
+                    },
+                },
+            ).catch((e) => {
+                console.warn(e)
             })
         },
     },
@@ -10,11 +25,11 @@ export default {
         '$route.name': {
             immediate: true,
             deep: true,
-            handler(value) {
+            handler: async function (value) {
                 if (!value) {
                     return
                 }
-                this.addTokenToUrl()
+                await this.addTokenToUrl()
             },
         },
     },

@@ -92,10 +92,10 @@
         },
         methods: {
             newDashboard() {
-                this.$router.push('dashboard-creation')
+                this.$router.push('/dashboard-creation')
             },
             manageLayout() {
-                this.$router.push('dashboard-settings')
+                this.$router.push('/dashboard-settings')
             },
             triggerMenu() {
                 this.showMenu = !this.showMenu

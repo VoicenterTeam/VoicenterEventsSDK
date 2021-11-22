@@ -1,9 +1,13 @@
 <template>
-    <range-filter class="pt-2" :pickerOptions="pickerOptions" :date="fetchDate" @on-change="onChange"/>
+    <date-time-picker class="pt-2"
+                      :pickerOptions="pickerOptions"
+                      :date="fetchDate"
+                      @on-change="onChange"
+    />
 </template>
 <script>
     import {TIME_LINE_TIMESTAMP} from '@/enum/generic'
-    import RangeFilter from '../../../Common/RangeFilter'
+    import DateTimePicker from '../../../Common/DateTimePicker'
     import {format} from 'date-fns'
     import get from 'lodash/get'
 
@@ -19,7 +23,7 @@
             }
         },
         components: {
-            RangeFilter
+            DateTimePicker
         },
         data() {
             return {

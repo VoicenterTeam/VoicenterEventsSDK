@@ -1,6 +1,7 @@
 <template>
 <div id="app">
     <network-status-alert/>
+    <notifications/>
     <fade-transition mode="out-in" :duration="100">
         <router-view/>
     </fade-transition>
@@ -26,6 +27,7 @@ export default {
         await this.$store.dispatch('layout/setupLayouts')
         await this.$store.dispatch('layout/getGlobalLayout')
         this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
+        this.$store.dispatch('dashboards/mapAllDashboardsWidgets')
     },
     computed: {
         layout() {

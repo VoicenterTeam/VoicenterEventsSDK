@@ -59,8 +59,19 @@ export function getDefaultGridLayout() {
     }
 }
 
-export function displayUsersRelatedWithAdmin (widgetConfig) {
+export function displayUsersRelatedWithAdmin(widgetConfig) {
     const userListConfig = widgetConfig.filter(config => config.ParameterName && config.ParameterName.toLowerCase() === USER_LIST_PARAMETER_NAME)
     const entityPositive = get(userListConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
     return entityPositive.includes(ADMIN_USER_ID)
+}
+
+export function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email)
+}
+
+export function delay(time = 3000) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time)
+    })
 }

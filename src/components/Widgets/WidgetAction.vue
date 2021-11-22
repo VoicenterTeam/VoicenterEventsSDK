@@ -88,12 +88,12 @@
     import { Switch, Tooltip, Select, Option } from 'element-ui'
     import { PrinterIcon, DownloadIcon } from 'vue-feather-icons'
     import { isHtmlEditor, isNoteListWidget, isChartWidget } from '@/helpers/widgetUtils'
-    
+
     const DOWNLOAD_JPEG = 'image/jpeg'
     const DOWNLOAD_PDF = 'application/pdf'
     const DOWNLOAD_PNG = 'image/png'
     const DOWNLOAD_SVG = 'image/svg+xml'
-    
+
     const DOWNLOAD_OPTIONS = [
         {
             label: 'PDF',
@@ -112,7 +112,7 @@
             value: DOWNLOAD_SVG,
         },
     ]
-    
+
     export default {
         components: {
             PrinterIcon,

@@ -10,7 +10,7 @@
         <portal to="form-title">
             {{ getTemplate.TemplateName }}
         </portal>
-        <div class="grid grid-cols-7 col-gap-4 template-preview -mx-4-5"
+        <div class="grid grid-cols-7 gap-4 template-preview -mx-4-5"
              v-loading="loading">
             <div class="col-span-5 bg-gray-150">
                 <div class="flex items-center justify-center h-full">
@@ -51,9 +51,9 @@
 </template>
 <script>
     import get from 'lodash/get'
-    
+
     const ONE_REM_IN_PX = 16
-    
+
     export default {
         props: {
             template: {
@@ -144,27 +144,27 @@
     .ellipse-wrapper {
         @apply w-9 h-9 rounded-full bg-primary-100;
         content: '';
-        
+
         span {
             @apply hidden;
         }
-        
+
         &:hover {
             span {
                 @apply flex;
             }
-            
+
             .ellipse-outer {
                 @apply bg-primary;
             }
         }
     }
-    
+
     .ellipse-outer {
         @apply w-5 h-5 rounded-full;
         content: '';
     }
-    
+
     .ellipse-inner {
         @apply w-3 h-3 rounded-full bg-primary;
         content: '';

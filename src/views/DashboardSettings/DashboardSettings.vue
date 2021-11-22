@@ -87,7 +87,8 @@
     import CopyDashboard from '@/views/DashboardSettings/sections/CopyDashboard'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
-    
+    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
+
     export default {
         components: {
             NavBar,
@@ -146,11 +147,11 @@
                             Order: index,
                         })
                     })
-                    
+
                     await DashboardApi.update(this.model)
                     await LayoutApi.update(this.activeLayout)
                     await Promise.all(toUpdatePromises)
-                    
+
                     const { DashboardID } = this.model
                     const dashboard = await DashboardApi.find(DashboardID)
                     await this.updateState(dashboard)

@@ -9,14 +9,15 @@ module.exports = {
         extend: {
             colors: {
                 primary: {
-                    default: 'var(--primary-color)',
+                    DEFAULT: 'var(--primary-color)',
+                    'base': 'var(--primary-color)',
                     50: 'var(--primary-color-opacity-50)',
                     100: 'var(--primary-color-opacity)',
                     200: 'var(--primary-color-opacity-200)',
                     300: 'var(--primary-color-opacity-300)',
                 },
                 steel: {
-                    default: 'var(--steel)',
+                    DEFAULT: 'var(--steel)',
                 },
                 gray: {
                     ...defaultTheme.colors.gray,
@@ -30,19 +31,20 @@ module.exports = {
                     650: 'var(--gray-650)',
                     900: 'var(--gray-900)',
                     950: 'var(--gray-950)',
+                    light: 'var(--gray-light)',
                 },
                 blue: {
                     ...defaultTheme.colors.blue,
-                    default: '#2575FF',
+                    DEFAULT: '#2575FF',
                 },
                 red: {
                     ...defaultTheme.colors.red,
-                    default: '#ff6060',
+                    DEFAULT: '#ff6060',
                     focus: 'var(--red-focus)',
                 },
                 green: {
                     ...defaultTheme.colors.green,
-                    default: '#7ED321',
+                    DEFAULT: '#7ED321',
                     main: '#7ED321',
                 },
                 orange: {
@@ -55,11 +57,20 @@ module.exports = {
                 mono: ['Roboto Mono', 'monospace'],
             },
             boxShadow: {
-                default: '0 10px 20px 0 rgba(209, 213, 223, 0.25)',
-                'base': '0px 0px 5px #E0E2E5',
+                DEFAULT: '0 10px 20px 0 rgba(209, 213, 223, 0.25)',
+                base: '0px 0px 5px #E0E2E5',
+                light: '0px 1px 6px #D1D5DF',
+                lighter: '0px 0px 5px #D8D8D8',
             },
             minWidth: {
+                ...defaultTheme.minWidth,
                 16: '4rem',
+                '2xl': '42rem',
+                '3xl': '48rem',
+                '4xl': '56rem',
+                '5xl': '64rem',
+                '6xl': '72rem',
+                '7xl': '80rem',
                 screen: '100vw',
             },
             maxWidth: {
@@ -73,10 +84,16 @@ module.exports = {
             minHeight: {
                 ...defaultTheme.minHeight,
                 22: '5.25rem',
+                20: '5rem',
+                40: '10rem',
+                41: '10.5rem',
             },
             maxHeight: {
                 ...defaultTheme.maxHeight,
                 8: '2rem',
+                28: '7rem',
+                40: '10rem',
+                56: '14rem',
                 64: '16rem',
                 75: '18.75rem',
                 91: '22.75rem',
@@ -84,12 +101,14 @@ module.exports = {
             spacing: {
                 '0-25': '0.0625rem',
                 '0-5': '0.125rem',
+                '1-25': '0.3125rem',
                 '1-5': '0.375rem',
                 '2-5': '0.5625rem',
                 '2-5-5': '0.6875rem',
                 '4-5': '1.125rem',
                 '5': '1.4375rem',
                 '6-5': '1.625rem',
+                '6-6': '1.6875rem',
                 7: '1.875rem',
                 9: '2.25rem',
                 13: '3.3125rem',
@@ -102,6 +121,7 @@ module.exports = {
                 29: '7.25rem',
                 35: '8.75rem',
                 37: '9.0625rem',
+                38: '9.375rem',
                 39: '9.875rem',
                 75: '18.75rem',
                 91: '22.75rem',
@@ -127,6 +147,14 @@ module.exports = {
             lineHeight: {
                 ...defaultTheme.lineHeight,
                 21: '1.3125rem',
+            },
+            zIndex: {
+                ...defaultTheme.zIndex,
+                999999: 999999,
+            },
+            borderRadius: {
+                ...defaultTheme.borderRadius,
+                '4xl': '2rem',
             },
         },
     },

@@ -2,6 +2,8 @@ import Vue from 'vue'
 import { DashboardApi } from '@/api/dashboardApi'
 import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
 import get from 'lodash/get'
+import $axios from '@/api/apiConnection'
+import { dashboardModel } from '@/models/instances'
 
 const ACTIVE_DASHBOARD = 'active-dashboard'
 
@@ -26,6 +28,7 @@ const types = {
     RESET_ACTIVE_DASHBOARD: 'RESET_ACTIVE_DASHBOARD',
     SET_LOADING: 'SET_LOADING',
     UPDATE_CURRENT_DASHBOARD: 'UPDATE_CURRENT_DASHBOARD',
+    MAP_ALL_WIDGETS: 'MAP_ALL_WIDGETS',
 }
 const state = {
     allDashboards: [],
@@ -33,6 +36,7 @@ const state = {
     activeWidgetGroup: null,
     editMode: false,
     loadingData: false,
+    allWidgets: [],
 }
 
 const mutations = {
@@ -54,10 +58,7 @@ const mutations = {
     [types.SET_ACTIVE_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
         localStorage.setItem(ACTIVE_DASHBOARD, JSON.stringify(dashboard))
-        if (!dashboard) {
-            return
-        }
-        if (!dashboard.DashboardLayoutID) {
+        if (dashboard && !dashboard.DashboardLayoutID) {
             dashboard.DashboardLayoutID = DEFAULT_LAYOUT_ID
         }
     },
@@ -82,6 +83,9 @@ const mutations = {
     },
     [types.UPDATE_CURRENT_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
+    },
+    [types.MAP_ALL_WIDGETS]: (state, widgets) => {
+        state.allWidgets = widgets
     },
 }
 
@@ -136,6 +140,16 @@ const actions = {
     async updateCurrentDashboard({ commit }, dashboard) {
         commit(types.UPDATE_CURRENT_DASHBOARD, dashboard)
     },
+    async mapAllDashboardsWidgets({ commit, state }) {
+        let widgets = []
+        
+        for (let dashboard of state.allDashboards) {
+            const { WidgetGroupList } = await DashboardApi.find(dashboard.DashboardID)
+            const groupWidgets = WidgetGroupList.map(group => group.WidgetList)
+            widgets = widgets.concat(...groupWidgets)
+        }
+        commit(types.MAP_ALL_WIDGETS, widgets)
+    },
 }
 
 const getters = {
@@ -148,6 +162,21 @@ const getters = {
     getActiveWidgetGroup: state => {
         return state.activeWidgetGroup
     },
+    getAllWidgets: state => {
+        return state.allWidgets
+    },
+    //ParameterType: 2
+    getWidgetsWithColumnTypeInt: state => {
+        const {allWidgets: widgets = []} = state
+        if (!widgets.length) {
+            return []
+        }
+        const result = []
+        widgets.forEach(widget => {
+        
+        })
+        return result
+    }
 }
 
 export default {

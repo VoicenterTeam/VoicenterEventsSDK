@@ -1,6 +1,6 @@
 <template>
     <div class="text-gray-900">
-        <div class="grid grid-cols-4 col-gap-6 lg:col-gap-12 dashboard-settings">
+        <div class="grid grid-cols-4 gap-6 lg:gap-12 dashboard-settings">
             <div class="col-span-4 border-b pb-3 md:pb-0 md:border-none md:col-span-1">
                 <div class="flex items-center mb-3">
                     <div class="flex">
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-4 col-gap-6 lg:col-gap-12 mt-6 sm:mt-12">
+        <div class="grid grid-cols-4 gap-6 lg:gap-12 mt-6 sm:mt-12">
             <div class="col-span-4 md:col-span-1 mb-4 md:mb-0">
                 <LayoutManagementSelect v-on="$listeners"/>
             </div>
@@ -144,7 +144,7 @@
     import WidgetGroupManagement from '@/views/DashboardSettings/components/WidgetGroupManagement'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
     import { DEFAULT_GROUP_KEYS, PRIMARY_COLOR_KEY } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    
+
     export default {
         components: {
             LayoutLogo,

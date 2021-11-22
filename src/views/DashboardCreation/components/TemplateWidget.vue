@@ -35,7 +35,7 @@
     import get from 'lodash/get'
     import { templateIcons } from '@/enum/widgetDataTypes'
     import TemplateWidgetInfoDialog from '@/views/DashboardCreation/components/TemplateWidgetInfoDialog'
-    
+
     export default {
         components: {
             TemplateWidgetInfoDialog,

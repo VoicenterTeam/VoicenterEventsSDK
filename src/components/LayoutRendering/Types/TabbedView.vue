@@ -5,7 +5,7 @@
                 <div v-if="editMode"
                      :key="tab.WidgetGroupID"
                      class="flex items-center justify-between px-2 pb-2">
-                    <base-input v-model="tab.WidgetGroupTitle"/>
+                    <base-outline-input v-model="tab.WidgetGroupTitle"/>
                     <edit-group-buttons :widget-groups="tabs"
                                         :widget-group="tab"
                                         v-on="$listeners">

@@ -19,7 +19,7 @@
 <script>
     import { Popover } from 'element-ui'
     import TemplateWrapper from '@/views/DashboardCreation/components/TemplateWrapper'
-    
+
     export default {
         inheritAttrs: false,
         components: {

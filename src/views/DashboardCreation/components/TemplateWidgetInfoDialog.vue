@@ -46,9 +46,9 @@
 <script>
     import get from 'lodash/get'
     import Modal from '@/components/Common/Modal'
-    
+
     const ONE_REM_IN_PX = 16
-    
+
     export default {
         inheritAttrs: false,
         components: {
@@ -104,27 +104,27 @@
     .ellipse-wrapper {
         @apply w-9 h-9 rounded-full bg-primary-50;
         content: '';
-        
+
         span {
             @apply hidden;
         }
-        
+
         &:hover {
             span {
                 @apply flex;
             }
-            
+
             .ellipse-outer {
                 @apply bg-primary;
             }
         }
     }
-    
+
     .ellipse-outer {
         @apply w-5 h-5 rounded-full;
         content: '';
     }
-    
+
     .ellipse-inner {
         @apply w-3 h-3 rounded-full bg-primary;
         content: '';

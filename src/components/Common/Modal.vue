@@ -6,6 +6,7 @@
         <div
             v-show="visible"
             class="el-dialog__wrapper"
+            :class="wrapperClasses"
             @mousedown.self="handleWrapperClick">
             <div role="dialog"
                  :key="key"
@@ -20,9 +21,12 @@
                                       class="h-14"/>
                     <div class="header-title border-gray-300 truncate flex-1 py-3 px-6 overflow-hidden"
                          :class="$rtl.isRTL ? 'border-l-2' : 'border-r-2'">
-                        <div class="flex items-center justify-between">
+                        <div class="flex w-full items-center"
+                             :class="titleCentered ? 'justify-center' : 'justify-between'">
                             <slot name="title">
-                                <span class="el-dialog__title">{{ title }}</span>
+                                <span class="el-dialog__title">
+                                    {{ $t(title) }}
+                                </span>
                             </slot>
                             <slot name="additional-action"/>
                         </div>
@@ -48,14 +52,18 @@
 
 <script>
     import Popup from 'element-ui/src/utils/popup';
+    import 'element-ui/lib/theme-chalk/dialog.css'
     import Migrating from 'element-ui/src/mixins/migrating';
     import emitter from 'element-ui/src/mixins/emitter';
-    import 'element-ui/lib/theme-chalk/dialog.css'
     
     export default {
         name: 'Modal',
         mixins: [Popup, emitter, Migrating],
         props: {
+            titleCentered: {
+                type: Boolean,
+                default: false,
+            },
             title: {
                 type: String,
                 default: '',
@@ -90,7 +98,7 @@
             },
             width: {
                 type: String,
-                default: '60%'
+                default: '60%',
             },
             customClass: {
                 type: String,
@@ -106,6 +114,10 @@
                 default: false,
             },
             destroyOnClose: Boolean,
+            wrapperClasses: {
+                type: String,
+                default: '',
+            },
         },
         data() {
             return {
@@ -219,8 +231,16 @@
         },
     }
 </script>
-<style>
+<style lang="scss">
 .modal-header__wrapper {
     @apply border-b-2 border-gray-300;
+}
+
+.dialog-fade-enter-active {
+    animation: dialog-fade-in 0.3s
+}
+
+.dialog-fade-leave-active {
+    animation: dialog-fade-out 0.3s
 }
 </style>
