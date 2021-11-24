@@ -137,7 +137,6 @@
                 this.$emit('on-reorder-widget-group', objToEmit)
             },
             tryAddAllWidgetsFromCategory(category) {
-                this.showConfirmDialog = true
                 this.selectedCategory = category
             },
             addAllWidgetsFromCategory() {
