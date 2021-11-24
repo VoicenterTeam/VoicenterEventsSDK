@@ -26,24 +26,34 @@
             <transition-group name="flip">
                 <template v-if="!onViewTemplate">
                     <el-form class="flex flex-row items-center my-8"
-                             key="el-form">
+                             key="el-form" :model="model" ref="dashboardCreationForm">
                         <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
-                            <span class="label-input">
+                            <span class="label-input label-dashboard-name">
                                 {{ $t('Set the Name') }}
                             </span>
                             <div class="lg:w-64 lg:mx-4">
-                                <el-input v-model="model.DashboardTitle"/>
+                                <el-form-item
+                                    prop="DashboardTitle"
+                                    :rules="[
+                                        { required: true, message: $t('Validation required', { field: $t('Dashboard Name') }) }
+                                    ]"
+                                >
+                                    <el-input type="DashboardTitle" v-model="model.DashboardTitle" />
+                                    <span class="el-form-item__error" slot="error" slot-scope="error">&nbsp;{{error.error}}</span>
+                                </el-form-item>
                             </div>
                         </div>
                         <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
-                             class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto">
+                             class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto layout-block">
                             <span class="label-input flex-wrap">
                                 {{ $t('Choose Layout') }}
                             </span>
                             <div>
-                                <LayoutSelect class="w-64 lg:mx-4"
-                                              @on-chose-layout="onChoseLayout"
-                                              :display-label="false"
+                                <LayoutSelect
+                                    :active-layout="{ LayoutID: model.DashboardLayoutID }"
+                                    class="w-64 lg:mx-4"
+                                    @on-chose-layout="onChoseLayout"
+                                    :display-label="false"
                                 />
                             </div>
                         </div>
@@ -58,13 +68,14 @@
                         <fade-transition mode="out-in"
                                          :duration="transitionDuration">
                             <TemplatesPreview class="col-span-3"
-                                              key="TemplatesPreview"
-                                              @on-submit="tryAddDashboard"
-                                              :selected-template="selectedTemplate"
-                                              @on-select-template="onSelectTemplate"
-                                              @on-detailed-view="onDetailedView"
-                                              v-if="dashboardTemplateCategory && dashboardTemplateCategories"
-                                              :dashboard-category="selectedCategory"/>
+                                key="TemplatesPreview"
+                                @on-submit="tryAddDashboard"
+                                :selected-template="selectedTemplate"
+                                @on-select-template="onSelectTemplate"
+                                @on-detailed-view="onDetailedView"
+                                v-if="dashboardTemplateCategory && dashboardTemplateCategories"
+                                :dashboard-category="selectedCategory"
+                                :disableCreateBlankBtn="disableCreateBlankBtn" />
                         </fade-transition>
                     </div>
                 </template>
@@ -86,9 +97,9 @@
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"
-                             :loading="loading"
-                             :disabled="!selectedTemplate"
-                             @click="tryAddDashboard">
+                        :loading="loading"
+                        :disabled="!isFormValid"
+                        @click="tryAddDashboard">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
@@ -157,14 +168,15 @@
                 loading: false,
                 model: {
                     DashboardTitle: 'New Dashboard',
-                    DashboardLayoutID: 1,
+                    DashboardLayoutID: '',
+                    DashboardTemplateID: null
                 },
                 accountLayouts: [],
                 dashboardTemplateCategories: [],
                 dashboardTemplateCategory: null,
                 selectedTemplate: false,
                 showConfirmDialog: false,
-                onViewTemplate: false,
+                onViewTemplate: false
             }
         },
         computed: {
@@ -180,6 +192,12 @@
             activeLanguage() {
                 return this.$store.state.lang.language
             },
+            disableCreateBlankBtn () {
+                return !this.model.DashboardTitle
+            },
+            isFormValid () {
+                return Object.values(this.model).every(el => el !== null && el !== '')
+            }
         },
         methods: {
             redirectBack() {
@@ -188,6 +206,7 @@
             onDiscard() {
                 this.selectedTemplate = false
                 this.onViewTemplate = false
+                this.redirectBack()
             },
             onChoseLayout(layout) {
                 this.model.DashboardLayoutID = layout.LayoutID
@@ -297,10 +316,10 @@
                     return false
                 }
             },
-            newDashboard() {
-                this.getAccountLayouts()
+            async newDashboard() {
+                await this.getAccountLayouts()
                 this.model.DashboardLayoutID = this.dashboardLayoutID
-            },
+            }
         },
         async mounted() {
             this.loading = true
@@ -312,12 +331,20 @@
         watch: {
             async activeLanguage() {
                 await this.getDashboardTemplates()
-            },
-        },
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
 .label-input {
     @apply whitespace-nowrap text-gray-900 text-main-sm font-medium truncate;
+}
+.label-dashboard-name, .layout-block {
+    @apply mb-5.5;
+}
+@media (max-width: 640px) {
+    .label-dashboard-name {
+        @apply mb-0;
+    }
 }
 </style>
