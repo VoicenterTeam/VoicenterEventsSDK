@@ -56,7 +56,7 @@
                             </base-button>
                             <base-button fixed-width="w-37"
                                          :loading="loading"
-                                         @click="onSubmit()">
+                                         @click="onSubmit(true)">
                                 <div class="flex items-center">
                                     <IconSave class="mx-1"/>
                                     <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
@@ -136,7 +136,7 @@
                 this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.currentDashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
             },
-            async onSubmit() {
+            async onSubmit(goBack = false) {
                 try {
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
@@ -154,6 +154,9 @@
                     const { DashboardID } = this.model
                     const dashboard = await DashboardApi.find(DashboardID)
                     await this.updateState(dashboard)
+                    if (goBack) {
+                        this.$router.push('/')
+                    }
                 } catch (e) {
                     console.warn(e)
                 } finally {
