@@ -1,9 +1,13 @@
 <template>
     <div class="rounded-lg pt-2"
          v-if="chartVisibility">
-        <highcharts :options="chartOptions"
-                    :callback="onInitChartCallback"
-                    class="chart-content_wrapper"/>
+        <highcharts
+            ref="funnel-3d-chart"
+            class="chart-content_wrapper"
+            :options="chartOptions"
+            :callback="onInitChartCallback"
+            :updateArgs="[true, true]"
+        />
     </div>
 </template>
 <script>
@@ -50,10 +54,15 @@
                 this.chartInstance = chart
             },
             tryPrintChart() {
-                this.chartInstance.print()
+                const divToPrint = this.$el.children[0]
+                const newWin = window.open();
+                newWin.document.write(divToPrint.innerHTML);
+                newWin.document.close();
+                newWin.focus();
+                newWin.print();
             },
             tryDownloadChart(type) {
-                this.chartInstance.exportChart({
+                this.$refs['funnel-3d-chart'].chart.exportChart({
                     type: type,
                 })
             },
