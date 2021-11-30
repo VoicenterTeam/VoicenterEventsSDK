@@ -142,11 +142,12 @@
             },
             async initWindowGrid() {
                 await this.nextTick()
-                this.tryDestroyGrid()
+                // this.tryDestroyGrid()
                 
                 const gridOptions = {
                     acceptWidgets: true,
                 }
+                console.log(this.$refs.widgetListContainer, 'this.$refs.widgetListContainer')
                 
                 this.grid = window.GridStack.init(gridOptions, this.$refs.widgetListContainer)
                 
@@ -156,7 +157,9 @@
                 
                 this.grid.movable('.grid-stack-item', this.editable)
                 this.grid.resizable('.grid-stack-item', this.editable)
+                console.log(window)
                 window.grids.push(this.grid)
+                // console.log(window)
                 
                 this.resizeEventEmitter()
                 this.onDragStartEvent()
@@ -176,20 +179,21 @@
                 grid.destroy()
                 window.grids.splice(index, 1)
             },
-            addWidgetsToGrid(widgets) {
-                this.$nextTick(() => {
-                    widgets.forEach((widget) => {
-                        this.inViewById[widget.WidgetID] = true
-                        const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
+            // async addWidgetsToGrid(widgets) {
+            //     this.$nextTick(() => {
+            //         widgets.forEach((widget) => {
+            //             this.inViewById[widget.WidgetID] = true
+            //             const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
                         
-                        if (!isPresent) {
-                            return
-                        }
-                        
-                        this.grid.makeWidget(`#${widget.WidgetID}`)
-                    })
-                })
-            },
+            //             if (!isPresent || Object.keys(isPresent).length === 0) {
+            //                 return
+            //             }
+            //             // this.$nextTick(() => {
+            //             this.grid.makeWidget(`#${widget.WidgetID}`)
+            //             // })
+            //         })
+            //     })
+            // },
             onDragStartEvent() {
                 this.grid.on('dragstart', () => {
                     this.onMousedown()
@@ -201,6 +205,9 @@
             },
             isWidgetModalOpen() {
                 let bodyElement = document.body
+                if (bodyElement.classList.length) {
+                    return false
+                }
                 return bodyElement.classList.contains('el-popup-parent--hidden')
             },
             initIntersectionObserver() {
@@ -235,11 +242,19 @@
             },
             
         },
-        mounted() {
-            this.initWindowGrid()
+        async mounted() {
+            // this.tryDestroyGrid()
+            // await this.initWindowGrid()
+            // console.log(this.widgets, 'qwfqwfqwf')
+            await this.initWindowGrid()
             
-            bus.$on('added-widgets', (widgets) => {
-                this.addWidgetsToGrid(widgets)
+            
+            bus.$on('added-widgets', async (widgets) => {
+                // window.grids = []
+                await this.initWindowGrid()
+                // await this.addWidgetsToGrid(widgets)
+                // console.log(this.grid, 'this.grid')
+                // GridStack.update()
             })
         },
         watch: {
