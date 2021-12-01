@@ -43,11 +43,11 @@
                         :fixed="column.fixed || false"
                         :key="column.prop"
                         :label="$t(column.prop) || column.label"
-                        :min-width="column.minWidth || columnMinWidth"
+                        :min-width="column.minWidth || columnMinWidthData"
                         :sortable="true"
                         :type="column.type"
                         v-bind="column"
-                        v-for="(column, index) in renderedColumns">
+                        v-for="column in renderedColumns">
                         <template slot="header">
                             <div class="flex flex-1 w-full break-normal">
                                 <slot :column="column" name="header_title">
@@ -178,6 +178,7 @@
                 tableId,
                 screenWidth: screen.width,
                 showManageColumns: true,
+                columnMinWidthData: this.columnMinWidth
             }
         },
         computed: {
@@ -357,19 +358,19 @@
             },
             adaptColumnWidth(scale, pageWidth) {
                 if (scale == 0.9) {
-                    this.columnMinWidth = 150
+                    this.columnMinWidthData = 150
                     return
                 }
                 if (scale == 0.8) {
-                    this.columnMinWidth = 130
+                    this.columnMinWidthData = 130
                     return
                 }
                 if (scale == 0.75) {
-                    this.columnMinWidth = 120
+                    this.columnMinWidthData = 120
                     return
                 }
                 if (scale == 0.67 || scale < 0.34) {
-                    this.columnMinWidth = 90
+                    this.columnMinWidthData = 90
                     return
                 }
                 return (this.screenWidth / pageWidth).toFixed(2) * 170
