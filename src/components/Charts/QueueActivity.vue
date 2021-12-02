@@ -1,9 +1,13 @@
 <template>
     <div class="bg-transparent rounded-lg pt-2"
          v-if="chartVisibility">
-        <highcharts :options="chartData"
-                    :callback="onInitChartCallback"
-                    class="chart-content_wrapper"/>
+        <highcharts
+            ref="queue-activity"
+            class="chart-content_wrapper"
+            :options="chartData"
+            :callback="onInitChartCallback"
+            :updateArgs="[true, true]"
+        />
     </div>
 </template>
 <script>
@@ -62,10 +66,15 @@
                 this.chartInstance = chart
             },
             tryPrintChart() {
-                this.chartInstance.print()
+                const divToPrint = this.$el.children[0]
+                const newWin = window.open();
+                newWin.document.write(divToPrint.innerHTML);
+                newWin.document.close();
+                newWin.focus();
+                newWin.print();
             },
             tryDownloadChart(type) {
-                this.chartInstance.exportChart({
+                this.$refs['queue-activity'].chart.exportChart({
                     type: type,
                 })
             },
