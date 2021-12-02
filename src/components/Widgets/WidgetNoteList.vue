@@ -8,7 +8,7 @@
                     v-if="creationMode"/>
             </div>
         </modal>
-        <div class="flex flex-row justify-between" v-for="note in fetchNotes">
+        <div class="flex flex-row justify-between" v-for="(note, index) in fetchNotes" :key="index">
             <div class="border p-2 w-48 text-center">
                 {{getFormattedDate(note.date)}}
             </div>

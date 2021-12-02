@@ -9,6 +9,7 @@
 	z-index: $z-index-modal;
 	font-family: $base-font-family;
 	line-height: 24px;
+    z-index: 9999;
 }
 .redactor-modal {
 	position: relative;
