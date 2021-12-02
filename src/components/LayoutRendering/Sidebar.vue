@@ -1,30 +1,32 @@
 <template>
     <div class="flex sidebar-tabs__container justify-between w-full">
         <div class="w-full flex items-center overflow-x-auto">
-            <div v-if="showTabs"
-                 class="tab-wrapper px-3 lg:px-10 text-main-lg cursor-pointer"
-                 v-for="(group, index) in widgetGroupList"
-                 @click="switchTab(group)">
-                <div></div>
-                <div class="flex justify-between w-full items-center"
-                     :key="`edit-${group.WidgetGroupID}`">
-                    <div class="whitespace-no-wrap tab-name"
-                         :class="[{'active': isActiveGroup(group)}, $rtl.isRTL ? 'ml-4' : 'mr-4']">
-                        {{ widgetGroupName(group, index) }}
+            <template v-if="showTabs">
+                <div
+                    class="tab-wrapper px-3 lg:px-10 text-main-lg cursor-pointer"
+                    v-for="(group, index) in widgetGroupList"
+                    @click="switchTab(group)" :key="index">
+                    <div></div>
+                    <div class="flex justify-between w-full items-center"
+                        :key="`edit-${group.WidgetGroupID}`">
+                        <div class="whitespace-no-wrap tab-name"
+                            :class="[{'active': isActiveGroup(group)}, $rtl.isRTL ? 'ml-4' : 'mr-4']">
+                            {{ widgetGroupName(group, index) }}
+                        </div>
+                        <ActionsTabbedView :edit-mode="editMode"
+                                        @on-remove-widget-group="onRemoveWidgetGroup(group)"
+                                        @on-edit-widget-group="onEditWidgetGroup(group)"
+                                        :key="`group-${group.WidgetGroupID}`"
+                                        :is-active-group="isActiveGroup(group)"
+                        />
                     </div>
-                    <ActionsTabbedView :edit-mode="editMode"
-                                       @on-remove-widget-group="onRemoveWidgetGroup(group)"
-                                       @on-edit-widget-group="onEditWidgetGroup(group)"
-                                       :key="`group-${group.WidgetGroupID}`"
-                                       :is-active-group="isActiveGroup(group)"
-                    />
+                    <fade-transition mode="out-in" :duration="250">
+                        <div v-if="isActiveGroup(group)"
+                            class="self-border"/>
+                        <div v-else/>
+                    </fade-transition>
                 </div>
-                <fade-transition mode="out-in" :duration="250">
-                    <div v-if="isActiveGroup(group)"
-                         class="self-border"/>
-                    <div v-else/>
-                </fade-transition>
-            </div>
+            </template>
             <div v-if="editMode && !showTabs"
                  class="px-14 text-gray-900 text-2xl">
                 {{ $t('Edit Mode') }}
