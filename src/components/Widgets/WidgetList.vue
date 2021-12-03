@@ -11,7 +11,7 @@
                  :data-id="widget.WidgetID"
                  @mousedown="onMousedown"
                  class="grid-stack-item overflow-hidden"
-                 :id="`widget-${widget.WidgetID}`"
+                 :id="widget.WidgetID"
                  v-bind="gridStackAttributes(widget)"
                  v-for="widget in widgets"
                  :key="widget.WidgetID">
@@ -142,7 +142,6 @@
             },
             async initWindowGrid() {
                 await this.nextTick()
-                this.tryDestroyGrid()
                 
                 const gridOptions = {
                     acceptWidgets: true,
@@ -176,18 +175,18 @@
                 grid.destroy()
                 window.grids.splice(index, 1)
             },
-            addWidgetsToGrid(widgets) {
-                this.$nextTick(() => {
-                    widgets.forEach((widget) => {
-                        this.inViewById[widget.WidgetID] = true
-                        const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
-                        
-                        if (!isPresent) {
-                            return
-                        }
-                        
-                        this.grid.makeWidget(`#${widget.WidgetID}`)
-                    })
+            async addWidgetsToGrid(widgets) {
+                await this.$nextTick()
+
+                widgets.forEach((widget) => {
+                    this.inViewById[widget.WidgetID] = true
+                    const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
+                    
+                    if (!isPresent) {
+                        return
+                    }
+                    
+                    this.grid.makeWidget(`#${widget.WidgetID}`)
                 })
             },
             onDragStartEvent() {
@@ -201,6 +200,9 @@
             },
             isWidgetModalOpen() {
                 let bodyElement = document.body
+                if (bodyElement.classList.length) {
+                    return false
+                }
                 return bodyElement.classList.contains('el-popup-parent--hidden')
             },
             initIntersectionObserver() {
@@ -235,11 +237,11 @@
             },
             
         },
-        mounted() {
-            this.initWindowGrid()
+        async mounted() {
+            await this.initWindowGrid()
             
-            bus.$on('added-widgets', (widgets) => {
-                this.addWidgetsToGrid(widgets)
+            bus.$on('added-widgets', async (widgets) => {
+                await this.addWidgetsToGrid(widgets)
             })
         },
         watch: {

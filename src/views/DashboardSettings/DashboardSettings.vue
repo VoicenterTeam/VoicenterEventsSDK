@@ -25,8 +25,8 @@
                                     <CopyDashboard :dashboard="activeDashboard"/>
                                     <base-button class="my-2"
                                         @click="onDiscard()"
-                                                 variant="discard"
-                                                 fixed-width="w-37">
+                                            variant="discard"
+                                            fixed-width="w-37">
                                         <div class="flex items-center">
                                             <IconDiscard class="mx-1"/>
                                             <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
@@ -46,7 +46,7 @@
                         <div class="flex-row items-center hidden md:flex">
                             <CopyDashboard :dashboard="activeDashboard"/>
                             <base-button class="mx-4"
-                                         @click="onDiscard()"
+                                         @click="onDiscard(true)"
                                          variant="discard"
                                          fixed-width="w-37">
                                 <div class="flex items-center">
@@ -56,7 +56,7 @@
                             </base-button>
                             <base-button fixed-width="w-37"
                                          :loading="loading"
-                                         @click="onSubmit()">
+                                         @click="onSubmit(true)">
                                 <div class="flex items-center">
                                     <IconSave class="mx-1"/>
                                     <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
@@ -123,7 +123,7 @@
             async onDiscard(goBack = false) {
                 if (goBack) {
                     await this.$store.dispatch('dashboards/getDashboards')
-                    await this.$router.push('/')
+                    this.$router.push('/')
                     return
                 }
                 this.discardLayoutChanges()
@@ -136,7 +136,7 @@
                 this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.currentDashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
             },
-            async onSubmit() {
+            async onSubmit(goBack = false) {
                 try {
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
@@ -154,6 +154,9 @@
                     const { DashboardID } = this.model
                     const dashboard = await DashboardApi.find(DashboardID)
                     await this.updateState(dashboard)
+                    if (goBack) {
+                        this.$router.push('/')
+                    }
                 } catch (e) {
                     console.warn(e)
                 } finally {

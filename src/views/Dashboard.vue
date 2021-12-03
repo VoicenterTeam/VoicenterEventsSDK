@@ -30,8 +30,8 @@
             <div class="dashboard-container min-h-screen mb-10"
                  v-if="dashboard"
             >
-                <fade-transition :duration="150" mode="out-in">
-                    <sidebar v-if="(showTabs || editMode) && showSidebar"
+                <fade-transition :duration="300" mode="out-in">
+                    <sidebar v-if="(showTabs || editMode) && showSidebar && !onFullScreen"
                              :active-tab="activeTab"
                              :widget-group-list="activeDashboardData.WidgetGroupList"
                              @switch-tab="(tab) => switchTab(tab)"
@@ -45,7 +45,7 @@
                     />
                 </fade-transition>
                 <div class="flex justify-center w-full">
-                    <div v-if="showTabs || editMode"
+                    <div v-if="(showTabs || editMode) && !onFullScreen"
                          class="w-20 bg-gray-400 text-gray-600 hover:text-primary h-3 w-20 rounded-b-2xl text-white cursor-pointer flex items-center justify-center"
                          @click="toggleSidebarState">
                         <IconArrowUp v-if="showSidebar"/>
@@ -232,6 +232,13 @@
             },
             triggerFullScreenMode() {
                 this.onFullScreen = !this.onFullScreen
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen()
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen()
+                    }
+                }
             },
             onEditWidgetGroup(group) {
                 this.$nextTick(() => {

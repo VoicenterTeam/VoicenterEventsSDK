@@ -3,7 +3,7 @@
         <transition-group name="flip-list">
             <div :class="{'editable-widgets':editMode}"
                  v-for="(widgetGroup, index) in widgetGroupList"
-                 :key="index"
+                 :key="widgetGroup.WidgetGroupTitle"
                  class="widget--group_section mb-3 relative">
                 <div class="widget--group_border"/>
                 <div class="p-2">
