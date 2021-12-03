@@ -10,9 +10,11 @@
                     <div v-if="editMode"
                          class="flex items-center justify-between pb-2">
                         <base-outline-input v-model="widgetGroup.WidgetGroupTitle"/>
-                        <edit-group-buttons :widgetGroup="widgetGroup"
-                                            v-bind="$attrs"
-                                            v-on="$listeners">
+                        <edit-group-buttons
+                            :widgetGroup="widgetGroup"
+                            v-bind="$attrs"
+                            v-on="$listeners"
+                            @on-reorder-widget-group="onReorderWidgetGroup">
                         </edit-group-buttons>
                     </div>
                     <div v-else class="flex items-center justify-between pb-2">
@@ -24,12 +26,14 @@
                                          v-on="$listeners"
                                          :group="widgetGroup"/>
                     </div>
-                    <widget-list :editable="editMode"
-                                 :widget-group="widgetGroup"
-                                 :widgetTemplates="widgetTemplates"
-                                 :widgets="widgetGroup.WidgetList"
-                                 v-bind="$attrs"
-                                 v-on="$listeners"/>
+                    <widget-list
+                        v-if="showComponent"
+                        :editable="editMode"
+                        :widget-group="widgetGroup"
+                        :widgetTemplates="widgetTemplates"
+                        :widgets="widgetGroup.WidgetList"
+                        v-bind="$attrs"
+                        v-on="$listeners"/>
                 </div>
             </div>
         </transition-group>
@@ -64,11 +68,24 @@
                 default: false,
             },
         },
+        data () {
+            return {
+                showComponent: true
+            }
+        },
         computed: {
             getStyles() {
                 return this.$store.getters['layout/widgetGroupTitleStyles']
             },
         },
+        methods: {
+            onReorderWidgetGroup () {
+                this.showComponent = false
+                this.$nextTick(() => {
+                    this.showComponent = true
+                })
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>

@@ -71,7 +71,7 @@
                                    @remove-widget="(data) => removeWidget(data.widget, data.group)"
                                    @switch-tab="(tab) => switchTab(tab)"
                                    @update-widget="(data) => updateWidget(data.widget, data.group)"
-                                   @on-reorder-widget-group="onReorderWidgetGroup"
+                                   @on-reorder-widget-group="(data) => onReorderWidgetGroup(data)"
                         />
                     </fade-transition>
                 </div>

@@ -8,14 +8,19 @@
             </h3>
         </template>
         <div class="py-4">
-            <DraggableList :value="widgetGroups"
-                           @change="(ev) => onGroupListChange(ev, widgetGroups)"
-                           group="widgets">
-                <div :key="widgetGroup.WidgetGroupID"
+            <DraggableList
+                v-if="showDraggableList"
+                :value="widgetGroups"
+                @change="(ev) => onGroupListChange(ev)"
+                group="widgets">
+                <div :key="index"
                      class="w-full flex justify-between items-center items my-1"
-                     v-for="widgetGroup in widgetGroups">
+                     v-for="(widgetGroup, index) in widgetGroups">
                     <div :style="getStyles" class="widget-item p-1">
-                        {{ $t(widgetGroup.WidgetGroupTitle) }}
+                        {{ widgetGroup.WidgetGroupTitle || `# ${widgetGroup.WidgetGroupID}` }}
+                    </div>
+                    <div class="flex cursor-pointer">
+                        <IconDragAndDrop class="text-gray-500 hover:text-primary"/>
                     </div>
                 </div>
             </DraggableList>
@@ -66,6 +71,7 @@
             return {
                 widgetGroups: [],
                 modalWidth: '700px',
+                showDraggableList: false
             }
         },
         computed: {
@@ -88,6 +94,8 @@
                 let { newIndex: newIndex, oldIndex: oldIndex } = eventData
                 
                 this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0])
+
+                this.$emit('reorder-widgets-in-modal')
             },
         },
         watch: {
@@ -99,6 +107,11 @@
                 },
             },
         },
+        mounted () {
+            this.$nextTick(() => {
+                this.showDraggableList = true
+            })
+        }
     }
 </script>
 <style lang="scss" scoped>
