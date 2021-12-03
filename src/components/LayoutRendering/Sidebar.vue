@@ -5,7 +5,8 @@
                 <div
                     class="tab-wrapper px-3 lg:px-10 text-main-lg cursor-pointer"
                     v-for="(group, index) in widgetGroupList"
-                    @click="switchTab(group)" :key="index">
+                    @click="switchTab(group)"
+                    :key="index">
                     <div></div>
                     <div class="flex justify-between w-full items-center"
                         :key="`edit-${group.WidgetGroupID}`">
