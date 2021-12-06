@@ -131,7 +131,7 @@ const getters = {
     getTemplateToPreview: state => state.templateToPreview,
     getTemplatesToSetup: state => state.templates,
     getSummaries: state => state.summaries,
-    getTemplateToEdit: state => state.templateToEdit,
+    getTemplateToEdit: state => state.templateToEdit
 }
 
 export default {

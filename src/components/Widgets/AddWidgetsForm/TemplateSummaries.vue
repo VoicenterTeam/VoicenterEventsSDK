@@ -77,6 +77,9 @@
         },
         methods: {
             onSubmit() {
+                this.templates.forEach(el => {
+                    console.log(el.DefaultWidgetConfig)
+                })
                 this.$emit('on-submit', this.templates)
             },
             getTemplateIcon(templateDataTypeID) {

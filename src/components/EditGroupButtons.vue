@@ -36,13 +36,14 @@
                             class="text-red cursor-pointer hover:text-red-focus mx-2">
                 </IconDelete>
             </el-tooltip>
-            <AddWidgetDialog :visible.sync="showAddWidgetDialog"
-                             v-if="showAddWidgetDialog"
-                             :widget-group="widgetGroup"
-                             v-on="$listeners"
-                             @try-store-category="tryAddAllWidgetsFromCategory"
-                             @on-submit="showAddWidgetDialog = false"
-                             @on-cancel="showAddWidgetDialog = false"
+            <AddWidgetDialog
+                :visible.sync="showAddWidgetDialog"
+                v-if="showAddWidgetDialog"
+                :widget-group="widgetGroup"
+                v-on="$listeners"
+                @try-store-category="tryAddAllWidgetsFromCategory"
+                @on-submit="showAddWidgetDialog = false"
+                @on-cancel="showAddWidgetDialog = false"
             />
         </div>
         <ConfirmDialog v-if="showConfirmDialog"

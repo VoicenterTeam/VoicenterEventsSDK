@@ -30,7 +30,7 @@
                 <div class="px-6">
                     <p class="text-xs leading-4 text-gray-900 font-bold mb-1">{{ getSummaryActions }}</p>
                     <p class="text-xs leading-4 text-gray-900">
-                        <span v-for="(tQuantity, tName) in getSummaryTexts">
+                        <span v-for="(tQuantity, tName) in getSummaryTexts" :key="tName">
                             <template v-if="tQuantity">
                                 {{ tName }}
                                 <b> {{ $t('x') }}{{ tQuantity }}</b>
