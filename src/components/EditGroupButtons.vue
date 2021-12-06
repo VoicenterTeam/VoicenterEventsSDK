@@ -76,10 +76,11 @@
             </template>
         </ConfirmDialog>
         <ReorderWidgetGroupDialog v-if="showReorderLayoutDialog"
-                                  :widget-group-list="activeDashboardData.WidgetGroupList"
-                                  :visible.sync="showReorderLayoutDialog"
-                                  @on-cancel="showReorderLayoutDialog = false"
-                                  @on-submit="showReorderLayoutDialog = false"
+            :widget-group-list="activeDashboardData.WidgetGroupList"
+            :visible.sync="showReorderLayoutDialog"
+            @on-cancel="showReorderLayoutDialog = false"
+            @on-submit="showReorderLayoutDialog = false"
+            @reorder-widgets-in-modal="reorderWidgetsInModal"
         />
     </div>
 </template>
@@ -137,7 +138,6 @@
                 this.$emit('on-reorder-widget-group', objToEmit)
             },
             tryAddAllWidgetsFromCategory(category) {
-                this.showConfirmDialog = true
                 this.selectedCategory = category
             },
             addAllWidgetsFromCategory() {
@@ -162,6 +162,9 @@
             tryReorderWidgetGroups() {
                 this.showReorderLayoutDialog = !this.showReorderLayoutDialog
             },
+            reorderWidgetsInModal () {
+                this.onMove('move')
+            }
         },
     }
 </script>

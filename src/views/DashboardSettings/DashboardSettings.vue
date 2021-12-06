@@ -25,8 +25,8 @@
                                     <CopyDashboard :dashboard="activeDashboard"/>
                                     <base-button class="my-2"
                                         @click="onDiscard()"
-                                                 variant="discard"
-                                                 fixed-width="w-37">
+                                            variant="discard"
+                                            fixed-width="w-37">
                                         <div class="flex items-center">
                                             <IconDiscard class="mx-1"/>
                                             <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
@@ -46,7 +46,7 @@
                         <div class="flex-row items-center hidden md:flex">
                             <CopyDashboard :dashboard="activeDashboard"/>
                             <base-button class="mx-4"
-                                         @click="onDiscard()"
+                                         @click="onDiscard(true)"
                                          variant="discard"
                                          fixed-width="w-37">
                                 <div class="flex items-center">
@@ -123,7 +123,7 @@
             async onDiscard(goBack = false) {
                 if (goBack) {
                     await this.$store.dispatch('dashboards/getDashboards')
-                    await this.$router.push('/')
+                    this.$router.push('/')
                     return
                 }
                 this.discardLayoutChanges()
