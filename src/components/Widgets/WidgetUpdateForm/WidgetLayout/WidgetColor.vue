@@ -2,7 +2,7 @@
     <div class="flex items-center">
         <slot>
             <IconColorPicker class="w-6 h-6"
-                             :style="getIndicatorStyles(color)"/>
+                             :style="getIndicatorStyles(value)"/>
         </slot>
         <span class="px-1 text-main-sm">
             {{ $t('widget.settings.color.' + option) }}
@@ -10,7 +10,7 @@
         <color-picker
             class="mx-2 mt-1-5"
             show-alpha
-            v-model="color"
+            v-model="value"
             :predefine="predefinedColors"/>
     </div>
 </template>
@@ -23,7 +23,7 @@ export default {
         ColorPicker
     },
     props: [
-        'color',
+        'value',
         'option',
         'predefinedColors'
     ],
