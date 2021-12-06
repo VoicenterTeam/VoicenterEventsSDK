@@ -1,5 +1,5 @@
 <template>
-    <draggable class="flex -mx-2"
+    <draggable class="flex-mx-2"
                tag="div"
                v-bind="attributes"
                v-on="$listeners">

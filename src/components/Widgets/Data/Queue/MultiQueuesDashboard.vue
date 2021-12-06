@@ -151,6 +151,7 @@
         computed: {
             fetchTableData() {
                 let tableData = this.tableData
+                tableData.map(el => el.q_name = this.getQueueName(el.queue_id))
                 
                 if (this.displayQueueAsRows) {
                     let visibleRows = this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
@@ -291,12 +292,13 @@
                             'MaxRingTime': 0,
                             'NotInSLACount': 0,
                             'queue_id': Number(queueID),
+                            'q_name': ''
                         }
                         data.push(objectToAppend)
                     })
                     
                     let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsRows, showStatsInPercentage)
-                    
+
                     availableColumns = result.columns
                     data = result.data
                     
@@ -312,6 +314,7 @@
                         columns.push(columnData)
                         this.searchableFields.push(column)
                     }
+                    this.searchableFields.push('q_name')
                     
                     this.columns = columns
                     this.tableData = data
