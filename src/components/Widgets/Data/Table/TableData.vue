@@ -28,7 +28,7 @@
                 :columnsWithPercentage="columnsWithPercentage"
                 @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
-                    <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
+                    <div v-if="row.Recording" v-html="replaceLabelStringToIcon(row.Recording)" />
                     <div v-else>{{$t('N/A')}}</div>
                 </template>
                 <template v-slot:pagination>
@@ -99,6 +99,7 @@
     import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
+    import $axios from '@/api/apiConnection'
 
     export default {
         mixins: [dataTableMixin],
@@ -231,15 +232,6 @@
                     }
                 }
             },
-            getRecordingUrl(recordingLink) {
-                const div = document.createElement('div')
-                div.innerHTML = recordingLink
-                const anchor = div.querySelector('a')
-                if (anchor && anchor.href) {
-                    return anchor.href
-                }
-                return ''
-            },
             storePaginationSettings(pageSize) {
                 this.data.WidgetLayout['paginationSize'] = Number(pageSize)
                 this.$emit('on-update', this.data)
@@ -252,6 +244,10 @@
                 const pageSize = this.customPageSize
                 this.storePaginationSettings(pageSize)
             },
+            replaceLabelStringToIcon (record) {
+                const getLinkInnerHtmlWithoutLabel = record.split('>')[0]
+                return `${getLinkInnerHtmlWithoutLabel}><i class="el-icon-video-play text-3xl" />`
+            }
         },
         mounted() {
             if (this.data.DefaultRefreshInterval) {
