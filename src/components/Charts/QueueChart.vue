@@ -118,7 +118,7 @@
                         },
                     ],
                     legend: {
-                        enabled: false,
+                        enabled: true,
                     },
                 },
                 showManageQueuesDialog: false,
