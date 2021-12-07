@@ -9,7 +9,7 @@
         </span>
         <color-picker
             class="mx-2 mt-1-5"
-            show-alpha
+            color-format="hex"
             v-model="value"
             :predefine="predefinedColors"/>
     </div>
@@ -27,6 +27,11 @@ export default {
         'option',
         'predefinedColors'
     ],
+    watch: {
+        value (newV) {
+            this.$emit('input', newV)
+        }
+    },
     methods: {
         getIndicatorStyles(color) {
             return {
