@@ -61,27 +61,20 @@
                     <div class="col-span-3">
                         <LayoutPreview @on-real-time-preview="onRealTimePreview">
                             <template v-slot:actions>
-                                <div v-if="layoutNameAlreadyUsed"
-                                     class="w-full border rounded-md my-2 flex p-2 items-center text-orange-600">
-                                    <AlertTriangleIcon class="w-5 h-5"/>
-                                    <span class="mx-1">
-                                        {{ $t('Layout name already used, please use another name.') }}
-                                    </span>
-                                </div>
                                 <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
                                         <base-button @click="onDiscard(true)"
-                                                     variant="discard"
-                                                     fixed-width="w-37">
+                                            variant="discard"
+                                            fixed-width="w-37">
                                             <div class="flex items-center">
                                                 <IconDiscard class="mx-1"/>
                                                 <span class="mx-1 text-base font-bold">{{ 'Discard' }}</span>
                                             </div>
                                         </base-button>
                                         <div class="mx-2"/>
-                                        <base-button fixed-width="w-37"
-                                                     :disabled="layoutNameAlreadyUsed"
-                                                     @click="onApply()">
+                                        <base-button
+                                            fixed-width="w-37"
+                                            @click="onApply()">
                                             <div class="flex items-center">
                                                 <IconSave class="mx-1"/>
                                                 <span class="mx-1 text-base font-bold">{{ 'Apply' }}</span>
@@ -95,43 +88,82 @@
                 </div>
             </div>
         </div>
-        <ConfirmDialog :visible.sync="showConfirmDialog"
-                       :description="getPromptDescription">
+        <ConfirmDialog
+            :visible.sync="showConfirmDialog"
+            :description="getPromptDescription"
+            modalWidth="456px">
             <template v-slot:title>
-                <h3 class="text-main-2xl font-semibold text-gray-700">
+                <h3 class="text-xl font-bold text-gray-950">
                     {{ isDefaultLayout ? $t('Save Layout') : $t('Save Changes') }}
                 </h3>
             </template>
-            <template v-slot:footer-actions>
-                <slot name="footer-actions">
-                    <base-button class="mx-4"
-                                 v-if="isDefaultLayout"
-                                 @click="showConfirmDialog = false"
-                                 variant="discard"
-                                 fixed-width="w-37">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="font-semibold">{{ 'Cancel' }}</span>
+            <div v-if="!isDefaultLayout" class="py-8">
+                <div class="mb-5">
+                    <BaseRadioButton
+                        v-model="layoutForm.typeOfTheme"
+                        group-name="group1"
+                        value="newTheme"
+                        checked
+                    >
+                        {{ $t('Save as a new') }}
+                    </BaseRadioButton>
+                </div>
+                <div class="ml-6 mb-11" :class="{ 'disabled-block': layoutForm.typeOfTheme !== 'newTheme'}">
+                    <div class="flex items-center mb-3">
+                        <div class="flex">
+                            <IconExtensionsTable class="text-primary mr-2 icon"/>
+                            <div class="text font-normal">{{ $t('New Theme Name') }}</div>
                         </div>
-                    </base-button>
-                    <template v-if="!isDefaultLayout">
-                        <base-button @click="onUpdateLayout"
-                                     key="update-layout"
-                                     variant="white"
-                                     fixed-width="w-37"
-                                     :loading="updatingData">
-                            <span class="font-semibold">{{ $t('Save Changes') }}</span>
+                    </div>
+                    <el-form :model="layoutForm" ref="layoutForm">
+                        <div>
+                            <el-form-item
+                                prop="layoutName"
+                                :rules="rules.layoutName">
+                                <el-input
+                                    v-model="layoutForm.layoutName"
+                                    :placeholder="$t('New Theme Name')"
+                                    class="new-theme-input"
+                                    :disabled="layoutForm.typeOfTheme !== 'newTheme'"
+                                />
+                                <span class="el-form-item__error" slot="error" slot-scope="error">&nbsp;{{ error.error }}</span>
+                            </el-form-item>
+                        </div>
+                    </el-form>
+                </div>
+                <BaseRadioButton
+                    v-model="layoutForm.typeOfTheme"
+                    group-name="group1"
+                    value="existingTheme"
+                >
+                    {{ $t('Save changes in the existing theme') }}
+                </BaseRadioButton>
+            </div>
+            <template v-slot:footer-actions>
+                <div class="w-full flex items-center justify-center">
+                    <slot name="footer-actions">
+                        <base-button class="mr-4"
+                            @click="showConfirmDialog = false"
+                            variant="discard"
+                            fixed-width="w-30" size="lg">
+                            <div class="flex items-center">
+                                <IconDiscard class="mx-1" v-if="isDefaultLayout" />
+                                <span class="font-semibold">{{ $t('common.cancel') }}</span>
+                            </div>
                         </base-button>
-                    </template>
-                    <base-button @click="onNewLayout"
-                                 key="new-layout"
-                                 fixed-width="w-37"
-                                 :loading="storingData">
-                        <span class="font-semibold">
-                            {{ isDefaultLayout ? $t('Confirm') : $t('Save as New') }}
-                        </span>
-                    </base-button>
-                </slot>
+                        <base-button
+                            class="ml-4"
+                            @click="onNewLayout"
+                            key="new-layout"
+                            fixed-width="w-30"
+                            :loading="storingData" size="lg"
+                            :disabled="disabledForm">
+                            <span class="font-semibold">
+                                {{ isDefaultLayout ? $t('Confirm') : $t('Apply') }}
+                            </span>
+                        </base-button>
+                    </slot>
+                </div>
             </template>
         </ConfirmDialog>
     </div>
@@ -148,6 +180,8 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import LayoutPreview from '@/views/LayoutSettings/LayoutPreview'
     import LayoutWrapper from '@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'
+    import BaseRadioButton from '@/components/BaseRadioButton'
+    import merge from 'lodash/merge'
 
     export default {
         components: {
@@ -158,8 +192,17 @@
             LayoutPreview,
             LayoutWrapper,
             AlertTriangleIcon,
+            BaseRadioButton
         },
         data() {
+            let validationThemeName = (rule, value, callback) => {
+                const validationThemeName = this.layoutNames.includes(value)
+                if (validationThemeName) {
+                    callback(new Error(''))
+                } else {
+                    callback()
+                }
+            }
             return {
                 updatingData: false,
                 storingData: false,
@@ -167,23 +210,29 @@
                 layoutSettings: {},
                 showConfirmDialog: false,
                 realTimePreview: true,
+                layoutForm: {
+                   layoutName: '',
+                   typeOfTheme: 'newTheme'
+                },
+                rules: {
+                    layoutName: [
+                        { required: true, message: this.$t('Validation required', { field: this.$t('New Theme Name') }) },
+                        { validator: validationThemeName, message: this.$t('Layout name already used, please use another name.') }
+                    ]
+                },
+                disabledForm: !this.isDefaultLayout,
+                selectedLayout: {}
             }
         },
         computed: {
-            selectedLayout() {
-                return this.$store.getters['layout/getActiveLayout']
-            },
+            // selectedLayout() {
+            //     return this.$store.getters['layout/getActiveLayout']
+            // },
             allLayouts() {
                 return this.$store.getters['layout/getAllLayouts']
             },
-            additionalLayouts() {
-              return this.allLayouts.filter(layout => layout.LayoutID !== this.layoutSettings.LayoutID)
-            },
             layoutNames() {
-                return this.additionalLayouts.map(layout => layout.LayoutName)
-            },
-            layoutNameAlreadyUsed() {
-                return this.layoutNames.includes(this.layoutSettings.LayoutName)
+                return this.allLayouts.map(layout => layout.LayoutName)
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
@@ -206,6 +255,7 @@
         },
         methods: {
             onChoseLayout(layout) {
+                console.log(layout, 'layout')
                 this.layoutSettings = cloneDeep(layout)
                 this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
             },
@@ -248,21 +298,36 @@
                     this.updatingData = false
                     this.showConfirmDialog = false
                     this.editableTitle = false
+                    this.$router.push('/dashboard-settings')
                 }
             },
             async onNewLayout() {
-                try {
-                    this.storingData = true
-                    let payload = this.composePayload()
-                    delete payload.LayoutID
-                    await LayoutApi.update(payload)
-                    await this.getAccountLayouts()
-                } catch (e) {
-                    console.warn(e)
-                } finally {
-                    this.storingData = false
-                    this.showConfirmDialog = false
-                    this.editableTitle = false
+                if (this.layoutForm.typeOfTheme === 'newTheme') {
+                    let layout = {}
+                    let payload = {}
+                    try {
+                        this.storingData = true
+                        payload = this.composePayload()
+                        payload.LayoutName = this.layoutForm.layoutName
+                        delete payload.LayoutID
+                        await LayoutApi.update(payload)
+                        console.log(this.allLayouts, 'this.allLayouts')
+                    } catch (e) {
+                        console.warn(e)
+                    } finally {
+                        this.storingData = false
+                        this.showConfirmDialog = false
+                        this.editableTitle = false
+                        const newTheme = this.allLayouts.find(el => el.LayoutName === payload.LayoutName)
+                        console.log(this.allLayouts.find(el => el.LayoutName === payload.LayoutName), 'qwf')
+                        console.log(payload, 'payload', newTheme)
+                        layout = newTheme
+                        console.log(layout, 'layout')
+                        this.selectedLayout = layout
+                        this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
+                    }
+                } else {
+                    await this.onUpdateLayout()
                 }
             },
             async getAccountLayouts() {
@@ -304,9 +369,21 @@
                     }
                 })
             },
+            validateForm () {
+                this.$refs.layoutForm.validate((valid) => {
+                    if (valid) {
+                        this.disabledForm = false
+                    } else {
+                        this.disabledForm = true
+                        return false
+                    }
+                })
+            }
         },
         mounted() {
+            this.selectedLayout = this.$store.getters['layout/getActiveLayout']
             this.layoutSettings = cloneDeep(this.selectedLayout)
+            console.log(this.layoutSettings, 'this.layoutSettings')
         },
         watch: {
             layoutSettings: {
@@ -315,6 +392,38 @@
                     this.triggerLayoutChanges()
                 },
             },
-        },
+            showConfirmDialog () {
+                this.$nextTick(() => {
+                    this.$refs.layoutForm.resetFields()
+                    this.layoutForm.typeOfTheme = 'newTheme'
+                    this.disabledForm = true
+                })
+            },
+            layoutForm: {
+                handler (val) {
+                    if (!this.showConfirmDialog) {
+                        return
+                    }
+
+                    if (val.typeOfTheme !== 'existingTheme') {
+                        this.validateForm()
+                        this.$refs.layoutForm.clearValidate()
+                    } else {
+                        this.$refs.layoutForm.resetFields()
+                        this.disabledForm = false
+                    }
+                },
+                deep: true
+            }
+        }
     }
 </script>
+
+<style lang="scss" scoped>
+.new-theme-input ::v-deep .el-input__inner {
+    @apply text-sm font-normal;
+}
+.disabled-block .icon, .disabled-block .text {
+    @apply text-gray-550 transition duration-300;
+}
+</style>
