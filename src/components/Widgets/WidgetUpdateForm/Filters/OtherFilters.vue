@@ -3,7 +3,6 @@
         <label>
             {{model.ParameterPrettyName}}
         </label>
-        {{ model }}
         <component :is="getComponent.name"
                    :type="getComponent.type"
                    :placeholder="$t('settings.add.filter')"
