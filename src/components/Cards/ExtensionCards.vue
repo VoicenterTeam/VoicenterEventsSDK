@@ -1,33 +1,41 @@
 <template>
     <div>
         <portal :to="`widget-header__${data.WidgetID}`">
-            <div class="flex  w-full justify-end">
-                <div class="-my-1 cursor-pointer hidden lg:block">
-                    <div>
-                        <IconCardsGrid @click.stop="showGridMenu = !showGridMenu"/>
-                    </div>
-                    <fade-transition :duration="250">
-                        <div class="bg-white rounded mt-1 absolute flex flex-col border-2"
-                             v-click-outside="onMenuClickOutside"
-                             v-if="showGridMenu">
-                            <div class="bg-gray-200 rounded-t border-b-2">
-                                <p class="p-2 text-main-sm font-medium">{{ layoutColumns }}
-                                                                        {{ $t('columns.layout') }}</p>
-                            </div>
-                            <div class="w-full flex p-2 justify-between">
-                                <i :class="{'bg-primary-100': index <= layoutColumns}"
-                                   @click="updateGrid(index)"
-                                   class="icon-square mx-margin--1"
-                                   v-for="index in maxLayoutColumns"/>
-                            </div>
-                        </div>
-                    </fade-transition>
+            <div class="flex w-full justify-end overflow-x-hidden">
+                <div class="cursor-pointer hidden lg:block">
+                    <template v-if="showDropDown">
+                        <el-dropdown trigger="click">
+                            <span class="el-dropdown-link">
+                                <IconCardsGrid />
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <div class="bg-white rounded mt-1 flex flex-col border-2">
+                                        <div class="bg-gray-200 rounded-t border-b-2">
+                                            <p class="p-2 text-main-sm font-medium">{{ layoutColumns }}
+                                                {{ $t('columns.layout') }}
+                                            </p>
+                                        </div>
+                                        <div class="w-full flex p-2 justify-between">
+                                            <i
+                                                v-for="index in maxLayoutColumns"
+                                                :key="index"
+                                                :class="{'bg-primary-100': index <= layoutColumns}"
+                                                @click="updateGrid(index)"
+                                                class="icon-square mx-margin--1"
+                                            />
+                                        </div>
+                                    </div>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </template>
                 </div>
-                <el-select :placeholder="$t('Sort by')" v-model="sortBy">
+                <el-select :placeholder="$t('Sort by')" v-model="sortBy" class="mt-1">
                     <template v-slot:prefix>
-                    <span class="h-full flex items-center">
-                        <i class="el-icon-d-caret"/>
-                    </span>
+                        <span class="h-full flex items-center">
+                            <i class="el-icon-d-caret"/>
+                        </span>
                     </template>
                     <el-option :key="option.label" v-bind="option" v-for="option in sortByOptions"/>
                 </el-select>
@@ -64,7 +72,7 @@
     import times from 'lodash/times'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
-    import { Option, Select } from 'element-ui'
+    import { Option, Select, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
     import { FadeTransition } from 'vue2-transitions'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
     import ExtensionCard from '@/components/Cards/ExtensionCard'
@@ -77,6 +85,9 @@
         components: {
             [Select.name]: Select,
             [Option.name]: Option,
+            [Dropdown.name]: Dropdown,
+            [DropdownMenu.name]: DropdownMenu,
+            [DropdownItem.name]: DropdownItem,
             ExtensionCard,
             FadeTransition,
         },
@@ -87,7 +98,7 @@
             },
             data: {
                 type: Object,
-                default: () => ({}),
+                default: () => ({})
             },
         },
         data() {
@@ -122,7 +133,13 @@
                 showGridMenu: false,
                 maxLayoutColumns: 0,
                 layoutColumns: 0,
+                showDropDown: false
             }
+        },
+        mounted () {
+            this.$nextTick(() => {
+                this.showDropDown = true
+            })
         },
         computed: {
             getThresholdConfig() {
@@ -212,6 +229,10 @@
 
 .grid-container {
     display: grid;
+}
+::v-deep .el-dropdown-menu__item:focus, ::v-deep .el-dropdown-menu__item:not(.is-disabled):hover {
+    background-color: inherit;
+    color: inherit;
 }
 </style>
 <style lang="scss">

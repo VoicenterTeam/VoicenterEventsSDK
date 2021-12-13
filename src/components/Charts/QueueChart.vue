@@ -16,7 +16,7 @@
     import { getServerTimeOffset } from '@/enum/generic'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import { administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS } from '@/enum/extensionStatuses'
-    
+
     export default {
         mixins: [queueMixin, actionMixin],
         components: {
@@ -52,6 +52,12 @@
                         column: {
                             stacking: 'normal',
                         },
+                        series: {
+                            events: {
+                                hide: this.legendItemClick,
+                                show: this.legendItemClick
+                            }
+                        }
                     },
                     series: [
                         {
@@ -112,11 +118,13 @@
                         },
                     ],
                     legend: {
-                        enabled: false,
+                        enabled: true,
                     },
                 },
                 showManageQueuesDialog: false,
                 width: '50%',
+                timeout: 5000,
+                showTime: 60000
             };
         },
         computed: {
@@ -129,16 +137,8 @@
                 }
                 this.fetchDataInterval = setInterval(() => {
                     this.updateChartData()
-                }, 5000)
-                
-                if (this.data.WidgetLayout.showSeries) {
-                    this.chartData.series.forEach((serie, index) => {
-                        this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
-                    })
-                }
-                this.chartData.legend = {
-                    enabled: true,
-                }
+                }, this.timeout)
+
                 return this.chartData
             },
             responsiveClass() {
@@ -154,8 +154,19 @@
             },
         },
         methods: {
+            legendItemClick({target}) {
+                const index = target.index
+
+                this.chartData.series[index].visible = target.visible
+            },
             onInitChartCallback(chart) {
                 this.chartInstance = chart
+
+                if (this.data.WidgetLayout.showSeries) {
+                    this.chartData.series.forEach((serie, index) => {
+                        this.chartData.series[index].visible = this.data.WidgetLayout.showSeries.includes(index);
+                    })
+                }
             },
             tryPrintChart() {
                 this.chartInstance.print()
@@ -166,11 +177,12 @@
                 })
             },
             updateChartData() {
+                const newTime = new Date()
                 let queues = this.filteredQueues
-                
-                let minJoinTimeStamp = (new Date()).getTime() + getServerTimeOffset() / 1000
+
+                let minJoinTimeStamp = newTime.getTime() + getServerTimeOffset() / 1000
                 let queueCalls = 0
-                
+
                 queues.forEach((queue) => {
                     queue.Calls.forEach((call) => {
                         if (call.JoinTimeStamp < minJoinTimeStamp) {
@@ -179,31 +191,34 @@
                         }
                     })
                 })
-                
+
+
                 let agentsOnline = this.agentsOnline
-                let maxWaitingTime = queueCalls > 0 ? (parseInt((new Date()).getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
-                
-                let currentTime = (new Date()).getTime() + getServerTimeOffset();
-                
-                if (this.chartData.series[0].data.length > 11) {
+                let maxWaitingTime = queueCalls > 0 ? (Math.floor(newTime.getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
+
+                let currentTime = newTime.getTime() + getServerTimeOffset();
+
+                const columns = Math.floor(this.showTime / this.timeout)
+
+                if (this.chartData.series[0].data.length >= columns) {
                     this.chartData.xAxis = {
                         ...this.chartData.xAxis,
                         ...{
-                            min: new Date().setMinutes(new Date().getMinutes() - 1) + getServerTimeOffset(),
-                            max: new Date().getTime() + getServerTimeOffset(),
+                            min: (new Date()).setMinutes(newTime.getMinutes() - 1) + getServerTimeOffset(),
+                            max: newTime.getTime() + getServerTimeOffset(),
                         },
                     }
                 }
-                
+
                 let agentsInCall = []
                 let agentsWithACallInHold = []
-                
+
                 let agentsAvailable = []
                 let agentsInAdministrativeBreak = []
                 let agentsInBreak = []
-                
+
                 agentsOnline.forEach((agent) => {
-                    
+
                     if (agent.calls.length > 0) {
                         if (agent.calls.filter((call) => call.answered && call.callstatus !== this.HOLD_STATUS).length) {
                             agentsInCall.push(agent)
@@ -223,13 +238,13 @@
                         }
                     }
                 });
-                
+
                 this.chartData.series[0].data.push({
                     x: currentTime,
                     y: maxWaitingTime,
                     toTime: maxWaitingTime,
                 });
-                
+
                 [
                     queueCalls,
                     agentsAvailable,
@@ -274,10 +289,7 @@
         },
         watch: {
             data() {
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
+                this.reDrawChart()
             },
         },
     }
