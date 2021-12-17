@@ -257,9 +257,9 @@
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
-    
+
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
-    
+
     export default {
         inheritAttrs: false,
         mixins: [queueMixin],
@@ -296,8 +296,8 @@
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
                 model: {
-                    settings: realTimeSettings,
-                    colors: defaultColors,
+                    settings: cloneDeep(realTimeSettings),
+                    colors: cloneDeep(defaultColors),
                 },
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
@@ -384,9 +384,9 @@
             },
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {
-                    
+
                     if (!valid) return
-                    
+
                     if (this.model.WidgetTime.type === 'relative') {
                         let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                         this.model.WidgetTime = {
@@ -394,47 +394,47 @@
                             ...widgetTime,
                         }
                     }
-                    
+
                     this.model.WidgetLayout = {
                         ...this.model.WidgetLayout,
                         ...{ settings: this.model.settings },
                         ...{ colors: this.model.colors },
                     }
-                    
+
                     try {
                         this.model.WidgetConfig.forEach((config) => {
-                            
+
                             if (config.ParameterType !== AUTO_COMPLETE_PARAMETER_TYPE) {
                                 delete config.WidgetParameterValueJson
                                 return
                             }
-                            
+
                             if (typeof config.WidgetParameterValue === 'object') {
                                 config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
                                 config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
                             }
-                            
+
                             if (typeof config.WidgetParameterValueJson !== 'object') {
                                 return
                             }
-                            
+
                             const entityNegative = config.WidgetParameterValueJson['EntityNegative']
-                            
+
                             if (entityNegative && entityNegative.length) {
                                 config.WidgetParameterValueJson['EntityPositive'] = config.WidgetParameterValueJson['EntityPositive'].filter((el) => !entityNegative.includes(el))
                             }
-                            
+
                             if (config.WidgetParameterValueJson['EntityPositive'].length) {
                                 config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
                             } else {
                                 config.WidgetParameterValueJson['AccountList'] = []
                             }
-                            
+
                         })
                     } catch (e) {
                         console.warn(e)
                     }
-                    
+
                     this.$emit('on-update', this.model)
                     this.toggleVisibility(false)
                 })
@@ -450,17 +450,17 @@
         },
         mounted() {
             this.model = cloneDeep(this.widget)
-            
-            this.model.colors = this.model.WidgetLayout.colors || defaultColors
-            
+
+            this.model.colors = this.model.WidgetLayout.colors || cloneDeep(defaultColors)
+
             if (isAreaChartWidget(this.widget)) {
                 this.model.colors = { ...defaultAreaChartColors, ...this.model.WidgetLayout.colors }
             }
-            
+
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
-            
+
             if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                 this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]
