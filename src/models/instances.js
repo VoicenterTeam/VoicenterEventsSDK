@@ -29,8 +29,10 @@ export const dashboardOperation = (type, target, payload, parentID = null, tempo
     }
 })
 
-export const widgetModel = (TemplateID, Title, WidgetLayout) => ({
+export const widgetModel = (TemplateID, Title, WidgetGroupID, DashboardID, WidgetLayout) => ({
     Title: Title,
     TemplateID: TemplateID,
+    WidgetGroupID: WidgetGroupID,
+    DashboardID: DashboardID,
     WidgetLayout: WidgetLayout
 })
