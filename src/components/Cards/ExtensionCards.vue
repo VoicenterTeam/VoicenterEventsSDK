@@ -78,7 +78,7 @@
     import ExtensionCard from '@/components/Cards/ExtensionCard'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { ADMIN_USER_ID, displayUsersRelatedWithAdmin } from '@/helpers/util'
-    import { EXTENSION_ID } from '@/enum/parameters'
+    import EXTENSION_ID from '@/enum/parameters'
 
     const cardWidth = 256;
 
