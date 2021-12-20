@@ -67,7 +67,6 @@ export default {
         },
         addNewGroup() {
             const group = { ...widgetGroupModel() }
-            console.log(group, 'group')
 
             this.activeDashboardData.WidgetGroupList.splice(0, 0, group)
             this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
