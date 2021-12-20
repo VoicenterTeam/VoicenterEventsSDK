@@ -1,8 +1,23 @@
 <template>
-    <div v-if="this.model.ParameterType">
-        <label>
-            {{model.ParameterPrettyName}}
-        </label>
+    <div v-if="model.ParameterType">
+        <div class="flex justify-between w-full">
+            <div class="flex items-center">
+                <label>
+                    {{ model.ParameterPrettyName }}
+                </label>
+            </div>
+            <div
+                class="h-12 flex items-center category-wrapper hover:text-primary cursor-pointer">
+                <el-tooltip
+                    :content="model.ParameterDescription"
+                    :open-delay="200"
+                    placement="top">
+                    <span class="mx-2 truncate">
+                        <IconInfo/>
+                    </span>
+                </el-tooltip>
+            </div>
+        </div>
         <component :is="getComponent.name"
                    :type="getComponent.type"
                    v-model="model.WidgetParameterValue"
@@ -23,7 +38,7 @@
             model: {
                 type: Object,
                 default: () => ({})
-            }
+            },
         },
         computed: {
             getComponent() {

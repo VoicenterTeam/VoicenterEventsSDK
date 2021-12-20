@@ -3,31 +3,44 @@
          class="filter-items -mx-2 px-2">
         <el-radio-group class="pb-4" v-model="entityType">
             <el-radio v-for="option in SELECTIONS"
-                      v-bind="option"
-                      :key="option.label">
+                v-bind="option"
+                :key="option.label">
                 {{ option.text }}
             </el-radio>
         </el-radio-group>
         <div>
-            <div class="flex">
-                <component class="w-4-5 h-4-5 text-primary"
-                           :is="getEntityIcon"/>
-                <span class="mx-1">
-                    {{ model.ParameterPrettyName }}
-                </span>
+            <div class="flex justify-between w-full">
+                <div class="flex items-center">
+                    <component class="w-4-5 h-4-5 text-primary"
+                        :is="getEntityIcon"/>
+                    <span class="mx-1">
+                        {{ model.ParameterPrettyName }}
+                    </span>
+                </div>
+                <div
+                    class="h-12 flex items-center category-wrapper hover:text-primary cursor-pointer">
+                    <el-tooltip
+                        :content="model.ParameterDescription"
+                        :open-delay="200"
+                        placement="top">
+                        <span class="mx-2 truncate">
+                            <IconInfo/>
+                        </span>
+                    </el-tooltip>
+                </div>
             </div>
             <base-select class="w-full py-2"
-                         filterable
-                         :loading="loading"
-                         :v-on="$listeners"
-                         :collapse-tags="collapseTags"
-                         multiple
-                         :value="autocompleteValue"
-                         @change="onAutocompleteChange"
-                         :data="options"
-                         :label-key="templateConfig.label"
-                         :second-label-key="templateConfig.second_label"
-                         :value-key="templateConfig.value">
+                filterable
+                :loading="loading"
+                :v-on="$listeners"
+                :collapse-tags="collapseTags"
+                multiple
+                :value="autocompleteValue"
+                @change="onAutocompleteChange"
+                :data="options"
+                :label-key="templateConfig.label"
+                :second-label-key="templateConfig.second_label"
+                :value-key="templateConfig.value">
             </base-select>
         </div>
     </div>
