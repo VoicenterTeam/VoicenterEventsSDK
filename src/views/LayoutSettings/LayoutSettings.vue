@@ -42,9 +42,10 @@
                         </div>
                     </div>
                     <div class="hidden sm:flex flex-row items-center w-64">
-                        <LayoutSelect :active-layout="selectedLayout"
-                                      :display-label="false"
-                                      @on-chose-layout="onChoseLayout"/>
+                        <LayoutSelect
+                            :active-layout="selectedLayout"
+                            :display-label="false"
+                            @on-chose-layout="onChoseLayout"/>
                     </div>
                 </div>
             </div>
@@ -181,7 +182,6 @@
     import LayoutPreview from '@/views/LayoutSettings/LayoutPreview'
     import LayoutWrapper from '@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'
     import BaseRadioButton from '@/components/BaseRadioButton'
-    import merge from 'lodash/merge'
 
     export default {
         components: {
@@ -225,9 +225,6 @@
             }
         },
         computed: {
-            // selectedLayout() {
-            //     return this.$store.getters['layout/getActiveLayout']
-            // },
             allLayouts() {
                 return this.$store.getters['layout/getAllLayouts']
             },
@@ -255,7 +252,6 @@
         },
         methods: {
             onChoseLayout(layout) {
-                console.log(layout, 'layout')
                 this.layoutSettings = cloneDeep(layout)
                 this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
             },
@@ -303,28 +299,24 @@
             },
             async onNewLayout() {
                 if (this.layoutForm.typeOfTheme === 'newTheme') {
-                    let layout = {}
                     let payload = {}
                     try {
                         this.storingData = true
                         payload = this.composePayload()
                         payload.LayoutName = this.layoutForm.layoutName
                         delete payload.LayoutID
-                        await LayoutApi.update(payload)
-                        console.log(this.allLayouts, 'this.allLayouts')
+                        const { LayoutID } = await LayoutApi.update(payload)
+                        payload.LayoutID = LayoutID
                     } catch (e) {
                         console.warn(e)
                     } finally {
                         this.storingData = false
                         this.showConfirmDialog = false
-                        this.editableTitle = false
-                        const newTheme = this.allLayouts.find(el => el.LayoutName === payload.LayoutName)
-                        console.log(this.allLayouts.find(el => el.LayoutName === payload.LayoutName), 'qwf')
-                        console.log(payload, 'payload', newTheme)
-                        layout = newTheme
-                        console.log(layout, 'layout')
-                        this.selectedLayout = layout
-                        this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
+                        this.selectedLayout = payload
+                        this.layoutSettings = this.selectedLayout
+                        this.$store.commit('layout/SET_ACTIVE_LAYOUT', payload)
+                        this.$store.dispatch('layout/setupLayouts')
+                        this.$store.dispatch('layout/getGlobalLayout')
                     }
                 } else {
                     await this.onUpdateLayout()
@@ -383,7 +375,6 @@
         mounted() {
             this.selectedLayout = this.$store.getters['layout/getActiveLayout']
             this.layoutSettings = cloneDeep(this.selectedLayout)
-            console.log(this.layoutSettings, 'this.layoutSettings')
         },
         watch: {
             layoutSettings: {
@@ -394,9 +385,11 @@
             },
             showConfirmDialog () {
                 this.$nextTick(() => {
-                    this.$refs.layoutForm.resetFields()
-                    this.layoutForm.typeOfTheme = 'newTheme'
-                    this.disabledForm = true
+                    setTimeout(() => {
+                        this.$refs.layoutForm.resetFields()
+                        this.layoutForm.typeOfTheme = 'newTheme'
+                        this.disabledForm = true
+                    }, 150)
                 })
             },
             layoutForm: {
