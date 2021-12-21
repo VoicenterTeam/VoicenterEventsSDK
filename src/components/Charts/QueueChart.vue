@@ -172,15 +172,15 @@
                     })
                 }
             },
-            tryPrintChart() {
+            async tryPrintChart() {
                 const divToPrint = this.$el.children[0]
                 const newWin = window.open();
                 newWin.document.write(divToPrint.innerHTML);
                 newWin.document.close();
                 newWin.focus();
-                setTimeout(() => {
-                    newWin.print();
-                }, 150)
+
+                await this.$nextTick();
+                newWin.print();
             },
             tryDownloadChart(type) {
                 this.$refs['queue-chart'].chart.exportChart({
