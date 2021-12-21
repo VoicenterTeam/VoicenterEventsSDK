@@ -179,7 +179,7 @@
                 newWin.document.close();
                 newWin.focus();
 
-                await this.$nextTick()
+                await this.$nextTick();
                 newWin.print();
             },
             tryDownloadChart(type) {
@@ -302,7 +302,7 @@
             data() {
                 this.reDrawChart()
             },
-        }
+        },
     }
 </script>
 <style lang="scss" scoped>
