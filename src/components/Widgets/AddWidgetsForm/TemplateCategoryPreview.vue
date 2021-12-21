@@ -45,7 +45,7 @@
                             type="_primary">
                             <div class="flex items-center justify-center">
                                 <IconAdd class="mb-0-5"
-                                         :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
+                                    :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
                                 <span>{{ $t('Add') }}</span>
                             </div>
                         </el-button>
@@ -157,7 +157,7 @@
             manageWidgets(value, template) {
                 this.quantities[template.TemplateID] = value
                 this.summaries[template.TemplateName] = value
-                template['quantity'] = value
+                template.quantity = value
 
                 this.templates[`${template.TemplateID}`] = template
 
@@ -198,6 +198,9 @@
                 this.templates = cloneDeep(this.getTemplate)
             },
             tryAddAllWidgetsFromCategory() {
+                this.filteredTemplates.forEach(el => {
+                    this.manageWidgets(1, el)
+                })
                 this.$emit('try-store-category', this.templateCategory)
             },
             tryUpdateSummary() {

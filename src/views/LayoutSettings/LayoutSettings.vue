@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
-                                        <base-button @click="onDiscard()"
+                                        <base-button @click="onDiscard(true)"
                                                      variant="discard"
                                                      fixed-width="w-37">
                                             <div class="flex items-center">

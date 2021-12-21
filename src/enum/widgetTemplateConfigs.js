@@ -7,7 +7,10 @@ export const componentTypes = {
     },
     2: {
         name: 'Input',
-        type: 'number'
+        type: 'number',
+        params: {
+            min: 0
+        }
     },
     3: {
         name: 'Date',
