@@ -172,15 +172,15 @@
                     })
                 }
             },
-            tryPrintChart() {
+            async tryPrintChart() {
                 const divToPrint = this.$el.children[0]
                 const newWin = window.open();
                 newWin.document.write(divToPrint.innerHTML);
                 newWin.document.close();
                 newWin.focus();
-                setTimeout(() => {
-                    newWin.print();
-                }, 150)
+
+                await this.$nextTick()
+                newWin.print();
             },
             tryDownloadChart(type) {
                 this.$refs['queue-chart'].chart.exportChart({
@@ -300,17 +300,9 @@
         },
         watch: {
             data() {
-<<<<<<< HEAD
-                this.chartVisibility = false
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
-            }
-=======
                 this.reDrawChart()
             },
->>>>>>> 50012f39604adfdc9be3362b1a9df8db703be09d
-        },
+        }
     }
 </script>
 <style lang="scss" scoped>
