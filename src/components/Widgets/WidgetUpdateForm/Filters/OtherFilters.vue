@@ -5,8 +5,9 @@
         </label>
         <component :is="getComponent.name"
                    :type="getComponent.type"
+                   v-model="model.WidgetParameterValue"
                    :placeholder="$t('settings.add.filter')"
-                   v-model="model.WidgetParameterValue">
+                   v-bind="getComponent.params">
         </component>
     </div>
 </template>
@@ -26,7 +27,10 @@
         },
         computed: {
             getComponent() {
-                return componentTypes[this.model.ParameterType]
+                return {
+                    params: {},
+                    ...componentTypes[this.model.ParameterType]
+                }
             }
         }
     }
