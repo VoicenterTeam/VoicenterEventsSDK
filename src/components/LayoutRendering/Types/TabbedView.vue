@@ -1,14 +1,16 @@
 <template>
     <div v-if="tabs.length && !storingData" class="w-full">
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
-            <template v-slot="{tab, activeTab, index}">
+            <template v-slot="{ tab, activeTab }">
                 <div v-if="editMode"
                      :key="tab.WidgetGroupID"
                      class="flex items-center justify-between px-2 pb-2">
                     <base-outline-input v-model="tab.WidgetGroupTitle"/>
-                    <edit-group-buttons :widget-groups="tabs"
-                                        :widget-group="tab"
-                                        v-on="$listeners">
+                    <edit-group-buttons
+                        :widget-groups="tabs"
+                        :widget-group="tab"
+                        @on-reorder-widget-group="onReorderWidgetGroup"
+                        v-on="$listeners">
                     </edit-group-buttons>
                 </div>
                 <widget-list
@@ -17,7 +19,7 @@
                     :widgetTemplates="widgetTemplates"
                     :widgets="tab.WidgetList"
                     v-bind="$attrs"
-                    v-if="activeTab.toString() === tab.WidgetGroupID.toString()"
+                    v-if="activeTab.toString() === tab.WidgetGroupID.toString() && showComponent"
                     v-on="$listeners">
                 </widget-list>
             </template>
@@ -54,6 +56,11 @@
             },
             activeTab: [String, Number],
         },
+        data () {
+            return {
+                showComponent: true
+            }
+        },
         computed: {
             circularTimeout() {
                 const reportSwitching = this.$store.getters['layout/switchReport']
@@ -68,5 +75,14 @@
                 return this.$rtl.isRTL ? data.reverse() : data
             },
         },
+        methods: {
+            onReorderWidgetGroup (data) {
+                this.showComponent = false
+                this.$nextTick(() => {
+                    this.showComponent = true
+                    this.$emit('on-reorder-widget-group')
+                })
+            }
+        }
     }
 </script>

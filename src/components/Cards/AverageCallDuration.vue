@@ -90,7 +90,7 @@
     </div>
 </template>
 <script>
-    
+
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import UpdateDialog from './UpdateDialog'
@@ -104,7 +104,7 @@
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import { Checkbox, Collapse, CollapseItem, Option, Radio, RadioGroup, Select, Tooltip } from 'element-ui'
-    
+
     export default {
         mixins: [cardWidgetMixin],
         components: {
@@ -187,7 +187,7 @@
             onChange() {
                 try {
                     this.model.WidgetConfig.forEach((config) => {
-                        if (typeof config.WidgetParameterValueJson === 'object') {
+                        if (typeof config.WidgetParameterJson === 1) {
                             config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
                         }
                         if (typeof config.WidgetParameterValue === 'object') {
@@ -197,7 +197,7 @@
                     })
                 } catch (e) {
                 }
-                
+
                 if (this.model.WidgetTime.type === 'relative') {
                     let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                     this.model.WidgetTime = {
@@ -205,23 +205,23 @@
                         ...widgetTime,
                     }
                 }
-                
+
                 let data = {
                     showText: this.displayCardText,
                     displayBorder: this.displayCardBorder,
                 }
-                
+
                 this.data.WidgetLayout = {
                     ...this.model.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
                     colors: this.model.colors,
-                    
+
                 }
-                
+
                 this.data.WidgetTime = this.model.WidgetTime
                 this.data.WidgetConfig = this.model.WidgetConfig
-                
+
                 this.$emit('on-update', this.data)
                 this.showModal = false
             },

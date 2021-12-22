@@ -59,7 +59,7 @@ export default {
             
             if (direction === 'up') {
                 newIndex = index - 1;
-            } else {
+            } else if (direction === 'down') {
                 newIndex = index + 1;
             }
             
