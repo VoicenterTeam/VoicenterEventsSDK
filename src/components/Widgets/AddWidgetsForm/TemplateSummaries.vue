@@ -11,8 +11,11 @@
             {{ $t('Summary') }}
         </portal>
         <div class="-mx-4-5">
-            <div class="px-6 py-2 flex items-center justify-between text-gray-550"
-                 v-for="template in templates">
+            <div
+                class="px-6 py-2 flex items-center justify-between text-gray-550"
+                v-for="template in templates"
+                :key="template.TemplateName"
+            >
                 <div class="flex items-center">
                     <el-checkbox @change="onChange($event, template)"
                                  :checked="template.toStore"
@@ -77,9 +80,6 @@
         },
         methods: {
             onSubmit() {
-                this.templates.forEach(el => {
-                    console.log(el.DefaultWidgetConfig)
-                })
                 this.$emit('on-submit', this.templates)
             },
             getTemplateIcon(templateDataTypeID) {
@@ -127,14 +127,10 @@
                     })
                 })
                 this.templates = widgetTemplatesToAdd
-            },
-            async updateStore() {
-                await this.$store.dispatch('widgetCreation/editTemplate', false)
-            },
+            }
         },
         async mounted() {
             await this.composeData()
-            await this.updateStore()
-        },
+        }
     }
 </script>

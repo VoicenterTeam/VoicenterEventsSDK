@@ -53,6 +53,7 @@
     import TemplateCategories from '@/components/Widgets/AddWidgetsForm/TemplateCategories'
     import TemplatesSettingSetup from '@/components/Widgets/AddWidgetsForm/TemplatesSettingSetup'
     import TemplateCategoryPreview from '@/components/Widgets/AddWidgetsForm/TemplateCategoryPreview'
+    import TemplatesEditWidget from '@/components/Widgets/AddWidgetsForm/TemplatesEditWidget'
 
     export default {
         components: {
@@ -62,6 +63,7 @@
             TemplateCategories,
             TemplatesSettingSetup,
             TemplateCategoryPreview,
+            TemplatesEditWidget
         },
         props: {
             modalWidth: {

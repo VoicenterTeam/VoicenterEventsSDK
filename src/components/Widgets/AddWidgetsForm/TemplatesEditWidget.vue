@@ -2,13 +2,13 @@
     <div>
         <portal to="redirect-action">
             <span class="text-steel hover:text-primary redirect-action"
-                @click="allSelectedTemplates()">
+                @click="goToSummary()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Widgets') }}
+                {{ $t('Summary') }}
             </span>
         </portal>
         <portal to="form-title">
-            {{$t('Set up the general widgets settings')}}
+            {{$t('Set up the widget settings')}}
         </portal>
         <div class="py-4 -mx-4-5">
             <div v-for="(config, index) in uniqTemplatesConfigs"
@@ -39,10 +39,10 @@
     </div>
 </template>
 <script>
-    import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
+    import cloneDeep from 'lodash/cloneDeep'
 
     const AUTO_COMPLETE_TYPE_KEY = 6
 
@@ -65,45 +65,37 @@
             }
         },
         computed: {
-            getTemplatesToSetup() {
-                return this.$store.getters['widgetCreation/getTemplatesToSetup']
-            }
+            getTemplateToEdit() {
+                return this.$store.getters['widgetCreation/getTemplateToEdit']
+            },
         },
         async mounted () {
-            await this.getTemplateConfigs()
             await this.createUniqTemplateConfigs()
         },
         methods: {
             isAutoCompleteConfig(config) {
                 return config.ParameterType === AUTO_COMPLETE_TYPE_KEY
             },
-            async allSelectedTemplates() {
-                await this.$store.dispatch('widgetCreation/goToCategory', 'TemplatePreview')
-            },
-            async onViewSummary() {
-                this.templateConfigs.flat().map(temp => {
-                    this.uniqTemplatesConfigs.forEach(uniqTemp => {
-                        if (uniqTemp.ParameterName === temp.ParameterName) {
-                            if (uniqTemp.WidgetParameterJson) {
-                                temp.WidgetParameterValueJson = uniqTemp.WidgetParameterValueJson
-                            } else {
-                                temp.WidgetParameterValue = uniqTemp.WidgetParameterValue
-                            }
-                        }
-                    })
-                    return temp
-                })
+            async goToSummary() {
+                const data = {
+                    template: this.uniqTemplatesConfigs,
+                    widgetName: this.getTemplateToEdit.TemplateID
+                }
+                await this.$store.dispatch('widgetCreation/updateTemplate', data)
                 await this.$store.dispatch('widgetCreation/goToSummary')
             },
-            async createUniqTemplateConfigs () {
-                const uniqTemplates = uniqBy(this.templateConfigs.flat(), 'ParameterName')
-                this.uniqTemplatesConfigs = orderBy(uniqTemplates, ['ParameterType'], ['desc'])
+            async onViewSummary() {
+                await this.goToSummary()
             },
-            async getTemplateConfigs() {
-                const templatesToSetup = this.getTemplatesToSetup
-                const result = Object.values(templatesToSetup)
+            async createUniqTemplateConfigs () {
+                const editMode = cloneDeep(this.getTemplateToEdit)
+                let templates = []
 
-                this.templateConfigs = result.map(template => template.DefaultWidgetConfig)
+                if (editMode && Object.keys(editMode).length) {
+                    templates = orderBy(editMode.DefaultWidgetConfig, ['ParameterType'], ['desc'])
+                }
+
+                this.uniqTemplatesConfigs = templates
             }
         }
     }

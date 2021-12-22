@@ -4,6 +4,7 @@ const TEMPLATE_PREVIEW = 'TEMPLATE_PREVIEW'
 const TEMPLATES_SETUP = 'TEMPLATES_SETUP'
 const TEMPLATES_SUMMARY = 'TEMPLATES_SUMMARY'
 const UPDATE_SUMMARY = 'UPDATE_SUMMARY'
+const TEMPLATE_EDIT_WIDGET  = 'TEMPLATE_EDIT_WIDGET '
 
 const emptyState = {
     step: 'TEMPLATE_CATEGORIES',
@@ -32,6 +33,10 @@ const allSteps = {
         component: 'TemplateSummaries',
         hasSummary: true,
     },
+    [TEMPLATE_EDIT_WIDGET]: {
+        component: 'TemplatesEditWidget',
+        hasSummary: true,
+    },
 }
 
 const types = {
@@ -43,6 +48,8 @@ const types = {
     GO_TO_SELECTED_CATEGORY: 'GO_TO_SELECTED_CATEGORY',
     TEMPLATE_SETUP: 'TEMPLATE_SETUP',
     UPDATE_SUMMARY: 'UPDATE_SUMMARY',
+    TEMPLATE_EDIT_WIDGET: 'TEMPLATE_EDIT_WIDGET',
+    TEMPLATE_UPDATE: 'TEMPLATE_UPDATE'
 }
 
 const state = {
@@ -90,10 +97,16 @@ const mutations = {
         if (!template) {
             return
         }
-        state.step = TEMPLATES_SETUP
+        state.step = TEMPLATE_EDIT_WIDGET
     },
     [types.UPDATE_SUMMARY]: (state, summary) => {
         state.summaries = summary
+    },
+    [types.TEMPLATE_EDIT_WIDGET]: (state) => {
+        state.step = TEMPLATE_EDIT_WIDGET
+    },
+    [types.TEMPLATE_UPDATE]: (state, summary) => {
+        state.templates[summary.widgetName].DefaultWidgetConfig = summary.template
     }
 }
 
@@ -119,8 +132,11 @@ const actions = {
     async editTemplate({ commit }, template) {
         await commit(types.TEMPLATE_SETUP, template)
     },
-    async updateSummaries({ commit   }, summary) {
+    async updateSummaries({ commit }, summary) {
         await commit(types.UPDATE_SUMMARY, summary)
+    },
+    async updateTemplate({ commit }, template) {
+        await commit(types.TEMPLATE_UPDATE, template)
     }
 }
 

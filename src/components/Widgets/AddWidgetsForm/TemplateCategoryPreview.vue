@@ -163,6 +163,8 @@
 
                 if (!value) {
                     delete this.summaries[template.TemplateName]
+                    delete this.templates[template.TemplateID]
+                    delete this.quantities[template.TemplateName]
                 }
             },
             async onPreviewTemplate(template) {
