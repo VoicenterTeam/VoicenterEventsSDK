@@ -103,7 +103,9 @@
                 const templatesToSetup = this.getTemplatesToSetup
                 const result = Object.values(templatesToSetup)
 
-                this.templateConfigs = result.map(template => template.DefaultWidgetConfig)
+                this.templateConfigs = result
+                    .filter(template => template.DefaultWidgetConfig)
+                    .map(template => template.DefaultWidgetConfig)
             }
         }
     }
