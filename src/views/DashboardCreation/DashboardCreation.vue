@@ -124,9 +124,12 @@
                             </span>
                         </div>
                     </base-button>
-                    <base-button @click="onSubmit"
-                                 fixed-width="w-37"
-                                 key="store">
+                    <base-button
+                        @click="onSubmit"
+                        fixed-width="w-37"
+                        key="store"
+                        :disabled="isConfirmed"
+                    >
                         {{ $t('Confirm') }}
                     </base-button>
                 </slot>
@@ -176,7 +179,8 @@
                 dashboardTemplateCategory: null,
                 selectedTemplate: false,
                 showConfirmDialog: false,
-                onViewTemplate: false
+                onViewTemplate: false,
+                isConfirmed: false
             }
         },
         computed: {
@@ -246,6 +250,7 @@
                 try {
                     this.loading = true
                     this.showConfirmDialog = false
+                    this.isConfirmed = true
                     
                     const dashboard = await DashboardApi.store({
                         ...this.model,
@@ -261,6 +266,7 @@
                 } catch (e) {
                     console.warn(e)
                     Notification.error('Something went wrong please try again.')
+                    this.isConfirmed = false
                 } finally {
                     this.loading = false
                 }
