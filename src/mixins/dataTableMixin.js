@@ -28,13 +28,13 @@ export default {
                 ...data,
             }
             await WidgetApi.update(this.widget)
-            let updatedWidget = await WidgetApi.find(this.widget.WidgetID)
+            let {WidgetData} = await WidgetApi.find(this.widget.WidgetID)
             this.widget = {
                 ...this.widget,
-                ...updatedWidget,
+                ...WidgetData,
                 WidgetConfig: this.widget.WidgetConfig,
             }
-            this.data.WidgetLayout = updatedWidget.WidgetLayout || this.widget.WidgetLayout
+            this.data.WidgetLayout = WidgetData.WidgetLayout || this.widget.WidgetLayout
         },
     },
 
