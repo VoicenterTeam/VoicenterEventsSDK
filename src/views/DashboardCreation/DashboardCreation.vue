@@ -61,12 +61,11 @@
                     <div class="lg:grid lg:grid-cols-4 gap-5 mb-4"
                          key="TemplateCategories">
                         <TemplateCategories class="col-span-1"
-                                            key="categories"
-                                            :categories="dashboardTemplateCategories"
-                                            @on-choose-category="onChooseCategory"
+                            key="categories"
+                            :categories="dashboardTemplateCategories"
+                            @on-choose-category="onChooseCategory"
                         />
-                        <fade-transition mode="out-in"
-                                         :duration="transitionDuration">
+                        <fade-transition mode="out-in" :duration="transitionDuration">
                             <TemplatesPreview class="col-span-3"
                                 key="TemplatesPreview"
                                 @on-submit="tryAddDashboard"
@@ -176,11 +175,12 @@
                 dashboardTemplateCategory: null,
                 selectedTemplate: false,
                 showConfirmDialog: false,
-                onViewTemplate: false
+                onViewTemplate: false,
+                createBlankDashboard: false
             }
         },
         computed: {
-            selectedCategory() {
+            selectedCategory () {
                 return this.dashboardTemplateCategories.find(category => category.DashboardTemplateCategoryID.toString() === this.dashboardTemplateCategory.DashboardTemplateCategoryID.toString())
             },
             dashboardLayoutID() {
@@ -197,6 +197,9 @@
             },
             isFormValid () {
                 return Object.values(this.model).every(el => el !== null && el !== '')
+            },
+            isCreateBlankDashboard () {
+                return this.createBlankDashboard && typeof this.createBlankDashboard === 'boolean'
             }
         },
         methods: {
@@ -239,7 +242,12 @@
                     console.warn(e)
                 }
             },
-            tryAddDashboard() {
+            tryAddDashboard(createBlankDashboard) {
+                this.createBlankDashboard = createBlankDashboard
+                if (this.isCreateBlankDashboard) {
+                    this.selectedTemplate = false
+                    delete this.model.DashboardTemplateID
+                }
                 this.showConfirmDialog = true
             },
             async onSubmit() {
@@ -247,12 +255,8 @@
                     this.loading = true
                     this.showConfirmDialog = false
                     
-                    const dashboard = await DashboardApi.store({
-                        ...this.model,
-                        AccountID: this.currentAccountId,
-                    })
-                    
-                    await this.addEntities(dashboard)
+                    const dashboard = await this.createDashboard()
+                    await this.addEntities(dashboard, this.isCreateBlankDashboard)
                     await this.$store.dispatch('dashboards/getDashboards')
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
                     
@@ -265,9 +269,9 @@
                     this.loading = false
                 }
             },
-            async addEntities(dashboard) {
+            async addEntities(dashboard, isCreateBlankDashboard) {
                 const { DashboardID, WidgetGroupList } = dashboard
-                if (!this.selectedTemplate.WidgetTemplateList) {
+                if (!this.selectedTemplate.WidgetTemplateList || isCreateBlankDashboard) {
                     return
                 }
                 
@@ -319,6 +323,12 @@
             async newDashboard() {
                 await this.getAccountLayouts()
                 this.model.DashboardLayoutID = this.dashboardLayoutID
+            },
+            async createDashboard () {
+                return await DashboardApi.store({
+                    ...this.model,
+                    AccountID: this.currentAccountId,
+                })
             }
         },
         async mounted() {
