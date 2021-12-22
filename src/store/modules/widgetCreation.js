@@ -106,7 +106,7 @@ const mutations = {
         state.step = TEMPLATE_EDIT_WIDGET
     },
     [types.TEMPLATE_UPDATE]: (state, summary) => {
-        state.templates[summary.widgetName].DefaultWidgetConfig = summary.template
+        state.templates[summary.templateID].DefaultWidgetConfig = summary.template
     }
 }
 

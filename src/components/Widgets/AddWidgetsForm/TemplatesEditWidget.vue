@@ -79,7 +79,7 @@
             async goToSummary() {
                 const data = {
                     template: this.uniqTemplatesConfigs,
-                    widgetName: this.getTemplateToEdit.TemplateID
+                    templateID: this.getTemplateToEdit.TemplateID
                 }
                 await this.$store.dispatch('widgetCreation/updateTemplate', data)
                 await this.$store.dispatch('widgetCreation/goToSummary')
