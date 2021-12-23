@@ -7,7 +7,9 @@
                 </label>
             </div>
             <div
-                class="h-12 flex items-center category-wrapper hover:text-primary cursor-pointer">
+                v-if="model.ParameterDescription"
+                class="h-12 flex items-center category-wrapper hover:text-primary cursor-pointer"
+            >
                 <el-tooltip
                     :content="model.ParameterDescription"
                     :open-delay="200"
