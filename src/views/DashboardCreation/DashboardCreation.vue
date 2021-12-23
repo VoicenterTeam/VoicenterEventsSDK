@@ -299,14 +299,14 @@
                         TemplateID: widgets[i]['WidgetTemplateID'],
                     }
                     const newWidget = await WidgetApi.store(payload)
-                    widgetList.push(newWidget)
+                    widgetList.push(newWidget.Data)
                 }
                 return widgetList
             },
             async storeGroup(widgets, widgetGroupList) {
                 let newGroup = {}
                 if (!widgetGroupList || !widgetGroupList.length) {
-                    newGroup = { ...widgetGroupModel }
+                    newGroup = { ...widgetGroupModel() }
                     newGroup['WidgetList'] = widgets
                     const { WidgetGroupID } = await WidgetGroupsApi.store(newGroup)
                     return WidgetGroupID
