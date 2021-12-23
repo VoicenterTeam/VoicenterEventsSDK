@@ -43,8 +43,7 @@
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import cloneDeep from 'lodash/cloneDeep'
-
-    const AUTO_COMPLETE_TYPE_KEY = 6
+    import { AUTO_COMPLETE_TYPE_KEY } from '@/enum/parameters'
 
     export default {
         components: {

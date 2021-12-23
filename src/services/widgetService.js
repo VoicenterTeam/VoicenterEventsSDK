@@ -4,10 +4,7 @@ import store from '@/store/store'
 import { WidgetApi } from '@/api/widgetApi'
 import { widgetModel } from '@/models/instances'
 import { WidgetDataApi } from '@/api/widgetDataApi'
-import { getOptionsValues } from '@/helpers/entitiesList'
 import { isExternalDataWidget } from '@/helpers/widgetUtils'
-
-const AUTO_COMPLETE_TYPE_KEY = 6
 
 // Create new widgets from Widget Templates
 export async function createNewWidgets(templates, widgetGroup, Order = false) {
