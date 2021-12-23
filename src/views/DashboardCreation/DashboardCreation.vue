@@ -150,7 +150,7 @@
     import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
     import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
     import TemplateDetailedPreview from '@/views/DashboardCreation/components/TemplateDetailedPreview'
-    
+
     export default {
         components: {
             TemplateDetailedPreview,
@@ -259,7 +259,7 @@
                     await this.addEntities(dashboard, this.isCreateBlankDashboard)
                     await this.$store.dispatch('dashboards/getDashboards')
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
-                    
+
                     Notification.success('Dashboard added with success.')
                     this.redirectBack()
                 } catch (e) {
@@ -274,37 +274,40 @@
                 if (!this.selectedTemplate.WidgetTemplateList || isCreateBlankDashboard) {
                     return
                 }
-                
-                const widgetList = await this.storeDashboardWidgets()
-                const WidgetGroupID = await this.storeGroup(widgetList, WidgetGroupList)
+
+                const WidgetGroupID = get(WidgetGroupList, '[0].WidgetGroupID', null)
+
                 if (!WidgetGroupID) {
                     return
                 }
-                await DashboardApi.addWidgetGroup(DashboardID, +WidgetGroupID)
+
+                await this.storeDashboardWidgets(DashboardID, WidgetGroupID)
             },
             getWidgetTemplate(templateID) {
                 return this.$store.getters['widgetTemplate/getWidgetTemplate'](templateID)
             },
-            async storeDashboardWidgets() {
+            async storeDashboardWidgets(DashboardID, WidgetGroupID) {
                 let widgetList = []
                 const widgets = this.selectedTemplate.WidgetTemplateList
-                
+
                 for (let i = 0; i < widgets.length; i++) {
                     const templateData = this.getWidgetTemplate(widgets[i]['WidgetTemplateID'])
                     const payload = {
                         ...widgets[i],
+                        DashboardID,
+                        WidgetGroupID,
                         WidgetConfig: templateData.DefaultWidgetConfig || [],
                         TemplateID: widgets[i]['WidgetTemplateID'],
                     }
                     const newWidget = await WidgetApi.store(payload)
-                    widgetList.push(newWidget)
+                    widgetList.push(newWidget.Data)
                 }
                 return widgetList
             },
             async storeGroup(widgets, widgetGroupList) {
                 let newGroup = {}
                 if (!widgetGroupList || !widgetGroupList.length) {
-                    newGroup = { ...widgetGroupModel }
+                    newGroup = { ...widgetGroupModel() }
                     newGroup['WidgetList'] = widgets
                     const { WidgetGroupID } = await WidgetGroupsApi.store(newGroup)
                     return WidgetGroupID

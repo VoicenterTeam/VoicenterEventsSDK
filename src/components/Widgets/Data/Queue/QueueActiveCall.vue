@@ -93,7 +93,8 @@
             async onUpdateLayout (data) {
                 this.widget.WidgetLayout['Columns'] = data
                 await WidgetApi.update(this.widget)
-                this.widget = await WidgetApi.find(this.widget.WidgetID)
+                const {WidgetData} = await WidgetApi.find(this.widget.WidgetID)
+                this.widget = WidgetData
             }
         },
         mounted () {
