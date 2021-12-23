@@ -409,7 +409,6 @@
         },
         mounted() {
             this.fetchReportItems()
-            //console.log('$listeners', this.$listeners)
         },
     }
 </script>

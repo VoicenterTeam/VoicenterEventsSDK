@@ -1,9 +1,13 @@
 <template>
     <div class="bg-transparent pt-2 rounded-lg"
          v-if="chartVisibility">
-        <highcharts :options="chartData"
-                    class="chart-content_wrapper"
-                    :callback="onInitChartCallback"/>
+        <highcharts
+            ref="gauge-chart"
+            class="chart-content_wrapper"
+            :options="chartData"
+            :callback="onInitChartCallback"
+            :updateArgs="[true, true]"
+        />
     </div>
 </template>
 <script>
@@ -62,10 +66,15 @@
                 this.chartInstance = chart
             },
             tryPrintChart() {
-                this.chartInstance.print()
+                const divToPrint = this.$el.children[0]
+                const newWin = window.open();
+                newWin.document.write(divToPrint.innerHTML);
+                newWin.document.close();
+                newWin.focus();
+                newWin.print();
             },
             tryDownloadChart(type) {
-                this.chartInstance.exportChart({
+                this.$refs['gauge-chart'].chart.exportChart({
                     type: type,
                 })
             },

@@ -65,7 +65,7 @@ const mutations = {
     [types.SET_ACTIVE_WIDGET_GROUP]: (state, group) => {
         state.activeWidgetGroup = group
     },
-    
+
     [types.SET_EDIT_MODE]: (state, value) => {
         state.editMode = value
     },
@@ -96,7 +96,7 @@ const actions = {
         commit(types.SET_LOADING, false)
         commit(types.SET_ALL_DASHBOARDS, dashboards)
     },
-    async selectDashboard({ commit, state }, dashboard) {
+    async selectDashboard({ commit, state, getters }, dashboard) {
         const previousDashboard = previousActiveDashboard()
         dashboard = dashboard || previousDashboard || get(state, 'allDashboards.[0]', false)
         if (!dashboard) {
@@ -107,8 +107,11 @@ const actions = {
             dashboard['DashboardLayoutID'] = DEFAULT_LAYOUT_ID
             await DashboardApi.update(dashboard)
         }
-        
+
         dashboard = await DashboardApi.find(dashboard.DashboardID)
+        const groupWidgets = dashboard.WidgetGroupList.map(group => group.WidgetList)
+        commit(types.MAP_ALL_WIDGETS, [...getters.getAllWidgets, ...groupWidgets])
+
         commit(types.SET_ACTIVE_DASHBOARD, dashboard)
         commit(types.SET_LOADING, false)
     },
@@ -142,7 +145,7 @@ const actions = {
     },
     async mapAllDashboardsWidgets({ commit, state }) {
         let widgets = []
-        
+
         for (let dashboard of state.allDashboards) {
             const { WidgetGroupList } = await DashboardApi.find(dashboard.DashboardID)
             const groupWidgets = WidgetGroupList.map(group => group.WidgetList)
@@ -173,7 +176,7 @@ const getters = {
         }
         const result = []
         widgets.forEach(widget => {
-        
+
         })
         return result
     }
