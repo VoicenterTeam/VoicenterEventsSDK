@@ -27,6 +27,10 @@ export default {
             this.activeDashboardData.WidgetGroupList[index].WidgetList = this.activeDashboardData.WidgetGroupList[index].WidgetList.concat(createdWidgets)
             this.groupToEdit = this.activeDashboardData.WidgetGroupList[index]
 
+            createdWidgets.forEach(({WidgetID}) => {
+                this.temporaryWidgetIds.push(WidgetID)
+            })
+
             bus.$emit('added-widgets', createdWidgets)
             this.loading = false
         },
