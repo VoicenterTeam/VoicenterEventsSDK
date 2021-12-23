@@ -43,7 +43,7 @@
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import cloneDeep from 'lodash/cloneDeep'
-    import { AUTO_COMPLETE_TYPE_KEY } from '@/enum/parameters'
+    import ENUM from '@/enum/parameters'
 
     export default {
         components: {
@@ -73,7 +73,7 @@
         },
         methods: {
             isAutoCompleteConfig(config) {
-                return config.ParameterType === AUTO_COMPLETE_TYPE_KEY
+                return config.ParameterType === ENUM.AUTO_COMPLETE_TYPE_KEY
             },
             async goToSummary() {
                 const data = {

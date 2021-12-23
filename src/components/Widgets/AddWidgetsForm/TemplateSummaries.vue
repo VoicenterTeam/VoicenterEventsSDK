@@ -47,7 +47,6 @@
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
     import times from 'lodash/times'
     import { Checkbox } from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
@@ -111,8 +110,8 @@
             async onEditTemplate(template) {
                 await this.$store.dispatch('widgetCreation/editTemplate', template)
             },
-            async goToSettings() {
-                await this.$store.dispatch('widgetCreation/goToSetupTemplates', false)
+            goToSettings() {
+                this.$emit('on-go-to-settings')
             },
             composeData() {
                 const templates = this.getTemplatesToSetup

@@ -43,7 +43,7 @@
     import orderBy from 'lodash/orderBy'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
-    import { AUTO_COMPLETE_TYPE_KEY } from '@/enum/parameters'
+    import ENUM from '@/enum/parameters'
 
     export default {
         components: {
@@ -74,22 +74,21 @@
         },
         methods: {
             isAutoCompleteConfig(config) {
-                return config.ParameterType === AUTO_COMPLETE_TYPE_KEY
+                return config.ParameterType === ENUM.AUTO_COMPLETE_TYPE_KEY
             },
             async allSelectedTemplates() {
                 await this.$store.dispatch('widgetCreation/goToCategory', 'TemplatePreview')
             },
             async onViewSummary() {
                 this.templateConfigs.flat().map(temp => {
-                    this.uniqTemplatesConfigs.forEach(uniqTemp => {
-                        if (uniqTemp.ParameterName === temp.ParameterName) {
-                            if (uniqTemp.WidgetParameterJson) {
-                                temp.WidgetParameterValueJson = uniqTemp.WidgetParameterValueJson
-                            } else {
-                                temp.WidgetParameterValue = uniqTemp.WidgetParameterValue
-                            }
-                        }
-                    })
+                    const uniqTemplateConfig = this.uniqTemplatesConfigs.find(uniqTemp => uniqTemp.ParameterName === temp.ParameterName)
+
+                    if (parseInt(uniqTemplateConfig.WidgetParameterJson) === 1) {
+                        temp.WidgetParameterValueJson = uniqTemplateConfig.WidgetParameterValueJson
+                    } else {
+                        temp.WidgetParameterValue = uniqTemplateConfig.WidgetParameterValue
+                    }
+
                     return temp
                 })
                 await this.$store.dispatch('widgetCreation/goToSummary')
