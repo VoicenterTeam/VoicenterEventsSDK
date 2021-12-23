@@ -43,7 +43,7 @@ export async function runDashboardOperations(operations, dashboard) {
                                 break;
                             case types.MOVED_OUT:
                             case types.REMOVE:
-                                await WidgetGroupsApi.removeWidget(operation.meta.parentID, operation.payload.WidgetID)
+                                await WidgetApi.destroy(operation.payload.WidgetID)
                                 break;
                             default:
                                 break;
