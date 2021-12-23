@@ -51,14 +51,10 @@
     import { filters } from '@/enum/widgetTemplateConfigs'
     import { Option, Radio, RadioGroup, Select } from 'element-ui'
     import { getOptionsList, getTemplateConfig } from '@/helpers/entitiesList'
-    
+
     const ENTITY_POSITIVE_KEY = 'EntityPositive'
     const ENTITY_NEGATIVE_KEY = 'EntityNegative'
-    const defaultParameterJson = {
-        EntityPositive: [],
-        EntityNegative: [],
-        AccountList: [],
-    }
+
     export default {
         components: {
             [Select.name]: Select,
@@ -93,10 +89,11 @@
         },
         computed: {
             autocompleteValue() {
-                if (this.model.WidgetParameterValueJson) {
-                    return this.model.WidgetParameterValueJson[this.entityType]
+                if (this.model.WidgetParameterJson === 1) {
+                    return get(this.model.WidgetParameterValueJson, this.entityType, [])
+                } else {
+                    return get(JSON.parse(this.model.WidgetParameterValue), this.entityType, [])
                 }
-                return get(this.model.WidgetParameterValue, this.entityType, [])
             },
             getEntityIcon() {
                 return filters[this.model.ParameterName.toLowerCase()].icon
@@ -105,28 +102,19 @@
         methods: {
             get,
             getData() {
-                try {
-                    this.options = getOptionsList(this.model.ParameterName)
-                    if (typeof this.model.WidgetParameterValue === 'string') {
-                        this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || ''
-                    }
-                    if (!this.model.WidgetParameterValueJson) {
-                        this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
-                    }
-                } catch (e) {
-                    if (!this.model.WidgetParameterValueJson) {
-                        this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
-                    }
-                    console.warn(e)
-                } finally {
-                    this.loading = false
-                }
+                this.options = getOptionsList(this.model.ParameterName)
+
+                this.loading = false
             },
             onAutocompleteChange(value) {
-                if (!this.model.WidgetParameterValueJson) {
-                    this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
+                if (this.model.WidgetParameterJson === 1) {
+                    this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
+                } else {
+                    const currentValue = JSON.parse(this.model.WidgetParameterValue)
+                    currentValue[this.entityType] = cloneDeep(value)
+
+                    this.model.WidgetParameterValue = JSON.stringify(value)
                 }
-                this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
             },
         },
         mounted() {

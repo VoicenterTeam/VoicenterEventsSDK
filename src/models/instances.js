@@ -11,12 +11,14 @@ export const dashboardModel = () => {
     }
 }
 
-export const widgetGroupModel = {
-    Order: 0,
-    WidgetGroupID: Math.random() * 100,
-    WidgetGroupTitle: '',
-    WidgetList: [],
-    IsNew: true
+export const widgetGroupModel = () => {
+    return {
+        Order: 0,
+        WidgetGroupID: Math.floor(Math.random() * 100),
+        WidgetGroupTitle: '',
+        WidgetList: [],
+        IsNew: true
+    }
 }
 
 export const dashboardOperation = (type, target, payload, parentID = null, temporaryID = false) => ({
@@ -29,8 +31,10 @@ export const dashboardOperation = (type, target, payload, parentID = null, tempo
     }
 })
 
-export const widgetModel = (TemplateID, Title, WidgetLayout) => ({
+export const widgetModel = (TemplateID, Title, WidgetGroupID, DashboardID, WidgetLayout) => ({
     Title: Title,
     TemplateID: TemplateID,
+    WidgetGroupID: WidgetGroupID,
+    DashboardID: DashboardID,
     WidgetLayout: WidgetLayout
 })
