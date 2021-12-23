@@ -124,9 +124,12 @@
                             </span>
                         </div>
                     </base-button>
-                    <base-button @click="onSubmit"
-                                 fixed-width="w-37"
-                                 key="store">
+                    <base-button
+                        @click="onSubmit"
+                        fixed-width="w-37"
+                        key="store"
+                        :loading="loading"
+                    >
                         {{ $t('Confirm') }}
                     </base-button>
                 </slot>

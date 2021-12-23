@@ -60,9 +60,9 @@
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
                     <base-button class="mx-4"
-                                 @click="onCancel"
-                                 variant="discard"
-                                 fixed-width="w-37">
+                                @click="onCancel"
+                                variant="discard"
+                                fixed-width="w-37">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>

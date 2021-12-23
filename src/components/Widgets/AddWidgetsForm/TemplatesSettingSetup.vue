@@ -12,14 +12,16 @@
         </portal>
         <div class="py-4 -mx-4-5">
             <div v-for="(config, index) in templateConfigs"
+                :key="index"
                  class="py-4 px-16"
                  :class="{'border-b': templateConfigs.length !== index + 1}">
-                <AutoComplete v-if="isAutoCompleteConfig(config)"
-                              :key="config.ParameterID"
-                              :model="config"/>
+                <AutoComplete
+                    v-if="isAutoCompleteConfig(config)"
+                    :key="config.ParameterID"
+                    :model="config" />
                 <OtherFilters v-else
-                              :key="config.ParameterID"
-                              :model="config"/>
+                    :key="index"
+                    :model="config" />
             </div>
         </div>
         <portal to="form-footer">
