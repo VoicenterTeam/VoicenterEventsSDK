@@ -128,7 +128,7 @@
                         @click="onSubmit"
                         fixed-width="w-37"
                         key="store"
-                        :disabled="isConfirmed"
+                        :loading="loading"
                     >
                         {{ $t('Confirm') }}
                     </base-button>
@@ -154,7 +154,7 @@
     import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
     import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
     import TemplateDetailedPreview from '@/views/DashboardCreation/components/TemplateDetailedPreview'
-    
+
     export default {
         components: {
             TemplateDetailedPreview,
@@ -179,8 +179,7 @@
                 dashboardTemplateCategory: null,
                 selectedTemplate: false,
                 showConfirmDialog: false,
-                onViewTemplate: false,
-                isConfirmed: false
+                onViewTemplate: false
             }
         },
         computed: {
@@ -250,51 +249,53 @@
                 try {
                     this.loading = true
                     this.showConfirmDialog = false
-                    this.isConfirmed = true
-                    
+
                     const dashboard = await DashboardApi.store({
                         ...this.model,
                         AccountID: this.currentAccountId,
                     })
-                    
+
                     await this.addEntities(dashboard)
                     await this.$store.dispatch('dashboards/getDashboards')
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
-                    
+
                     Notification.success('Dashboard added with success.')
                     this.redirectBack()
                 } catch (e) {
                     console.warn(e)
                     Notification.error('Something went wrong please try again.')
-                    this.isConfirmed = false
                 } finally {
                     this.loading = false
                 }
             },
             async addEntities(dashboard) {
                 const { DashboardID, WidgetGroupList } = dashboard
+
                 if (!this.selectedTemplate.WidgetTemplateList) {
                     return
                 }
-                
-                const widgetList = await this.storeDashboardWidgets()
-                const WidgetGroupID = await this.storeGroup(widgetList, WidgetGroupList)
+
+                const WidgetGroupID = get(WidgetGroupList, '[0].WidgetGroupID', null)
+
                 if (!WidgetGroupID) {
                     return
                 }
-                await DashboardApi.addWidgetGroup(DashboardID, +WidgetGroupID)
+
+                await this.storeDashboardWidgets(DashboardID, WidgetGroupID)
             },
             getWidgetTemplate(templateID) {
                 return this.$store.getters['widgetTemplate/getWidgetTemplate'](templateID)
             },
-            async storeDashboardWidgets() {
+            async storeDashboardWidgets(DashboardID, WidgetGroupID) {
                 let widgetList = []
                 const widgets = this.selectedTemplate.WidgetTemplateList
-                
+
                 for (let i = 0; i < widgets.length; i++) {
                     const templateData = this.getWidgetTemplate(widgets[i]['WidgetTemplateID'])
                     const payload = {
                         ...widgets[i],
+                        DashboardID,
+                        WidgetGroupID,
                         WidgetConfig: templateData.DefaultWidgetConfig || [],
                         TemplateID: widgets[i]['WidgetTemplateID'],
                     }
