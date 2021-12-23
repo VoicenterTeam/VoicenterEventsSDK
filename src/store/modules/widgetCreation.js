@@ -6,13 +6,6 @@ const TEMPLATES_SUMMARY = 'TEMPLATES_SUMMARY'
 const UPDATE_SUMMARY = 'UPDATE_SUMMARY'
 const TEMPLATE_EDIT_WIDGET  = 'TEMPLATE_EDIT_WIDGET '
 
-const emptyState = {
-    step: 'TEMPLATE_CATEGORIES',
-    category: [],
-    summaries: '',
-    templates: '',
-}
-
 const allSteps = {
     [TEMPLATE_CATEGORIES]: {
         component: 'TemplateCategories',
@@ -49,7 +42,9 @@ const types = {
     TEMPLATE_SETUP: 'TEMPLATE_SETUP',
     UPDATE_SUMMARY: 'UPDATE_SUMMARY',
     TEMPLATE_EDIT_WIDGET: 'TEMPLATE_EDIT_WIDGET',
-    TEMPLATE_UPDATE: 'TEMPLATE_UPDATE'
+    TEMPLATE_UPDATE: 'TEMPLATE_UPDATE',
+    RESET_COPY_TEMPLATE: 'RESET_COPY_TEMPLATE',
+    COPY_TEMPLATE: 'COPY_TEMPLATE'
 }
 
 const state = {
@@ -59,6 +54,7 @@ const state = {
     templates: '',
     templateToEdit: false,
     templateToPreview: null,
+    copyOfUniqTemplatesDefaultConfig: null
 }
 
 const mutations = {
@@ -107,6 +103,12 @@ const mutations = {
     },
     [types.TEMPLATE_UPDATE]: (state, summary) => {
         state.templates[summary.templateID].DefaultWidgetConfig = summary.template
+    },
+    [types.RESET_COPY_TEMPLATE]: (state) => {
+        state.copyOfUniqTemplatesDefaultConfig = null
+    },
+    [types.COPY_TEMPLATE]: (state, data) => {
+        state.copyOfUniqTemplatesDefaultConfig = data
     }
 }
 
@@ -137,6 +139,12 @@ const actions = {
     },
     async updateTemplate({ commit }, template) {
         await commit(types.TEMPLATE_UPDATE, template)
+    },
+    async resetCopyTemplate({ commit }) {
+        await commit(types.RESET_COPY_TEMPLATE)
+    },
+    async copyTemplate({ commit }, template) {
+        await commit(types.COPY_TEMPLATE, template)
     }
 }
 
@@ -147,7 +155,8 @@ const getters = {
     getTemplateToPreview: state => state.templateToPreview,
     getTemplatesToSetup: state => state.templates,
     getSummaries: state => state.summaries,
-    getTemplateToEdit: state => state.templateToEdit
+    getTemplateToEdit: state => state.templateToEdit,
+    getCopyTemplate: state => state.copyOfUniqTemplatesDefaultConfig
 }
 
 export default {

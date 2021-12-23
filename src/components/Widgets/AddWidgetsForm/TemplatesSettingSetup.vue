@@ -64,8 +64,8 @@
             }
         },
         computed: {
-            getTemplatesToSetup() {
-                return this.$store.getters['widgetCreation/getTemplatesToSetup']
+            async getTemplatesToSetup() {
+                return await this.$store.getters['widgetCreation/getTemplatesToSetup']
             }
         },
         async mounted () {
@@ -91,15 +91,24 @@
 
                     return temp
                 })
+                await this.$store.dispatch('widgetCreation/copyTemplate', this.uniqTemplatesConfigs)
                 await this.$store.dispatch('widgetCreation/goToSummary')
             },
             async createUniqTemplateConfigs () {
+                const copyTemplates = await this.$store.getters['widgetCreation/getCopyTemplate']
                 const uniqTemplates = uniqBy(this.templateConfigs.flat(), 'ParameterName')
+                    .map((el, index) => {
+                        if (copyTemplates && el.ParameterName === copyTemplates[index].ParameterName) {
+                            el = copyTemplates[index]
+                        }
+
+                        return el
+                    })
                 this.uniqTemplatesConfigs = orderBy(uniqTemplates, ['ParameterType'], ['desc'])
             },
             async getTemplateConfigs() {
-                const templatesToSetup = this.getTemplatesToSetup
-                const result = Object.values(templatesToSetup)
+                const templatesToSetup = await this.getTemplatesToSetup
+                const result =  Object.values(templatesToSetup)
 
                 this.templateConfigs = result
                     .filter(template => template.DefaultWidgetConfig)

@@ -56,7 +56,7 @@
                     <base-button
                         @click="onCancel"
                         variant="discard"
-                        fixed-width="w-37">
+                        fixed-width="w-32">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
@@ -64,7 +64,7 @@
                     </base-button>
                     <base-button
                         @click="onConfirm"
-                        fixed-width="w-37"
+                        fixed-width="w-32"
                         key="store"
                     >
                         <span class="mx-1 text-base font-bold">{{ $t('Confirm') }}</span>
@@ -181,6 +181,10 @@
                 this.showConfirmDialog = false
             }
         },
+        async beforeDestroy () {
+            await this.$store.dispatch('widgetCreation/resetState')
+            await this.$store.dispatch('widgetCreation/resetCopyTemplate')
+        }
     }
 </script>
 <style lang="scss">

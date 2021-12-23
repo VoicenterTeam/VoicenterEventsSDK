@@ -176,6 +176,7 @@
             },
             async allTemplateCategories() {
                 await this.$store.dispatch('widgetCreation/resetState')
+                await this.$store.dispatch('widgetCreation/resetCopyTemplate')
             },
             composeSummary() {
                 return {
