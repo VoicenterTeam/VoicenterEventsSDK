@@ -43,20 +43,24 @@ export default {
 
             let newWidget = cloneDeep(widget)
             newWidget.WidgetEntity = []
-
+            newWidget.DashboardID = this.dashboard.DashboardID
+            newWidget.WidgetGroupID = this.groupToEdit.WidgetGroupID
             const yPosition = widget.WidgetLayout.GridLayout.y || 2
             newWidget.WidgetLayout.GridLayout.y += yPosition
 
-            const duplicatedWidget = await WidgetApi.store(newWidget)
+            const {Data} = await WidgetApi.store(newWidget)
 
-            this.temporaryWidgetIds.push(duplicatedWidget.WidgetID)
+            if (!Data) {
+                return
+            }
 
-            this.operations.add(dashboardOperation(types.ADD, targets.WIDGET, duplicatedWidget, widgetGroup.WidgetGroupID))
+            const {WidgetData} = await WidgetApi.find(Data.WidgetID)
+            this.temporaryWidgetIds.push(WidgetData.WidgetID)
 
-            widgetGroup.WidgetList.splice(widgetGroup.WidgetList.length, 0, duplicatedWidget)
+            widgetGroup.WidgetList.push(WidgetData)
 
             this.groupToEdit = widgetGroup
-            bus.$emit('added-widgets', [duplicatedWidget])
+            bus.$emit('added-widgets', [WidgetData])
 
             this.editMode = false
             this.$nextTick(() => {
