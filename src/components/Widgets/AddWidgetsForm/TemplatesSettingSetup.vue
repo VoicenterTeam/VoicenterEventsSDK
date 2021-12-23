@@ -98,7 +98,7 @@
                 const copyTemplates = await this.$store.getters['widgetCreation/getCopyTemplate']
                 const uniqTemplates = uniqBy(this.templateConfigs.flat(), 'ParameterName')
                     .map((el, index) => {
-                        if (copyTemplates && el.ParameterName === copyTemplates[index].ParameterName) {
+                        if (copyTemplates && copyTemplates.length && el.ParameterName === copyTemplates[index].ParameterName) {
                             el = copyTemplates[index]
                         }
 
