@@ -4,6 +4,8 @@ import { WidgetApi } from '@/api/widgetApi'
 import { targets, types } from '@/enum/operations'
 import { createNewWidgets } from '@/services/widgetService'
 import { dashboardOperation, widgetGroupModel } from '@/models/instances'
+import { DashboardApi } from '@/api/dashboardApi'
+import { WidgetGroupsApi } from '@/api/widgetGroupApi'
 
 export default {
     data() {
@@ -67,18 +69,19 @@ export default {
         },
         addNewGroup() {
             const group = { ...widgetGroupModel() }
-
-            this.activeDashboardData.WidgetGroupList.splice(0, 0, group)
-            this.activeDashboardData.WidgetGroupList.forEach((group, index) => {
-                group.Order = index
-            })
-
             this.editMode = false
 
-            this.$nextTick(() => {
+            this.$nextTick(async () => {
+                const widget = await WidgetGroupsApi.store(group)
+                const { DashboardID } = await this.$store.getters['dashboards/getActiveDashboard']
+                await DashboardApi.addWidgetGroup(DashboardID, widget.WidgetGroupID)
+                this.activeDashboardData.WidgetGroupList.splice(0, 0, widget)
+                widget.isNewGroup = true
+
+                this.activeDashboardData.WidgetGroupList[0] = widget
                 this.editMode = true
-                this.groupToEdit = group
-                this.switchTab(group.WidgetGroupID)
+                this.groupToEdit = widget
+                this.switchTab(widget.WidgetGroupID)
             })
         },
     },

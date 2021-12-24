@@ -4,6 +4,7 @@ import { removeDummyWidgets } from '@/services/widgetService'
 import { cloneDeep } from 'lodash'
 import DashboardOperations from '@/helpers/DashboardOperations'
 import { targets, types } from '@/enum/operations'
+import { DashboardApi } from '@/api/dashboardApi'
 
 export default {
     data() {
@@ -60,6 +61,16 @@ export default {
             let dashboard = this.$store.state.dashboards.activeDashboard
             
             this.$store.dispatch('dashboards/updateDashboard', dashboard)
+            this.activeDashboardData.WidgetGroupList.map(async widgetGroup => {
+                if (widgetGroup.isNewGroup) {
+                    if (widgetGroup.WidgetList && widgetGroup.WidgetList.length) {
+                        const ids = widgetGroup.WidgetList.map(el => el.WidgetID)
+                        removeDummyWidgets(ids)
+                    }
+                    DashboardApi.removeWidgetGroup(dashboard.DashboardID, widgetGroup.WidgetGroupID)
+                }
+                return widgetGroup
+            })
             this.activeDashboardData = cloneDeep(this.$store.state.dashboards.activeDashboard)
             this.operations = new DashboardOperations()
             this.$nextTick(() => {
