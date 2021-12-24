@@ -36,7 +36,7 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
 
         let WidgetConfig = []
 
-        if (template.DefaultWidgetConfig.length) {
+        if (template.DefaultWidgetConfig && template.DefaultWidgetConfig.length) {
             for (let config of template.DefaultWidgetConfig) {
                 if (parseInt(config.WidgetParameterJson) === 1) {
                     delete config.WidgetParameterValue

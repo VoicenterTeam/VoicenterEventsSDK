@@ -6,7 +6,7 @@
                 <slot>
                     <div class="items-center flex justify-between md:h-23-5">
                         <div class="flex items-center xl:-mx-24 w-full">
-                            <div @click="onDiscard(true)"
+                            <div @click="onDiscard()"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                                 <IconDirLeft/>
                                 <span class="mx-1">{{ $t('Back') }}</span>
@@ -46,7 +46,7 @@
                         <div class="flex-row items-center hidden md:flex">
                             <CopyDashboard :dashboard="activeDashboard"/>
                             <base-button class="mx-4"
-                                         @click="onDiscard(true)"
+                                         @click="onDiscard()"
                                          variant="discard"
                                          fixed-width="w-37">
                                 <div class="flex items-center">
@@ -56,7 +56,7 @@
                             </base-button>
                             <base-button fixed-width="w-37"
                                          :loading="loading"
-                                         @click="onSubmit(true)">
+                                         @click="onSubmit()">
                                 <div class="flex items-center">
                                     <IconSave class="mx-1"/>
                                     <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
@@ -120,10 +120,10 @@
             },
         },
         methods: {
-            async onDiscard(goBack = false) {
+            async onDiscard(goBack = true) {
                 if (goBack) {
                     await this.$store.dispatch('dashboards/getDashboards')
-                    this.$router.push('/')
+                    await this.$router.push('/')
                     return
                 }
                 this.discardLayoutChanges()
@@ -136,7 +136,7 @@
                 this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.currentDashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
             },
-            async onSubmit(goBack = false) {
+            async onSubmit(goBack = true) {
                 try {
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
@@ -155,12 +155,14 @@
                     const dashboard = await DashboardApi.find(DashboardID)
                     await this.updateState(dashboard)
                     if (goBack) {
-                        this.$router.push('/')
+                        await this.$store.dispatch('dashboards/getDashboards')
+                        await this.$router.push('/')
                     }
                 } catch (e) {
                     console.warn(e)
                 } finally {
                     this.loading = false
+
                 }
             },
             async onChangeLayout(layout) {
