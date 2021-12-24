@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="flex items-center px-14 hidden md:flex">
-            <div class="flex items-center">
+            <div class="flex items-center" v-if="layoutType === 'tabbed'">
                 <div @click="addNewGroup"
                      class="w-32 cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7">
                     <IconNewGroup class="mx-0-5"/>
@@ -59,7 +59,7 @@
 </template>
 <script>
     import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
-    
+
     export default {
         components: {
             ActionsTabbedView,
@@ -82,6 +82,10 @@
                 default: false,
             },
             onFullScreen: {},
+            layoutType: {
+                type: String,
+                default: 'tabbed'
+            }
         },
         methods: {
             widgetGroupName(group, index) {
@@ -132,11 +136,11 @@
     line-height: normal;
     color: var(--steel);
     height: 100%;
-    
+
     .active {
         color: var(--greyish-brown);
     }
-    
+
     &:first-child {
         margin-left: 65px;
     }

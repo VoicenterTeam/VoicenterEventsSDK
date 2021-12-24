@@ -12,6 +12,17 @@
         <base-navbar v-if="!onFullScreen"
                      key="base-navbar">
             <template v-slot:dashboard-operations>
+                <div v-if="layoutType !== 'tabbed'"
+                     class="flex items-center">
+                    <div class="flex items-center">
+                        <div @click="addNewGroup"
+                             class="w-32 cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7">
+                            <IconNewGroup class="mx-0-5"/>
+                            <span class="mx-0-5">{{ $t('Add Group') }}</span>
+                        </div>
+                    </div>
+                    <IconVerticalLine class="mx-6 h-12"/>
+                </div>
                 <div class="flex items-center">
                     <layout-switcher :active-type="layoutType"
                                      :edit-mode="editMode"
@@ -34,6 +45,7 @@
                     <sidebar v-if="(showTabs || editMode) && showSidebar && !onFullScreen"
                              :active-tab="activeTab"
                              :widget-group-list="activeDashboardData.WidgetGroupList"
+                             :layout-type="layoutType"
                              @switch-tab="(tab) => switchTab(tab)"
                              @add-new-group="addNewGroup"
                              :show-tabs="showTabs"
@@ -108,7 +120,7 @@
     import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
     import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
-    
+
     export default {
         components: {
             AccountNoData,
@@ -191,16 +203,16 @@
                 this.editMode = false
                 this.storingData = true
                 const wGrids = window.grids
-                
+
                 if (this.groupToEdit) {
                     const currentGroup = this.groupToEdit
                     await this.updateGridStacks(currentGroup, wGrids)
                 }
                 await this.validateOrderedGroups()
-                
+
                 let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
-                
+
                 this.operations = new DashboardOperations()
                 this.storingData = false
                 this.groupToEdit = null
