@@ -6,7 +6,7 @@
                 <slot>
                     <div class="items-center flex justify-between md:h-23-5">
                         <div class="flex items-center xl:-mx-24 w-full">
-                            <div @click="onDiscard()"
+                            <div @click="onDiscard"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                                 <IconDirLeft/>
                                 <span class="mx-1">{{ $t('Back') }}</span>
@@ -24,7 +24,7 @@
                                 <div class="flex justify-center items-center w-full md:hidden flex-col">
                                     <CopyDashboard :dashboard="activeDashboard"/>
                                     <base-button class="my-2"
-                                        @click="onDiscard()"
+                                        @click="onDiscard"
                                             variant="discard"
                                             fixed-width="w-37">
                                         <div class="flex items-center">
@@ -34,7 +34,7 @@
                                     </base-button>
                                     <base-button fixed-width="w-37"
                                                  :loading="loading"
-                                                 @click="onSubmit()">
+                                                 @click="onSubmit">
                                         <div class="flex items-center">
                                             <IconSave class="mx-1"/>
                                             <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
@@ -46,7 +46,7 @@
                         <div class="flex-row items-center hidden md:flex">
                             <CopyDashboard :dashboard="activeDashboard"/>
                             <base-button class="mx-4"
-                                         @click="onDiscard()"
+                                         @click="onDiscard"
                                          variant="discard"
                                          fixed-width="w-37">
                                 <div class="flex items-center">
@@ -56,7 +56,7 @@
                             </base-button>
                             <base-button fixed-width="w-37"
                                          :loading="loading"
-                                         @click="onSubmit()">
+                                         @click="onSubmit">
                                 <div class="flex items-center">
                                     <IconSave class="mx-1"/>
                                     <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
