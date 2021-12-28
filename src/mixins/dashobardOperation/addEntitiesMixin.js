@@ -72,16 +72,16 @@ export default {
             this.editMode = false
 
             this.$nextTick(async () => {
-                const widget = await WidgetGroupsApi.store(group)
+                const widgetGroup = await WidgetGroupsApi.store(group)
                 const { DashboardID } = await this.$store.getters['dashboards/getActiveDashboard']
-                await DashboardApi.addWidgetGroup(DashboardID, widget.WidgetGroupID)
-                this.activeDashboardData.WidgetGroupList.splice(0, 0, widget)
-                widget.isNewGroup = true
+                await DashboardApi.addWidgetGroup(DashboardID, widgetGroup.WidgetGroupID)
+                this.activeDashboardData.WidgetGroupList.splice(0, 0, widgetGroup)
+                widgetGroup.isNewGroup = true
 
-                this.activeDashboardData.WidgetGroupList[0] = widget
+                this.activeDashboardData.WidgetGroupList[0] = widgetGroup
                 this.editMode = true
-                this.groupToEdit = widget
-                this.switchTab(widget.WidgetGroupID)
+                this.groupToEdit = widgetGroup
+                this.switchTab(widgetGroup.WidgetGroupID)
             })
         },
     },
