@@ -91,7 +91,6 @@
         </div>
         <ConfirmDialog
             :visible.sync="showConfirmDialog"
-            :description="getPromptDescription"
             modalWidth="456px">
             <template v-slot:title>
                 <h3 class="text-xl font-bold text-gray-950">
@@ -140,6 +139,28 @@
                     {{ $t('Save changes in the existing theme') }}
                 </BaseRadioButton>
             </div>
+            <div v-else class="py-8">
+                <div class="flex items-center mb-3">
+                    <div class="flex">
+                        <IconExtensionsTable class="text-primary mr-2 icon"/>
+                        <div class="text font-normal">{{ $t('New Theme Name') }}</div>
+                    </div>
+                </div>
+                <el-form :model="layoutForm" ref="layoutForm">
+                    <div>
+                        <el-form-item
+                            prop="layoutName"
+                            :rules="rules.layoutName">
+                            <el-input
+                                v-model="layoutForm.layoutName"
+                                :placeholder="$t('New Theme Name')"
+                                class="new-theme-input"
+                            />
+                            <span class="el-form-item__error" slot="error" slot-scope="error">&nbsp;{{ error.error }}</span>
+                        </el-form-item>
+                    </div>
+                </el-form>
+            </div>
             <template v-slot:footer-actions>
                 <div class="w-full flex items-center justify-center">
                     <slot name="footer-actions">
@@ -160,7 +181,7 @@
                             :loading="storingData" size="lg"
                             :disabled="disabledForm">
                             <span class="font-semibold">
-                                {{ isDefaultLayout ? $t('Confirm') : $t('Apply') }}
+                                {{ $t('Apply') }}
                             </span>
                         </base-button>
                     </slot>
@@ -242,13 +263,7 @@
             },
             isDefaultLayout() {
                 return this.layoutSettings.LayoutID === DEFAULT_LAYOUT_ID
-            },
-            getPromptDescription() {
-                if (this.isDefaultLayout) {
-                    return this.$t('Are you sure you want to create new Layout? A copy of default layout.')
-                }
-                return this.$t('Do you want to save changes in the existing theme or save as a new?')
-            },
+            }
         },
         methods: {
             onChoseLayout(layout) {
