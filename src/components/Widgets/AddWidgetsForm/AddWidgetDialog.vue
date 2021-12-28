@@ -4,7 +4,8 @@
             v-bind="$attrs"
             v-on="$listeners"
             @close="onCloseDialog"
-            :width="modalWidth">
+            :width="modalWidth"
+            id="componentStep">
             <template v-slot:redirect-action>
                 <portal-target name="redirect-action"/>
             </template>
@@ -119,6 +120,12 @@
                 return isEmpty(this.getSummary.summaryText)
             },
             getComponentByStep() {
+                this.$nextTick(() => {
+                    document.getElementById('componentStep').getElementsByClassName('el-dialog__body')[0].scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    })
+                })
                 return this.$store.getters['widgetCreation/getComponent']
             },
             componentHasSummary() {
