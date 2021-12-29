@@ -32,6 +32,17 @@ export const WidgetApi = {
             parseCatch(e, true, 'Update Widget')
         }
     },
+    async updatePosition(data) {
+        try {         
+            const widgetList = {
+                WidgetList: data
+            }   
+            let result = await $axios.post(`/Widgets/UpdatePosition/`, widgetList)
+            return parseCustomErrorMessage(result, 'Update Widget Position')
+        } catch (e) {
+            parseCatch(e, true, 'Update Widget')
+        }
+    },
 
     async store(data) {
         try {

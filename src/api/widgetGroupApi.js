@@ -53,4 +53,14 @@ export const WidgetGroupsApi = {
             parseCatch(e, true, 'Remove Widget from Widget Group')
         }
     },
+    async reorder(data) {
+        try {
+            const widgetGroupList = {
+                WidgetGroupList: data
+            }
+            return await $axios.post(`/WidgetsGroups/Reorder/`, widgetGroupList)
+        } catch (e) {
+            parseCatch(e, true, 'Reorder Widget Groups')
+        }
+    }
 }

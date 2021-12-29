@@ -10,7 +10,13 @@ export async function runDashboardOperations(operations, dashboard) {
     if (operations.all().length) {
         try {
             let dashboardID = dashboard.DashboardID
-            for (const operation of operations.all()) {
+            const operationsUpdateWidgetsGroup = getAllWidgetGroupsNeedToUpdate(operations)
+            const operationsUpdateWidgetPosition = getAllWidgetsNeedToUpdate(operations)
+            const allOperationsWithoutUpdate = operations
+                .all()
+                .filter(el => el.type !== 'update')
+
+            for (const operation of allOperationsWithoutUpdate) {
                 switch (operation.target) {
                     case targets.WIDGET_GROUP:
                         switch (operation.type) {
@@ -18,9 +24,6 @@ export async function runDashboardOperations(operations, dashboard) {
                                 delete operation.payload.IsNew
                                 const { WidgetGroupID } = await WidgetGroupsApi.store(operation.payload)
                                 await DashboardApi.addWidgetGroup(dashboardID, WidgetGroupID)
-                                break;
-                            case types.UPDATE:
-                                await WidgetGroupsApi.update(operation.payload)
                                 break;
                             case types.REMOVE:
                                 await DashboardApi.removeWidgetGroup(dashboardID, operation.payload.WidgetGroupID)
@@ -37,10 +40,6 @@ export async function runDashboardOperations(operations, dashboard) {
                             case types.ADD:
                                 await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID)
                                 break;
-                            case types.MOVED:
-                            case types.UPDATE:
-                                await WidgetApi.update(operation.payload)
-                                break;
                             case types.MOVED_OUT:
                             case types.REMOVE:
                                 await WidgetApi.destroy(operation.payload.WidgetID)
@@ -53,6 +52,14 @@ export async function runDashboardOperations(operations, dashboard) {
                         break;
                 }
             }
+
+            if (operationsUpdateWidgetsGroup.length) {
+                await WidgetGroupsApi.reorder(operationsUpdateWidgetsGroup)
+            }
+            if (operationsUpdateWidgetPosition.length) {
+                await WidgetApi.updatePosition(operationsUpdateWidgetPosition)
+            }
+
             return getDashboard(dashboardID)
         } catch (e) {
             Notification.error({
@@ -72,4 +79,28 @@ export async function updateDashboard(dashboard) {
 
 function getDashboard(dashboardID) {
     return DashboardApi.find(dashboardID)
+}
+
+function getAllWidgetGroupsNeedToUpdate(operations) {
+    return operations
+        .all()
+        .filter(el => el.type === 'update' && el.target === 'WidgetGroup')
+        .map(el => {
+            return {
+                WidgetGroupID: el.payload.WidgetGroupID,
+                Order: el.payload.Order 
+            }
+        })
+}
+
+function getAllWidgetsNeedToUpdate(operations) {
+    return  operations
+        .all()
+        .filter(el => (el.type === 'update' || el.type === 'moved') && el.target === 'Widget')
+        .map(el => {
+            return { 
+                WidgetID: el.payload.WidgetID,
+                GridLayout: el.payload.WidgetLayout.GridLayout
+            }
+        })
 }
