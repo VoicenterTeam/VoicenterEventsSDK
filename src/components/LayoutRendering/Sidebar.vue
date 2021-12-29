@@ -58,10 +58,12 @@
 </template>
 <script>
     import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
+    import NewGroupButton from '@/components/NewGroupButton'
 
     export default {
         components: {
             ActionsTabbedView,
+            NewGroupButton,
         },
         props: {
             widgetGroupList: {
