@@ -2,13 +2,13 @@
     <div>
         <portal to="redirect-action">
             <span class="text-steel hover:text-primary redirect-action"
-                @click="allSelectedTemplates()">
+                @click="goToSummary()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Widgets') }}
+                {{ $t('Summary') }}
             </span>
         </portal>
         <portal to="form-title">
-            {{$t('Set up the general widgets settings')}}
+            {{$t('Set up the widget settings')}}
         </portal>
         <div class="py-4 -mx-4-5">
             <div v-for="(config, index) in uniqTemplatesConfigs"
@@ -39,10 +39,10 @@
     </div>
 </template>
 <script>
-    import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
+    import cloneDeep from 'lodash/cloneDeep'
     import ENUM from '@/enum/parameters'
 
     export default {
@@ -64,55 +64,37 @@
             }
         },
         computed: {
-            async getTemplatesToSetup() {
-                return await this.$store.getters['widgetCreation/getTemplatesToSetup']
-            }
+            getTemplateToEdit() {
+                return this.$store.getters['widgetCreation/getTemplateToEdit']
+            },
         },
         async mounted () {
-            await this.getTemplateConfigs()
             await this.createUniqTemplateConfigs()
         },
         methods: {
             isAutoCompleteConfig(config) {
                 return config.ParameterType === ENUM.AUTO_COMPLETE_TYPE_KEY
             },
-            async allSelectedTemplates() {
-                await this.$store.dispatch('widgetCreation/goToCategory', 'TemplatePreview')
-            },
-            async onViewSummary() {
-                this.templateConfigs.flat().map(temp => {
-                    const uniqTemplateConfig = this.uniqTemplatesConfigs.find(uniqTemp => uniqTemp.ParameterName === temp.ParameterName)
-
-                    if (parseInt(uniqTemplateConfig.WidgetParameterJson) === 1) {
-                        temp.WidgetParameterValueJson = uniqTemplateConfig.WidgetParameterValueJson
-                    } else {
-                        temp.WidgetParameterValue = uniqTemplateConfig.WidgetParameterValue
-                    }
-
-                    return temp
-                })
-                await this.$store.dispatch('widgetCreation/copyTemplate', this.uniqTemplatesConfigs)
+            async goToSummary() {
+                const data = {
+                    template: this.uniqTemplatesConfigs,
+                    templateID: this.getTemplateToEdit.TemplateID
+                }
+                await this.$store.dispatch('widgetCreation/updateTemplate', data)
                 await this.$store.dispatch('widgetCreation/goToSummary')
             },
-            async createUniqTemplateConfigs () {
-                const copyTemplates = await this.$store.getters['widgetCreation/getCopyTemplate']
-                const uniqTemplates = uniqBy(this.templateConfigs.flat(), 'ParameterName')
-                    .map((el, index) => {
-                        if (copyTemplates && copyTemplates.length && el.ParameterName === copyTemplates[index].ParameterName) {
-                            el = copyTemplates[index]
-                        }
-
-                        return el
-                    })
-                this.uniqTemplatesConfigs = orderBy(uniqTemplates, ['ParameterType'], ['desc'])
+            async onViewSummary() {
+                await this.goToSummary()
             },
-            async getTemplateConfigs() {
-                const templatesToSetup = await this.getTemplatesToSetup
-                const result =  Object.values(templatesToSetup)
+            async createUniqTemplateConfigs () {
+                const editMode = cloneDeep(this.getTemplateToEdit)
+                let templates = []
 
-                this.templateConfigs = result
-                    .filter(template => template.DefaultWidgetConfig)
-                    .map(template => template.DefaultWidgetConfig)
+                if (editMode && Object.keys(editMode).length) {
+                    templates = orderBy(editMode.DefaultWidgetConfig, ['ParameterType'], ['desc'])
+                }
+
+                this.uniqTemplatesConfigs = templates
             }
         }
     }

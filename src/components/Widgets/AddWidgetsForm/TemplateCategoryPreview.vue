@@ -163,6 +163,8 @@
 
                 if (!value) {
                     delete this.summaries[template.TemplateName]
+                    delete this.templates[template.TemplateID]
+                    delete this.quantities[template.TemplateName]
                 }
             },
             async onPreviewTemplate(template) {
@@ -174,6 +176,7 @@
             },
             async allTemplateCategories() {
                 await this.$store.dispatch('widgetCreation/resetState')
+                await this.$store.dispatch('widgetCreation/resetCopyTemplate')
             },
             composeSummary() {
                 return {
