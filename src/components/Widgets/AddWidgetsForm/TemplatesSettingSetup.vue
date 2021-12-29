@@ -27,8 +27,8 @@
         <portal to="form-footer">
             <div class="px-10">
                 <el-button @click="onViewSummary"
-                           class="font-bold"
-                           type="primary">
+                    class="font-bold"
+                    type="primary">
                     {{ $t('Next') }}
                 </el-button>
             </div>
