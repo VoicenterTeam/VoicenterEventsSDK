@@ -102,4 +102,12 @@ export const DashboardApi = {
             parseCatch(e, true)
         }
     },
+
+    async copy(data) {
+        try {
+            return await $axios.post(`/DashBoards/Copy/`, data)
+        } catch (e) {
+            parseCatch(e, true)
+        }
+    }
 }
