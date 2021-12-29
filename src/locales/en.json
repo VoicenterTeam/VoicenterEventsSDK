@@ -989,6 +989,9 @@
     "Report Recipient Upsert": "Report Recipient Upsert",
     "Report Item Status Upsert": "Report Item Status Upsert",
     "New Report": "New Report",
+    "Set up the widget settings": "Set up the widget settings",
+    "Remove changes": "Remove changes",
+    "Do you want to remove changes and go to the settings?": "Do you want to remove changes and go to the settings?",
     "Save changes in the existing theme": "Save changes in the existing theme",
     "Save as a new": "Save as a new",
     "New Theme Name": "New Theme Name"
