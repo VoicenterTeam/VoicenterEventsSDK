@@ -16,9 +16,9 @@ export default {
     methods: {
         async addWidgetsToGroup(data = {}) {
             this.loading = true
-            let { widgets: widgetTemplates } = data
+            let { widgets: widgetTemplates, group } = data
             let widgetGroup = {
-                ...this.groupToEdit,
+                ...group,
                 DashboardID: this.activeDashboardData.DashboardID
             }
 

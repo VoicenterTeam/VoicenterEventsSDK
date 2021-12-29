@@ -3,11 +3,11 @@
         <transition-group name="flip-list">
             <div :class="{'editable-widgets':editMode}"
                  v-for="(widgetGroup, index) in widgetGroupList"
-                 :key="widgetGroup.WidgetGroupTitle"
+                 :key="`${index}-${widgetGroup.WidgetGroupID}`"
                  class="widget--group_section mb-3 relative">
                 <div class="widget--group_border"/>
                 <div class="p-2">
-                    <div v-if="editMode"
+                    <div v-if="editMode && (editedGroup.WidgetGroupID === widgetGroup.WidgetGroupID)"
                          class="flex items-center justify-between pb-2">
                         <base-outline-input v-model="widgetGroup.WidgetGroupTitle"/>
                         <edit-group-buttons
@@ -28,7 +28,7 @@
                     </div>
                     <widget-list
                         v-if="showComponent"
-                        :editable="editMode"
+                        :editable="editMode && (editedGroup.WidgetGroupID === widgetGroup.WidgetGroupID)"
                         :widget-group="widgetGroup"
                         :widgetTemplates="widgetTemplates"
                         :widgets="widgetGroup.WidgetList"
@@ -43,7 +43,7 @@
     import WidgetList from '@/components/Widgets/WidgetList'
     import EditGroupButtons from '@/components/EditGroupButtons'
     import ActionsListView from '@/components/LayoutRendering/ActionsListView'
-    
+
     export default {
         components: {
             EditGroupButtons,
@@ -54,6 +54,10 @@
             editMode: {
                 type: Boolean,
                 default: false,
+            },
+            editedGroup: {
+                type: Object,
+                default: () => {}
             },
             widgetTemplates: {
                 type: Array,
@@ -92,7 +96,7 @@
 .widget--group_section {
     @apply border border-gray-650 rounded;
     border-top: none;
-    
+
     .widget--group_border {
         @apply absolute bg-primary h-1;
         width: calc(100% + 2px);
