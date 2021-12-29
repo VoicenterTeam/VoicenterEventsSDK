@@ -35,11 +35,10 @@
         </div>
         <div class="flex items-center px-14 hidden md:flex">
             <div class="flex items-center" v-if="layoutType === 'tabbed'">
-                <div @click="addNewGroup"
-                     class="w-32 cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7">
-                    <IconNewGroup class="mx-0-5"/>
-                    <span class="mx-0-5">{{ $t('Add Group') }}</span>
-                </div>
+                <new-group-button
+                    :disabled="editMode"
+                    @click="addNewGroup"
+                />
             </div>
             <template v-if="editMode">
                 <IconVerticalLine class="mx-6 h-12"/>

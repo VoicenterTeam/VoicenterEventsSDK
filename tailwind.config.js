@@ -9,6 +9,7 @@ module.exports = {
         extend: {
             colors: {
                 primary: {
+                    ...defaultTheme.colors.blue,
                     DEFAULT: 'var(--primary-color)',
                     'base': 'var(--primary-color)',
                     50: 'var(--primary-color-opacity-50)',
