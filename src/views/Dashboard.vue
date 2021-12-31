@@ -175,6 +175,9 @@
             dashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
             },
+            clonedDashboard () {
+                return cloneDeep(this.dashboard)
+            },
             allWidgetTemplates() {
                 return this.$store.state.widgetTemplate.allWidgetTemplates
             },
@@ -208,7 +211,7 @@
                 }
                 await this.validateOrderedGroups()
 
-                let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData)
+                let dashboard = await runDashboardOperations(this.operations, this.activeDashboardData, this.clonedDashboard)
                 await this.$store.dispatch('dashboards/updateDashboard', dashboard)
 
                 this.operations = new DashboardOperations()

@@ -6,12 +6,13 @@ import store from '@/store/store'
 import { Notification } from 'element-ui'
 import i18n from '@/i18n'
 
-export async function runDashboardOperations(operations, dashboard) {
+export async function runDashboardOperations(operations, dashboard, clonedDashboard) {
     if (operations.all().length) {
         try {
             let dashboardID = dashboard.DashboardID
             const operationsUpdateWidgetsGroup = getAllWidgetGroupsNeedToUpdate(operations)
-            const operationsUpdateWidgetPosition = getAllWidgetsNeedToUpdate(operations)
+            const operationsUpdateWidgetPosition = getAllWidgetsPositionNeedToUpdate(operations)
+            const updateWidgetsGroupTitle = getAllWidgetGroupsTitleNeedToUpdate(operations, clonedDashboard)
             const allOperationsWithoutUpdate = operations
                 .all()
                 .filter(el => el.type !== 'update')
@@ -59,6 +60,9 @@ export async function runDashboardOperations(operations, dashboard) {
             if (operationsUpdateWidgetPosition.length) {
                 await WidgetApi.updatePosition(operationsUpdateWidgetPosition)
             }
+            if (updateWidgetsGroupTitle && Object.keys(updateWidgetsGroupTitle).length) {
+                await WidgetGroupsApi.update(updateWidgetsGroupTitle, true)
+            }
 
             return getDashboard(dashboardID)
         } catch (e) {
@@ -93,7 +97,7 @@ function getAllWidgetGroupsNeedToUpdate(operations) {
         })
 }
 
-function getAllWidgetsNeedToUpdate(operations) {
+function getAllWidgetsPositionNeedToUpdate(operations) {
     return  operations
         .all()
         .filter(el => (el.type === 'update' || el.type === 'moved') && el.target === 'Widget')
@@ -103,4 +107,36 @@ function getAllWidgetsNeedToUpdate(operations) {
                 GridLayout: el.payload.WidgetLayout.GridLayout
             }
         })
+}
+
+function getAllWidgetGroupsTitleNeedToUpdate (operations, clonedDashboard) {
+    let newWidgetGroup = {}
+    const createWidgetGroup = (widgetGroup) => {
+        return  {
+            WidgetsGroupID: widgetGroup.WidgetGroupID,
+            WidgetsGroupTitle: widgetGroup.WidgetGroupTitle
+        }
+    }
+
+    operations
+        .all()
+        .filter(el => el.type === 'update' && el.target === 'WidgetGroup')
+        .map(el => {
+            return {
+                WidgetGroupID: el.payload.WidgetGroupID,
+                WidgetGroupTitle: el.payload.WidgetGroupTitle 
+            }
+        })
+        .forEach(widgetGroup => {
+            const findTheSameElement = clonedDashboard.WidgetGroupList.find(el => +el.WidgetGroupID === +widgetGroup.WidgetGroupID && el.WidgetGroupTitle !== widgetGroup.WidgetGroupTitle)
+            const allClonedWidgetGroupIds = clonedDashboard.WidgetGroupList.map(el => el.WidgetGroupID)
+            const isOldElementToUpdate = findTheSameElement && Object.keys(findTheSameElement).length
+            const isNewElementToUpdate = allClonedWidgetGroupIds.indexOf(widgetGroup.WidgetGroupID) === -1 && widgetGroup.WidgetGroupTitle
+
+            if (isOldElementToUpdate || isNewElementToUpdate) {
+                newWidgetGroup = createWidgetGroup(widgetGroup)
+            }
+        })
+
+    return  newWidgetGroup
 }
