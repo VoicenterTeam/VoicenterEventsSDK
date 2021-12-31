@@ -11,7 +11,7 @@
                 </i>
                 <IconHorisontalLine class="hidden lg:flex mx-4 xl:mx-12"/>
                 <DashboardMenu/>
-                <ManageReports/>
+                <!-- <ManageReports/> TODO: make reports --> 
             </div>
             <div class="flex items-center p-2 sm:justify-between sm:w-full lg:w-auto">
                 <slot name="dashboard-operations"/>
