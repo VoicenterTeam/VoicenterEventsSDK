@@ -418,12 +418,6 @@
                                 return
                             }
 
-                            const entityNegative = config.WidgetParameterValueJson['EntityNegative']
-
-                            if (entityNegative && entityNegative.length) {
-                                config.WidgetParameterValueJson['EntityPositive'] = config.WidgetParameterValueJson['EntityPositive'].filter((el) => !entityNegative.includes(el))
-                            }
-
                             if (config.WidgetParameterValueJson['EntityPositive'].length) {
                                 config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
                             } else {

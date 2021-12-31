@@ -21,7 +21,7 @@
                 </h3>
             </template>
             <div class="py-5">
-                <p class="mb-4">
+                <p class="mb-2">
                     {{ $t('Account') }}
                     ({{ $t('copy dashboard into selected account') }})
                 </p>
@@ -32,6 +32,10 @@
                     :multiple="false"
                     class="w-full mb-2"
                     v-model="account"/>
+                <p class="mb-2">
+                    {{ $t('New Dashboard Name') }}
+                </p>
+                <el-input v-model="dashboardCopy.DashboardTitle"/>
                 <el-collapse
                     v-model="activeCollapse"
                     class="mt-3">
@@ -98,7 +102,7 @@
     import { templateIcons } from '@/enum/widgetDataTypes'
     import { Collapse, CollapseItem, Checkbox } from 'element-ui'
     import { DashboardApi } from '@/api/dashboardApi'
-    
+
     export default {
         components: {
             Modal,
@@ -120,12 +124,16 @@
                 openDelay: 200,
                 showDialog: false,
                 account: null,
-                displayWidgetList: true
+                displayWidgetList: true,
+                dashboardCopy: {
+                    ...cloneDeep(this.dashboard),
+                    DashboardTitle: `${this.dashboard.DashboardTitle} - Copy`
+                }
             }
         },
         computed: {
             widgetGroups() {
-                return this.dashboard.WidgetGroupList || []
+                return this.dashboardCopy.WidgetGroupList || []
             },
             allAccounts() {
                 return this.$store.getters['entities/accountsList']
@@ -150,8 +158,7 @@
                 })
             },
             async onCopy() {
-                const dashboard = cloneDeep(this.dashboard)
-                const widgetGroupList =  dashboard.WidgetGroupList
+                const widgetGroupList = this.dashboardCopy.WidgetGroupList
                     .map(widgetGroup => {
                         if (widgetGroup.isSelected) {
                             const newWidgetGroupItem = {}
@@ -167,10 +174,16 @@
                 try {
                     this.loading = true
                     const copiedDashboard = {
-                        DashboardID: dashboard.DashboardID,
+                        DashboardID: this.dashboardCopy.DashboardID,
+                        DashboardCopyTitle: this.dashboardCopy.DashboardTitle,
                         WidgetGroupCopyList: widgetGroupList
                     }
-                    await DashboardApi.copy(copiedDashboard)
+
+                    const newDashboard = await DashboardApi.copy(copiedDashboard)
+
+                    await this.$store.dispatch('dashboards/selectDashboard', newDashboard)
+                    await this.$store.dispatch('dashboards/getDashboards')
+                    await this.$router.push('/')
                 } catch (e) {
                     console.warn(e)
                 } finally {
