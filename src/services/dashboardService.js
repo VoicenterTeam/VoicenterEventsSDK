@@ -110,8 +110,15 @@ function getAllWidgetsPositionNeedToUpdate(operations) {
 }
 
 function getAllWidgetGroupsTitleNeedToUpdate (operations, clonedDashboard) {
-    let widgetGroup = {}
-    const operationsWithWidgetGroupsTitleId = operations
+    let newWidgetGroup = {}
+    const createWidgetGroup = (widgetGroup) => {
+        return  {
+            WidgetsGroupID: widgetGroup.WidgetGroupID,
+            WidgetsGroupTitle: widgetGroup.WidgetGroupTitle
+        }
+    }
+
+    operations
         .all()
         .filter(el => el.type === 'update' && el.target === 'WidgetGroup')
         .map(el => {
@@ -120,16 +127,16 @@ function getAllWidgetGroupsTitleNeedToUpdate (operations, clonedDashboard) {
                 WidgetGroupTitle: el.payload.WidgetGroupTitle 
             }
         })
-    clonedDashboard.WidgetGroupList
-        .forEach(clonedEl => {
-            const sameElement = operationsWithWidgetGroupsTitleId.find(el => +el.WidgetGroupID === +clonedEl.WidgetGroupID && el.WidgetGroupTitle !== clonedEl.WidgetGroupTitle)
-            if (sameElement && Object.keys(sameElement).length) {
-                widgetGroup = {
-                    WidgetsGroupID: sameElement.WidgetGroupID,
-                    WidgetsGroupTitle: sameElement.WidgetGroupTitle
-                }
+        .forEach(widgetGroup => {
+            const findTheSameElement = clonedDashboard.WidgetGroupList.find(el => +el.WidgetGroupID === +widgetGroup.WidgetGroupID && el.WidgetGroupTitle !== widgetGroup.WidgetGroupTitle)
+            const allClonedWidgetGroupIds = clonedDashboard.WidgetGroupList.map(el => el.WidgetGroupID)
+            const isOldElementToUpdate = findTheSameElement && Object.keys(findTheSameElement).length
+            const isNewElementToUpdate = allClonedWidgetGroupIds.indexOf(widgetGroup.WidgetGroupID) === -1 && widgetGroup.WidgetGroupTitle
+
+            if (isOldElementToUpdate || isNewElementToUpdate) {
+                newWidgetGroup = createWidgetGroup(widgetGroup)
             }
         })
 
-    return  widgetGroup
+    return  newWidgetGroup
 }
