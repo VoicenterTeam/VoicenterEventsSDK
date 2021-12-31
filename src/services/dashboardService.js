@@ -110,7 +110,7 @@ function getAllWidgetsPositionNeedToUpdate(operations) {
 }
 
 function getAllWidgetGroupsTitleNeedToUpdate (operations, clonedDashboard) {
-    let updateWidgetsGroupTitle = {}
+    let updateWidgetsGroup = {}
     const operationsWithWidgetGroupsTitleId = operations
         .all()
         .filter(el => el.type === 'update' && el.target === 'WidgetGroup')
@@ -124,12 +124,12 @@ function getAllWidgetGroupsTitleNeedToUpdate (operations, clonedDashboard) {
         .forEach(clonedEl => {
             const sameElement = operationsWithWidgetGroupsTitleId.find(el => +el.WidgetGroupID === +clonedEl.WidgetGroupID && el.WidgetGroupTitle !== clonedEl.WidgetGroupTitle)
             if (sameElement && Object.keys(sameElement).length) {
-                updateWidgetsGroupTitle = {
+                updateWidgetsGroup = {
                     WidgetsGroupID: sameElement.WidgetGroupID,
                     WidgetsGroupTitle: sameElement.WidgetGroupTitle
                 }
             }
         })
 
-    return  updateWidgetsGroupTitle
+    return  updateWidgetsGroup
 }
