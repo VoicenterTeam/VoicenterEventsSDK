@@ -135,7 +135,7 @@ class EventsSDK {
   }
 
   _onConnectError(data) {
-    this._retryConnection('next');
+    this._retryConnection('next', true);
     this.connected = false;
     this.Logger.log(eventTypes.CONNECT_ERROR, data)
   }
@@ -145,18 +145,19 @@ class EventsSDK {
   }
 
   _onReconnectFailed() {
-    this._retryConnection('next');
+    this._retryConnection('next',true);
     this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
   }
 
   _onConnectTimeout() {
-    this._retryConnection('next');
+    this._retryConnection('next',true);
     this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
   _onReconnectAttempt() {
+    this.connected = false;
     if (this.reconnectOptions.retryCount >= this.reconnectOptions.maxReconnectAttempts) {
-      this._retryConnection('next');
+      this._retryConnection('next',true);
       return;
     }
     if (this.reconnectOptions.reconnectionDelay < this.reconnectOptions.maxReconnectionDelay) {
@@ -172,7 +173,7 @@ class EventsSDK {
   _onDisconnect(reason) {
     this.connected = false;
     this.Logger.log(eventTypes.DISCONNECT, reason);
-    this._connect('next')
+    this._connect('next', true)
   }
 
   _onKeepAlive(data) {
@@ -190,7 +191,7 @@ class EventsSDK {
 
   async _onLoginResponse(data) {
     if (data.Client) {
-      await loadExternalScript(data.Client)
+      await loadExternalScript('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=2.4.0')
     }
     if (data.URL) {
       this.server = {
@@ -211,14 +212,14 @@ class EventsSDK {
       this.token = data.Token
       await this._connect('default', true)
     }
-
+    if (data.TokenExpiry) {
+      this.options.tokenExpiry = data.TokenExpiry
+    }
     if (data.RefreshToken) {
       this.options.refreshToken = data.RefreshToken
       this._handleTokenExpiry()
     }
-    if (data.TokenExpiry) {
-      this.options.tokenExpiry = data.TokenExpiry
-    }
+
   }
 
   _handleTokenExpiry() {
@@ -228,8 +229,13 @@ class EventsSDK {
     }
     const timeout = date.getTime() - new Date().getTime() - 5000 // 5 seconds before expire
     setTimeout(async () => {
+      let Socket = null
       const res = await refreshToken(this.options.refreshTokenUrl, this.options.refreshToken)
-      await this._onLoginResponse(res)
+      if(res.Data){
+        Socket = res.Data.Socket;
+        return await this._onLoginResponse(Socket)
+      }
+      throw new Error(`Error on refreshToken`)
     }, timeout)
   }
 
@@ -282,7 +288,10 @@ class EventsSDK {
     this.Logger.log('Connecting to..', url);
     this.closeAllConnections();
     const options = {
-      ...this.options,
+      reconnection: false,
+      perMessageDeflate: false,
+      upgrade: false,
+      transports: ['websocket'],
       debug: false
     }
     if (this.token) {
@@ -290,12 +299,24 @@ class EventsSDK {
         token: this.token
       }
     }
-    this.socket = window.io(url, options);
+    this.socket = window.io(url, options)
+
+
+
     allConnections.push(this.socket);
     this.connectionEstablished = true;
   }
-
   _initSocketEvents() {
+    this.socket
+    .on(eventTypes.RECONNECT_ATTEMPT, data => this._onReconnectAttempt(data))
+    .on(eventTypes.RECONNECT_FAILED, data => this._onReconnectFailed(data))
+    .on(eventTypes.CONNECT, data => this._onConnect(data))
+    .on(eventTypes.CONNECT_TIMEOUT , data => this._onConnectTimeout(data))
+    .on(eventTypes.CONNECT_ERROR, data => this._onConnectError(data))
+    .on(eventTypes.RECONNECT_ERROR, data => this._onReconnectAttempt(data))
+    .on(eventTypes.ERROR, data => this._onError(data))
+    .on(eventTypes.DISCONNECT, data => this._onDisconnect(data))
+    this.socket.onpacket = this._onEvent.bind(this)
     this.socket.onevent = this._onEvent.bind(this)
   }
 
@@ -321,13 +342,14 @@ class EventsSDK {
       }
       if (now > this.getLastEventTimestamp() + this.options.keepAliveTimeout) {
         this.emit(eventTypes.KEEP_ALIVE, this.options.token);
+        return
       }
 
     }, this.options.keepAliveTimeout);
 
-    this.idleInterval = setInterval(() => {
-      this.reSync(false)
-    }, this.options.idleInterval)
+    // this.idleInterval = setInterval(() => {
+    //   this.reSync(false)
+    // }, this.options.idleInterval)
   }
 
   _findCurrentServer() {
@@ -387,7 +409,7 @@ class EventsSDK {
   }
 
   _onEvent(packet) {
-    if (!packet.data) {
+    if (!packet.data) { 
       return;
     }
     let evt = this._parsePacket(packet);
@@ -401,13 +423,6 @@ class EventsSDK {
       }
     })
     const eventMappings = {
-      [eventTypes.RECONNECT_ATTEMPT]: this._onReconnectAttempt,
-      [eventTypes.RECONNECT_FAILED]: this._onReconnectFailed,
-      [eventTypes.CONNECT]: this._onConnect,
-      [eventTypes.DISCONNECT]: this._onDisconnect,
-      [eventTypes.ERROR]: this._onError,
-      [eventTypes.CONNECT_ERROR]: this._onConnectError,
-      [eventTypes.CONNECT_TIMEOUT]: this._onConnectTimeout,
       [eventTypes.KEEP_ALIVE_RESPONSE]: this._onKeepAlive,
       [eventTypes.LOGIN_RESPONSE]: this._onLoginResponse,
       [eventTypes.EXTENSION_UPDATED]: this._reSync,
@@ -470,6 +485,7 @@ class EventsSDK {
     allConnections = []
     if (this.socket) {
       this.socket.disconnect()
+      this.socket.close()
       this.socket = null
     }
   }
