@@ -1,8 +1,10 @@
+import userData from '../fixtures/example.json';
+
 const response = {
     Status: 200
 }
 
-const token = process.env.USER_ACCESS_TOKEN;
+const token = userData.accessToken;
 const url = `/?token=${token}`
 
 describe('Initial test', () => {
