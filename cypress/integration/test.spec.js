@@ -2,7 +2,8 @@ const response = {
     Status: 200
 }
 
-const url = '/?token=Y6C1T3kadBbIQlyx1zsQNcUky1uSTbCaL3zpNoQF3f6ABM9xSfryBefp916N2Ytfyws2YyhQvytvfhZsLlm2Vf3PL1IUCLHzvxoA'
+const token = process.env.USER_ACCESS_TOKEN;
+const url = `/?token=${token}`
 
 describe('Initial test', () => {
     it('Base test', () => {
