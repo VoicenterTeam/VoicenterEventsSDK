@@ -1,4 +1,4 @@
-import userData from '../fixtures/example.json';
+import userData from '../fixtures/userData.json';
 
 const response = {
     Status: 200
