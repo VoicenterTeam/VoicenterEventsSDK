@@ -87,10 +87,11 @@
                 </div>
             </div>
         </div>
-        <ConfirmDialog :visible.sync="showConfirmDialog"
-                       description="Are you sure that you want to delete this Widget Group"
-                       @on-cancel="showConfirmDialog = false"
-                       @on-confirm="removeWidgetGroup"
+        <delete-dialog
+            :visible.sync="showConfirmDialog"
+            description="Are you sure that you want to delete this Widget Group"
+            @on-cancel="showConfirmDialog = false"
+            @on-confirm="removeWidgetGroup"
         />
     </div>
 </template>
@@ -100,11 +101,10 @@
     import cloneDeep from 'lodash/cloneDeep'
     import AccountNoData from '@/views/AccountNoData'
     import { targets, types } from '@/enum/operations'
-    import pageSizeMixin from '@/mixins/pageSizeMixin'
     import NewGroupButton from '@/components/NewGroupButton'
     import { dashboardOperation } from '@/models/instances'
     import Sidebar from '@/components/LayoutRendering/Sidebar'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
+    import DeleteDialog from '@/components/Dialogs/DeleteDialog'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
     import { retrySocketConnection } from '@/plugins/initRealTimeSdk'
@@ -130,9 +130,9 @@
             Sidebar,
             SocketStatusButton,
             SocketStatusAlert,
-            ConfirmDialog,
+            DeleteDialog,
         },
-        mixins: [pageSizeMixin, removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
+        mixins: [removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
         props: {
             showLoadingIndicator: {
                 type: Boolean,

@@ -55,7 +55,7 @@
     import 'element-ui/lib/theme-chalk/dialog.css'
     import Migrating from 'element-ui/src/mixins/migrating';
     import emitter from 'element-ui/src/mixins/emitter';
-    
+
     export default {
         name: 'Modal',
         mixins: [Popup, emitter, Migrating],
@@ -199,7 +199,6 @@
             hide(cancel) {
                 if (cancel !== false) {
                     this.$emit('update:visible', false);
-                    this.$emit('close');
                     this.closed = true;
                 }
             },

@@ -20,34 +20,32 @@
     </div>
 </template>
 <script>
-    import pageSizeMixin from '@/mixins/pageSizeMixin'
     import BaseNavbar from '@/components/Navbar/BaseNavbar'
     import EditableTabs from '@/modules/common/components/EditableTabs'
-    
+
     const REPORT_CREATION_TAB = {
         title: 'New Report',
         name: 'reports-create',
         icon: 'IconStore',
     }
-    
+
     const REPORT_EDIT_TAB = {
         name: 'reports-edit',
         icon: 'IconEdit',
     }
-    
+
     const REPORT_LIST_TAB = {
         title: 'Report List',
         name: 'list',
         icon: 'IconList',
     }
-    
+
     const AVAILABLE_ROUTES = {
         'list': '/reports',
         'reports-create': '/reports/create',
     }
-    
+
     export default {
-        mixins: [pageSizeMixin],
         components: {
             BaseNavbar,
             EditableTabs,

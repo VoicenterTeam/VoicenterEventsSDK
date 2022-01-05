@@ -143,7 +143,6 @@
     import { WidgetApi } from '@/api/widgetApi'
     import { templateApi } from '@/api/templateApi'
     import { DashboardApi } from '@/api/dashboardApi'
-    import pageSizeMixin from '@/mixins/pageSizeMixin'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { widgetGroupModel } from '@/models/instances'
     import { WidgetGroupsApi } from '@/api/widgetGroupApi'
@@ -163,7 +162,6 @@
             LayoutSelect,
             NavBar,
         },
-        mixins: [pageSizeMixin],
         data() {
             return {
                 transitionDuration: 250,
@@ -257,7 +255,7 @@
                 try {
                     this.loading = true
                     this.showConfirmDialog = false
-                    
+
                     const dashboard = await this.createDashboard()
                     await this.addEntities(dashboard, this.isCreateBlankDashboard)
                     await this.$store.dispatch('dashboards/getDashboards')
