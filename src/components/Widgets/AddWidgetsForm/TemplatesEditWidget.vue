@@ -1,7 +1,7 @@
 <template>
     <div>
         <portal to="redirect-action">
-            <span class="text-steel hover:text-primary redirect-action"
+            <span class="text-primary redirect-action"
                 @click="goToSummary()">
                 <IconDirLeft class="mx-1"/>
                 {{ $t('Summary') }}

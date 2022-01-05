@@ -1,12 +1,13 @@
 <template>
     <div>
         <portal to="form-title">
-            {{ $t('All Categories') }}
+            {{ $t('Add New Widgets') }}
         </portal>
-        <TemplateCategoryCard v-for="templatesCategory in getTemplateCategories"
-                              v-bind="templatesCategory"
-                              :key="templatesCategory.CategoryID"
-                              :templates-category="templatesCategory"
+        <TemplateCategoryCard
+            v-for="templatesCategory in getTemplateCategories"
+            v-bind="templatesCategory"
+            :key="templatesCategory.CategoryID"
+            :templates-category="templatesCategory"
         />
     </div>
 </template>

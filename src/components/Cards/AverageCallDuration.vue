@@ -40,6 +40,7 @@
                 </el-form>
             </template>
             <template v-slot:additional-data>
+                {{ model }}
                 <time-frame
                     :model="model"
                     :timeFrameType="model.WidgetTime.type"
