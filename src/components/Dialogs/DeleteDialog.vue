@@ -22,7 +22,7 @@ export default {
     data () {
         return {
             titleDefault: this.$t('Delete Confirmation'),
-            descriptionDefault: 'Are you sure that you want to delete this Dashboard?',
+            descriptionDefault: this.$t('dialog.delete.description'),
             configDefault: {
                 confirmIcon: 'IconDelete',
                 confirmText: this.$t('Delete')

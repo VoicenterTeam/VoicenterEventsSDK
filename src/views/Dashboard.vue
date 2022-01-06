@@ -89,7 +89,7 @@
         </div>
         <delete-dialog
             :visible.sync="showConfirmDialog"
-            description="Are you sure that you want to delete this Widget Group"
+            :description="$t('dialog.widgetGroup.delete.description')"
             @on-cancel="showConfirmDialog = false"
             @on-confirm="removeWidgetGroup"
         />

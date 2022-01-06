@@ -227,6 +227,12 @@
     "widget.info": "Widget Info",
     "html.editor.image.upload.error": "Could not upload the image.",
     "statistics.to.display": "Statistics to display",
+
+    "dialog.delete.description": "Are you sure that you want to delete this Dashboard?",
+    "dialog.warning.description": "Are you sure that you want to do this?",
+
+    "dialog.widgetGroup.delete.description": "Are you sure that you want to delete this Widget Group",
+
     "Display % of Others value": "Display % of Others value",
     "Display absolute numbers": "Display absolute numbers",
     "Include the selected": "Include the selected",
@@ -909,7 +915,6 @@
     "Funnel 3D": "Funnel 3D",
     "Are you sure that you want to delete this Dashboard?": "Are you sure that you want to delete this Dashboard?",
     "Delete Confirmation": "Delete Confirmation",
-    "Are you sure that you want to delete this Widget Group": "Are you sure that you want to delete this Widget Group",
     "Copy Dashboard": "Copy Dashboard",
     "Copy": "Copy",
     "Confirm": "Confirm",

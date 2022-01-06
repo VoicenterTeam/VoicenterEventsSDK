@@ -29,7 +29,7 @@ export default {
     data () {
         return {
             titleDefault: this.$t('Warning'),
-            descriptionDefault: 'Are you sure that you want to do this?'
+            descriptionDefault: this.$t('dialog.warning.description')
         }
     },
 }
