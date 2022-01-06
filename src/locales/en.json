@@ -995,5 +995,8 @@
     "Save changes in the existing theme": "Save changes in the existing theme",
     "Save as a new": "Save as a new",
     "New Theme Name": "New Theme Name",
-    "New Dashboard Name": "New Dashboard Name"
+    "New Dashboard Name": "New Dashboard Name",
+    "general.pageNotFound": "Page not found",
+    "general.pageDoesNotExist": "We are sorry, but the page you are looking for - does not exist",
+    "general.backToMainPage": "Back to Main Page"
 }
