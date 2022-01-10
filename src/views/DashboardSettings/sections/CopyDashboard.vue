@@ -47,7 +47,7 @@
                     >
                         <template slot="title">
                             <el-checkbox :value="group.isSelected"
-                                         @change.native.stop="toggleSelection(group)"/>
+                                         @change.native.stop="toggleGroupSelection(group)"/>
                             <span class="mx-2">
                                 {{ group.WidgetGroupTitle || $t('Group ID') + ': ' + group.WidgetGroupID }}
                             </span>
@@ -59,7 +59,7 @@
                                 class="w-full flex items-center">
                                 <el-checkbox
                                     :value="widget.isSelected"
-                                    @change="toggleSelection(widget)"
+                                    @change="toggleWidgetSelection(widget, group)"
                                 />
                                 <component class="text-primary my-1 mx-2"
                                         :is="getWidgetIcon(widget)"/>
@@ -150,9 +150,37 @@
                 const { DataTypeID } = widget.WidgetLayout
                 return templateIcons[DataTypeID]
             },
-            toggleSelection(group) {
+            toggleGroupSelection(group) {
                 this.displayWidgetList = false
                 group.isSelected = !group.isSelected
+
+                if (!group.isSelected) {
+                    group.WidgetList.forEach(widget => {
+                        widget.isSelected = false
+                    })
+                } else {
+                    group.WidgetList.forEach(widget => {
+                        widget.isSelected = true
+                    })
+                }
+
+                this.$nextTick(() => {
+                    this.displayWidgetList = true
+                })
+            },
+            toggleWidgetSelection(widget, group) {
+                this.displayWidgetList = false
+                widget.isSelected = !widget.isSelected
+
+                if(widget.isSelected && !group.isSelected) {
+                    group.isSelected = true
+                }
+
+                const isFullyUnchecked = !group.WidgetList.some(el => el.isSelected)
+                if (isFullyUnchecked) {
+                    group.isSelected = false
+                }
+
                 this.$nextTick(() => {
                     this.displayWidgetList = true
                 })
