@@ -10,7 +10,7 @@
                         {{ $t('Dashboard Name') }}
                     </div>
                 </div>
-                <el-input v-model="value.DashboardTitle"/>
+                <base-input v-model="value.DashboardTitle" />
             </div>
             <div class="col-span-4 md:col-span-1 pt-4 border-b pb-3 md:pb-0 md:border-none md:pt-0">
                 <div class="flex items-center mb-4">
@@ -144,6 +144,7 @@
     import WidgetGroupManagement from '@/views/DashboardSettings/components/WidgetGroupManagement'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
     import { DEFAULT_GROUP_KEYS, PRIMARY_COLOR_KEY } from '@/views/DashboardSettings/LayoutManagement/layout-management'
+    import BaseInput from '@/components/Common/BaseInput'
 
     export default {
         components: {
@@ -153,6 +154,7 @@
             ColorParameterType,
             WidgetGroupManagement,
             LayoutManagementSelect,
+            BaseInput
         },
         props: {
             value: {
