@@ -31,28 +31,28 @@
     --red-focus: #FF3636;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "../css/tailwind";
 
-@import "element-overrides/button";
-@import "element-overrides/collapse";
-@import "element-overrides/dialog";
-@import "element-overrides/dialog";
-@import "element-overrides/date-picker";
-@import "element-overrides/select";
-@import "element-overrides/tabs";
-@import "element-overrides/checkbox";
-@import "element-overrides/color-picker";
-@import "element-overrides/input";
-@import "element-overrides/table";
-@import "element-overrides/pagination";
-@import "element-overrides/radio";
-@import "element-overrides/spiner";
-@import "element-overrides/slider";
-@import "element-overrides/form";
-@import "widgets/card";
+@import "main/element-overrides/button";
+@import "main/element-overrides/collapse";
+@import "main/element-overrides/dialog";
+@import "main/element-overrides/dialog";
+@import "main/element-overrides/date-picker";
+@import "main/element-overrides/select";
+@import "main/element-overrides/tabs";
+@import "main/element-overrides/checkbox";
+@import "main/element-overrides/color-picker";
+@import "main/element-overrides/input";
+@import "main/element-overrides/table";
+@import "main/element-overrides/pagination";
+@import "main/element-overrides/radio";
+@import "main/element-overrides/spiner";
+@import "main/element-overrides/slider";
+@import "main/element-overrides/form";
+@import "main/widgets/card";
 
-@import "scroll";
+@import "main/scroll";
 
-@import "layout/dashboard";
+@import "main/layout/dashboard";
+
+@import "main/icons";
