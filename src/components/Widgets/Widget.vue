@@ -3,10 +3,11 @@
          class="grid-stack-item-content relative rounded-lg flex flex-col"
          :key="widget.WidgetID"
          :style="getStyles">
-        <div class="flex relative items-center">
+        <div class="flex relative items-center py-2">
             <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header"
                  v-if="showDeleteButton"
             >
+<!--                <i :class="widget.WidgetTemplateIcon"/>-->
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>

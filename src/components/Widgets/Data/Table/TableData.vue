@@ -31,9 +31,31 @@
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
                     <div v-else>{{$t('N/A')}}</div>
                 </template>
-                <template v-slot:pagination>
+                <template v-slot:pagination-rows-per-page>
                     <div class="flex items-center">
                         <el-select
+                            @change="handlePageChange(1)"
+                            class="w-48 mx-4 py-1"
+                            size="small"
+                            v-model="pageSize">
+                            <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
+                            <slot>
+                                <div class="w-40 mx-2">
+                                    <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
+                                    <div class="flex flex-row">
+                                        <el-input size="mini" class="mx-1" v-model="customPageSize"></el-input>
+                                        <el-button size="mini" class="mx-1" @click="applyCustomPageSize">
+                                            {{$t('Apply')}}
+                                        </el-button>
+                                    </div>
+                                </div>
+                            </slot>
+                        </el-select>
+                    </div>
+                </template>
+                <template v-slot:pagination>
+                    <div class="flex items-center">
+<!--                        <el-select
                             @change="handlePageChange(1)"
                             class="w-20 mx-1 py-1"
                             size="mini"
@@ -50,7 +72,7 @@
                                     </div>
                                 </div>
                             </slot>
-                        </el-select>
+                        </el-select>-->
                         <el-pagination
                             :current-page="currentPage"
                             :hide-on-single-page="hideOnSinglePage"
@@ -67,19 +89,19 @@
                     <time-frame :widget="data"/>
                 </template>
                 <template v-slot:search-input>
-                    <div class="flex items-center w-48 px-1">
+                    <div class="flex items-center w-64 px-1 lg:ml-8">
                         <el-input
                             clearable
                             :placeholder="$t('Type text to filter')"
-                            size="medium"
-                            suffix-icon="el-icon-search"
+                            size="small"
+                            prefix-icon="el-icon-search"
                             v-model="filter"/>
                     </div>
                 </template>
-                <template v-slot:additional-data>
+<!--                <template v-slot:additional-data>
                     <p class="text-main-sm px-2 truncate" :style="getStyles">{{dataCounts}} / {{filteredDataLength}}
                         {{$t('row(s)')}}</p>
-                </template>
+                </template>-->
             </data-table>
         </div>
     </div>

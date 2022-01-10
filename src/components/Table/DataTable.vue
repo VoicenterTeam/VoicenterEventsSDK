@@ -1,7 +1,10 @@
 <template>
     <div class="data-table__container h-full">
         <portal :to="`widget-header__${widget.WidgetID}`">
-            <slot name="search-input"/>
+            <div class="flex justify-start">
+                <slot name="search-input"/>
+                <slot name="pagination-rows-per-page"/>
+            </div>
             <slot name="time-frame"/>
             <div class="flex items-center table-row__count"
                  v-if="showManageColumns"
@@ -20,8 +23,9 @@
                                         @on-reorder-column="reorderColumn"/>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <slot name="additional-data"/>
             </div>
+            <IconInfo class=""/>
+            <slot name="additional-data"/>
         </portal>
         <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
             <el-table :data="rowsData"
