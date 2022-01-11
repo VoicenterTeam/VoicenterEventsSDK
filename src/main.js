@@ -11,6 +11,7 @@ import i18n from './i18n'
 import initRealTimeSdk from '@/plugins/initRealTimeSdk';
 import PortalVue from 'portal-vue'
 import dashboardPlugin from './plugins/dashboardPlugin'
+import '@/assets/css/icon-vc.css'
 
 Vue.config.productionTip = false
 
