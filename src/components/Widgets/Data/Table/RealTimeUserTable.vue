@@ -77,14 +77,11 @@
                 <div class="flex items-center w-48 px-1">
                     <el-input
                         clearable
-                        :placeholder="$t('Type text to filter')"
+                        :placeholder="$t('Search')"
                         size="medium"
-                        suffix-icon="el-icon-search"
+                        prefix-icon="el-icon-search"
                         v-model="filter"/>
                 </div>
-            </template>
-            <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{ fetchTableData.length }} {{ $t('row(s)') }}</p>
             </template>
         </data-table>
     </div>

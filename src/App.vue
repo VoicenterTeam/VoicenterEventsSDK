@@ -3,7 +3,7 @@
     <network-status-alert/>
     <notifications/>
     <fade-transition mode="out-in" :duration="100">
-        <router-view/>
+        <router-view v-loading.fullscreen.lock="initialLoading" />
     </fade-transition>
 </div>
 </template>
@@ -17,16 +17,25 @@ export default {
     components: {
         NetworkStatusAlert,
     },
+    data() {
+      return {
+          initialLoading: true
+      }
+    },
     async created() {
-        await this.$store.dispatch('entities/getEntitiesList')
-        await this.$store.dispatch('dashboards/getDashboards')
-        await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
-        await this.$store.dispatch('dashboards/selectDashboard')
-        await this.$store.dispatch('layout/setupActiveLayout')
-        await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
-        await this.$store.dispatch('layout/setupLayouts')
-        await this.$store.dispatch('layout/getGlobalLayout')
-        this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
+        try {
+            await this.$store.dispatch('entities/getEntitiesList')
+            await this.$store.dispatch('dashboards/getDashboards')
+            await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
+            await this.$store.dispatch('dashboards/selectDashboard')
+            await this.$store.dispatch('layout/setupActiveLayout')
+            await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
+            await this.$store.dispatch('layout/setupLayouts')
+            await this.$store.dispatch('layout/getGlobalLayout')
+            this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
+        } finally {
+            this.initialLoading = false
+        }
     },
     computed: {
         layout() {
