@@ -41,9 +41,7 @@
             },
             getHelpByWidgetsTemplateID() {
                 const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](this.getTemplate.template.TemplateID)
-                console.log('HH this.getTemplate.template.TemplateID', this.getTemplate.template.TemplateID)
 
-                console.log('HH helpData', helpData)
                 this.templateHelp = get(helpData, 'Help', {})
             },
         },

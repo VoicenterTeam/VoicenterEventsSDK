@@ -11,7 +11,8 @@
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
-
+                <!--            TODO: rewrite using button with icon font -->
+                <IconInfo class="cursor-pointer w-8 mx-2" @click="showPreviewInfoDialog = true" />
             </div>
             <WidgetAction :key="widget.WidgetID"
                           :editable="editable"
@@ -51,6 +52,13 @@
             v-on="$listeners"
             width="45%"
         />
+        <TemplatePreviewInfoDialog
+            :visible.sync="showPreviewInfoDialog"
+            :templateId="widget.TemplateID"
+            v-if="showPreviewInfoDialog"
+            v-on="$listeners"
+            @on-close="showPreviewInfoDialog = false"
+        />
     </div>
 </template>
 <script>
@@ -82,6 +90,7 @@
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
     import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
     import AverageCallDuration from '@/components/Cards/AverageCallDuration'
+    import TemplatePreviewInfoDialog from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog";
     import {
         getWidgetDataType,
         getWidgetEndpoint,
@@ -131,6 +140,7 @@
             AverageCallDuration,
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
+            TemplatePreviewInfoDialog,
         },
         props: {
             editable: {
@@ -155,6 +165,7 @@
                 showUpdateDialog: false,
                 TABLE_DATA_TYPE_ID: '4',
                 editMode: false,
+                showPreviewInfoDialog: false,
             }
         },
         computed: {

@@ -3,7 +3,9 @@
     <network-status-alert/>
     <notifications/>
     <fade-transition mode="out-in" :duration="100">
-        <router-view v-loading.fullscreen.lock="initialLoading" />
+        <router-view
+            v-loading.fullscreen.lock="initialLoading"
+            element-loading-background="rgba(0, 0, 0, 0.2)" />
     </fade-transition>
 </div>
 </template>

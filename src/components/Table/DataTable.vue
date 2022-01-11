@@ -24,8 +24,8 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-<!--            TODO: rewrite using button with icon font -->
-            <IconInfo class="" @click="showPreviewInfoDialog = true" />
+<!--            TODO: rewrite using button with icon font
+            <IconInfo class="" @click="showPreviewInfoDialog = true" />-->
             <slot name="additional-data"/>
         </portal>
         <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
@@ -103,13 +103,13 @@
                 </div>
             </div>
         </portal>
-        <TemplatePreviewInfoDialog
+<!--        <TemplatePreviewInfoDialog
             :visible.sync="showPreviewInfoDialog"
             :templateId="widget.TemplateID"
             v-if="showPreviewInfoDialog"
             v-on="$listeners"
             @on-close="showPreviewInfoDialog = false"
-        />
+        />-->
     </div>
 </template>
 <script>
@@ -121,14 +121,14 @@
     import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import { format } from 'date-fns'
     import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
-    import TemplatePreviewInfoDialog from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog";
+    /*import TemplatePreviewInfoDialog from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog";*/
     
     const QUEUE_STATISTICS_TEMPLATE = 45
     
     export default {
         inheritAttrs: false,
         components: {
-            TemplatePreviewInfoDialog,
+            /*TemplatePreviewInfoDialog,*/
             ManageColumns,
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
@@ -194,7 +194,7 @@
                 showManageColumns: true,
                 columnMinWidthData: this.columnMinWidth,
                 templateHelp: {},
-                showPreviewInfoDialog: false,
+                /*showPreviewInfoDialog: false,*/
             }
         },
         computed: {

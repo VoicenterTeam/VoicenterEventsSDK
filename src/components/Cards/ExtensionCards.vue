@@ -243,11 +243,6 @@
     transition: transform 5s;
 }
 
-.el-loading-mask .el-loading-spinner {
-    display: flex;
-    justify-content: center;
-}
-
 .el-row {
     margin-bottom: 20px;
 
