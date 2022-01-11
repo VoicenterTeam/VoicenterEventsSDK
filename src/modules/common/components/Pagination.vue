@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex justify-between item-center bg-transparent h-12 p-4 base-pagination">
-        <el-dropdown trigger="click" @command="changePage">
+        <el-dropdown v-if="!hidePerPageOption" trigger="click" @command="changePage">
             <div class="flex items-center">
                 <div class="text-xs font-semibold text-gray-700 mr-4"> {{ $t('Pages') }}:</div>
                 <div class="text-xs font-medium text-gray">{{ value }}</div>
@@ -71,6 +71,10 @@
                 type: Number,
                 default: 5,
             },
+            hidePerPageOption: {
+                type: Boolean,
+                default: false,
+            }
         },
         computed: {
             totalPages() {

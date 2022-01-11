@@ -3,13 +3,13 @@
         <div @click="triggerExportDialog(exportTo.XLSX)" class="mx-2 cursor-pointer export-button">
             <div class="flex items-center">
                 <p class="text-md">{{ $t('general.export.excel') }}</p>
-                <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
+                <i class="vc-icon-download icon-lg mx-2 text-primary"/>
             </div>
         </div>
         <div @click="triggerExportDialog(exportTo.CSV)" class="mx-2 cursor-pointer export-button">
             <div class="flex items-center">
                 <p class="text-md">{{ $t('general.export.csv') }}</p>
-                <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
+                <i class="vc-icon-download icon-lg mx-2 text-primary"/>
             </div>
         </div>
         <modal :visible.sync="showExportDialog" v-if="showExportDialog">

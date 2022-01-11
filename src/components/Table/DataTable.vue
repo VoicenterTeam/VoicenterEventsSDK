@@ -9,10 +9,10 @@
             <div class="flex items-center table-row__count"
                  v-if="showManageColumns"
                  :key="`${widget.WidgetID} - ${activeLanguage}`">
-                <el-dropdown class="px-2" size="mini" trigger="click">
-                    <el-button size="small" type="primary">
+                <el-dropdown class="pr-4" size="mini" trigger="click">
+                    <el-button size="small" type="_primary" plain>
+                        <i class="vc-icon-filter el-icon--left"/>
                         {{ $t('datatable.manage.columns') }}
-                        <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                         <manage-columns :key="`${widget.WidgetID} - ${activeLanguage}`"
@@ -24,8 +24,6 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-<!--            TODO: rewrite using button with icon font
-            <IconInfo class="" @click="showPreviewInfoDialog = true" />-->
             <slot name="additional-data"/>
         </portal>
         <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
@@ -82,7 +80,7 @@
             </el-table>
         </div>
         <portal :to="`widget-footer__${widget.WidgetID}`">
-            <div class="flex items-center justify-between -mx-1 widget-footer" v-if="tableData.length">
+            <div class="flex items-center justify-between -mx-1 widget-footer h-12" v-if="tableData.length">
                 <export-data :tableId="tableId"
                              :widget="widget"
                              @on-update-layout="updateLayout"
@@ -103,13 +101,6 @@
                 </div>
             </div>
         </portal>
-<!--        <TemplatePreviewInfoDialog
-            :visible.sync="showPreviewInfoDialog"
-            :templateId="widget.TemplateID"
-            v-if="showPreviewInfoDialog"
-            v-on="$listeners"
-            @on-close="showPreviewInfoDialog = false"
-        />-->
     </div>
 </template>
 <script>
@@ -121,14 +112,12 @@
     import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import { format } from 'date-fns'
     import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
-    /*import TemplatePreviewInfoDialog from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog";*/
     
     const QUEUE_STATISTICS_TEMPLATE = 45
     
     export default {
         inheritAttrs: false,
         components: {
-            /*TemplatePreviewInfoDialog,*/
             ManageColumns,
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
@@ -194,7 +183,6 @@
                 showManageColumns: true,
                 columnMinWidthData: this.columnMinWidth,
                 templateHelp: {},
-                /*showPreviewInfoDialog: false,*/
             }
         },
         computed: {

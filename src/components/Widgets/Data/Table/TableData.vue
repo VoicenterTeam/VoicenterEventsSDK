@@ -38,7 +38,7 @@
                             class="w-48 mx-4 py-1"
                             size="small"
                             v-model="pageSize">
-                            <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
+                            <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
                             <slot>
                                 <div class="w-40 mx-2">
                                     <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
@@ -55,34 +55,12 @@
                 </template>
                 <template v-slot:pagination>
                     <div class="flex items-center">
-<!--                        <el-select
-                            @change="handlePageChange(1)"
-                            class="w-20 mx-1 py-1"
-                            size="mini"
-                            v-model="pageSize">
-                            <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
-                            <slot>
-                                <div class="w-40 mx-2">
-                                    <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
-                                    <div class="flex flex-row">
-                                        <el-input size="mini" class="mx-1" v-model="customPageSize"></el-input>
-                                        <el-button size="mini" class="mx-1" @click="applyCustomPageSize">
-                                            {{$t('Apply')}}
-                                        </el-button>
-                                    </div>
-                                </div>
-                            </slot>
-                        </el-select>-->
-                        <el-pagination
-                            :current-page="currentPage"
-                            :hide-on-single-page="hideOnSinglePage"
-                            :page-size="pageSize"
-                            :page-sizes="pageSizes"
-                            :pager-count="pagerCount"
-                            :total="filteredDataLength"
-                            @current-change="handlePageChange"
-                            layout="prev, pager, next">
-                        </el-pagination>
+                        <Pagination class="z-10 rounded-b-md"
+                                    v-model="currentPage"
+                                    :per-page="pageSize"
+                                    hidePerPageOption
+                                    :total="filteredDataLength"
+                        />
                     </div>
                 </template>
                 <template v-slot:time-frame>
@@ -93,9 +71,10 @@
                         <el-input
                             clearable
                             :placeholder="$t('Search')"
-                            size="small"
-                            prefix-icon="el-icon-search"
-                            v-model="filter"/>
+                            size="large"
+                            v-model="filter">
+                            <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
+                        </el-input>
                     </div>
                 </template>
             </data-table>
@@ -108,7 +87,7 @@
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import { Option, Pagination, Select } from 'element-ui'
+    import { Option, Select } from 'element-ui'
     import AudioPlayer from '@/components/Audio/AudioPlayer'
     import DataTable from '@/components/Table/DataTable'
     import { isMultiQueuesDashboard, isRealtimeWidget } from '@/helpers/widgetUtils'
@@ -117,6 +96,7 @@
     import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
+    import Pagination from '@/modules/common/components/Pagination'
 
     export default {
         mixins: [dataTableMixin],
@@ -125,9 +105,9 @@
             TimeFrame,
             AudioPlayer,
             RealTimeUserTable,
+            Pagination,
             [Select.name]: Select,
             [Option.name]: Option,
-            [Pagination.name]: Pagination,
             [MultiQueuesDashboard.name]: MultiQueuesDashboard,
         },
         props: {

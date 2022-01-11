@@ -7,12 +7,13 @@
             <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header"
                  v-if="showDeleteButton"
             >
-<!--                <i :class="widget.WidgetTemplateIcon"/>-->
+                <i class="icon-lg text-primary mx-2" :class="widget.WidgetTemplateIcon"/>
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
-                <!--            TODO: rewrite using button with icon font -->
-                <IconInfo class="cursor-pointer w-8 mx-2" @click="showPreviewInfoDialog = true" />
+                <span class="cursor-pointer ml-2" @click="showPreviewInfoDialog = true">
+                    <i class="vc-icon-info icon-lg text-gray-700"/>
+                </span>
             </div>
             <WidgetAction :key="widget.WidgetID"
                           :editable="editable"

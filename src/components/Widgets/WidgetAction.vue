@@ -1,8 +1,9 @@
 <template>
-    <div class="relative px-4 py-1-5 rounded hover:bg-primary-100 cursor-pointer"
+    <div class="relative px-2 py-1-5 rounded hover:bg-primary-100 cursor-pointer"
          @click.stop="triggerMenu"
          :class="{'bg-primary-100': showActionsMenu}">
-        <IconOptions class="w-1 h-5 text-gray-500 hover:text-primary"/>
+        <i class="vc-icon-menu icon-lg text-gray-500" />
+<!--        <IconOptions class="w-1 h-5 text-gray-500 hover:text-primary"/>-->
         <fade-transition :duration="350">
             <div v-click-outside="onMenuClickOutside"
                  class="menu-wrapper px-3 py-1 absolute z-50 mt-2"

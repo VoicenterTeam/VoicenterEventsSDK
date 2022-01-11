@@ -78,9 +78,10 @@
                     <el-input
                         clearable
                         :placeholder="$t('Search')"
-                        size="medium"
-                        prefix-icon="el-icon-search"
-                        v-model="filter"/>
+                        size="large"
+                        v-model="filter">
+                        <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
+                    </el-input>
                 </div>
             </template>
         </data-table>
