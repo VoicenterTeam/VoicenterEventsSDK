@@ -11,7 +11,7 @@
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
-                <span class="cursor-pointer ml-2" @click="showPreviewInfoDialog = true">
+                <span class="cursor-pointer px-2 py-1-5 hover:bg-primary-100" @click="showPreviewInfoDialog = true">
                     <i class="vc-icon-info icon-lg text-gray-700"/>
                 </span>
             </div>
@@ -53,11 +53,11 @@
             v-on="$listeners"
             width="45%"
         />
-        <TemplatePreviewInfoDialog
+        <template-preview-info-dialog
+            v-if="showPreviewInfoDialog"
             :visible.sync="showPreviewInfoDialog"
             :templateId="widget.TemplateID"
-            v-if="showPreviewInfoDialog"
-            v-on="$listeners"
+            :widget-title="widget.Title"
             @on-close="showPreviewInfoDialog = false"
         />
     </div>

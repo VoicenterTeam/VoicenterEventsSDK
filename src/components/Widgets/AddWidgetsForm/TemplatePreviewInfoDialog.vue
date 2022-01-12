@@ -1,17 +1,15 @@
 <template>
-    <div>
         <modal :append-to-body="true"
                v-bind="$attrs"
                v-on="$listeners"
                @close="onCloseDialog"
                :width="modalWidth"
                id="templatePreviewInfoDialog">
-            <fade-transition :duration="transitionDuration"
-                             mode="out-in">
-                <TemplatePreviewInfo :templateHelp="templateHelp" />
-            </fade-transition>
+            <template v-slot:title>
+                {{ $t(widgetTitle) }}
+            </template>
+            <template-preview-info :templateHelp="templateHelp" />
         </modal>
-    </div>
 </template>
 
 <script>
@@ -21,6 +19,8 @@ import TemplatePreviewInfo from "@/components/Widgets/AddWidgetsForm/TemplatePre
 import get from "lodash/get";
 
 export default {
+    name: "template-preview-info-dialog",
+    inheritAttrs: false,
     components: {
         TemplatePreviewInfo,
         Modal,
@@ -36,6 +36,9 @@ export default {
         },
         templateId: {
             type: Number
+        },
+        widgetTitle: {
+            type: String
         }
     },
     data() {

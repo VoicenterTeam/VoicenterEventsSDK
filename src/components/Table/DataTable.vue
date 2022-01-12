@@ -9,7 +9,7 @@
             <div class="flex items-center table-row__count"
                  v-if="showManageColumns"
                  :key="`${widget.WidgetID} - ${activeLanguage}`">
-                <el-dropdown class="pr-4" size="mini" trigger="click">
+                <el-dropdown class="px-4" size="mini" trigger="click">
                     <el-button size="small" type="_primary" plain>
                         <i class="vc-icon-filter el-icon--left"/>
                         {{ $t('datatable.manage.columns') }}

@@ -12,6 +12,8 @@ export default {
             return 0 + ' - ' + 0
         },
         availableColumns() {
+            console.log('WidgetLayout', this.widget.WidgetLayout)
+            console.log('this.columns', this.columns)
             return get(this.widget.WidgetLayout, 'Columns.availableColumns') || this.columns
         },
         visibleColumns() {
