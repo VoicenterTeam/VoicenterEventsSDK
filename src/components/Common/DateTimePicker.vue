@@ -9,7 +9,9 @@
             :range-separator="rangeSeparator"
             :start-placeholder="startPlaceholder"
             :end-placeholder="endPlaceholder"
-            :align="align">
+            :align="align"
+            prefix-icon="vc-icon-schedule-calendar"
+            clear-icon="vc-icon-ticket-closed">
         </el-date-picker>
     </div>
 </template>
@@ -83,5 +85,11 @@
     .el-date-editor--data {
         width: 100%;
     }
+}
+::v-deep .el-input__icon.el-range__icon.vc-icon-schedule-calendar {
+    @apply text-primary text-base;
+}
+::v-deep .el-input__icon.el-range__close-icon {
+    @apply text-primary text-base;
 }
 </style>

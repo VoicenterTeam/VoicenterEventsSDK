@@ -13,7 +13,7 @@
         <div class="py-4 -mx-4-5">
             <div class="pt-4 pb-7 px-16 border-b">
                 <div class="flex items-center pb-4">
-                    <IconDirLeft class="mx-w-4-5 h-4-5 text-primary" />
+                    <i class="vc-icon-timer text-primary mx-w-4-5 text-xl" />
                     <span class="mx-2 font-bold text-xl text-gray-950">
                         {{ $t('timeFrame') }}
                     </span>

@@ -5,8 +5,7 @@
             <div class="flex justify-between w-full">
                 <div class="mb-0">
                     <div class="flex items-center pb-4">
-                        <component class="w-4-5 h-4-5 text-primary"
-                            :is="getEntityIcon"/>
+                        <i :class="model.ParameterIcon" class="text-primary mx-w-4-5 text-xl" />
                         <span class="mx-2 font-medium text-xl text-gray-950">
                             {{ model.ParameterPrettyName }}
                         </span>

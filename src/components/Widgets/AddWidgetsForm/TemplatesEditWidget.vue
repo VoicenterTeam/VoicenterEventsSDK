@@ -14,7 +14,7 @@
             <div class="pt-4 pb-7 px-16">
                 <div class="w-70">
                     <div class="flex mb-2">
-                        <IconDirLeft class="mx-w-4-5 h-4-5 text-primary mr-2" /> <!--TODO: change to vc-icon -->
+                        <i class="vc-icon-name text-primary mx-w-4-5 text-xl mr-2" />
                         <label class="font-medium text-gray-950">{{ $t('widget.title') }}</label>
                     </div>
                     <el-input
@@ -24,7 +24,7 @@
             </div>
             <div class="pt-4 pb-7 px-16 border-b">
                 <div class="flex items-center pb-4">
-                    <IconDirLeft class="mx-w-4-5 h-4-5 text-primary" />
+                    <i class="vc-icon-timer text-primary mx-w-4-5 text-xl" />
                     <span class="mx-2 font-medium text-xl text-gray-950">
                         {{ $t('timeFrame') }}
                     </span>

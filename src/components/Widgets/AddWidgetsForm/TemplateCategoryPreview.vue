@@ -38,7 +38,7 @@
                     class="input-search"
                 >
                     <template v-slot:prefix>
-                        <i class="el-input__icon el-icon-search text-primary text-xl"></i> <!--TODO: change to vc-icon -->
+                        <i class="el-input__icon vc-icon-search text-primary text-xl" />
                     </template>
                 </el-input>
             </div>
