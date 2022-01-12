@@ -143,7 +143,7 @@
                 } else {
                     templates.forEach((template) => {
                         template['WidgetLayout'] = { GridLayout: defaultLayout }
-                        return times(template.quantity, () => {
+                        times(template.quantity, () => {
                             template['toStore'] = true
                             widgetTemplatesToAdd.push(cloneDeep(template))
                         })
