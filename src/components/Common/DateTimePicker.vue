@@ -18,50 +18,54 @@
     
     export default {
         components: {
-            [DatePicker.name]: DatePicker,
+            [DatePicker.name]: DatePicker
         },
         props: {
             type: {
                 type: String,
-                default: 'daterange',
+                default: 'daterange'
             },
             date: {
                 type: Array,
-                default: () => [],
+                default: () => []
             },
             rangeSeparator: {
                 type: String,
                 default: function () {
                     return this.$t('range.filter.to')
-                },
+                }
             },
             startPlaceholder: {
                 type: String,
                 default: function () {
                     return this.$t('range.filter.start')
-                },
+                }
             },
             endPlaceholder: {
                 type: String,
                 default: function () {
                     return this.$t('range.filter.end')
-                },
+                }
             },
             align: {
                 type: String,
-                default: 'right',
-            },
+                default: 'left'
+            }
         },
         data() {
             return {
-                value: this.date,
+                value: this.date
             }
+        },
+        mounted () {
+            const dates = this.value.map(el => new Date(el))
+            this.$emit('on-change', dates)
         },
         methods: {
             updateDateRange() {
                 this.$emit('on-change', this.value)
-            },
-        },
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>

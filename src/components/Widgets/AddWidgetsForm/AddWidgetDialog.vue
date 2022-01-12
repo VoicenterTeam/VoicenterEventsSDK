@@ -165,6 +165,8 @@
         methods: {
             onCloseDialog() {
                 this.$store.dispatch('widgetCreation/resetState')
+                this.$store.dispatch('widgetCreation/resetCopyTemplate')
+                this.$store.dispatch('widgetCreation/resetWidgets')
             },
             addWidgetsToGroup(templates) {
                 const widgetTemplatesToAdd = templates.filter(template => template.toStore)
@@ -197,12 +199,13 @@
         async beforeDestroy () {
             await this.$store.dispatch('widgetCreation/resetState')
             await this.$store.dispatch('widgetCreation/resetCopyTemplate')
+            await this.$store.dispatch('widgetCreation/resetWidgets')
         }
     }
 </script>
 <style lang="scss">
     .redirect-action {
-        @apply text-sm flex items-center px-6 cursor-pointer;
+        @apply text-sm flex items-center px-8 cursor-pointer;
     }
     .form-title {
         @apply text-gray-950 font-bold text-xl;

@@ -1,7 +1,7 @@
 <template>
-    <div class="h-20 border-b flex widget-card items-center justify-between"
+    <div class="h-20 border-b flex widget-card items-center justify-between w-full"
          :key="TemplateID">
-        <div class="flex items-center">
+        <div class="flex items-center w-full pl-8">
             <div class="quantity" v-show="quantities[TemplateID]">
                 <slot name="quantity"/>
             </div>
@@ -10,21 +10,26 @@
             </div>
             <slot name="icon">
                 <component class="mx-6 text-primary"
-                           :is="getTemplateIcon"/>
+                    :is="getTemplateIcon"
+                />
             </slot>
             <slot name="title">
                 <div class="flex flex-col">
-                    <div class="text-main-sm break-normal max-w-90-p">
+                    <div class="text-xl text-gray-950 break-normal">
                         {{ $t(TemplateName) }}
                     </div>
-                    <span v-if="activeWidgets"
-                          class="text-xs text-steel">
+                    <span
+                        v-if="activeWidgets"
+                        class="text-xs text-steel"
+                    >
                     {{ $t('Active Widgets') }}: {{ activeWidgets }}
                 </span>
                 </div>
             </slot>
         </div>
-        <slot name="template-preview"/>
+        <div class="mr-6-5">
+            <slot name="template-preview"/>
+        </div>
     </div>
 </template>
 <script>
@@ -74,10 +79,3 @@
         },
     }
 </script>
-<style lang="scss" scoped>
-.quantity ::v-deep {
-    .el-input-number--mini {
-        @apply w-24;
-    }
-}
-</style>
