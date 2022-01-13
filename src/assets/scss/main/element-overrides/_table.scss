@@ -4,15 +4,10 @@
 
 .el-table th {
     font-size: var(--font-size-sm);
-
-    .header-handle, .caret-wrapper {
-        display: none;
-    }
 }
 
 .el-table th:hover {
     .header-handle, .caret-wrapper {
-        display: flex;
         color: var(--primary-color);
     }
 }

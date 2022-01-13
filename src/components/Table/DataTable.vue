@@ -47,7 +47,7 @@
                         :key="column.prop"
                         :label="$t(column.prop) || column.label"
                         :min-width="column.minWidth || columnMinWidthData"
-                        :sortable="true"
+                        sortable="custom"
                         :type="column.type"
                         v-bind="column"
                         v-for="column in renderedColumns">
@@ -379,6 +379,11 @@
                 }
                 return (this.screenWidth / pageWidth).toFixed(2) * 170
             },
+            clearDataSort() {
+                if (this.$refs['table']) {
+                    this.$refs['table'].clearSort()
+                }
+            }
         },
         watch: {
             columns: {

@@ -57,24 +57,29 @@
             }
         },
         computed: {
-            fetchTableData () {
-                let data = []
-                this.filteredQueuesWithActiveCalls.forEach((queue) => {
-                    queue.Calls.forEach((call) => {
+            fetchTableData: {
+                get: function () {
+                    let data = []
+                    this.filteredQueuesWithActiveCalls.forEach((queue) => {
+                        queue.Calls.forEach((call) => {
 
-                        data.push({
-                            QueueName: queue.QueueName,
-                            CallerNumber: queue.CallerPhone || ' - ',
-                            CallerName: call.CallerName,
-                            CallerID: call.CallerID,
-                            Call: call
+                            data.push({
+                                QueueName: queue.QueueName,
+                                CallerNumber: queue.CallerPhone || ' - ',
+                                CallerName: call.CallerName,
+                                CallerID: call.CallerID,
+                                Call: call
+                            })
                         })
                     })
-                })
 
-                return orderBy(data, function (q) {
-                    return q.Call.JoinTimeStamp
-                }, ['asc']);
+                    return orderBy(data, function (q) {
+                        return q.Call.JoinTimeStamp
+                    }, ['asc']);
+                },
+                set: function (newValue) {
+                    return newValue
+                }
             },
             availableColumns () {
                 return get(this.widget.WidgetLayout, 'Columns.availableColumns') || activeCallColumns
@@ -95,7 +100,19 @@
                 await WidgetApi.update(this.widget)
                 const {WidgetData} = await WidgetApi.find(this.widget.WidgetID)
                 this.widget = WidgetData
-            }
+            },
+            /* TODO: Use this method in sort-change event handler if previous doesn't work */
+            onSortChange({column, prop, order}) {
+                if (prop === null) {
+                    return
+                }
+
+                if (order === 'ascending') {
+                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
+                } else if (order === 'descending') {
+                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
+                }
+            },
         },
         mounted () {
             if (!this.data.WidgetLayout.showQueues) {

@@ -16,6 +16,7 @@
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
+            @sort-change="onSortChange"
             @on-reorder-rows="onReorderRows"
             @on-update-layout="onUpdateLayout">
             <template v-if="displayQueueAsRows" v-slot:header_title="{column}">
@@ -57,7 +58,7 @@
                 <time-frame :widget="data"/>
             </template>
             <template v-slot:search-input>
-                <div class="flex items-center w-48 px-1">
+                <div class="flex items-center w-64 px-1">
                     <el-input
                         clearable
                         :placeholder="$t('Search')"
@@ -147,30 +148,35 @@
             }
         },
         computed: {
-            fetchTableData() {
-                let tableData = this.tableData
-                tableData.map(el => el.q_name = this.getQueueName(el.queue_id))
-                
-                if (this.displayQueueAsRows) {
-                    let visibleRows = this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
-                    tableData = tableData.filter(c => visibleRows.includes(c['Stat type']))
-                    tableData = mapOrder(tableData, visibleRows, 'Stat type')
-                }
-                
-                if (this.filter && this.searchableFields.length > 0) {
-                    tableData = tableData.filter(c => {
-                        return this.searchableFields.some(field => {
-                            if (c[field]) {
-                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
-                            }
-                            return false
+            fetchTableData: {
+                get: function () {
+                    let tableData = this.tableData
+                    tableData.map(el => el.q_name = this.getQueueName(el.queue_id))
+
+                    if (this.displayQueueAsRows) {
+                        let visibleRows = this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
+                        tableData = tableData.filter(c => visibleRows.includes(c['Stat type']))
+                        tableData = mapOrder(tableData, visibleRows, 'Stat type')
+                    }
+
+                    if (this.filter && this.searchableFields.length > 0) {
+                        tableData = tableData.filter(c => {
+                            return this.searchableFields.some(field => {
+                                if (c[field]) {
+                                    return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
+                                }
+                                return false
+                            })
                         })
-                    })
+                    }
+                    const visibleQueuesColumns = get(this.widget.WidgetLayout, 'Columns.visibleQueuesColumns') || this.columns.map(c => c.prop)
+                    tableData = mapOrder(tableData, visibleQueuesColumns, 'queue_id')
+
+                    return tableData
+                },
+                set: function (newValue) {
+                    return newValue
                 }
-                const visibleQueuesColumns = get(this.widget.WidgetLayout, 'Columns.visibleQueuesColumns') || this.columns.map(c => c.prop)
-                tableData = mapOrder(tableData, visibleQueuesColumns, 'queue_id')
-                
-                return tableData
             },
             allEntityQueues() {
                 return getOptionsList(`${this.QUEUE_LIST_KEY}`)
@@ -389,6 +395,17 @@
                     }
                 }
                 this.onUpdateLayout(payload)
+            },
+            onSortChange({column, prop, order}) {
+                if (prop === null) {
+                    return
+                }
+
+                if (order === 'ascending') {
+                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
+                } else if (order === 'descending') {
+                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
+                }
             },
         },
         mounted() {

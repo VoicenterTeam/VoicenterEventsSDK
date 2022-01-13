@@ -15,6 +15,7 @@
         </div>
         <div v-if="isSimpleTable">
             <data-table
+                ref="dataTableRef"
                 v-bind="$attrs"
                 :widget="data"
                 :border="border"
@@ -26,6 +27,7 @@
                 :tableData="fetchTableData"
                 :widgetTitle="data.Title"
                 :columnsWithPercentage="columnsWithPercentage"
+                @sort-change="onSortChange"
                 @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
@@ -36,7 +38,7 @@
                         <el-select
                             @change="handlePageChange(1)"
                             class="w-48 mx-4 py-1"
-                            size="small"
+                            size="large"
                             v-model="pageSize">
                             <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
                             <slot>
@@ -136,34 +138,15 @@
                 hideOnSinglePage: true,
                 border: true,
                 widget: cloneDeep(this.data),
-                stripe: true,
+                stripe: false,
                 queuesTableData: [],
                 columnsWithPercentage: [],
+                fetchTableData: [],
             }
         },
         computed: {
             getStyles() {
                 return this.$store.getters['layout/widgetTitleStyles']
-            },
-            fetchTableData() {
-                let tableData = this.tableData
-
-                if (this.filter && this.searchableFields.length > 0) {
-                    tableData = tableData.filter(c => {
-                        return this.searchableFields.some(field => {
-                            if (c[field]) {
-                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
-                            }
-                            return false
-                        })
-                    })
-                }
-
-                this.filteredDataLength = tableData.length
-
-                if (tableData.length) {
-                    return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
-                }
             },
             isSimpleTable() {
                 return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)
@@ -245,10 +228,47 @@
             applyPaginationSettings() {
                 this.pageSize = get(this.data.WidgetLayout, 'paginationSize', 10)
                 this.customPageSize = this.pageSize
+                if (this.$refs['dataTableRef']) {
+                    this.$refs['dataTableRef'].clearDataSort()
+                }
             },
             applyCustomPageSize() {
                 const pageSize = this.customPageSize
                 this.storePaginationSettings(pageSize)
+            },
+            updatePaginatedData(data) {
+                let tableData = data
+
+                if (this.filter && this.searchableFields.length > 0) {
+                    tableData = tableData.filter(c => {
+                        return this.searchableFields.some(field => {
+                            if (c[field]) {
+                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
+                            }
+                            return false
+                        })
+                    })
+                }
+                this.filteredDataLength = tableData.length
+                return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+            },
+            onSortChange({column, prop, order}) {
+                if (prop === null) {
+                    return
+                }
+
+                let sortedData;
+                if (order === 'ascending') {
+                    sortedData = this.tableData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
+                } else if (order === 'descending') {
+                    sortedData = this.tableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
+                }
+
+                if (!sortedData) {
+                    return
+                }
+
+                this.fetchTableData = this.updatePaginatedData(sortedData)
             },
         },
         mounted() {
@@ -276,6 +296,18 @@
                     this.storePaginationSettings(val)
                 },
             },
+            currentPage: {
+                immediate: true,
+                handler() {
+                    this.fetchTableData = this.updatePaginatedData(this.tableData)
+                }
+            },
+            tableData: {
+                deep: true,
+                handler(newV) {
+                    this.fetchTableData = this.updatePaginatedData(newV)
+                }
+            }
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {
