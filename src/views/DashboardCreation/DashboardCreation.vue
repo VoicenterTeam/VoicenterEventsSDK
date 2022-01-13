@@ -58,15 +58,18 @@
                             </div>
                         </div>
                     </el-form>
-                    <div class="lg:grid lg:grid-cols-4 gap-5 mb-4"
-                         key="TemplateCategories">
+                    <div
+                        class="lg:grid lg:grid-cols-4 gap-5 mb-18"
+                        key="TemplateCategories"
+                    >
                         <TemplateCategories class="col-span-1"
                             key="categories"
                             :categories="dashboardTemplateCategories"
                             @on-choose-category="onChooseCategory"
                         />
                         <fade-transition mode="out-in" :duration="transitionDuration">
-                            <TemplatesPreview class="col-span-3"
+                            <TemplatesPreview
+                                class="col-span-3"
                                 key="TemplatesPreview"
                                 @on-submit="tryAddDashboard"
                                 :selected-template="selectedTemplate"
@@ -74,48 +77,55 @@
                                 @on-detailed-view="onDetailedView"
                                 v-if="dashboardTemplateCategory && dashboardTemplateCategories"
                                 :dashboard-category="selectedCategory"
-                                :disableCreateBlankBtn="disableCreateBlankBtn" />
+                                :disableCreateBlankBtn="disableCreateBlankBtn"
+                            />
                         </fade-transition>
                     </div>
                 </template>
                 <template v-else>
-                    <TemplateDetailedPreview key="to-preview"
-                                             :template="selectedTemplate"/>
+                    <TemplateDetailedPreview
+                        key="to-preview"
+                        :template="selectedTemplate"
+                    />
                 </template>
             </transition-group>
         </div>
-        <div class="flex w-full items-center">
+        <div class="flex w-full items-center border-t py-6">
             <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
-                <base-button class="mx-4"
-                             @click="onDiscard"
-                             variant="discard"
+                <base-button
+                    class="dashboard-creation-btn"
+                    @click="onDiscard"
+                    variant="discard"
                 >
                     <div class="flex items-center">
-                        <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
                     </div>
                 </base-button>
-                <base-button fixed-width="w-37"
-                        :loading="loading"
-                        :disabled="!isFormValid"
-                        @click="tryAddDashboard">
+                <base-button
+                    class="dashboard-creation-btn"
+                    :loading="loading"
+                    :disabled="!isFormValid"
+                    @click="tryAddDashboard"
+                >
                     <div class="flex items-center">
-                        <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
                     </div>
                 </base-button>
             </div>
         </div>
-        <ConfirmDialog :visible.sync="showConfirmDialog"
-                       title="Add Dashboard"
-                       description="Please confirm you action?"
+        <ConfirmDialog
+            :visible.sync="showConfirmDialog"
+            title="Add Dashboard"
+            description="Please confirm you action?"
         >
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
-                    <base-button class="mx-4"
-                                 @click="showConfirmDialog = false"
-                                 variant="discard"
-                                 fixed-width="w-37">
+                    <base-button
+                        class="mx-4"
+                        @click="showConfirmDialog = false"
+                        variant="discard"
+                        fixed-width="w-37"
+                    >
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">
@@ -362,5 +372,8 @@
     .label-dashboard-name {
         @apply mb-0;
     }
+}
+::v-deep .dashboard-creation-btn button {
+    @apply w-32 h-9 p-0;
 }
 </style>
