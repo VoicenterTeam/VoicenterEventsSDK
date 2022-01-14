@@ -450,6 +450,10 @@ th > div.cell > span {
     }
 }
 
+.el-table ::v-deep th:hover.el-table__cell>.cell {
+    @apply flex;
+}
+
 .data-table ::v-deep .el-table td.direction-ltr {
     direction: ltr;
 }
