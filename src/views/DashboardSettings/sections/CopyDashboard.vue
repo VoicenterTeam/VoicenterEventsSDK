@@ -154,15 +154,9 @@
                 this.displayWidgetList = false
                 group.isSelected = !group.isSelected
 
-                if (!group.isSelected) {
-                    group.WidgetList.forEach(widget => {
-                        widget.isSelected = false
-                    })
-                } else {
-                    group.WidgetList.forEach(widget => {
-                        widget.isSelected = true
-                    })
-                }
+                group.WidgetList.forEach(widget => {
+                    widget.isSelected = group.isSelected
+                })
 
                 this.$nextTick(() => {
                     this.displayWidgetList = true
