@@ -14,7 +14,7 @@
             <div class="pt-4 pb-7 px-16 border-b">
                 <div class="flex items-center pb-4">
                     <i class="vc-icon-timer text-primary mx-w-4-5 text-xl" />
-                    <span class="mx-2 font-bold text-xl text-gray-950">
+                    <span class="mx-2 font-medium text-xl text-gray-950">
                         {{ $t('timeFrame') }}
                     </span>
                 </div>
@@ -33,6 +33,38 @@
                         />
                     </template>
                 </time-frame>
+            </div>
+            <div class="pt-4 pb-7 px-16" v-if="showStatusSelect">
+                <div class="w-100">
+                    <div class="flex items-center pt-4">
+                        <div class="flex items-center pb-4">
+                            <span class="mx-2 font-medium text-xl text-gray-950">
+                                {{ $t('status') }}
+                            </span>
+                        </div>
+                    </div>
+                    <el-select
+                        :placeholder="$t('common.selectStatus')"
+                        @change="onStatusChange"
+                        class="w-full select select-status"
+                        :label="`${selectedStatus}`"
+                        v-model="selectedStatus">
+                        <el-option
+                            v-for="option in statuses"
+                            :key="option.value"
+                            :label="$t(option.text)"
+                            v-bind="option"
+                        >
+                            <div class="flex">
+                                <component :is="option.icon" class="w-5 mx-1 text-primary" />
+                                <span class="w-16 mx-1">{{ $t(option.text) }}</span>
+                            </div>
+                        </el-option>
+                        <template #prefix>
+                            <component :is="selectedIcon" class="w-5 mx-1 pt-2 text-primary" />
+                        </template>
+                    </el-select>
+                </div>
             </div>
             <div v-for="(config, index) in uniqTemplatesConfigs"
                 :key="index"
@@ -69,12 +101,17 @@
     import ENUM from '@/enum/parameters'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
+    import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
+    import { Option, Select } from 'element-ui'
+    import { isCounterAgentsInStatus } from '@/helpers/widgetUtils'
 
     export default {
         components: {
             AutoComplete,
             OtherFilters,
-            TimeFrame
+            TimeFrame,
+            [Option.name]: Option,
+            [Select.name]: Select,
         },
         props: {
             templates: {
@@ -89,7 +126,11 @@
                 templateConfigs: [],
                 widgetTime: [],
                 widgetTimeTypes,
-                widgetTimeOptions
+                widgetTimeOptions,
+                selectedStatus: '',
+                selectedIcon: '',
+                selectedOption: {},
+                showStatusSelect: false
             }
         },
         computed: {
@@ -103,12 +144,37 @@
                             label: el.text, value: el.label
                         }
                     })
+            },
+            statuses() {
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                let finalStatuses = []
+                
+                if (storeStatuses.length) {
+                    finalStatuses = this.getStoreStatuses()
+                } else {
+                    finalStatuses = localStatuses.map(status => {
+                        const statusText = this.$store.getters['entities/getStatusTextById'](status.value)
+                        return {
+                            ...status,
+                            text: statusText,
+                        }
+                    })
+                }
+                
+                finalStatuses.push(statusTypes[callStatuses.CALLING])
+                finalStatuses.push(statusTypes[callStatuses.HOLD])
+                finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
+                
+                return finalStatuses
             }
         },
         async mounted () {
             await this.getTemplateConfigs()
             await this.createUniqTemplateConfigs()
-            this.$store.dispatch('widgetCreation/resetWidgets')
+            await this.$store.dispatch('widgetCreation/resetWidgets')
+            await this.settingDefaultValueInStatus()
+            await this.setShowSelectStatus()
         },
         methods: {
             isAutoCompleteConfig(config) {
@@ -130,10 +196,16 @@
 
                     return temp
                 })
+
                 const templatesToSetup = await this.getTemplatesToSetup
                 const result =  Object.values(templatesToSetup)
                 result.map(el => {
                     el.DefaultWidgetTime = this.widgetTime.WidgetTime
+                    if (this.selectedOption && Object.keys(this.selectedOption).length) {
+                        el.DefaultWidgetLayout = {
+                            status: this.selectedOption
+                        }
+                    }
 
                     return el
                 })
@@ -167,6 +239,43 @@
                 this.templateConfigs = result
                     .filter(template => template.DefaultWidgetConfig)
                     .map(template => template.DefaultWidgetConfig)
+            },
+            onStatusChange(value) {
+                let option = statusTypes[value];
+                this.selectedOption = option;
+                this.selectedStatus = option.value;
+                this.selectedIcon = option.icon;
+            },
+            getStoreStatuses() {
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                return storeStatuses.map(status => {
+                    const otherData = localStatuses.find(s => s.value === status.StatusID) || {}
+                    if (otherData) {
+                        otherData['text'] = this.$store.getters['entities/getStatusTextById'](otherData.value)
+                    }
+                    return {
+                        ...status,
+                        ...otherData,
+                    }
+                })
+            },
+            async setShowSelectStatus () {
+                const templatesToSetup = await this.getTemplatesToSetup
+                const allTemplatesToSetup = Object.values(templatesToSetup)
+                this.showStatusSelect = allTemplatesToSetup.some(el => isCounterAgentsInStatus(el.DataType))
+            },
+            async settingDefaultValueInStatus () {
+                const templatesToSetup = await this.getTemplatesToSetup
+                Object.values(templatesToSetup)
+                    .forEach(el => {
+                        if (el.DefaultWidgetLayout && Object.keys(el.DefaultWidgetLayout)) {
+                            const value = el.DefaultWidgetLayout.status.value
+                            this.onStatusChange(value)
+                        } else {
+                            this.onStatusChange(this.statuses[0].value)
+                        }
+                    })
             }
         }
     }
@@ -181,5 +290,14 @@
 }
 .btn-next {
     @apply text-base px-11 py-2;
+}
+.select ::v-deep input::placeholder {
+    @apply text-gray-500 font-normal text-sm;
+}
+.select, .select ::v-deep .el-select > .el-input {
+    @apply w-100;
+}
+.select-status .el-input__inner {
+    @apply pl-9;
 }
 </style>

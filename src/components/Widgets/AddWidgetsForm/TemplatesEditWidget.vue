@@ -45,6 +45,38 @@
                     </template>
                 </time-frame>
             </div>
+            <div class="pt-4 pb-7 px-16" v-if="showStatusSelect">
+                <div class="w-100">
+                    <div class="flex items-center pt-4">
+                        <div class="flex items-center pb-4">
+                            <span class="mx-2 font-medium text-xl text-gray-950">
+                                {{ $t('status') }}
+                            </span>
+                        </div>
+                    </div>
+                    <el-select
+                        :placeholder="$t('common.selectStatus')"
+                        @change="onStatusChange"
+                        class="w-full select select-status"
+                        :label="`${selectedStatus}`"
+                        v-model="selectedStatus">
+                        <el-option
+                            v-for="option in statuses"
+                            :key="option.value"
+                            :label="$t(option.text)"
+                            v-bind="option"
+                        >
+                            <div class="flex">
+                                <component :is="option.icon" class="w-5 mx-1 text-primary" />
+                                <span class="w-16 mx-1">{{ $t(option.text) }}</span>
+                            </div>
+                        </el-option>
+                        <template #prefix>
+                            <component :is="selectedIcon" class="w-5 mx-1 pt-2 text-primary" />
+                        </template>
+                    </el-select>
+                </div>
+            </div>
             <div v-for="(config, index) in uniqTemplatesConfigs"
                 :key="index"
                 class="py-4 px-16"
@@ -80,12 +112,17 @@
     import ENUM from '@/enum/parameters'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
+    import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
+    import { Option, Select } from 'element-ui'
+    import { isCounterAgentsInStatus } from '@/helpers/widgetUtils'
 
     export default {
         components: {
             AutoComplete,
             OtherFilters,
-            TimeFrame
+            TimeFrame,
+            [Option.name]: Option,
+            [Select.name]: Select
         },
         props: {
             templates: {
@@ -102,7 +139,11 @@
                 widgetTimeTypes,
                 widgetTimeOptions,
                 widgetName: '',
-                editIndex: null
+                editIndex: null,
+                selectedStatus: '',
+                selectedIcon: '',
+                selectedOption: {},
+                showStatusSelect: false
             }
         },
         computed: {
@@ -116,6 +157,29 @@
                             label: el.text, value: el.label
                         }
                     })
+            },
+            statuses() {
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                let finalStatuses = []
+                
+                if (storeStatuses.length) {
+                    finalStatuses = this.getStoreStatuses()
+                } else {
+                    finalStatuses = localStatuses.map(status => {
+                        const statusText = this.$store.getters['entities/getStatusTextById'](status.value)
+                        return {
+                            ...status,
+                            text: statusText,
+                        }
+                    })
+                }
+                
+                finalStatuses.push(statusTypes[callStatuses.CALLING])
+                finalStatuses.push(statusTypes[callStatuses.HOLD])
+                finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
+                
+                return finalStatuses
             }
         },
         async mounted () {
@@ -133,6 +197,7 @@
                     widgetName: this.widgetName,
                     index: this.editIndex
                 }
+                this.selectedOption && (data.defaultWidgetLayout = this.selectedOption)
 
                 await this.$store.dispatch('widgetCreation/updateWidget', data)
                 await this.$store.dispatch('widgetCreation/goToSummary')
@@ -155,8 +220,41 @@
                         ...templateToEdit.DefaultWidgetTime
                     }
                 }
+
                 this.widgetName = templateToEdit.TemplateName
+
+                if (this.getTemplateToEdit.template && Object.keys(this.getTemplateToEdit.template).length && 'DefaultWidgetLayout' in this.getTemplateToEdit.template) {
+                    this.onStatusChange(this.getTemplateToEdit.template.DefaultWidgetLayout.status.value)
+                }
+
+                const templateToEditWithDataType = [templateToEdit]
+                this.showStatusSelect = templateToEditWithDataType.some(el => isCounterAgentsInStatus(el.DataType))
+            },
+            onStatusChange(value) {
+                let option = statusTypes[value];
+                this.selectedOption = option;
+                this.selectedStatus = option.value;
+                this.selectedIcon = option.icon;
+            },
+            getStoreStatuses() {
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                return storeStatuses.map(status => {
+                    const otherData = localStatuses.find(s => s.value === status.StatusID) || {}
+                    if (otherData) {
+                        otherData['text'] = this.$store.getters['entities/getStatusTextById'](otherData.value)
+                    }
+                    return {
+                        ...status,
+                        ...otherData,
+                    }
+                })
             }
         }
     }
 </script>
+<style lang="scss">
+.select-status .el-input__inner {
+    @apply pl-9;
+}
+</style>

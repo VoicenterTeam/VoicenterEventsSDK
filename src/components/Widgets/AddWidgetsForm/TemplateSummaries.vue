@@ -93,6 +93,13 @@
         },
         methods: {
             onSubmit() {
+                this.templates.map(el => {
+                    if (el.DefaultWidgetLayout && Object.keys(el.DefaultWidgetLayout)) {
+                        el.WidgetLayout.status = el.DefaultWidgetLayout.status.value
+                        delete el.DefaultWidgetLayout
+                    }
+                    return el
+                })
                 this.$emit('on-submit', this.templates)
             },
             getTemplateIcon(templateDataTypeID) {

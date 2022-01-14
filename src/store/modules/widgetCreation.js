@@ -114,6 +114,10 @@ const mutations = {
         state.allWidgetsWithQuantity[data.index].DefaultWidgetConfig = data.template
         state.allWidgetsWithQuantity[data.index].DefaultWidgetTime = data.widgetTime
         state.allWidgetsWithQuantity[data.index].TemplateName = data.widgetName
+        state.allWidgetsWithQuantity[data.index].TemplateName = data.widgetName
+        if (data.defaultWidgetLayout) {
+            state.allWidgetsWithQuantity[data.index].DefaultWidgetLayout.status = data.defaultWidgetLayout 
+        }
     },
     [types.RESET_WIDGETS]: (state) => {
         state.allWidgetsWithQuantity = null
