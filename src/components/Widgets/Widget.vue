@@ -3,16 +3,16 @@
          class="grid-stack-item-content relative rounded-lg flex flex-col"
          :key="widget.WidgetID"
          :style="getStyles">
-        <div class="flex relative items-center py-2">
-            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header"
+        <div class="flex relative items-center">
+            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header py-2"
                  v-if="showDeleteButton"
             >
                 <i class="icon-lg text-primary mx-2" :class="widget.WidgetTemplateIcon"/>
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
-                <span class="cursor-pointer px-2 py-1-5 hover:bg-primary-100" @click="showPreviewInfoDialog = true">
-                    <i class="vc-icon-info icon-lg text-gray-700"/>
+                <span class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
+                    <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
                 </span>
             </div>
             <WidgetAction :key="widget.WidgetID"
@@ -36,6 +36,7 @@
                 @on-update="(data) => onUpdate(data)"
                 @remove-item="removeWidget(widget)"
                 @duplicate-widget="duplicateWidget(widget)"
+                @on-show-info="onShowInfo"
                 ref="widget"
                 class="widget"
                 v-bind="widget.WidgetLayout">
@@ -219,7 +220,7 @@
                 if (DataTypeID.toString() === this.TABLE_DATA_TYPE_ID) {
                     return 'has-margin'
                 }
-            },
+            }
         },
         methods: {
             isHtmlEditor,
@@ -268,6 +269,9 @@
                     console.log(e)
                 }
             },
+            onShowInfo() {
+                this.showPreviewInfoDialog = true
+            }
         },
         mounted() {
             this.getComponentTypeAndSetData(this.widget)

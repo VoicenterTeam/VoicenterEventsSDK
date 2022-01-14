@@ -5,30 +5,37 @@
          class="w-auto h-full flex items-center rounded-lg justify-between p-4">
         <div :class="{'flex-col': isVertical}"
              class="w-full flex items-center justify-center relative">
-            <slot name="icon">
-                <component :is="cardIcon" class="min-w-16 status-icon mx-1 text-primary" :style="mainColor"/>
-            </slot>
-            <slot name="text">
-                <el-tooltip :content="cardText" class="item" effect="dark" placement="top" v-if="showText">
-                    <p :style="cardTitleStyles" class="font-bold mx-3 status-text">
-                        {{ cardText }}
-                    </p>
-                </el-tooltip>
-            </slot>
-            <div :class="{[$rtl.isRTL ? 'mr-auto' : 'ml-auto']: !isVertical}">
+            <div :class="{[$rtl.isRTL ? 'ml-auto' : 'mr-auto']: !isVertical}">
                 <slot name="value">
                     <p :class="{'-my-6': isVertical}"
                        :style="cardValueStyles"
-                       class="text-6xl font-bold -my-5 card-value">
+                       class="text-6xl font-bold card-value">
                         {{ cardValue }}
                     </p>
                 </slot>
             </div>
         </div>
         <div class="absolute card-action_wrapper rounded">
-            <CardAction :editable="editable"
-                        v-on="$listeners"
-                        :main-color="mainColor"/>
+            <div class="flex items-center pl-6 pt-2">
+                <slot name="icon">
+                    <component :is="cardIcon" class="min-w-12 status-icon mx-1 text-primary" :style="mainColor"/>
+                </slot>
+                <slot name="text">
+                    <el-tooltip :content="cardText" class="item" effect="dark" placement="top" v-if="showText">
+                        <p :style="cardTitleStyles" class="font-bold mx-3 status-text">
+                            {{ cardText }}
+                        </p>
+                    </el-tooltip>
+                </slot>
+            </div>
+            <div class="flex">
+                <span class="px-2" @click="onInfoClick">
+                <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
+            </span>
+                <CardAction :editable="editable"
+                            v-on="$listeners"
+                            :main-color="mainColor"/>
+            </div>
         </div>
     </div>
 </template>
@@ -110,6 +117,9 @@
                     this.checkIfCardIsVertical(widgetID)
                 })
             },
+            onInfoClick() {
+                this.$emit('on-show-info')
+            }
         },
         mounted() {
             this.triggerResizeEvent()
@@ -134,6 +144,8 @@
 .card-action_wrapper {
     top: 10px;
     right: 10px;
+
+    @apply flex w-full justify-between;
     
     &.edit-mode {
         top: 0;

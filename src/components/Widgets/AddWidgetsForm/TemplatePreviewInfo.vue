@@ -1,6 +1,4 @@
 <template>
-<!--    <fade-transition :duration="500"
-                     mode="out-in">-->
         <div class="grid grid-cols-7 gap-4 template-preview -mx-4-5"
              v-loading="loading">
             <div class="col-span-5 bg-gray-150">
@@ -38,7 +36,6 @@
                 </div>
             </div>
         </div>
-<!--    </fade-transition>-->
 </template>
 
 <script>
@@ -69,7 +66,6 @@ export default {
             }
         },
         onEllipseMouseOver(index) {
-            console.log('onEllipseMouseOver index', index)
             this.activeItemNumber = index
         },
         onEllipseMouseLeave() {
