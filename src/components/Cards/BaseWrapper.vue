@@ -2,7 +2,7 @@
     <div :style="styles"
          v-if="widget.WidgetID"
          :ref="`wrapperContainer-${widget.WidgetID}`"
-         class="w-auto h-full flex items-center rounded-lg justify-between p-4">
+         class="w-auto h-full flex items-end rounded-lg justify-between p-4">
         <div :class="{'flex-col': isVertical}"
              class="w-full flex items-center justify-center relative">
             <div :class="{[$rtl.isRTL ? 'ml-auto' : 'mr-auto']: !isVertical}">
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="absolute card-action_wrapper rounded">
-            <div class="flex items-center pl-6 pt-2">
+            <div class="flex items-center pl-6 pt-8">
                 <slot name="icon">
                     <component :is="cardIcon" class="min-w-12 status-icon mx-1 text-primary" :style="mainColor"/>
                 </slot>
@@ -28,7 +28,7 @@
                     </el-tooltip>
                 </slot>
             </div>
-            <div class="flex">
+            <div class="flex pt-1">
                 <span class="px-2" @click="onInfoClick">
                 <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
             </span>

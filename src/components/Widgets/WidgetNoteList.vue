@@ -175,15 +175,16 @@
                 return this.editMode && (!this.noteToUpdate || this.noteToUpdate !== note.date)
             },
         },
-        mounted() {
+        /*mounted() {
             if (!this.data.WidgetLayout['Notes']) {
+                console.log('setup')
                 this.data.WidgetLayout['Notes'] = []
             }
 
             if (!this.data.WidgetLayout.hasOwnProperty('displayWidgetTitle')) {
                 this.$set(this.data.WidgetLayout, 'displayWidgetTitle', false)
             }
-        },
+        },*/
         watch: {
             onEditMode: {
                 immediate: true,
