@@ -1,5 +1,5 @@
 <template>
-    <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners"
+    <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners" :appendToBody="true"
            class="update-dialog_wrapper">
         <template v-slot:title>
             <div class="flex flex-row items-center">
