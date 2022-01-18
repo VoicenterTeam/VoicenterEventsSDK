@@ -226,7 +226,6 @@
             isHtmlEditor,
             isNoteListWidget,
             tryManageNotes() {
-                console.log('tryManageNotes')
                 this.editMode = !this.editMode
             },
             removeWidget() {
