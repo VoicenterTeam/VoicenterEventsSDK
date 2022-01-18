@@ -95,7 +95,15 @@
             onSubmit() {
                 this.templates.map(el => {
                     if (el.DefaultWidgetLayout && Object.keys(el.DefaultWidgetLayout)) {
-                        el.WidgetLayout.status = el.DefaultWidgetLayout.status.value
+                        if (el.DefaultWidgetLayout.status && Object.keys(el.DefaultWidgetLayout.status)) {
+                            el.WidgetLayout.status = el.DefaultWidgetLayout.status.value
+                        }
+                        if (el.DefaultWidgetLayout.statistics && Object.keys(el.DefaultWidgetLayout.statistics)) {
+                            el.WidgetLayout.ShowStatistics = el.DefaultWidgetLayout.statistics.ShowStatistics
+                            el.WidgetLayout.SumOfOthers = el.DefaultWidgetLayout.statistics.SumOfOthers
+                            el.WidgetLayout.AbsoluteNumbers = el.DefaultWidgetLayout.statistics.AbsoluteNumbers
+                        }
+
                         delete el.DefaultWidgetLayout
                     }
                     return el

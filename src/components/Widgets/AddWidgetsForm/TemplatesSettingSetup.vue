@@ -34,6 +34,33 @@
                     </template>
                 </time-frame>
             </div>
+            <div class="pt-4 pb-7 px-16" v-if="showStatisticsToDisplay">
+                <div class="flex items-center pt-4">
+                    <div class="flex items-center pb-4">
+                        <span class="mx-2 font-medium text-xl text-gray-950">
+                            {{ $t('statistics.to.display') }}
+                        </span>
+                    </div>
+                </div>
+                <base-select
+                    :data="statistics"
+                    v-model="ShowStatistics"
+                    valueKey="key"
+                    class="select-statistics"
+                />
+                <div class="flex mt-3">
+                    <el-checkbox v-model="SumOfOthers">
+                        <span class="text-gray-950">
+                            {{ $t('Display % of Others value') }}
+                        </span>
+                    </el-checkbox>
+                    <el-checkbox v-model="AbsoluteNumbers">
+                        <span class="text-gray-950">
+                            {{ $t('Display absolute numbers') }}
+                        </span>
+                    </el-checkbox>
+                </div>
+            </div>
             <div class="pt-4 pb-7 px-16" v-if="showStatusSelect">
                 <div class="w-100">
                     <div class="flex items-center pt-4">
@@ -102,8 +129,9 @@
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
     import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
-    import { Option, Select } from 'element-ui'
-    import { isCounterAgentsInStatus } from '@/helpers/widgetUtils'
+    import { Option, Select, Checkbox } from 'element-ui'
+    import { isCounterAgentsInStatus, isQueueDashboardWidget } from '@/helpers/widgetUtils'
+    import { statistics } from '@/enum/queueDashboardStatistics'
 
     export default {
         components: {
@@ -112,6 +140,7 @@
             TimeFrame,
             [Option.name]: Option,
             [Select.name]: Select,
+            [Checkbox.name]: Checkbox
         },
         props: {
             templates: {
@@ -130,7 +159,12 @@
                 selectedStatus: '',
                 selectedIcon: '',
                 selectedOption: {},
-                showStatusSelect: false
+                showStatusSelect: false,
+                statistics,
+                ShowStatistics: [],
+                SumOfOthers: false,
+                AbsoluteNumbers: false,
+                showStatisticsToDisplay: false
             }
         },
         computed: {
@@ -174,7 +208,7 @@
             await this.createUniqTemplateConfigs()
             await this.$store.dispatch('widgetCreation/resetWidgets')
             await this.settingDefaultValueInStatus()
-            await this.setShowSelectStatus()
+            await this.setShowingFields()
         },
         methods: {
             isAutoCompleteConfig(config) {
@@ -204,6 +238,19 @@
                     if (this.selectedOption && Object.keys(this.selectedOption).length) {
                         el.DefaultWidgetLayout = {
                             status: this.selectedOption
+                        }
+                    }
+                    if (this.ShowStatistics && this.ShowStatistics.length) {
+                        const data = {
+                            statistics: {
+                                ShowStatistics: this.ShowStatistics,
+                                SumOfOthers: this.SumOfOthers,
+                                AbsoluteNumbers: this.AbsoluteNumbers
+                            }
+                        }
+
+                        el.DefaultWidgetLayout = {
+                            ...data
                         }
                     }
 
@@ -260,20 +307,36 @@
                     }
                 })
             },
-            async setShowSelectStatus () {
+            async setShowingFields () {
                 const templatesToSetup = await this.getTemplatesToSetup
                 const allTemplatesToSetup = Object.values(templatesToSetup)
                 this.showStatusSelect = allTemplatesToSetup.some(el => isCounterAgentsInStatus(el.DataType))
+                this.showStatisticsToDisplay = allTemplatesToSetup
+                    .map(el => {
+                        el.DataTypeID = el.DataType.DataTypeID
+                        el.EndPoint = el.Endpoint
+
+                        return el
+                    })
+                    .some(el => isQueueDashboardWidget(el))
             },
             async settingDefaultValueInStatus () {
                 const templatesToSetup = await this.getTemplatesToSetup
                 Object.values(templatesToSetup)
                     .forEach(el => {
                         if (el.DefaultWidgetLayout && Object.keys(el.DefaultWidgetLayout)) {
-                            const value = el.DefaultWidgetLayout.status.value
-                            this.onStatusChange(value)
-                        } else {
-                            this.onStatusChange(this.statuses[0].value)
+                            if (el.DefaultWidgetLayout.status && Object.keys(el.DefaultWidgetLayout.status)) {
+                                const value = el.DefaultWidgetLayout.status.value
+                                this.onStatusChange(value)
+                            } else {
+                                this.onStatusChange(this.statuses[0].value)
+                            }
+
+                            if (el.DefaultWidgetLayout.statistics && Object.keys(el.DefaultWidgetLayout.statistics)) {
+                                this.ShowStatistics = el.DefaultWidgetLayout.statistics.ShowStatistics
+                                this.SumOfOthers = el.DefaultWidgetLayout.statistics.SumOfOthers
+                                this.AbsoluteNumbers = el.DefaultWidgetLayout.statistics.AbsoluteNumbers
+                            }
                         }
                     })
             }
@@ -297,6 +360,9 @@
 .select, .select ::v-deep .el-select > .el-input {
     @apply w-100;
 }
+// .select, .select ::v-deep .el-select > .el-input, ::v-deep .select-statistics.el-select > .el-input {
+//     @apply w-100;
+// }
 .select-status .el-input__inner {
     @apply pl-9;
 }
