@@ -836,5 +836,8 @@
   "Save as a new": "Save as a new",
   "New Theme Name": "New Theme Name",
   "Widget": "Widget",
-  "timeFrame": "Time Frame"
+  "timeFrame": "Time Frame",
+  "general.pageNotFound": "הדף לא נמצא",
+  "general.pageDoesNotExist": "אנו מצטערים, אבל העמוד שאתה מחפש - לא קיים",
+  "general.backToMainPage": "חזרה לעמוד הראשי"
 }

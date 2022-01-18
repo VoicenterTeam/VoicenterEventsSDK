@@ -997,5 +997,8 @@
     "New Theme Name": "New Theme Name",
     "New Dashboard Name": "New Dashboard Name",
     "Widget": "Widget",
-    "timeFrame": "Time Frame"
+    "timeFrame": "Time Frame",
+    "general.pageNotFound": "Page not found",
+    "general.pageDoesNotExist": "We are sorry, but the page you are looking for - does not exist",
+    "general.backToMainPage": "Back to Main Page"
 }
