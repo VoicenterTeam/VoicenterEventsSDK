@@ -16,7 +16,7 @@
                         <rect width="1" height="88" fill="#EBEBEB"/>
                     </svg>
                 </span>
-                    <span class="text-xl font-bold text-gray-900">
+                    <span class="text-2xl font-bold text-gray-900">
                     {{ $t('Dashboard Creation') }}
                 </span>
                 </div>
@@ -31,7 +31,7 @@
                             <span class="label-input label-dashboard-name">
                                 {{ $t('Set the Name') }}
                             </span>
-                            <div class="lg:w-64 lg:mx-4">
+                            <div class="lg:w-80 lg:mx-5">
                                 <el-form-item
                                     prop="DashboardTitle"
                                     :rules="[
@@ -59,27 +59,44 @@
                         </div>
                     </el-form>
                     <div
-                        class="lg:grid lg:grid-cols-4 gap-5 mb-18"
+                        class="mb-18"
                         key="TemplateCategories"
                     >
-                        <TemplateCategories class="col-span-1"
-                            key="categories"
-                            :categories="dashboardTemplateCategories"
-                            @on-choose-category="onChooseCategory"
-                        />
-                        <fade-transition mode="out-in" :duration="transitionDuration">
-                            <TemplatesPreview
-                                class="col-span-3"
-                                key="TemplatesPreview"
-                                @on-submit="tryAddDashboard"
-                                :selected-template="selectedTemplate"
-                                @on-select-template="onSelectTemplate"
-                                @on-detailed-view="onDetailedView"
-                                v-if="dashboardTemplateCategory && dashboardTemplateCategories"
-                                :dashboard-category="selectedCategory"
-                                :disableCreateBlankBtn="disableCreateBlankBtn"
-                            />
-                        </fade-transition>
+                        <div class="flex">
+                            <div>
+                                <div class="flex flex-row items-center justify-between text-main-base font-medium mb-4">
+                                    {{ $t("types") }}
+                                </div>
+                                <TemplateCategories class="col-span-1 w-48 mr-6"
+                                    key="categories"
+                                    :categories="dashboardTemplateCategories"
+                                    @on-choose-category="onChooseCategory"
+                                />
+                            </div>
+                            <div>
+                                <div class="px-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
+                                    <!-- <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span> -->
+                                    <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
+                                        @click="onSubmit" :disabled="disableCreateBlankBtn">
+                                        <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
+                                        {{ $t('Create blank dashboard') }}
+                                    </button>
+                                </div>
+                                <fade-transition mode="out-in" :duration="transitionDuration">
+                                    <TemplatesPreview
+                                        class="col-span-3"
+                                        key="TemplatesPreview"
+                                        @on-submit="tryAddDashboard"
+                                        :selected-template="selectedTemplate"
+                                        @on-select-template="onSelectTemplate"
+                                        @on-detailed-view="onDetailedView"
+                                        v-if="dashboardTemplateCategory && dashboardTemplateCategories"
+                                        :dashboard-category="selectedCategory"
+                                        :disableCreateBlankBtn="disableCreateBlankBtn"
+                                    />
+                                </fade-transition>
+                            </div>
+                        </div>
                     </div>
                 </template>
                 <template v-else>
@@ -194,6 +211,7 @@
         },
         computed: {
             selectedCategory () {
+                console.log(this.dashboardTemplateCategory, 'this.dashboardTemplateCategory')
                 return this.dashboardTemplateCategories.find(category => category.DashboardTemplateCategoryID.toString() === this.dashboardTemplateCategory.DashboardTemplateCategoryID.toString())
             },
             dashboardLayoutID() {
@@ -243,6 +261,7 @@
             async getDashboardTemplates() {
                 try {
                     this.dashboardTemplateCategories = await templateApi.getDashboardTemplates()
+                    console.log(this.dashboardTemplateCategories)
                 } catch (e) {
                     console.warn(e)
                 }
@@ -363,7 +382,7 @@
 </script>
 <style lang="scss" scoped>
 .label-input {
-    @apply whitespace-nowrap text-gray-900 text-main-sm font-medium truncate;
+    @apply whitespace-nowrap text-black font-medium truncate;
 }
 .label-dashboard-name, .layout-block {
     @apply mb-5.5;
@@ -375,5 +394,8 @@
 }
 ::v-deep .dashboard-creation-btn button {
     @apply w-32 h-9 p-0;
+}
+::v-deep .el-input input {
+    @apply text-gray-950;
 }
 </style>

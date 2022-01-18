@@ -1,7 +1,21 @@
 <template>
     <div class="md:grid md:grid-cols-6 gap-6 my-6 template-preview_wrapper">
-        <div class="col-span-4 border rounded shadow-base">
-            <img src="/img/IconDashboardTemplate.png" alt="template">
+        <div class="col-span-4 border rounded shadow-base pointer-events-none">
+                <div class="relative"
+                :class="{'full-screen': fullScreenMode}">
+                <div class="border border-gray-550 rounded preview-wrapper">
+                    <div class="content relative"
+                        id="dashboard-preview">
+                        <slot>
+                            <Dashboard
+                                class="absolute"
+                                :show-loading-indicator="false"
+                                :accountNoData="false"
+                            />
+                        </slot>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
         <div class="col-span-2">
@@ -57,10 +71,12 @@
 <script>
     import TemplateWidget from '@/views/DashboardCreation/components/TemplateWidget'
     import { DEFAULT_GROUP_KEYS } from '@/views/DashboardSettings/LayoutManagement/layout-management'
+    import Dashboard from '@/views/Dashboard'
     
     export default {
         components: {
             TemplateWidget,
+            Dashboard
         },
         props: {
             template: {
@@ -71,6 +87,9 @@
         data() {
             return {
                 groupKeys: DEFAULT_GROUP_KEYS,
+                realTimePreview: true,
+                zoom: this.defaultZoom,
+                fullScreenMode: false
             }
         },
         computed: {

@@ -2,15 +2,18 @@
     <div class="transition flex relative flex-col dashboard-wrapper">
         <div class="overflow-hidden h-8 w-full bg-transparent px-4" v-if="onFullScreen">
             <div @click="triggerFullScreenMode"
-                 :class="$rtl.isRTL ? 'mr-auto' : 'right-0'"
-                 class="flex w-full justify-end items-center cursor-pointer h-8 focus:outline-none text-gray-550 hover:text-primary">
+                :class="$rtl.isRTL ? 'mr-auto' : 'right-0'"
+                class="flex w-full justify-end items-center cursor-pointer h-8 focus:outline-none text-primary"
+            >
                 <IconExitFullScreen class="mx-2"/>
                 {{ $t('Exit Full Screen') }}
             </div>
         </div>
         <socket-status-alert @retry="retrySocketConnection"/>
-        <base-navbar v-if="!onFullScreen"
-                     key="base-navbar">
+        <base-navbar
+            v-if="!onFullScreen"
+            key="base-navbar"
+            :editMode="editMode">
             <template v-slot:dashboard-operations>
                 <div v-if="layoutType !== 'tabbed'"
                      class="flex items-center">

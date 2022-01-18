@@ -10,7 +10,7 @@
                          class="h-10">
                 </i>
                 <IconHorisontalLine class="hidden lg:flex mx-4 xl:mx-12"/>
-                <DashboardMenu/>
+                <DashboardMenu :editMode="editMode" />
                 <!-- <ManageReports/> TODO: make reports --> 
             </div>
             <div class="flex items-center p-2 sm:justify-between sm:w-full lg:w-auto">
@@ -35,6 +35,11 @@
             ManageReports,
             DashboardMenu,
             LanguageSwitcher,
+        },
+        props: {
+            editMode: {
+                type: Boolean
+            }
         },
         computed: {
             getLogo() {
