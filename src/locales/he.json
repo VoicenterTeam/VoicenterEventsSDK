@@ -837,5 +837,8 @@
   "New Theme Name": "New Theme Name",
   "Widget": "Widget",
   "timeFrame": "Time Frame",
-  "types": "Types"
+  "types": "Types",
+  "general.pageNotFound": "הדף לא נמצא",
+  "general.pageDoesNotExist": "אנו מצטערים, אבל העמוד שאתה מחפש - לא קיים",
+  "general.backToMainPage": "חזרה לעמוד הראשי"
 }
