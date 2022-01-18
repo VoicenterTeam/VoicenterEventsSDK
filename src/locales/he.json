@@ -834,5 +834,8 @@
   "Do you want to remove changes and go to the settings?": "Do you want to remove changes and go to the settings?",
   "Save changes in the existing theme": "Save changes in the existing theme",
   "Save as a new": "Save as a new",
-  "New Theme Name": "New Theme Name"
+  "New Theme Name": "New Theme Name",
+  "general.pageNotFound": "הדף לא נמצא",
+  "general.pageDoesNotExist": "אנו מצטערים, אבל העמוד שאתה מחפש - לא קיים",
+  "general.backToMainPage": "חזרה לעמוד הראשי"
 }
