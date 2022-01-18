@@ -33,7 +33,6 @@
         <AccountNoData v-if="accountNoData"/>
         <div class="dashboard"
              v-else
-             v-loading="loadingData"
              :key="activeLanguage">
             <div class="dashboard-container min-h-screen mb-10"
                  v-if="dashboard"
@@ -66,6 +65,7 @@
                      :key="activeDashboardData.DashboardID">
                     <fade-transition :duration="250" mode="out-in">
                         <component :active-tab="activeTab"
+                                   v-if="!isContentLoading"
                                    :edit-mode="editMode"
                                    :is="layoutTypes[layoutType]"
                                    :active-dashboard-data="activeDashboardData"
@@ -168,6 +168,9 @@
                     return false
                 }
                 return this.$store.state.dashboards.loadingData || this.loading
+            },
+            isContentLoading() {
+                return this.$store.state.dashboards.contentLoading
             },
             activeLanguage() {
                 return this.$store.state.lang.language

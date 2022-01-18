@@ -4,7 +4,7 @@
     <notifications/>
     <fade-transition mode="out-in" :duration="100">
         <router-view
-            v-loading.fullscreen.lock="initialLoading"
+            v-loading.fullscreen.lock="isContentLoading"
             element-loading-background="rgba(0, 0, 0, 0.2)" />
     </fade-transition>
 </div>
@@ -19,24 +19,31 @@ export default {
     components: {
         NetworkStatusAlert,
     },
-    data() {
-      return {
-          initialLoading: true
-      }
-    },
     async created() {
         try {
+            await this.$store.dispatch('dashboards/setContentLoading', true)
+
             await this.$store.dispatch('entities/getEntitiesList')
             await this.$store.dispatch('dashboards/getDashboards')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
-            await this.$store.dispatch('dashboards/selectDashboard')
+
+            const dashboardExist = this.allDashboards.some(dashboard => {
+                return dashboard.DashboardID === this.activeDashboard.DashboardID
+            })
+
+            if (dashboardExist) {
+                await this.$store.dispatch('dashboards/selectDashboard')
+            } else {
+                await this.$store.dispatch('dashboards/selectDashboard', this.allDashboards[this.allDashboards.length - 1])
+            }
+
             await this.$store.dispatch('layout/setupActiveLayout')
             await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
             await this.$store.dispatch('layout/setupLayouts')
             await this.$store.dispatch('layout/getGlobalLayout')
             this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
         } finally {
-            this.initialLoading = false
+            await this.$store.dispatch('dashboards/setContentLoading', false)
         }
     },
     computed: {
@@ -52,6 +59,12 @@ export default {
         activeDashboard() {
             return this.$store.getters['dashboards/getActiveDashboard']
         },
+        allDashboards() {
+            return this.$store.getters['dashboards/getAllDashboards']
+        },
+        isContentLoading() {
+            return this.$store.state.dashboards.contentLoading
+        }
     },
     methods: {
         initMainColorsVars(colors) {
