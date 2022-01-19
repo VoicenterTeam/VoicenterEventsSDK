@@ -31,6 +31,26 @@ export const activeCallColumns = [{
     sortable: true
 }]
 
+export const activeGaugeCallColumns = [{
+    prop: 'Id',
+    fixed: false,
+    align: 'center',
+    label: '#',
+    sortable: false
+}, {
+    prop: 'CallerID',
+    fixed: false,
+    align: 'center',
+    label: i18n.t('CallerID'),
+    sortable: false
+}, {
+    prop: 'WaitingTime',
+    fixed: false,
+    align: 'center',
+    label: i18n.t('Waiting Time'),
+    sortable: false
+}]
+
 export const allSeries = [
     {
         label: i18n.t('queue.maximum.waiting.time'),

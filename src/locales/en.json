@@ -271,6 +271,7 @@
     "UniqueAnsweredOutgoingCalls": "Unique Answered Outgoing Calls",
     "SuccessfulDurationCalls": "Successful Duration Calls",
     "UniqueSuccessfulDurationCalls": "Unique Successful Duration Calls",
+    "calls": "calls",
     "CallsOffered": "Calls Offered",
     "TotalAvg": "Total Avg",
     "TotalSum": "Total Sum",

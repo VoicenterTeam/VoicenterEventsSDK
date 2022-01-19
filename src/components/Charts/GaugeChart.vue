@@ -8,6 +8,20 @@
             :callback="onInitChartCallback"
             :updateArgs="[true, true]"
         />
+        <div class="mb-4">
+            <data-table
+                :border="tableBorder"
+                :columns="availableColumns"
+                :editable="editable"
+                can-sort-rows="custom"
+                :showColumns="visibleColumns"
+                :tableData="fetchTableData">
+                <template v-slot:WaitingTime="{row}">
+                    <waiting-time :call="row.Call" :key="row.Call.ivrid" :textColor="'text-white'"
+                                  v-if="row.Call"/>
+                </template>
+            </data-table>
+        </div>
     </div>
 </template>
 <script>
@@ -24,6 +38,10 @@
     import solidGaugeInit from 'highcharts/modules/solid-gauge'
     import { isExternalDataWidget } from '@/helpers/widgetUtils'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
+    import DataTable from '@/components/Table/DataTable'
+    import WaitingTime from '@/components/Widgets/Data/Queue/WaitingTime'
+    import {activeGaugeCallColumns} from "@/enum/queueConfigs";
+    import orderBy from "lodash/orderBy";
     
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
@@ -34,6 +52,8 @@
             TrashIcon,
             highcharts: Chart,
             [Tooltip.name]: Tooltip,
+            DataTable,
+            WaitingTime,
         },
         props: {
             data: {
@@ -51,6 +71,8 @@
                 chartData: {},
                 chartInstance: false,
                 fetchDataInterval: null,
+                tableBorder: true,
+                activeGaugeCallColumns,
             }
         },
         computed: {
@@ -59,6 +81,35 @@
             },
             getLabelFontSize() {
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
+            },
+            availableColumns () {
+                return get(this.data.WidgetLayout, 'Columns.availableColumns') || activeGaugeCallColumns
+            },
+            visibleColumns () {
+                return get(this.data.WidgetLayout, 'Columns.visibleColumns') || activeGaugeCallColumns.map(c => c.prop)
+            },
+            fetchTableData: {
+                get: function () {
+                    let data = []
+                    let rowsCounter = 0
+                    this.filteredQueuesWithActiveCalls.forEach((queue) => {
+                        queue.Calls.forEach((call) => {
+                            rowsCounter++
+                            data.push({
+                                Id: rowsCounter,
+                                CallerID: call.CallerID,
+                                Call: call
+                            })
+                        })
+                    })
+
+                    return orderBy(data, function (q) {
+                        return q.Call.JoinTimeStamp
+                    }, ['asc']);
+                },
+                set: function (newValue) {
+                    return newValue
+                }
             },
         },
         methods: {
@@ -110,7 +161,7 @@
                     ...range,
                     stops,
                     labels: {
-                        y: labelFontSize * 0.8,
+                        y: labelFontSize * 1.2,
                         style: {
                             fontSize: labelFontSize,
                         },
@@ -130,7 +181,8 @@
                         y: -35,
                         format:
                             '<div style="text-align:center">' +
-                            `<span ${labelStyle}>{y}</span><br/>` +
+                            `<span ${labelStyle}>{y}</span>&nbsp;` +
+                            `<span>${this.$t("calls")}</span>` +
                             '</div>',
                     },
                 }]

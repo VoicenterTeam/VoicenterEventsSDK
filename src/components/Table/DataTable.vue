@@ -47,7 +47,7 @@
                         :key="column.prop"
                         :label="$t(column.prop) || column.label"
                         :min-width="column.minWidth || columnMinWidthData"
-                        sortable="custom"
+                        :sortable="canSortRows"
                         :type="column.type"
                         v-bind="column"
                         v-for="column in renderedColumns">

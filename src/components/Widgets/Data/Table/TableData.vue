@@ -26,6 +26,7 @@
                 :allRecords="tableData"
                 :tableData="fetchTableData"
                 :widgetTitle="data.Title"
+                can-sort-rows="custom"
                 :columnsWithPercentage="columnsWithPercentage"
                 @sort-change="onSortChange"
                 @on-update-layout="onUpdateLayout">

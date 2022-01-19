@@ -8,8 +8,9 @@
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
+            can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"
-            @sort-change="sortChange">
+            @sort-change="onSortChange">
             <template v-slot:WaitingTime="{row}">
                 <waiting-time :call="row.Call" :key="row.Call.ivrid" :textColor="'text-white'"
                               v-if="row.Call && drawRow"/>
@@ -50,7 +51,7 @@
             return {
                 activeCallColumns,
                 border: true,
-                stripe: true,
+                stripe: false,
                 width: '30%',
                 drawRow: true,
                 widget: cloneDeep(this.data),

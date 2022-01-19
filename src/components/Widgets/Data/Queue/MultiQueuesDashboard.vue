@@ -123,7 +123,7 @@
         },
         data() {
             return {
-                canSortRows: true,
+                canSortRows: 'custom',
                 tableData: [],
                 columns: [],
                 searchableFields: [],

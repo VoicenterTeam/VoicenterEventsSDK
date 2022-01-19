@@ -11,6 +11,7 @@
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
+            can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
             <template v-slot:user_id="{row}">
