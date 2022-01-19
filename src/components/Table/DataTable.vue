@@ -160,7 +160,7 @@
                 default: () => [],
             },
             canSortRows: {
-                type: Boolean,
+                type: [Boolean, String],
                 default: false,
             },
             columnMinWidth: {
