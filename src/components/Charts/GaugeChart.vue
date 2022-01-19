@@ -169,9 +169,9 @@
             }
             this.triggerResizeEvent()
             if (this.data.DefaultRefreshInterval) {
-                /*this.fetchDataInterval = setInterval(() => {
+                this.fetchDataInterval = setInterval(() => {
                     this.chartOptions()
-                }, this.data.DefaultRefreshInterval)*/
+                }, this.data.DefaultRefreshInterval)
             }
         },
         beforeDestroy() {
