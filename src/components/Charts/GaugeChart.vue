@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-transparent pt-2 rounded-lg"
+    <div class="bg-transparent pt-4 rounded-lg"
          v-if="chartVisibility">
         <highcharts
             ref="gauge-chart"
@@ -169,9 +169,9 @@
             }
             this.triggerResizeEvent()
             if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
+                /*this.fetchDataInterval = setInterval(() => {
                     this.chartOptions()
-                }, this.data.DefaultRefreshInterval)
+                }, this.data.DefaultRefreshInterval)*/
             }
         },
         beforeDestroy() {
