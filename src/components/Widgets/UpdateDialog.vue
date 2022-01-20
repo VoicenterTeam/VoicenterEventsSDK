@@ -84,12 +84,12 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
-                            {{ $t('Display % of Others value') }}
+                            {{ $t('widget.displayPercentOfOthersValue') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.AbsoluteNumbers">
-                            {{ $t('Display absolute numbers') }}
+                            {{ $t('widget.displayAbsoluteNumbers') }}
                         </el-checkbox>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
             </el-collapse>
 <!--            <el-form-item v-if="isPieWidget(widget)">-->
 <!--                <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">-->
-<!--                    {{ $t('Don`t count logged out agents') }}-->
+<!--                    {{ $t('widget.dontCountLoggedOutAgents') }}-->
 <!--                </el-checkbox>-->
 <!--            </el-form-item>-->
             <el-form-item>

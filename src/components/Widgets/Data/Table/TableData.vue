@@ -29,7 +29,7 @@
                 @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
-                    <div v-else>{{$t('N/A')}}</div>
+                    <div v-else>{{$t('general.NA')}}</div>
                 </template>
                 <template v-slot:pagination>
                     <div class="flex items-center">
