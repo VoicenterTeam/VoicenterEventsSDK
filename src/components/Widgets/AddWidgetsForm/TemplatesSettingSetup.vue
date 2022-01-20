@@ -132,6 +132,7 @@
     import { Option, Select, Checkbox } from 'element-ui'
     import { isCounterAgentsInStatus, isQueueDashboardWidget } from '@/helpers/widgetUtils'
     import { statistics } from '@/enum/queueDashboardStatistics'
+    import merge from 'lodash/merge'
 
     export default {
         components: {
@@ -207,8 +208,8 @@
             await this.getTemplateConfigs()
             await this.createUniqTemplateConfigs()
             await this.$store.dispatch('widgetCreation/resetWidgets')
-            await this.settingDefaultValueInStatus()
             await this.setShowingFields()
+            await this.settingDefaultValueInStatus()
         },
         methods: {
             isAutoCompleteConfig(config) {
@@ -279,8 +280,15 @@
                     .filter(template => template.DefaultWidgetTime)
                     .map(template => template.DefaultWidgetTime)
 
+                const actualWidgetTime = widgetTime.length ? uniqBy(widgetTime, 'DefaultWidgetTime')[0] : []
+                const defaultWidgetTime = {
+                    Date_interval: '0',
+                    datedeff: '0',
+                    type: 'relative'
+                }
+
                 this.widgetTime = {
-                    WidgetTime: uniqBy(widgetTime, 'DefaultWidgetTime')[0]
+                    WidgetTime: merge(defaultWidgetTime, actualWidgetTime)
                 }
 
                 this.templateConfigs = result
@@ -336,6 +344,10 @@
                                 this.ShowStatistics = el.DefaultWidgetLayout.statistics.ShowStatistics
                                 this.SumOfOthers = el.DefaultWidgetLayout.statistics.SumOfOthers
                                 this.AbsoluteNumbers = el.DefaultWidgetLayout.statistics.AbsoluteNumbers
+                            }
+                        } else {
+                            if (this.showStatusSelect) {
+                                this.onStatusChange(this.statuses[0].value)
                             }
                         }
                     })

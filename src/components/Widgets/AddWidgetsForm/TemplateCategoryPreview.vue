@@ -153,6 +153,9 @@
                 return this.templateCategory.TemplatesList || []
             },
             filteredTemplates() {
+                if (!this.templateList || !this.templateList.length) {
+                    return
+                }
                 return this.templateList.filter((template) => {
                     const templateName = this.translateTemplateName(template.TemplateName)
                     return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())

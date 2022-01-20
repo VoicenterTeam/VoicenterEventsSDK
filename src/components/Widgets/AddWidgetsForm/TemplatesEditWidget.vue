@@ -233,7 +233,9 @@
                 }
 
                 if (this.selectedOption && Object.keys(this.selectedOption).length) {
-                    data.defaultWidgetLayout.status = this.selectedOption
+                    data.defaultWidgetLayout = {
+                        status: this.selectedOption
+                    }
                 }
                 if (this.ShowStatistics && this.ShowStatistics.length) {
                     data.defaultWidgetLayout = {
