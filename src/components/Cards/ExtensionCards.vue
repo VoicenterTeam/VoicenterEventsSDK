@@ -144,7 +144,7 @@
         },
         computed: {
             getThresholdConfig() {
-                return this.$store.getters['layout/getThresholdConfig']
+                return this.$store.getters['layout/getThresholdConfig']('activeLayout')
             },
             adminSelected() {
                 return displayUsersRelatedWithAdmin(this.data.WidgetConfig)

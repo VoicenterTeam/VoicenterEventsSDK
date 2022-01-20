@@ -74,8 +74,8 @@
                                 />
                             </div>
                             <div>
-                                <div class="px-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
-                                    <!-- <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span> -->
+                                <div class="pr-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
+                                    <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span>
                                     <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
                                         @click="onSubmit" :disabled="disableCreateBlankBtn">
                                         <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
@@ -206,12 +206,15 @@
                 selectedTemplate: false,
                 showConfirmDialog: false,
                 onViewTemplate: false,
-                createBlankDashboard: false
+                createBlankDashboard: false,
+                isPreviewDashboardTemplate: false
             }
         },
         computed: {
             selectedCategory () {
-                console.log(this.dashboardTemplateCategory, 'this.dashboardTemplateCategory')
+                if (!this.dashboardTemplateCategories.length || !this.dashboardTemplateCategory) {
+                    return
+                }
                 return this.dashboardTemplateCategories.find(category => category.DashboardTemplateCategoryID.toString() === this.dashboardTemplateCategory.DashboardTemplateCategoryID.toString())
             },
             dashboardLayoutID() {
@@ -231,11 +234,22 @@
             },
             isCreateBlankDashboard () {
                 return this.createBlankDashboard && typeof this.createBlankDashboard === 'boolean'
+            },
+            allLayouts() {
+                return this.$store.getters['layout/getAllLayouts']
             }
         },
         methods: {
-            redirectBack() {
-                this.$router.push('/')
+            async redirectBack() {
+                if (this.isPreviewDashboardTemplate) {
+                    this.onViewTemplate = !this.onViewTemplate
+                    this.isPreviewDashboardTemplate = false
+                    this.createBlankDashboard = false
+                    this.model.DashboardTemplateID = null
+                } else {
+                    this.$router.push('/')
+                    await this.$store.dispatch('layout/resetPreviewLayout')
+                }
             },
             onDiscard() {
                 this.selectedTemplate = false
@@ -244,6 +258,7 @@
             },
             onChoseLayout(layout) {
                 this.model.DashboardLayoutID = layout.LayoutID
+                this.$store.dispatch('layout/setPreviewLayout', layout)
             },
             onSelectTemplate(template) {
                 this.selectedTemplate = template
@@ -251,6 +266,7 @@
             },
             onDetailedView(template) {
                 this.onViewTemplate = !this.onViewTemplate
+                this.isPreviewDashboardTemplate = true
                 return this.onSelectTemplate(template)
             },
             onChooseCategory(category) {
@@ -261,7 +277,6 @@
             async getDashboardTemplates() {
                 try {
                     this.dashboardTemplateCategories = await templateApi.getDashboardTemplates()
-                    console.log(this.dashboardTemplateCategories)
                 } catch (e) {
                     console.warn(e)
                 }
@@ -291,9 +306,10 @@
                     await this.addEntities(dashboard, this.isCreateBlankDashboard)
                     await this.$store.dispatch('dashboards/getDashboards')
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
+                    await this.$store.dispatch('layout/resetPreviewLayout')
 
                     Notification.success('Dashboard added with success.')
-                    this.redirectBack()
+                    this.$router.push('/')
                 } catch (e) {
                     console.warn(e)
                     Notification.error('Something went wrong please try again.')
@@ -372,6 +388,8 @@
             await this.getDashboardTemplates()
             this.loading = false
             window.grids = []
+            const layout = this.allLayouts[0]
+            this.$store.dispatch('layout/setPreviewLayout', layout)
         },
         watch: {
             async activeLanguage() {

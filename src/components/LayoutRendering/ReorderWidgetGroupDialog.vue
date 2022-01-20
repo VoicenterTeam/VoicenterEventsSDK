@@ -76,7 +76,7 @@
         },
         computed: {
             getStyles() {
-                return this.$store.getters['layout/widgetTitleStyles']
+                return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
             },
         },
         methods: {

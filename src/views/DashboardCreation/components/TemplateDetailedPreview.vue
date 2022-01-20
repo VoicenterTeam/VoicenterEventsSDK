@@ -5,12 +5,12 @@
                 :class="{'full-screen': fullScreenMode}">
                 <div class="border border-gray-550 rounded preview-wrapper">
                     <div class="content relative"
-                        id="dashboard-preview">
+                        id="dashboard-preview" :style="getStyles">
                         <slot>
-                            <Dashboard
+                            <DashboardPreview
                                 class="absolute"
                                 :show-loading-indicator="false"
-                                :accountNoData="false"
+                                :template="template"
                             />
                         </slot>
                     </div>
@@ -71,18 +71,22 @@
 <script>
     import TemplateWidget from '@/views/DashboardCreation/components/TemplateWidget'
     import { DEFAULT_GROUP_KEYS } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    import Dashboard from '@/views/Dashboard'
+    import DashboardPreview from '@/views/DashboardPreview'
     
     export default {
         components: {
             TemplateWidget,
-            Dashboard
+            DashboardPreview
         },
         props: {
             template: {
                 type: Object,
                 default: () => ({}),
             },
+            model: {
+                type: Object,
+                default: () => ({}),
+            }
         },
         data() {
             return {
@@ -94,7 +98,7 @@
         },
         computed: {
             activeLayout() {
-                return this.$store.getters['layout/getActiveLayout']
+                return this.$store.getters['layout/getPreviewLayout']
             },
             getTimeSettings() {
                 const MinRefreshInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'MinRefreshInterval')
@@ -112,6 +116,11 @@
                 const group = this.groupKeys['Colors']
                 return this.getGroupedParameters(group)
             },
+            getStyles() {
+                return {
+                    zoom: 0.5
+                }
+            }
         },
         methods: {
             getGroupedParameters(group) {

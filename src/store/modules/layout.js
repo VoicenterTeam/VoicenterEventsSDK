@@ -14,11 +14,14 @@ const types = {
     SET_ACTIVE_LAYOUT: 'SET_ACTIVE_LAYOUT',
     UPDATE_ACTIVE_LAYOUT: 'UPDATE_ACTIVE_LAYOUT',
     SET_GLOBAL_LAYOUT: 'SET_GLOBAL_LAYOUT',
+    SET_PREVIEW_LAYOUT: 'SET_PREVIEW_LAYOUT',
+    RESET_ACTIVE_LAYOUT: 'RESET_ACTIVE_LAYOUT'
 };
 const state = {
     data: [],
     activeLayout: {},
     globalLayout: defaultLayout(null),
+    previewLayout: {}
 };
 
 const mutations = {
@@ -35,6 +38,12 @@ const mutations = {
         state.data.splice(0, 0, value)
         state.globalLayout = value
     },
+    [types.SET_PREVIEW_LAYOUT]: (state, value) => {
+        state.previewLayout = value;
+    },
+    [types.RESET_ACTIVE_LAYOUT]: (state) => {
+        state.previewLayout = {};
+    }
 };
 
 const actions = {
@@ -75,10 +84,16 @@ const actions = {
             commit(types.UPDATE_ACTIVE_LAYOUT, state.activeLayout)
         }
     },
+    async setPreviewLayout({ commit }, layout) {
+        commit(types.SET_PREVIEW_LAYOUT, layout)
+    },
+    async resetPreviewLayout({ commit }) {
+        commit(types.RESET_ACTIVE_LAYOUT)
+    }
 };
 
 const getters = {
-    colors: state => {
+    colors: (state) => (layoutType) => {
         let result = {
             primary: '#2575FF',
             primary_rgba: '37, 117, 255',
@@ -91,11 +106,11 @@ const getters = {
         
         result['primary_rgba'] = convertHex(result.primary);
         
-        if (!get(state, 'activeLayout.LayoutParametersList.length', false)) {
+        if (!get(state, `${layoutType}.LayoutParametersList.length`, false)) {
             return result
         }
         
-        state.activeLayout.LayoutParametersList.forEach((el) => {
+        state[layoutType].LayoutParametersList.forEach((el) => {
             
             if (el.LayoutParameterName === 'ColorPrimary') {
                 result.primary = el.Value
@@ -126,47 +141,47 @@ const getters = {
         
         return result
     },
-    baseFontSize: state => {
+    baseFontSize: (state) => (layoutType) => {
         try {
-            let result = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'FontSize')
+            let result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'FontSize')
             return Number(result[0]['Value'])
         } catch (e) {
             console.warn(e)
             return 16
         }
     },
-    refreshDelay: state => {
+    refreshDelay: (state) => (layoutType) => {
         try {
-            let result = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'RefreshRealTimeDataDelay')
+            let result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'RefreshRealTimeDataDelay')
             return Number(result[0]['Value'])
         } catch (e) {
             console.warn(e)
             return 30
         }
     },
-    switchInterval: state => {
+    switchInterval: (state) => (layoutType) => {
         try {
-            let result = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ReportInterval')
+            let result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'ReportInterval')
             return Number(result[0]['Value'])
         } catch (e) {
             console.warn(e)
             return null
         }
     },
-    switchReport: state => {
+    switchReport: (state) => (layoutType) => {
         try {
-            let result = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ReportSwitching')
+            let result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'ReportSwitching')
             return Boolean(result[0]['Value'] === '1');
         } catch (e) {
             console.warn(e)
             return false
         }
     },
-    widgetGroupTitleStyles: state => {
+    widgetGroupTitleStyles: (state) => (layoutType) => {
         try {
-            const fontSize = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTitlesFontSize')
+            const fontSize = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTitlesFontSize')
             const _fontSize = Number(fontSize[0]['Value'])
-            const color = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorWidgetGroupTitles')
+            const color = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorWidgetGroupTitles')
             const _color = color[0]['Value']
             
             return {
@@ -181,9 +196,9 @@ const getters = {
             }
         }
     },
-    widgetTitleStyles: state => {
+    widgetTitleStyles: (state) => (layoutType) => {
         try {
-            const result = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTitlesFontSize')
+            const result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTitlesFontSize')
             const fontSize = Number(result[0]['Value'])
             return {
                 fontSize: `${fontSize}px`,
@@ -195,27 +210,27 @@ const getters = {
             }
         }
     },
-    showWidgetTitles: state => {
+    showWidgetTitles: (state) => (layoutType) => {
         try {
-            let result = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'ShowWidgetTitles')
+            let result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'ShowWidgetTitles')
             return Boolean(result[0]['Value'] === '1');
         } catch (e) {
             console.warn(e)
             return true
         }
     },
-    minRefreshInterval: state => {
+    minRefreshInterval: (state) => (layoutType) => {
         try {
-            let result = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'MinRefreshInterval')
+            let result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'MinRefreshInterval')
             return Number(result[0]['Value'])
         } catch (e) {
             console.warn(e)
             return 10
         }
     },
-    getLogo: state => {
+    getLogo: (state) => (layoutType) => {
         try {
-            const logo = state.activeLayout.LayoutParametersList.filter((el) => el.LayoutParameterName === 'DashboardLogo')
+            const logo = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'DashboardLogo')
             return get(logo, `[0]['ValueText']`, DEFAULT_LOGO) || DEFAULT_LOGO
         } catch (e) {
             console.warn(e)
@@ -233,8 +248,8 @@ const getters = {
     storedDashboardLayout: state => LayoutID => {
         return state.data.find(layout => layout.LayoutID.toString() === LayoutID.toString())
     },
-    getThresholdConfig: state => {
-        const { LayoutParametersList } = state.activeLayout || {}
+    getThresholdConfig: (state) => (layoutType) => {
+        const { LayoutParametersList } = state[layoutType] || {}
         
         if (!LayoutParametersList) {
             return defaultExtensionThresholdConfig
@@ -248,6 +263,9 @@ const getters = {
         })
         return config
     },
+    getPreviewLayout: state => {
+        return state.previewLayout
+    }
 }
 
 export default {

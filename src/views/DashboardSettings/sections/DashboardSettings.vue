@@ -174,7 +174,7 @@
                 return this.activeLayout.LayoutID === DEFAULT_LAYOUT_ID
             },
             getLogo() {
-                return this.$store.getters['layout/getLogo']
+                return this.$store.getters['layout/getLogo']('activeLayout')
             },
             activeLayout() {
                 return this.$store.getters['layout/getActiveLayout']

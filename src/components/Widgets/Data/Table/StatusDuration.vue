@@ -58,7 +58,7 @@
                 }
             },
             thresholdConfig() {
-                return this.$store.getters['layout/getThresholdConfig']
+                return this.$store.getters['layout/getThresholdConfig']('activeLayout')
             },
         },
         methods: {

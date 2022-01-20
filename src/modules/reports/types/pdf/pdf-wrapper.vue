@@ -51,7 +51,7 @@
         },
         computed: {
             getLogo() {
-                return this.$store.getters['layout/getLogo']
+                return this.$store.getters['layout/getLogo']('activeLayout')
             },
             activeDashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']
