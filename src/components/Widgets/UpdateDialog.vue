@@ -296,7 +296,7 @@
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
                 model: {
-                    settings: cloneDeep(realTimeSettings),
+                    settings: realTimeSettings,
                     colors: cloneDeep(defaultColors),
                 },
                 activeCollapse: ['filters'],
