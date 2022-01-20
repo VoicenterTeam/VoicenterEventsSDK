@@ -18,11 +18,11 @@
                 <WidgetRefreshInterval :model="model"/>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Widget external endpoint') }}</label>
+                <label>{{ $t('widget.widgetExternalEndpoint') }}</label>
                 <el-input v-model="model.WidgetLayout.Endpoint"/>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Widget type') }}</label>
+                <label>{{ $t('widget.widgetType') }}</label>
                 <el-select v-model="model.WidgetLayout.ComponentTypeID"
                            placeholder="Select"
                            class="w-full pt-2">
@@ -109,7 +109,7 @@
                     this.widget.WidgetLayout.ComponentTypeID !== this.model.WidgetLayout.ComponentTypeID) {
                     this.$confirm(
                         this.$t('common.confirm.question', {
-                            action: this.$t('to update widget'),
+                            action: this.$t('config.toUpdateWidget'),
                         }), this.$t('widget.update'), {
                             cancelButtonText: this.$t('common.cancel'),
                             confirmButtonText: this.$t('common.confirm'),

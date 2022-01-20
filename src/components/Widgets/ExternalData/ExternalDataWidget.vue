@@ -2,7 +2,7 @@
     <div>
         <div v-if="!data.WidgetLayout.ComponentTypeID"
              class="w-full bg-white p-6 -my-4 text-center rounded">
-            {{ $t('Select a widget type') }}
+            {{ $t('widget.selectAWidgetType) }}
         </div>
         <component
             v-else

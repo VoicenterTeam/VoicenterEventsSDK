@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label>{{ $t('Widget padding') }}</label>
+        <label>{{ $t('widget.widgetPadding') }}</label>
         <el-slider
             class="px-1"
             :step="step"
