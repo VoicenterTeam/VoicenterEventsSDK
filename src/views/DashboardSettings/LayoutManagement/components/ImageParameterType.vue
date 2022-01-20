@@ -21,10 +21,10 @@
             placement="top-start"
             trigger="hover">
             <div>
-                {{ $t('Recommended dimensions:') }}<br>
-                {{ $t('Maximum Height - 150px') }}<br>
-                {{ $t('Maximum Width - 700px') }}<br>
-                {{ $t('Maximum Size - 100 KB') }}
+                {{ $t('layout.recommendedDimensions') }}<br>
+                {{ $t('layout.maximumHeight150px') }}<br>
+                {{ $t('layout.maximumWidth700px') }}<br>
+                {{ $t('layout.maximumSize100KB') }}
             </div>
             <AlertTriangleIcon class="text-orange-500 cursor-help"
                                slot="reference"/>

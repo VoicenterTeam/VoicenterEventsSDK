@@ -33,7 +33,7 @@
                     class="w-full mb-2"
                     v-model="account"/>
                 <p class="mb-2">
-                    {{ $t('New Dashboard Name') }}
+                    {{ $t('dashboard.newDashboardName') }}
                 </p>
                 <el-input v-model="dashboardCopy.DashboardTitle"/>
                 <el-collapse

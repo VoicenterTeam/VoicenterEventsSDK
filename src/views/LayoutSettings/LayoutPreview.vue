@@ -7,11 +7,11 @@
                  @click="triggerRealTimePreview">
                 <template v-if="realTimePreview">
                     <IconCrossedEye class="mb-0-5 mx-1"/>
-                    {{ $t('See without changes') }}
+                    {{ $t('layout.seeWithoutChanges') }}
                 </template>
                 <template v-if="!realTimePreview">
                     <EyeIcon class="w-4 h-4 mb-0-5 mx-1"/>
-                    {{ $t('See with changes') }}
+                    {{ $t('layout.seeWithChanges') }}
                 </template>
             </div>
         </div>

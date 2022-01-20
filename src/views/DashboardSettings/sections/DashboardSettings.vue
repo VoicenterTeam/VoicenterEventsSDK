@@ -41,7 +41,7 @@
                     <div class="flex">
                         <IconDashboardLogo class="text-primary mb-0-5"/>
                     </div>
-                    <div class="flex mx-1 label-input">{{ $t('Dashboard Logo') }}</div>
+                    <div class="flex mx-1 label-input">{{ $t('dashboard.dashboardLogo') }}</div>
                 </div>
                 <div class="flex flex-row items-center">
                     <img :src="getLogo" alt="Logo"

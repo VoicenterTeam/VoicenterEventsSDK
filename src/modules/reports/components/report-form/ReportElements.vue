@@ -36,7 +36,7 @@
                         icon: 'IconWidget',
                     },
                     {
-                        label: this.$t('Schedules'),
+                        label: this.$t('report.schedules'),
                         key: 'Schedules',
                         icon: 'IconSettings',
                     },

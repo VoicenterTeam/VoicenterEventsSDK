@@ -5,7 +5,7 @@
             <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
                 @click="onSubmit" :disabled="disableCreateBlankBtn">
                 <IconPlus class="w-3 h-3 mx-1"/>
-                {{ $t('Create blank dashboard') }}
+                {{ $t('dashboard.createBlankDashboard') }}
             </button>
         </div>
         <div class="overflow-auto wrapper-style">

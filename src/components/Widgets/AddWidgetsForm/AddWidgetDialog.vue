@@ -44,12 +44,12 @@
         >
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Remove changes') }}
+                    {{ $t('widget.removeChanges') }}
                 </h3>
             </template>
             <div class="flex justify-center w-full">
                 <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p px-3">
-                    {{ $t('Do you want to remove changes and go to the settings?') }}
+                    {{ $t('widget.doYouWantToRemoveChangesAndGoToTheSettings') }}
                 </div>
             </div>
             <template v-slot:footer-actions>

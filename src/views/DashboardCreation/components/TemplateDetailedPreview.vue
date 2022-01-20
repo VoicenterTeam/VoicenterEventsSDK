@@ -80,7 +80,7 @@
             getTimeSettings() {
                 const MinRefreshInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'MinRefreshInterval')
                 const ReportInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportInterval')
-                return `<p>${this.$t('Minimum refresh interval for real time widgets')}: <b>${MinRefreshInterval.Value}s</b>,  </p> <p>${this.$t('Switch category every')}: <b>${ReportInterval.Value}s</b></p>`
+                return `<p>${this.$t('widget.minimumRefreshIntervalForRealTimeWidgets')}: <b>${MinRefreshInterval.Value}s</b>,  </p> <p>${this.$t('Switch category every')}: <b>${ReportInterval.Value}s</b></p>`
             },
             getReportSettings() {
                 const ReportSwitching = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportSwitching')

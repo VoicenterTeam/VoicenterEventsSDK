@@ -50,7 +50,7 @@
                                                     <div @click.stop="onNewLayout"
                                                          class="mx-1 edit-justify-end items-center flex text-green-300">
                                                         <el-tooltip class="item" effect="dark"
-                                                                    :content="$t('Edit layout')"
+                                                                    :content="$t('layout.editLayout')"
                                                                     placement="top">
                                                             <IconPencil class="w-4-5 h-4-5"/>
                                                         </el-tooltip>
@@ -92,7 +92,7 @@
                             class="cursor-pointer text-gray-550 hover:text-primary text-sm font-medium border border-dashed hover:border-primary rounded justify-center py-2 flex items-center w-full">
                             <IconAdd class="mb-0-5"/>
                             <div class="mx-1" @click="newLayout">
-                                {{ $t('Create new') }}
+                                {{ $t('layout.createNew') }}
                             </div>
                         </div>
                     </div>

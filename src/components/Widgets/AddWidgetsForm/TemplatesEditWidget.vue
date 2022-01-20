@@ -8,7 +8,7 @@
             </span>
         </portal>
         <portal to="form-title">
-            {{$t('Set up the widget settings')}}
+            {{$t('widget.setUpTheWidgetSettings')}}
         </portal>
         <div class="py-4 -mx-4-5">
             <div v-for="(config, index) in uniqTemplatesConfigs"

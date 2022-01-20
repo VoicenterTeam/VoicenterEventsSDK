@@ -24,7 +24,7 @@
             </el-form-item>
             <el-form-item>
                 <label>{{ $t('Subject') }}</label>
-                <el-input :placeholder="$t('Email Subject')"
+                <el-input :placeholder="$t('report.emailSubject')"
                           v-model="model.subject"/>
             </el-form-item>
             <el-form-item>
