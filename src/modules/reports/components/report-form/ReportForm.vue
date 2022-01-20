@@ -90,7 +90,7 @@
             return {
                 loading: false,
                 model: {
-                    ReportName: this.$t('New Report'),
+                    ReportName: this.$t('report.newReport'),
                     ReportStatusID: 1,
                     ReportTypeID: 1, //Check available options
                     ReportTypeName: '',
