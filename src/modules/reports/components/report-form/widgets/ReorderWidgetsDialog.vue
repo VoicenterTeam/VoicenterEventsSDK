@@ -101,7 +101,7 @@
             return {
                 sections: [
                     {
-                        label: this.$t('PDF'),
+                        label: this.$t('general.PDF'),
                         icon: 'IconPdf',
                         key: 2,
                     },

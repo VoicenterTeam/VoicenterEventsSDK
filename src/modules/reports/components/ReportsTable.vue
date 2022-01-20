@@ -167,7 +167,7 @@
                         sortable: true,
                     },
                     {
-                        label: this.$t('Widget Name'),
+                        label: this.$t('widget.widgetName'),
                         prop: 'ReportItemList',
                         align: 'center',
                         minWidth: 100,
@@ -175,7 +175,7 @@
                         sortable: true,
                     },
                     {
-                        label: this.$t('Schedule'),
+                        label: this.$t('report.schedule'),
                         prop: 'ReportTriggerList',
                         align: 'center',
                         minWidth: 100,
@@ -190,7 +190,7 @@
                         icon: 'IconCondition',
                     },
                     {
-                        label: this.$t('Action'),
+                        label: this.$t('general.action'),
                         prop: 'actions',
                         align: 'center',
                         icon: 'IconActionColumn',

@@ -145,7 +145,7 @@
                             v-model="model.WidgetLayout.labelFontSize">
                         </el-slider>
                         <div class="flex flex-row items-center pt-10">
-                            <label>{{ $t('Data labels color') }}</label>
+                            <label>{{ $t('widget.dataLabelsColor') }}</label>
                             <el-color-picker
                                 :predefine="predefinedColors"
                                 class="mx-4"

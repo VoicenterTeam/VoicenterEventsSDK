@@ -123,7 +123,7 @@
                 return this.currentStep > 0
             },
             getActiveStep() {
-                return this.$t('Step') + ' ' + (this.currentStep+1) + ' ' + this.$t('of') + ' ' + WIZARD_CONFIG.length
+                return this.$t('general.step') + ' ' + (this.currentStep+1) + ' ' + this.$t('of') + ' ' + WIZARD_CONFIG.length
             },
         },
         methods: {

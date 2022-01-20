@@ -65,15 +65,15 @@
                 ],
                 operatorOptions: [
                     {
-                        label: this.$t('Equality'),
+                        label: this.$t('report.equality'),
                         value: '=',
                     },
                     {
-                        label: this.$t('Greater'),
+                        label: this.$t('report.greater'),
                         value: '>',
                     },
                     {
-                        label: this.$t('Smaller'),
+                        label: this.$t('report.smaller'),
                         value: '<',
                     },
                 ],

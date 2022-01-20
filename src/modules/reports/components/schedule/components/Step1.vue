@@ -23,7 +23,7 @@
                 </div>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Subject') }}</label>
+                <label>{{ $t('report.subject') }}</label>
                 <el-input :placeholder="$t('report.emailSubject')"
                           v-model="model.subject"/>
             </el-form-item>

@@ -5,7 +5,7 @@
                 <div class="flex flex-col w-38"
                      :class="$rtl.isRTL ? 'ml-10' : 'mr-10'">
                     <span class="mb-2">
-                        {{ $t('Frequency') }}:
+                        {{ $t('report.frequency') }}:
                     </span>
                     <base-select :value="selectedFrequency.value"
                                  id="frequency"
@@ -100,7 +100,7 @@
                             <div class="flex flex-col"
                                  :class="$rtl.isRTL ? 'mr-5 3xl:mr-10' : 'ml:5 3xl:ml-10'">
                                 <span class="mb-2">
-                                    {{ $t('Check every') }}:
+                                    {{ $t('report.checkEvery') }}:
                                 </span>
                                 <TimePicker id="check_every"
                                             class="flex w-35"

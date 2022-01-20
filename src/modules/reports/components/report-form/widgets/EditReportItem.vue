@@ -11,14 +11,14 @@
         >
             <el-form-item>
                 <label for="name">
-                    {{ $t('Widget Name') }}
+                    {{ $t('widget.widgetName') }}
                 </label>
                 <el-input id="name"
                           v-model="model.ReportItemName"/>
             </el-form-item>
             <el-form-item>
                 <label for="description">
-                    {{ $t('Description') }}
+                    {{ $t('general.description') }}
                 </label>
                 <el-input id="description"
                           v-model="model.ReportItemDescription"/>
@@ -29,14 +29,14 @@
                                  @change="onTriggerExportType($event, pdfTypeID)"
                                  :value="exportToPdf">
                         <span class="truncate">
-                            {{ $t('Export To Pdf') }}
+                            {{ $t('report.exportToPdf') }}
                         </span>
                     </el-checkbox>
                     <el-checkbox class="col-span-1"
                                  @change="onTriggerExportType($event, csvTypeID)"
                                  :value="exportToCsv">
                         <span class="truncate">
-                        {{ $t('Export To Csv') }}
+                        {{ $t('report.exportToCsv') }}
                         </span>
                     </el-checkbox>
                 </div>

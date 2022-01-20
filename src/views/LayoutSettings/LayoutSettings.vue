@@ -26,7 +26,7 @@
                                 <div class="flex items-center text-primary-300 hover:text-primary cursor-pointer"
                                      @click="onEditLayoutTitle">
                                     <IconPencil class="w-4 h-4"/>
-                                    <span class="text-sm mx-1">{{ $t('Edit') }}</span>
+                                    <span class="text-sm mx-1">{{ $t('common.edit') }}</span>
                                 </div>
                             </div>
                             <div v-else

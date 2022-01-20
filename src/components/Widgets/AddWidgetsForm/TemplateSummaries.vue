@@ -29,7 +29,7 @@
                 <div class="flex items-center cursor-pointer hover:text-primary"
                      @click="onEditTemplate(template)">
                 <span class="mx-1">
-                    {{ $t('Edit') }}
+                    {{ $t('common.edit') }}
                 </span>
                     <IconShape/>
                 </div>

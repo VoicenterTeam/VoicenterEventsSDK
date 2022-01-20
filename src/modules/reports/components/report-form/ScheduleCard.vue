@@ -45,7 +45,7 @@
             <span class="flex items-center font-medium leading-5">
                 <IconEmailGroup class="w-4 h-4 text-primary"/>
                 <span class="mx-2">
-                    {{ $t('Recipient list') }}:
+                    {{ $t('report.recipientList') }}:
                 </span>
             </span>
             <RecipientCard v-for="(recipient, index) in schedule.recipients"

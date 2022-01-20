@@ -2,7 +2,7 @@
     <div class="flex flex-col">
         <div class="flex w-full items-center justify-between">
             <div class="font-bold">
-                {{ $t('Condition Group') }}
+                {{ $t('report.conditionGroup') }}
             </div>
             <div class="flex items-center font-semibold">
                 <div class="text-primary-300 flex text-sm items-center hover:text-primary cursor-pointer mx-2"
@@ -17,7 +17,7 @@
                     </i>
                     <span class="text-sm"
                           :class="$rtl.isRTL ? 'ml-auto mr-1': 'mr-auto ml-1'">
-                        {{ $t('Remove') }}
+                        {{ $t('general.remove') }}
                     </span>
                 </div>
             </div>

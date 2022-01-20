@@ -103,7 +103,7 @@
                              @click="onEditLayout">
                             <div class="flex items-center">
                                 <IconPencil class="w-4 h-4"/>
-                                <div>{{ $t('Edit') }}</div>
+                                <div>{{ $t('common.edit') }}</div>
                             </div>
                         </div>
                         <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"

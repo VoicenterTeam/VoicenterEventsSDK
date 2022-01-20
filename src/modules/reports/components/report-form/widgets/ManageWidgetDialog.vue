@@ -46,7 +46,7 @@
                         <div class="flex items-center text-primary">
                             <AlertCircleIcon class="w-5 h-5"/>
                             <span class="mx-2 text-sm">
-                                    {{ $t('Help') }}
+                                    {{ $t('general.help') }}
                                 </span>
                         </div>
                     </div>
