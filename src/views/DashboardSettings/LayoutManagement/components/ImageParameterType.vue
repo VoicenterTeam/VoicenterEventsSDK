@@ -13,7 +13,7 @@
                              size="xs"
                              fixed-width="w-20"
                              variant="discard">
-                    {{ $t('Change') }}
+                    {{ $t('general.change') }}
                 </base-button>
             </el-upload>
         </div>

@@ -13,7 +13,7 @@
         </div>
         <div v-if="layoutID && dashboardsWithThisLayout.length" class="pb-5">
             <el-alert
-                :title="$t('This layout config is already used')"
+                :title="$t('layout.thisLayoutConfigIsAlreadyUsed')"
                 type="warning"
                 effect="dark"
                 :closable="closable"
@@ -120,7 +120,7 @@
                 this.dashboardsWithThisLayout.forEach((dashboard) => {
                     dashboards += `${dashboard.DashboardTitle}.. `
                 })
-                return `${this.$t('You must select another configuration for these dashboards:')} <br> <strong> ${dashboards} </strong>`
+                return `${this.$t('dashboard.youMustSelectAnotherConfiguration')} <br> <strong> ${dashboards} </strong>`
             },
             getAccountLayouts() {
                 return this.$store.state.layout.data || []
