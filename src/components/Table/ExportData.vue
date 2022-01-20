@@ -14,7 +14,7 @@
         </div>
         <modal :visible.sync="showExportDialog" v-if="showExportDialog">
             <div class="flex flex-row items-center pb-4">
-                <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('Export Data') }}</h3>
+                <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('general.exportData') }}</h3>
                 <static-widget-info :widget="widget" class="px-2"/>
             </div>
             <div class="pb-4">
@@ -29,8 +29,8 @@
                 show-icon
             />
             <div class="py-6 border-b">
-                <el-radio v-model="exportFormat" :label="exportTo.CSV">{{ $t('CSV') }}</el-radio>
-                <el-radio v-model="exportFormat" :label="exportTo.XLSX">{{ $t('Excel') }}</el-radio>
+                <el-radio v-model="exportFormat" :label="exportTo.CSV">{{ $t('general.export.csv') }}</el-radio>
+                <el-radio v-model="exportFormat" :label="exportTo.XLSX">{{ $t('general.export.excel') }}</el-radio>
             </div>
             <slot :onManageExport="onManageExport"/>
             <template v-slot:footer>

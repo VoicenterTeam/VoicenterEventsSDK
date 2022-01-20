@@ -4,7 +4,7 @@
           <span class="text-steel hover:text-primary redirect-action"
                 @click="goToSettings()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Settings') }}
+                {{ $t('settings.settings') }}
             </span>
         </portal>
         <portal to="form-title">

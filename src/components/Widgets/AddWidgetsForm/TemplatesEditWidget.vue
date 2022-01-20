@@ -32,7 +32,7 @@
                 <el-button @click="onViewSummary"
                     class="font-bold"
                     type="primary">
-                    {{ $t('Next') }}
+                    {{ $t('general.next') }}
                 </el-button>
             </div>
         </portal>

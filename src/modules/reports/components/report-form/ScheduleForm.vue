@@ -55,7 +55,7 @@
                                 <base-button fixed-width="w-37"
                                              @click="onNext">
                                     <div class="flex items-center">
-                                        <span class="mx-1 text-base font-bold">{{ $t('Next') }}</span>
+                                        <span class="mx-1 text-base font-bold">{{ $t('general.next') }}</span>
                                         <IconDirRight class="mx-1"/>
                                     </div>
                                 </base-button>

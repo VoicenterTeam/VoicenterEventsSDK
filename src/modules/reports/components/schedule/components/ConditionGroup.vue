@@ -7,7 +7,7 @@
             <div class="flex items-center font-semibold">
                 <div class="text-primary-300 flex text-sm items-center hover:text-primary cursor-pointer mx-2"
                      @click="onAddCondition">
-                    + {{ $t('Add') }}
+                    + {{ $t('general.add') }}
                 </div>
                 <div v-if="canDelete"
                      class="flex items-center text-red-300 cursor-pointer hover:text-red"

@@ -46,7 +46,7 @@
                             <div class="flex items-center justify-center">
                                 <IconAdd class="mb-0-5"
                                     :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
-                                <span>{{ $t('Add') }}</span>
+                                <span>{{ $t('general.add') }}</span>
                             </div>
                         </el-button>
                     </template>

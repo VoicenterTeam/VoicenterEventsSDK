@@ -119,7 +119,7 @@
                          @click="goNext">
                 <div class="flex items-center">
                     <span class="mx-1 text-base font-bold">
-                        {{ $t('Next') }}
+                        {{ $t('general.next') }}
                     </span>
                     <IconDirRight class="mx-1"/>
                 </div>
