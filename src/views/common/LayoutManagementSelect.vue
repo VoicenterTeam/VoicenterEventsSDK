@@ -58,7 +58,7 @@
                                                     <div @click.stop="tryDeleteLayout(layout)"
                                                          class="edit-justify-end items-center flex text-red-300">
                                                         <el-tooltip class="item" effect="dark"
-                                                                    :content="$t('Move layout to bin')"
+                                                                    :content="$t('layout.moveLayoutToBin')"
                                                                     placement="top">
                                                             <IconDelete class="w-4-5 h-4-5"/>
                                                         </el-tooltip>
@@ -78,7 +78,7 @@
                                 <template v-if="!activeLayouts">
                                     <div class="edit-flex justify-end items-center cursor-pointer"
                                          @click.stop="tryRestoreLayout(layout)">
-                                        <el-tooltip :content="$t('Restore layout')"
+                                        <el-tooltip :content="$t('layout.restoreLayout')"
                                                     placement="top">
                                             <RotateCcwIcon class="text-gray-400 w-4 hover:text-primary"/>
                                         </el-tooltip>

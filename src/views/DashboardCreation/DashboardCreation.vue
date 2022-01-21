@@ -8,7 +8,7 @@
                     <div @click="redirectBack()"
                          class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                         <IconDirLeft/>
-                        <span class="mx-1">{{ $t('Back') }}</span>
+                        <span class="mx-1">{{ $t('general.back') }}</span>
                     </div>
                     <span class="mx-8">
                     <svg width="1" height="88" viewBox="0 0 1 88" fill="none"

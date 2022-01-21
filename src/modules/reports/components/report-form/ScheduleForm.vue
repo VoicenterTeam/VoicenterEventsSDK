@@ -49,7 +49,7 @@
                                  v-if="canGoBack"
                                  class="text-primary-300 flex items-center hover:text-primary cursor-pointer mx-16">
                                 <IconDirLeft/>
-                                <span class="mx-1">{{ $t('Back') }}</span>
+                                <span class="mx-1">{{ $t('general.back') }}</span>
                             </div>
                             <portal-target name="next-button">
                                 <base-button fixed-width="w-37"

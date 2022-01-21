@@ -19,7 +19,7 @@ export const availableLayouts = [{
     statusName: ENABLED_STATUS_NAME,
     name: 'enabledLayouts',
 }, {
-    label: i18n.t('Recycle Bin'),
+    label: i18n.t('layout.recycleBin'),
     statusID: DELETED_STATUS_ID,
     statusName: DELETED_STATUS_NAME,
     name: 'deletedLayouts',

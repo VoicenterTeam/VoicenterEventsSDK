@@ -67,7 +67,7 @@
                         <div class="flex flex-col">
                             <div class="flex items-center mb-2">
                                 <IconDashboardColor class="text-primary"/>
-                                <span class="mx-1">{{ $t('Colors') }}</span>
+                                <span class="mx-1">{{ $t('dashboard.colors') }}</span>
                             </div>
                             <div class="flex flex-row">
                                 <div v-for="group in getColorParameters"
@@ -80,7 +80,7 @@
                         <div class="flex flex-col">
                             <div class="flex items-center mb-2">
                                 <IconFonts class="text-primary"/>
-                                <span class="mx-1">{{ $t('Fonts') }}</span>
+                                <span class="mx-1">{{ $t('dashboard.fonts') }}</span>
                             </div>
                             <div class="text-xs text-gray-900">
                                 {{ getFontInfos }}

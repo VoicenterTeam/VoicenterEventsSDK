@@ -22,7 +22,7 @@
                     <IconTimerSm class="text-primary"/>
                 </i>
                 <span class="mx-2">
-                    {{ $t('Timers') }}
+                    {{ $t('widget.timers') }}
                 </span>
             </div>
             <div v-html="getReportSettings"/>
@@ -30,7 +30,7 @@
             <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
             <div class="flex items-center mt-4 mb-2">
                 <IconDashboardColor class="text-primary"/>
-                <span class="mx-1">{{ $t('Colors') }}</span>
+                <span class="mx-1">{{ $t('dashboard.colors') }}</span>
             </div>
             <div class="flex flex-col">
                 <div v-for="group in getColorParameters"
