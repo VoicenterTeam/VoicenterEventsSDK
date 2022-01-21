@@ -18,7 +18,7 @@ export const LayoutApi = {
             if (data.LayoutID) {
                 Notification.success(i18n.t('Layout updated with success'))
             } else {
-                Notification.success(i18n.t('Layout added with success'))
+                Notification.success(i18n.t('layout.layoutAddedWithSuccess'))
             }
             return result
         } catch (e) {

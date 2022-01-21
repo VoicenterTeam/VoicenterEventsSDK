@@ -1,5 +1,5 @@
 <template>
-    <ConfirmDialog :title="$t('Edit Report Item')"
+    <ConfirmDialog :title="$t('report.editReportItem')"
                    v-bind="$attrs"
                    v-on="$listeners"
                    @close="onCancel()"

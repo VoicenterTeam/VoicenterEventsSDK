@@ -1,5 +1,5 @@
 <template>
-    <el-tooltip :content="$t('Manage Reports')"
+    <el-tooltip :content="$t('report.manageReports')"
                 v-if="showButton"
                 placement="bottom">
         <a href="/reports">

@@ -8,7 +8,7 @@
                 {{ getWidgetNames }}
             </span>
         </div>
-        <el-tooltip :content="$t('Add widgets in this group')"
+        <el-tooltip :content="$t('general.addWidgetsInThisGroup')"
                     placement="top">
             <div class="flex font-bold text-primary leading-5 items-center cursor-pointer"
                  @click="onSelectGroup()">

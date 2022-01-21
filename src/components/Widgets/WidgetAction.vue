@@ -30,7 +30,7 @@
                                     placement="top">
                             <div class="flex items-center hover:text-primary w-24">
                                 <DownloadIcon class="text-blue-600 w-4-5 h-4-5"/>
-                                <span class="mx-1">{{ $t('To') }}</span>
+                                <span class="mx-1">{{ $t('general.to') }}</span>
                             </div>
                         </el-tooltip>
                         <el-select v-model="downloadChartFormat"

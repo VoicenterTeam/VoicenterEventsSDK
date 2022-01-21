@@ -158,7 +158,7 @@
                         width: '50',
                     },
                     {
-                        label: this.$t('Report Name'),
+                        label: this.$t('report.reportName'),
                         prop: 'ReportName',
                         align: 'center',
                         minWidth: 50,

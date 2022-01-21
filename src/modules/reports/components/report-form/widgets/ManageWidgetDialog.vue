@@ -7,12 +7,12 @@
                     <IconAddReport/>
                 </i>
                 <span class="text-main-sm leading-4">
-                    {{ $t('Manage Report Items') }}
+                    {{ $t('report.manageReportItems') }}
                 </span>
             </div>
         </div>
         <modal :visible.sync="showDialog"
-               title="Manage Report Items"
+               title="report.manageReportItems"
                width="50%"
                :title-centered="true"
                v-show="showDialog">

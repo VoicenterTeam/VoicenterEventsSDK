@@ -155,7 +155,7 @@
                             let innerRadius = reversedCounts ? '88%' : '63%'
                             
                             let InSLAData = {
-                                name: this.$t('In SLA'),
+                                name: this.$t('queue.inSLA'),
                                 data: [{
                                     color: InSLACountStyles['color'],
                                     radius: radius,

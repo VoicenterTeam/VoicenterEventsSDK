@@ -238,7 +238,7 @@
                 rules: {
                     layoutName: [
                         { required: true, message: this.$t('general.validationRequired', { field: this.$t('layout.newThemeName') }) },
-                        { validator: validationThemeName, message: this.$t('Layout name already used, please use another name.') }
+                        { validator: validationThemeName, message: this.$t('layout.layoutNameAlreadyUsedWarning') }
                     ]
                 },
                 disabledForm: !this.isDefaultLayout,

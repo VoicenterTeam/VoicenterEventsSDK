@@ -5,7 +5,7 @@
             <div class="flex items-center">
                 <IconAddReport class="w-4 h-4 mx-1"/>
                 <span class="text-main-sm leading-4">
-                    {{ $t('Add New Schedule') }}
+                    {{ $t('widget.addNewSchedule') }}
                 </span>
             </div>
         </div>
@@ -17,7 +17,7 @@
         >
             <template v-slot:title>
                 <div class="flex w-full justify-center">
-                    {{ $t('Add Schedule') }}
+                    {{ $t('widget.addSchedule') }}
                 </div>
             </template>
             <div class="grid grid-cols-8 relative">

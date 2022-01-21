@@ -34,7 +34,7 @@
             <span class="flex items-center font-medium leading-5">
                 <IconCondition class="w-4 h-4 text-primary"/>
                 <span :class="!$rtl.isRTL ? 'ml-2 mr-9' : 'ml-9 mr-2'">
-                    {{ $t('Conditions') }}:
+                    {{ $t('widget.conditions') }}:
                 </span>
             </span>
             <p class="text-sm leading-5 font-normal">

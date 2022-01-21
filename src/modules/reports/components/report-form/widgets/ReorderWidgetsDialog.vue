@@ -5,12 +5,12 @@
             <div class="flex items-center">
                 <IconChangeOrder class="w-5 h-5 mx-1"/>
                 <span class="text-main-sm leading-4">
-                    {{ $t('Change Widget Order') }}
+                    {{ $t('widget.changeWidgetOrder') }}
                 </span>
             </div>
         </div>
         <modal :visible.sync="showDialog"
-               title="Widget Reorder"
+               title="widget.widgetReorder"
                top="15vh"
                wrapper-classes="reorder-widgets"
                :title-centered="true"

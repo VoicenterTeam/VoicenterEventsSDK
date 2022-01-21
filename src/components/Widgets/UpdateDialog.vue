@@ -32,7 +32,7 @@
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
-                            {{ $t('Display the row with totals') }}
+                            {{ $t('widget.displayTheRowWithTotals') }}
                         </el-checkbox>
                     </div>
                 </div>

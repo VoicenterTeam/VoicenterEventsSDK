@@ -14,8 +14,8 @@
                 </template>
                 <div class="mx-20 mt-8 mb-20">
                     <base-input rules="required"
-                                :name="$t('Report Name')"
-                                :label="$t('Report Name')"
+                                :name="$t('report.reportName')"
+                                :label="$t('report.reportName')"
                                 label-icon="IconReportName"
                                 v-model="model.ReportName"
                                 id="ReportTypeName"

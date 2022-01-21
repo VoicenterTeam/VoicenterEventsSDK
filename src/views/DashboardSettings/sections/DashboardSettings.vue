@@ -29,7 +29,7 @@
                     <div v-else
                          class="mt-4 flex items-center">
                         <IconColorPicker class="w-6 h-6 text-primary"/>
-                        <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                        <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
                                     placement="top">
                             <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5 mx-2"/>
                         </el-tooltip>
@@ -48,7 +48,7 @@
                          class="h-6 object-cover">
                     <LayoutLogo class="mx-2"
                                 :disabled="defaultLayout"/>
-                    <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                    <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
                                 v-if="defaultLayout"
                                 placement="top">
                         <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
@@ -106,7 +106,7 @@
                                 <div>{{ $t('common.edit') }}</div>
                             </div>
                         </div>
-                        <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                        <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
                                     placement="top"
                                     v-if="defaultLayout"
                         >

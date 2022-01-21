@@ -2,7 +2,7 @@
     <div class="content-wrapper">
         <el-form>
             <el-form-item>
-                <label>{{ $t('To') }}</label>
+                <label>{{ $t('general.to') }}</label>
                 <div class="w-full">
                     <el-select id="email-wrapper"
                                class="w-full"

@@ -94,7 +94,7 @@
             <template v-slot:actions="{row, index}">
                 <div class="flex items-center justify-center"
                      :key="`action-${index}`">
-                    <el-tooltip :content="$t('Edit Widget')"
+                    <el-tooltip :content="$t('tooltip.edit.widget')"
                                 placement="top">
                             <span class="cursor-pointer mx-2 text-green hover:opacity-75"
                                   @click="tryEditWidget(row, index)">
@@ -111,7 +111,7 @@
                 </div>
             </template>
             <template v-slot:empty-text>
-                {{ $t('No report items') }}
+                {{ $t('report.noReportItems') }}
             </template>
         </DataTable>
         <ConfirmDialog :visible.sync="showDeleteDialog"
@@ -192,7 +192,7 @@
                 drawTable: true,
                 columns: [
                     {
-                        label: this.$t('№'),
+                        label: this.$t('general.№'),
                         prop: 'index',
                         align: 'center',
                         minWidth: 20,
