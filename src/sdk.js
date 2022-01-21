@@ -1,4 +1,5 @@
 import eventTypes from './eventTypes';
+import environments from './utils/environments'
 import { defaultServers } from './config';
 import Logger from './Logger';
 import debounce from 'lodash/debounce'
@@ -13,6 +14,7 @@ import md5 from "js-md5";
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
+  environment: environments.BROWSER,
   fallbackServer: {
     Domain: 'monitor5.voicenter.co.il',
     Priority: 0,
@@ -191,7 +193,7 @@ class EventsSDK {
 
   async _onLoginResponse(data) {
     if (data.Client) {
-      await loadExternalScript('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=2.4.0')
+      await loadExternalScript(data.Client, this.options.environment)
     }
     if (data.URL) {
       this.server = {
@@ -299,9 +301,7 @@ class EventsSDK {
         token: this.token
       }
     }
-    this.socket = window.io(url, options)
-
-
+    this.socket = self.io(url, options)
 
     allConnections.push(this.socket);
     this.connectionEstablished = true;
@@ -409,7 +409,7 @@ class EventsSDK {
   }
 
   _onEvent(packet) {
-    if (!packet.data) { 
+    if (!packet.data) {
       return;
     }
     let evt = this._parsePacket(packet);
@@ -555,27 +555,36 @@ class EventsSDK {
       }
     }
   }
-  _getTabsSession(){
-      if (!window.sessionStorage.length) {
-        // Ask other tabs for session storage
-        localStorage.setItem('getSessionStorage', Date.now());
-      };
+  _getTabsSession() {
+    if (this.options.environment !== environments.BROWSER) {
+      return Promise.resolve()
+    }
+
+    if (!window.sessionStorage.length) {
+      // Ask other tabs for session storage
+      localStorage.setItem('getSessionStorage', Date.now());
+    }
+
+    return new Promise((resolve) => {
       window.addEventListener('storage', (event) => {
-        //console.log('storage event', event);
-        if (event.key == 'getSessionStorage') {
+        if (event.key === 'getSessionStorage') {
           // Some tab asked for the sessionStorage -> send it
           localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
           localStorage.removeItem('sessionStorage');
-        } else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+        } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
           // sessionStorage is empty -> fill it
-          var data = JSON.parse(event.newValue),
-                value;
+          const data = JSON.parse(event.newValue)
+
           for (let key in data) {
-            window.sessionStorage.setItem(key, data[key]);
+            if (data.hasOwnProperty(key)) {
+              window.sessionStorage.setItem(key, data[key]);
+            }
           }
+
+          resolve()
         }
       })
-      return new Promise(resolve => setTimeout((resolve), 200))
+    })
   }
 
   /**
@@ -593,28 +602,35 @@ class EventsSDK {
     }
     let key = md5(JSON.stringify(payload))
     const delay = 1000;
+
     if (this._lastLoginTimestamp + delay > new Date().getTime()) {
       return Promise.resolve()
     }
+
     this._lastLoginTimestamp = new Date().getTime()
+
     return new Promise(async (resolve, reject) => {
-      try{
+      try {
         let loginSession = window.sessionStorage.getItem(key);
-        if(loginSession){
+
+        if (loginSession) {
           loginSession = JSON.parse(loginSession)
           this.Logger.log('got data from session', loginSession);
           await this._onLoginResponse(loginSession)
           return resolve(loginSession);
         }
-      }catch(err){
-        this.Logger.log('Error on getting session',err)
+      } catch (err) {
+        this.Logger.log('Error on getting session', err)
       }
+
       try {
-        let url = getExternalLoginUrl(this.options.loginUrl, type)
-        const res = await externalLogin(url,payload)
+        const url = getExternalLoginUrl(this.options.loginUrl, type)
+        const res = await externalLogin(url, payload)
         await this._onLoginResponse(res)
 
-        window.sessionStorage.setItem(key, JSON.stringify(res));
+        if (this.options.environment === environments.BROWSER) {
+          window.sessionStorage.setItem(key, JSON.stringify(res));
+        }
 
         resolve(res)
       } catch (err) {
@@ -623,7 +639,6 @@ class EventsSDK {
       }
     });
   }
-
 }
 
 export default EventsSDK;

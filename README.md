@@ -97,6 +97,7 @@ The SDK constructor accepts multiple options when initializing which can be used
 
 | Option | Type | Default | Description |
 |-----------|---------------|---------------|---------------|
+| environment | String | browser | Could be 'browser'/'chrome_extension' |
 | token | String | Null | Monitor code token to use for login |
 | user | String | Can be used to login with "user" or "account" login type |  |
 | password | String | Used for login with "user" or "account" login type. Must be used together with user property |  |

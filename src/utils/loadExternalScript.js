@@ -1,5 +1,7 @@
-export function loadExternalScript(url) {
-  return new Promise((resolve) => {
+import environments from './environments'
+
+function loadBrowserScript(url) {
+  return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.src = url;
     script.onload = () => {
@@ -10,4 +12,25 @@ export function loadExternalScript(url) {
     };
     document.body.append(script);
   });
+}
+
+async function loadExtensionScript(url) {
+  try {
+    let script = await fetch(url)
+    script = await script.text()
+
+    eval(script)
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
+export async function loadExternalScript(url, environment) {
+  switch (environment) {
+    case environments.BROWSER:
+      await loadBrowserScript(url)
+      break
+    case environments.CHROME_EXTENSION:
+      await loadExtensionScript(url)
+  }
 }
