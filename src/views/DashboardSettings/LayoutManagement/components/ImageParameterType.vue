@@ -62,8 +62,8 @@
                 //100 kb
                 if (file && file.size > 100000) {
                     Notification.error({
-                        title: i18n.t('Invalid Logo'),
-                        message: i18n.t('Logo size should be less than 100kb'),
+                        title: i18n.t('layout.invalidLogo'),
+                        message: i18n.t('layout.logoSizeShouldBeLessThan100kb'),
                     })
                     return
                 }

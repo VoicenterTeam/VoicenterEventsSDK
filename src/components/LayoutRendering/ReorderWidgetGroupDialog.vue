@@ -34,7 +34,7 @@
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
-                        {{ $t('Discard') }}
+                        {{ $t('general.discard') }}
                     </span>
                     </div>
                 </base-button>

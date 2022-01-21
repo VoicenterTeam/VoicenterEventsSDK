@@ -29,7 +29,7 @@
                              key="el-form" :model="model" ref="dashboardCreationForm">
                         <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
                             <span class="label-input label-dashboard-name">
-                                {{ $t('Set the Name') }}
+                                {{ $t('dashboard.setTheName') }}
                             </span>
                             <div class="lg:w-64 lg:mx-4">
                                 <el-form-item
@@ -46,7 +46,7 @@
                         <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
                              class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto layout-block">
                             <span class="label-input flex-wrap">
-                                {{ $t('Choose Layout') }}
+                                {{ $t('dashboard.chooseLayout') }}
                             </span>
                             <div>
                                 <LayoutSelect
@@ -92,7 +92,7 @@
                 >
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('general.discard') }}</span>
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"

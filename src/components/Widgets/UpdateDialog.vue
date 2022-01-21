@@ -22,7 +22,7 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.showStatsInPercentage">
-                            {{ $t('Show Stats in Percentage') }}
+                            {{ $t('widget.showStatsInPercentage') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
