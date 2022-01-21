@@ -45,7 +45,7 @@
                 return this.group.WidgetList.map(el => el.Title).join(', ')
             },
             getGroupName() {
-                return this.group.WidgetGroupTitle ? this.group.WidgetGroupTitle : `${this.$t('Group')}: ${this.index}`
+                return this.group.WidgetGroupTitle ? this.group.WidgetGroupTitle : `${this.$t('general.group')}: ${this.index}`
             }
         },
         methods: {

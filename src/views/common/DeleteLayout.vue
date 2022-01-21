@@ -5,7 +5,7 @@
            :width="modalWidth">
         <h3 class="text-main-xl font-semibold text-gray-700"
             slot="title">
-            {{ $t('Delete Confirmation') }}
+            {{ $t('general.deleteConfirmation') }}
         </h3>
         <div class="py-4">
             {{ promptMessage }}<br>

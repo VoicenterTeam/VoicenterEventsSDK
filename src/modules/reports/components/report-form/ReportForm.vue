@@ -46,7 +46,7 @@
                                      fixed-width="w-37">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-semibold">{{ $t('Cancel') }}</span>
+                                <span class="mx-1 text-base font-semibold">{{ $t('common.cancel') }}</span>
                             </div>
                         </base-button>
                         <base-button :loading="loading"

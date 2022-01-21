@@ -117,7 +117,7 @@
                              :loading="localLoading">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ 'Confirm' }}</span>
+                        <span class="mx-1 text-base font-bold">{{ 'common.confirm' }}</span>
                     </div>
                 </base-button>
             </template>

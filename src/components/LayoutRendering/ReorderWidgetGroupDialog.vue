@@ -43,7 +43,7 @@
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
-                        {{ $t('Save') }}
+                        {{ $t('common.save') }}
                     </span>
                     </div>
                 </base-button>

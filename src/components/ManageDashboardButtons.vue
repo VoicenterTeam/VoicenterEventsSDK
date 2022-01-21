@@ -16,14 +16,14 @@
                     <div class="px-1 flex flex-row items-center">
                         <div class="flex w-1/2 mx-1" v-if="activeTabGroup">
                             <el-tooltip
-                                :content="`${$t('Current group')}: ${activeTabGroup.WidgetGroupTitle}`" class="item"
+                                :content="`${$t('dashboard.currentGroup')}: ${activeTabGroup.WidgetGroupTitle}`" class="item"
                                 effect="dark"
                                 placement="top">
                                 <button
                                     class="w-full border btn items-center p-2 shadow rounded bg-white text-gray-700 cursor-pointer text-main-xs font-semibold hover:bg-primary-100 hover:text-primary"
                                     @click="onEditGroup(activeTabGroup)"
                                     :class="{'w-full': !activeTabGroup}">
-                                    {{$t('Current group')}}
+                                    {{$t('dashboard.currentGroup')}}
                                 </button>
                             </el-tooltip>
                         </div>

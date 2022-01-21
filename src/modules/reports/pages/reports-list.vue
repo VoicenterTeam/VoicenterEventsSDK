@@ -12,7 +12,7 @@
         >
             <template v-slot:title>
                 <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
-                    {{ $t('Delete Confirmation') }}
+                    {{ $t('general.deleteConfirmation') }}
                 </h3>
             </template>
             <div class="mt-10 mb-8 flex flex-col items-center justify-center">

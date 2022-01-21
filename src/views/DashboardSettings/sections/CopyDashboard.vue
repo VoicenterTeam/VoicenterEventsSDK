@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-tooltip effect="dark"
-                    :content="$t('Copy Dashboard')"
+                    :content="$t('dashboard.copyDashboard')"
                     :open-delay="openDelay"
                     placement="top">
             <base-button @click="showDialog = true"
@@ -9,7 +9,7 @@
                          fixed-width="w-37">
                 <div class="flex items-center">
                     <CopyIcon class="w-4-5 h-4-5"/>
-                    <span class="mx-1 text-base font-bold">{{ $t('Copy') }}</span>
+                    <span class="mx-1 text-base font-bold">{{ $t('general.copy') }}</span>
                 </div>
             </base-button>
         </el-tooltip>
@@ -17,13 +17,13 @@
                :append-to-body="true">
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Copy Dashboard') }}
+                    {{ $t('dashboard.copyDashboard') }}
                 </h3>
             </template>
             <div class="py-5">
                 <p class="mb-2">
                     {{ $t('Account') }}
-                    ({{ $t('copy dashboard into selected account') }})
+                    ({{ $t('dashboard.copyDashboardIntoSelectedAccount') }})
                 </p>
                 <base-select
                     :data="allAccounts"
@@ -87,7 +87,7 @@
                                  fixed-width="w-37"
                                  :loading="loading">
                         <span class="font-semibold">
-                            {{ $t('Confirm') }}
+                            {{ $t('common.confirm') }}
                         </span>
                     </base-button>
                 </div>
@@ -144,7 +144,7 @@
         },
         methods: {
             groupTitle(group) {
-                return group.WidgetGroupTitle ? this.$t(group.WidgetGroupTitle) : `${this.$t('Group')} #${group.WidgetGroupID}`
+                return group.WidgetGroupTitle ? this.$t(group.WidgetGroupTitle) : `${this.$t('general.group')} #${group.WidgetGroupID}`
             },
             getWidgetIcon(widget) {
                 const { DataTypeID } = widget.WidgetLayout

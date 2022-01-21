@@ -40,7 +40,7 @@
                 <el-button @click="onSubmit"
                            class="font-bold"
                            type="primary">
-                    {{ $t('Save') }}
+                    {{ $t('common.save') }}
                 </el-button>
             </div>
         </portal>

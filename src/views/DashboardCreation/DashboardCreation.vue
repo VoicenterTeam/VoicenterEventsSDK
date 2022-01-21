@@ -101,7 +101,7 @@
                         @click="tryAddDashboard">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
                     </div>
                 </base-button>
             </div>
@@ -129,7 +129,7 @@
                         key="store"
                         :loading="loading"
                     >
-                        {{ $t('Confirm') }}
+                        {{ $t('common.confirm') }}
                     </base-button>
                 </slot>
             </template>

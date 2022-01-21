@@ -60,7 +60,7 @@
                         fixed-width="w-32">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
+                            <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
                         </div>
                     </base-button>
                     <base-button
@@ -68,7 +68,7 @@
                         fixed-width="w-32"
                         key="store"
                     >
-                        <span class="mx-1 text-base font-bold">{{ $t('Confirm') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('common.confirm') }}</span>
                     </base-button>
                 </slot>
             </template>
