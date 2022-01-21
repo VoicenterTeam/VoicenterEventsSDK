@@ -50,7 +50,7 @@
                     <div @click="onDuplicateWidget()"
                          class="menu-action_item border-t border-gray-300">
                         <IconDuplicate class="text-blue-600 w-4-5 h-4-5"/>
-                        <span class="mx-1">{{ $t('Duplicate widget') }}</span>
+                        <span class="mx-1">{{ $t('widget.duplicateWidget') }}</span>
                     </div>
                     <div class="menu-action_item border-t border-gray-300"
                          @click="onRemoveWidget()">

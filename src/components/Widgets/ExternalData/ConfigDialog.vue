@@ -35,7 +35,7 @@
             </el-form-item>
             <el-collapse v-if="model.WidgetLayout.ComponentTypeID"
                          v-model="activeCollapse">
-                <el-collapse-item :title="$t('Dictionary')" name="dictionary">
+                <el-collapse-item :title="$t('widget.dictionary')" name="dictionary">
                     <json-viewer
                         :value="dictionary[model.WidgetLayout.ComponentTypeID]"
                         :expand-depth=5

@@ -18,13 +18,13 @@
                 <static-widget-info :widget="widget" class="px-2"/>
             </div>
             <div class="pb-4">
-                <label>{{ $t('File Name') }}</label>
+                <label>{{ $t('widget.export.fileName') }}</label>
                 <el-input v-model="fileName"/>
             </div>
             <el-alert
-                :title="$t('Export Data To') +' '+format"
+                :title="$t('widget.export.exportDataTo') +' '+format"
                 type="info"
-                :description="$t('Manage or set the order for the columns that will be present in the exported file')"
+                :description="$t('widget.export.exportFileColumnOrder')"
                 :closable="false"
                 show-icon
             />
@@ -39,7 +39,7 @@
                     <el-button @click="exportTableData"
                                :disabled="loading || !columnsToExport.length"
                                :loading="loading"
-                               type="primary">{{ $t('Export') }}
+                               type="primary">{{ $t('widget.export.export') }}
                     </el-button>
                 </div>
             </template>

@@ -16,7 +16,7 @@ export const LayoutApi = {
         try {
             const result = await $axios.post('/Layout/Upsert/', data)
             if (data.LayoutID) {
-                Notification.success(i18n.t('Layout updated with success'))
+                Notification.success(i18n.t('layout.layoutUpdatedWithSuccess'))
             } else {
                 Notification.success(i18n.t('layout.layoutAddedWithSuccess'))
             }

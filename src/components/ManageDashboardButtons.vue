@@ -28,7 +28,7 @@
                             </el-tooltip>
                         </div>
                         <div class="flex w-1/2 mx-1" :class="{'w-full': !activeTabGroup}">
-                            <el-tooltip :content="$t('Click to add new group')" class="item" effect="dark"
+                            <el-tooltip :content="$t('tooltip.widget.clickToAddNewGroup')" class="item" effect="dark"
                                         placement="top">
                                 <button
                                     class="w-full justify-center border btn flex items-center p-2 shadow rounded bg-white text-gray-700 cursor-pointer hover:bg-primary-100 hover:text-primary"
