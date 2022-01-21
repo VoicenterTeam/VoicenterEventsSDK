@@ -22,7 +22,7 @@
         </portal>
         <div class="flex w-full justify-center border-b py-4">
             <div class="w-1/2">
-                <el-input :placeholder="$t('Search')"
+                <el-input :placeholder="$t('general.search')"
                           size="small"
                           suffix-icon="el-icon-search"
                           v-model="search"/>
@@ -62,7 +62,7 @@
                         />
                     </template>
                     <template v-slot:template-preview>
-                        <el-tooltip :content="$t('Template Dictionary')"
+                        <el-tooltip :content="$t('widget.templateDictionary')"
                                     :open-delay="openDelay"
                                     class="item"
                                     effect="dark"
@@ -80,7 +80,7 @@
                            :disabled="submitDisabled"
                            class="font-bold"
                            type="primary">
-                    {{ $t('Set up Widgets') }}
+                    {{ $t('widget.setUpWidgets') }}
                 </el-button>
             </div>
         </portal>

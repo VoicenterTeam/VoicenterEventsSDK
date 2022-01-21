@@ -16,13 +16,13 @@
                 </span>
             </div>
             <div class="col-span-1 actions flex items-center justify-end">
-                <el-tooltip :content="$t('Edit Report')"
+                <el-tooltip :content="$t('widget.editReport')"
                             placement="top">
                             <span class="cursor-pointer mx-2 text-green hover:opacity-75">
                                 <IconPencil class="w-4-5 h-4-5 mt-1"/>
                             </span>
                 </el-tooltip>
-                <el-tooltip :content="$t('Delete Report')"
+                <el-tooltip :content="$t('widget.deleteReport')"
                             placement="top">
                             <span class="cursor-pointer text-red hover:opacity-75">
                                 <IconDelete class="w-4 h-4"/>

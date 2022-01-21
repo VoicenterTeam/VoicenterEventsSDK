@@ -101,7 +101,7 @@
                                 <IconPencil class="w-4 h-4"/>
                             </span>
                     </el-tooltip>
-                    <el-tooltip :content="$t('Delete Report')"
+                    <el-tooltip :content="$t('widget.deleteReport')"
                                 placement="top">
                             <span class="cursor-pointer text-red hover:opacity-75"
                                   @click="tryDeleteWidget(index)">
@@ -215,7 +215,7 @@
                         icon: 'IconPdf',
                     },
                     {
-                        label: this.$t('Spreadsheet'),
+                        label: this.$t('widget.spreadsheet'),
                         prop: 'spreadsheet',
                         align: 'center',
                         minWidth: 70,
@@ -223,7 +223,7 @@
                         icon: 'IconSpreadsheet',
                     },
                     {
-                        label: this.$t('Email Body'),
+                        label: this.$t('widget.emailBody'),
                         prop: 'html',
                         align: 'center',
                         minWidth: 70,

@@ -28,7 +28,7 @@
                 <div class="flex flex-col accolade-height mx-6">
                     <div class="w-1 h-1 w-5 bg-gray-550"></div>
                     <div class="flex h-full w-1 bg-gray-550 justify-center items-center whitespace-nowrap">
-                        <span class="uppercase bg-white whitespace-nowrap">{{ $t('and') }}</span>
+                        <span class="uppercase bg-white whitespace-nowrap">{{ $t('general.and') }}</span>
                     </div>
                     <div class="w-1 h-1 w-5 bg-gray-550"></div>
                 </div>
@@ -51,7 +51,7 @@
         </div>
         <div class="h-1 relative bg-gray-550 ml-6 my-6 font-semibold">
             <div class="absolute uppercase bg-white -mt-4-5 ml-20 p-2">
-                {{ $t('or') }}
+                {{ $t('general.or') }}
             </div>
             <slot name="new-criteria"/>
         </div>

@@ -9,7 +9,7 @@
                         {{ $t('Layout Selection') }}
                     </span>
                 </div>
-                <el-tooltip :content="$t('Active/Inactive layouts')"
+                <el-tooltip :content="$t('layout.activeOrInactiveLayouts')"
                             placement="top">
                     <el-switch :value="activeLayouts"
                                @change="onChangeLayoutType"/>
@@ -101,7 +101,7 @@
         </div>
         <ConfirmDialog v-if="showConfirmDialog"
                        :visible.sync="showConfirmDialog"
-                       :description="$t('Are you sure you want enable layout?')"
+                       :description="$t('layout.enableLayoutConfirmation')"
                        :title="$t('Update status')">
             <template v-slot:footer-actions>
                 <base-button class="mx-4"

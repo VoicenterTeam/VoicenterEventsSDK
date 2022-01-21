@@ -9,7 +9,7 @@
             >
                 <template v-slot:title>
                     <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
-                        {{ $t('Duplicate Report') }}
+                        {{ $t('report.duplicateReport') }}
                     </h3>
                 </template>
                 <div class="mx-20 mt-8 mb-20">

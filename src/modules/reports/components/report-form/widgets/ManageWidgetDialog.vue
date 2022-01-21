@@ -21,7 +21,7 @@
                  v-loading="localLoading">
                 <div class="flex w-full justify-center py-4-5">
                     <div class="w-1/2">
-                        <el-input :placeholder="$t('Search')"
+                        <el-input :placeholder="$t('general.search')"
                                   size="small"
                                   prefix-icon="el-icon-search"
                                   v-model="search"/>

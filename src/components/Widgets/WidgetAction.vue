@@ -24,7 +24,7 @@
                     <div @click="downloadChartAs(widget.WidgetID)"
                          :key="`download-${widget.WidgetID}`"
                          class="w-full rounded text-gray-700 flex items-center px-2 py-3 border-t border-gray-300 w-full justify-between">
-                        <el-tooltip :content="$t('Download chart in the selected format')"
+                        <el-tooltip :content="$t('widget.downloadChartInTheSelectedFormat')"
                                     class="item"
                                     effect="dark"
                                     placement="top">

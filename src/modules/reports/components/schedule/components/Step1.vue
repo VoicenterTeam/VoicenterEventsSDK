@@ -12,7 +12,7 @@
                                filterable
                                allow-create
                                default-first-option
-                               :placeholder="$t('Recipients')"
+                               :placeholder="$t('report.recipients')"
                     >
                         <el-option v-for="(item, index) in report.ReportRecipient"
                                    :key="`recipient-${index}-${item.Email}`"
@@ -42,7 +42,7 @@
                 <div class="flex items-center">
                     <IconSave class="mx-1"/>
                     <span class="mx-1 text-base font-bold">
-                        {{ $t('Finish') }}
+                        {{ $t('general.finish') }}
                     </span>
                 </div>
             </base-button>

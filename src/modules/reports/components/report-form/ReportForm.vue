@@ -37,7 +37,7 @@
             <template v-slot:header="{valid, handleSubmit}">
                 <div class="flex items-center justify-between mb-10">
                     <span class="text-xl font-bold text-gray-900">
-                        {{ model.ReportID ? `${$t('Edit Report')} #${model.ReportID}` : $t('report.reportCreation') }}
+                        {{ model.ReportID ? `${$t('widget.editReport')} #${model.ReportID}` : $t('report.reportCreation') }}
                     </span>
                     <div class="flex">
                         <base-button :class="$rtl.isRTL ? 'mx-4' : 'mx-4'"

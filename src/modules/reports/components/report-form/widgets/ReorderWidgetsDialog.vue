@@ -106,7 +106,7 @@
                         key: 2,
                     },
                     {
-                        label: this.$t('Spreadsheet'),
+                        label: this.$t('widget.spreadsheet'),
                         icon: 'IconSpreadsheet',
                         key: 1,
                     },

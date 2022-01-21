@@ -32,7 +32,7 @@
         </div>
         <div class="flex w-1/4">
             <el-input v-model="model.ConditionFilterValue"
-                      :placeholder="$t('Value')"
+                      :placeholder="$t('general.value')"
                       type="number"
                       id="value"
             />
