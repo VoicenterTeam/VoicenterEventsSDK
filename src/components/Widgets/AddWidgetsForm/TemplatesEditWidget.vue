@@ -4,7 +4,7 @@
             <span class="text-steel hover:text-primary redirect-action"
                 @click="goToSummary()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Summary') }}
+                {{ $t('widget.summary') }}
             </span>
         </portal>
         <portal to="form-title">

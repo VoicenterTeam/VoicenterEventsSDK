@@ -6,7 +6,7 @@
                 <div class="flex">
                     <IconLayoutSelection class="text-primary"/>
                     <span class="mx-1 text-gray-900 text-main-sm font-medium truncate">
-                        {{ $t('Layout Selection') }}
+                        {{ $t('layout.layoutSelection') }}
                     </span>
                 </div>
                 <el-tooltip :content="$t('layout.activeOrInactiveLayouts')"

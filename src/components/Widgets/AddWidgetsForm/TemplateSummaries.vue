@@ -8,7 +8,7 @@
             </span>
         </portal>
         <portal to="form-title">
-            {{ $t('Summary') }}
+            {{ $t('widget.summary') }}
         </portal>
         <div class="-mx-4-5">
             <div

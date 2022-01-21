@@ -2,7 +2,7 @@
     <div>
         <div class="flex items-center justify-between mb-4"
              v-if="havePreview && headerCaption">
-            {{ $t('Preview') }}
+            {{ $t('layout.preview') }}
             <div class="flex items-center text-primary-300 hover:text-primary cursor-pointer"
                  @click="triggerRealTimePreview">
                 <template v-if="realTimePreview">

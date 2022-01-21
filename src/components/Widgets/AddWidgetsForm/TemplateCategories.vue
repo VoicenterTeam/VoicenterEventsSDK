@@ -1,7 +1,7 @@
 <template>
     <div>
         <portal to="form-title">
-            {{ $t('All Categories') }}
+            {{ $t('widget.allCategories') }}
         </portal>
         <TemplateCategoryCard v-for="templatesCategory in getTemplateCategories"
                               v-bind="templatesCategory"

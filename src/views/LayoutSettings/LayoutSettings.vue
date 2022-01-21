@@ -94,7 +94,7 @@
             modalWidth="456px">
             <template v-slot:title>
                 <h3 class="text-xl font-bold text-gray-950">
-                    {{ isDefaultLayout ? $t('layout.saveLayout') : $t('Save Changes') }}
+                    {{ isDefaultLayout ? $t('layout.saveLayout') : $t('general.saveChanges') }}
                 </h3>
             </template>
             <div v-if="!isDefaultLayout" class="py-8">

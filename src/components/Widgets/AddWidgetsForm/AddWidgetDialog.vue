@@ -147,7 +147,7 @@
                 return +activeWidgets
             },
             getSummaryActions() {
-                return `${this.$t('Summary')}: (${this.$t('before')} - ${this.groupWidgetsCount}, ${this.$t('after adding')} - ${this.afterAdding})`
+                return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
             },
             getSummary() {
                 return this.$store.getters['widgetCreation/getSummaries']

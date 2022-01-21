@@ -19,7 +19,7 @@
                             </span>
                             <div class="flex flex-col w-full flex-1">
                                 <span class="text-xl font-bold text-gray-900">
-                                    {{ $t('Dashboard Settings') }}
+                                    {{ $t('dashboard.dashboardSettings') }}
                                 </span>
                                 <div class="flex justify-center items-center w-full md:hidden flex-col">
                                     <CopyDashboard :dashboard="activeDashboard"/>

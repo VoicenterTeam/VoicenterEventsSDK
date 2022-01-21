@@ -80,14 +80,14 @@
             getTimeSettings() {
                 const MinRefreshInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'MinRefreshInterval')
                 const ReportInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportInterval')
-                return `<p>${this.$t('widget.minimumRefreshIntervalForRealTimeWidgets')}: <b>${MinRefreshInterval.Value}s</b>,  </p> <p>${this.$t('Switch category every')}: <b>${ReportInterval.Value}s</b></p>`
+                return `<p>${this.$t('widget.minimumRefreshIntervalForRealTimeWidgets')}: <b>${MinRefreshInterval.Value}s</b>,  </p> <p>${this.$t('dashboard.switchCategoryEvery')}: <b>${ReportInterval.Value}s</b></p>`
             },
             getReportSettings() {
                 const ReportSwitching = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportSwitching')
                 const ReportRefresh = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportRefresh')
                 const _ReportSwitching = ReportSwitching ? 'enabled' : 'disabled'
                 const _ReportRefresh = ReportRefresh ? 'enabled' : 'disabled'
-                return `<p>${this.$t('Category switching')}: <b>${_ReportSwitching}</b>, </p> <p> ${this.$t('Category refresh')}: <b>${_ReportRefresh}</b></p>`
+                return `<p>${this.$t('dashboard.categorySwitching')}: <b>${_ReportSwitching}</b>, </p> <p> ${this.$t('dashboard.categoryRefresh')}: <b>${_ReportRefresh}</b></p>`
             },
             getColorParameters() {
                 const group = this.groupKeys['Colors']

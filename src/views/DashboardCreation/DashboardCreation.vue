@@ -17,7 +17,7 @@
                     </svg>
                 </span>
                     <span class="text-xl font-bold text-gray-900">
-                    {{ $t('Dashboard Creation') }}
+                    {{ $t('dashboard.dashboardCreation') }}
                 </span>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                                 <el-form-item
                                     prop="DashboardTitle"
                                     :rules="[
-                                        { required: true, message: $t('general.validationRequired', { field: $t('Dashboard Name') }) }
+                                        { required: true, message: $t('general.validationRequired', { field: $t('dashboard.dashboardName') }) }
                                     ]"
                                 >
                                     <el-input type="DashboardTitle" v-model="model.DashboardTitle" />

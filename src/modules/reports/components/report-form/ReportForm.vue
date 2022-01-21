@@ -53,7 +53,7 @@
                                      @click="handleSubmit(onSubmit)">
                             <div class="flex items-center">
                                 <IconSave class="mx-1"/>
-                                <span class="mx-1 text-base font-semibold">{{ $t('Save Changes') }}</span>
+                                <span class="mx-1 text-base font-semibold">{{ $t('general.saveChanges') }}</span>
                             </div>
                         </base-button>
                     </div>

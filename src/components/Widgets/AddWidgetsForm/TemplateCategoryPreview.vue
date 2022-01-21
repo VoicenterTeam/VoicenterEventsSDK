@@ -4,7 +4,7 @@
           <span class="text-steel hover:text-primary redirect-action"
                 @click="allTemplateCategories()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('All Categories') }}
+                {{ $t('widget.allCategories') }}
             </span>
         </portal>
         <portal to="form-title">
@@ -16,7 +16,7 @@
                        type="_primary">
                 <div class="flex items-center">
                     <IconAdd :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
-                    <span>{{ $t('Add All') }}</span>
+                    <span>{{ $t('widget.addAll') }}</span>
                 </div>
             </el-button>
         </portal>
@@ -141,7 +141,7 @@
                 return +newWidgetsCount + +activeWidgets
             },
             getSummaryActions() {
-                return `${this.$t('Summary')}: (${this.$t('before')} - ${this.groupWidgetsCount}, ${this.$t('after adding')} - ${this.afterAdding})`
+                return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
             },
             getSummaries() {
                 return this.$store.state.widgetCreation.summaries

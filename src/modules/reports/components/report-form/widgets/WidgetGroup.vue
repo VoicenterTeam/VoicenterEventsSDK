@@ -39,7 +39,7 @@
         },
         computed: {
             getWidgetLength() {
-                return this.group.WidgetList.length + ' ' + this.$t('Widgets')
+                return this.group.WidgetList.length + ' ' + this.$t('widget.widgets')
             },
             getWidgetNames() {
                 return this.group.WidgetList.map(el => el.Title).join(', ')

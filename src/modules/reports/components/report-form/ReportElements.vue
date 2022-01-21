@@ -31,7 +31,7 @@
                 activeSection: 'Widgets',
                 sections: [
                     {
-                        label: this.$t('Widgets'),
+                        label: this.$t('widget.widgets'),
                         key: 'Widgets',
                         icon: 'IconWidget',
                     },

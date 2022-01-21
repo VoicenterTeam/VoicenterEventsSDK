@@ -4,7 +4,7 @@
              v-if="displayLabel">
             <IconLayoutSelection class="text-primary"/>
             <div class="mx-1 text-gray-900 text-sm font-medium truncate">
-                {{ $t('Layout Selection') }}
+                {{ $t('layout.layoutSelection') }}
             </div>
         </div>
         <el-select v-model="selectedLayout"
