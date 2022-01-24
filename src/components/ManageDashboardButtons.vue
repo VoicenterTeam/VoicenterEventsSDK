@@ -12,7 +12,7 @@
         <div class="origin-top-right absolute right-0 mt-4 w-64 z-50" v-click-outside="onClickOutside" v-if="showMenu">
             <div class="shadow-lg rounded-lg bg-white">
                 <div class="py-1">
-                    <div class="px-3 py-2 text-center">{{$t('Select a widget group to edit')}}</div>
+                    <div class="px-3 py-2 text-center">{{$t('dashboard.selectAWidgetGroupToEdit')}}</div>
                     <div class="px-1 flex flex-row items-center">
                         <div class="flex w-1/2 mx-1" v-if="activeTabGroup">
                             <el-tooltip
@@ -43,7 +43,7 @@
                         <div :key="widgetGroup.WidgetGroupID"
                              @click="onEditGroup(widgetGroup)"
                              class="rounded m-2 cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-primary-100 border-2 border-dotted">
-                            {{widgetGroup.WidgetGroupTitle || $t('Group ID') +': '+ widgetGroup.WidgetGroupID}}
+                            {{widgetGroup.WidgetGroupTitle || $t('dashboard.groupID') +': '+ widgetGroup.WidgetGroupID}}
                         </div>
                     </div>
                 </div>

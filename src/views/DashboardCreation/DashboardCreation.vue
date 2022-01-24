@@ -107,7 +107,7 @@
             </div>
         </div>
         <ConfirmDialog :visible.sync="showConfirmDialog"
-                       title="Add Dashboard"
+                       title="dashboard.addDashboard"
                        description="Please confirm you action?"
         >
             <template v-slot:footer-actions>

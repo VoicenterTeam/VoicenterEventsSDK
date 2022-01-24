@@ -78,7 +78,7 @@
                                             @click="onApply()">
                                             <div class="flex items-center">
                                                 <IconSave class="mx-1"/>
-                                                <span class="mx-1 text-base font-bold">{{ 'Apply' }}</span>
+                                                <span class="mx-1 text-base font-bold">{{ $t('general.apply') }}</span>
                                             </div>
                                         </base-button>
                                     </div>
@@ -181,7 +181,7 @@
                             :loading="storingData" size="lg"
                             :disabled="disabledForm">
                             <span class="font-semibold">
-                                {{ $t('Apply') }}
+                                {{ $t('general.apply') }}
                             </span>
                         </base-button>
                     </slot>

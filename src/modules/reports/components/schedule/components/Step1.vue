@@ -28,7 +28,7 @@
                           v-model="model.subject"/>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Text') }}</label>
+                <label>{{ $t('report.editor.text') }}</label>
                 <html-editor :has-buttons="hasButtons"
                              ref="editor"
                              :value="model.text"

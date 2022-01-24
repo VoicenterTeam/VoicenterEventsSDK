@@ -93,7 +93,7 @@
                 if (group.IsNew) {
                     return this.$t('general.group') + ' ' + (index + 1)
                 }
-                return group.WidgetGroupTitle || this.$t('Group ID') + ': ' + group.WidgetGroupID
+                return group.WidgetGroupTitle || this.$t('dashboard.groupID') + ': ' + group.WidgetGroupID
             },
             switchTab(group) {
                 if (this.editMode) {

@@ -49,7 +49,7 @@
                             <el-checkbox :value="group.isSelected"
                                          @change.native.stop="toggleSelection(group)"/>
                             <span class="mx-2">
-                                {{ group.WidgetGroupTitle || $t('Group ID') + ': ' + group.WidgetGroupID }}
+                                {{ group.WidgetGroupTitle || $t('dashboard.groupID') + ': ' + group.WidgetGroupID }}
                             </span>
                         </template>
                         <template v-if="displayWidgetList">

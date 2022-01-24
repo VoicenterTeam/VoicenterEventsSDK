@@ -27,7 +27,7 @@
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueuesAsRow">
-                            {{ $t('Display queues as rows') }}
+                            {{ $t('widget.config.displayQueuesAsRows') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
@@ -39,7 +39,7 @@
             </el-form-item>
             <el-form-item v-if="isQueueGauge(widget)">
                 <div class="flex justify-between">
-                    <label>{{ $t('Maximum range value') }}</label>
+                    <label>{{ $t('widget.config.maximumRangeValue') }}</label>
                     <el-input-number :max="1000" :min="1" :step="2" type="number"
                                      v-model="model.WidgetLayout.maximumRange"/>
                 </div>
@@ -105,17 +105,17 @@
                 <el-collapse-item class="py-4" :title="$t('widget.layout')" name="layout">
                     <el-form-item v-if="isHtmlEditor(widget)">
                         <el-checkbox v-model="model.WidgetLayout.showLastUpdateDate">
-                            {{ $t('Display last update date') }}
+                            {{ $t('widget.displayLastUpdateDate') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item v-if="isNoteListWidget(widget)">
                         <el-checkbox v-model="model.WidgetLayout.displayWidgetTitle">
-                            {{ $t('Display widget title') }}
+                            {{ $t('widget.displayWidgetTitle') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
                         <div class="py-4">
-                            <label>{{ $t('Card title font size') }}</label>
+                            <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
                             <el-slider
                                 :marks="cardTitleBestOptions"
                                 :max="cardTitleFontSizes.max"
@@ -125,7 +125,7 @@
                             </el-slider>
                         </div>
                         <div class="py-4">
-                            <label>{{ $t('Card value font size') }}</label>
+                            <label>{{ $t('widget.config.cardValueFontSize') }}</label>
                             <el-slider
                                 :marks="cardValueBestOptions"
                                 :max="cardValueFontSizes.max"
@@ -136,7 +136,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
-                        <label>{{ $t('Status label font size') }}</label>
+                        <label>{{ $t('widget.statusLabelFontSize') }}</label>
                         <el-slider
                             :marks="textSizeBestOptions"
                             :max="textFontSizes.max"

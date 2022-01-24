@@ -76,7 +76,7 @@
                     <div @click="onAddNote"
                          class="menu-action_item border-t border-gray-300">
                         <IconPlus class="w-3 h-3"/>
-                        <span class="mx-1">{{ $t('Add New Note') }}</span>
+                        <span class="mx-1">{{ $t('widget.action.addNewNote') }}</span>
                     </div>
                 </template>
             </div>
