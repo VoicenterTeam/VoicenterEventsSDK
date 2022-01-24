@@ -71,7 +71,7 @@
                          class="menu-action_item border-t border-gray-300 truncate">
                         <el-switch :value="tryManageNote"
                                    @change="onTryManageNote"/>
-                        <span class="mx-1">{{ $t('Display hidden notes') }}</span>
+                        <span class="mx-1">{{ $t('widget.editor.displayHiddenNotes') }}</span>
                     </div>
                     <div @click="onAddNote"
                          class="menu-action_item border-t border-gray-300">
