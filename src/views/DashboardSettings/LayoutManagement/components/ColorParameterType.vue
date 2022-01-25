@@ -23,7 +23,7 @@
 <script>
     import { ColorPicker } from 'element-ui'
     import { predefinedColors } from '../layout-management'
-    
+
     export default {
         inheritAttrs: false,
         name: 'Color',
@@ -60,40 +60,40 @@
     .el-color-picker__trigger {
         @apply w-24;
         border: none;
-        
+
         .el-color-picker__color {
             border: none;
         }
-        
+
         .el-icon-arrow-down:before,
         .el-icon-close:before {
-            font-family: Montserrat;
-            font-weight: 600;
+            @apply text-sm;
+            font-family: Montserrat, sans-serif;
+            font-weight: 500;
             content: "Change";
-            color: var(--gray-550);
+            color: var(--primary-color);
         }
-        
+
         .el-color-picker__color-inner {
             @apply rounded;
             background: transparent !important;
-            border: 1px solid var(--gray-550);
+            border: 1px solid var(--primary-color);
             color: var(--gray-550);
-            
         }
-        
+
         &:hover {
             .el-icon-arrow-down:before,
             .el-icon-close:before {
                 color: var(--primary-color);
             }
-            
+
             .el-color-picker__color-inner {
                 border: 1px solid var(--primary-color);
                 color: var(--primary-color);
             }
         }
     }
-    
+
     .el-color-dropdown__link-btn {
         padding: 0 !important;
     }

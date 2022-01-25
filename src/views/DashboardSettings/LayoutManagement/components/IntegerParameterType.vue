@@ -1,5 +1,5 @@
 <template>
-<div class="pt-3 pb-5 border-b">
+<div class="pt-3 pb-5 border-b slider">
     <label>{{ $t(LayoutParameterName) }}</label>
     <el-slider
         v-bind="sliderOptionConfigs[LayoutParameterName]"
@@ -53,3 +53,17 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+.slider::v-deep {
+    .el-slider__marks-text {
+        font-size: 12px;
+        margin-top: 10px;
+    }
+    .el-slider__button {
+        width: 10px;
+        height: 10px;
+        border-width: 1px;
+    }
+}
+</style>

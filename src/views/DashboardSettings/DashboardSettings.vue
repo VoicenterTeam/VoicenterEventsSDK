@@ -22,17 +22,17 @@
                                     {{ $t('Dashboard Settings') }}
                                 </span>
                                 <div class="flex justify-center items-center w-full md:hidden flex-col">
-                                    <CopyDashboard :dashboard="activeDashboard"/>
-                                    <base-button class="my-2"
+                                    <base-button type="danger"
                                                  outline
-                                        @click="onDiscard()"
-                                            variant="discard"
-                                            fixed-width="w-37">
-                                        <div class="flex items-center">
-                                            <IconDiscard class="mx-1"/>
-                                            <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
-                                        </div>
+                                                 square
+                                                 size="sm"
+                                                 @click="onDelete">
+                                        <template v-slot:icon>
+                                            <IconDelete />
+                                        </template>
                                     </base-button>
+                                    <CopyDashboard class="mx-4"
+                                                   :dashboard="activeDashboard"/>
                                     <base-button fixed-width="w-37"
                                                  type="primary"
                                                  :loading="loading"
@@ -46,16 +46,17 @@
                             </div>
                         </div>
                         <div class="flex-row items-center hidden md:flex">
-                            <CopyDashboard :dashboard="activeDashboard"/>
-                            <base-button class="mx-4"
+                            <base-button type="danger"
                                          outline
-                                         @click="onDiscard(true)"
-                                         fixed-width="w-37">
-                                <div class="flex items-center">
-                                    <IconDiscard class="mx-1"/>
-                                    <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
-                                </div>
+                                         square
+                                         size="md"
+                                         @click="onDelete">
+                                <template v-slot:icon>
+                                    <IconDelete />
+                                </template>
                             </base-button>
+                            <CopyDashboard class="mx-4"
+                                           :dashboard="activeDashboard"/>
                             <base-button fixed-width="w-37"
                                          type="primary"
                                          :loading="loading"
@@ -138,6 +139,17 @@
             discardGroupsManagement() {
                 this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.currentDashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
+            },
+            async onDelete() {
+                try {
+                    this.loading = true
+                    await this.$store.dispatch('dashboards/deleteDashboard', this.currentDashboard)
+                    await this.$router.push('/')
+                } catch (err) {
+                    console.error(err)
+                } finally {
+                    this.loading = false
+                }
             },
             async onSubmit(goBack = false) {
                 try {

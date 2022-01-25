@@ -48,7 +48,7 @@
             'hover:bg-secondary-actions--focus focus:bg-secondary-actions--pressed active:bg-secondary-actions--pressed': type === 'default' && !outline && !link  && !disabled && !noStates,
             'hover:bg-secondary-actions-bg--focus focus:bg-secondary-actions-bg--pressed active:bg-secondary-actions-bg--pressed hover:text-secondary-actions--focus focus:text-secondary-actions--pressed active:text-secondary-actions--pressed' : type === 'default' && (link || outline)  && !disabled && !noStates,
 
-            'text-sm font-normal': ['xs', 'sm', 'sml'].includes(size),
+            'text-sm font-medium': ['xs', 'sm', 'sml'].includes(size),
             'text-base font-bold': size === 'md',
 
             'leading-tight': ['xs', 'sm', 'sml', 'md'].includes(size),
@@ -147,7 +147,7 @@ export default {
         size: {
             type: String,
             default: 'md',
-            description: 'Button size (sm|sml|md|lg)'
+            description: 'Button size (xs|sm|sml|md|lg)'
         },
         link: {
             type: Boolean,
@@ -191,6 +191,7 @@ export default {
 <style lang="scss" scoped>
 .btn {
     @apply transition duration-300 ease-in-out;
+    font-family: Montserrat, sans-serif;
     line-height: normal;
 
 

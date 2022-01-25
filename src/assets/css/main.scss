@@ -29,45 +29,54 @@
     --orange-350: #FAB11E;
     --red: #FF4D4D;
     --red-focus: #FF3636;
+    --white: #FFFFFF;
+    --transparent: #00000000;
+    --empty-bg: var(--transparent);
 
 
     --default-bg: #F5F6FA;
-    --default-text: var(--primary-color);
+    --default-text: var(--gray-950);
+
     --icons: var(--primary-color);
     --sub-bg: #8292A5;
     --headers: var(--primary-color);
     --ui-lines: #EBEBEB;
     --placeholders: #9EA6B2;
-    --active-elements--focus: #1265F8;
     --field-borders: #EBEBEB;
     --major-ui-lines: #E0E2E5;
     --table-headings: var(--primary-color);
-    --active-elements: var(--primary-color);
-    --active-elements--pressed: #0052E3;
-    --inactive-elements--focus: #9EA6B2;
-    --secondary-actions--focus: #9EA6B2;
-    --active-elements-bg--focus: #EAF1FF;
-    --destructive-actions--focus: #FF3636;
-    --inactive-elements: var(--secondary-color);
-    --inactive-elements--pressed: #888F9D;
-    --primary-actions--focus: #1265F8;
-    --secondary-actions: var(--secondary-color);
-    --secondary-actions--pressed: #888F9D;
-    --active-elements-bg--pressed: #CCDDFF;
-    --destructive-actions: #FF4D4D;
-    --destructive-actions--pressed: #E31515;
-    --inactive-elements-bg--focus: #F1F2F4;
     --progress-line-done: var(--primary-color);
-    --secondary-actions-bg--focus: #F1F2F4;
-    --destructive-actions-bg--focus: #FFD4D4;
+    --progress-line-not-done: var(--gray-550);
+
+    --active-elements: var(--primary-color);
+    --active-elements--focus: var(--primary-color);
+    --active-elements--pressed: var(--primary-color);
+    --active-elements-bg--focus: var(--empty-bg);
+    --active-elements-bg--pressed: var(--empty-bg);
+
+    --inactive-elements: var(--gray-550);
+    --inactive-elements--focus: var(--gray-550);
+    --inactive-elements--pressed: var(--gray-550);
+    --inactive-elements-bg--focus: var(--empty-bg);
+    --inactive-elements-bg--pressed: var(--empty-bg);
+
     --primary-actions: var(--primary-color);
-    --primary-actions--pressed: #0052E3;
-    --inactive-elements-bg--pressed: #E0E2E5;
-    --primary-actions-bg--focus: #EAF1FF;
-    --secondary-actions-bg--pressed: #E0E2E5;
-    --destructive-actions-bg--pressed: #FF9696;
-    --primary-actions-bg--pressed: #CCDDFF;
-    --progress-line-not-done: var(--secondary-color);
+    --primary-actions--focus: var(--primary-color);
+    --primary-actions--pressed: var(--primary-color);
+    --primary-actions-bg--focus: var(--empty-bg);
+    --primary-actions-bg--pressed: var(--empty-bg);
+
+    --secondary-actions: var(--gray-550);
+    --secondary-actions--focus: var(--gray-550);
+    --secondary-actions--pressed: var(--gray-550);
+    --secondary-actions-bg--focus: var(--empty-bg);
+    --secondary-actions-bg--pressed: var(--empty-bg);
+
+    --destructive-actions: var(--red);
+    --destructive-actions--focus: var(--red);
+    --destructive-actions--pressed: var(--red);
+    --destructive-actions-bg--focus: var(--empty-bg);
+    --destructive-actions-bg--pressed: var(--empty-bg);
 }
 
 @tailwind base;

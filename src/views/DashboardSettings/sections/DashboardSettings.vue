@@ -24,7 +24,7 @@
                                         v-if="!defaultLayout"
                                         :display-label="false"
                                         v-model="primaryColorSettings.Value">
-                        <IconColorPicker class="w-6 h-6 text-primary"/>
+                        <IconColorPickerSimple class="w-6 h-6 text-primary"/>
                     </ColorParameterType>
                     <div v-else
                          class="mt-4 flex items-center">
@@ -82,7 +82,7 @@
                                 <IconFonts class="text-primary"/>
                                 <span class="mx-1">{{ $t('Fonts') }}</span>
                             </div>
-                            <div class="text-xs text-gray-900">
+                            <div class="text-xs font-normal text-gray-900">
                                 {{ getFontInfos }}
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                 </i>
                                 <span class="mx-1">{{ $t('Time Settings') }}</span>
                             </div>
-                            <div class="text-xs text-gray-900">
+                            <div class="text-xs font-normal text-gray-900">
                                 {{ getTimeSettings }} <br>
                                 {{ getReportSettings }}
                             </div>
