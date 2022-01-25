@@ -22,7 +22,7 @@
             </template>
             <div class="py-5">
                 <p class="mb-2">
-                    {{ $t('Account') }}
+                    {{ $t('general.account') }}
                     ({{ $t('dashboard.copyDashboardIntoSelectedAccount') }})
                 </p>
                 <base-select
