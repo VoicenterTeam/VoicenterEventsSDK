@@ -24,6 +24,7 @@
                                 <div class="flex justify-center items-center w-full md:hidden flex-col">
                                     <CopyDashboard :dashboard="activeDashboard"/>
                                     <base-button class="my-2"
+                                                 outline
                                         @click="onDiscard()"
                                             variant="discard"
                                             fixed-width="w-37">
@@ -33,6 +34,7 @@
                                         </div>
                                     </base-button>
                                     <base-button fixed-width="w-37"
+                                                 type="primary"
                                                  :loading="loading"
                                                  @click="onSubmit()">
                                         <div class="flex items-center">
@@ -46,8 +48,8 @@
                         <div class="flex-row items-center hidden md:flex">
                             <CopyDashboard :dashboard="activeDashboard"/>
                             <base-button class="mx-4"
+                                         outline
                                          @click="onDiscard(true)"
-                                         variant="discard"
                                          fixed-width="w-37">
                                 <div class="flex items-center">
                                     <IconDiscard class="mx-1"/>
@@ -55,6 +57,7 @@
                                 </div>
                             </base-button>
                             <base-button fixed-width="w-37"
+                                         type="primary"
                                          :loading="loading"
                                          @click="onSubmit(true)">
                                 <div class="flex items-center">

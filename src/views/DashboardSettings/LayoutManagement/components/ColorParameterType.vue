@@ -76,7 +76,7 @@
         .el-color-picker__color-inner {
             @apply rounded;
             background: transparent !important;
-            border: 2px solid var(--gray-550);
+            border: 1px solid var(--gray-550);
             color: var(--gray-550);
             
         }
@@ -88,7 +88,7 @@
             }
             
             .el-color-picker__color-inner {
-                border: 2px solid var(--primary-color);
+                border: 1px solid var(--primary-color);
                 color: var(--primary-color);
             }
         }
