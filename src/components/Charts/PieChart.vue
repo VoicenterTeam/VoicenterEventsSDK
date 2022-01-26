@@ -123,7 +123,7 @@
                 const dataLabelsColor = this.getDataLabelsColor
                 
                 const series = [{
-                    name: this.$t('Agents'),
+                    name: this.$t('widget.agents'),
                     colorByPoint: true,
                     data: data,
                     dataLabels: {

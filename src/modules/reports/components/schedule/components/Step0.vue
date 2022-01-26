@@ -5,7 +5,7 @@
                 <div class="flex flex-col w-38"
                      :class="$rtl.isRTL ? 'ml-10' : 'mr-10'">
                     <span class="mb-2">
-                        {{ $t('Frequency') }}:
+                        {{ $t('report.frequency') }}:
                     </span>
                     <base-select :value="selectedFrequency.value"
                                  id="frequency"
@@ -35,7 +35,7 @@
                             <div class="flex flex-col"
                                  :class="$rtl.isRTL ? 'mr-10' : 'ml-10'">
                                 <span class="mb-2">
-                                    {{ $t('Time') }}:
+                                    {{ $t('widget.time') }}:
                                 </span>
                                 <TimePicker id="time"
                                             class="flex w-35"
@@ -59,7 +59,7 @@
                         <div class="flex flex-col"
                              :class="$rtl.isRTL ? 'mr-10' : 'ml-10'">
                             <span class="mb-2">
-                                {{ $t('Time') }}:
+                                {{ $t('widget.time') }}:
                             </span>
                             <TimePicker id="_time"
                                         class="flex w-35"
@@ -79,7 +79,7 @@
                             </div>
                             <div class="flex flex-col mx-5 3xl:mx-10">
                                 <span class="mb-2">
-                                    {{ $t('Time range') }}:
+                                    {{ $t('widget.timeRange') }}:
                                 </span>
                                 <TimeRange id="time_range"
                                            class="flex w-38"
@@ -89,7 +89,7 @@
                             </div>
                             <div class="flex flex-col">
                                 <span class="mb-2">
-                                    {{ $t('Interval') }}:
+                                    {{ $t('widget.interval') }}:
                                 </span>
                                 <TimePicker id="interval"
                                             class="flex w-35"
@@ -100,7 +100,7 @@
                             <div class="flex flex-col"
                                  :class="$rtl.isRTL ? 'mr-5 3xl:mr-10' : 'ml:5 3xl:ml-10'">
                                 <span class="mb-2">
-                                    {{ $t('Check every') }}:
+                                    {{ $t('report.checkEvery') }}:
                                 </span>
                                 <TimePicker id="check_every"
                                             class="flex w-35"
@@ -119,7 +119,7 @@
                          @click="goNext">
                 <div class="flex items-center">
                     <span class="mx-1 text-base font-bold">
-                        {{ $t('Next') }}
+                        {{ $t('general.next') }}
                     </span>
                     <IconDirRight class="mx-1"/>
                 </div>

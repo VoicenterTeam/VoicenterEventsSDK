@@ -31,7 +31,7 @@
                         </el-dropdown>
                     </template>
                 </div>
-                <el-select :placeholder="$t('Sort by')" v-model="sortBy" class="mt-1">
+                <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" class="mt-1">
                     <template v-slot:prefix>
                         <span class="h-full flex items-center">
                             <i class="el-icon-d-caret"/>

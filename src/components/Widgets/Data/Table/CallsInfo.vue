@@ -16,7 +16,7 @@
             </call-info>
         </template>
         <div v-else>
-            {{$t('No callers')}}
+            {{$t('widget.table.noCallers')}}
         </div>
     </div>
 </template>

@@ -7,12 +7,12 @@
                     <IconAddReport/>
                 </i>
                 <span class="text-main-sm leading-4">
-                    {{ $t('Manage Report Items') }}
+                    {{ $t('report.manageReportItems') }}
                 </span>
             </div>
         </div>
         <modal :visible.sync="showDialog"
-               title="Manage Report Items"
+               title="report.manageReportItems"
                width="50%"
                :title-centered="true"
                v-show="showDialog">
@@ -21,7 +21,7 @@
                  v-loading="localLoading">
                 <div class="flex w-full justify-center py-4-5">
                     <div class="w-1/2">
-                        <el-input :placeholder="$t('Search')"
+                        <el-input :placeholder="$t('general.search')"
                                   size="small"
                                   prefix-icon="el-icon-search"
                                   v-model="search"/>
@@ -46,7 +46,7 @@
                         <div class="flex items-center text-primary">
                             <AlertCircleIcon class="w-5 h-5"/>
                             <span class="mx-2 text-sm">
-                                    {{ $t('Help') }}
+                                    {{ $t('general.help') }}
                                 </span>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="pt-2 widget-color-picker">
         <label class="text-main-sm">
-            {{ $t('Widget colors') }}
+            {{ $t('widget.colors') }}
         </label>
         <div class="flex pt-2 items-center">
             <widget-color

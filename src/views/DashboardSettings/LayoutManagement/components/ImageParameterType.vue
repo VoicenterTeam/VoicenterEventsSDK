@@ -13,7 +13,7 @@
                              size="xs"
                              fixed-width="w-20"
                              variant="discard">
-                    {{ $t('Change') }}
+                    {{ $t('general.change') }}
                 </base-button>
             </el-upload>
         </div>
@@ -21,10 +21,10 @@
             placement="top-start"
             trigger="hover">
             <div>
-                {{ $t('Recommended dimensions:') }}<br>
-                {{ $t('Maximum Height - 150px') }}<br>
-                {{ $t('Maximum Width - 700px') }}<br>
-                {{ $t('Maximum Size - 100 KB') }}
+                {{ $t('layout.recommendedDimensions') }}<br>
+                {{ $t('layout.maximumHeight150px') }}<br>
+                {{ $t('layout.maximumWidth700px') }}<br>
+                {{ $t('layout.maximumSize100KB') }}
             </div>
             <AlertTriangleIcon class="text-orange-500 cursor-help"
                                slot="reference"/>
@@ -62,8 +62,8 @@
                 //100 kb
                 if (file && file.size > 100000) {
                     Notification.error({
-                        title: i18n.t('Invalid Logo'),
-                        message: i18n.t('Logo size should be less than 100kb'),
+                        title: i18n.t('layout.invalidLogo'),
+                        message: i18n.t('layout.logoSizeShouldBeLessThan100kb'),
                     })
                     return
                 }

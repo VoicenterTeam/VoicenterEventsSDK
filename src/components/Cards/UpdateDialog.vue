@@ -13,7 +13,7 @@
     <el-collapse class="pt-2" v-model="activeCollapse">
         <el-collapse-item :title="$t('widget.layout')" name="layout">
             <div class="py-4">
-                <label>{{ $t('Card title font size') }}</label>
+                <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
                 <el-slider
                     :marks="titleBestOptions"
                     :max="titleFontSizes.max"
@@ -23,7 +23,7 @@
                 </el-slider>
             </div>
             <div class="py-4">
-                <label>{{ $t('Card value font size') }}</label>
+                <label>{{ $t('widget.config.cardValueFontSize') }}</label>
                 <el-slider
                     :marks="valueBestOptions"
                     :max="valueFontSizes.max"

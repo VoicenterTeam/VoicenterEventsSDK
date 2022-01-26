@@ -51,8 +51,8 @@
                 name: 'customfontsize',
                 handle: 'submit',
                 commands: {
-                    cancel: {title: this.lang.get('cancel')},
-                    submit: {title: this.lang.get('apply')}
+                    cancel: {title: this.lang.get('common.cancel')},
+                    submit: {title: this.lang.get('general.apply')}
                 }
             };
 

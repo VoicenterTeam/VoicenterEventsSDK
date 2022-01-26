@@ -24,13 +24,13 @@
                     <div @click="downloadChartAs(widget.WidgetID)"
                          :key="`download-${widget.WidgetID}`"
                          class="w-full rounded text-gray-700 flex items-center px-2 py-3 border-t border-gray-300 w-full justify-between">
-                        <el-tooltip :content="$t('Download chart in the selected format')"
+                        <el-tooltip :content="$t('widget.downloadChartInTheSelectedFormat')"
                                     class="item"
                                     effect="dark"
                                     placement="top">
                             <div class="flex items-center hover:text-primary w-24">
                                 <DownloadIcon class="text-blue-600 w-4-5 h-4-5"/>
-                                <span class="mx-1">{{ $t('To') }}</span>
+                                <span class="mx-1">{{ $t('general.to') }}</span>
                             </div>
                         </el-tooltip>
                         <el-select v-model="downloadChartFormat"
@@ -50,7 +50,7 @@
                     <div @click="onDuplicateWidget()"
                          class="menu-action_item border-t border-gray-300">
                         <IconDuplicate class="text-blue-600 w-4-5 h-4-5"/>
-                        <span class="mx-1">{{ $t('Duplicate widget') }}</span>
+                        <span class="mx-1">{{ $t('widget.duplicateWidget') }}</span>
                     </div>
                     <div class="menu-action_item border-t border-gray-300"
                          @click="onRemoveWidget()">
@@ -71,12 +71,12 @@
                          class="menu-action_item border-t border-gray-300 truncate">
                         <el-switch :value="tryManageNote"
                                    @change="onTryManageNote"/>
-                        <span class="mx-1">{{ $t('Display hidden notes') }}</span>
+                        <span class="mx-1">{{ $t('widget.editor.displayHiddenNotes') }}</span>
                     </div>
                     <div @click="onAddNote"
                          class="menu-action_item border-t border-gray-300">
                         <IconPlus class="w-3 h-3"/>
-                        <span class="mx-1">{{ $t('Add New Note') }}</span>
+                        <span class="mx-1">{{ $t('widget.action.addNewNote') }}</span>
                     </div>
                 </template>
             </div>

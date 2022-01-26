@@ -2,12 +2,12 @@
     <div class="flex flex-col">
         <div class="flex w-full items-center justify-between">
             <div class="font-bold">
-                {{ $t('Condition Group') }}
+                {{ $t('report.conditionGroup') }}
             </div>
             <div class="flex items-center font-semibold">
                 <div class="text-primary-300 flex text-sm items-center hover:text-primary cursor-pointer mx-2"
                      @click="onAddCondition">
-                    + {{ $t('Add') }}
+                    + {{ $t('general.add') }}
                 </div>
                 <div v-if="canDelete"
                      class="flex items-center text-red-300 cursor-pointer hover:text-red"
@@ -17,7 +17,7 @@
                     </i>
                     <span class="text-sm"
                           :class="$rtl.isRTL ? 'ml-auto mr-1': 'mr-auto ml-1'">
-                        {{ $t('Remove') }}
+                        {{ $t('general.remove') }}
                     </span>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 <div class="flex flex-col accolade-height mx-6">
                     <div class="w-1 h-1 w-5 bg-gray-550"></div>
                     <div class="flex h-full w-1 bg-gray-550 justify-center items-center whitespace-nowrap">
-                        <span class="uppercase bg-white whitespace-nowrap">{{ $t('and') }}</span>
+                        <span class="uppercase bg-white whitespace-nowrap">{{ $t('general.and') }}</span>
                     </div>
                     <div class="w-1 h-1 w-5 bg-gray-550"></div>
                 </div>
@@ -51,7 +51,7 @@
         </div>
         <div class="h-1 relative bg-gray-550 ml-6 my-6 font-semibold">
             <div class="absolute uppercase bg-white -mt-4-5 ml-20 p-2">
-                {{ $t('or') }}
+                {{ $t('general.or') }}
             </div>
             <slot name="new-criteria"/>
         </div>

@@ -9,7 +9,7 @@
                             <div @click="onDiscard(true)"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                                 <IconDirLeft/>
-                                <span class="mx-1">{{ $t('Back') }}</span>
+                                <span class="mx-1">{{ $t('general.back') }}</span>
                             </div>
                             <span class="mx-8">
                             <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
@@ -26,7 +26,7 @@
                                 <div class="flex items-center text-primary-300 hover:text-primary cursor-pointer"
                                      @click="onEditLayoutTitle">
                                     <IconPencil class="w-4 h-4"/>
-                                    <span class="text-sm mx-1">{{ $t('Edit') }}</span>
+                                    <span class="text-sm mx-1">{{ $t('common.edit') }}</span>
                                 </div>
                             </div>
                             <div v-else
@@ -78,7 +78,7 @@
                                             @click="onApply()">
                                             <div class="flex items-center">
                                                 <IconSave class="mx-1"/>
-                                                <span class="mx-1 text-base font-bold">{{ 'Apply' }}</span>
+                                                <span class="mx-1 text-base font-bold">{{ $t('general.apply') }}</span>
                                             </div>
                                         </base-button>
                                     </div>
@@ -94,7 +94,7 @@
             modalWidth="456px">
             <template v-slot:title>
                 <h3 class="text-xl font-bold text-gray-950">
-                    {{ isDefaultLayout ? $t('Save Layout') : $t('Save Changes') }}
+                    {{ isDefaultLayout ? $t('layout.saveLayout') : $t('general.saveChanges') }}
                 </h3>
             </template>
             <div v-if="!isDefaultLayout" class="py-8">
@@ -105,14 +105,14 @@
                         value="newTheme"
                         checked
                     >
-                        {{ $t('Save as a new') }}
+                        {{ $t('layout.saveAsANew') }}
                     </BaseRadioButton>
                 </div>
                 <div class="ml-6 mb-11" :class="{ 'disabled-block': layoutForm.typeOfTheme !== 'newTheme'}">
                     <div class="flex items-center mb-3">
                         <div class="flex">
                             <IconExtensionsTable class="text-primary mr-2 icon"/>
-                            <div class="text font-normal">{{ $t('New Theme Name') }}</div>
+                            <div class="text font-normal">{{ $t('layout.newThemeName') }}</div>
                         </div>
                     </div>
                     <el-form :model="layoutForm" ref="layoutForm">
@@ -122,7 +122,7 @@
                                 :rules="rules.layoutName">
                                 <el-input
                                     v-model="layoutForm.layoutName"
-                                    :placeholder="$t('New Theme Name')"
+                                    :placeholder="$t('layout.newThemeName')"
                                     class="new-theme-input"
                                     :disabled="layoutForm.typeOfTheme !== 'newTheme'"
                                 />
@@ -136,14 +136,14 @@
                     group-name="group1"
                     value="existingTheme"
                 >
-                    {{ $t('Save changes in the existing theme') }}
+                    {{ $t('layout.saveChangesToExistingTheme') }}
                 </BaseRadioButton>
             </div>
             <div v-else class="py-8">
                 <div class="flex items-center mb-3">
                     <div class="flex">
                         <IconExtensionsTable class="text-primary mr-2 icon"/>
-                        <div class="text font-normal">{{ $t('New Theme Name') }}</div>
+                        <div class="text font-normal">{{ $t('layout.newThemeName') }}</div>
                     </div>
                 </div>
                 <el-form :model="layoutForm" ref="layoutForm">
@@ -153,7 +153,7 @@
                             :rules="rules.layoutName">
                             <el-input
                                 v-model="layoutForm.layoutName"
-                                :placeholder="$t('New Theme Name')"
+                                :placeholder="$t('layout.newThemeName')"
                                 class="new-theme-input"
                             />
                             <span class="el-form-item__error" slot="error" slot-scope="error">&nbsp;{{ error.error }}</span>
@@ -181,7 +181,7 @@
                             :loading="storingData" size="lg"
                             :disabled="disabledForm">
                             <span class="font-semibold">
-                                {{ $t('Apply') }}
+                                {{ $t('general.apply') }}
                             </span>
                         </base-button>
                     </slot>
@@ -237,8 +237,8 @@
                 },
                 rules: {
                     layoutName: [
-                        { required: true, message: this.$t('Validation required', { field: this.$t('New Theme Name') }) },
-                        { validator: validationThemeName, message: this.$t('Layout name already used, please use another name.') }
+                        { required: true, message: this.$t('general.validationRequired', { field: this.$t('layout.newThemeName') }) },
+                        { validator: validationThemeName, message: this.$t('layout.layoutNameAlreadyUsedWarning') }
                     ]
                 },
                 disabledForm: !this.isDefaultLayout,

@@ -9,7 +9,7 @@
         <template v-slot:icon>
             <IconNewGroup class="mx-0-5"/>
         </template>
-        <span class="mx-0-5">{{ $t('Add Group') }}</span>
+        <span class="mx-0-5">{{ $t('dashboard.addGroup') }}</span>
     </new-base-button>
 </template>
 <script>
