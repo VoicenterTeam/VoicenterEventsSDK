@@ -2,7 +2,7 @@
     <div class="w-full flex justify-between item-center bg-transparent h-12 p-4 base-pagination">
         <el-dropdown v-if="!hidePerPageOption" trigger="click" @command="changePage">
             <div class="flex items-center">
-                <div class="text-xs font-semibold text-gray-700 mr-4"> {{ $t('Pages') }}:</div>
+                <div class="text-xs font-semibold text-gray-700 mr-4"> {{ $t('general.pages') }}:</div>
                 <div class="text-xs font-medium text-gray">{{ value }}</div>
                 <i class="el-icon-arrow-down el-icon--right"></i>
             </div>
@@ -17,7 +17,7 @@
         <div class="flex items-center">
             <div class="flex item-center text-sm font-medium text-gray mr-5 leading-5">
                 <div> {{ from }} - {{ to }}</div>
-                <div class="text-xs font-normal text-gray-700 mx-2 mt-0-5">{{ $t('of') }}</div>
+                <div class="text-xs font-normal text-gray-700 mx-2 mt-0-5">{{ $t('general.of') }}</div>
                 <div> {{ total }}</div>
             </div>
             <div class="w-6 md:w-12 flex items-center justify-between">

@@ -16,7 +16,7 @@
                          variant="white"
             >
                 <span class="font-semibold">
-                    {{ $t('New Criteria') }}
+                    {{ $t('report.newCriteria') }}
                 </span>
             </base-button>
         </div>

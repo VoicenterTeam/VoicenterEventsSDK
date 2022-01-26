@@ -61,7 +61,7 @@
                 <div class="flex items-center w-64 px-1">
                     <el-input
                         clearable
-                        :placeholder="$t('Search')"
+                        :placeholder="$t('general.search')"
                         size="large"
                         v-model="filter">
                         <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />

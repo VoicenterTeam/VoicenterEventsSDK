@@ -79,11 +79,11 @@
                 SELECTIONS: [
                     {
                         label: ENTITY_POSITIVE_KEY,
-                        text: this.$t('Include the selected'),
+                        text: this.$t('autocomplete.includeTheSelected'),
                     },
                     {
                         label: ENTITY_NEGATIVE_KEY,
-                        text: this.$t('Exclude the selected'),
+                        text: this.$t('autocomplete.excludeTheSelected'),
                     },
                 ],
                 entityType: ENTITY_POSITIVE_KEY,

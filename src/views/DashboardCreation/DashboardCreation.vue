@@ -8,7 +8,7 @@
                     <div @click="redirectBack()"
                          class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                         <IconDirLeft/>
-                        <span class="mx-1">{{ $t('Back') }}</span>
+                        <span class="mx-1">{{ $t('general.back') }}</span>
                     </div>
                     <span class="mx-8">
                     <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
@@ -17,7 +17,7 @@
                     </svg>
                 </span>
                     <span class="text-xl font-bold text-gray-900">
-                    {{ $t('Dashboard Creation') }}
+                    {{ $t('dashboard.dashboardCreation') }}
                 </span>
                 </div>
             </div>
@@ -29,13 +29,13 @@
                              key="el-form" :model="model" ref="dashboardCreationForm">
                         <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
                             <span class="label-input label-dashboard-name">
-                                {{ $t('Set the Name') }}
+                                {{ $t('dashboard.setTheName') }}
                             </span>
                             <div class="lg:w-64 lg:mx-4">
                                 <el-form-item
                                     prop="DashboardTitle"
                                     :rules="[
-                                        { required: true, message: $t('Validation required', { field: $t('Dashboard Name') }) }
+                                        { required: true, message: $t('general.validationRequired', { field: $t('dashboard.dashboardName') }) }
                                     ]"
                                 >
                                     <el-input type="DashboardTitle" v-model="model.DashboardTitle" />
@@ -46,7 +46,7 @@
                         <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
                              class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto layout-block">
                             <span class="label-input flex-wrap">
-                                {{ $t('Choose Layout') }}
+                                {{ $t('dashboard.chooseLayout') }}
                             </span>
                             <div>
                                 <LayoutSelect
@@ -92,7 +92,7 @@
                 >
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('general.discard') }}</span>
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"
@@ -101,13 +101,13 @@
                         @click="tryAddDashboard">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
                     </div>
                 </base-button>
             </div>
         </div>
         <ConfirmDialog :visible.sync="showConfirmDialog"
-                       title="Add Dashboard"
+                       title="dashboard.addDashboard"
                        description="Please confirm you action?"
         >
             <template v-slot:footer-actions>
@@ -129,7 +129,7 @@
                         key="store"
                         :loading="loading"
                     >
-                        {{ $t('Confirm') }}
+                        {{ $t('common.confirm') }}
                     </base-button>
                 </slot>
             </template>

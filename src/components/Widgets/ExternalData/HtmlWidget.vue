@@ -46,7 +46,7 @@
         },
         computed: {
             fetchData() {
-                return this.data.WidgetLayout.htmlData || `<p>${this.$t('Click the switch to enable edit mode for this html')}</p>`
+                return this.data.WidgetLayout.htmlData || `<p>${this.$t('widget.clickTheSwitchToEnableEditModeForThisHtml')}</p>`
             },
             margins() {
                 if (this.$rtl.isRTL) {

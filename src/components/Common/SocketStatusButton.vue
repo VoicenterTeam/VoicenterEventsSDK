@@ -7,7 +7,7 @@
                 @click="onClick">
             <ZapIcon class="w-5 h-5"/>
             <span v-if="isSocketOffline" class="ml-1">
-                {{$t('Reconnect')}}
+                {{$t('status.socket.reconnect')}}
             </span>
         </button>
     </el-tooltip>

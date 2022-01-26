@@ -12,23 +12,23 @@
         <div class="origin-top-right absolute right-0 mt-4 w-64 z-50" v-click-outside="onClickOutside" v-if="showMenu">
             <div class="shadow-lg rounded-lg bg-white">
                 <div class="py-1">
-                    <div class="px-3 py-2 text-center">{{$t('Select a widget group to edit')}}</div>
+                    <div class="px-3 py-2 text-center">{{$t('dashboard.selectAWidgetGroupToEdit')}}</div>
                     <div class="px-1 flex flex-row items-center">
                         <div class="flex w-1/2 mx-1" v-if="activeTabGroup">
                             <el-tooltip
-                                :content="`${$t('Current group')}: ${activeTabGroup.WidgetGroupTitle}`" class="item"
+                                :content="`${$t('dashboard.currentGroup')}: ${activeTabGroup.WidgetGroupTitle}`" class="item"
                                 effect="dark"
                                 placement="top">
                                 <button
                                     class="w-full border btn items-center p-2 shadow rounded bg-white text-gray-700 cursor-pointer text-main-xs font-semibold hover:bg-primary-100 hover:text-primary"
                                     @click="onEditGroup(activeTabGroup)"
                                     :class="{'w-full': !activeTabGroup}">
-                                    {{$t('Current group')}}
+                                    {{$t('dashboard.currentGroup')}}
                                 </button>
                             </el-tooltip>
                         </div>
                         <div class="flex w-1/2 mx-1" :class="{'w-full': !activeTabGroup}">
-                            <el-tooltip :content="$t('Click to add new group')" class="item" effect="dark"
+                            <el-tooltip :content="$t('tooltip.widget.clickToAddNewGroup')" class="item" effect="dark"
                                         placement="top">
                                 <button
                                     class="w-full justify-center border btn flex items-center p-2 shadow rounded bg-white text-gray-700 cursor-pointer hover:bg-primary-100 hover:text-primary"
@@ -43,7 +43,7 @@
                         <div :key="widgetGroup.WidgetGroupID"
                              @click="onEditGroup(widgetGroup)"
                              class="rounded m-2 cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-primary-100 border-2 border-dotted">
-                            {{widgetGroup.WidgetGroupTitle || $t('Group ID') +': '+ widgetGroup.WidgetGroupID}}
+                            {{widgetGroup.WidgetGroupTitle || $t('dashboard.groupID') +': '+ widgetGroup.WidgetGroupID}}
                         </div>
                     </div>
                 </div>

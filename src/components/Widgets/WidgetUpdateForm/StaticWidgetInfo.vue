@@ -52,7 +52,7 @@
             },
             getPermissionsBlockedIds () {
                 const permissionsBlocked = this.permissionsBlocked.join(', ')
-                return `${this.$t('This widget is displaying a partial list because of permissions issues.')} <br> ${this.$t('The following IDs were not displayed are')}: <b>${permissionsBlocked}</b>`
+                return `${this.$t('general.error.partialListPermissionsIssues')} <br> ${this.$t('general.error.theFollowingIDsWereNotDisplayedAre')}: <b>${permissionsBlocked}</b>`
             }
         },
     }

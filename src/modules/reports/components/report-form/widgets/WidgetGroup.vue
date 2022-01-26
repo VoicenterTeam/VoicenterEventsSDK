@@ -8,7 +8,7 @@
                 {{ getWidgetNames }}
             </span>
         </div>
-        <el-tooltip :content="$t('Add widgets in this group')"
+        <el-tooltip :content="$t('general.addWidgetsInThisGroup')"
                     placement="top">
             <div class="flex font-bold text-primary leading-5 items-center cursor-pointer"
                  @click="onSelectGroup()">
@@ -39,13 +39,13 @@
         },
         computed: {
             getWidgetLength() {
-                return this.group.WidgetList.length + ' ' + this.$t('Widgets')
+                return this.group.WidgetList.length + ' ' + this.$t('widget.widgets')
             },
             getWidgetNames() {
                 return this.group.WidgetList.map(el => el.Title).join(', ')
             },
             getGroupName() {
-                return this.group.WidgetGroupTitle ? this.group.WidgetGroupTitle : `${this.$t('Group')}: ${this.index}`
+                return this.group.WidgetGroupTitle ? this.group.WidgetGroupTitle : `${this.$t('general.group')}: ${this.index}`
             }
         },
         methods: {

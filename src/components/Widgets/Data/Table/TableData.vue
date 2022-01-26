@@ -32,7 +32,7 @@
                 @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
-                    <div v-else>{{$t('N/A')}}</div>
+                    <div v-else>{{$t('general.NA')}}</div>
                 </template>
                 <template v-slot:pagination-rows-per-page>
                     <div class="flex items-center">
@@ -44,11 +44,11 @@
                             <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
                             <slot>
                                 <div class="w-40 mx-2">
-                                    <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
+                                    <span class="text-xs flex justify-center pb-2">{{$t('widget.table.customValue')}}</span>
                                     <div class="flex flex-row">
                                         <el-input size="mini" class="mx-1" v-model="customPageSize"></el-input>
                                         <el-button size="mini" class="mx-1" @click="applyCustomPageSize">
-                                            {{$t('Apply')}}
+                                            {{$t('general.apply')}}
                                         </el-button>
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@
                     <div class="flex items-center w-64 px-1 lg:ml-8">
                         <el-input
                             clearable
-                            :placeholder="$t('Search')"
+                            :placeholder="$t('general.search')"
                             size="large"
                             v-model="filter">
                             <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />

@@ -4,7 +4,7 @@
           <span class="text-steel hover:text-primary redirect-action"
                 @click="allTemplateCategories()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('All Categories') }}
+                {{ $t('widget.allCategories') }}
             </span>
         </portal>
         <portal to="form-title">
@@ -16,13 +16,13 @@
                        type="_primary">
                 <div class="flex items-center">
                     <IconAdd :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
-                    <span>{{ $t('Add All') }}</span>
+                    <span>{{ $t('widget.addAll') }}</span>
                 </div>
             </el-button>
         </portal>
         <div class="flex w-full justify-center border-b py-4">
             <div class="w-1/2">
-                <el-input :placeholder="$t('Search')"
+                <el-input :placeholder="$t('general.search')"
                           size="small"
                           suffix-icon="el-icon-search"
                           v-model="search"/>
@@ -46,7 +46,7 @@
                             <div class="flex items-center justify-center">
                                 <IconAdd class="mb-0-5"
                                     :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
-                                <span>{{ $t('Add') }}</span>
+                                <span>{{ $t('general.add') }}</span>
                             </div>
                         </el-button>
                     </template>
@@ -62,7 +62,7 @@
                         />
                     </template>
                     <template v-slot:template-preview>
-                        <el-tooltip :content="$t('Template Dictionary')"
+                        <el-tooltip :content="$t('widget.templateDictionary')"
                                     :open-delay="openDelay"
                                     class="item"
                                     effect="dark"
@@ -80,7 +80,7 @@
                            :disabled="submitDisabled"
                            class="font-bold"
                            type="primary">
-                    {{ $t('Set up Widgets') }}
+                    {{ $t('widget.setUpWidgets') }}
                 </el-button>
             </div>
         </portal>
@@ -141,7 +141,7 @@
                 return +newWidgetsCount + +activeWidgets
             },
             getSummaryActions() {
-                return `${this.$t('Summary')}: (${this.$t('before')} - ${this.groupWidgetsCount}, ${this.$t('after adding')} - ${this.afterAdding})`
+                return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
             },
             getSummaries() {
                 return this.$store.state.widgetCreation.summaries

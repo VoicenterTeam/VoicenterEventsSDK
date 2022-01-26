@@ -24,26 +24,26 @@
             </div>
             <div class="border p-2 w-32" v-if="showActions(note)">
                 <div class="flex justify-center">
-                    <el-tooltip :content="$t('Display note on the list')" :open-delay="openDelay" class="item"
+                    <el-tooltip :content="$t('widget.editor.displayNoteOnTheList')" :open-delay="openDelay" class="item"
                                 effect="dark"
                                 placement="top">
                         <eye-off-icon @click="displayNoteInList(true, note)"
                                       class="text-primary w-4 cursor-pointer"
                                       v-if="!note.displayed"></eye-off-icon>
                     </el-tooltip>
-                    <el-tooltip :content="$t('Hide note from list')" :open-delay="openDelay" class="item"
+                    <el-tooltip :content="$t('widget.editor.hideNoteFromList')" :open-delay="openDelay" class="item"
                                 effect="dark" placement="top">
                         <eye-icon @click="displayNoteInList(false, note)"
                                   class="text-primary w-4 cursor-pointer"
                                   v-if="note.displayed"></eye-icon>
                     </el-tooltip>
-                    <el-tooltip :content="$t('Open edit mode for this note')" :open-delay="openDelay"
+                    <el-tooltip :content="$t('widget.editor.openEditModeForThisNote')" :open-delay="openDelay"
                                 class="item" effect="dark"
                                 placement="top">
                         <edit-3-icon @click="onEditNote(note)" class="text-green w-4 mx-2 cursor-pointer"
                                      cursor-pointer></edit-3-icon>
                     </el-tooltip>
-                    <el-tooltip :content="$t('Remove note')" :open-delay="openDelay" class="item" effect="dark"
+                    <el-tooltip :content="$t('widget.editor.removeNote')" :open-delay="openDelay" class="item" effect="dark"
                                 placement="top">
                         <trash-2-icon @click="removeNote(note)"
                                       class="text-red w-4 cursor-pointer"></trash-2-icon>
@@ -133,8 +133,8 @@
             removeNote(note) {
                 this.$confirm(
                     this.$t('common.confirm.question', {
-                        action: this.$t('to remove this note'),
-                    }), this.$t('Remove note'), {
+                        action: this.$t('widget.editor.toRemoveThisNote'),
+                    }), this.$t('widget.editor.removeNote'), {
                         cancelButtonText: this.$t('common.cancel'),
                         confirmButtonText: this.$t('common.confirm'),
                     }).then(() => {

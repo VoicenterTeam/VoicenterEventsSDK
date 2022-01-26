@@ -16,13 +16,13 @@
                 </span>
             </div>
             <div class="col-span-1 actions flex items-center justify-end">
-                <el-tooltip :content="$t('Edit Report')"
+                <el-tooltip :content="$t('widget.editReport')"
                             placement="top">
                             <span class="cursor-pointer mx-2 text-green hover:opacity-75">
                                 <IconPencil class="w-4-5 h-4-5 mt-1"/>
                             </span>
                 </el-tooltip>
-                <el-tooltip :content="$t('Delete Report')"
+                <el-tooltip :content="$t('widget.deleteReport')"
                             placement="top">
                             <span class="cursor-pointer text-red hover:opacity-75">
                                 <IconDelete class="w-4 h-4"/>
@@ -34,7 +34,7 @@
             <span class="flex items-center font-medium leading-5">
                 <IconCondition class="w-4 h-4 text-primary"/>
                 <span :class="!$rtl.isRTL ? 'ml-2 mr-9' : 'ml-9 mr-2'">
-                    {{ $t('Conditions') }}:
+                    {{ $t('widget.conditions') }}:
                 </span>
             </span>
             <p class="text-sm leading-5 font-normal">
@@ -45,7 +45,7 @@
             <span class="flex items-center font-medium leading-5">
                 <IconEmailGroup class="w-4 h-4 text-primary"/>
                 <span class="mx-2">
-                    {{ $t('Recipient list') }}:
+                    {{ $t('report.recipientList') }}:
                 </span>
             </span>
             <RecipientCard v-for="(recipient, index) in schedule.recipients"

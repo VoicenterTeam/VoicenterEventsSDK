@@ -19,7 +19,7 @@
                     </div>
                     <span v-if="activeWidgets"
                           class="text-xs text-steel">
-                    {{ $t('Active Widgets') }}: {{ activeWidgets }}
+                    {{ $t('widget.activeWidgets') }}: {{ activeWidgets }}
                 </span>
                 </div>
             </slot>

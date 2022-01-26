@@ -33,7 +33,7 @@
             <div class="flex flex-col items-center">
                 <IconNoData class="h-56 w-56"/>
                 <p class="text-gray-600 max-w-lg text-center">
-                    {{ $t('WidgetGroup no Data') }}
+                    {{ $t('dashboard.widgetGroupNoData') }}
                 </p>
             </div>
         </div>

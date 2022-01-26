@@ -5,7 +5,7 @@
                  :class="$rtl.isRTL ? 'mr-auto' : 'right-0'"
                  class="flex w-full justify-end items-center cursor-pointer h-8 focus:outline-none text-gray-550 hover:text-primary">
                 <IconExitFullScreen class="mx-2"/>
-                {{ $t('Exit Full Screen') }}
+                {{ $t('dashboard.exitFullScreen') }}
             </div>
         </div>
         <socket-status-alert @retry="retrySocketConnection"/>
@@ -88,7 +88,7 @@
             </div>
         </div>
         <ConfirmDialog :visible.sync="showConfirmDialog"
-                       description="Are you sure that you want to delete this Widget Group"
+                       description="dashboard.deleteWidgetGroupConfirmation"
                        @on-cancel="showConfirmDialog = false"
                        @on-confirm="removeWidgetGroup"
         />

@@ -4,11 +4,11 @@
           <span class="text-steel hover:text-primary redirect-action"
                 @click="goToSettings()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Settings') }}
+                {{ $t('settings.settings') }}
             </span>
         </portal>
         <portal to="form-title">
-            {{ $t('Summary') }}
+            {{ $t('widget.summary') }}
         </portal>
         <div class="-mx-4-5">
             <div
@@ -29,7 +29,7 @@
                 <div class="flex items-center cursor-pointer hover:text-primary"
                      @click="onEditTemplate(template)">
                 <span class="mx-1">
-                    {{ $t('Edit') }}
+                    {{ $t('common.edit') }}
                 </span>
                     <IconShape/>
                 </div>
@@ -40,7 +40,7 @@
                 <el-button @click="onSubmit"
                            class="font-bold"
                            type="primary">
-                    {{ $t('Save') }}
+                    {{ $t('common.save') }}
                 </el-button>
             </div>
         </portal>

@@ -4,11 +4,11 @@
             <span class="text-steel hover:text-primary redirect-action"
                 @click="allSelectedTemplates()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Widgets') }}
+                {{ $t('widget.widgets') }}
             </span>
         </portal>
         <portal to="form-title">
-            {{$t('Set up the general widgets settings')}}
+            {{$t('widget.setUpTheGeneralSettings')}}
         </portal>
         <div class="py-4 -mx-4-5">
             <div v-for="(config, index) in uniqTemplatesConfigs"
@@ -32,7 +32,7 @@
                 <el-button @click="onViewSummary"
                     class="font-bold"
                     type="primary">
-                    {{ $t('Next') }}
+                    {{ $t('general.next') }}
                 </el-button>
             </div>
         </portal>
