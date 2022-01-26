@@ -5,7 +5,7 @@
                  @click="tryAddWidgets">
                 <IconAddWidget/>
                 <div class="mx-2">
-                    {{ $t('Add New Widgets') }}
+                    {{ $t('widget.addNewWidgets') }}
                 </div>
             </div>
             <template v-if="getLayoutType === layoutTypes.TABBED">
@@ -36,41 +36,42 @@
                             class="text-red cursor-pointer hover:text-red-focus mx-2">
                 </IconDelete>
             </el-tooltip>
-            <AddWidgetDialog :visible.sync="showAddWidgetDialog"
-                             v-if="showAddWidgetDialog"
-                             :widget-group="widgetGroup"
-                             v-on="$listeners"
-                             @try-store-category="tryAddAllWidgetsFromCategory"
-                             @on-submit="showAddWidgetDialog = false"
-                             @on-cancel="showAddWidgetDialog = false"
+            <AddWidgetDialog
+                :visible.sync="showAddWidgetDialog"
+                v-if="showAddWidgetDialog"
+                :widget-group="widgetGroup"
+                v-on="$listeners"
+                @try-store-category="tryAddAllWidgetsFromCategory"
+                @on-submit="showAddWidgetDialog = false"
+                @on-cancel="showAddWidgetDialog = false"
             />
         </div>
         <ConfirmDialog v-if="showConfirmDialog"
                        :visible.sync="showConfirmDialog">
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Save Changes') }}
+                    {{ $t('general.saveChanges') }}
                 </h3>
             </template>
             <div class="flex justify-center w-full">
                 <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p">
-                    {{ $t('Do you want to save changes in the existing theme or save as a new?') }}
+                    {{ $t('layout.saveChangesInTheExistingThemeOrNew') }}
                 </div>
             </div>
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
                     <base-button class="mx-4"
-                                 @click="onCancel"
-                                 variant="discard"
-                                 fixed-width="w-37">
+                                @click="onCancel"
+                                variant="discard"
+                                fixed-width="w-37">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
+                            <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
                         </div>
                     </base-button>
                     <base-button @click="addAllWidgetsFromCategory"
                                  key="store">
-                        {{ $t('Confirm') }}
+                        {{ $t('common.confirm') }}
                     </base-button>
                 </slot>
             </template>

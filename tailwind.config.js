@@ -76,6 +76,7 @@ module.exports = {
                 base: '0px 0px 5px #E0E2E5',
                 light: '0px 1px 6px #D1D5DF',
                 lighter: '0px 0px 5px #D8D8D8',
+                radio: '0px 0px 5px var(--primary)'
             },
             minWidth: {
                 ...defaultTheme.spacing,
@@ -139,6 +140,7 @@ module.exports = {
                 23: '5.875rem',
                 28: '7rem',
                 29: '7.25rem',
+                30: '7.5rem',
                 35: '8.75rem',
                 37: '9.0625rem',
                 38: '9.375rem',

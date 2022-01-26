@@ -27,7 +27,7 @@
         },
     }
 </script>
-<style>
+<style scoped>
     .btn {
         transition: all .2s;
     }

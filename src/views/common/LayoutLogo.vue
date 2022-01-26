@@ -14,7 +14,7 @@
                          outline
                          size="sml"
                          fixed-width="w-20">
-                {{ $t('Change') }}
+                {{ $t('general.change') }}
             </base-button>
         </el-upload>
     </div>

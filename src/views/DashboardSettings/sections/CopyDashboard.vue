@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-tooltip effect="dark"
-                    :content="$t('Copy Dashboard')"
+                    :content="$t('dashboard.copyDashboard')"
                     :open-delay="openDelay"
                     placement="top">
             <base-button @click="showDialog = true"
@@ -9,7 +9,7 @@
                          fixed-width="w-37">
                 <div class="flex items-center">
                     <CopyIcon class="w-4-5 h-4-5"/>
-                    <span class="mx-1 text-base font-bold">{{ $t('Copy') }}</span>
+                    <span class="mx-1 text-base font-bold">{{ $t('general.copy') }}</span>
                 </div>
             </base-button>
         </el-tooltip>
@@ -17,47 +17,57 @@
                :append-to-body="true">
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Copy Dashboard') }}
+                    {{ $t('dashboard.copyDashboard') }}
                 </h3>
             </template>
             <div class="py-5">
-                <p class="mb-4">
-                    {{ $t('Account') }}
-                    ({{ $t('copy dashboard into selected account') }})
+                <p class="mb-2">
+                    {{ $t('general.account') }}
+                    ({{ $t('dashboard.copyDashboardIntoSelectedAccount') }})
                 </p>
-                <base-select :data="allAccounts"
-                             labelKey="name"
-                             valueKey="ID"
-                             :multiple="false"
-                             class="w-full mb-2"
-                             v-model="account"/>
-                <el-collapse v-model="activeCollapse"
-                             class="mt-3">
+                <base-select
+                    :data="allAccounts"
+                    labelKey="name"
+                    valueKey="ID"
+                    :multiple="false"
+                    class="w-full mb-2"
+                    v-model="account"/>
+                <p class="mb-2">
+                    {{ $t('dashboard.newDashboardName') }}
+                </p>
+                <el-input v-model="dashboardCopy.DashboardTitle"/>
+                <el-collapse
+                    v-model="activeCollapse"
+                    class="mt-3">
                     <el-collapse-item v-for="group in widgetGroups"
-                                      class="my-2"
-                                      :title="groupTitle(group)"
-                                      :key="group.WidgetGroupID"
-                                      :name="group.WidgetGroupID"
+                        class="my-2"
+                        :title="groupTitle(group)"
+                        :key="group.WidgetGroupID"
+                        :name="group.WidgetGroupID"
                     >
                         <template slot="title">
                             <el-checkbox :value="group.isSelected"
-                                         @change.native.stop="toggleSelection(group)"/>
+                                         @change.native.stop="toggleGroupSelection(group)"/>
                             <span class="mx-2">
-                                {{ group.WidgetGroupTitle }}
+                                {{ group.WidgetGroupTitle || $t('dashboard.groupID') + ': ' + group.WidgetGroupID }}
                             </span>
                         </template>
-                        <div v-if="displayWidgetList"
-                             v-for="widget in group.WidgetList"
-                             :key="widget.WidgetID"
-                             class="w-full flex items-center">
-                            <el-checkbox :value="widget.isSelected"
-                                         @change="toggleSelection(widget)"/>
-                            <component class="text-primary my-1 mx-2"
-                                       :is="getWidgetIcon(widget)"/>
-                            <span class="flex-1 truncate">
-                                {{ widget.Title }}
-                            </span>
-                        </div>
+                        <template v-if="displayWidgetList">
+                            <div
+                                v-for="widget in group.WidgetList"
+                                :key="widget.WidgetID"
+                                class="w-full flex items-center">
+                                <el-checkbox
+                                    :value="widget.isSelected"
+                                    @change="toggleWidgetSelection(widget, group)"
+                                />
+                                <component class="text-primary my-1 mx-2"
+                                        :is="getWidgetIcon(widget)"/>
+                                <span class="flex-1 truncate">
+                                    {{ widget.Title }}
+                                </span>
+                            </div>
+                        </template>
                     </el-collapse-item>
                 </el-collapse>
             </div>
@@ -77,7 +87,7 @@
                                  fixed-width="w-37"
                                  :loading="loading">
                         <span class="font-semibold">
-                            {{ $t('Confirm') }}
+                            {{ $t('common.confirm') }}
                         </span>
                     </base-button>
                 </div>
@@ -86,16 +96,13 @@
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
-    import pick from 'lodash/pick'
+    import cloneDeep from 'lodash/cloneDeep'
     import { CopyIcon } from 'vue-feather-icons'
     import Modal from '@/components/Common/Modal'
     import { templateIcons } from '@/enum/widgetDataTypes'
     import { Collapse, CollapseItem, Checkbox } from 'element-ui'
-    import { WidgetApi } from '@/api/widgetApi'
     import { DashboardApi } from '@/api/dashboardApi'
-    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
-    
+
     export default {
         components: {
             Modal,
@@ -107,8 +114,8 @@
         props: {
             dashboard: {
                 type: Object,
-                default: () => ({}),
-            },
+                default: () => ({})
+            }
         },
         data() {
             return {
@@ -118,47 +125,87 @@
                 showDialog: false,
                 account: null,
                 displayWidgetList: true,
+                dashboardCopy: {
+                    ...cloneDeep(this.dashboard),
+                    DashboardTitle: `${this.dashboard.DashboardTitle} - Copy`
+                }
             }
         },
         computed: {
             widgetGroups() {
-                return this.dashboard.WidgetGroupList || []
+                return this.dashboardCopy.WidgetGroupList || []
             },
             allAccounts() {
                 return this.$store.getters['entities/accountsList']
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
-            },
+            }
         },
         methods: {
             groupTitle(group) {
-                return group.WidgetGroupTitle ? this.$t(group.WidgetGroupTitle) : `${this.$t('Group')} #${group.WidgetGroupID}`
+                return group.WidgetGroupTitle ? this.$t(group.WidgetGroupTitle) : `${this.$t('general.group')} #${group.WidgetGroupID}`
             },
             getWidgetIcon(widget) {
                 const { DataTypeID } = widget.WidgetLayout
                 return templateIcons[DataTypeID]
             },
-            toggleSelection(group) {
+            toggleGroupSelection(group) {
                 this.displayWidgetList = false
                 group.isSelected = !group.isSelected
+
+                group.WidgetList.forEach(widget => {
+                    widget.isSelected = group.isSelected
+                })
+
+                this.$nextTick(() => {
+                    this.displayWidgetList = true
+                })
+            },
+            toggleWidgetSelection(widget, group) {
+                this.displayWidgetList = false
+                widget.isSelected = !widget.isSelected
+
+                if(widget.isSelected && !group.isSelected) {
+                    group.isSelected = true
+                }
+
+                const isFullyUnchecked = !group.WidgetList.some(el => el.isSelected)
+                if (isFullyUnchecked) {
+                    group.isSelected = false
+                }
+
                 this.$nextTick(() => {
                     this.displayWidgetList = true
                 })
             },
             async onCopy() {
+                const widgetGroupList = this.dashboardCopy.WidgetGroupList
+                    .map(widgetGroup => {
+                        if (widgetGroup.isSelected) {
+                            const newWidgetGroupItem = {}
+                            newWidgetGroupItem.WidgetGroupID = widgetGroup.WidgetGroupID
+                            newWidgetGroupItem.WidgetList = widgetGroup.WidgetList
+                                .filter(el => el.isSelected)
+                                .map(el => el.WidgetID) || []
+                            return newWidgetGroupItem
+                        }
+                    })
+                    .filter(el => el)
+
                 try {
                     this.loading = true
-                    let payload = pick(this.dashboard, ['GroupTransitionTimer', 'DashboardTitle', 'DashboardLayoutID', 'DashboardLayout', 'DashBoardsPermission', 'DashBoardsUserPermission'])
-                    payload.AccountID = this.account
-                    payload.DashboardTitle = `${payload.DashboardTitle} - copy`
-                    const newDashboardData = await DashboardApi.store(payload)
-                    const { DashboardID } = newDashboardData
-                    await this.addWidgetGroups(DashboardID)
-                    let WidgetGroupID = get(newDashboardData.WidgetGroupList, '[0].WidgetGroupID' ,false)
-                    if (WidgetGroupID) {
-                        await DashboardApi.removeWidgetGroup(DashboardID, WidgetGroupID)
+                    const copiedDashboard = {
+                        DashboardID: this.dashboardCopy.DashboardID,
+                        DashboardCopyTitle: this.dashboardCopy.DashboardTitle,
+                        WidgetGroupCopyList: widgetGroupList
                     }
+
+                    const newDashboard = await DashboardApi.copy(copiedDashboard)
+
+                    await this.$store.dispatch('dashboards/selectDashboard', newDashboard)
+                    await this.$store.dispatch('dashboards/getDashboards')
+                    await this.$router.push('/')
                 } catch (e) {
                     console.warn(e)
                 } finally {
@@ -166,57 +213,20 @@
                     this.showDialog = false
                 }
             },
-            async addWidgetGroups(DashboardID) {
-                for (let i = 0; i < this.widgetGroups.length; i++) {
-                    const group = this.widgetGroups[i]
-                    if (!group.isSelected) {
-                        return
-                    }
-                    const payload = {
-                        Order: group.Order,
-                        WidgetGroupTitle: group.WidgetGroupTitle,
-                        WidgetList: [],
-                    }
-                    const { WidgetGroupID } = await WidgetGroupsApi.store(payload)
-                    
-                    await DashboardApi.addWidgetGroup(DashboardID, WidgetGroupID)
-                    this.addWidgets(group.WidgetList, WidgetGroupID)
-                }
-            },
-            async addWidgets(widgets, WidgetGroupID) {
-                for (let i = 0; i < widgets.length; i++) {
-                    const widget = widgets[i]
-                    
-                    if (!widget.isSelected) {
-                        return
-                    }
-                    const payload = {
-                        ...widget,
-                        WidgetEntity: [],
-                    }
-                    delete payload.WidgetID
-                    delete payload.LastUpdate
-                    delete payload.isSelected
-                    
-                    const { WidgetID } = await WidgetApi.store(payload)
-                    if (!WidgetID) {
-                        return
-                    }
-                    WidgetGroupsApi.addWidget(WidgetGroupID, WidgetID)
-                }
-            },
             fillAccount() {
                 this.account = this.currentAccountId
-            },
+            }
         },
         mounted() {
-            this.widgetGroups.forEach((group) => {
+            this.widgetGroups.map((group) => {
                 group['isSelected'] = true
-                group.WidgetList.forEach(widget => {
+                group.WidgetList.map(widget => {
                     widget['isSelected'] = true
+                    return widget
                 })
+                return group
             })
             this.fillAccount()
-        },
+        }
     }
 </script>

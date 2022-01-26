@@ -1,14 +1,23 @@
 <template>
-    <div class="flex mx-1">
-        <button
-            class="btn flex items-center p-2 shadow rounded bg-white cursor-pointer text-primary hover:bg-primary-100">
-            <IconPlus class="w-3 fill-current mx-1"/>
-            <span class="text-main-xs font-semibold">{{$t('common.newGroup')}}</span>
-        </button>
-    </div>
+    <new-base-button
+        v-bind="$attrs"
+        class="cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7"
+        size="sml"
+        custom-size-params="font-semibold"
+        v-on="$listeners"
+    >
+        <template v-slot:icon>
+            <IconNewGroup class="mx-0-5"/>
+        </template>
+        <span class="mx-0-5">{{ $t('dashboard.addGroup') }}</span>
+    </new-base-button>
 </template>
 <script>
+    import NewBaseButton from "@/components/Buttons/NewBaseButton";
     export default {
         inheritAttrs: false,
+        components: {
+            NewBaseButton
+        }
     }
 </script>

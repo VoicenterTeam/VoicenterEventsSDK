@@ -3,25 +3,28 @@ import parseCatch from '../helpers/handleErrors';
 
 export const WidgetGroupsApi = {
     
-    async update(data) {
+    async update(data, updateTitle = false) {
         try {
-            data.WidgetList.forEach(widget => {
-                widget.WidgetConfig = widget.WidgetConfig.filter(config => config.ParameterID)
-                if (!widget.WidgetTime) {
-                    widget.WidgetTime = {}
-                }
-                if (!widget.WidgetConfig) {
-                    widget.WidgetConfig = []
-                }
-                widget.WidgetConfig.forEach(config => {
-                    if (config.WidgetParameterValue === '{}') {
-                        config.WidgetParameterValue = ''
+            if (!updateTitle) {
+                data.WidgetList.forEach(widget => {
+                    widget.WidgetConfig = widget.WidgetConfig.filter(config => config.ParameterID)
+                    if (!widget.WidgetTime) {
+                        widget.WidgetTime = {}
                     }
+                    if (!widget.WidgetConfig) {
+                        widget.WidgetConfig = []
+                    }
+                    widget.WidgetConfig.forEach(config => {
+                        if (config.WidgetParameterValue === '{}') {
+                            config.WidgetParameterValue = ''
+                        }
+                    })
                 })
-            })
-            if (data.Order === null) {
-                data.Order = 0
+                if (data.Order === null) {
+                    data.Order = 0
+                }
             }
+
             return await $axios.post(`/WidgetsGroups/Update/`, data)
         } catch (e) {
             parseCatch(e, true, 'Update Widget Groups')
@@ -51,6 +54,16 @@ export const WidgetGroupsApi = {
             return await $axios.post(`/WidgetsGroups/RemoveWidget/${groupID}/${widgetID}`)
         } catch (e) {
             parseCatch(e, true, 'Remove Widget from Widget Group')
+        }
+    },
+    async reorder(data) {
+        try {
+            const widgetGroupList = {
+                WidgetGroupList: data
+            }
+            return await $axios.post(`/WidgetsGroups/Reorder/`, widgetGroupList)
+        } catch (e) {
+            parseCatch(e, true, 'Reorder Widget Groups')
         }
     },
 }

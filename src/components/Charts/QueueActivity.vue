@@ -1,9 +1,13 @@
 <template>
     <div class="bg-transparent rounded-lg pt-2"
          v-if="chartVisibility">
-        <highcharts :options="chartData"
-                    :callback="onInitChartCallback"
-                    class="chart-content_wrapper"/>
+        <highcharts
+            ref="queue-activity"
+            class="chart-content_wrapper"
+            :options="chartData"
+            :callback="onInitChartCallback"
+            :updateArgs="[true, true]"
+        />
     </div>
 </template>
 <script>
@@ -62,10 +66,15 @@
                 this.chartInstance = chart
             },
             tryPrintChart() {
-                this.chartInstance.print()
+                const divToPrint = this.$el.children[0]
+                const newWin = window.open();
+                newWin.document.write(divToPrint.innerHTML);
+                newWin.document.close();
+                newWin.focus();
+                newWin.print();
             },
             tryDownloadChart(type) {
-                this.chartInstance.exportChart({
+                this.$refs['queue-activity'].chart.exportChart({
                     type: type,
                 })
             },
@@ -113,7 +122,7 @@
                             let innerRadius = reversedCounts ? '63%' : '88%'
                             
                             let answerData = {
-                                name: this.$t('Answer'),
+                                name: this.$t('queue.answer'),
                                 data: [{
                                     color: AnswerCountStyles['color'],
                                     radius: radius,
@@ -146,7 +155,7 @@
                             let innerRadius = reversedCounts ? '88%' : '63%'
                             
                             let InSLAData = {
-                                name: this.$t('In SLA'),
+                                name: this.$t('queue.inSLA'),
                                 data: [{
                                     color: InSLACountStyles['color'],
                                     radius: radius,
@@ -172,7 +181,7 @@
                     
                     if (activitiesToDisplay.includes('AnswerCount')) {
                         let index = reversedCounts ? 1 : 0
-                        dataLabels[index] = `<span style="font-size: ${AnswerCountStyles['fontSize'] + 'px'}; color: ${AnswerCountStyles['color']}">${answerPercentage}%<br>${this.$t('Answer')}</span>`
+                        dataLabels[index] = `<span style="font-size: ${AnswerCountStyles['fontSize'] + 'px'}; color: ${AnswerCountStyles['color']}">${answerPercentage}%<br>${this.$t('queue.answer')}</span>`
                         yMargin = AnswerCountStyles['fontSize']
                     }
                     

@@ -11,7 +11,7 @@
                 :disabled="disabled || loading"
                 v-on="$listeners"
                 ref="button"
-                class="items-center justify-center border-2 border-transparent font-medium focus:outline-none focus:ring-blue transition ease-in-out duration-50 relative"
+                class="items-center justify-center border-2 border-transparent font-medium focus:outline-none focus:ring-blue transition ease-in-out duration-50 relative box-content"
                 :class="[{
                   'rounded': !rounded,
                   'rounded-full': rounded,
@@ -28,7 +28,7 @@
                   'text-xs px-2.5 py-1-5 leading-4': size === 'xs',
                   'text-sm px-3 py-1-5 leading-4': size === 'sm',
                   'text-sm px-4 py-1-5 leading-4': size === 'md',
-                  'text-base px-6 py-2 leading-6': size === 'lg',
+                  'text-base px-1.5 py-2 leading-6': size === 'lg',
                   'text-base px-8 py-3 leading-6': size === 'xl',
                   'p-0 leading-0': size === 'full',
                   'opacity-50 cursor-not-allowed': disabled || localLoading,

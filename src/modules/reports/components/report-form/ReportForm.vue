@@ -5,8 +5,8 @@
         >
             <div class="col-span-3 md:col-span-1">
                 <base-input rules="required"
-                            :name="$t('Report Name')"
-                            :label="$t('Report Name')"
+                            :name="$t('report.reportName')"
+                            :label="$t('report.reportName')"
                             label-icon="IconReportName"
                             v-model="model.ReportName"
                             id="ReportTypeName"
@@ -14,8 +14,8 @@
             </div>
             <div class="col-span-3 md:col-span-1">
                 <base-input rules="required"
-                            :name="$t('Report Type Name')"
-                            :label="$t('Report Type Name')"
+                            :name="$t('report.reportTypeName')"
+                            :label="$t('report.reportTypeName')"
                             label-icon="IconReportName"
                             v-model="model.ReportTypeName"
                             id="ReportName"
@@ -25,7 +25,7 @@
                 <label class="flex items-center mb-4">
                     <IconCondition class="w-4 h-4 text-primary"/>
                     <span class="mx-1 text-main-sm text-gray-950">
-                        {{ $t('Report Status') }}
+                        {{ $t('report.reportStatus') }}
                     </span>
                 </label>
                 <el-switch :value="reportStatus()"
@@ -37,7 +37,7 @@
             <template v-slot:header="{valid, handleSubmit}">
                 <div class="flex items-center justify-between mb-10">
                     <span class="text-xl font-bold text-gray-900">
-                        {{ model.ReportID ? `${$t('Edit Report')} #${model.ReportID}` : $t('Report Creation') }}
+                        {{ model.ReportID ? `${$t('widget.editReport')} #${model.ReportID}` : $t('report.reportCreation') }}
                     </span>
                     <div class="flex">
                         <base-button :class="$rtl.isRTL ? 'mx-4' : 'mx-4'"
@@ -46,14 +46,14 @@
                                      fixed-width="w-37">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-semibold">{{ $t('Cancel') }}</span>
+                                <span class="mx-1 text-base font-semibold">{{ $t('common.cancel') }}</span>
                             </div>
                         </base-button>
                         <base-button :loading="loading"
                                      @click="handleSubmit(onSubmit)">
                             <div class="flex items-center">
                                 <IconSave class="mx-1"/>
-                                <span class="mx-1 text-base font-semibold">{{ $t('Save Changes') }}</span>
+                                <span class="mx-1 text-base font-semibold">{{ $t('general.saveChanges') }}</span>
                             </div>
                         </base-button>
                     </div>
@@ -90,7 +90,7 @@
             return {
                 loading: false,
                 model: {
-                    ReportName: this.$t('New Report'),
+                    ReportName: this.$t('report.newReport'),
                     ReportStatusID: 1,
                     ReportTypeID: 1, //Check available options
                     ReportTypeName: '',

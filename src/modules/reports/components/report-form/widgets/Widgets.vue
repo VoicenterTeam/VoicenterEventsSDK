@@ -94,14 +94,14 @@
             <template v-slot:actions="{row, index}">
                 <div class="flex items-center justify-center"
                      :key="`action-${index}`">
-                    <el-tooltip :content="$t('Edit Widget')"
+                    <el-tooltip :content="$t('tooltip.edit.widget')"
                                 placement="top">
                             <span class="cursor-pointer mx-2 text-green hover:opacity-75"
                                   @click="tryEditWidget(row, index)">
                                 <IconPencil class="w-4 h-4"/>
                             </span>
                     </el-tooltip>
-                    <el-tooltip :content="$t('Delete Report')"
+                    <el-tooltip :content="$t('widget.deleteReport')"
                                 placement="top">
                             <span class="cursor-pointer text-red hover:opacity-75"
                                   @click="tryDeleteWidget(index)">
@@ -111,7 +111,7 @@
                 </div>
             </template>
             <template v-slot:empty-text>
-                {{ $t('No report items') }}
+                {{ $t('report.noReportItems') }}
             </template>
         </DataTable>
         <ConfirmDialog :visible.sync="showDeleteDialog"
@@ -122,7 +122,7 @@
             <div class="mt-10 mb-8 flex flex-col items-center justify-center">
                 <IconQuestion/>
                 <div class="text-center text-gray-900 text-sm leading-21 mt-5 max-w-65-p break-normal">
-                    {{ this.$t('Are you sure you want to delete this widget from report?') }}
+                    {{ this.$t('report.deleteWidgetFromReportConfirmation') }}
                 </div>
                 <b>{{ `#${widgetToDeleteIndex}` }}</b>
             </div>
@@ -192,14 +192,14 @@
                 drawTable: true,
                 columns: [
                     {
-                        label: this.$t('№'),
+                        label: this.$t('general.№'),
                         prop: 'index',
                         align: 'center',
                         minWidth: 20,
                         maxWidth: 20,
                     },
                     {
-                        label: this.$t('Widget Name'),
+                        label: this.$t('widget.widgetName'),
                         prop: 'ReportItemName',
                         align: 'center',
                         sortable: true,
@@ -207,7 +207,7 @@
                         icon: 'IconWidgetName',
                     },
                     {
-                        label: this.$t('Pdf'),
+                        label: this.$t('general.Pdf'),
                         prop: 'pdf',
                         align: 'center',
                         minWidth: 40,
@@ -215,7 +215,7 @@
                         icon: 'IconPdf',
                     },
                     {
-                        label: this.$t('Spreadsheet'),
+                        label: this.$t('widget.spreadsheet'),
                         prop: 'spreadsheet',
                         align: 'center',
                         minWidth: 70,
@@ -223,7 +223,7 @@
                         icon: 'IconSpreadsheet',
                     },
                     {
-                        label: this.$t('Email Body'),
+                        label: this.$t('widget.emailBody'),
                         prop: 'html',
                         align: 'center',
                         minWidth: 70,
@@ -239,14 +239,14 @@
                         icon: 'IconCondition',
                     },
                     {
-                        label: this.$t('Description'),
+                        label: this.$t('general.description'),
                         prop: 'ReportItemDescription',
                         align: 'center',
                         sortable: true,
                         minWidth: 100,
                     },
                     {
-                        label: this.$t('Action'),
+                        label: this.$t('general.action'),
                         prop: 'actions',
                         icon: 'IconActions',
                         align: 'center',
@@ -409,7 +409,6 @@
         },
         mounted() {
             this.fetchReportItems()
-            //console.log('$listeners', this.$listeners)
         },
     }
 </script>

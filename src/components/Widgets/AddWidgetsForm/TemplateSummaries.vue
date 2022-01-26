@@ -4,15 +4,18 @@
           <span class="text-steel hover:text-primary redirect-action"
                 @click="goToSettings()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Settings') }}
+                {{ $t('settings.settings') }}
             </span>
         </portal>
         <portal to="form-title">
-            {{ $t('Summary') }}
+            {{ $t('widget.summary') }}
         </portal>
         <div class="-mx-4-5">
-            <div class="px-6 py-2 flex items-center justify-between text-gray-550"
-                 v-for="template in templates">
+            <div
+                class="px-6 py-2 flex items-center justify-between text-gray-550"
+                v-for="template in templates"
+                :key="template.TemplateName"
+            >
                 <div class="flex items-center">
                     <el-checkbox @change="onChange($event, template)"
                                  :checked="template.toStore"
@@ -26,7 +29,7 @@
                 <div class="flex items-center cursor-pointer hover:text-primary"
                      @click="onEditTemplate(template)">
                 <span class="mx-1">
-                    {{ $t('Edit') }}
+                    {{ $t('common.edit') }}
                 </span>
                     <IconShape/>
                 </div>
@@ -37,14 +40,13 @@
                 <el-button @click="onSubmit"
                            class="font-bold"
                            type="primary">
-                    {{ $t('Save') }}
+                    {{ $t('common.save') }}
                 </el-button>
             </div>
         </portal>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
     import times from 'lodash/times'
     import { Checkbox } from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
@@ -108,8 +110,8 @@
             async onEditTemplate(template) {
                 await this.$store.dispatch('widgetCreation/editTemplate', template)
             },
-            async goToSettings() {
-                await this.$store.dispatch('widgetCreation/goToSetupTemplates', false)
+            goToSettings() {
+                this.$emit('on-go-to-settings')
             },
             composeData() {
                 const templates = this.getTemplatesToSetup
@@ -124,14 +126,10 @@
                     })
                 })
                 this.templates = widgetTemplatesToAdd
-            },
-            async updateStore() {
-                await this.$store.dispatch('widgetCreation/editTemplate', false)
-            },
+            }
         },
         async mounted() {
             await this.composeData()
-            await this.updateStore()
-        },
+        }
     }
 </script>

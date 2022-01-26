@@ -1,6 +1,6 @@
 <template>
     <div :class="getClass"
-         class="grid-stack-item-content relative rounded-lg"
+         class="grid-stack-item-content relative rounded-lg flex flex-col"
          :key="widget.WidgetID"
          :style="getStyles">
         <div class="flex relative items-center">
@@ -10,7 +10,7 @@
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
-            
+
             </div>
             <WidgetAction :key="widget.WidgetID"
                           :editable="editable"
@@ -23,8 +23,7 @@
                           @on-remove="removeWidget"
                           @on-show-update-dialog="showUpdateDialog = true"/>
         </div>
-        <div class="flex w-full flex-col widget-container"
-             :class="getWidgetHeightClass"
+        <div class="flex w-full flex-col widget-container h-full contents"
              v-if="inView">
             <component
                 :data="widget"
@@ -89,7 +88,7 @@
         isHtmlEditor,
         isNoteListWidget,
     } from '@/helpers/widgetUtils'
-    
+
     const DEFAULT_WIDGET_TIME = {
         type: 'relative',
         datedeff: '0',
@@ -105,7 +104,7 @@
         widgetDataTypes.TOTAL_OUTGOING_CALLS,
         widgetDataTypes.AVERAGE_CALLS_DURATION,
     ]
-    
+
     export default {
         components: {
             PieChart,
@@ -168,7 +167,7 @@
                 return this.inViewById[this.widget.WidgetID] || true
             },
             showDeleteButton() {
-                
+
                 let dataType = getWidgetDataType(this.widget)
                 return !EXCEPTIONS.includes(dataType)
             },
@@ -185,13 +184,13 @@
             getStyles() {
                 let styles = {}
                 let colors = get(this.widget.WidgetLayout, 'colors') || defaultColors
-                
+
                 styles = {
                     'background': colors.background,
                     'color': colors.fonts,
                 }
                 const padding = this.getPadding
-                
+
                 if (this.showDeleteButton) {
                     let border = { 'border': '2px solid ' + colors.frames }
                     styles = {
@@ -208,9 +207,6 @@
                     return 'has-margin'
                 }
             },
-            getWidgetHeightClass() {
-                return this.showDeleteButton ? 'h-container' : 'h-full'
-            }
         },
         methods: {
             isHtmlEditor,
@@ -233,7 +229,7 @@
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
-                
+
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)
                 this.$set(widget, 'EndPoint', endPoint)
@@ -263,7 +259,7 @@
         mounted() {
             this.getComponentTypeAndSetData(this.widget)
             this.checkWidgetTimeConfig()
-            
+
             const { editMode } = this.widget.WidgetLayout || false
             this.editMode = editMode
         },
@@ -281,8 +277,5 @@
         overflow-x: hidden;
         overflow-y: auto;
     }
-}
-.h-container {
-    height: calc(100% - 2.5rem);
 }
 </style>

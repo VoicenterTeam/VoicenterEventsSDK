@@ -30,16 +30,15 @@
             </template>
             <div v-if="editMode && !showTabs"
                  class="px-14 text-gray-900 text-2xl">
-                {{ $t('Edit Mode') }}
+                {{ $t('general.editMode') }}
             </div>
         </div>
         <div class="flex items-center px-14 hidden md:flex">
-            <div class="flex items-center">
-                <div @click="addNewGroup"
-                     class="w-32 cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7">
-                    <IconNewGroup class="mx-0-5"/>
-                    <span class="mx-0-5">{{ $t('Add Group') }}</span>
-                </div>
+            <div class="flex items-center" v-if="layoutType === 'tabbed'">
+                <new-group-button
+                    :disabled="editMode"
+                    @click="addNewGroup"
+                />
             </div>
             <template v-if="editMode">
                 <IconVerticalLine class="mx-6 h-12"/>
@@ -47,11 +46,11 @@
                            size="mini"
                            type="_primary"
                            class="h-7">
-                    {{ $t('Save') }}
+                    {{ $t('common.save') }}
                 </el-button>
                 <div class="mx-6 font-medium cursor-pointer text-steel hover:text-primary"
                      @click="onCancel">
-                    {{ $t('Cancel') }}
+                    {{ $t('common.cancel') }}
                 </div>
             </template>
         </div>
@@ -59,10 +58,12 @@
 </template>
 <script>
     import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
-    
+    import NewGroupButton from '@/components/NewGroupButton'
+
     export default {
         components: {
             ActionsTabbedView,
+            NewGroupButton,
         },
         props: {
             widgetGroupList: {
@@ -82,13 +83,17 @@
                 default: false,
             },
             onFullScreen: {},
+            layoutType: {
+                type: String,
+                default: 'tabbed'
+            }
         },
         methods: {
             widgetGroupName(group, index) {
                 if (group.IsNew) {
-                    return this.$t('Group') + ' ' + (index + 1)
+                    return this.$t('general.group') + ' ' + (index + 1)
                 }
-                return group.WidgetGroupTitle || this.$t('Group ID') + ': ' + group.WidgetGroupID
+                return group.WidgetGroupTitle || this.$t('dashboard.groupID') + ': ' + group.WidgetGroupID
             },
             switchTab(group) {
                 if (this.editMode) {
@@ -132,11 +137,11 @@
     line-height: normal;
     color: var(--steel);
     height: 100%;
-    
+
     .active {
         color: var(--greyish-brown);
     }
-    
+
     &:first-child {
         margin-left: 65px;
     }

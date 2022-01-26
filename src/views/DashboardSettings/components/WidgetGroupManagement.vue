@@ -3,7 +3,7 @@
         <div class="flex items-center pb-6 border-b border-gray-300">
             <IconWidgetGroup class="text-primary"/>
             <span class="mx-1 text-xl font-bold text-gray-900">
-                {{ $t('Widget Group Management') }}
+                {{ $t('widget.widgetGroupManagement') }}
             </span>
         </div>
         <DraggableList :value="widgetGroups"

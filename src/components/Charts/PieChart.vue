@@ -1,9 +1,13 @@
 <template>
     <div class="bg-transparent rounded-lg pt-2"
          v-if="chartVisibility">
-        <highcharts :options="chartData"
-                    :callback="onInitChartCallback"
-                    class="chart-content_wrapper"/>
+        <highcharts
+            ref="pie-activity"
+            class="chart-content_wrapper"
+            :options="chartData"
+            :callback="onInitChartCallback"
+            :updateArgs="[true, true]"
+        />
     </div>
 </template>
 <script>
@@ -59,10 +63,15 @@
                 this.chartInstance = chart
             },
             tryPrintChart() {
-                this.chartInstance.print()
+                const divToPrint = this.$el.children[0]
+                const newWin = window.open();
+                newWin.document.write(divToPrint.innerHTML);
+                newWin.document.close();
+                newWin.focus();
+                newWin.print();
             },
             tryDownloadChart(type) {
-                this.chartInstance.exportChart({
+                this.$refs['pie-activity'].chart.exportChart({
                     type: type,
                 })
             },
@@ -114,7 +123,7 @@
                 const dataLabelsColor = this.getDataLabelsColor
                 
                 const series = [{
-                    name: this.$t('Agents'),
+                    name: this.$t('widget.agents'),
                     colorByPoint: true,
                     data: data,
                     dataLabels: {

@@ -22,24 +22,24 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.showStatsInPercentage">
-                            {{ $t('Show Stats in Percentage') }}
+                            {{ $t('widget.showStatsInPercentage') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueuesAsRow">
-                            {{ $t('Display queues as rows') }}
+                            {{ $t('widget.config.displayQueuesAsRows') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
-                            {{ $t('Display the row with totals') }}
+                            {{ $t('widget.displayTheRowWithTotals') }}
                         </el-checkbox>
                     </div>
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueGauge(widget)">
                 <div class="flex justify-between">
-                    <label>{{ $t('Maximum range value') }}</label>
+                    <label>{{ $t('widget.config.maximumRangeValue') }}</label>
                     <el-input-number :max="1000" :min="1" :step="2" type="number"
                                      v-model="model.WidgetLayout.maximumRange"/>
                 </div>
@@ -84,12 +84,12 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
-                            {{ $t('Display % of Others value') }}
+                            {{ $t('widget.displayPercentOfOthersValue') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.AbsoluteNumbers">
-                            {{ $t('Display absolute numbers') }}
+                            {{ $t('widget.displayAbsoluteNumbers') }}
                         </el-checkbox>
                     </div>
                 </div>
@@ -105,17 +105,17 @@
                 <el-collapse-item class="py-4" :title="$t('widget.layout')" name="layout">
                     <el-form-item v-if="isHtmlEditor(widget)">
                         <el-checkbox v-model="model.WidgetLayout.showLastUpdateDate">
-                            {{ $t('Display last update date') }}
+                            {{ $t('widget.displayLastUpdateDate') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item v-if="isNoteListWidget(widget)">
                         <el-checkbox v-model="model.WidgetLayout.displayWidgetTitle">
-                            {{ $t('Display widget title') }}
+                            {{ $t('widget.displayWidgetTitle') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
                         <div class="py-4">
-                            <label>{{ $t('Card title font size') }}</label>
+                            <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
                             <el-slider
                                 :marks="cardTitleBestOptions"
                                 :max="cardTitleFontSizes.max"
@@ -125,7 +125,7 @@
                             </el-slider>
                         </div>
                         <div class="py-4">
-                            <label>{{ $t('Card value font size') }}</label>
+                            <label>{{ $t('widget.config.cardValueFontSize') }}</label>
                             <el-slider
                                 :marks="cardValueBestOptions"
                                 :max="cardValueFontSizes.max"
@@ -136,7 +136,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
-                        <label>{{ $t('Status label font size') }}</label>
+                        <label>{{ $t('widget.statusLabelFontSize') }}</label>
                         <el-slider
                             :marks="textSizeBestOptions"
                             :max="textFontSizes.max"
@@ -145,7 +145,7 @@
                             v-model="model.WidgetLayout.labelFontSize">
                         </el-slider>
                         <div class="flex flex-row items-center pt-10">
-                            <label>{{ $t('Data labels color') }}</label>
+                            <label>{{ $t('widget.dataLabelsColor') }}</label>
                             <el-color-picker
                                 :predefine="predefinedColors"
                                 class="mx-4"
@@ -160,7 +160,7 @@
             </el-collapse>
 <!--            <el-form-item v-if="isPieWidget(widget)">-->
 <!--                <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">-->
-<!--                    {{ $t('Don`t count logged out agents') }}-->
+<!--                    {{ $t('widget.dontCountLoggedOutAgents') }}-->
 <!--                </el-checkbox>-->
 <!--            </el-form-item>-->
             <el-form-item>
@@ -257,9 +257,9 @@
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
-    
+
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
-    
+
     export default {
         inheritAttrs: false,
         mixins: [queueMixin],
@@ -296,8 +296,8 @@
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
                 model: {
-                    settings: realTimeSettings,
-                    colors: defaultColors,
+                    settings: cloneDeep(realTimeSettings),
+                    colors: cloneDeep(defaultColors),
                 },
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
@@ -384,9 +384,9 @@
             },
             onChange() {
                 this.$refs.updateWidget.validate((valid) => {
-                    
+
                     if (!valid) return
-                    
+
                     if (this.model.WidgetTime.type === 'relative') {
                         let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                         this.model.WidgetTime = {
@@ -394,47 +394,41 @@
                             ...widgetTime,
                         }
                     }
-                    
+
                     this.model.WidgetLayout = {
                         ...this.model.WidgetLayout,
                         ...{ settings: this.model.settings },
                         ...{ colors: this.model.colors },
                     }
-                    
+
                     try {
                         this.model.WidgetConfig.forEach((config) => {
-                            
+
                             if (config.ParameterType !== AUTO_COMPLETE_PARAMETER_TYPE) {
                                 delete config.WidgetParameterValueJson
                                 return
                             }
-                            
+
                             if (typeof config.WidgetParameterValue === 'object') {
                                 config.WidgetParameterValue['AccountList'] = [this.$store.state.entities.selectedAccountID]
                                 config.WidgetParameterValue = JSON.stringify(config.WidgetParameterValue)
                             }
-                            
+
                             if (typeof config.WidgetParameterValueJson !== 'object') {
                                 return
                             }
-                            
-                            const entityNegative = config.WidgetParameterValueJson['EntityNegative']
-                            
-                            if (entityNegative && entityNegative.length) {
-                                config.WidgetParameterValueJson['EntityPositive'] = config.WidgetParameterValueJson['EntityPositive'].filter((el) => !entityNegative.includes(el))
-                            }
-                            
+
                             if (config.WidgetParameterValueJson['EntityPositive'].length) {
                                 config.WidgetParameterValueJson['AccountList'] = [this.$store.state.entities.selectedAccountID]
                             } else {
                                 config.WidgetParameterValueJson['AccountList'] = []
                             }
-                            
+
                         })
                     } catch (e) {
                         console.warn(e)
                     }
-                    
+
                     this.$emit('on-update', this.model)
                     this.toggleVisibility(false)
                 })
@@ -450,17 +444,17 @@
         },
         mounted() {
             this.model = cloneDeep(this.widget)
-            
-            this.model.colors = this.model.WidgetLayout.colors || defaultColors
-            
+
+            this.model.colors = this.model.WidgetLayout.colors || cloneDeep(defaultColors)
+
             if (isAreaChartWidget(this.widget)) {
                 this.model.colors = { ...defaultAreaChartColors, ...this.model.WidgetLayout.colors }
             }
-            
+
             if (isRealtimeWidget(this.widget)) {
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
-            
+
             if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {
                 this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
                 this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]

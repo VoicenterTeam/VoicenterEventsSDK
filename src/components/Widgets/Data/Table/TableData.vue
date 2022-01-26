@@ -28,8 +28,8 @@
                 :columnsWithPercentage="columnsWithPercentage"
                 @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
-                    <div v-if="row.Recording" v-html="replaceLabelStringToIcon(row.Recording)" />
-                    <div v-else>{{$t('N/A')}}</div>
+                    <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
+                    <div v-else>{{$t('general.NA')}}</div>
                 </template>
                 <template v-slot:pagination>
                     <div class="flex items-center">
@@ -41,11 +41,11 @@
                             <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
                             <slot>
                                 <div class="w-40 mx-2">
-                                    <span class="text-xs flex justify-center pb-2">{{$t('Custom value')}}</span>
+                                    <span class="text-xs flex justify-center pb-2">{{$t('widget.table.customValue')}}</span>
                                     <div class="flex flex-row">
                                         <el-input size="mini" class="mx-1" v-model="customPageSize"></el-input>
                                         <el-button size="mini" class="mx-1" @click="applyCustomPageSize">
-                                            {{$t('Apply')}}
+                                            {{$t('general.apply')}}
                                         </el-button>
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
                     <div class="flex items-center w-48 px-1">
                         <el-input
                             clearable
-                            :placeholder="$t('Type text to filter')"
+                            :placeholder="$t('widget.data.typeTextToFilter')"
                             size="medium"
                             suffix-icon="el-icon-search"
                             v-model="filter"/>
@@ -78,7 +78,7 @@
                 </template>
                 <template v-slot:additional-data>
                     <p class="text-main-sm px-2 truncate" :style="getStyles">{{dataCounts}} / {{filteredDataLength}}
-                        {{$t('row(s)')}}</p>
+                        {{$t('widget.table.row(s)')}}</p>
                 </template>
             </data-table>
         </div>
@@ -99,7 +99,6 @@
     import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
-    import $axios from '@/api/apiConnection'
 
     export default {
         mixins: [dataTableMixin],
@@ -232,6 +231,15 @@
                     }
                 }
             },
+            getRecordingUrl(recordingLink) {
+                const div = document.createElement('div')
+                div.innerHTML = recordingLink
+                const anchor = div.querySelector('a')
+                if (anchor && anchor.href) {
+                    return anchor.href
+                }
+                return ''
+            },
             storePaginationSettings(pageSize) {
                 this.data.WidgetLayout['paginationSize'] = Number(pageSize)
                 this.$emit('on-update', this.data)
@@ -244,10 +252,6 @@
                 const pageSize = this.customPageSize
                 this.storePaginationSettings(pageSize)
             },
-            replaceLabelStringToIcon (record) {
-                const getLinkInnerHtmlWithoutLabel = record.split('>')[0]
-                return `${getLinkInnerHtmlWithoutLabel}><i class="el-icon-video-play text-3xl" />`
-            }
         },
         mounted() {
             if (this.data.DefaultRefreshInterval) {

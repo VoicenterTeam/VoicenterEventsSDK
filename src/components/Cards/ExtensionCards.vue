@@ -31,7 +31,7 @@
                         </el-dropdown>
                     </template>
                 </div>
-                <el-select :placeholder="$t('Sort by')" v-model="sortBy" class="mt-1">
+                <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" class="mt-1">
                     <template v-slot:prefix>
                         <span class="h-full flex items-center">
                             <i class="el-icon-d-caret"/>
@@ -78,9 +78,10 @@
     import ExtensionCard from '@/components/Cards/ExtensionCard'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { ADMIN_USER_ID, displayUsersRelatedWithAdmin } from '@/helpers/util'
-    
+    import EXTENSION_ID from '@/enum/parameters'
+
     const cardWidth = 256;
-    
+
     export default {
         components: {
             [Select.name]: Select,
@@ -166,7 +167,9 @@
                 return this.filteredExtensions
             },
             extensionToDisplay() {
-                return get(this.data.WidgetConfig, '[0].WidgetParameterValueJson.EntityPositive', [])
+                const extensionParameter = this.data.WidgetConfig.find(param => param.ParameterID === EXTENSION_ID)
+
+                return extensionParameter ? get(extensionParameter, 'WidgetParameterValueJson.EntityPositive', []) : []
             },
             sortedExtensions() {
                 let extensionToDisplay = this.extensionToDisplay
@@ -215,7 +218,7 @@
     height: 20px;
     border-radius: 5px;
     border: 2px solid var(--silver-color);
-    
+
     &:hover {
         background: var(--silver-color);
         border: 2px solid var(--primary-color);
@@ -247,7 +250,7 @@
 
 .el-row {
     margin-bottom: 20px;
-    
+
     &:last-child {
         margin-bottom: 0;
     }

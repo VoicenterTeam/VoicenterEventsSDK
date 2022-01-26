@@ -3,7 +3,7 @@
         <span>
             {{ recipient }}
         </span>
-        <el-tooltip :content="$t('Delete Recipient')"
+        <el-tooltip :content="$t('widget.deleteRecipient')"
                     placement="top">
             <div role="button"
                  :class="$rtl.isRTL ? 'mr-2 ml-auto': 'ml-2 mr-auto'"

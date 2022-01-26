@@ -3,31 +3,46 @@
          class="filter-items -mx-2 px-2">
         <el-radio-group class="pb-4" v-model="entityType">
             <el-radio v-for="option in SELECTIONS"
-                      v-bind="option"
-                      :key="option.label">
+                v-bind="option"
+                :key="option.label">
                 {{ option.text }}
             </el-radio>
         </el-radio-group>
         <div>
-            <div class="flex">
-                <component class="w-4-5 h-4-5 text-primary"
-                           :is="getEntityIcon"/>
-                <span class="mx-1">
-                    {{ model.ParameterPrettyName }}
-                </span>
+            <div class="flex justify-between w-full">
+                <div class="flex items-center">
+                    <component class="w-4-5 h-4-5 text-primary"
+                        :is="getEntityIcon"/>
+                    <span class="mx-1">
+                        {{ model.ParameterPrettyName }}
+                    </span>
+                </div>
+                <div
+                    v-if="model.ParameterDescription"
+                    class="h-12 flex items-center category-wrapper hover:text-primary cursor-pointer"
+                >
+                    <el-tooltip
+                        :content="model.ParameterDescription"
+                        :open-delay="200"
+                        placement="top">
+                        <span class="mx-2 truncate">
+                            <IconInfo/>
+                        </span>
+                    </el-tooltip>
+                </div>
             </div>
             <base-select class="w-full py-2"
-                         filterable
-                         :loading="loading"
-                         :v-on="$listeners"
-                         :collapse-tags="collapseTags"
-                         multiple
-                         :value="autocompleteValue"
-                         @change="onAutocompleteChange"
-                         :data="options"
-                         :label-key="templateConfig.label"
-                         :second-label-key="templateConfig.second_label"
-                         :value-key="templateConfig.value">
+                filterable
+                :loading="loading"
+                :v-on="$listeners"
+                :collapse-tags="collapseTags"
+                multiple
+                :value="autocompleteValue"
+                @change="onAutocompleteChange"
+                :data="options"
+                :label-key="templateConfig.label"
+                :second-label-key="templateConfig.second_label"
+                :value-key="templateConfig.value">
             </base-select>
         </div>
     </div>
@@ -38,14 +53,10 @@
     import { filters } from '@/enum/widgetTemplateConfigs'
     import { Option, Radio, RadioGroup, Select } from 'element-ui'
     import { getOptionsList, getTemplateConfig } from '@/helpers/entitiesList'
-    
+
     const ENTITY_POSITIVE_KEY = 'EntityPositive'
     const ENTITY_NEGATIVE_KEY = 'EntityNegative'
-    const defaultParameterJson = {
-        EntityPositive: [],
-        EntityNegative: [],
-        AccountList: [],
-    }
+
     export default {
         components: {
             [Select.name]: Select,
@@ -68,11 +79,11 @@
                 SELECTIONS: [
                     {
                         label: ENTITY_POSITIVE_KEY,
-                        text: this.$t('Include the selected'),
+                        text: this.$t('autocomplete.includeTheSelected'),
                     },
                     {
                         label: ENTITY_NEGATIVE_KEY,
-                        text: this.$t('Exclude the selected'),
+                        text: this.$t('autocomplete.excludeTheSelected'),
                     },
                 ],
                 entityType: ENTITY_POSITIVE_KEY,
@@ -80,10 +91,11 @@
         },
         computed: {
             autocompleteValue() {
-                if (this.model.WidgetParameterValueJson) {
-                    return this.model.WidgetParameterValueJson[this.entityType]
+                if (this.model.WidgetParameterJson === 1) {
+                    return get(this.model.WidgetParameterValueJson, this.entityType, [])
+                } else {
+                    return get(JSON.parse(this.model.WidgetParameterValue), this.entityType, [])
                 }
-                return get(this.model.WidgetParameterValue, this.entityType, [])
             },
             getEntityIcon() {
                 return filters[this.model.ParameterName.toLowerCase()].icon
@@ -92,28 +104,19 @@
         methods: {
             get,
             getData() {
-                try {
-                    this.options = getOptionsList(this.model.ParameterName)
-                    if (typeof this.model.WidgetParameterValue === 'string') {
-                        this.model.WidgetParameterValue = JSON.parse(this.model.WidgetParameterValue) || ''
-                    }
-                    if (!this.model.WidgetParameterValueJson) {
-                        this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
-                    }
-                } catch (e) {
-                    if (!this.model.WidgetParameterValueJson) {
-                        this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
-                    }
-                    console.warn(e)
-                } finally {
-                    this.loading = false
-                }
+                this.options = getOptionsList(this.model.ParameterName)
+
+                this.loading = false
             },
             onAutocompleteChange(value) {
-                if (!this.model.WidgetParameterValueJson) {
-                    this.$set(this.model, 'WidgetParameterValueJson', cloneDeep(defaultParameterJson))
+                if (this.model.WidgetParameterJson === 1) {
+                    this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
+                } else {
+                    const currentValue = JSON.parse(this.model.WidgetParameterValue)
+                    currentValue[this.entityType] = cloneDeep(value)
+
+                    this.model.WidgetParameterValue = JSON.stringify(value)
                 }
-                this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
             },
         },
         mounted() {

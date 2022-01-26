@@ -6,10 +6,10 @@
                 <slot>
                     <div class="items-center flex justify-between md:h-23-5">
                         <div class="flex items-center xl:-mx-24 w-full">
-                            <div @click="onDiscard(true)"
+                            <div @click="onDiscard"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                                 <IconDirLeft/>
-                                <span class="mx-1">{{ $t('Back') }}</span>
+                                <span class="mx-1">{{ $t('general.back') }}</span>
                             </div>
                             <span class="mx-4 lg:mx-8">
                             <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
@@ -19,7 +19,7 @@
                             </span>
                             <div class="flex flex-col w-full flex-1">
                                 <span class="text-xl font-bold text-gray-900">
-                                    {{ $t('Dashboard Settings') }}
+                                    {{ $t('dashboard.dashboardSettings') }}
                                 </span>
                                 <div class="flex justify-center items-center w-full md:hidden flex-col">
                                     <base-button type="danger"
@@ -36,10 +36,10 @@
                                     <base-button fixed-width="w-37"
                                                  type="primary"
                                                  :loading="loading"
-                                                 @click="onSubmit()">
+                                                 @click="onSubmit">
                                         <div class="flex items-center">
                                             <IconSave class="mx-1"/>
-                                            <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
+                                            <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
                                         </div>
                                     </base-button>
                                 </div>
@@ -60,10 +60,10 @@
                             <base-button fixed-width="w-37"
                                          type="primary"
                                          :loading="loading"
-                                         @click="onSubmit(true)">
+                                         @click="onSubmit">
                                 <div class="flex items-center">
                                     <IconSave class="mx-1"/>
-                                    <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
+                                    <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
                                 </div>
                             </base-button>
                         </div>
@@ -124,10 +124,10 @@
             },
         },
         methods: {
-            async onDiscard(goBack = false) {
+            async onDiscard(goBack = true) {
                 if (goBack) {
                     await this.$store.dispatch('dashboards/getDashboards')
-                    this.$router.push('/')
+                    await this.$router.push('/')
                     return
                 }
                 this.discardLayoutChanges()
@@ -151,7 +151,7 @@
                     this.loading = false
                 }
             },
-            async onSubmit(goBack = false) {
+            async onSubmit(goBack = true) {
                 try {
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
@@ -170,12 +170,14 @@
                     const dashboard = await DashboardApi.find(DashboardID)
                     await this.updateState(dashboard)
                     if (goBack) {
-                        this.$router.push('/')
+                        await this.$store.dispatch('dashboards/getDashboards')
+                        await this.$router.push('/')
                     }
                 } catch (e) {
                     console.warn(e)
                 } finally {
                     this.loading = false
+
                 }
             },
             async onChangeLayout(layout) {

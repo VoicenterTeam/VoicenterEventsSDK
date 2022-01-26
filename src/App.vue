@@ -27,7 +27,6 @@ export default {
         await this.$store.dispatch('layout/setupLayouts')
         await this.$store.dispatch('layout/getGlobalLayout')
         this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
-        this.$store.dispatch('dashboards/mapAllDashboardsWidgets')
     },
     computed: {
         layout() {

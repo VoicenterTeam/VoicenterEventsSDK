@@ -33,7 +33,7 @@
             <div class="flex flex-col items-center">
                 <IconNoData class="h-56 w-56"/>
                 <p class="text-gray-600 max-w-lg text-center">
-                    {{ $t('WidgetGroup no Data') }}
+                    {{ $t('dashboard.widgetGroupNoData') }}
                 </p>
             </div>
         </div>
@@ -44,7 +44,7 @@
     import Widget from './Widget'
     import bus from '@/event-bus/EventBus'
     import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
-    
+
     export default {
         components: {
             Widget,
@@ -100,24 +100,24 @@
                     return
                 }
                 const rowCount = gridStackContainer.getAttribute('data-gs-current-row')
-                
+
                 let GridLayout = {
                     x: 0,
                     y: Number(rowCount),
                     width: 12,
                     height: 2,
                 }
-                
+
                 widget['WidgetLayout'] = {
                     ...widget['WidgetLayout'],
                     GridLayout,
                 }
-                
+
                 let objectToEmit = {
                     widgets: [widget],
                     group: this.widgetGroup,
                 }
-                
+
                 this.$emit('add-widgets-to-group', objectToEmit)
             },
             removeWidget(widget) {
@@ -129,7 +129,7 @@
             },
             findMatchingGrid() {
                 const matchingGridIndex = window.grids.findIndex(grid => grid.el.id === this.gridId)
-                
+
                 return {
                     grid: window.grids[matchingGridIndex],
                     index: matchingGridIndex,
@@ -141,22 +141,22 @@
                 })
             },
             async initWindowGrid() {
-                await this.nextTick()
-                
+                // await this.nextTick()
+
                 const gridOptions = {
                     acceptWidgets: true,
                 }
-                
+
                 this.grid = window.GridStack.init(gridOptions, this.$refs.widgetListContainer)
-                
+
                 if (!this.grid) {
                     return
                 }
-                
+
                 this.grid.movable('.grid-stack-item', this.editable)
                 this.grid.resizable('.grid-stack-item', this.editable)
                 window.grids.push(this.grid)
-                
+
                 this.resizeEventEmitter()
                 this.onDragStartEvent()
                 this.initIntersectionObserver()
@@ -181,11 +181,11 @@
                 widgets.forEach((widget) => {
                     this.inViewById[widget.WidgetID] = true
                     const isPresent = this.widgets.find(w => w.WidgetID === widget.WidgetID)
-                    
+
                     if (!isPresent) {
                         return
                     }
-                    
+
                     this.grid.makeWidget(`#${widget.WidgetID}`)
                 })
             },
@@ -207,7 +207,7 @@
             },
             initIntersectionObserver() {
                 const sections = document.querySelectorAll('.grid-stack-item')
-                
+
                 const options = {
                     root: null,
                     threshold: 0.1,
@@ -226,20 +226,20 @@
                     })
                     this.inViewById = inViewById
                 }
-                
+
                 const observer = new IntersectionObserver(callback, options)
-                
+
                 sections.forEach((section) => {
                     observer.observe(section)
                 })
-                
+
                 this.observer = observer
             },
-            
+
         },
         async mounted() {
             await this.initWindowGrid()
-            
+
             bus.$on('added-widgets', async (widgets) => {
                 await this.addWidgetsToGrid(widgets)
             })

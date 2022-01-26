@@ -6,10 +6,10 @@
                 <div class="flex">
                     <IconLayoutSelection class="text-primary"/>
                     <span class="mx-1 text-gray-900 text-main-sm font-medium truncate">
-                        {{ $t('Layout Selection') }}
+                        {{ $t('layout.layoutSelection') }}
                     </span>
                 </div>
-                <el-tooltip :content="$t('Active/Inactive layouts')"
+                <el-tooltip :content="$t('layout.activeOrInactiveLayouts')"
                             placement="top">
                     <el-switch :value="activeLayouts"
                                @change="onChangeLayoutType"/>
@@ -51,7 +51,7 @@
                                                     <div @click.stop="onNewLayout"
                                                          class="mx-1 edit-justify-end items-center flex text-green-300">
                                                         <el-tooltip class="item" effect="dark"
-                                                                    :content="$t('Edit layout')"
+                                                                    :content="$t('layout.editLayout')"
                                                                     placement="top">
                                                             <IconPencil class="w-4-5 h-4-5"/>
                                                         </el-tooltip>
@@ -59,7 +59,7 @@
                                                     <div @click.stop="tryDeleteLayout(layout)"
                                                          class="edit-justify-end items-center flex text-red-300">
                                                         <el-tooltip class="item" effect="dark"
-                                                                    :content="$t('Move layout to bin')"
+                                                                    :content="$t('layout.moveLayoutToBin')"
                                                                     placement="top">
                                                             <IconDelete class="w-4-5 h-4-5"/>
                                                         </el-tooltip>
@@ -69,7 +69,7 @@
                                         </template>
                                         <template v-else>
                                             <el-tooltip
-                                                :content="$t('This is a default config, please add a new one if you want to edit it')"
+                                                :content="$t('dashboard.cantEditDefaultConfigWarning')"
                                                 placement="top">
                                                 <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
                                             </el-tooltip>
@@ -79,7 +79,7 @@
                                 <template v-if="!activeLayouts">
                                     <div class="edit-flex justify-end items-center cursor-pointer"
                                          @click.stop="tryRestoreLayout(layout)">
-                                        <el-tooltip :content="$t('Restore layout')"
+                                        <el-tooltip :content="$t('layout.restoreLayout')"
                                                     placement="top">
                                             <RotateCcwIcon class="text-gray-400 w-4 hover:text-primary"/>
                                         </el-tooltip>
@@ -93,7 +93,7 @@
                             class="cursor-pointer text-gray-550 hover:text-primary text-sm font-medium border border-dashed hover:border-primary rounded justify-center py-2 flex items-center w-full">
                             <IconAdd class="mb-0-5"/>
                             <div class="mx-1" @click="newLayout">
-                                {{ $t('Create new') }}
+                                {{ $t('layout.createNew') }}
                             </div>
                         </div>
                     </div>
@@ -102,8 +102,8 @@
         </div>
         <ConfirmDialog v-if="showConfirmDialog"
                        :visible.sync="showConfirmDialog"
-                       :description="$t('Are you sure you want enable layout?')"
-                       :title="$t('Update status')">
+                       :description="$t('layout.enableLayoutConfirmation')"
+                       :title="$t('layout.updateStatus')">
             <template v-slot:footer-actions>
                 <base-button class="mx-4"
                              @click="onCancel"
@@ -118,7 +118,7 @@
                              :loading="localLoading">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ 'Confirm' }}</span>
+                        <span class="mx-1 text-base font-bold">{{ 'common.confirm' }}</span>
                     </div>
                 </base-button>
             </template>

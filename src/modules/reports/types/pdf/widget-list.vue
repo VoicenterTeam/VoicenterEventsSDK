@@ -109,7 +109,6 @@
             },
             checkIfNextRowNotTruncated(lastWidgetHeight, lastWidgetIndex) {
                 let cols = 0
-                console.log(lastWidgetHeight)
                 while (cols < 12 && lastWidgetIndex <= this.allWidgets.length) {
                     const widget = this.allWidgets[++lastWidgetIndex]
                     if (!widget) {

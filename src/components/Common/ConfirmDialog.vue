@@ -6,7 +6,7 @@
         <template v-slot:title>
             <slot name="title">
                 <h3 class="text-2xl font-semibold text-gray-700">
-                    {{ $t(title) || $t('Delete Confirmation') }}
+                    {{ $t(title) || $t('general.deleteConfirmation') }}
                 </h3>
             </slot>
         </template>
@@ -28,7 +28,7 @@
                                  fixed-width="w-37">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
+                            <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
                         </div>
                     </base-button>
                     <base-button fixed-width="w-37"

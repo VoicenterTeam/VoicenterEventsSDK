@@ -55,12 +55,6 @@
     const ONE_REM_IN_PX = 16
 
     export default {
-        props: {
-            template: {
-                type: Object,
-                default: () => ({}),
-            },
-        },
         computed: {
             getTemplate() {
                 return this.$store.getters['widgetCreation/getTemplateToPreview']
@@ -73,44 +67,7 @@
             return {
                 loading: false,
                 activeItemNumber: 0,
-                templateHelp: {
-                    WidgetName: 'Table - User Preformance',
-                    WidgetTitle: 'Table - User Preformance',
-                    WidgetUsage: 'To track each user and it overall data and performance, including calls, breaks, and much more.',
-                    WidgetDescription: 'Shows overall performance and data per user, in a table view.',
-                    WidgetHelpPicture: 'IconThelpCounter',
-                    WidgetTemplateHelpID: 2,
-                    Items: [
-                        {
-                            ItemDescription: 'place holder text we will change it',
-                            ItemIcon: 'Default',
-                            ItemName: 'User:',
-                            ItemNumber: 1,
-                            ItemPositionX: 1,
-                            ItemPositionY: 1,
-                            WidgetTemplateHelpID: 7,
-                            WidgetTemplateHelpItemID: 1,
-                        }, {
-                            ItemDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab dolorum eaque earum facilis in nostrum perspiciatis qui quia repellendus rerum.',
-                            ItemIcon: 'Default',
-                            ItemName: 'User:',
-                            ItemNumber: 2,
-                            ItemPositionX: 12.5,
-                            ItemPositionY: 1.4,
-                            WidgetTemplateHelpID: 7,
-                            WidgetTemplateHelpItemID: 2,
-                        }, {
-                            ItemDescription: 'place holder text we will change it',
-                            ItemIcon: 'Default',
-                            ItemName: 'Hold Percentage:',
-                            ItemNumber: 3,
-                            ItemPositionX: 2,
-                            ItemPositionY: 6.5,
-                            WidgetTemplateHelpID: 7,
-                            WidgetTemplateHelpItemID: 3,
-                        },
-                    ],
-                },
+                templateHelp: {},
             }
         },
         methods: {
@@ -130,12 +87,13 @@
                 this.activeItemNumber = 0
             },
             getHelpByWidgetsTemplateID() {
-                const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](this.template.TemplateID)
-                this.templateHelp = get(helpData, 'Help.Items', [])
+                const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](this.getTemplate.template.TemplateID)
+
+                this.templateHelp = get(helpData, 'Help', {})
             },
         },
         mounted() {
-            //this.getHelpByWidgetsTemplateID()
+            this.getHelpByWidgetsTemplateID()
         },
     }
 </script>

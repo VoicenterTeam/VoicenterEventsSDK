@@ -6,11 +6,18 @@ import store from '@/store/store'
 import { Notification } from 'element-ui'
 import i18n from '@/i18n'
 
-export async function runDashboardOperations(operations, dashboard) {
+export async function runDashboardOperations(operations, dashboard, clonedDashboard) {
     if (operations.all().length) {
         try {
             let dashboardID = dashboard.DashboardID
-            for (const operation of operations.all()) {
+            const operationsUpdateWidgetsGroup = getAllWidgetGroupsNeedToUpdate(operations)
+            const operationsUpdateWidgetPosition = getAllWidgetsPositionNeedToUpdate(operations)
+            const updateWidgetsGroupTitle = getAllWidgetGroupsTitleNeedToUpdate(operations, clonedDashboard)
+            const allOperationsWithoutUpdate = operations
+                .all()
+                .filter(el => el.type !== 'update')
+
+            for (const operation of allOperationsWithoutUpdate) {
                 switch (operation.target) {
                     case targets.WIDGET_GROUP:
                         switch (operation.type) {
@@ -18,9 +25,6 @@ export async function runDashboardOperations(operations, dashboard) {
                                 delete operation.payload.IsNew
                                 const { WidgetGroupID } = await WidgetGroupsApi.store(operation.payload)
                                 await DashboardApi.addWidgetGroup(dashboardID, WidgetGroupID)
-                                break;
-                            case types.UPDATE:
-                                await WidgetGroupsApi.update(operation.payload)
                                 break;
                             case types.REMOVE:
                                 await DashboardApi.removeWidgetGroup(dashboardID, operation.payload.WidgetGroupID)
@@ -37,13 +41,9 @@ export async function runDashboardOperations(operations, dashboard) {
                             case types.ADD:
                                 await WidgetGroupsApi.addWidget(operation.meta.parentID, operation.payload.WidgetID)
                                 break;
-                            case types.MOVED:
-                            case types.UPDATE:
-                                await WidgetApi.update(operation.payload)
-                                break;
                             case types.MOVED_OUT:
                             case types.REMOVE:
-                                await WidgetGroupsApi.removeWidget(operation.meta.parentID, operation.payload.WidgetID)
+                                await WidgetApi.destroy(operation.payload.WidgetID)
                                 break;
                             default:
                                 break;
@@ -53,11 +53,22 @@ export async function runDashboardOperations(operations, dashboard) {
                         break;
                 }
             }
+
+            if (operationsUpdateWidgetsGroup.length) {
+                await WidgetGroupsApi.reorder(operationsUpdateWidgetsGroup)
+            }
+            if (operationsUpdateWidgetPosition.length) {
+                await WidgetApi.updatePosition(operationsUpdateWidgetPosition)
+            }
+            if (updateWidgetsGroupTitle && Object.keys(updateWidgetsGroupTitle).length) {
+                await WidgetGroupsApi.update(updateWidgetsGroupTitle, true)
+            }
+
             return getDashboard(dashboardID)
         } catch (e) {
             Notification.error({
-                title: i18n.t('Something went wrong.'),
-                message: i18n.t('Please refresh page and try again.'),
+                title: i18n.t('dashboard.somethingWentWrong'),
+                message: i18n.t('dashboard.pleaseRefreshPageAndTryAgain'),
             })
             store.dispatch('dashboards/setLoadingData', false)
         }
@@ -72,4 +83,60 @@ export async function updateDashboard(dashboard) {
 
 function getDashboard(dashboardID) {
     return DashboardApi.find(dashboardID)
+}
+
+function getAllWidgetGroupsNeedToUpdate(operations) {
+    return operations
+        .all()
+        .filter(el => el.type === 'update' && el.target === 'WidgetGroup')
+        .map(el => {
+            return {
+                WidgetGroupID: el.payload.WidgetGroupID,
+                Order: el.payload.Order 
+            }
+        })
+}
+
+function getAllWidgetsPositionNeedToUpdate(operations) {
+    return  operations
+        .all()
+        .filter(el => (el.type === 'update' || el.type === 'moved') && el.target === 'Widget')
+        .map(el => {
+            return { 
+                WidgetID: el.payload.WidgetID,
+                GridLayout: el.payload.WidgetLayout.GridLayout
+            }
+        })
+}
+
+function getAllWidgetGroupsTitleNeedToUpdate (operations, clonedDashboard) {
+    let newWidgetGroup = {}
+    const createWidgetGroup = (widgetGroup) => {
+        return  {
+            WidgetsGroupID: widgetGroup.WidgetGroupID,
+            WidgetsGroupTitle: widgetGroup.WidgetGroupTitle
+        }
+    }
+
+    operations
+        .all()
+        .filter(el => el.type === 'update' && el.target === 'WidgetGroup')
+        .map(el => {
+            return {
+                WidgetGroupID: el.payload.WidgetGroupID,
+                WidgetGroupTitle: el.payload.WidgetGroupTitle 
+            }
+        })
+        .forEach(widgetGroup => {
+            const findTheSameElement = clonedDashboard.WidgetGroupList.find(el => +el.WidgetGroupID === +widgetGroup.WidgetGroupID && el.WidgetGroupTitle !== widgetGroup.WidgetGroupTitle)
+            const allClonedWidgetGroupIds = clonedDashboard.WidgetGroupList.map(el => el.WidgetGroupID)
+            const isOldElementToUpdate = findTheSameElement && Object.keys(findTheSameElement).length
+            const isNewElementToUpdate = allClonedWidgetGroupIds.indexOf(widgetGroup.WidgetGroupID) === -1 && widgetGroup.WidgetGroupTitle
+
+            if (isOldElementToUpdate || isNewElementToUpdate) {
+                newWidgetGroup = createWidgetGroup(widgetGroup)
+            }
+        })
+
+    return  newWidgetGroup
 }
