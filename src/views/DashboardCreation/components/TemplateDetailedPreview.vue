@@ -22,7 +22,7 @@
                     <IconTimerSm class="text-primary"/>
                 </i>
                 <span class="mx-2">
-                    {{ $t('Timers') }}
+                    {{ $t('widget.timers') }}
                 </span>
             </div>
             <div v-html="getReportSettings"/>
@@ -30,7 +30,7 @@
             <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
             <div class="flex items-center mt-4 mb-2">
                 <IconDashboardColor class="text-primary"/>
-                <span class="mx-1">{{ $t('Colors') }}</span>
+                <span class="mx-1">{{ $t('dashboard.colors') }}</span>
             </div>
             <div class="flex flex-col">
                 <div v-for="group in getColorParameters"
@@ -80,14 +80,14 @@
             getTimeSettings() {
                 const MinRefreshInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'MinRefreshInterval')
                 const ReportInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportInterval')
-                return `<p>${this.$t('Minimum refresh interval for real time widgets')}: <b>${MinRefreshInterval.Value}s</b>,  </p> <p>${this.$t('Switch category every')}: <b>${ReportInterval.Value}s</b></p>`
+                return `<p>${this.$t('widget.minimumRefreshIntervalForRealTimeWidgets')}: <b>${MinRefreshInterval.Value}s</b>,  </p> <p>${this.$t('dashboard.switchCategoryEvery')}: <b>${ReportInterval.Value}s</b></p>`
             },
             getReportSettings() {
                 const ReportSwitching = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportSwitching')
                 const ReportRefresh = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportRefresh')
                 const _ReportSwitching = ReportSwitching ? 'enabled' : 'disabled'
                 const _ReportRefresh = ReportRefresh ? 'enabled' : 'disabled'
-                return `<p>${this.$t('Category switching')}: <b>${_ReportSwitching}</b>, </p> <p> ${this.$t('Category refresh')}: <b>${_ReportRefresh}</b></p>`
+                return `<p>${this.$t('dashboard.categorySwitching')}: <b>${_ReportSwitching}</b>, </p> <p> ${this.$t('dashboard.categoryRefresh')}: <b>${_ReportRefresh}</b></p>`
             },
             getColorParameters() {
                 const group = this.groupKeys['Colors']

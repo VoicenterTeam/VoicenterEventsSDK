@@ -60,14 +60,14 @@
                 <div class="flex items-center w-48 px-1">
                     <el-input
                         clearable
-                        :placeholder="$t('Type text to filter')"
+                        :placeholder="$t('widget.data.typeTextToFilter')"
                         size="medium"
                         suffix-icon="el-icon-search"
                         v-model="filter"/>
                 </div>
             </template>
             <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{ tableData.length }} {{ $t('row(s)') }}</p>
+                <p class="text-main-sm px-2">{{ tableData.length }} {{ $t('widget.table.row(s)') }}</p>
             </template>
         </data-table>
     </div>

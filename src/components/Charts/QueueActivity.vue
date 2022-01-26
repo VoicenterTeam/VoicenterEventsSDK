@@ -122,7 +122,7 @@
                             let innerRadius = reversedCounts ? '63%' : '88%'
                             
                             let answerData = {
-                                name: this.$t('Answer'),
+                                name: this.$t('queue.answer'),
                                 data: [{
                                     color: AnswerCountStyles['color'],
                                     radius: radius,
@@ -155,7 +155,7 @@
                             let innerRadius = reversedCounts ? '88%' : '63%'
                             
                             let InSLAData = {
-                                name: this.$t('In SLA'),
+                                name: this.$t('queue.inSLA'),
                                 data: [{
                                     color: InSLACountStyles['color'],
                                     radius: radius,
@@ -181,7 +181,7 @@
                     
                     if (activitiesToDisplay.includes('AnswerCount')) {
                         let index = reversedCounts ? 1 : 0
-                        dataLabels[index] = `<span style="font-size: ${AnswerCountStyles['fontSize'] + 'px'}; color: ${AnswerCountStyles['color']}">${answerPercentage}%<br>${this.$t('Answer')}</span>`
+                        dataLabels[index] = `<span style="font-size: ${AnswerCountStyles['fontSize'] + 'px'}; color: ${AnswerCountStyles['color']}">${answerPercentage}%<br>${this.$t('queue.answer')}</span>`
                         yMargin = AnswerCountStyles['fontSize']
                     }
                     

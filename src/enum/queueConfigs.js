@@ -4,18 +4,18 @@ export const activeCallColumns = [{
     prop: 'QueueName',
     fixed: false,
     align: 'center',
-    label: i18n.t('Queue Name'),
+    label: i18n.t('queue.queueName'),
     sortable: true
 }, {
     prop: 'CallerNumber',
     fixed: false,
     align: 'center',
-    label: i18n.t('Caller Number'),
+    label: i18n.t('queue.callerNumber'),
 }, {
     prop: 'CallerName',
     fixed: false,
     align: 'center',
-    label: i18n.t('Caller Name'),
+    label: i18n.t('queue.callerName'),
     sortable: true
 }, {
     prop: 'CallerID',
@@ -27,7 +27,7 @@ export const activeCallColumns = [{
     prop: 'WaitingTime',
     fixed: false,
     align: 'center',
-    label: i18n.t('Waiting Time'),
+    label: i18n.t('queue.waitingTime'),
     sortable: true
 }]
 

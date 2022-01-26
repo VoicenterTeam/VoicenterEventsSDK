@@ -5,7 +5,7 @@
                  @click="tryAddWidgets">
                 <IconAddWidget/>
                 <div class="mx-2">
-                    {{ $t('Add New Widgets') }}
+                    {{ $t('widget.addNewWidgets') }}
                 </div>
             </div>
             <template v-if="getLayoutType === layoutTypes.TABBED">
@@ -50,12 +50,12 @@
                        :visible.sync="showConfirmDialog">
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Save Changes') }}
+                    {{ $t('general.saveChanges') }}
                 </h3>
             </template>
             <div class="flex justify-center w-full">
                 <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p">
-                    {{ $t('Do you want to save changes in the existing theme or save as a new?') }}
+                    {{ $t('layout.saveChangesInTheExistingThemeOrNew') }}
                 </div>
             </div>
             <template v-slot:footer-actions>
@@ -66,12 +66,12 @@
                                 fixed-width="w-37">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
+                            <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
                         </div>
                     </base-button>
                     <base-button @click="addAllWidgetsFromCategory"
                                  key="store">
-                        {{ $t('Confirm') }}
+                        {{ $t('common.confirm') }}
                     </base-button>
                 </slot>
             </template>

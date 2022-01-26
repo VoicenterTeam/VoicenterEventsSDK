@@ -12,23 +12,23 @@ export const types = {
 
 export const options = [
     {
-        label: i18n.t('Counter'),
+        label: i18n.t('widget.counter'),
         value: types.COUNTER
     },
     {
-        label: i18n.t('Speedometer'),
+        label: i18n.t('widget.speedometer'),
         value: types.SPEEDOMETER
     },
     {
-        label: i18n.t('Table'),
+        label: i18n.t('widget.table'),
         value: types.TABLE
     },
     {
-        label: i18n.t('Lines'),
+        label: i18n.t('widget.lines'),
         value: types.LINES
     },
     {
-        label: i18n.t('Pie'),
+        label: i18n.t('widget.pie'),
         value: types.PIE
     },
     {

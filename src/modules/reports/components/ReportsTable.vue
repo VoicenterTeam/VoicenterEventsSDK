@@ -16,7 +16,7 @@
                      @click="onAdd">
                     <div class="flex items-center">
                         <IconAddReport class="w-4 h-4 mx-1"/>
-                        <span class="text-main-sm leading-4">{{ $t('Add New Report') }}</span>
+                        <span class="text-main-sm leading-4">{{ $t('report.addNewReport') }}</span>
                     </div>
                 </div>
             </template>
@@ -29,21 +29,21 @@
             <template v-slot:actions="{row, index}">
                 <div class="flex items-center justify-center"
                      :key="`action-${index}`">
-                    <el-tooltip :content="$t('Duplicate Report')"
+                    <el-tooltip :content="$t('report.duplicateReport')"
                                 placement="top">
                             <span class="cursor-pointer text-primary hover:opacity-75"
                                   @click="onDuplicate(row)">
                                 <IconDuplicate class="w-4 h-4"/>
                             </span>
                     </el-tooltip>
-                    <el-tooltip :content="$t('Edit Report')"
+                    <el-tooltip :content="$t('widget.editReport')"
                                 placement="top">
                             <span class="cursor-pointer mx-2 text-green hover:opacity-75"
                                   @click="onEdit(row)">
                                 <IconPencil class="w-4 h-4"/>
                             </span>
                     </el-tooltip>
-                    <el-tooltip :content="$t('Delete Report')"
+                    <el-tooltip :content="$t('widget.deleteReport')"
                                 placement="top">
                             <span class="cursor-pointer text-red hover:opacity-75"
                                   @click="onDelete(row)">
@@ -158,7 +158,7 @@
                         width: '50',
                     },
                     {
-                        label: this.$t('Report Name'),
+                        label: this.$t('report.reportName'),
                         prop: 'ReportName',
                         align: 'center',
                         minWidth: 50,
@@ -167,7 +167,7 @@
                         sortable: true,
                     },
                     {
-                        label: this.$t('Widget Name'),
+                        label: this.$t('widget.widgetName'),
                         prop: 'ReportItemList',
                         align: 'center',
                         minWidth: 100,
@@ -175,7 +175,7 @@
                         sortable: true,
                     },
                     {
-                        label: this.$t('Schedule'),
+                        label: this.$t('report.schedule'),
                         prop: 'ReportTriggerList',
                         align: 'center',
                         minWidth: 100,
@@ -190,7 +190,7 @@
                         icon: 'IconCondition',
                     },
                     {
-                        label: this.$t('Action'),
+                        label: this.$t('general.action'),
                         prop: 'actions',
                         align: 'center',
                         icon: 'IconActionColumn',
