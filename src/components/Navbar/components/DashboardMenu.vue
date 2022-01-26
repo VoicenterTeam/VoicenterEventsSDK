@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex relative w-64 dashboard-title_wrapper" v-if="!editMode">
+        <div class="flex relative w-64 dashboard-title_wrapper" v-if="!editMode && activeDashboard">
             <button @click.stop="triggerMenu"
                     class="flex w-full items-center rounded cursor-pointer focus:outline-none justify-between px-4">
                 <div class="text-main-sm md:text-main-lg text-gray-500 w-56 truncate flex items-center">
@@ -11,7 +11,7 @@
                     <span class="mx-2">{{ activeDashboard.DashboardTitle }}</span>
                 </div>
                 <div class="flex">
-                    <IconArrowDown class="text-gray-500 transition text-primary"
+                    <IconArrowDown class="transition text-primary"
                     :class="{'is-expanded': showMenu}"/>
                 </div>
             </button>
@@ -39,8 +39,9 @@
                 </div>
             </fade-transition>
         </div>
-        <div v-else class="flex items-center justify-center">
-            <span class="text-gray-950 font-bold text-2xl">{{ activeDashboard.DashboardTitle }}</span>
+        <div v-else-if="editMode || !activeDashboard" class="flex items-center justify-center">
+            <span class="text-gray-950 font-bold text-2xl" v-if="activeDashboard">{{ activeDashboard.DashboardTitle }}</span>
+            <span class="text-gray-950 font-bold text-2xl" v-else>{{ $t('common.newDashboard') }}</span>
             <el-tooltip class="item" effect="dark" :content="$t('common.newDashboard')" placement="top">
                 <span
                     class="py-3 px-4 text-primary cursor-pointer flex items-center"
@@ -75,7 +76,7 @@
         },
         computed: {
             activeDashboard() {
-                return this.$store.getters['dashboards/getActiveDashboard'] || { DashboardTitle: '--' }
+                return this.$store.getters['dashboards/getActiveDashboard'] || ''
             },
             allDashboards() {
                 return this.$store.state.dashboards.allDashboards
