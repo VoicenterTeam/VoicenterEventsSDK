@@ -623,12 +623,17 @@ export default {
 .input-label-wrapper {
     @apply w-full inline-flex items-center justify-between;
 
+    .input-label {
+        display: flex;
+        align-items: center;
+    }
+
     .label-left-icon {
-        @apply inline-flex items-center;
+        @apply text-primary inline-flex items-center;
     }
 
     .label-text {
-        @apply relative mr-4;
+        @apply text-default-text relative mr-4;
     }
 
     .required-label-icon {

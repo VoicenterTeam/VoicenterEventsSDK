@@ -71,7 +71,7 @@
                                 <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
                                         <base-button @click="onDiscard(true)"
-                                                     variant="discard"
+                                                     outline
                                                      fixed-width="w-37">
                                             <div class="flex items-center">
                                                 <IconDiscard class="mx-1"/>
@@ -80,6 +80,7 @@
                                         </base-button>
                                         <div class="mx-2"/>
                                         <base-button fixed-width="w-37"
+                                                     type="primary"
                                                      :disabled="layoutNameAlreadyUsed"
                                                      @click="onApply()">
                                             <div class="flex items-center">
@@ -102,6 +103,20 @@
                     {{ isDefaultLayout ? $t('Save Layout') : $t('Save Changes') }}
                 </h3>
             </template>
+            <div>
+                <el-radio-group v-model="modalSaveTarget" class="custom-radios">
+                    <el-radio>
+                        <span>Save as a new</span>
+                        <base-input v-model="modalTemplateName" label="New Theme Name" class="custom-radio-content">
+                            <template v-slot:labelIcon>
+                                <IconNewLayout />
+                            </template>
+                        </base-input>
+                    </el-radio>
+                    <el-radio label="Save changes in the existing theme ">
+                    </el-radio>
+                </el-radio-group>
+            </div>
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
                     <base-button class="mx-4"
@@ -141,6 +156,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { LayoutApi } from '@/api/layoutApi'
     import NavBar from '@/views/common/NavBar'
+    import { Radio, RadioGroup } from 'element-ui'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
     import DeleteLayout from '@/views/common/DeleteLayout'
@@ -153,6 +169,8 @@
         components: {
             NavBar,
             ConfirmDialog,
+            [RadioGroup.name]: RadioGroup,
+            [Radio.name]: Radio,
             LayoutSelect,
             DeleteLayout,
             LayoutPreview,
@@ -167,6 +185,8 @@
                 layoutSettings: {},
                 showConfirmDialog: false,
                 realTimePreview: true,
+                modalSaveTarget: 'new',
+                modalTemplateName: ''
             }
         },
         computed: {
@@ -318,3 +338,12 @@
         },
     }
 </script>
+
+<style lang="scss" scoped>
+.custom-radios {
+    .custom-radio-content {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+</style>

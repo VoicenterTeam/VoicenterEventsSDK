@@ -1,4 +1,6 @@
 .el-radio {
+    display: flex !important;
+
     .el-radio__inner:hover {
         border-color: var(--primary-color);
     }
@@ -11,7 +13,33 @@
 
         .el-radio__inner {
             border-color: var(--primary-color);
-            background: var(--primary-color);
+            background: var(--empty-bg);
+        }
+    }
+    .el-radio__inner {
+        height: 18px;
+        width: 18px;
+        min-width: 18px;
+        border-width: 2px;
+
+        &::after {
+            content: '';
+            @apply rounded-full inline-block absolute left-0 top-0 transition-all duration-300 ease-in;
+            transition: transform 0.3s ease-in;
+        }
+
+    }
+
+    &.is-checked {
+        .el-radio__inner {
+            &::after {
+                height: 10px;
+                width: 10px;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                @apply bg-active-elements;
+            }
         }
     }
 }
