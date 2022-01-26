@@ -92,6 +92,7 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import AddWidgetDialog from '@/components/Widgets/AddWidgetsForm/AddWidgetDialog'
     import ReorderWidgetGroupDialog from '@/components/LayoutRendering/ReorderWidgetGroupDialog'
+    import bus from '@/event-bus/EventBus';
     
     export default {
         inheritAttrs: false,
@@ -167,5 +168,10 @@
                 this.onMove('move')
             }
         },
+        mounted () {
+            bus.$on('add-new-widget-by-navbar', (val) => {
+                this.showAddWidgetDialog = val
+            });
+        }
     }
 </script>

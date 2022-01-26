@@ -2,7 +2,7 @@
     <div v-if="tabs.length && !storingData" class="w-full">
         <tabs :circular-timeout="circularTimeout" :tabs="tabs" v-on="$listeners" :newActiveTab="activeTab">
             <template v-slot="{ tab, activeTab }">
-                <div v-if="editMode"
+                <div v-show="editMode"
                      :key="tab.WidgetGroupID"
                      class="flex items-center justify-between px-2 pb-2">
                     <base-outline-input v-model="tab.WidgetGroupTitle"/>

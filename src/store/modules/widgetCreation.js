@@ -44,7 +44,9 @@ const types = {
     TEMPLATE_EDIT_WIDGET: 'TEMPLATE_EDIT_WIDGET',
     TEMPLATE_UPDATE: 'TEMPLATE_UPDATE',
     RESET_COPY_TEMPLATE: 'RESET_COPY_TEMPLATE',
-    COPY_TEMPLATE: 'COPY_TEMPLATE'
+    COPY_TEMPLATE: 'COPY_TEMPLATE',
+    UPDATE_QUICK_CREATING: 'UPDATE_QUICK_CREATING',
+    RESET_QUICK_CREATING: 'RESET_QUICK_CREATING'
 }
 
 const state = {
@@ -54,7 +56,11 @@ const state = {
     templates: '',
     templateToEdit: false,
     templateToPreview: null,
-    copyOfUniqTemplatesDefaultConfig: null
+    copyOfUniqTemplatesDefaultConfig: null,
+    quickCreatingWidget: {
+        isClickedOnAddBtn: false,
+        isCreatedWidget: false
+    }
 }
 
 const mutations = {
@@ -109,6 +115,15 @@ const mutations = {
     },
     [types.COPY_TEMPLATE]: (state, data) => {
         state.copyOfUniqTemplatesDefaultConfig = data
+    },
+    [types.UPDATE_QUICK_CREATING]: (state, data) => {
+        state.quickCreatingWidget[data.key] = data.value
+    },
+    [types.RESET_QUICK_CREATING]: (state) => {
+        state.quickCreatingWidget = {
+            isClickedOnAddBtn: false,
+            isCreatedWidget: false
+        }
     }
 }
 
@@ -145,7 +160,13 @@ const actions = {
     },
     async copyTemplate({ commit }, template) {
         await commit(types.COPY_TEMPLATE, template)
-    }
+    },
+    async updateQuickCreatingWidget({ commit }, data) {
+        await commit(types.UPDATE_QUICK_CREATING, data)
+    },
+    async resetQuickCreatingWidget({ commit }) {
+        await commit(types.RESET_QUICK_CREATING)
+    },
 }
 
 const getters = {
@@ -156,7 +177,8 @@ const getters = {
     getTemplatesToSetup: state => state.templates,
     getSummaries: state => state.summaries,
     getTemplateToEdit: state => state.templateToEdit,
-    getCopyTemplate: state => state.copyOfUniqTemplatesDefaultConfig
+    getCopyTemplate: state => state.copyOfUniqTemplatesDefaultConfig,
+    getQuickCreatingWidget: state => state.quickCreatingWidget
 }
 
 export default {

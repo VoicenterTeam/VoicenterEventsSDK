@@ -39,7 +39,7 @@
                  v-if="dashboard"
             >
                 <fade-transition :duration="300" mode="out-in">
-                    <sidebar v-if="(showTabs || editMode) && showSidebar && !onFullScreen"
+                    <sidebar v-show="(showTabs || editMode) && showSidebar && !onFullScreen"
                              :active-tab="activeTab"
                              :widget-group-list="activeDashboardData.WidgetGroupList"
                              :layout-type="layoutType"
@@ -118,6 +118,7 @@
     import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
     import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
+    import bus from '@/event-bus/EventBus'
 
     export default {
         components: {
@@ -306,6 +307,9 @@
                 },
             },
         },
+        beforeDestroy() {
+            bus.$off('add-new-widget-by-navbar')
+        }
     }
 </script>
 <style lang="scss">

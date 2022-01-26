@@ -7,8 +7,8 @@
                  class="widget--group_section mb-3 relative">
                 <div class="widget--group_border"/>
                 <div class="p-2">
-                    <div v-if="editMode && (editedGroup.WidgetGroupID === widgetGroup.WidgetGroupID)"
-                         class="flex items-center justify-between pb-2">
+                    <div v-show="editMode && (editedGroup.WidgetGroupID === widgetGroup.WidgetGroupID)"
+                        class="flex items-center justify-between pb-2">
                         <base-outline-input v-model="widgetGroup.WidgetGroupTitle"/>
                         <edit-group-buttons
                             :widgetGroup="widgetGroup"
@@ -17,7 +17,7 @@
                             @on-reorder-widget-group="onReorderWidgetGroup">
                         </edit-group-buttons>
                     </div>
-                    <div v-else class="flex items-center justify-between pb-2">
+                    <div v-show="!editMode" class="flex items-center justify-between pb-2">
                         <h3 :style="getStyles"
                             class="font-semibold text-main-2xl text-gray-800">
                             {{ widgetGroup.WidgetGroupTitle }}
@@ -56,7 +56,7 @@
                 default: false,
             },
             editedGroup: {
-                type: Object,
+                type: [Object, Array],
                 default: () => {}
             },
             widgetTemplates: {

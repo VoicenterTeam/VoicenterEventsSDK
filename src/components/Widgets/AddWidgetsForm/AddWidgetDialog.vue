@@ -168,6 +168,12 @@
                 }
 
                 this.$emit('add-widgets-to-group', objToEmit)
+                const data = {
+                    key: 'isCreatedWidget',
+                    value: true
+                }
+                this.$store.dispatch('widgetCreation/updateQuickCreatingWidget', data)
+
                 this.resetState()
             },
             resetState() {

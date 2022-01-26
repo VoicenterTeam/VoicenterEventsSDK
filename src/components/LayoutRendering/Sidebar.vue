@@ -28,13 +28,18 @@
                     </fade-transition>
                 </div>
             </template>
-            <div v-if="editMode && !showTabs"
+            <div v-show="editMode && !showTabs"
                  class="px-14 text-gray-900 text-2xl">
                 {{ $t('Edit Mode') }}
             </div>
         </div>
         <div class="flex items-center px-14 hidden md:flex">
             <div class="flex items-center" v-if="layoutType === 'tabbed'">
+                <create-new-widget-button
+                    class="mr-5"
+                    v-if="!editMode && widgetGroupList.length"
+                    @click="clickToAddNewWidget"
+                />
                 <new-group-button
                     :disabled="editMode"
                     @click="addNewGroup"
@@ -59,11 +64,14 @@
 <script>
     import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
     import NewGroupButton from '@/components/NewGroupButton'
+    import CreateNewWidgetButton from '@/components/CreateNewWidgetButton'
+    import bus from '@/event-bus/EventBus';
 
     export default {
         components: {
             ActionsTabbedView,
             NewGroupButton,
+            CreateNewWidgetButton
         },
         props: {
             widgetGroupList: {
@@ -88,6 +96,22 @@
                 default: 'tabbed'
             }
         },
+        computed: {
+            onEditMode () {
+                return this.$store.getters['widgetCreation/getQuickCreatingWidget']
+            }
+        },
+        watch: {
+            onEditMode: {
+                handler (val) {
+                    if (Object.values(val).every(el => el)) {
+                        const group = this.widgetGroupList.filter(el => el.WidgetGroupID.toString() === this.activeTab.toString())
+                        this.$emit('on-edit-widget-group', group)
+                    }
+                },
+                deep: true
+            }
+        },
         methods: {
             widgetGroupName(group, index) {
                 if (group.IsNew) {
@@ -108,9 +132,11 @@
                 this.$emit('add-new-group')
             },
             onCancel() {
+                this.$store.dispatch('widgetCreation/resetQuickCreatingWidget')
                 this.$emit('exit-edit-mode')
             },
             onSubmit() {
+                this.$store.dispatch('widgetCreation/resetQuickCreatingWidget')
                 this.$emit('save-dashboard')
             },
             onEditWidgetGroup(group) {
@@ -119,6 +145,14 @@
             onRemoveWidgetGroup(group) {
                 this.$emit('on-remove-widget-group', group)
             },
+            clickToAddNewWidget () {
+                bus.$emit('add-new-widget-by-navbar', true);
+                const data = {
+                    key: 'isClickedOnAddBtn',
+                    value: true
+                }
+                this.$store.dispatch('widgetCreation/updateQuickCreatingWidget', data)
+            }
         },
     }
 </script>
