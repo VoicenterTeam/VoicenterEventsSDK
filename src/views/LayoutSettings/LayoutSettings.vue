@@ -64,9 +64,9 @@
                             <template v-slot:actions>
                                 <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
-                                        <base-button @click="onDiscard(true)"
-                                                     outline
-                                                     fixed-width="w-37">
+                                        <base-button outline
+                                                     fixed-width="w-37"
+                                                     @click="onDiscard(true)">
                                             <div class="flex items-center">
                                                 <IconDiscard class="mx-1"/>
                                                 <span class="mx-1 text-base font-bold">{{ 'Discard' }}</span>
@@ -166,9 +166,10 @@
                 <div class="w-full flex items-center justify-center">
                     <slot name="footer-actions">
                         <base-button class="mr-4"
-                            @click="showConfirmDialog = false"
-                            variant="discard"
-                            fixed-width="w-30" size="lg">
+                                     outline
+                                     fixed-width="w-30"
+                                     size="lg"
+                                     @click="showConfirmDialog = false">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1" v-if="isDefaultLayout" />
                                 <span class="font-semibold">{{ $t('common.cancel') }}</span>
@@ -176,11 +177,13 @@
                         </base-button>
                         <base-button
                             class="ml-4"
-                            @click="onNewLayout"
                             key="new-layout"
                             fixed-width="w-30"
-                            :loading="storingData" size="lg"
-                            :disabled="disabledForm">
+                            size="lg"
+                            type="primary"
+                            :loading="storingData"
+                            :disabled="disabledForm"
+                            @click="onNewLayout">
                             <span class="font-semibold">
                                 {{ $t('general.apply') }}
                             </span>
@@ -252,6 +255,9 @@
             },
             layoutNames() {
                 return this.allLayouts.map(layout => layout.LayoutName)
+            },
+            layoutNameAlreadyUsed() {
+                return this.layoutNames.includes(this.layoutSettings.LayoutName)
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID

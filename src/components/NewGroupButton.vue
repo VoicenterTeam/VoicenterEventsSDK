@@ -1,5 +1,5 @@
 <template>
-    <new-base-button
+    <base-button
         v-bind="$attrs"
         class="cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7"
         size="sml"
@@ -10,14 +10,10 @@
             <IconNewGroup class="mx-0-5"/>
         </template>
         <span class="mx-0-5">{{ $t('dashboard.addGroup') }}</span>
-    </new-base-button>
+    </base-button>
 </template>
 <script>
-    import NewBaseButton from "@/components/Buttons/NewBaseButton";
     export default {
-        inheritAttrs: false,
-        components: {
-            NewBaseButton
-        }
+        inheritAttrs: false
     }
 </script>

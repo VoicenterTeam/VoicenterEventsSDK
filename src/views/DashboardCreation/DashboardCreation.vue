@@ -87,8 +87,8 @@
         <div class="flex w-full items-center">
             <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
                 <base-button class="mx-4"
+                             outline
                              @click="onDiscard"
-                             variant="discard"
                 >
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
@@ -96,9 +96,10 @@
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"
-                        :loading="loading"
-                        :disabled="!isFormValid"
-                        @click="tryAddDashboard">
+                             type="primary"
+                             :loading="loading"
+                             :disabled="!isFormValid"
+                             @click="tryAddDashboard">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
@@ -113,9 +114,9 @@
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
                     <base-button class="mx-4"
-                                 @click="showConfirmDialog = false"
-                                 variant="discard"
-                                 fixed-width="w-37">
+                                 outline
+                                 fixed-width="w-37"
+                                 @click="showConfirmDialog = false">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">
@@ -124,10 +125,11 @@
                         </div>
                     </base-button>
                     <base-button
-                        @click="onSubmit"
                         fixed-width="w-37"
                         key="store"
+                        type="primary"
                         :loading="loading"
+                        @click="onSubmit"
                     >
                         {{ $t('common.confirm') }}
                     </base-button>
@@ -257,7 +259,7 @@
                 try {
                     this.loading = true
                     this.showConfirmDialog = false
-                    
+
                     const dashboard = await this.createDashboard()
                     await this.addEntities(dashboard, this.isCreateBlankDashboard)
                     await this.$store.dispatch('dashboards/getDashboards')

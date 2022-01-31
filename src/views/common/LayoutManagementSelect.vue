@@ -106,16 +106,16 @@
                        :title="$t('layout.updateStatus')">
             <template v-slot:footer-actions>
                 <base-button class="mx-4"
-                             @click="onCancel"
-                             variant="discard"
-                             fixed-width="w-37">
+                             outline
+                             fixed-width="w-37"
+                             @click="onCancel">
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
                     </div>
                 </base-button>
-                <base-button @click="onConfirm"
-                             :loading="localLoading">
+                <base-button :loading="localLoading"
+                             @click="onConfirm">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ 'common.confirm' }}</span>

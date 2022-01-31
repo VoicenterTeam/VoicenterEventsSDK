@@ -12,7 +12,7 @@
                 <base-button class="mx-1"
                              size="xs"
                              fixed-width="w-20"
-                             variant="discard">
+                             outline>
                     {{ $t('general.change') }}
                 </base-button>
             </el-upload>
@@ -36,7 +36,7 @@
     import { getBase64 } from '@/helpers/util'
     import { Notification, Popover, Upload } from 'element-ui'
     import { AlertTriangleIcon } from 'vue-feather-icons'
-    
+
     export default {
         inheritAttrs: false,
         components: {

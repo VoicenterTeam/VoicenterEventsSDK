@@ -116,6 +116,7 @@
         <Conditions/>
         <portal to="next-button">
             <base-button fixed-width="w-37"
+                         type="primary"
                          @click="goNext">
                 <div class="flex items-center">
                     <span class="mx-1 text-base font-bold">
@@ -132,11 +133,11 @@
     import TimePicker from '@/modules/reports/components/TimePicker'
     import BaseDatePicker from '@/components/Widgets/BaseDatePicker'
     import Conditions from '@/modules/reports/components/schedule/components/Conditions'
-    
+
     const DAILY_FREQUENCY = 'daily'
     const MONTHLY_FREQUENCY = 'monthly'
     const INTERVAL_FREQUENCY = 'interval'
-    
+
     export default {
         components: {
             TimeRange,
@@ -239,7 +240,7 @@
 .el-time-range-picker {
     .el-time-panel__footer {
         height: 40px !important;
-        
+
         .el-time-panel__btn.confirm {
             color: white !important;
             background: var(--primary-color) !important;
@@ -247,12 +248,12 @@
             border-radius: 4px !important;
             padding-left: 16px !important;
             padding-right: 16px !important;
-            
+
             &:hover {
                 opacity: 0.75 !important;
             }
         }
-        
+
         .el-time-panel__btn.cancel {
             border: 2px solid var(--gray-550) !important;
             border-radius: 4px !important;
@@ -260,7 +261,7 @@
             font-weight: 700 !important;
             color: var(--gray-550) !important;
             padding-right: 16px !important;
-            
+
             &:hover {
                 background: var(--gray-200) !important;
             }
