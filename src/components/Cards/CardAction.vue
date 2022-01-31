@@ -1,6 +1,6 @@
 <template>
-    <div class="relative">
-        <i class="vc-icon-menu icon-lg text-gray-500 px-2 py-1-5 rounded hover:bg-primary-100 cursor-pointer"
+    <div class="relative cursor-pointer">
+        <i class="vc-icon-menu icon-lg text-gray-500 px-2 py-1-5 rounded hover:bg-primary-100"
            :class="{'bg-primary-100': showActionsMenu}"
            @click.stop="triggerMenu"/>
         <fade-transition :duration="350">

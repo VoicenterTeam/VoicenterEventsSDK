@@ -11,10 +11,10 @@
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
-                <span class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
-                    <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
-                </span>
             </div>
+            <span v-if="showDeleteButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
+                    <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
+            </span>
             <WidgetAction :key="widget.WidgetID"
                           :editable="editable"
                           :edit-mode="editMode"
