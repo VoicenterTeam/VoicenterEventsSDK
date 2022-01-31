@@ -26,7 +26,7 @@
                 <div class="flex items-center pb-4">
                     <i class="vc-icon-timer text-primary mx-w-4-5 text-xl" />
                     <span class="mx-2 font-medium text-xl text-gray-950">
-                        {{ $t('timeFrame') }}
+                        {{ $t('settings.time.frame') }}
                     </span>
                 </div>
                 <time-frame
@@ -62,12 +62,12 @@
                 <div class="flex mt-3">
                     <el-checkbox v-model="SumOfOthers">
                         <span class="text-gray-950">
-                            {{ $t('Display % of Others value') }}
+                            {{ $t('widget.displayPercentOfOthersValue') }}
                         </span>
                     </el-checkbox>
                     <el-checkbox v-model="AbsoluteNumbers">
                         <span class="text-gray-950">
-                            {{ $t('Display absolute numbers') }}
+                            {{ $t('widget.displayAbsoluteNumbers') }}
                         </span>
                     </el-checkbox>
                 </div>
@@ -77,7 +77,7 @@
                     <div class="flex items-center pt-4">
                         <div class="flex items-center pb-4">
                             <span class="mx-2 font-medium text-xl text-gray-950">
-                                {{ $t('status') }}
+                                {{ $t('general.status') }}
                             </span>
                         </div>
                     </div>
