@@ -24,19 +24,19 @@
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                 <slot name="footer-actions">
                     <base-button @click="onCancel"
-                                 variant="discard"
+                                 outline
                                  fixed-width="w-37">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
+                            <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
                         </div>
                     </base-button>
                     <base-button fixed-width="w-37"
-                                 variant="danger"
+                                 type="primary"
                                  @click="onConfirm">
                         <div class="flex items-center">
                             <IconDelete class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ 'Delete' }}</span>
+                            <span class="mx-1 text-base font-bold">{{ $t('common.delete') }}</span>
                         </div>
                     </base-button>
                 </slot>
@@ -46,7 +46,7 @@
 </template>
 <script>
     import Modal from '@/components/Common/Modal'
-    
+
     export default {
         components: {
             Modal,

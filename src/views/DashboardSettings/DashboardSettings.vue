@@ -77,6 +77,10 @@
                                    :current-dashboard="currentDashboard"/>
             </div>
         </div>
+        <ConfirmDialog :visible.sync="showConfirmDialog"
+                       @on-cancel="showConfirmDialog = false"
+                       @on-confirm="deleteDashboard"
+        />
     </div>
 </template>
 <script>
@@ -91,6 +95,11 @@
     import CopyDashboard from '@/views/DashboardSettings/sections/CopyDashboard'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
+    import ConfirmDialog from '@/components/Common/ConfirmDialog'
+    import map from "lodash/map";
+    import {removeDummyWidgets} from "@/services/widgetService";
+    import {dashboardOperation} from "@/models/instances";
+    import {targets, types} from "@/enum/operations";
 
     export default {
         components: {
@@ -100,6 +109,7 @@
             ColorParameterType,
             DashboardSettings,
             [Popover.name]: Popover,
+            ConfirmDialog
         },
         data() {
             return {
@@ -107,6 +117,7 @@
                 currentDashboard: {},
                 loading: false,
                 initialLayout: {},
+                showConfirmDialog: false
             }
         },
         computed: {
@@ -140,7 +151,7 @@
                 this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.currentDashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
             },
-            async onDelete() {
+            async deleteDashboard() {
                 try {
                     this.loading = true
                     await this.$store.dispatch('dashboards/deleteDashboard', this.currentDashboard)
@@ -149,7 +160,11 @@
                     console.error(err)
                 } finally {
                     this.loading = false
+                    this.showConfirmDialog = false
                 }
+            },
+            async onDelete() {
+                this.showConfirmDialog = true
             },
             async onSubmit(goBack = true) {
                 try {
