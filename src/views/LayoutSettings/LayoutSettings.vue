@@ -376,11 +376,12 @@
             },
             triggerLayoutChanges() {
                 this.$nextTick(() => {
-                    if (this.realTimePreview) {
-                        this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
-                    } else {
-                        this.$store.dispatch('layout/updateActiveLayout', this.storedDashboardLayout)
-                    }
+                    // if (this.realTimePreview) {
+                    //     this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
+                    // } else {
+                    //     this.$store.dispatch('layout/updateActiveLayout', this.storedDashboardLayout)
+                    // }
+                    // TODO: updates should display in the layout preview
                 })
             },
             validateForm () {
