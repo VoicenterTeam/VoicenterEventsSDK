@@ -12,13 +12,13 @@
         >
             <template v-slot:title>
                 <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
-                    {{ $t('Delete Confirmation') }}
+                    {{ $t('general.deleteConfirmation') }}
                 </h3>
             </template>
             <div class="mt-10 mb-8 flex flex-col items-center justify-center">
                 <IconQuestion/>
                 <div class="text-center text-gray-900 text-sm leading-21 mt-5 max-w-65-p break-normal">
-                    {{ this.$t('Are you sure you want to delete this report?') }}
+                    {{ this.$t('report.deleteReportConfirmation') }}
                 </div>
                 <br>
                 <b>{{ reportToDelete.name }}</b>

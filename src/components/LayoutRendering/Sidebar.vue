@@ -30,7 +30,7 @@
             </template>
             <div v-if="editMode && !showTabs"
                  class="px-14 text-gray-900 text-2xl">
-                {{ $t('Edit Mode') }}
+                {{ $t('general.editMode') }}
             </div>
         </div>
         <div class="flex items-center px-14 hidden md:flex">
@@ -46,11 +46,11 @@
                            size="mini"
                            type="_primary"
                            class="h-7">
-                    {{ $t('Save') }}
+                    {{ $t('common.save') }}
                 </el-button>
                 <div class="mx-6 font-medium cursor-pointer text-steel hover:text-primary"
                      @click="onCancel">
-                    {{ $t('Cancel') }}
+                    {{ $t('common.cancel') }}
                 </div>
             </template>
         </div>
@@ -91,9 +91,9 @@
         methods: {
             widgetGroupName(group, index) {
                 if (group.IsNew) {
-                    return this.$t('Group') + ' ' + (index + 1)
+                    return this.$t('general.group') + ' ' + (index + 1)
                 }
-                return group.WidgetGroupTitle || this.$t('Group ID') + ': ' + group.WidgetGroupID
+                return group.WidgetGroupTitle || this.$t('dashboard.groupID') + ': ' + group.WidgetGroupID
             },
             switchTab(group) {
                 if (this.editMode) {

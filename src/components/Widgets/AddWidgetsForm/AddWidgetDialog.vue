@@ -50,12 +50,12 @@
         >
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Remove changes') }}
+                    {{ $t('widget.removeChanges') }}
                 </h3>
             </template>
             <div class="flex justify-center w-full">
                 <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p px-3">
-                    {{ $t('Do you want to remove changes and go to the settings?') }}
+                    {{ $t('widget.doYouWantToRemoveChangesAndGoToTheSettings') }}
                 </div>
             </div>
             <template v-slot:footer-actions>
@@ -66,7 +66,7 @@
                         fixed-width="w-32">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
+                            <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
                         </div>
                     </base-button>
                     <base-button
@@ -74,7 +74,7 @@
                         fixed-width="w-32"
                         key="store"
                     >
-                        <span class="mx-1 text-base font-bold">{{ $t('Confirm') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('common.confirm') }}</span>
                     </base-button>
                 </slot>
             </template>
@@ -153,7 +153,7 @@
                 return +activeWidgets
             },
             getSummaryActions() {
-                return `${this.$t('Summary')}: (${this.$t('before')} - ${this.groupWidgetsCount}, ${this.$t('after adding')} - ${this.afterAdding})`
+                return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
             },
             getSummary() {
                 return this.$store.getters['widgetCreation/getSummaries']

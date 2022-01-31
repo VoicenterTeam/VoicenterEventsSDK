@@ -2,7 +2,7 @@
     <div class="content-wrapper">
         <el-form>
             <el-form-item>
-                <label>{{ $t('To') }}</label>
+                <label>{{ $t('general.to') }}</label>
                 <div class="w-full">
                     <el-select id="email-wrapper"
                                class="w-full"
@@ -12,7 +12,7 @@
                                filterable
                                allow-create
                                default-first-option
-                               :placeholder="$t('Recipients')"
+                               :placeholder="$t('report.recipients')"
                     >
                         <el-option v-for="(item, index) in report.ReportRecipient"
                                    :key="`recipient-${index}-${item.Email}`"
@@ -23,12 +23,12 @@
                 </div>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Subject') }}</label>
-                <el-input :placeholder="$t('Email Subject')"
+                <label>{{ $t('report.subject') }}</label>
+                <el-input :placeholder="$t('report.emailSubject')"
                           v-model="model.subject"/>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Text') }}</label>
+                <label>{{ $t('report.editor.text') }}</label>
                 <html-editor :has-buttons="hasButtons"
                              ref="editor"
                              :value="model.text"
@@ -42,7 +42,7 @@
                 <div class="flex items-center">
                     <IconSave class="mx-1"/>
                     <span class="mx-1 text-base font-bold">
-                        {{ $t('Finish') }}
+                        {{ $t('general.finish') }}
                     </span>
                 </div>
             </base-button>

@@ -14,14 +14,14 @@
                      @click="onEditWidgetGroup()">
                     <IconPencil class="text-green w-4-5 h-4-5"/>
                     <span class="mx-2 text-main-sm truncate">
-                        {{ $t('Edit Group') }}
+                        {{ $t('dashboard.editGroup') }}
                     </span>
                 </div>
                 <div class="menu-action_item border-t border-gray-300"
                      @click="tryDeleteWidgetGroup()">
                     <IconDelete class="text-red w-4-5 h-4-5"/>
                     <span class="mx-2 text-main-sm truncate">
-                        {{ $t('Delete Group') }}
+                        {{ $t('dashboard.deleteGroup') }}
                     </span>
                 </div>
             </div>

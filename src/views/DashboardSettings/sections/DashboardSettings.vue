@@ -7,7 +7,7 @@
                         <IconDashboardName class="text-primary mb-1"/>
                     </div>
                     <div class="flex px-1 label-input">
-                        {{ $t('Dashboard Name') }}
+                        {{ $t('dashboard.dashboardName') }}
                     </div>
                 </div>
                 <el-input v-model="value.DashboardTitle"/>
@@ -17,7 +17,7 @@
                     <div class="flex">
                         <IconDashboardColor class="text-primary"/>
                     </div>
-                    <div class="flex mx-1 label-input">{{ $t('Dashboard Color') }}</div>
+                    <div class="flex mx-1 label-input">{{ $t('dashboard.dashboardColor') }}</div>
                 </div>
                 <div class="flex flex-row items-center -mt-3">
                     <ColorParameterType v-bind="primaryColorSettings"
@@ -29,7 +29,7 @@
                     <div v-else
                          class="mt-4 flex items-center">
                         <IconColorPicker class="w-6 h-6 text-primary"/>
-                        <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                        <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
                                     placement="top">
                             <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5 mx-2"/>
                         </el-tooltip>
@@ -41,14 +41,14 @@
                     <div class="flex">
                         <IconDashboardLogo class="text-primary mb-0-5"/>
                     </div>
-                    <div class="flex mx-1 label-input">{{ $t('Dashboard Logo') }}</div>
+                    <div class="flex mx-1 label-input">{{ $t('dashboard.dashboardLogo') }}</div>
                 </div>
                 <div class="flex flex-row items-center">
                     <img :src="getLogo" alt="Logo"
                          class="h-6 object-cover">
                     <LayoutLogo class="mx-2"
                                 :disabled="defaultLayout"/>
-                    <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                    <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
                                 v-if="defaultLayout"
                                 placement="top">
                         <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
@@ -67,7 +67,7 @@
                         <div class="flex flex-col">
                             <div class="flex items-center mb-2">
                                 <IconDashboardColor class="text-primary"/>
-                                <span class="mx-1">{{ $t('Colors') }}</span>
+                                <span class="mx-1">{{ $t('dashboard.colors') }}</span>
                             </div>
                             <div class="flex flex-row">
                                 <div v-for="group in getColorParameters"
@@ -80,7 +80,7 @@
                         <div class="flex flex-col">
                             <div class="flex items-center mb-2">
                                 <IconFonts class="text-primary"/>
-                                <span class="mx-1">{{ $t('Fonts') }}</span>
+                                <span class="mx-1">{{ $t('dashboard.fonts') }}</span>
                             </div>
                             <div class="text-xs text-gray-900">
                                 {{ getFontInfos }}
@@ -91,7 +91,7 @@
                                 <i>
                                     <IconTimer class="text-primary"/>
                                 </i>
-                                <span class="mx-1">{{ $t('Time Settings') }}</span>
+                                <span class="mx-1">{{ $t('dashboard.timeSettings') }}</span>
                             </div>
                             <div class="text-xs text-gray-900">
                                 {{ getTimeSettings }} <br>
@@ -103,10 +103,10 @@
                              @click="onEditLayout">
                             <div class="flex items-center">
                                 <IconPencil class="w-4 h-4"/>
-                                <div>{{ $t('Edit') }}</div>
+                                <div>{{ $t('common.edit') }}</div>
                             </div>
                         </div>
-                        <el-tooltip :content="$t('This is a default config, please add a new one/select if you want to edit it')"
+                        <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
                                     placement="top"
                                     v-if="defaultLayout"
                         >
@@ -118,7 +118,7 @@
                             <i>
                                 <IconTimer class="text-primary"/>
                             </i>
-                            <span class="mx-1">{{ $t('Time Settings') }}</span>
+                            <span class="mx-1">{{ $t('dashboard.timeSettings') }}</span>
                         </div>
                         <div class="text-xs text-gray-900">
                             {{ getTimeSettings }} <br>
@@ -186,19 +186,19 @@
             getFontInfos() {
                 const base = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'FontSize')
                 const header = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'WidgetGroupTitlesFontSize')
-                return `${this.$t('Base')} - ${base.Value}px, ${this.$t('Headers')} - ${header.Value}px`
+                return `${this.$t('dashboard.base')} - ${base.Value}px, ${this.$t('dashboard.headers')} - ${header.Value}px`
             },
             getTimeSettings() {
                 const MinRefreshInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'MinRefreshInterval')
                 const ReportInterval = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportInterval')
-                return `${this.$t('Refresh interval')}: ${MinRefreshInterval.Value}s,   ${this.$t('Switch category every')}: ${ReportInterval.Value}s`
+                return `${this.$t('dashboard.refreshInterval')}: ${MinRefreshInterval.Value}s,   ${this.$t('dashboard.switchCategoryEvery')}: ${ReportInterval.Value}s`
             },
             getReportSettings() {
                 const ReportSwitching = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportSwitching')
                 const ReportRefresh = this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === 'ReportRefresh')
                 const _ReportSwitching = ReportSwitching ? 'enabled' : 'disabled'
                 const _ReportRefresh = ReportRefresh ? 'enabled' : 'disabled'
-                return `${this.$t('Category switching')} ${_ReportSwitching}, ${this.$t('Category refresh')} ${_ReportRefresh}`
+                return `${this.$t('dashboard.categorySwitching')} ${_ReportSwitching}, ${this.$t('dashboard.categoryRefresh')} ${_ReportRefresh}`
             },
             primaryColorSettings() {
                 return this.activeLayout.LayoutParametersList.find((el) => el.LayoutParameterName === PRIMARY_COLOR_KEY)

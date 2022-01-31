@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-row py-2">
         <div class="flex items-center">
-            <span>{{ $t('Widget refresh interval') }}</span>
+            <span>{{ $t('widget.widgetRefreshInterval') }}</span>
             <el-popover placement="bottom-start"
-                        :content="$t('Set the interval when widget data will be reloaded automatically (in seconds)')"
+                        :content="$t('widget.setIntervalOnWidgetReload')"
                         class="mx-2"
                         trigger="hover">
                 <InfoIcon class="text-primary cursor-help w-5" slot="reference"/>

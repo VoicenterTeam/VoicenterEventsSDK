@@ -4,11 +4,11 @@
             <span class="text-primary redirect-action"
                 @click="allSelectedTemplates()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Widgets') }}
+                {{ $t('widget.widgets') }}
             </span>
         </portal>
         <portal to="form-title">
-            {{$t('Set up the general widgets settings')}}
+            {{$t('widget.setUpTheGeneralSettings')}}
         </portal>
         <div class="py-4 -mx-4-5">
             <div class="pt-4 pb-7 px-16 border-b">
@@ -55,7 +55,7 @@
                 <el-button @click="onViewSummary"
                     class="font-bold btn-next"
                     type="primary">
-                    {{ $t('Next') }}
+                    {{ $t('general.next') }}
                 </el-button>
             </div>
         </portal>
