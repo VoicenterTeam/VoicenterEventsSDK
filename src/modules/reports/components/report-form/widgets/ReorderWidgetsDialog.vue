@@ -5,12 +5,12 @@
             <div class="flex items-center">
                 <IconChangeOrder class="w-5 h-5 mx-1"/>
                 <span class="text-main-sm leading-4">
-                    {{ $t('Change Widget Order') }}
+                    {{ $t('widget.changeWidgetOrder') }}
                 </span>
             </div>
         </div>
         <modal :visible.sync="showDialog"
-               title="Widget Reorder"
+               title="widget.widgetReorder"
                top="15vh"
                wrapper-classes="reorder-widgets"
                :title-centered="true"
@@ -60,7 +60,7 @@
                                      fixed-width="w-37">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
+                                <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
                             </div>
                         </base-button>
                         <base-button fixed-width="w-37"
@@ -101,12 +101,12 @@
             return {
                 sections: [
                     {
-                        label: this.$t('PDF'),
+                        label: this.$t('general.PDF'),
                         icon: 'IconPdf',
                         key: 2,
                     },
                     {
-                        label: this.$t('Spreadsheet'),
+                        label: this.$t('widget.spreadsheet'),
                         icon: 'IconSpreadsheet',
                         key: 1,
                     },

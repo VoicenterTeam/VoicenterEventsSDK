@@ -80,12 +80,12 @@
                 templateConfig: getTemplateConfig(this.model.ParameterName),
                 SELECTIONS: [
                     {
-                        value: ENTITY_POSITIVE_KEY,
-                        label: this.$t('Include the selected'),
+                        label: ENTITY_POSITIVE_KEY,
+                        text: this.$t('autocomplete.includeTheSelected'),
                     },
                     {
-                        value: ENTITY_NEGATIVE_KEY,
-                        label: this.$t('Exclude the selected'),
+                        label: ENTITY_NEGATIVE_KEY,
+                        text: this.$t('autocomplete.excludeTheSelected'),
                     },
                 ],
                 entityType: ENTITY_POSITIVE_KEY,

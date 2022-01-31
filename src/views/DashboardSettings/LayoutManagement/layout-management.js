@@ -14,12 +14,12 @@ export const ENABLED_STATUS_NAME = 'Enable';
 export const DELETED_STATUS_NAME = 'Deleted';
 
 export const availableLayouts = [{
-    label: i18n.t('Active Layouts'),
+    label: i18n.t('layout.activeLayouts'),
     statusID: ENABLED_STATUS_ID,
     statusName: ENABLED_STATUS_NAME,
     name: 'enabledLayouts',
 }, {
-    label: i18n.t('Recycle Bin'),
+    label: i18n.t('layout.recycleBin'),
     statusID: DELETED_STATUS_ID,
     statusName: DELETED_STATUS_NAME,
     name: 'deletedLayouts',

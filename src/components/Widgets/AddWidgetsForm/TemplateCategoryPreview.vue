@@ -3,8 +3,8 @@
         <portal to="redirect-action">
           <span class="text-primary redirect-action"
                 @click="allTemplateCategories()">
-                <IconDirLeft class="mr-2"/>
-                {{ $t('All Categories') }}
+                <IconDirLeft class="mx-2"/>
+                {{ $t('widget.allCategories') }}
             </span>
         </portal>
         <portal to="form-title">
@@ -24,7 +24,7 @@
                         <span
                             class="text-base"
                         >
-                            {{ $t('Add All') }}
+                            {{ $t('widget.addAll') }}
                         </span>
                     </div>
                 </el-button>
@@ -34,7 +34,7 @@
             <div class="w-full max-w-md">
                 <el-input
                     v-model="search"
-                    :placeholder="$t('Search')"
+                    :placeholder="$t('general.search')"
                     class="input-search"
                 >
                     <template v-slot:prefix>
@@ -67,7 +67,7 @@
                                 <span
                                     class="text-sm"
                                 >
-                                    {{ $t('Add') }}
+                                    {{ $t('general.add') }}
                                 </span>
                             </div>
                         </el-button>
@@ -85,7 +85,7 @@
                         />
                     </template>
                     <template v-slot:template-preview>
-                        <el-tooltip :content="$t('Template Dictionary')"
+                        <el-tooltip :content="$t('widget.templateDictionary')"
                                     :open-delay="openDelay"
                                     class="item"
                                     effect="dark"
@@ -107,7 +107,7 @@
                     class="button-set-up-widgets font-bold"
                     type="primary"
                 >
-                    {{ $t('Set up Widgets') }}
+                    {{ $t('widget.setUpWidgets') }}
                 </el-button>
             </div>
         </portal>
@@ -171,7 +171,7 @@
                 return +newWidgetsCount + +activeWidgets
             },
             getSummaryActions() {
-                return `${this.$t('Summary')}: (${this.$t('before')} - ${this.groupWidgetsCount}, ${this.$t('after adding')} - ${this.afterAdding})`
+                return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
             },
             getSummaries() {
                 return this.$store.state.widgetCreation.summaries

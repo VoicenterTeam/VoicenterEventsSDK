@@ -18,11 +18,10 @@
                     <div class="text-xl text-gray-950 break-normal">
                         {{ $t(TemplateName) }}
                     </div>
-                    <span
+                    <span 
                         v-if="activeWidgets"
-                        class="text-xs text-steel"
-                    >
-                    {{ $t('Active Widgets') }}: {{ activeWidgets }}
+                        class="text-xs text-steel">
+                    {{ $t('widget.activeWidgets') }}: {{ activeWidgets }}
                 </span>
                 </div>
             </slot>

@@ -67,8 +67,8 @@ export async function runDashboardOperations(operations, dashboard, clonedDashbo
             return getDashboard(dashboardID)
         } catch (e) {
             Notification.error({
-                title: i18n.t('Something went wrong.'),
-                message: i18n.t('Please refresh page and try again.'),
+                title: i18n.t('dashboard.somethingWentWrong'),
+                message: i18n.t('dashboard.pleaseRefreshPageAndTryAgain'),
             })
             store.dispatch('dashboards/setLoadingData', false)
         }

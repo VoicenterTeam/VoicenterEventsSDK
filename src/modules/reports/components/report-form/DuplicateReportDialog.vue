@@ -9,13 +9,13 @@
             >
                 <template v-slot:title>
                     <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
-                        {{ $t('Duplicate Report') }}
+                        {{ $t('report.duplicateReport') }}
                     </h3>
                 </template>
                 <div class="mx-20 mt-8 mb-20">
                     <base-input rules="required"
-                                :name="$t('Report Name')"
-                                :label="$t('Report Name')"
+                                :name="$t('report.reportName')"
+                                :label="$t('report.reportName')"
                                 label-icon="IconReportName"
                                 v-model="model.ReportName"
                                 id="ReportTypeName"
@@ -37,7 +37,7 @@
                         <div class="flex items-center">
                             <IconSave class="mx-1"/>
                             <span class="mx-1 text-base font-bold">
-                            {{ $t('Save') }}
+                            {{ $t('common.save') }}
                         </span>
                         </div>
                     </base-button>

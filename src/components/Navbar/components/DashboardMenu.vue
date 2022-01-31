@@ -39,7 +39,7 @@
                             </el-tooltip>
                         </template>
                         <template v-else>
-                            <el-tooltip :content="$t('Manage Layout')"
+                            <el-tooltip :content="$t('dashboard.manageLayout')"
                                         lass="item"
                                         effect="dark"
                                         placement="top">

@@ -71,7 +71,7 @@
                 return get(this.templatesCategory, 'TemplatesList.length', 0)
             },
             setWidgetTranslation () {
-                return this.getTemplatesListLength === 1 ? this.$t('Widget') : this.$t('Widgets')
+                return this.getTemplatesListLength === 1 ? this.$t('widget.widget') : this.$t('widget.widgets')
             }
         },
     }

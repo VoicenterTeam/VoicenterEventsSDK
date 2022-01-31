@@ -8,7 +8,7 @@
                 :key="call.ivrid"
                 :settings="settings"
                 :text-color="'text-white'"
-                v-for="(call, index) in extension.calls"
+                v-for="call in extension.calls"
             >
                 <template v-slot:threshold="{statusThreshold}">
                     <component :is="statusThreshold.icon" class="w-6 mb-1 mx-2" v-if="statusThreshold.show"/>
@@ -16,7 +16,7 @@
             </call-info>
         </template>
         <div v-else>
-            {{$t('No callers')}}
+            {{$t('widget.table.noCallers')}}
         </div>
     </div>
 </template>

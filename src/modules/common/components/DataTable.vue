@@ -9,7 +9,7 @@
                     <div class="w-52">
                         <el-input v-model="searchText"
                                   clearable
-                                  :placeholder="$t('Type text to filter')"
+                                  :placeholder="$t('widget.data.typeTextToFilter')"
                                   size="medium"
                                   prefix-icon="el-icon-search"
                         />

@@ -23,7 +23,7 @@
             </el-tooltip>
             <IconHorisontalLine class="py-2-5 mx-4"/>
             <el-tooltip effect="dark"
-                        :content="$t('On full screen mode')"
+                        :content="$t('dashboard.onFullScreenMode')"
                         placement="top">
                 <button class="focus:outline-none mx-1 text-gray-300 hover:text-primary"
                         @click="onFullScreen">

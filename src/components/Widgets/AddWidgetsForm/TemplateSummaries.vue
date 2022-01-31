@@ -4,11 +4,11 @@
           <span class="text-primary redirect-action"
                 @click="goToSettings()">
                 <IconDirLeft class="mx-1"/>
-                {{ $t('Settings') }}
+                {{ $t('settings.settings') }}
             </span>
         </portal>
         <portal to="form-title">
-            {{ $t('Summary') }}
+            {{ $t('widget.summary') }}
         </portal>
         <div class="-mx-4-5">
             <div
@@ -39,7 +39,7 @@
                     @click="onEditTemplate(template, index)"
                 >
                     <span class="mx-3 text-primary text-base">
-                        {{ $t('Edit') }}
+                        {{ $t('common.edit') }}
                     </span>
                     <IconShape/>
                 </div>
@@ -52,7 +52,7 @@
                     class="font-bold btn-save"
                     type="primary"
                 >
-                    {{ $t('Save') }}
+                    {{ $t('common.save') }}
                 </el-button>
             </div>
         </portal>
