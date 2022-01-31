@@ -427,8 +427,7 @@ export default {
             this.$emit('input', evt.target.value);
         },
         onFocus(event) {
-            this.focused = true;
-
+            this.focused = true
             this.$emit('focus', event)
         },
         onBlur() {
@@ -436,12 +435,6 @@ export default {
         },
         onInputHover(state = true) {
             this.isInputHovered = state
-        },
-        setInputFocus() {
-            if(this.$refs.inputElement){
-                this.$refs.inputElement.focus()
-            }
-
         },
         handleCopy() {
             const el = document.createElement('textarea');
@@ -467,7 +460,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "src/assets/css/_common.scss";
+@import "src/assets/scss/main/_common.scss";
 
 .rtl {
     .form-group ::v-deep {

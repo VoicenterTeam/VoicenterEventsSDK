@@ -98,7 +98,7 @@
                     {{ isDefaultLayout ? $t('layout.saveLayout') : $t('general.saveChanges') }}
                 </h3>
             </template>
-            <div v-if="!isDefaultLayout && false" class="py-8">
+            <div v-if="!isDefaultLayout" class="py-8">
                 <div class="mb-5">
                     <BaseRadioButton
                         v-model="layoutForm.typeOfTheme"
@@ -140,7 +140,7 @@
                     {{ $t('layout.saveChangesToExistingTheme') }}
                 </BaseRadioButton>
             </div>
-            <div v-else-if="false" class="py-8">
+            <div v-else class="py-8">
                 <div class="flex items-center mb-3">
                     <div class="flex">
                         <IconExtensionsTable class="text-primary mr-2 icon"/>
@@ -161,22 +161,6 @@
                         </el-form-item>
                     </div>
                 </el-form>
-            </div>
-
-
-            <div>
-                <el-radio-group v-model="modalSaveTarget" class="custom-radios">
-                    <el-radio>
-                        <span>Save as a new</span>
-                        <base-input v-model="modalTemplateName" label="New Theme Name" class="custom-radio-content">
-                            <template v-slot:labelIcon>
-                                <IconNewLayout />
-                            </template>
-                        </base-input>
-                    </el-radio>
-                    <el-radio label="Save changes in the existing theme ">
-                    </el-radio>
-                </el-radio-group>
             </div>
             <template v-slot:footer-actions>
                 <div class="w-full flex items-center justify-center">
@@ -212,7 +196,6 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { LayoutApi } from '@/api/layoutApi'
     import NavBar from '@/views/common/NavBar'
-    import { Radio, RadioGroup } from 'element-ui'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
     import DeleteLayout from '@/views/common/DeleteLayout'
@@ -226,8 +209,6 @@
         components: {
             NavBar,
             ConfirmDialog,
-            [RadioGroup.name]: RadioGroup,
-            [Radio.name]: Radio,
             LayoutSelect,
             DeleteLayout,
             LayoutPreview,
@@ -251,8 +232,6 @@
                 layoutSettings: {},
                 showConfirmDialog: false,
                 realTimePreview: true,
-                modalSaveTarget: 'new',
-                modalTemplateName: '',
                 layoutForm: {
                    layoutName: '',
                    typeOfTheme: 'newTheme'
@@ -331,7 +310,7 @@
                     this.updatingData = false
                     this.showConfirmDialog = false
                     this.editableTitle = false
-                    this.$router.push('/dashboard-settings')
+                    await this.$router.push('/dashboard-settings')
                 }
             },
             async onNewLayout() {
@@ -352,8 +331,8 @@
                         this.selectedLayout = payload
                         this.layoutSettings = this.selectedLayout
                         this.$store.commit('layout/SET_ACTIVE_LAYOUT', payload)
-                        this.$store.dispatch('layout/setupLayouts')
-                        this.$store.dispatch('layout/getGlobalLayout')
+                        await this.$store.dispatch('layout/setupLayouts')
+                        await this.$store.dispatch('layout/getGlobalLayout')
                     }
                 } else {
                     await this.onUpdateLayout()
@@ -375,8 +354,8 @@
                 await this.$store.dispatch('dashboards/updateDashboardLayout', layout.LayoutID)
                 this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
                 this.showConfirmDialog = false
-                this.$store.dispatch('layout/setupLayouts')
-                this.$store.dispatch('layout/getGlobalLayout')
+                await this.$store.dispatch('layout/setupLayouts')
+                await this.$store.dispatch('layout/getGlobalLayout')
             },
             onEditLayoutTitle() {
                 this.editableTitle = !this.editableTitle
