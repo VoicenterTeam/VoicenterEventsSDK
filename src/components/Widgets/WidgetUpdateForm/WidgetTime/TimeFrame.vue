@@ -5,8 +5,8 @@
                 <el-collapse-item :title="$t('settings.time.frame')" name="timeFrame">
                     <slot name="frame-types"/>
                     <div>
-                        <label>{{$t('widget.time.interval')}}</label>
-                        <component :is="getComponent" v-bind="$attrs"/>
+                        <label class="text-gray-950">{{$t('widget.time.interval')}}</label>
+                        <component :is="getComponent" v-bind="$attrs" rangeSeparator="-" />
                     </div>
                 </el-collapse-item>
             </el-collapse>

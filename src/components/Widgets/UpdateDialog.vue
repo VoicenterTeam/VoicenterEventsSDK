@@ -158,11 +158,6 @@
                     <widget-colors :availableColors="availableColors" :model="model"/>
                 </el-collapse-item>
             </el-collapse>
-<!--            <el-form-item v-if="isPieWidget(widget)">-->
-<!--                <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">-->
-<!--                    {{ $t('widget.dontCountLoggedOutAgents') }}-->
-<!--                </el-checkbox>-->
-<!--            </el-form-item>-->
             <el-form-item>
                 <div v-if="model.WidgetTime.type">
                     <time-frame
@@ -170,12 +165,11 @@
                         :timeFrameType="model.WidgetTime.type"
                         :widgetTimeOptions="widgetTimeOptions">
                         <template v-slot:frame-types>
-                            <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
-                                <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
-                                          v-for="widgetTimeType in widgetTimeTypes">
-                                    {{ $t(widgetTimeType.text) }}
-                                </el-radio>
-                            </el-radio-group>
+                            <BaseRadioGroup
+                                v-model="model.WidgetTime.type"
+                                :radios="createWidgetTimeTypes"
+                                class="radio-groups mb-5"
+                            />
                         </template>
                     </time-frame>
                 </div>
@@ -223,7 +217,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Radio, RadioGroup, Slider } from 'element-ui'
+    import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Slider } from 'element-ui'
     import Modal from '@/components/Common/Modal'
     import queueMixin from '@/mixins/queueMixin'
     import { allSeries } from '@/enum/queueConfigs'
@@ -267,8 +261,6 @@
             RealTimeSettings,
             TimeFrame,
             Modal,
-            [Radio.name]: Radio,
-            [RadioGroup.name]: RadioGroup,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             [Checkbox.name]: Checkbox,
@@ -293,8 +285,8 @@
         },
         data() {
             return {
-                widgetTimeOptions: widgetTimeOptions,
-                widgetTimeTypes: widgetTimeTypes,
+                widgetTimeOptions,
+                widgetTimeTypes,
                 model: {
                     settings: realTimeSettings,
                     colors: cloneDeep(defaultColors),
@@ -364,6 +356,14 @@
             otherFilters() {
                 return this.widget.WidgetConfig.filter(c => c.ParameterType && c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
+            createWidgetTimeTypes () {
+                return this.widgetTimeTypes
+                    .map(el => {
+                        return {
+                            label: el.text, value: el.label
+                        }
+                    })
+            }
         },
         methods: {
             isHtmlEditor,
@@ -472,5 +472,11 @@
             @apply w-full;
         }
     }
+}
+.radio-groups {
+    @apply flex;
+}
+.radio-groups .vc-form-radio:last-child {
+    @apply ml-8;
 }
 </style>

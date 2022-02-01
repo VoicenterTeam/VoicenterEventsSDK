@@ -21,11 +21,14 @@
             <template v-slot:content>
                 <el-form @submit.native.prevent="onChange">
                     <el-form-item>
-                        <label>{{ $t('widget.countersToDisplay') }}</label>
-                        <base-select
-                            :multiple="false"
-                            :data="availableCounters"
-                            v-model="model.WidgetLayout.showCounter"/>
+                        <div class="flex flex-col">
+                            <label>{{ $t('Counters to display') }}</label>
+                            <base-select
+                                :multiple="false"
+                                :data="availableCounters"
+                                v-model="model.WidgetLayout.showCounter"
+                            />
+                        </div>
                     </el-form-item>
                     <el-form-item>
                         <div class="py-2 flex">
