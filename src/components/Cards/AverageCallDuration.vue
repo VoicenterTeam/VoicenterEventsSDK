@@ -21,11 +21,14 @@
             <template v-slot:content>
                 <el-form @submit.native.prevent="onChange">
                     <el-form-item>
-                        <label>{{ $t('widget.countersToDisplay') }}</label>
-                        <base-select
-                            :multiple="false"
-                            :data="availableCounters"
-                            v-model="model.WidgetLayout.showCounter"/>
+                        <div class="flex flex-col">
+                            <label>{{ $t('widget.countersToDisplay') }}</label>
+                            <base-select
+                                :multiple="false"
+                                :data="availableCounters"
+                                v-model="model.WidgetLayout.showCounter"
+                            />
+                        </div>
                     </el-form-item>
                     <el-form-item>
                         <div class="py-2 flex">
@@ -46,12 +49,11 @@
                     :widgetTimeOptions="widgetTimeOptions"
                     v-if="model && model.WidgetTime">
                     <template v-slot:frame-types>
-                        <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
-                            <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
-                                      v-for="widgetTimeType in widgetTimeTypes">
-                                {{ $t(widgetTimeType.text) }}
-                            </el-radio>
-                        </el-radio-group>
+                        <BaseRadioGroup
+                            v-model="model.WidgetTime.type"
+                            :radios="createWidgetTimeTypes"
+                            class="radio-groups mb-5"
+                        />
                     </template>
                 </time-frame>
                 <div class="flex items-center justify-between text-main-base" v-if="autoCompletes.length">
@@ -103,7 +105,7 @@
     import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
-    import { Checkbox, Collapse, CollapseItem, Option, Radio, RadioGroup, Select, Tooltip } from 'element-ui'
+    import { Checkbox, Collapse, CollapseItem, Option, Select, Tooltip } from 'element-ui'
 
     export default {
         mixins: [cardWidgetMixin],
@@ -113,8 +115,6 @@
             AutoComplete,
             UpdateDialog,
             RefreshButton,
-            [Radio.name]: Radio,
-            [RadioGroup.name]: RadioGroup,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
@@ -171,6 +171,14 @@
             getCardIcon() {
                 return this.icons[this.getCounterTypeKey]
             },
+            createWidgetTimeTypes () {
+                return this.widgetTimeTypes
+                    .map(el => {
+                        return {
+                            label: el.text, value: el.label
+                        }
+                    })
+            }
         },
         methods: {
             async getWidgetData() {
@@ -268,3 +276,9 @@
         },
     }
 </script>
+
+<style lang="scss" scoped>
+::v-deep .el-select {
+    @apply w-full;
+}
+</style>
