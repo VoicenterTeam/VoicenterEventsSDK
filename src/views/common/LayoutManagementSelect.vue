@@ -15,14 +15,15 @@
                                @change="onChangeLayoutType"/>
                 </el-tooltip>
             </div>
-            <button @click.stop="triggerMenu"
-                    class="border h-10 border-gray-550 flex w-full items-center rounded cursor-pointer focus:outline-none justify-between px-4">
-                <span class="mx-2 truncate">{{ selectedLayout.LayoutName }}</span>
+            <span class="select-button"
+                  @click.stop="triggerMenu"
+            >
+                <span class="select-text">{{ selectedLayout.LayoutName }}</span>
                 <div class="flex">
                     <IconArrowDown class="text-gray-500 transition"
                                    :class="{'is-expanded': showMenu}"/>
                 </div>
-            </button>
+            </span>
             <fade-transition :duration="fadeDuration">
                 <div class="menu-wrapper"
                      v-if="showMenu">
@@ -106,16 +107,16 @@
                        :title="$t('layout.updateStatus')">
             <template v-slot:footer-actions>
                 <base-button class="mx-4"
-                             @click="onCancel"
-                             variant="discard"
-                             fixed-width="w-37">
+                             outline
+                             fixed-width="w-37"
+                             @click="onCancel">
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
                     </div>
                 </base-button>
-                <base-button @click="onConfirm"
-                             :loading="localLoading">
+                <base-button :loading="localLoading"
+                             @click="onConfirm">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ 'common.confirm' }}</span>
@@ -143,12 +144,12 @@
         ENABLED_STATUS_ID,
         DELETED_STATUS_ID,
     } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    
+
     const MAP_LAYOUT_STATUSES = {
         true: ENABLED_STATUS_ID,
         false: DELETED_STATUS_ID,
     }
-    
+
     export default {
         components: {
             DeleteLayout,
@@ -259,7 +260,7 @@
                         LayoutStatusID: ENABLED_STATUS_ID,
                         LayoutStatusName: 'Enable',
                     }
-                    
+
                     await LayoutApi.update(payload)
                     await this.$store.dispatch('layout/setupLayouts')
                     await this.$store.dispatch('layout/getGlobalLayouts')
@@ -277,29 +278,29 @@
 .layout-selection ::v-deep {
     .menu-wrapper {
         @apply z-50 rounded bg-white mt-1 absolute w-full flex flex-col origin-top-right right-0 shadow-base;
-        
+
         .layouts {
             @apply max-h-64 overflow-auto;
         }
     }
-    
+
     .transition {
         transition: all 0.2s ease-in;
     }
-    
+
     .is-expanded {
         transform: rotate(-180deg);
     }
-    
+
     .layout-wrapper {
         :hover:not(.readonly) {
             @apply bg-primary-100 border border-primary text-primary;
         }
-        
+
         .readonly {
             @apply bg-gray-200 text-gray-500 cursor-not-allowed;
         }
-        
+
         .layout-option {
             @apply shadow-base flex-1 py-2 rounded;
             :hover {
@@ -307,9 +308,16 @@
             }
         }
     }
-    
+
     .el-switch.is-checked .el-switch__core {
         @apply border-primary bg-primary;
+    }
+
+    .select-button {
+        @apply font-normal text-sm border h-8 border-gray-550 flex w-full items-center rounded cursor-pointer focus:outline-none justify-between px-3;
+    }
+    .select-text {
+        @apply text-sm truncate;
     }
 }
 </style>

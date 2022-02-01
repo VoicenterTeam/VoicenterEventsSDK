@@ -1,11 +1,12 @@
 <template>
-<div class="pt-3 pb-5 border-b">
+<div class="pt-3 pb-5 border-b slider">
     <label>{{ $t(LayoutParameterName) }}</label>
     <el-slider
-        v-bind="sliderOptionConfigs[LayoutParameterName]"
+        v-bind="sliderConfig"
         v-on="listeners"
         :value="valueToInt"
         :show-input="showInput"
+        :format-tooltip="tooltipValue"
     />
 </div>
 </template>
@@ -44,12 +45,33 @@ export default {
         valueToInt() {
             return Number(this.$attrs.Value)
         },
+        sliderConfig() {
+            return this.sliderOptionConfigs[this.LayoutParameterName]
+        }
     },
     methods: {
         onInput(value) {
             const valToEmit = value.toString()
             this.$emit('input', valToEmit);
         },
+        tooltipValue(value) {
+            const marks = this.sliderConfig.marks || []
+            return marks[value]
+        }
     },
 }
 </script>
+
+<style lang="scss" scoped>
+.slider::v-deep {
+    .el-slider__marks-text {
+        font-size: 12px;
+        margin-top: 10px;
+    }
+    .el-slider__button {
+        width: 10px;
+        height: 10px;
+        border-width: 1px;
+    }
+}
+</style>

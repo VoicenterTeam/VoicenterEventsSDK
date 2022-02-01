@@ -22,9 +22,10 @@
                     />
                 </div>
                 <template v-slot:footer-actions>
-                    <base-button @click="onCancel()"
-                                 variant="discard"
-                                 fixed-width="w-37">
+                    <base-button outline
+                                 fixed-width="w-37"
+                                 @click="onCancel()"
+                    >
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">
@@ -33,6 +34,7 @@
                         </div>
                     </base-button>
                     <base-button fixed-width="w-37"
+                                 type="primary"
                                  @click="handleSubmit(onDuplicate)">
                         <div class="flex items-center">
                             <IconSave class="mx-1"/>
@@ -52,7 +54,7 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import BaseForm from '@/modules/common/components/form/BaseForm'
     import BaseInput from '@/modules/common/components/form/BaseInput'
-    
+
     export default {
         components: {
             BaseForm,

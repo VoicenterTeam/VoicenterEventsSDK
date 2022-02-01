@@ -28,9 +28,9 @@
         <template v-slot:footer>
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                 <base-button class="mx-4"
-                             @click="$emit('on-close')"
-                             variant="discard"
-                             fixed-width="w-37">
+                             outline
+                             fixed-width="w-37"
+                             @click="$emit('on-close')">
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
@@ -38,7 +38,7 @@
                 </base-button>
                 <base-button fixed-width="w-37"
                              :loading="loading"
-                             variant="danger"
+                             type="danger"
                              @click="onDelete">
                     <div class="flex items-center">
                         <IconDelete class="mx-1"/>
@@ -47,7 +47,7 @@
                 </base-button>
             </div>
         </template>
-    
+
     </modal>
 </template>
 <script>
@@ -57,7 +57,7 @@
     import { Alert, Option, Select } from 'element-ui'
     import LayoutSelect from '@/views/common/LayoutSelect'
     import { statusDictionary } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    
+
     export default {
         components: {
             Modal,
@@ -138,7 +138,7 @@
                     this.loading = true
                     if (this.layoutID) {
                         const dashboardsWithThisLayout = this.dashboardsWithThisLayout
-                        
+
                         const newLayoutID = this.layoutToReplace === 1 ? this.layoutToReplace: this.layoutToReplace.LayoutID
 
                         for (const dashboard of dashboardsWithThisLayout) {
@@ -155,13 +155,13 @@
                             await this.$store.dispatch('layout/updateActiveLayout', layout[0])
                         }
                     }
-                    
+
                     const layoutSettings = {
                         ...this.layoutToRemove,
                         LayoutStatusID: this.statusToSet,
                         LayoutStatusName: this.statusNameToSet,
                     }
-                    
+
                     await LayoutApi.update(layoutSettings)
                     await this.$store.dispatch('layout/setupLayouts')
                     await this.$store.dispatch('layout/getGlobalLayout')

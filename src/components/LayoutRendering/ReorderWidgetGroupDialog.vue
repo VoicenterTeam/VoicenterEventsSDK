@@ -28,9 +28,9 @@
         <template slot="footer">
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                 <base-button class="mx-4"
-                             @click="$emit('on-cancel')"
-                             variant="discard"
-                             fixed-width="w-37">
+                             outline
+                             fixed-width="w-37"
+                             @click="$emit('on-cancel')">
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
@@ -39,6 +39,7 @@
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"
+                             type="primary"
                              @click="onSubmit()">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
@@ -55,7 +56,7 @@
     import Modal from '@/components/Common/Modal'
     import draggableEvents from '@/enum/draggableEvents'
     import DraggableList from '@/components/Widgets/DraggableList'
-    
+
     export default {
         components: {
             Modal,
@@ -92,7 +93,7 @@
             onGroupListChange(ev) {
                 let eventData = ev[draggableEvents.MOVED]
                 let { newIndex: newIndex, oldIndex: oldIndex } = eventData
-                
+
                 this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0])
 
                 this.$emit('reorder-widgets-in-modal')

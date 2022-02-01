@@ -109,21 +109,19 @@
         </div>
         <div class="flex w-full items-center border-t py-6">
             <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
-                <base-button
-                    class="dashboard-creation-btn"
-                    @click="onDiscard"
-                    variant="discard"
+                <base-button class="dashboard-creation-btn"
+                             outline
+                             @click="onDiscard"
                 >
                     <div class="flex items-center">
                         <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
                     </div>
                 </base-button>
-                <base-button
-                    class="dashboard-creation-btn"
-                    :loading="loading"
-                    :disabled="!isFormValid"
-                    @click="tryAddDashboard"
-                >
+                <base-button class="dashboard-creation-btn"
+                             type="primary"
+                             :loading="loading"
+                             :disabled="!isFormValid"
+                             @click="tryAddDashboard">
                     <div class="flex items-center">
                         <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
                     </div>
@@ -137,12 +135,10 @@
         >
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
-                    <base-button
-                        class="mx-4"
-                        @click="showConfirmDialog = false"
-                        variant="discard"
-                        fixed-width="w-37"
-                    >
+                    <base-button class="mx-4"
+                                 outline
+                                 fixed-width="w-37"
+                                 @click="showConfirmDialog = false">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">
@@ -151,10 +147,11 @@
                         </div>
                     </base-button>
                     <base-button
-                        @click="onSubmit"
                         fixed-width="w-37"
                         key="store"
+                        type="primary"
                         :loading="loading"
+                        @click="onSubmit"
                     >
                         {{ $t('Confirm') }}
                     </base-button>

@@ -29,7 +29,7 @@
     import IntegerParameterType from '../components/IntegerParameterType'
     import BooleanParameterType from '../components/BooleanParameterType'
     import { DEFAULT_GROUP_KEYS } from '../layout-management'
-    
+
     export default {
         inheritAttrs: false,
         components: {
@@ -75,18 +75,18 @@
                 const group = this.groupKeys[section]
                 const settings = this.value.LayoutParametersList.filter((el) => group.includes(el.LayoutParameterName))
                 return mapOrder(settings, group, 'LayoutParameterName')
-            },
+            }
         },
     }
 </script>
 <style lang="scss">
 .rtl {
     .layout-wrapper /deep/ {
-        
+
         .el-button--primary {
             margin-left: 10px;
         }
-        
+
         .el-button--default {
             margin-left: 10px;
         }

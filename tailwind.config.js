@@ -1,3 +1,5 @@
+const colors = require('./src/assets/tailwind/colors.js')
+
 let defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
     purge: [
@@ -33,6 +35,8 @@ module.exports = {
                     900: 'var(--gray-900)',
                     950: 'var(--gray-950)',
                     light: 'var(--gray-light)',
+                    DEFAULT: 'var(--gray-400)',
+                    border: 'var(--gray-550)'
                 },
                 blue: {
                     ...defaultTheme.colors.blue,
@@ -52,6 +56,16 @@ module.exports = {
                     ...defaultTheme.colors.orange,
                     350: 'var(--orange-350)',
                 },
+                ...colors
+            },
+            borderColor: {
+                ...colors
+            },
+            fill: {
+                ...colors
+            },
+            stroke: {
+                ...colors
             },
             fontFamily: {
                 montserrat: ['Montserrat', 'sans-serif'],
@@ -65,6 +79,7 @@ module.exports = {
                 radio: '0px 0px 5px var(--primary)'
             },
             minWidth: {
+                ...defaultTheme.spacing,
                 ...defaultTheme.minWidth,
                 16: '4rem',
                 '2xl': '42rem',
@@ -76,6 +91,7 @@ module.exports = {
                 screen: '100vw',
             },
             maxWidth: {
+                ...defaultTheme.spacing,
                 ...defaultTheme.maxWidth,
                 40: '10rem',
                 45: '12.5',
@@ -85,6 +101,7 @@ module.exports = {
                 '90-p': '90%',
             },
             minHeight: {
+                ...defaultTheme.spacing,
                 ...defaultTheme.minHeight,
                 22: '5.25rem',
                 20: '5rem',
@@ -92,6 +109,7 @@ module.exports = {
                 41: '10.5rem',
             },
             maxHeight: {
+                ...defaultTheme.spacing,
                 ...defaultTheme.maxHeight,
                 8: '2rem',
                 28: '7rem',

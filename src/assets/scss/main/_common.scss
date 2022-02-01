@@ -10,3 +10,7 @@
     cursor: -webkit-grabbing;
     cursor: grabbing;
 }
+
+.base-transition {
+    @apply transition-all duration-300 ease-in;
+}

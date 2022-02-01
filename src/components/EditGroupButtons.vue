@@ -61,15 +61,16 @@
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
                     <base-button class="mx-4"
-                                @click="onCancel"
-                                variant="discard"
-                                fixed-width="w-37">
+                                 outline
+                                 fixed-width="w-37"
+                                 @click="onCancel">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
                         </div>
                     </base-button>
                     <base-button @click="addAllWidgetsFromCategory"
+                                 type="primary"
                                  key="store">
                         {{ $t('common.confirm') }}
                     </base-button>
@@ -92,7 +93,7 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import AddWidgetDialog from '@/components/Widgets/AddWidgetsForm/AddWidgetDialog'
     import ReorderWidgetGroupDialog from '@/components/LayoutRendering/ReorderWidgetGroupDialog'
-    
+
     export default {
         inheritAttrs: false,
         name: 'edit-group-buttons',

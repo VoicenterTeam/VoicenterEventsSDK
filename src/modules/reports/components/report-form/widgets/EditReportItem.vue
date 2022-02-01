@@ -45,9 +45,9 @@
         <template v-slot:footer-actions>
             <slot name="footer-actions">
                 <base-button class="mx-4"
-                             @click="onCancel()"
-                             variant="discard"
-                             fixed-width="w-37">
+                             outline
+                             fixed-width="w-37"
+                             @click="onCancel">
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
@@ -56,6 +56,7 @@
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"
+                             type="primary"
                              @click="onSubmit()">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
@@ -72,7 +73,7 @@
     import get from 'lodash/get'
     import { Checkbox } from 'element-ui'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    
+
     export default {
         components: {
             ConfirmDialog,
@@ -135,7 +136,7 @@
                     this.model.ReportItemExport[0].ReportExportTypeID -= type
                 }
             },
-            
+
         },
         watch: {
             '$attrs.visible': {
