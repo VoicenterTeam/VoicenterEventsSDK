@@ -39,10 +39,10 @@
                             </el-tooltip>
                         </div>
                     </div>
-                    <div v-for="widgetGroup in widgetGroupList">
-                        <div :key="widgetGroup.WidgetGroupID"
-                             @click="onEditGroup(widgetGroup)"
-                             class="rounded m-2 cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-primary-100 border-2 border-dotted">
+                    <div v-for="widgetGroup in widgetGroupList" :key="widgetGroup.WidgetGroupID">
+                        <div
+                            @click="onEditGroup(widgetGroup)"
+                            class="rounded m-2 cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-primary-100 border-2 border-dotted">
                             {{widgetGroup.WidgetGroupTitle || $t('dashboard.groupID') +': '+ widgetGroup.WidgetGroupID}}
                         </div>
                     </div>

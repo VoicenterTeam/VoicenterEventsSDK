@@ -1,36 +1,44 @@
 <template>
-    <el-select :filterable="filterable"
-               :collapse-tags="collapseTags"
-               :clearable="multiple"
-               :multiple="multiple"
-               :value="value"
-               :loading="loading"
-               v-bind="$attrs"
-               v-on="listeners">
-        <template v-slot:prefix>
-            <slot name="prefix"/>
-        </template>
-        <slot>
-            <el-option v-if="multiple && data.length" :label="$t('select.all')" :disabled="allValuesSelected"
-                       value="all"/>
-            <el-option v-if="multiple && data.length" :label="$t('select.clear')" :disabled="noValueSelected"
-                       value="none"/>
-            <el-option v-for="(option, key) in data"
-                       :key="key"
-                       :label="composeLabel(option)"
-                       :value="option[valueKey]">
-                <div class="flex items-center"
-                     :key="key">
-                    <component v-if="option.icon"
-                               :is="option.icon"
-                               class="text-primary w-4 h-4"
-                               :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"
-                    />
-                    {{ composeLabel(option) }}
-                </div>
-            </el-option>
-        </slot>
-    </el-select>
+    <div>
+        <div class="select-label" v-if="$slots && $slots.label">
+            <slot name="label" />
+        </div>
+        <div>
+            <el-select :filterable="filterable"
+                :collapse-tags="collapseTags"
+                :clearable="multiple"
+                :multiple="multiple"
+                :value="value"
+                :loading="loading"
+                v-bind="$attrs"
+                v-on="listeners">
+            <template v-slot:prefix>
+                <slot name="prefix"/>
+            </template>
+            <slot>
+                <el-option v-if="multiple && data.length" :label="$t('select.all')" :disabled="allValuesSelected"
+                        value="all"/>
+                <el-option v-if="multiple && data.length" :label="$t('select.clear')" :disabled="noValueSelected"
+                        value="none"/>
+                <el-option v-for="(option, key) in data"
+                        :key="key"
+                        :label="composeLabel(option)"
+                        :value="option[valueKey]">
+                    <div class="flex items-center"
+                        :key="key">
+                        <component
+                            v-if="option.icon"
+                            :is="option.icon"
+                            class="text-primary w-4 h-4"
+                            :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"
+                        />
+                        {{ composeLabel(option) }}
+                    </div>
+                </el-option>
+            </slot>
+        </el-select>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -133,5 +141,14 @@
 <style lang="scss">
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
     color: var(--primary-color) !important;
+}
+.select-label {
+    @apply text-gray-950 text-sm mb-2 font-semibold;
+}
+::v-deep .el-select .el-input .el-select__caret {
+    @apply text-primary font-bold;
+}
+.el-input__inner::placeholder {
+    @apply text-gray-500 font-normal text-sm;
 }
 </style>

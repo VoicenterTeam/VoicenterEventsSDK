@@ -3,15 +3,17 @@
         <portal to="form-title">
             {{ $t('widget.allCategories') }}
         </portal>
-        <TemplateCategoryCard v-for="templatesCategory in getTemplateCategories"
-                              v-bind="templatesCategory"
-                              :key="templatesCategory.CategoryID"
-                              :templates-category="templatesCategory"
+        <TemplateCategoryCard
+            v-for="templatesCategory in getTemplateCategories"
+            v-bind="templatesCategory"
+            :key="templatesCategory.CategoryID"
+            :templates-category="templatesCategory"
         />
     </div>
 </template>
 <script>
     import TemplateCategoryCard from '@/components/Widgets/AddWidgetsForm/TemplateCategoryCard'
+    import cloneDeep from 'lodash/cloneDeep'
     
     export default {
         components: {
@@ -19,7 +21,7 @@
         },
         computed: {
             getTemplateCategories() {
-                return this.$store.state.templatesCategory.all
+                return cloneDeep(this.$store.state.templatesCategory.all)
             },
         },
         methods: {

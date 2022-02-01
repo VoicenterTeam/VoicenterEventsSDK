@@ -1,25 +1,26 @@
 <template>
     <div v-if="!loading"
          class="filter-items -mx-2 px-2">
-        <el-radio-group class="pb-4" v-model="entityType">
-            <el-radio v-for="option in SELECTIONS"
-                v-bind="option"
-                :key="option.label">
-                {{ option.text }}
-            </el-radio>
-        </el-radio-group>
         <div>
             <div class="flex justify-between w-full">
-                <div class="flex items-center">
-                    <component class="w-4-5 h-4-5 text-primary"
-                        :is="getEntityIcon"/>
-                    <span class="mx-1">
-                        {{ model.ParameterPrettyName }}
-                    </span>
+                <div class="mb-0">
+                    <div class="flex items-center pb-4">
+                        <i :class="model.ParameterIcon" class="text-primary mx-w-4-5 text-xl" />
+                        <span class="mx-2 font-medium text-xl text-gray-950">
+                            {{ model.ParameterPrettyName }}
+                        </span>
+                    </div>
+                    <div>
+                        <BaseRadioGroup
+                            v-model="entityType"
+                            :radios="SELECTIONS"
+                            class="radio-groups"
+                        />
+                    </div>
                 </div>
                 <div
                     v-if="model.ParameterDescription"
-                    class="h-12 flex items-center category-wrapper hover:text-primary cursor-pointer"
+                    class="flex items-center category-wrapper hover:text-primary cursor-pointer"
                 >
                     <el-tooltip
                         :content="model.ParameterDescription"
@@ -31,7 +32,8 @@
                     </el-tooltip>
                 </div>
             </div>
-            <base-select class="w-full py-2"
+            <base-select
+                class="py-2 select"
                 filterable
                 :loading="loading"
                 :v-on="$listeners"
@@ -131,5 +133,17 @@
 
 .filter-items:not(:last-child) {
     @apply mb-4 border-b;
+}
+.radio-groups {
+    @apply flex;
+}
+.radio-groups ::v-deep .vc-form-radio:last-child {
+    @apply ml-8;
+}
+.select ::v-deep input::placeholder {
+    @apply text-gray-500 font-normal text-sm;
+}
+.select, .select ::v-deep .el-select>.el-input {
+    @apply w-100;
 }
 </style>

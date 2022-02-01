@@ -1,22 +1,28 @@
 <template>
     <div>
-        <modal :append-to-body="true"
+        <modal
+            :append-to-body="true"
             v-bind="$attrs"
             v-on="$listeners"
             @close="onCloseDialog"
             :width="modalWidth"
-            id="componentStep">
+            id="componentStep"
+            top="50px">
             <template v-slot:redirect-action>
                 <portal-target name="redirect-action"/>
             </template>
             <template v-slot:title>
-                <portal-target name="form-title"/>
+                <span class="form-title">
+                    <portal-target name="form-title"/>
+                </span>
             </template>
             <template v-slot:additional-action>
                 <portal-target name="additional-action"/>
             </template>
-            <fade-transition :duration="transitionDuration"
-                            mode="out-in">
+            <fade-transition
+                :duration="transitionDuration"
+                mode="out-in"
+            >
                 <component
                     :is="getComponentByStep"
                     v-on="$listeners"
@@ -102,7 +108,7 @@
         props: {
             modalWidth: {
                 type: String,
-                default: '50%',
+                default: '1210px',
             },
             widgetGroup: {
                 type: Object,
@@ -159,6 +165,8 @@
         methods: {
             onCloseDialog() {
                 this.$store.dispatch('widgetCreation/resetState')
+                this.$store.dispatch('widgetCreation/resetCopyTemplate')
+                this.$store.dispatch('widgetCreation/resetWidgets')
             },
             addWidgetsToGroup(templates) {
                 const widgetTemplatesToAdd = templates.filter(template => template.toStore)
@@ -191,11 +199,15 @@
         async beforeDestroy () {
             await this.$store.dispatch('widgetCreation/resetState')
             await this.$store.dispatch('widgetCreation/resetCopyTemplate')
+            await this.$store.dispatch('widgetCreation/resetWidgets')
         }
     }
 </script>
 <style lang="scss">
     .redirect-action {
-        @apply text-sm flex items-center px-6 cursor-pointer;
+        @apply text-sm flex items-center px-8 cursor-pointer;
+    }
+    .form-title {
+        @apply text-gray-950 font-bold text-xl;
     }
 </style>
