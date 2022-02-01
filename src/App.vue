@@ -11,11 +11,12 @@
 </template>
 <script>
 import globalMixin from '@/mixins/globalMixin'
+import pageSizeMixin from '@/mixins/pageSizeMixin'
 import { defaultFontSize } from '@/enum/defaultDashboardSettings'
 import NetworkStatusAlert from '@/components/Common/NetworkStatusAlert'
 
 export default {
-    mixins: [globalMixin],
+    mixins: [globalMixin, pageSizeMixin],
     components: {
         NetworkStatusAlert,
     },
@@ -41,7 +42,8 @@ export default {
             await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
             await this.$store.dispatch('layout/setupLayouts')
             await this.$store.dispatch('layout/getGlobalLayout')
-            this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
+            await this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
+            await this.$store.dispatch('dashboards/mapAllDashboardsWidgets')
         } finally {
             await this.$store.dispatch('dashboards/setContentLoading', false)
         }
@@ -51,10 +53,10 @@ export default {
             return this.$store.getters['layout/getActiveLayout']
         },
         colors() {
-            return this.$store.getters['layout/colors']
+            return this.$store.getters['layout/colors']('activeLayout')
         },
         fontSize() {
-            return this.$store.getters['layout/baseFontSize']
+            return this.$store.getters['layout/baseFontSize']('activeLayout')
         },
         activeDashboard() {
             return this.$store.getters['dashboards/getActiveDashboard']

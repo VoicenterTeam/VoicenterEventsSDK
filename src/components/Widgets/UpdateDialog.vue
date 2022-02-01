@@ -296,7 +296,7 @@
                 widgetTimeOptions: widgetTimeOptions,
                 widgetTimeTypes: widgetTimeTypes,
                 model: {
-                    settings: cloneDeep(realTimeSettings),
+                    settings: realTimeSettings,
                     colors: cloneDeep(defaultColors),
                 },
                 activeCollapse: ['filters'],
@@ -349,7 +349,7 @@
                 return areaChartWidgetColors
             },
             predefinedColors() {
-                let options = values(this.$store.getters['layout/colors'])
+                let options = values(this.$store.getters['layout/colors']('activeLayout'))
                 return uniq(options)
             },
             rules() {

@@ -147,7 +147,7 @@
         },
         computed: {
             getStyles() {
-                return this.$store.getters['layout/widgetTitleStyles']
+                return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
             },
             isSimpleTable() {
                 return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)

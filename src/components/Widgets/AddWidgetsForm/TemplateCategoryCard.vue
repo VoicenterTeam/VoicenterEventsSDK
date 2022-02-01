@@ -2,24 +2,32 @@
     <div>
         <div class="py-2 bg-white flex items-center cursor-pointer border-b -mx-4"
              @click="onSelectCategory">
-            <div class="flex items-center justify-between w-full py-4 px-10 text-steel hover:text-primary">
+            <div class="flex items-center justify-between w-full py-4 px-10 text-steel">
                 <div class="flex items-center flex-1">
                     <slot name="icon">
-                        <component class="w-10 h-10"
-                                   :is="getCategoryImage"/>
+                        <component class="w-10 h-10 text-primary"
+                            :is="getCategoryImage"
+                        />
                     </slot>
-                    <slot name="title">
-                        <p class="text-main-2xl mx-6 font-medium">
-                            {{ $t(CategoryName) }}
-                        </p>
-                    </slot>
+                    <div class="mx-6-5">
+                        <slot name="title">
+                            <p class="text-2xl font-bold text-gray-950">
+                                {{ $t(CategoryName) }}
+                            </p>
+                        </slot>
+                        <slot name="description">
+                            <p class="text-xs font-normal text-gray-950 mt-2">
+                                {{ $t(CategoryDescription) }}
+                            </p>
+                        </slot>
+                    </div>
                     <slot name="state-icon"/>
                 </div>
-                <div class="flex items-center">
-                <span class="mx-2">
-                    {{ get(templatesCategory, 'TemplatesList.length', 0) }}
-                    {{ $t('widget.widgets') }}
-                </span>
+                <div class="flex items-center text-primary">
+                    <span class="mx-3 font-bold text-base">
+                        {{ getTemplatesListLength }}
+                        {{ setWidgetTranslation }}
+                    </span>
                     <IconShapeMini/>
                 </div>
             </div>
@@ -34,12 +42,16 @@
             CategoryImage: String,
             CategoryName: {
                 type: String,
-                default: '- -',
+                default: '- -'
             },
             templatesCategory: {
                 type: Object,
-                default: () => ({}),
+                default: () => ({})
             },
+            CategoryDescription: {
+                type: String,
+                default: ''
+            }
         },
         methods: {
             get,
@@ -55,6 +67,12 @@
                 }
                 return 'Icon' + iconName
             },
+            getTemplatesListLength () {
+                return get(this.templatesCategory, 'TemplatesList.length', 0)
+            },
+            setWidgetTranslation () {
+                return this.getTemplatesListLength === 1 ? this.$t('widget.widget') : this.$t('widget.widgets')
+            }
         },
     }
 </script>

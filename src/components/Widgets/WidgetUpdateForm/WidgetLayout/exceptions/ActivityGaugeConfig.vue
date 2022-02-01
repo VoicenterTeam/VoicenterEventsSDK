@@ -96,7 +96,7 @@
         },
         computed: {
             predefinedColors () {
-                let options = values(this.$store.getters['layout/colors'])
+                let options = values(this.$store.getters['layout/colors']('activeLayout'))
                 return uniq(options)
             },
             displayMainCountSelector () {

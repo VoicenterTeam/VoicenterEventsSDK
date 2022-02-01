@@ -25,8 +25,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-2 px-2">
-                <div v-for="item in templateHelp.Items">
+            <div class="col-span-2 px-2 overflow-auto max-h-65vh">
+                <div v-for="(item, index) in templateHelp.Items" :key="index">
                     <p class="text-gray-800 my-2">{{ item.ItemName }}</p>
                     <div class="flex break-normal p-1"
                          :class="{'bg-primary-100 rounded': item.ItemNumber === activeItemNumber}">
