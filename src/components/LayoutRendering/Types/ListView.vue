@@ -79,7 +79,7 @@
         },
         computed: {
             getStyles() {
-                return this.$store.getters['layout/widgetGroupTitleStyles']
+                return this.$store.getters['layout/widgetGroupTitleStyles']('activeLayout')
             },
         },
         methods: {

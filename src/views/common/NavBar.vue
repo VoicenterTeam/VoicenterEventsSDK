@@ -25,7 +25,7 @@
         },
         computed: {
             getLogo() {
-                return this.$store.getters['layout/getLogo']
+                return this.$store.getters['layout/getLogo']('activeLayout')
             },
         },
         methods: {

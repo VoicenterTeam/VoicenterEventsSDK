@@ -17,10 +17,10 @@
         },
         computed: {
             showWidgetTitle() {
-                return this.$store.getters['layout/showWidgetTitles']
+                return this.$store.getters['layout/showWidgetTitles']('activeLayout')
             },
             widgetTitleStyles() {
-                return this.$store.getters['layout/widgetTitleStyles']
+                return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
             }
         }
     }

@@ -2,15 +2,19 @@
     <div class="transition flex relative flex-col dashboard-wrapper">
         <div class="overflow-hidden h-8 w-full bg-transparent px-4" v-if="onFullScreen">
             <div @click="triggerFullScreenMode"
-                 :class="$rtl.isRTL ? 'mr-auto' : 'right-0'"
-                 class="flex w-full justify-end items-center cursor-pointer h-8 focus:outline-none text-gray-550 hover:text-primary">
+                :class="$rtl.isRTL ? 'mr-auto' : 'right-0'"
+                class="flex w-full justify-end items-center cursor-pointer h-8 focus:outline-none text-primary"
+            >
                 <IconExitFullScreen class="mx-2"/>
                 {{ $t('dashboard.exitFullScreen') }}
             </div>
         </div>
         <socket-status-alert @retry="retrySocketConnection"/>
-        <base-navbar v-if="!onFullScreen"
-                     key="base-navbar">
+        <base-navbar
+            v-if="!onFullScreen"
+            key="base-navbar"
+            :editMode="editMode"
+            layoutType="activeLayout">
             <template v-slot:dashboard-operations>
                 <div v-if="layoutType !== 'tabbed'"
                      class="flex items-center">
@@ -61,27 +65,36 @@
                         <IconArrowDown v-else/>
                     </div>
                 </div>
-                <div class="p-1"
-                     :class="{'px-2 md:p-6': !onFullScreen}"
-                     :key="activeDashboardData.DashboardID">
+                <div
+                    class="p-1"
+                    :class="{'px-2 md:p-6': !onFullScreen}"
+                    :key="activeDashboardData.DashboardID"
+                >
+                    <div
+                        v-if="onFullScreen && showActiveWidgetGroupName"
+                        class="font-bold text-xl text-gray pl-2 mb-4"
+                    >
+                        {{ showActiveWidgetGroupName}}
+                    </div>
                     <fade-transition :duration="250" mode="out-in">
-                        <component :active-tab="activeTab"
-                                   :edit-mode="editMode"
-                                   :is="layoutTypes[layoutType]"
-                                   :active-dashboard-data="activeDashboardData"
-                                   :layout-type="layoutType"
-                                   :storing-data="storingData"
-                                   :widget-group-list="groupsToDisplay"
-                                   :widget-templates="allWidgetTemplates"
-                                   :editedGroup="groupToEdit"
-                                   @add-widgets-to-group="addWidgetsToGroup"
-                                   @duplicate-widget="duplicateWidget"
-                                   @on-edit-widget-group="onEditWidgetGroup"
-                                   @remove-group="(widgetGroup) => tryRemoveWidgetGroup(widgetGroup)"
-                                   @remove-widget="(data) => removeWidget(data.widget, data.group)"
-                                   @switch-tab="(tab) => switchTab(tab)"
-                                   @update-widget="(data) => updateWidget(data.widget, data.group)"
-                                   @on-reorder-widget-group="(data) => onReorderWidgetGroup(data)"
+                        <component
+                            :active-tab="activeTab"
+                            :edit-mode="editMode"
+                            :is="layoutTypes[layoutType]"
+                            :active-dashboard-data="activeDashboardData"
+                            :layout-type="layoutType"
+                            :storing-data="storingData"
+                            :widget-group-list="groupsToDisplay"
+                            :widget-templates="allWidgetTemplates"
+                            :editedGroup="groupToEdit"
+                            @add-widgets-to-group="addWidgetsToGroup"
+                            @duplicate-widget="duplicateWidget"
+                            @on-edit-widget-group="onEditWidgetGroup"
+                            @remove-group="(widgetGroup) => tryRemoveWidgetGroup(widgetGroup)"
+                            @remove-widget="(data) => removeWidget(data.widget, data.group)"
+                            @switch-tab="(tab) => switchTab(tab)"
+                            @update-widget="(data) => updateWidget(data.widget, data.group)"
+                            @on-reorder-widget-group="(data) => onReorderWidgetGroup(data)"
                         />
                     </fade-transition>
                 </div>
@@ -195,6 +208,10 @@
                 }
                 return this.activeDashboardData.WidgetGroupList
             },
+            showActiveWidgetGroupName () {
+                const activeWidgetGroup = this.activeDashboardData.WidgetGroupList.find(el => Number(el.WidgetGroupID) === Number(this.activeWidgetGroupID))
+                return activeWidgetGroup.WidgetGroupTitle || this.$t('Group ID') +': '+ activeWidgetGroup.WidgetGroupID
+            }
         },
         methods: {
             get,
