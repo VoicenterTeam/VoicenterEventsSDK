@@ -26,7 +26,7 @@
                 <div class="flex items-center pb-4">
                     <i class="vc-icon-timer text-primary mx-w-4-5 text-xl" />
                     <span class="mx-2 font-medium text-xl text-gray-950">
-                        {{ $t('timeFrame') }}
+                        {{ $t('settings.time.frame') }}
                     </span>
                 </div>
                 <time-frame
@@ -44,6 +44,65 @@
                         />
                     </template>
                 </time-frame>
+            </div>
+            <div class="pt-4 pb-7 px-16" v-if="showStatisticsToDisplay">
+                <div class="flex items-center pt-4">
+                    <div class="flex items-center pb-4">
+                        <span class="mx-2 font-medium text-xl text-gray-950">
+                            {{ $t('statistics.to.display') }}
+                        </span>
+                    </div>
+                </div>
+                <base-select
+                    :data="statistics"
+                    v-model="ShowStatistics"
+                    valueKey="key"
+                    class="select-statistics"
+                />
+                <div class="flex mt-3">
+                    <el-checkbox v-model="SumOfOthers">
+                        <span class="text-gray-950">
+                            {{ $t('widget.displayPercentOfOthersValue') }}
+                        </span>
+                    </el-checkbox>
+                    <el-checkbox v-model="AbsoluteNumbers">
+                        <span class="text-gray-950">
+                            {{ $t('widget.displayAbsoluteNumbers') }}
+                        </span>
+                    </el-checkbox>
+                </div>
+            </div>
+            <div class="pt-4 pb-7 px-16" v-if="showStatusSelect">
+                <div class="w-100">
+                    <div class="flex items-center pt-4">
+                        <div class="flex items-center pb-4">
+                            <span class="mx-2 font-medium text-xl text-gray-950">
+                                {{ $t('general.status') }}
+                            </span>
+                        </div>
+                    </div>
+                    <el-select
+                        :placeholder="$t('common.selectStatus')"
+                        @change="onStatusChange"
+                        class="w-full select select-status"
+                        :label="`${selectedStatus}`"
+                        v-model="selectedStatus">
+                        <el-option
+                            v-for="option in statuses"
+                            :key="option.value"
+                            :label="$t(option.text)"
+                            v-bind="option"
+                        >
+                            <div class="flex">
+                                <component :is="option.icon" class="w-5 mx-1 text-primary" />
+                                <span class="w-16 mx-1">{{ $t(option.text) }}</span>
+                            </div>
+                        </el-option>
+                        <template #prefix>
+                            <component :is="selectedIcon" class="w-5 mx-1 pt-2 text-primary" />
+                        </template>
+                    </el-select>
+                </div>
             </div>
             <div v-for="(config, index) in uniqTemplatesConfigs"
                 :key="index"
@@ -80,12 +139,19 @@
     import ENUM from '@/enum/parameters'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
+    import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
+    import { Option, Select, Checkbox } from 'element-ui'
+    import { isCounterAgentsInStatus, isQueueDashboardWidget } from '@/helpers/widgetUtils'
+    import { statistics } from '@/enum/queueDashboardStatistics'
 
     export default {
         components: {
             AutoComplete,
             OtherFilters,
-            TimeFrame
+            TimeFrame,
+            [Option.name]: Option,
+            [Select.name]: Select,
+            [Checkbox.name]: Checkbox
         },
         props: {
             templates: {
@@ -102,7 +168,16 @@
                 widgetTimeTypes,
                 widgetTimeOptions,
                 widgetName: '',
-                editIndex: null
+                editIndex: null,
+                selectedStatus: '',
+                selectedIcon: '',
+                selectedOption: {},
+                showStatusSelect: false,
+                statistics,
+                ShowStatistics: [],
+                SumOfOthers: false,
+                AbsoluteNumbers: false,
+                showStatisticsToDisplay: false
             }
         },
         computed: {
@@ -116,6 +191,29 @@
                             label: el.text, value: el.label
                         }
                     })
+            },
+            statuses() {
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                let finalStatuses = []
+                
+                if (storeStatuses.length) {
+                    finalStatuses = this.getStoreStatuses()
+                } else {
+                    finalStatuses = localStatuses.map(status => {
+                        const statusText = this.$store.getters['entities/getStatusTextById'](status.value)
+                        return {
+                            ...status,
+                            text: statusText,
+                        }
+                    })
+                }
+                
+                finalStatuses.push(statusTypes[callStatuses.CALLING])
+                finalStatuses.push(statusTypes[callStatuses.HOLD])
+                finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
+                
+                return finalStatuses
             }
         },
         async mounted () {
@@ -132,6 +230,21 @@
                     widgetTime: this.widgetTimeConfig.WidgetTime,
                     widgetName: this.widgetName,
                     index: this.editIndex
+                }
+
+                if (this.selectedOption && Object.keys(this.selectedOption).length) {
+                    data.defaultWidgetLayout = {
+                        status: this.selectedOption
+                    }
+                }
+                if (this.ShowStatistics && this.ShowStatistics.length) {
+                    data.defaultWidgetLayout = {
+                        statistics: {
+                            ShowStatistics: this.ShowStatistics,
+                            SumOfOthers: this.SumOfOthers,
+                            AbsoluteNumbers: this.AbsoluteNumbers
+                        }
+                    }
                 }
 
                 await this.$store.dispatch('widgetCreation/updateWidget', data)
@@ -155,8 +268,53 @@
                         ...templateToEdit.DefaultWidgetTime
                     }
                 }
+
                 this.widgetName = templateToEdit.TemplateName
+
+                const templateToEditWithDataType = [templateToEdit]
+                this.showStatusSelect = templateToEditWithDataType.some(el => isCounterAgentsInStatus(el.DataType))
+                this.showStatisticsToDisplay = templateToEditWithDataType.some(el => isQueueDashboardWidget(el))
+
+                if (this.getTemplateToEdit.template && Object.keys(this.getTemplateToEdit.template).length && 'DefaultWidgetLayout' in this.getTemplateToEdit.template) {
+                    if (this.showStatusSelect) {
+                        this.onStatusChange(this.getTemplateToEdit.template.DefaultWidgetLayout.status.value)
+                    }
+
+                    if (this.showStatisticsToDisplay) {
+                        this.ShowStatistics = this.getTemplateToEdit.template.DefaultWidgetLayout.statistics.ShowStatistics
+                        this.SumOfOthers = this.getTemplateToEdit.template.DefaultWidgetLayout.statistics.SumOfOthers
+                        this.AbsoluteNumbers = this.getTemplateToEdit.template.DefaultWidgetLayout.statistics.AbsoluteNumbers
+                    }
+                }
+            },
+            onStatusChange(value) {
+                let option = statusTypes[value];
+                this.selectedOption = option;
+                this.selectedStatus = option.value;
+                this.selectedIcon = option.icon;
+            },
+            getStoreStatuses() {
+                const storeStatuses = this.$store.getters['entities/accountStatuses']
+                let localStatuses = Object.values(statusTypes)
+                return storeStatuses.map(status => {
+                    const otherData = localStatuses.find(s => s.value === status.StatusID) || {}
+                    if (otherData) {
+                        otherData['text'] = this.$store.getters['entities/getStatusTextById'](otherData.value)
+                    }
+                    return {
+                        ...status,
+                        ...otherData,
+                    }
+                })
             }
         }
     }
 </script>
+<style lang="scss">
+.select-status .el-input__inner {
+    @apply pl-9;
+}
+.select-statistics .el-select .el-input__inner {
+    @apply w-100;
+}
+</style>

@@ -27,7 +27,7 @@
                         <span
                             class="text-sm"
                         >
-                            {{ $t('Add Widget') }}
+                            {{ $t('dashboard.addWidget') }}
                         </span>
                     </div>
                 </el-button>
@@ -77,7 +77,7 @@
                 <el-button @click="finish"
                     class="font-bold btn-finish"
                     type="primary">
-                    {{ $t('Finish') }}
+                    {{ $t('general.finish') }}
                 </el-button>
             </div>
         </portal>

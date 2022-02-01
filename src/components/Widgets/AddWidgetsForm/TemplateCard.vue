@@ -18,10 +18,9 @@
                     <div class="text-xl text-gray-950 break-normal">
                         {{ $t(TemplateName) }}
                     </div>
-                    <span
+                    <span 
                         v-if="activeWidgets"
-                        class="text-xs text-steel"
-                    >
+                        class="text-xs text-steel">
                     {{ $t('widget.activeWidgets') }}: {{ activeWidgets }}
                 </span>
                 </div>

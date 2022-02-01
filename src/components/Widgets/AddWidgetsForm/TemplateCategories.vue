@@ -13,6 +13,7 @@
 </template>
 <script>
     import TemplateCategoryCard from '@/components/Widgets/AddWidgetsForm/TemplateCategoryCard'
+    import cloneDeep from 'lodash/cloneDeep'
     
     export default {
         components: {
@@ -20,7 +21,7 @@
         },
         computed: {
             getTemplateCategories() {
-                return this.$store.state.templatesCategory.all
+                return cloneDeep(this.$store.state.templatesCategory.all)
             },
         },
         methods: {

@@ -31,7 +31,8 @@
                             :class="{'text-primary': selectedLayout.LayoutID === layout.LayoutID, 'readonly': !activeLayouts}"
                             @click="onChooseLayout(layout)"
                             class="flex flex-row items-center justify-between py-2 px-4 cursor-pointer layout-wrapper"
-                            v-for="layout in filteredLayouts">
+                            v-for="(layout, index) in filteredLayouts"
+                            :key="index">
                             <div class="layout-option flex flex-row px-2 w-full  border border-transparent"
                                  :class="{'readonly': !activeLayouts}">
                                 <div class="flex flex-col w-full">

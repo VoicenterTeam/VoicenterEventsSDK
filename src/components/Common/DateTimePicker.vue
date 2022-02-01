@@ -87,9 +87,9 @@
     }
 }
 ::v-deep .el-input__icon.el-range__icon.vc-icon-schedule-calendar {
-    @apply text-primary text-base;
+    @apply text-primary text-base cursor-pointer leading-8;
 }
 ::v-deep .el-input__icon.el-range__close-icon {
-    @apply text-primary text-base;
+    @apply text-primary text-base cursor-pointer leading-8;
 }
 </style>

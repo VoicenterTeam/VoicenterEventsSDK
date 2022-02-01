@@ -148,4 +148,7 @@
 ::v-deep .el-select .el-input .el-select__caret {
     @apply text-primary font-bold;
 }
+.el-input__inner::placeholder {
+    @apply text-gray-500 font-normal text-sm;
+}
 </style>

@@ -3,7 +3,11 @@
         <portal to="redirect-action">
           <span class="text-primary redirect-action"
                 @click="allTemplateCategories()">
+<<<<<<< HEAD
                 <IconDirLeft class="mr-2"/>
+=======
+                <IconDirLeft class="mx-2"/>
+>>>>>>> production
                 {{ $t('widget.allCategories') }}
             </span>
         </portal>
@@ -153,6 +157,9 @@
                 return this.templateCategory.TemplatesList || []
             },
             filteredTemplates() {
+                if (!this.templateList || !this.templateList.length) {
+                    return
+                }
                 return this.templateList.filter((template) => {
                     const templateName = this.translateTemplateName(template.TemplateName)
                     return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
