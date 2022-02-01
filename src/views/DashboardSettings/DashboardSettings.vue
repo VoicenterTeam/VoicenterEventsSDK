@@ -9,7 +9,7 @@
                             <div @click="onDiscard"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                                 <IconDirLeft/>
-                                <span class="mx-1">{{ $t('Back') }}</span>
+                                <span class="mx-1">{{ $t('general.back') }}</span>
                             </div>
                             <span class="mx-4 lg:mx-8">
                             <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
@@ -19,7 +19,7 @@
                             </span>
                             <div class="flex flex-col w-full flex-1">
                                 <span class="text-xl font-bold text-gray-900">
-                                    {{ $t('Dashboard Settings') }}
+                                    {{ $t('dashboard.dashboardSettings') }}
                                 </span>
                                 <div class="flex justify-center items-center w-full md:hidden flex-col">
                                     <CopyDashboard :dashboard="activeDashboard"/>
@@ -29,7 +29,7 @@
                                             fixed-width="w-37">
                                         <div class="flex items-center">
                                             <IconDiscard class="mx-1"/>
-                                            <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
+                                            <span class="mx-1 text-base font-bold">{{ $t('general.discard') }}</span>
                                         </div>
                                     </base-button>
                                     <base-button fixed-width="w-37"
@@ -37,7 +37,7 @@
                                                  @click="onSubmit">
                                         <div class="flex items-center">
                                             <IconSave class="mx-1"/>
-                                            <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
+                                            <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
                                         </div>
                                     </base-button>
                                 </div>
@@ -51,7 +51,7 @@
                                          fixed-width="w-37">
                                 <div class="flex items-center">
                                     <IconDiscard class="mx-1"/>
-                                    <span class="mx-1 text-base font-bold">{{ $t('Discard') }}</span>
+                                    <span class="mx-1 text-base font-bold">{{ $t('general.discard') }}</span>
                                 </div>
                             </base-button>
                             <base-button fixed-width="w-37"
@@ -59,7 +59,7 @@
                                          @click="onSubmit">
                                 <div class="flex items-center">
                                     <IconSave class="mx-1"/>
-                                    <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
+                                    <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
                                 </div>
                             </base-button>
                         </div>

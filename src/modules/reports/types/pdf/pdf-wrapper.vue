@@ -8,7 +8,7 @@
                          class="h-5 mx-8"
                     />
                     <span class="leading-4 font-medium text-xs">
-                        {{ $t('Report №') }}2215
+                        {{ $t('report.report№') }}2215
                     </span>
                 </div>
                 <div class="flex flex-col mr-5 items-end leading-2 font-semibold text-xxs">
@@ -51,7 +51,7 @@
         },
         computed: {
             getLogo() {
-                return this.$store.getters['layout/getLogo']
+                return this.$store.getters['layout/getLogo']('activeLayout')
             },
             activeDashboard() {
                 return this.$store.getters['dashboards/getActiveDashboard']

@@ -8,11 +8,11 @@
         </div>
         <div class="w-full pt-5" v-if="displayMainCountSelector">
             <div class="flex">
-                <p class="pb-2">{{$t('Display as main count')}}</p>
+                <p class="pb-2">{{$t('widget.displayAsMainCount')}}</p>
                 <el-popover
                     placement="bottom-start"
                     trigger="hover">
-                    {{$t('Select count to be displayed in the bigger circle')}}
+                    {{$t('widget.selectCountBiggerCircle')}}
                     <InfoIcon class="mx-3 text-primary cursor-help w-5" slot="reference"></InfoIcon>
                 </el-popover>
             </div>
@@ -96,7 +96,7 @@
         },
         computed: {
             predefinedColors () {
-                let options = values(this.$store.getters['layout/colors'])
+                let options = values(this.$store.getters['layout/colors']('activeLayout'))
                 return uniq(options)
             },
             displayMainCountSelector () {

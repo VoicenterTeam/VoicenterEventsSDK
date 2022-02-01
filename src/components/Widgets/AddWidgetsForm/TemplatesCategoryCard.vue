@@ -17,7 +17,7 @@
             <div class="flex items-center">
                 <span class="mx-2">
                     {{ get(templatesCategory, 'TemplatesList.length', 0) }}
-                    {{ $t('Widgets') }}
+                    {{ $t('widget.widgets') }}
                 </span>
                 <IconShapeMini/>
             </div>

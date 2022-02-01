@@ -63,9 +63,9 @@
         },
         computed: {
             circularTimeout() {
-                const reportSwitching = this.$store.getters['layout/switchReport']
+                const reportSwitching = this.$store.getters['layout/switchReport']('activeLayout')
                 if (reportSwitching) {
-                    return this.$store.getters['layout/switchInterval']
+                    return this.$store.getters['layout/switchInterval']('activeLayout')
                 } else {
                     return null
                 }

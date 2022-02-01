@@ -8,14 +8,14 @@
         </div>
         <div v-else>
             <div class="flex flex-wrap -mx-1 pt-2" v-if="queueStatistics">
-                <div v-for="item in queueStatistics[PRIMARY_TYPE]">
+                <div v-for="(item, index) in queueStatistics[PRIMARY_TYPE]" :key="index">
                     <statistic-card
                         :item="getItemValue(item)"
                         :widget="data"
                         v-if="displayCounter(item)"
                     />
                 </div>
-                <div v-for="item in queueStatistics[PERCENTAGE_TYPE]">
+                <div v-for="(item, index) in queueStatistics[PERCENTAGE_TYPE]"  :key="index">
                     <statistic-card
                         :item="getItemInPercentage(item)"
                         :widget="data"

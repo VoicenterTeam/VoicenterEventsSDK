@@ -18,11 +18,11 @@
                 <WidgetRefreshInterval :model="model"/>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Widget external endpoint') }}</label>
+                <label>{{ $t('widget.widgetExternalEndpoint') }}</label>
                 <el-input v-model="model.WidgetLayout.Endpoint"/>
             </el-form-item>
             <el-form-item>
-                <label>{{ $t('Widget type') }}</label>
+                <label>{{ $t('widget.widgetType') }}</label>
                 <el-select v-model="model.WidgetLayout.ComponentTypeID"
                            placeholder="Select"
                            class="w-full pt-2">
@@ -35,7 +35,7 @@
             </el-form-item>
             <el-collapse v-if="model.WidgetLayout.ComponentTypeID"
                          v-model="activeCollapse">
-                <el-collapse-item :title="$t('Dictionary')" name="dictionary">
+                <el-collapse-item :title="$t('widget.dictionary')" name="dictionary">
                     <json-viewer
                         :value="dictionary[model.WidgetLayout.ComponentTypeID]"
                         :expand-depth=5
@@ -109,7 +109,7 @@
                     this.widget.WidgetLayout.ComponentTypeID !== this.model.WidgetLayout.ComponentTypeID) {
                     this.$confirm(
                         this.$t('common.confirm.question', {
-                            action: this.$t('to update widget'),
+                            action: this.$t('config.toUpdateWidget'),
                         }), this.$t('widget.update'), {
                             cancelButtonText: this.$t('common.cancel'),
                             confirmButtonText: this.$t('common.confirm'),

@@ -21,7 +21,7 @@
             <template v-slot:content>
                 <el-form @submit.native.prevent="onChange">
                     <el-form-item>
-                        <label>{{ $t('Counters to display') }}</label>
+                        <label>{{ $t('widget.countersToDisplay') }}</label>
                         <base-select
                             :multiple="false"
                             :data="availableCounters"

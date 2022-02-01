@@ -2,7 +2,7 @@
     <div>
         <div class="flex items-center justify-between pb-4">
             <span class="leading-6 font-medium text-xl">
-                {{$t('Schedule list')}}
+                {{$t('widget.scheduleList')}}
             </span>
             <ScheduleForm v-bind="$attrs"/>
         </div>

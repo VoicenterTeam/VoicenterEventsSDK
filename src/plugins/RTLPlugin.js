@@ -10,12 +10,12 @@ export default {
                 enableRTL() {
                     this.isRTL = true
                     document.body.classList.add('rtl')
-                    document.body.dir = "rtl"
+                    document.documentElement.dir = "rtl"
                 },
                 disableRTL() {
                     this.isRTL = false
                     document.body.classList.remove('rtl')
-                    document.body.dir = "ltr"
+                    document.documentElement.dir = "ltr"
                 },
             }
         })

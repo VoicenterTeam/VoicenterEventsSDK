@@ -35,10 +35,10 @@ export default {
             return this.$store.getters['layout/getActiveLayout']
         },
         colors() {
-            return this.$store.getters['layout/colors']
+            return this.$store.getters['layout/colors']('activeLayout')
         },
         fontSize() {
-            return this.$store.getters['layout/baseFontSize']
+            return this.$store.getters['layout/baseFontSize']('activeLayout')
         },
         activeDashboard() {
             return this.$store.getters['dashboards/getActiveDashboard']

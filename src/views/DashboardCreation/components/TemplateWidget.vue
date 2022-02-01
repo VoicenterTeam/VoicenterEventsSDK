@@ -16,7 +16,7 @@
                         <IconInfo></IconInfo>
                     </i>
                     <span class="mx-1">
-                        {{ $t('Learn More') }}
+                        {{ $t('widget.learnMore') }}
                     </span>
                 </div>
             </div>

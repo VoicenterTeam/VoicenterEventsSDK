@@ -1,52 +1,74 @@
 <template>
     <div>
         <portal to="redirect-action">
-          <span class="text-steel hover:text-primary redirect-action"
+          <span class="text-primary redirect-action"
                 @click="allTemplateCategories()">
-                <IconDirLeft class="mx-1"/>
-                {{ $t('All Categories') }}
+                <IconDirLeft class="mx-2"/>
+                {{ $t('widget.allCategories') }}
             </span>
         </portal>
         <portal to="form-title">
             {{ $t(templateCategory.CategoryName) }}
         </portal>
         <portal to="additional-action">
-            <el-button @click="tryAddAllWidgetsFromCategory()"
-                       size="mini"
-                       type="_primary">
-                <div class="flex items-center">
-                    <IconAdd :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
-                    <span>{{ $t('Add All') }}</span>
-                </div>
-            </el-button>
+            <span 
+                class="mr-2"
+            >
+                <el-button
+                    @click="tryAddAllWidgetsFromCategory()"
+                    type="_primary"
+                    class="button-add-all"
+                >
+                    <div class="flex items-center">
+                        <IconAdd :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
+                        <span
+                            class="text-base"
+                        >
+                            {{ $t('widget.addAll') }}
+                        </span>
+                    </div>
+                </el-button>
+            </span>
         </portal>
-        <div class="flex w-full justify-center border-b py-4">
-            <div class="w-1/2">
-                <el-input :placeholder="$t('Search')"
-                          size="small"
-                          suffix-icon="el-icon-search"
-                          v-model="search"/>
+        <div class="flex justify-center border-b py-4 -mx-4-5">
+            <div class="w-full max-w-md">
+                <el-input
+                    v-model="search"
+                    :placeholder="$t('general.search')"
+                    class="input-search"
+                >
+                    <template v-slot:prefix>
+                        <i class="el-input__icon vc-icon-search text-primary text-xl" />
+                    </template>
+                </el-input>
             </div>
         </div>
-        <div class="flex -mx-2 flex-col">
+        <div class="flex flex-col -mx-4-5">
             <div :key="template.TemplateID"
-                 class="w-full px-2"
+                 class="w-full"
                  v-for="template in filteredTemplates">
-                <TemplateCard class="w-full"
-                              :key="template.TemplateID"
-                              :quantities="quantities"
-                              v-bind="template">
+                <TemplateCard
+                    class="w-full"
+                    :key="template.TemplateID"
+                    :quantities="quantities"
+                    v-bind="template"
+                >
                     <template v-slot:new-one>
                         <el-button
                             @click="manageWidgets(1, template)"
                             size="mini"
-                            class="w-24 text-center"
+                            class="button-add-one-widget text-center"
                             :key="template.TemplateID"
-                            type="_primary">
+                            type="_primary"
+                        >
                             <div class="flex items-center justify-center">
                                 <IconAdd class="mb-0-5"
                                     :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
-                                <span>{{ $t('Add') }}</span>
+                                <span
+                                    class="text-sm"
+                                >
+                                    {{ $t('general.add') }}
+                                </span>
                             </div>
                         </el-button>
                     </template>
@@ -59,16 +81,19 @@
                             placeholder="0"
                             v-model="quantities[template.TemplateID]"
                             @change="manageWidgets($event, template)"
+                            class="input-number"
                         />
                     </template>
                     <template v-slot:template-preview>
-                        <el-tooltip :content="$t('Template Dictionary')"
+                        <el-tooltip :content="$t('widget.templateDictionary')"
                                     :open-delay="openDelay"
                                     class="item"
                                     effect="dark"
                                     placement="top">
-                            <IconInfo class="cursor-help text-steel hover:text-primary"
-                                      @click="onPreviewTemplate(template)"/>
+                            <IconInfo
+                                class="cursor-help text-primary"
+                                @click="onPreviewTemplate(template)"
+                            />
                         </el-tooltip>
                     </template>
                 </TemplateCard>
@@ -76,11 +101,13 @@
         </div>
         <portal to="form-footer">
             <div class="px-10">
-                <el-button @click="onSetupWidgets"
-                           :disabled="submitDisabled"
-                           class="font-bold"
-                           type="primary">
-                    {{ $t('Set up Widgets') }}
+                <el-button
+                    @click="onSetupWidgets"
+                    :disabled="submitDisabled"
+                    class="button-set-up-widgets font-bold"
+                    type="primary"
+                >
+                    {{ $t('widget.setUpWidgets') }}
                 </el-button>
             </div>
         </portal>
@@ -126,6 +153,9 @@
                 return this.templateCategory.TemplatesList || []
             },
             filteredTemplates() {
+                if (!this.templateList || !this.templateList.length) {
+                    return
+                }
                 return this.templateList.filter((template) => {
                     const templateName = this.translateTemplateName(template.TemplateName)
                     return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
@@ -141,7 +171,7 @@
                 return +newWidgetsCount + +activeWidgets
             },
             getSummaryActions() {
-                return `${this.$t('Summary')}: (${this.$t('before')} - ${this.groupWidgetsCount}, ${this.$t('after adding')} - ${this.afterAdding})`
+                return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
             },
             getSummaries() {
                 return this.$store.state.widgetCreation.summaries
@@ -198,7 +228,7 @@
                 const summaries = this.getSummaries
                 this.quantities = cloneDeep(summaries.quantities)
                 this.summaries = cloneDeep(summaries.summaryText)
-                this.templates = cloneDeep(this.getTemplate)
+                this.templates = cloneDeep(this.getTemplate) || {}
             },
             tryAddAllWidgetsFromCategory() {
                 this.filteredTemplates.forEach(el => {
@@ -216,6 +246,12 @@
         },
         mounted() {
             this.fillProgress()
+            this.filteredTemplates.forEach(el => {
+                if (el.quantity) {
+                    const quantity = el.quantity !== 1 ? el.quantity : 1
+                    this.manageWidgets(quantity, el)
+                }
+            })
         },
         watch: {
             quantities: {
@@ -235,5 +271,40 @@
     .text-main-xs {
         font-size: 11px;
         color: var(--cool-grey);
+    }
+    .button-add-all {
+        @apply px-4 py-0.5;
+    }
+    .input-search ::v-deep input::placeholder {
+        @apply text-gray-500 font-normal text-sm;
+    }
+    ::v-deep .el-input--prefix .el-input__inner {
+        @apply pl-11;
+    }
+    ::v-deep .el-input__prefix {
+        @apply left-4;
+    }
+    .button-add-one-widget {
+        @apply px-5 py-1 w-22.7 h-7;
+    }
+    .button-set-up-widgets {
+        @apply px-4-5 py-1.5 text-base;
+    }
+    .input-number {
+        @apply w-22.7 h-7;
+        ::v-deep .el-input-number__decrease, ::v-deep .el-input-number__increase {
+            @apply bg-white text-gray-950 font-bold w-6;
+            height: 28px;
+        }
+        ::v-deep .el-input-number__decrease i, ::v-deep .el-input-number__increase i {
+            @apply h-full flex justify-center items-center font-bold;
+        }
+        ::v-deep .el-input input {
+            @apply w-22.7 h-7;
+        }
+    }
+    ::v-deep .el-input-number--mini .el-input-number__decrease [class*=el-icon], ::v-deep .el-input-number--mini .el-input-number__increase [class*=el-icon] {
+        -webkit-transform: scale(1);
+        transform: scale(1);
     }
 </style>

@@ -1,8 +1,10 @@
 <template>
-    <date-time-picker class="pt-2"
-                      :pickerOptions="pickerOptions"
-                      :date="fetchDate"
-                      @on-change="onChange"
+    <date-time-picker
+        class="pt-2"
+        :pickerOptions="pickerOptions"
+        :date="fetchDate"
+        @on-change="onChange"
+        :rangeSeparator="rangeSeparator"
     />
 </template>
 <script>
@@ -20,6 +22,9 @@
             widgetTimeOptions: {
                 type: Array,
                 default: () => []
+            },
+            rangeSeparator: {
+                type: String
             }
         },
         components: {

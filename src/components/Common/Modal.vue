@@ -19,7 +19,7 @@
                     <slot name="redirect-action"/>
                     <IconVerticalLine v-if="$slots['redirect-action']"
                                       class="h-14"/>
-                    <div class="header-title border-gray-300 truncate flex-1 py-3 px-6 overflow-hidden"
+                    <div class="header-title border-gray-300 truncate flex-1 py-4 px-6 overflow-hidden"
                          :class="$rtl.isRTL ? 'border-l-2' : 'border-r-2'">
                         <div class="flex w-full items-center"
                              :class="titleCentered ? 'justify-center' : 'justify-between'">
