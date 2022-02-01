@@ -1,78 +1,28 @@
 <template>
-    <modal :append-to-body="true"
-           v-bind="$attrs"
-           v-on="$listeners"
-           :width="modalWidth">
-        <template v-slot:title>
-            <slot name="title">
-                <h3 class="text-2xl font-semibold text-gray-700">
-                    {{ $t(title) || $t('general.deleteConfirmation') }}
-                </h3>
-            </slot>
-        </template>
-        <slot>
-            <template>
-                <div class="mt-10 mb-8 flex flex-col items-center justify-center">
-                    <IconQuestion/>
-                    <div class="text-center text-gray-900 text-sm leading-21 mt-5 max-w-65-p break-normal">
-                        {{ $t(description) }}
-                    </div>
-                </div>
-            </template>
-        </slot>
-        <template v-slot:footer>
-            <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                <slot name="footer-actions">
-                    <base-button @click="onCancel"
-                                 outline
-                                 fixed-width="w-37">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
-                        </div>
-                    </base-button>
-                    <base-button fixed-width="w-37"
-                                 type="danger"
-                                 @click="onConfirm">
-                        <div class="flex items-center">
-                            <IconDelete class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ $t('common.delete') }}</span>
-                        </div>
-                    </base-button>
-                </slot>
-            </div>
-        </template>
-    </modal>
+    <Dialog
+        v-bind="$attrs"
+        v-on="$listeners"
+        :title="dialogTitle"
+        :description="dialogDescription"
+    >
+        <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
+    </Dialog>
 </template>
+
 <script>
-    import Modal from '@/components/Common/Modal'
+    import Dialog from '@/components/Dialogs/Dialog'
+    import dialogMixin from '@/mixins/dialogMixin'
 
     export default {
+        mixins: [ dialogMixin ],
         components: {
-            Modal,
+            Dialog,
         },
-        props: {
-            title: String,
-            modalWidth: {
-                type: String,
-                default: '445px',
-            },
-            description: {
-                type: String,
-                default: 'Are you sure that you want to delete this Dashboard?',
-            },
-            showButtons: {
-                type: Boolean,
-                default: true,
+        data () {
+            return {
+                titleDefault: this.$t('general.deleteConfirmation'),
+                descriptionDefault: this.$t('dialog.delete.description')
             }
-        },
-        methods: {
-            onConfirm() {
-                this.$emit('on-confirm')
-            },
-            onCancel() {
-                this.$emit('on-cancel')
-            },
-        },
+        }
     }
 </script>

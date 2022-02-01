@@ -8,7 +8,7 @@
                     <div @click="redirectBack()"
                          class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                         <IconDirLeft/>
-                        <span class="mx-1">{{ $t('general.back') }}</span>
+                        <span class="mx-1">{{ $t('Back') }}</span>
                     </div>
                     <span class="mx-8">
                     <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
@@ -16,8 +16,8 @@
                         <rect width="1" height="88" fill="#EBEBEB"/>
                     </svg>
                 </span>
-                    <span class="text-xl font-bold text-gray-900">
-                    {{ $t('dashboard.dashboardCreation') }}
+                    <span class="text-2xl font-bold text-gray-900">
+                    {{ $t('Dashboard Creation') }}
                 </span>
                 </div>
             </div>
@@ -29,13 +29,13 @@
                              key="el-form" :model="model" ref="dashboardCreationForm">
                         <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
                             <span class="label-input label-dashboard-name">
-                                {{ $t('dashboard.setTheName') }}
+                                {{ $t('Set the Name') }}
                             </span>
-                            <div class="lg:w-64 lg:mx-4">
+                            <div class="lg:w-80 lg:mx-5">
                                 <el-form-item
                                     prop="DashboardTitle"
                                     :rules="[
-                                        { required: true, message: $t('general.validationRequired', { field: $t('dashboard.dashboardName') }) }
+                                        { required: true, message: $t('Validation required', { field: $t('Dashboard Name') }) }
                                     ]"
                                 >
                                     <el-input type="DashboardTitle" v-model="model.DashboardTitle" />
@@ -46,7 +46,7 @@
                         <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
                              class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto layout-block">
                             <span class="label-input flex-wrap">
-                                {{ $t('dashboard.chooseLayout') }}
+                                {{ $t('Choose Layout') }}
                             </span>
                             <div>
                                 <LayoutSelect
@@ -58,58 +58,80 @@
                             </div>
                         </div>
                     </el-form>
-                    <div class="lg:grid lg:grid-cols-4 gap-5 mb-4"
-                         key="TemplateCategories">
-                        <TemplateCategories class="col-span-1"
-                            key="categories"
-                            :categories="dashboardTemplateCategories"
-                            @on-choose-category="onChooseCategory"
-                        />
-                        <fade-transition mode="out-in" :duration="transitionDuration">
-                            <TemplatesPreview class="col-span-3"
-                                key="TemplatesPreview"
-                                @on-submit="tryAddDashboard"
-                                :selected-template="selectedTemplate"
-                                @on-select-template="onSelectTemplate"
-                                @on-detailed-view="onDetailedView"
-                                v-if="dashboardTemplateCategory && dashboardTemplateCategories"
-                                :dashboard-category="selectedCategory"
-                                :disableCreateBlankBtn="disableCreateBlankBtn" />
-                        </fade-transition>
+                    <div
+                        class="mb-18"
+                        key="TemplateCategories"
+                    >
+                        <div class="flex">
+                            <div>
+                                <div class="flex flex-row items-center justify-between text-main-base font-medium mb-4">
+                                    {{ $t("types") }}
+                                </div>
+                                <TemplateCategories class="col-span-1 w-48 mr-6"
+                                    key="categories"
+                                    :categories="dashboardTemplateCategories"
+                                    @on-choose-category="onChooseCategory"
+                                />
+                            </div>
+                            <div>
+                                <div class="pr-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
+                                    <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span>
+                                    <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
+                                        @click="onSubmit" :disabled="disableCreateBlankBtn">
+                                        <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
+                                        {{ $t('Create blank dashboard') }}
+                                    </button>
+                                </div>
+                                <fade-transition mode="out-in" :duration="transitionDuration">
+                                    <TemplatesPreview
+                                        class="col-span-3"
+                                        key="TemplatesPreview"
+                                        @on-submit="tryAddDashboard"
+                                        :selected-template="selectedTemplate"
+                                        @on-select-template="onSelectTemplate"
+                                        @on-detailed-view="onDetailedView"
+                                        v-if="dashboardTemplateCategory && dashboardTemplateCategories"
+                                        :dashboard-category="selectedCategory"
+                                        :disableCreateBlankBtn="disableCreateBlankBtn"
+                                    />
+                                </fade-transition>
+                            </div>
+                        </div>
                     </div>
                 </template>
                 <template v-else>
-                    <TemplateDetailedPreview key="to-preview"
-                                             :template="selectedTemplate"/>
+                    <TemplateDetailedPreview
+                        key="to-preview"
+                        :template="selectedTemplate"
+                    />
                 </template>
             </transition-group>
         </div>
-        <div class="flex w-full items-center">
+        <div class="flex w-full items-center border-t py-6">
             <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
-                <base-button class="mx-4"
+                <base-button class="dashboard-creation-btn"
                              outline
                              @click="onDiscard"
                 >
                     <div class="flex items-center">
-                        <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('general.discard') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
                     </div>
                 </base-button>
-                <base-button fixed-width="w-37"
+                <base-button class="dashboard-creation-btn"
                              type="primary"
                              :loading="loading"
                              :disabled="!isFormValid"
                              @click="tryAddDashboard">
                     <div class="flex items-center">
-                        <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
+                        <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
                     </div>
                 </base-button>
             </div>
         </div>
-        <ConfirmDialog :visible.sync="showConfirmDialog"
-                       title="dashboard.addDashboard"
-                       description="Please confirm you action?"
+        <ConfirmDialog
+            :visible.sync="showConfirmDialog"
+            title="Add Dashboard"
+            description="Please confirm you action?"
         >
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
@@ -131,7 +153,7 @@
                         :loading="loading"
                         @click="onSubmit"
                     >
-                        {{ $t('common.confirm') }}
+                        {{ $t('Confirm') }}
                     </base-button>
                 </slot>
             </template>
@@ -145,7 +167,6 @@
     import { WidgetApi } from '@/api/widgetApi'
     import { templateApi } from '@/api/templateApi'
     import { DashboardApi } from '@/api/dashboardApi'
-    import pageSizeMixin from '@/mixins/pageSizeMixin'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { widgetGroupModel } from '@/models/instances'
     import { WidgetGroupsApi } from '@/api/widgetGroupApi'
@@ -165,7 +186,6 @@
             LayoutSelect,
             NavBar,
         },
-        mixins: [pageSizeMixin],
         data() {
             return {
                 transitionDuration: 250,
@@ -181,11 +201,15 @@
                 selectedTemplate: false,
                 showConfirmDialog: false,
                 onViewTemplate: false,
-                createBlankDashboard: false
+                createBlankDashboard: false,
+                isPreviewDashboardTemplate: false
             }
         },
         computed: {
             selectedCategory () {
+                if (!this.dashboardTemplateCategories.length || !this.dashboardTemplateCategory) {
+                    return
+                }
                 return this.dashboardTemplateCategories.find(category => category.DashboardTemplateCategoryID.toString() === this.dashboardTemplateCategory.DashboardTemplateCategoryID.toString())
             },
             dashboardLayoutID() {
@@ -205,11 +229,22 @@
             },
             isCreateBlankDashboard () {
                 return this.createBlankDashboard && typeof this.createBlankDashboard === 'boolean'
+            },
+            allLayouts() {
+                return this.$store.getters['layout/getAllLayouts']
             }
         },
         methods: {
-            redirectBack() {
-                this.$router.push('/')
+            async redirectBack() {
+                if (this.isPreviewDashboardTemplate) {
+                    this.onViewTemplate = !this.onViewTemplate
+                    this.isPreviewDashboardTemplate = false
+                    this.createBlankDashboard = false
+                    this.model.DashboardTemplateID = null
+                } else {
+                    this.$router.push('/')
+                    await this.$store.dispatch('layout/resetPreviewLayout')
+                }
             },
             onDiscard() {
                 this.selectedTemplate = false
@@ -218,6 +253,7 @@
             },
             onChoseLayout(layout) {
                 this.model.DashboardLayoutID = layout.LayoutID
+                this.$store.dispatch('layout/setPreviewLayout', layout)
             },
             onSelectTemplate(template) {
                 this.selectedTemplate = template
@@ -225,6 +261,7 @@
             },
             onDetailedView(template) {
                 this.onViewTemplate = !this.onViewTemplate
+                this.isPreviewDashboardTemplate = true
                 return this.onSelectTemplate(template)
             },
             onChooseCategory(category) {
@@ -264,9 +301,10 @@
                     await this.addEntities(dashboard, this.isCreateBlankDashboard)
                     await this.$store.dispatch('dashboards/getDashboards')
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
+                    await this.$store.dispatch('layout/resetPreviewLayout')
 
                     Notification.success('Dashboard added with success.')
-                    this.redirectBack()
+                    this.$router.push('/')
                 } catch (e) {
                     console.warn(e)
                     Notification.error('Something went wrong please try again.')
@@ -345,6 +383,8 @@
             await this.getDashboardTemplates()
             this.loading = false
             window.grids = []
+            const layout = this.allLayouts[0]
+            this.$store.dispatch('layout/setPreviewLayout', layout)
         },
         watch: {
             async activeLanguage() {
@@ -355,7 +395,7 @@
 </script>
 <style lang="scss" scoped>
 .label-input {
-    @apply whitespace-nowrap text-gray-900 text-main-sm font-medium truncate;
+    @apply whitespace-nowrap text-black font-medium truncate;
 }
 .label-dashboard-name, .layout-block {
     @apply mb-5.5;
@@ -364,5 +404,11 @@
     .label-dashboard-name {
         @apply mb-0;
     }
+}
+::v-deep .dashboard-creation-btn button {
+    @apply w-32 h-9 p-0;
+}
+::v-deep .el-input input {
+    @apply text-gray-950;
 }
 </style>

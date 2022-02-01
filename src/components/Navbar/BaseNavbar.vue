@@ -10,14 +10,14 @@
                          class="h-10">
                 </i>
                 <IconHorisontalLine class="hidden lg:flex mx-4 xl:mx-12"/>
-                <DashboardMenu/>
+                <DashboardMenu :editMode="editMode" v-if="layoutType === 'activeLayout'" />
                 <!-- <ManageReports/> TODO: make reports --> 
             </div>
             <div class="flex items-center p-2 sm:justify-between sm:w-full lg:w-auto">
                 <slot name="dashboard-operations"/>
-                <div class="flex justify-between w-full items-center">
-                    <LanguageSwitcher class="lg:mx-5"/>
-                    <AccountMenu/>
+                <div class="flex justify-between w-full items-center" v-if="layoutType === 'activeLayout'">
+                    <LanguageSwitcher class="lg:mx-5" />
+                    <AccountMenu />
                 </div>
             </div>
         </nav>
@@ -36,9 +36,17 @@
             DashboardMenu,
             LanguageSwitcher,
         },
+        props: {
+            editMode: {
+                type: Boolean
+            },
+            layoutType: {
+                type: String
+            }
+        },
         computed: {
             getLogo() {
-                return this.$store.getters['layout/getLogo']
+                return this.$store.getters['layout/getLogo'](this.layoutType)
             },
         },
     }

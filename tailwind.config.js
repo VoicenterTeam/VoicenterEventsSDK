@@ -187,10 +187,11 @@ module.exports = {
             width: {
                 22.7: '5.75rem',
                 70: '17.5rem',
-                100: '30rem',
+                80: '23.75rem',
+                100: '30rem'
             }
         },
     },
     variants: {},
-    plugins: [],
+    plugins: []
 }
