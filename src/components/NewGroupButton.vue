@@ -1,8 +1,9 @@
 <template>
     <base-button
         v-bind="$attrs"
-        class="cursor-pointer text-sm text-gray-500 hover:text-primary flex justify-center items-center rounded border border-gray-550 hover:border-primary h-7"
         size="sml"
+        type="primary"
+        outline
         custom-size-params="font-semibold"
         v-on="$listeners"
     >
