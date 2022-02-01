@@ -20,7 +20,7 @@
         },
         data () {
             return {
-                titleDefault: this.$t('Delete Confirmation'),
+                titleDefault: this.$t('general.deleteConfirmation'),
                 descriptionDefault: this.$t('dialog.delete.description')
             }
         }

@@ -61,15 +61,16 @@
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
                     <base-button
-                        @click="onCancel"
-                        variant="discard"
-                        fixed-width="w-32">
+                        outline
+                        fixed-width="w-32"
+                        @click="onCancel">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
                         </div>
                     </base-button>
                     <base-button
+                        type="primary"
                         @click="onConfirm"
                         fixed-width="w-32"
                         key="store"

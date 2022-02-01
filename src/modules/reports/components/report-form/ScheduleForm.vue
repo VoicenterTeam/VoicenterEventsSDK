@@ -36,9 +36,9 @@
                     <div
                         class="col-span-6 border-t-2 px-16 border-gray-300 bottom-0 h-20 flex w-full items-center justify-between">
                         <base-button class="mx-4"
-                                     @click="onCancel"
-                                     variant="discard"
-                                     fixed-width="w-37">
+                                     outline
+                                     fixed-width="w-37"
+                                     @click="onCancel">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
                                 <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
@@ -53,6 +53,7 @@
                             </div>
                             <portal-target name="next-button">
                                 <base-button fixed-width="w-37"
+                                             type="primary"
                                              @click="onNext">
                                     <div class="flex items-center">
                                         <span class="mx-1 text-base font-bold">{{ $t('general.next') }}</span>

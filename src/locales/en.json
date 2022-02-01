@@ -178,6 +178,7 @@
     "columns.layout": "Columns Layout",
     "common.cancel": "Cancel",
     "common.confirm": "Confirm",
+    "common.delete": "Delete",
     "common.confirm.question": "Are you sure you want {action}?",
     "common.dashboards": "Dashboards",
     "common.deleteDashboard": "Delete dashboard",

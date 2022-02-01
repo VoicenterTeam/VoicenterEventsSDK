@@ -41,15 +41,16 @@
                     </span>
                     <div class="flex">
                         <base-button :class="$rtl.isRTL ? 'mx-4' : 'mx-4'"
-                                     @click="onCancel()"
-                                     variant="discard"
-                                     fixed-width="w-37">
+                                     outline
+                                     fixed-width="w-37"
+                                     @click="onCancel">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
                                 <span class="mx-1 text-base font-semibold">{{ $t('common.cancel') }}</span>
                             </div>
                         </base-button>
                         <base-button :loading="loading"
+                                     type="primary"
                                      @click="handleSubmit(onSubmit)">
                             <div class="flex items-center">
                                 <IconSave class="mx-1"/>
@@ -73,7 +74,7 @@
     import { reportApi } from '@/modules/reports/services/reportService'
     import ReportElements from '@/modules/reports/components/report-form/ReportElements'
     import { STATUS_IDS, STATUS_NAMES, STATUS_VALUES } from '@/modules/reports/enum/report'
-    
+
     export default {
         components: {
             BaseForm,
@@ -130,7 +131,7 @@
                 }
             },
             onUpdateOperation() {
-            
+
             },
             onSchedulesUpsert(schedules) {
             },

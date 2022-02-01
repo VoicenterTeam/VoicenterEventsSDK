@@ -22,17 +22,19 @@
                                     {{ $t('dashboard.dashboardSettings') }}
                                 </span>
                                 <div class="flex justify-center items-center w-full md:hidden flex-col">
-                                    <CopyDashboard :dashboard="activeDashboard"/>
-                                    <base-button class="my-2"
-                                        @click="onDiscard"
-                                            variant="discard"
-                                            fixed-width="w-37">
-                                        <div class="flex items-center">
-                                            <IconDiscard class="mx-1"/>
-                                            <span class="mx-1 text-base font-bold">{{ $t('general.discard') }}</span>
-                                        </div>
+                                    <base-button type="danger"
+                                                 outline
+                                                 square
+                                                 size="sm"
+                                                 @click="onDelete">
+                                        <template v-slot:icon>
+                                            <IconDelete />
+                                        </template>
                                     </base-button>
+                                    <CopyDashboard class="mx-4"
+                                                   :dashboard="activeDashboard"/>
                                     <base-button fixed-width="w-37"
+                                                 type="primary"
                                                  :loading="loading"
                                                  @click="onSubmit">
                                         <div class="flex items-center">
@@ -44,17 +46,19 @@
                             </div>
                         </div>
                         <div class="flex-row items-center hidden md:flex">
-                            <CopyDashboard :dashboard="activeDashboard"/>
-                            <base-button class="mx-4"
-                                         @click="onDiscard"
-                                         variant="discard"
-                                         fixed-width="w-37">
-                                <div class="flex items-center">
-                                    <IconDiscard class="mx-1"/>
-                                    <span class="mx-1 text-base font-bold">{{ $t('general.discard') }}</span>
-                                </div>
+                            <base-button type="danger"
+                                         outline
+                                         square
+                                         size="md"
+                                         @click="onDelete">
+                                <template v-slot:icon>
+                                    <IconDelete />
+                                </template>
                             </base-button>
+                            <CopyDashboard class="mx-4"
+                                           :dashboard="activeDashboard"/>
                             <base-button fixed-width="w-37"
+                                         type="primary"
                                          :loading="loading"
                                          @click="onSubmit">
                                 <div class="flex items-center">
@@ -73,6 +77,10 @@
                                    :current-dashboard="currentDashboard"/>
             </div>
         </div>
+        <ConfirmDialog :visible.sync="showConfirmDialog"
+                       @on-cancel="showConfirmDialog = false"
+                       @on-confirm="deleteDashboard"
+        />
     </div>
 </template>
 <script>
@@ -87,6 +95,11 @@
     import CopyDashboard from '@/views/DashboardSettings/sections/CopyDashboard'
     import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
     import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
+    import ConfirmDialog from '@/components/Common/ConfirmDialog'
+    import map from "lodash/map";
+    import {removeDummyWidgets} from "@/services/widgetService";
+    import {dashboardOperation} from "@/models/instances";
+    import {targets, types} from "@/enum/operations";
 
     export default {
         components: {
@@ -96,6 +109,7 @@
             ColorParameterType,
             DashboardSettings,
             [Popover.name]: Popover,
+            ConfirmDialog
         },
         data() {
             return {
@@ -103,6 +117,7 @@
                 currentDashboard: {},
                 loading: false,
                 initialLayout: {},
+                showConfirmDialog: false
             }
         },
         computed: {
@@ -135,6 +150,21 @@
             discardGroupsManagement() {
                 this.model = cloneDeep(this.$store.state.dashboards.activeDashboard)
                 this.currentDashboard = cloneDeep(this.$store.state.dashboards.activeDashboard)
+            },
+            async deleteDashboard() {
+                try {
+                    this.loading = true
+                    await this.$store.dispatch('dashboards/deleteDashboard', this.currentDashboard)
+                    await this.$router.push('/')
+                } catch (err) {
+                    console.error(err)
+                } finally {
+                    this.loading = false
+                    this.showConfirmDialog = false
+                }
+            },
+            async onDelete() {
+                this.showConfirmDialog = true
             },
             async onSubmit(goBack = true) {
                 try {

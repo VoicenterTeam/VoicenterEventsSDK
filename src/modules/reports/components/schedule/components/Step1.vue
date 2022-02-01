@@ -38,6 +38,7 @@
         <portal to="next-button">
             <base-button fixed-width="w-37"
                          size="md"
+                         type="primary"
                          @click="onFinish">
                 <div class="flex items-center">
                     <IconSave class="mx-1"/>
@@ -55,7 +56,7 @@
     import HtmlEditor from '@/components/Html/HtmlEditor'
     import { makeRandomID, validateEmail } from '@/helpers/util'
     import { recipientObject } from '@/modules/reports/enum/report'
-    
+
     export default {
         props: {
             report: {
@@ -87,11 +88,11 @@
                 if (values || !values.length) {
                     return
                 }
-                
+
                 const ReportRecipientID = makeRandomID()
                 let targetItem = values.pop()
                 targetItem = recipientObject()
-                
+
                 if (validateEmail(targetItem)) {
                     values.push(targetItem)
                 }

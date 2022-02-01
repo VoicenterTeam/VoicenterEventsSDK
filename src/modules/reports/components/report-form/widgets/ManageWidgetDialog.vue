@@ -56,15 +56,16 @@
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                     <slot name="footer-actions">
                         <base-button class="mx-4"
-                                     @click="showDialog = false"
-                                     variant="discard"
-                                     fixed-width="w-37">
+                                     outline
+                                     fixed-width="w-37"
+                                     @click="showDialog = false">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
                                 <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
                             </div>
                         </base-button>
                         <base-button fixed-width="w-37"
+                                     type="primary"
                                      @click="onSubmit()">
                             <div class="flex items-center">
                                 <IconSave class="mx-1"/>
@@ -84,7 +85,7 @@
     import { AlertCircleIcon } from 'vue-feather-icons'
     import { templateIcons } from '@/enum/widgetDataTypes'
     import WidgetGroup from '@/modules/reports/components/report-form/widgets/WidgetGroup'
-    
+
     export default {
         components: {
             Modal,
