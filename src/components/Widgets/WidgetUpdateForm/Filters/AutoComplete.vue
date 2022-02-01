@@ -10,13 +10,11 @@
                             {{ model.ParameterPrettyName }}
                         </span>
                     </div>
-                    <div>
                         <BaseRadioGroup
                             v-model="entityType"
                             :radios="SELECTIONS"
                             class="radio-groups"
                         />
-                    </div>
                 </div>
                 <div
                     v-if="model.ParameterDescription"
@@ -80,12 +78,12 @@
                 templateConfig: getTemplateConfig(this.model.ParameterName),
                 SELECTIONS: [
                     {
-                        label: ENTITY_POSITIVE_KEY,
-                        text: this.$t('autocomplete.includeTheSelected'),
+                        value: ENTITY_POSITIVE_KEY,
+                        label: this.$t('autocomplete.includeTheSelected'),
                     },
                     {
-                        label: ENTITY_NEGATIVE_KEY,
-                        text: this.$t('autocomplete.excludeTheSelected'),
+                        value: ENTITY_NEGATIVE_KEY,
+                        label: this.$t('autocomplete.excludeTheSelected'),
                     },
                 ],
                 entityType: ENTITY_POSITIVE_KEY,
