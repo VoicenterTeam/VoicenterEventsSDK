@@ -28,14 +28,18 @@ export default {
             await this.$store.dispatch('dashboards/getDashboards')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
 
-            const dashboardExist = this.allDashboards.some(dashboard => {
-                return dashboard.DashboardID === this.activeDashboard.DashboardID
-            })
-
-            if (dashboardExist) {
+            if (!this.activeDashboard) {
                 await this.$store.dispatch('dashboards/selectDashboard')
             } else {
-                await this.$store.dispatch('dashboards/selectDashboard', this.allDashboards[this.allDashboards.length - 1])
+                const dashboardExist = this.allDashboards.some(dashboard => {
+                    return dashboard.DashboardID === this.activeDashboard.DashboardID
+                })
+
+                if (dashboardExist) {
+                    await this.$store.dispatch('dashboards/selectDashboard')
+                } else {
+                    await this.$store.dispatch('dashboards/selectDashboard', this.allDashboards[this.allDashboards.length - 1])
+                }
             }
 
             await this.$store.dispatch('layout/setupActiveLayout')
