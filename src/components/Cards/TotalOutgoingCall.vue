@@ -45,12 +45,11 @@
                     :widgetTimeOptions="widgetTimeOptions"
                     v-if="model && model.WidgetTime">
                     <template v-slot:frame-types>
-                        <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
-                            <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
-                                      v-for="widgetTimeType in widgetTimeTypes">
-                                {{ $t(widgetTimeType.text) }}
-                            </el-radio>
-                        </el-radio-group>
+                        <BaseRadioGroup
+                            v-model="model.WidgetTime.type"
+                            :radios="createWidgetTimeTypes"
+                            class="radio-groups mb-5"
+                        />
                     </template>
                 </time-frame>
                 <div class="flex items-center justify-between text-main-base" v-if="autoCompletes.length">
@@ -95,7 +94,7 @@
     import RefreshButton from '@/components/RefreshButton'
     import { getWidgetData } from '@/services/widgetService'
     import { defaultCardColors } from '@/enum/defaultWidgetSettings'
-    import { Checkbox, Collapse, CollapseItem, Radio, RadioGroup, Tooltip } from 'element-ui'
+    import { Checkbox, Collapse, CollapseItem, Tooltip } from 'element-ui'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
@@ -110,8 +109,6 @@
             AutoComplete,
             UpdateDialog,
             RefreshButton,
-            [Radio.name]: Radio,
-            [RadioGroup.name]: RadioGroup,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
@@ -159,6 +156,14 @@
             otherFilters() {
                 return this.data.WidgetConfig.filter(c => c.ParameterType && c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
+            createWidgetTimeTypes () {
+                return this.widgetTimeTypes
+                    .map(el => {
+                        return {
+                            label: el.text, value: el.label
+                        }
+                    })
+            }
         },
         methods: {
             get,
