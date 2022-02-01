@@ -15,7 +15,7 @@
                  :class="['el-dialog', { 'is-fullscreen': fullscreen, 'el-dialog--center': center }, customClass]"
                  ref="dialog"
                  :style="style">
-                <div class="flex items-center modal-header__wrapper overflow-hidden">
+                <div class="flex items-center modal-header__wrapper overflow-hidden h-16">
                     <slot name="redirect-action"/>
                     <IconVerticalLine v-if="$slots['redirect-action']"
                                       class="h-14"/>

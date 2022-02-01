@@ -81,6 +81,7 @@ module.exports = {
             minWidth: {
                 ...defaultTheme.spacing,
                 ...defaultTheme.minWidth,
+                12: '3rem',
                 16: '4rem',
                 '2xl': '42rem',
                 '3xl': '48rem',

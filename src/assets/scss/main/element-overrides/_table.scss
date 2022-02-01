@@ -3,16 +3,15 @@
 }
 
 .el-table th {
-    font-size: var(--font-size-sm);
-
     .header-handle, .caret-wrapper {
         display: none;
     }
+    font-size: var(--font-size-sm);
 }
 
 .el-table th:hover {
     .header-handle, .caret-wrapper {
-        display: flex;
+        @apply flex;
         color: var(--primary-color);
     }
 }

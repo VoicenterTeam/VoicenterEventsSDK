@@ -15,3 +15,8 @@ input, .el-dropdown .el-button, .el-button .el-checkbox,
     @apply font-semibold;
     font-size: var(--font-size-base);
 }
+
+.el-loading-mask .el-loading-spinner {
+    display: flex;
+    justify-content: center;
+}

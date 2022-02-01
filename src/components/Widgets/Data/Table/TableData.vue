@@ -15,6 +15,7 @@
         </div>
         <div v-if="isSimpleTable">
             <data-table
+                ref="dataTableRef"
                 v-bind="$attrs"
                 :widget="data"
                 :border="border"
@@ -25,20 +26,22 @@
                 :allRecords="tableData"
                 :tableData="fetchTableData"
                 :widgetTitle="data.Title"
+                can-sort-rows="custom"
                 :columnsWithPercentage="columnsWithPercentage"
+                @sort-change="onSortChange"
                 @on-update-layout="onUpdateLayout">
                 <template v-slot:Recording="{row}">
                     <audio-player :url="getRecordingUrl(row.Recording)" v-if="row.Recording"/>
                     <div v-else>{{$t('general.NA')}}</div>
                 </template>
-                <template v-slot:pagination>
+                <template v-slot:pagination-rows-per-page>
                     <div class="flex items-center">
                         <el-select
                             @change="handlePageChange(1)"
-                            class="w-20 mx-1 py-1"
-                            size="mini"
+                            class="w-48 mx-4 py-1"
+                            size="large"
                             v-model="pageSize">
-                            <el-option :key="option" :value="parseInt(option)" v-for="option in pageSizes"/>
+                            <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
                             <slot>
                                 <div class="w-40 mx-2">
                                     <span class="text-xs flex justify-center pb-2">{{$t('widget.table.customValue')}}</span>
@@ -51,34 +54,31 @@
                                 </div>
                             </slot>
                         </el-select>
-                        <el-pagination
-                            :current-page="currentPage"
-                            :hide-on-single-page="hideOnSinglePage"
-                            :page-size="pageSize"
-                            :page-sizes="pageSizes"
-                            :pager-count="pagerCount"
-                            :total="filteredDataLength"
-                            @current-change="handlePageChange"
-                            layout="prev, pager, next">
-                        </el-pagination>
+                    </div>
+                </template>
+                <template v-slot:pagination>
+                    <div class="flex items-center">
+                        <Pagination class="z-10 rounded-b-md"
+                                    v-model="currentPage"
+                                    :per-page="pageSize"
+                                    hidePerPageOption
+                                    :total="filteredDataLength"
+                        />
                     </div>
                 </template>
                 <template v-slot:time-frame>
                     <time-frame :widget="data"/>
                 </template>
                 <template v-slot:search-input>
-                    <div class="flex items-center w-48 px-1">
+                    <div class="flex items-center w-64 px-1 lg:ml-8">
                         <el-input
                             clearable
-                            :placeholder="$t('widget.data.typeTextToFilter')"
-                            size="medium"
-                            suffix-icon="el-icon-search"
-                            v-model="filter"/>
+                            :placeholder="$t('general.search')"
+                            size="large"
+                            v-model="filter">
+                            <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
+                        </el-input>
                     </div>
-                </template>
-                <template v-slot:additional-data>
-                    <p class="text-main-sm px-2 truncate" :style="getStyles">{{dataCounts}} / {{filteredDataLength}}
-                        {{$t('widget.table.row(s)')}}</p>
                 </template>
             </data-table>
         </div>
@@ -90,7 +90,7 @@
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
-    import { Option, Pagination, Select } from 'element-ui'
+    import { Option, Select } from 'element-ui'
     import AudioPlayer from '@/components/Audio/AudioPlayer'
     import DataTable from '@/components/Table/DataTable'
     import { isMultiQueuesDashboard, isRealtimeWidget } from '@/helpers/widgetUtils'
@@ -99,6 +99,7 @@
     import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
+    import Pagination from '@/modules/common/components/Pagination'
 
     export default {
         mixins: [dataTableMixin],
@@ -107,9 +108,9 @@
             TimeFrame,
             AudioPlayer,
             RealTimeUserTable,
+            Pagination,
             [Select.name]: Select,
             [Option.name]: Option,
-            [Pagination.name]: Pagination,
             [MultiQueuesDashboard.name]: MultiQueuesDashboard,
         },
         props: {
@@ -138,34 +139,15 @@
                 hideOnSinglePage: true,
                 border: true,
                 widget: cloneDeep(this.data),
-                stripe: true,
+                stripe: false,
                 queuesTableData: [],
                 columnsWithPercentage: [],
+                fetchTableData: [],
             }
         },
         computed: {
             getStyles() {
                 return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
-            },
-            fetchTableData() {
-                let tableData = this.tableData
-
-                if (this.filter && this.searchableFields.length > 0) {
-                    tableData = tableData.filter(c => {
-                        return this.searchableFields.some(field => {
-                            if (c[field]) {
-                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
-                            }
-                            return false
-                        })
-                    })
-                }
-
-                this.filteredDataLength = tableData.length
-
-                if (tableData.length) {
-                    return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
-                }
             },
             isSimpleTable() {
                 return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)
@@ -247,10 +229,47 @@
             applyPaginationSettings() {
                 this.pageSize = get(this.data.WidgetLayout, 'paginationSize', 10)
                 this.customPageSize = this.pageSize
+                if (this.$refs['dataTableRef']) {
+                    this.$refs['dataTableRef'].clearDataSort()
+                }
             },
             applyCustomPageSize() {
                 const pageSize = this.customPageSize
                 this.storePaginationSettings(pageSize)
+            },
+            updatePaginatedData(data) {
+                let tableData = data
+
+                if (this.filter && this.searchableFields.length > 0) {
+                    tableData = tableData.filter(c => {
+                        return this.searchableFields.some(field => {
+                            if (c[field]) {
+                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
+                            }
+                            return false
+                        })
+                    })
+                }
+                this.filteredDataLength = tableData.length
+                return tableData.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
+            },
+            onSortChange({column, prop, order}) {
+                if (prop === null) {
+                    return
+                }
+
+                let sortedData;
+                if (order === 'ascending') {
+                    sortedData = this.tableData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
+                } else if (order === 'descending') {
+                    sortedData = this.tableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
+                }
+
+                if (!sortedData) {
+                    return
+                }
+
+                this.fetchTableData = this.updatePaginatedData(sortedData)
             },
         },
         mounted() {
@@ -278,6 +297,18 @@
                     this.storePaginationSettings(val)
                 },
             },
+            currentPage: {
+                immediate: true,
+                handler() {
+                    this.fetchTableData = this.updatePaginatedData(this.tableData)
+                }
+            },
+            tableData: {
+                deep: true,
+                handler(newV) {
+                    this.fetchTableData = this.updatePaginatedData(newV)
+                }
+            }
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {

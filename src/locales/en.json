@@ -337,6 +337,7 @@
     "general.JPEG": "JPEG",
     "general.NA": "N/A",
     "general.next": "Next",
+    "general.noData": "No Data",
     "general.notFound": "Not Found",
     "general.notification.${this.type}": "general.notification.${this.type}",
     "general.notification.danger": "Error!",

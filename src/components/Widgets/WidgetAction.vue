@@ -1,8 +1,11 @@
 <template>
-    <div class="relative px-4 py-1-5 rounded hover:bg-primary-100 cursor-pointer"
+    <div class="relative px-2 py-1-5 rounded cursor-pointer"
          @click.stop="triggerMenu"
-         :class="{'bg-primary-100': showActionsMenu}">
-        <IconOptions class="w-1 h-5 text-gray-500 hover:text-primary"/>
+         :class="{
+             'bg-primary-100': showActionsMenu && !tryManageNote,
+             'hover:bg-primary-100': !tryManageNote,
+             'cursor-not-allowed': tryManageNote && isHtmlEditor(widget)}">
+        <i class="vc-icon-menu icon-lg text-gray-500" />
         <fade-transition :duration="350">
             <div v-click-outside="onMenuClickOutside"
                  class="menu-wrapper px-3 py-1 absolute z-50 mt-2"
@@ -59,18 +62,16 @@
                     </div>
                 </template>
                 <template v-if="isHtmlEditor(widget)">
-                    <div @click="onTryManageNote"
+                    <div @click="onTryManageHTMLNote"
                          class="menu-action_item border-t border-gray-300">
-                        <el-switch :value="tryManageNote"
-                                   @change="onTryManageNote"/>
+                        <el-switch :value="tryManageNote" class="pointer-events-none"/>
                         <span class="mx-1">{{ $t('tooltip.set.edit.mode') }}</span>
                     </div>
                 </template>
                 <template v-if="isNoteListWidget(widget)">
-                    <div @click="onTryManageNote"
+                    <div @click="onTryManageNoteList"
                          class="menu-action_item border-t border-gray-300 truncate">
-                        <el-switch :value="tryManageNote"
-                                   @change="onTryManageNote"/>
+                        <el-switch :value="tryManageNote" class="pointer-events-none"/>
                         <span class="mx-1">{{ $t('widget.editor.displayHiddenNotes') }}</span>
                     </div>
                     <div @click="onAddNote"
@@ -157,10 +158,15 @@
             onShowUpdateDialog() {
                 this.emitter('on-show-update-dialog')
             },
-            onTryManageNote() {
+            onTryManageNoteList() {
+                this.emitter('on-manage-notes')
+            },
+            onTryManageHTMLNote() {
+                this.showActionsMenu = false
                 this.emitter('on-manage-notes')
             },
             triggerMenu() {
+                if (this.tryManageNote && isHtmlEditor(this.widget)) { return }
                 this.showActionsMenu = !this.showActionsMenu
             },
             onMenuClickOutside() {

@@ -2,11 +2,11 @@ export default {
     chart: {
         type: 'solidgauge',
         backgroundColor: 'transparent',
-        height: '170px',
-        marginTop: 20
+        height: '180px',
+        marginTop: 10
     },
     pane: {
-        center: ['50%', '85%'],
+        center: ['50%', '95%'],
         size: '180%',
         startAngle: -90,
         endAngle: 90,
@@ -41,7 +41,7 @@ export default {
     },
     plotOptions: {
         solidgauge: {
-            innerRadius: '80%',
+            innerRadius: '50%',
             dataLabels: {
                 y: 5,
                 borderWidth: 0,

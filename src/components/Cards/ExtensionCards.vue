@@ -59,7 +59,7 @@
                     <div class="flex flex-col w-full items-center"
                          key="no-data"
                          v-if="sortedExtensions.length === 0">
-                        <h3 class="text-main-xl">{{ $t('extensions.noData') }}</h3>
+                        <h3 class="text-main-xl">{{ $t('general.noData') }}</h3>
                         <icon-no-data class="w-64"/>
                     </div>
                 </fade-transition>
@@ -241,11 +241,6 @@
 <style lang="scss">
 .flip-list-move {
     transition: transform 5s;
-}
-
-.el-loading-mask .el-loading-spinner {
-    display: flex;
-    justify-content: center;
 }
 
 .el-row {
