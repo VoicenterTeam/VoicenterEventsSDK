@@ -1,11 +1,10 @@
 <template>
-    <div class="xl:w-48 flex flex-row lg:flex-col">
-        <div
-            v-for="category in categories"
+    <div class="xl:w-64 flex flex-row lg:flex-col">
+        <div v-for="(category, index) in categories"
+            :key="index"
             @click="onChooseCategory(category)"
-            class="w-full h-12 p-4 flex items-center category-wrapper mb-2 mx-1 text-primary cursor-pointer"
-            :class="{ 'border border-primary': category.DashboardTemplateCategoryID === selectedCategoryID }"
-            :key="category.DashboardTemplateCategoryID">
+            class="w-full h-12 p-4 flex items-center category-wrapper mb-2 mx-1 hover:text-primary cursor-pointer"
+            :class="category.DashboardTemplateCategoryID == selectedCategoryID ? 'text-primary border border-primary': 'text-steel'">
             <component :is="fillCategoryIcon(category)"
                        class="w-4 h-4 text-primary"/>
             <el-tooltip :content="$t(category.DashboardTemplateCategoryName)"

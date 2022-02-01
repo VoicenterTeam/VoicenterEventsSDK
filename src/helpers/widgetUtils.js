@@ -151,3 +151,7 @@ export function isChartWidget(widget) {
     return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget)
 }
 
+export function isCounterAgentsInStatus(widget) {
+    return widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID
+}
+

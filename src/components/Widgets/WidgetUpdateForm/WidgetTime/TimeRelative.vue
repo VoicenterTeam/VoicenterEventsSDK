@@ -1,7 +1,10 @@
 <template>
-    <el-select v-model="model.WidgetTime.Date_interval"
-               placeholder="Select"
-               class="w-full pt-2">
+    <el-select
+        v-model="model.WidgetTime.Date_interval"
+        placeholder="Select"
+        class="w-full pt-2"
+        @change="onChange"
+    >
         <el-option
             v-for="(item, index) of widgetTimeOptions"
             :key="index"
@@ -30,7 +33,20 @@
         },
         mounted() {
             const dateInterval = this.model.WidgetTime.Date_interval
-            this.$set(this.model.WidgetTime, 'Date_interval', dateInterval.toString())
+            const isExistDateIntervalInRange = this.widgetTimeOptions.find(el => el.Date_interval === dateInterval)
+            const defaultDateInterval = isExistDateIntervalInRange ? isExistDateIntervalInRange.Date_interval : this.widgetTimeOptions[0].Date_interval
+            const defaultDateDeff = isExistDateIntervalInRange ? isExistDateIntervalInRange.datedeff : this.widgetTimeOptions[0].datedeff
+            this.$set(this.model.WidgetTime, 'Date_interval', defaultDateInterval)
+            this.$set(this.model.WidgetTime, 'datedeff', defaultDateDeff)
         },
+        methods: {
+            onChange (dateInterval) {
+                const widgetTimeOption = this.widgetTimeOptions.find(el => Number(el.Date_interval) === Number(dateInterval))
+                if (widgetTimeOption) {
+                    this.$set(this.model.WidgetTime, 'Date_interval', widgetTimeOption.Date_interval)
+                    this.$set(this.model.WidgetTime, 'datedeff', widgetTimeOption.datedeff) 
+                }
+            }
+        }
     }
 </script>
