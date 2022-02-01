@@ -1,7 +1,7 @@
 <template>
     <div>
         <portal to="redirect-action">
-          <span class="text-steel hover:text-primary redirect-action"
+          <span class="text-primary redirect-action"
                 @click="goToSettings()">
                 <IconDirLeft class="mx-1"/>
                 {{ $t('settings.settings') }}
@@ -12,34 +12,46 @@
         </portal>
         <div class="-mx-4-5">
             <div
-                class="px-6 py-2 flex items-center justify-between text-gray-550"
-                v-for="template in templates"
+                class="pl-9 pr-7 py-4 flex items-center justify-between text-gray-550 border-b"
+                v-for="(template, index) in templates"
                 :key="template.TemplateName"
             >
                 <div class="flex items-center">
-                    <el-checkbox @change="onChange($event, template)"
-                                 :checked="template.toStore"
-                                 :v-model="template.toStore"/>
-                    <component class="mx-2 text-primary"
-                               :is="getTemplateIcon(template.DataType.DataTypeID)"/>
+                    <el-checkbox
+                        @change="onChange($event, template)"
+                        :checked="template.toStore"
+                        :v-model="template.toStore"
+                    />
+                    <component
+                        class="ml-9 mr-5 text-primary"
+                        :is="getTemplateIcon(template.DataType.DataTypeID)"/>
                     <span class="truncate">
-                    {{ template.TemplateName }}
+                    <div class="font-bold text-gray-950">
+                        {{ template.TemplateName }}
+                    </div>
+                    <div class="font-medium">
+                        {{ getWidgetTime(template) }}
+                    </div>
                 </span>
                 </div>
-                <div class="flex items-center cursor-pointer hover:text-primary"
-                     @click="onEditTemplate(template)">
-                <span class="mx-1">
-                    {{ $t('common.edit') }}
-                </span>
+                <div
+                    class="flex items-center cursor-pointer text-primary"
+                    @click="onEditTemplate(template, index)"
+                >
+                    <span class="mx-3 text-primary text-base">
+                        {{ $t('common.edit') }}
+                    </span>
                     <IconShape/>
                 </div>
             </div>
         </div>
         <portal to="form-footer">
             <div class="px-10">
-                <el-button @click="onSubmit"
-                           class="font-bold"
-                           type="primary">
+                <el-button
+                    @click="onSubmit"
+                    class="font-bold btn-save"
+                    type="primary"
+                >
                     {{ $t('common.save') }}
                 </el-button>
             </div>
@@ -52,6 +64,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { getDefaultGridLayout } from '@/helpers/util'
     import { templateIcons } from '@/enum/widgetDataTypes'
+    import { widgetTimeOptions } from '@/enum/widgetTimeOptions'
     
     export default {
         components: {
@@ -63,6 +76,7 @@
         data() {
             return {
                 templates: [],
+                widgetTimeOptions
             }
         },
         computed: {
@@ -75,10 +89,25 @@
             getTemplatesToSetup() {
                 let templates = this.getDataToSetup
                 return Object.values(templates)
-            },
+            }
         },
         methods: {
             onSubmit() {
+                this.templates.map(el => {
+                    if (el.DefaultWidgetLayout && Object.keys(el.DefaultWidgetLayout)) {
+                        if (el.DefaultWidgetLayout.status && Object.keys(el.DefaultWidgetLayout.status)) {
+                            el.WidgetLayout.status = el.DefaultWidgetLayout.status.value
+                        }
+                        if (el.DefaultWidgetLayout.statistics && Object.keys(el.DefaultWidgetLayout.statistics)) {
+                            el.WidgetLayout.ShowStatistics = el.DefaultWidgetLayout.statistics.ShowStatistics
+                            el.WidgetLayout.SumOfOthers = el.DefaultWidgetLayout.statistics.SumOfOthers
+                            el.WidgetLayout.AbsoluteNumbers = el.DefaultWidgetLayout.statistics.AbsoluteNumbers
+                        }
+
+                        delete el.DefaultWidgetLayout
+                    }
+                    return el
+                })
                 this.$emit('on-submit', this.templates)
             },
             getTemplateIcon(templateDataTypeID) {
@@ -107,25 +136,53 @@
 
                 await this.$store.dispatch('widgetCreation/updateSummaries', summaries)
             },
-            async onEditTemplate(template) {
-                await this.$store.dispatch('widgetCreation/editTemplate', template)
+            async onEditTemplate(template, index) {
+                const data = {
+                    template: template,
+                    index: index
+                }
+
+                await this.$store.dispatch('widgetCreation/editTemplate', data)
             },
             goToSettings() {
                 this.$emit('on-go-to-settings')
             },
             composeData() {
-                const templates = this.getTemplatesToSetup
+                let templates = cloneDeep(this.getTemplatesToSetup)
                 let widgetTemplatesToAdd = []
                 let defaultLayout = getDefaultGridLayout()
-                
-                templates.forEach((template) => {
-                    template['WidgetLayout'] = { GridLayout: defaultLayout }
-                    return times(template.quantity, () => {
-                        template['toStore'] = true
-                        widgetTemplatesToAdd.push(template)
+                const allWidgetsWithQuantity = this.$store.getters['widgetCreation/getAllWidgetsWithQuantity']
+
+                if (allWidgetsWithQuantity && allWidgetsWithQuantity.length) {
+                    widgetTemplatesToAdd = allWidgetsWithQuantity
+                } else {
+                    templates.forEach((template) => {
+                        template['WidgetLayout'] = { GridLayout: defaultLayout }
+                        times(template.quantity, () => {
+                            template['toStore'] = true
+                            widgetTemplatesToAdd.push(cloneDeep(template))
+                        })
                     })
-                })
+                }
+                if (!allWidgetsWithQuantity) {
+                    const widgets = cloneDeep(widgetTemplatesToAdd)
+                    this.$store.dispatch('widgetCreation/setWidgets', widgets)
+                }
+
                 this.templates = widgetTemplatesToAdd
+            },
+            getWidgetTime (template) {
+                let widgetTimeOption = ''
+                const defaultWidgetTime = template.DefaultWidgetTime
+
+                if (defaultWidgetTime.type === 'absolute') {
+                    widgetTimeOption = `${defaultWidgetTime.Date_start} - ${defaultWidgetTime.Date_end}`
+                } else {
+                    const label = this.widgetTimeOptions.find(el => el.Date_interval === defaultWidgetTime.Date_interval).label
+                    widgetTimeOption = this.$t(label)
+                }
+
+                return widgetTimeOption
             }
         },
         async mounted() {
@@ -133,3 +190,9 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+.btn-save {
+    @apply text-base px-11 py-2;
+}
+</style>

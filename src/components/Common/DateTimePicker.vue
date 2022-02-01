@@ -9,7 +9,9 @@
             :range-separator="rangeSeparator"
             :start-placeholder="startPlaceholder"
             :end-placeholder="endPlaceholder"
-            :align="align">
+            :align="align"
+            prefix-icon="vc-icon-schedule-calendar"
+            clear-icon="vc-icon-ticket-closed">
         </el-date-picker>
     </div>
 </template>
@@ -18,50 +20,54 @@
     
     export default {
         components: {
-            [DatePicker.name]: DatePicker,
+            [DatePicker.name]: DatePicker
         },
         props: {
             type: {
                 type: String,
-                default: 'daterange',
+                default: 'daterange'
             },
             date: {
                 type: Array,
-                default: () => [],
+                default: () => []
             },
             rangeSeparator: {
                 type: String,
                 default: function () {
                     return this.$t('range.filter.to')
-                },
+                }
             },
             startPlaceholder: {
                 type: String,
                 default: function () {
                     return this.$t('range.filter.start')
-                },
+                }
             },
             endPlaceholder: {
                 type: String,
                 default: function () {
                     return this.$t('range.filter.end')
-                },
+                }
             },
             align: {
                 type: String,
-                default: 'right',
-            },
+                default: 'left'
+            }
         },
         data() {
             return {
-                value: this.date,
+                value: this.date
             }
+        },
+        mounted () {
+            const dates = this.value.map(el => new Date(el))
+            this.$emit('on-change', dates)
         },
         methods: {
             updateDateRange() {
                 this.$emit('on-change', this.value)
-            },
-        },
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
@@ -79,5 +85,11 @@
     .el-date-editor--data {
         width: 100%;
     }
+}
+::v-deep .el-input__icon.el-range__icon.vc-icon-schedule-calendar {
+    @apply text-primary text-base cursor-pointer leading-8;
+}
+::v-deep .el-input__icon.el-range__close-icon {
+    @apply text-primary text-base cursor-pointer leading-8;
 }
 </style>

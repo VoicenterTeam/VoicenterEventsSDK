@@ -94,6 +94,7 @@ module.exports = {
                 ...defaultTheme.spacing,
                 ...defaultTheme.maxWidth,
                 40: '10rem',
+                45: '12.5',
                 56: '14rem',
                 '50-p': '50%',
                 '65-p': '65%',
@@ -117,10 +118,12 @@ module.exports = {
                 64: '16rem',
                 75: '18.75rem',
                 91: '22.75rem',
+                '65vh':'65vh'
             },
             spacing: {
                 '0-25': '0.0625rem',
                 '0-5': '0.125rem',
+                '3px': '0.1875rem',
                 '1-25': '0.3125rem',
                 '1-5': '0.375rem',
                 '2-5': '0.5625rem',
@@ -178,6 +181,14 @@ module.exports = {
                 ...defaultTheme.borderRadius,
                 '4xl': '2rem',
             },
+            height: {
+                7.5: '2.125rem'
+            },
+            width: {
+                22.7: '5.75rem',
+                70: '17.5rem',
+                100: '30rem',
+            }
         },
     },
     variants: {},

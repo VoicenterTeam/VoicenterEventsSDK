@@ -47,8 +47,8 @@
         </div>
         <div class="h-0-5 w-full bg-gray-350 my-4 md:hidden"/>
         <div class="col-span-6 lg:col-span-3 mb-3 md:mb-0"
-             v-for="widget in template.WidgetTemplateList"
-             :key="template.DashboardTemplateWidgetID">
+             v-for="(widget, index) in template.WidgetTemplateList"
+             :key="index">
             <TemplateWidget :widget="widget"
                             :template="template"/>
         </div>

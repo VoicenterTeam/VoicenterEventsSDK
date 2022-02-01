@@ -1,26 +1,50 @@
 <template>
     <div>
         <portal to="redirect-action">
-            <span class="text-steel hover:text-primary redirect-action"
-                  @click="goToSelectedCategory()">
-                  <IconDirLeft class="mx-1"/>
-                  {{ $t(templateCategory.CategoryName) }}
+            <span
+                class="text-primary redirect-action"
+                @click="goToSelectedCategory()"
+            >
+                <IconDirLeft class="mx-1"/>
+                {{ $t(templateCategory.CategoryName) }}
             </span>
         </portal>
         <portal to="form-title">
-            {{ getTemplate.TemplateName }}
+            {{ getTemplate.template.TemplateName }}
+        </portal>
+        <portal to="additional-action">
+            <span 
+                class="mr-2"
+            >
+                <el-button
+                    @click="addWidgetToCategory(getTemplate.template)"
+                    type="_primary"
+                    class="button-add-all"
+                    v-if="!isWidgetAdded && !hideBtn"
+                >
+                    <div class="flex items-center">
+                        <IconAdd :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
+                        <span
+                            class="text-sm"
+                        >
+                            {{ $t('dashboard.addWidget') }}
+                        </span>
+                    </div>
+                </el-button>
+            </span>
         </portal>
         <div class="grid grid-cols-7 gap-4 template-preview -mx-4-5"
-             v-loading="loading">
+            v-loading="loading">
             <div class="col-span-5 bg-gray-150">
                 <div class="flex items-center justify-center h-full">
                     <div class="w-64 my-20 rounded p-2 relative">
-                        <div v-for="item in templateHelp.Items">
+                        <div v-for="(item, index) in templateHelp.Items" :key="index">
                             <div class="absolute z-50 cursor-help"
                                  :style="getStyle(item)">
                                 <div class="ellipse-wrapper flex items-center justify-center"
-                                     @mouseover="onEllipseMouseOver(item.ItemNumber)"
-                                     @mouseleave="onEllipseMouseLeave()">
+                                    @mouseover="onEllipseMouseOver(item.ItemNumber)"
+                                    @mouseleave="onEllipseMouseLeave()"
+                                >
                                     <div
                                         class="ellipse-outer bg-primary-300 text-white flex items-center justify-center">
                                         <div class="ellipse-inner text-white flex items-center justify-center">
@@ -30,14 +54,15 @@
                                 </div>
                             </div>
                         </div>
-                        <component :is="templateHelp.WidgetHelpPicture"
-                                   class="w-64 h-48"
+                        <component
+                            :is="templateHelp.WidgetHelpPicture"
+                            class="w-64 h-48"
                         />
                     </div>
                 </div>
             </div>
-            <div class="col-span-2 px-2">
-                <div v-for="item in templateHelp.Items">
+            <div class="col-span-2 px-2 overflow-auto max-h-65vh">
+                <div v-for="(item, index) in templateHelp.Items" :key="index">
                     <p class="text-gray-800 my-2">{{ item.ItemName }}</p>
                     <div class="flex break-normal p-1"
                          :class="{'bg-primary-100 rounded': item.ItemNumber === activeItemNumber}">
@@ -47,6 +72,15 @@
                 </div>
             </div>
         </div>
+        <portal to="form-footer">
+            <div class="px-10" v-if="!isWidgetAdded">
+                <el-button @click="finish"
+                    class="font-bold btn-finish"
+                    type="primary">
+                    {{ $t('general.finish') }}
+                </el-button>
+            </div>
+        </portal>
     </div>
 </template>
 <script>
@@ -62,12 +96,17 @@
             templateCategory() {
                 return this.$store.getters['widgetCreation/getCategoryTemplates']
             },
+            isWidgetAdded () {
+                const activeWidget = this.templateCategory.TemplatesList.find(el => Number(el.TemplateID) === Number(this.getTemplate.template.TemplateID))
+                return activeWidget.quantity
+            }
         },
         data() {
             return {
                 loading: false,
                 activeItemNumber: 0,
                 templateHelp: {},
+                hideBtn: false
             }
         },
         methods: {
@@ -91,6 +130,15 @@
 
                 this.templateHelp = get(helpData, 'Help', {})
             },
+            addWidgetToCategory () {
+                this.hideBtn = true
+            },
+            async finish () {
+                if (this.hideBtn) {
+                   this.$set(this.getTemplate.template, 'quantity', 1)
+                   await this.goToSelectedCategory()
+                }
+            }
         },
         mounted() {
             this.getHelpByWidgetsTemplateID()
@@ -127,5 +175,11 @@
         @apply w-3 h-3 rounded-full bg-primary;
         content: '';
     }
+}
+.button-add-all {
+    @apply px-5 py-1;
+}
+.btn-finish {
+    @apply text-base px-10 py-1.5;
 }
 </style>
