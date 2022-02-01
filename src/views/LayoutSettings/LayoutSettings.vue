@@ -168,7 +168,6 @@
                         <base-button class="mr-4"
                                      outline
                                      fixed-width="w-30"
-                                     size="lg"
                                      @click="showConfirmDialog = false">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1" v-if="isDefaultLayout" />
@@ -179,7 +178,6 @@
                             class="ml-4"
                             key="new-layout"
                             fixed-width="w-30"
-                            size="lg"
                             type="primary"
                             :loading="storingData"
                             :disabled="disabledForm"

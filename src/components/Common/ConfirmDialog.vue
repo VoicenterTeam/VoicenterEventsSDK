@@ -32,7 +32,7 @@
                         </div>
                     </base-button>
                     <base-button fixed-width="w-37"
-                                 type="primary"
+                                 type="danger"
                                  @click="onConfirm">
                         <div class="flex items-center">
                             <IconDelete class="mx-1"/>
