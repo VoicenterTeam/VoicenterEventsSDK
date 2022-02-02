@@ -15,7 +15,7 @@
                     @click="addNewWidget()">
                     <IconPlus class="text-blue w-4-5 h-4-5"/>
                     <span class="mx-2 text-main-sm truncate">
-                        {{ $t('Add New Widgets') }}
+                        {{ $t('widget.addNewWidgets') }}
                     </span>
                 </div>
                 <div class="menu-action_item"
