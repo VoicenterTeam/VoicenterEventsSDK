@@ -75,7 +75,6 @@
                                         <div class="mx-2"/>
                                         <base-button fixed-width="w-37"
                                                      type="primary"
-                                                     :disabled="layoutNameAlreadyUsed"
                                                      @click="onApply">
                                             <div class="flex items-center">
                                                 <IconSave class="mx-1"/>
@@ -253,9 +252,6 @@
             },
             layoutNames() {
                 return this.allLayouts.map(layout => layout.LayoutName)
-            },
-            layoutNameAlreadyUsed() {
-                return this.layoutNames.includes(this.layoutSettings.LayoutName)
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
