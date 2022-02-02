@@ -22,14 +22,14 @@
                      @click="onEditWidgetGroup()">
                     <IconPencil class="text-green w-4-5 h-4-5"/>
                     <span class="mx-2 text-main-sm truncate">
-                        {{ $t('Edit Group') }}
+                        {{ $t('dashboard.editGroup') }}
                     </span>
                 </div>
                 <div class="menu-action_item border-t border-gray-300"
                      @click="tryDeleteWidgetGroup()">
                     <IconDelete class="text-red w-4-5 h-4-5"/>
                     <span class="mx-2 text-main-sm truncate">
-                        {{ $t('Delete Group') }}
+                        {{ $t('dashboard.deleteGroup') }}
                     </span>
                 </div>
             </div>
@@ -37,7 +37,6 @@
     </div>
 </template>
 <script>
-    import bus from '@/event-bus/EventBus';
     export default {
         props: {
             editMode: {
@@ -74,11 +73,12 @@
                 this.showMenuActions = false
             },
             addNewWidget () {
-                bus.$emit('add-new-widget-by-navbar', true);
+                this.$emit('on-edit-widget-group', this.group)
                 const data = {
                     key: 'isClickedOnAddBtn',
                     value: true
                 }
+
                 this.$store.dispatch('widgetCreation/updateQuickCreatingWidget', data)
             }
         },

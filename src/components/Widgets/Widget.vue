@@ -4,14 +4,17 @@
          :key="widget.WidgetID"
          :style="getStyles">
         <div class="flex relative items-center">
-            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header"
+            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header py-2"
                  v-if="showDeleteButton"
             >
+                <i class="icon-lg text-primary mx-2" :class="widget.WidgetTemplateIcon"/>
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
-
             </div>
+            <span v-if="showDeleteButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
+                    <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
+            </span>
             <WidgetAction :key="widget.WidgetID"
                           :editable="editable"
                           :edit-mode="editMode"
@@ -33,6 +36,7 @@
                 @on-update="(data) => onUpdate(data)"
                 @remove-item="removeWidget(widget)"
                 @duplicate-widget="duplicateWidget(widget)"
+                @on-show-info="onShowInfo"
                 ref="widget"
                 class="widget"
                 v-bind="widget.WidgetLayout">
@@ -49,6 +53,13 @@
             v-if="showUpdateDialog"
             v-on="$listeners"
             width="45%"
+        />
+        <template-preview-info-dialog
+            v-if="showPreviewInfoDialog"
+            :visible.sync="showPreviewInfoDialog"
+            :templateId="widget.TemplateID"
+            :widget-title="widget.Title"
+            @on-close="showPreviewInfoDialog = false"
         />
     </div>
 </template>
@@ -81,6 +92,7 @@
     import ExternalDataWidget from './ExternalData/ExternalDataWidget'
     import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
     import AverageCallDuration from '@/components/Cards/AverageCallDuration'
+    import TemplatePreviewInfoDialog from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog";
     import {
         getWidgetDataType,
         getWidgetEndpoint,
@@ -130,6 +142,7 @@
             AverageCallDuration,
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
+            TemplatePreviewInfoDialog,
         },
         props: {
             editable: {
@@ -154,6 +167,7 @@
                 showUpdateDialog: false,
                 TABLE_DATA_TYPE_ID: '4',
                 editMode: false,
+                showPreviewInfoDialog: false,
             }
         },
         computed: {
@@ -206,7 +220,7 @@
                 if (DataTypeID.toString() === this.TABLE_DATA_TYPE_ID) {
                     return 'has-margin'
                 }
-            },
+            }
         },
         methods: {
             isHtmlEditor,
@@ -255,6 +269,9 @@
                     console.log(e)
                 }
             },
+            onShowInfo() {
+                this.showPreviewInfoDialog = true
+            }
         },
         mounted() {
             this.getComponentTypeAndSetData(this.widget)

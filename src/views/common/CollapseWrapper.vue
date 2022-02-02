@@ -13,7 +13,7 @@
                     </span>
                 </div>
             </div>
-            <IconShape class="text-gray-900 hover:text-primary"
+            <IconShape class="text-primary hover:text-primary"
                        :class="expanded ? 'is-expanded text-primary': 'is-collapsed'"/>
         </div>
         <collapse-transition :duration="250">

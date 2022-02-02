@@ -1,15 +1,15 @@
 <template>
     <div>
         <el-tooltip effect="dark"
-                    :content="$t('Copy Dashboard')"
+                    :content="$t('dashboard.copyDashboard')"
                     :open-delay="openDelay"
                     placement="top">
-            <base-button @click="showDialog = true"
-                         variant="discard"
-                         fixed-width="w-37">
+            <base-button outline
+                         fixed-width="w-37"
+                         @click="showDialog = true">
                 <div class="flex items-center">
                     <CopyIcon class="w-4-5 h-4-5"/>
-                    <span class="mx-1 text-base font-bold">{{ $t('Copy') }}</span>
+                    <span class="mx-1 text-base font-bold">{{ $t('general.copy') }}</span>
                 </div>
             </base-button>
         </el-tooltip>
@@ -17,13 +17,13 @@
                :append-to-body="true">
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('Copy Dashboard') }}
+                    {{ $t('dashboard.copyDashboard') }}
                 </h3>
             </template>
             <div class="py-5">
                 <p class="mb-2">
-                    {{ $t('Account') }}
-                    ({{ $t('copy dashboard into selected account') }})
+                    {{ $t('general.account') }}
+                    ({{ $t('dashboard.copyDashboardIntoSelectedAccount') }})
                 </p>
                 <base-select
                     :data="allAccounts"
@@ -33,7 +33,7 @@
                     class="w-full mb-2"
                     v-model="account"/>
                 <p class="mb-2">
-                    {{ $t('New Dashboard Name') }}
+                    {{ $t('dashboard.newDashboardName') }}
                 </p>
                 <el-input v-model="dashboardCopy.DashboardTitle"/>
                 <el-collapse
@@ -49,7 +49,7 @@
                             <el-checkbox :value="group.isSelected"
                                          @change.native.stop="toggleGroupSelection(group)"/>
                             <span class="mx-2">
-                                {{ group.WidgetGroupTitle || $t('Group ID') + ': ' + group.WidgetGroupID }}
+                                {{ group.WidgetGroupTitle || $t('dashboard.groupID') + ': ' + group.WidgetGroupID }}
                             </span>
                         </template>
                         <template v-if="displayWidgetList">
@@ -74,20 +74,21 @@
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 flex items-center justify-between px-6">
                     <base-button class="md:mx-4"
-                                 @click="showDialog = false"
-                                 variant="discard"
-                                 fixed-width="w-37">
+                                 outline
+                                 fixed-width="w-37"
+                                 @click="showDialog = false">
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="font-semibold">{{ 'Cancel' }}</span>
                         </div>
                     </base-button>
-                    <base-button @click="onCopy"
-                                 key="new-layout"
+                    <base-button key="new-layout"
                                  fixed-width="w-37"
-                                 :loading="loading">
+                                 type="primary"
+                                 :loading="loading"
+                                 @click="onCopy">
                         <span class="font-semibold">
-                            {{ $t('Confirm') }}
+                            {{ $t('common.confirm') }}
                         </span>
                     </base-button>
                 </div>
@@ -144,7 +145,7 @@
         },
         methods: {
             groupTitle(group) {
-                return group.WidgetGroupTitle ? this.$t(group.WidgetGroupTitle) : `${this.$t('Group')} #${group.WidgetGroupID}`
+                return group.WidgetGroupTitle ? this.$t(group.WidgetGroupTitle) : `${this.$t('general.group')} #${group.WidgetGroupID}`
             },
             getWidgetIcon(widget) {
                 const { DataTypeID } = widget.WidgetLayout

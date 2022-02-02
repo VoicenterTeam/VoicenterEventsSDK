@@ -3,34 +3,34 @@
         <div @click="triggerExportDialog(exportTo.XLSX)" class="mx-2 cursor-pointer export-button">
             <div class="flex items-center">
                 <p class="text-md">{{ $t('general.export.excel') }}</p>
-                <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
+                <i class="vc-icon-download icon-lg mx-2 text-primary"/>
             </div>
         </div>
         <div @click="triggerExportDialog(exportTo.CSV)" class="mx-2 cursor-pointer export-button">
             <div class="flex items-center">
                 <p class="text-md">{{ $t('general.export.csv') }}</p>
-                <DownloadIcon class="w-5 mx-1 mb-1 text-primary"/>
+                <i class="vc-icon-download icon-lg mx-2 text-primary"/>
             </div>
         </div>
         <modal :visible.sync="showExportDialog" v-if="showExportDialog">
             <div class="flex flex-row items-center pb-4">
-                <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('Export Data') }}</h3>
+                <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('general.exportData') }}</h3>
                 <static-widget-info :widget="widget" class="px-2"/>
             </div>
             <div class="pb-4">
-                <label>{{ $t('File Name') }}</label>
+                <label>{{ $t('widget.export.fileName') }}</label>
                 <el-input v-model="fileName"/>
             </div>
             <el-alert
-                :title="$t('Export Data To') +' '+format"
+                :title="$t('widget.export.exportDataTo') +' '+format"
                 type="info"
-                :description="$t('Manage or set the order for the columns that will be present in the exported file')"
+                :description="$t('widget.export.exportFileColumnOrder')"
                 :closable="false"
                 show-icon
             />
             <div class="py-6 border-b">
-                <el-radio v-model="exportFormat" :label="exportTo.CSV">{{ $t('CSV') }}</el-radio>
-                <el-radio v-model="exportFormat" :label="exportTo.XLSX">{{ $t('Excel') }}</el-radio>
+                <el-radio v-model="exportFormat" :label="exportTo.CSV">{{ $t('general.export.csv') }}</el-radio>
+                <el-radio v-model="exportFormat" :label="exportTo.XLSX">{{ $t('general.export.excel') }}</el-radio>
             </div>
             <slot :onManageExport="onManageExport"/>
             <template v-slot:footer>
@@ -39,7 +39,7 @@
                     <el-button @click="exportTableData"
                                :disabled="loading || !columnsToExport.length"
                                :loading="loading"
-                               type="primary">{{ $t('Export') }}
+                               type="primary">{{ $t('widget.export.export') }}
                     </el-button>
                 </div>
             </template>

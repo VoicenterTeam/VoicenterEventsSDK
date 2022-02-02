@@ -9,7 +9,7 @@
                             <div @click="onDiscard(true)"
                                  class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                                 <IconDirLeft/>
-                                <span class="mx-1">{{ $t('Back') }}</span>
+                                <span class="mx-1">{{ $t('general.back') }}</span>
                             </div>
                             <span class="mx-8">
                             <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
@@ -26,7 +26,7 @@
                                 <div class="flex items-center text-primary-300 hover:text-primary cursor-pointer"
                                      @click="onEditLayoutTitle">
                                     <IconPencil class="w-4 h-4"/>
-                                    <span class="text-sm mx-1">{{ $t('Edit') }}</span>
+                                    <span class="text-sm mx-1">{{ $t('common.edit') }}</span>
                                 </div>
                             </div>
                             <div v-else
@@ -64,21 +64,22 @@
                             <template v-slot:actions>
                                 <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
-                                        <base-button @click="onDiscard(true)"
-                                            variant="discard"
-                                            fixed-width="w-37">
+                                        <base-button outline
+                                                     fixed-width="w-37"
+                                                     @click="onDiscard(true)">
                                             <div class="flex items-center">
                                                 <IconDiscard class="mx-1"/>
                                                 <span class="mx-1 text-base font-bold">{{ 'Discard' }}</span>
                                             </div>
                                         </base-button>
                                         <div class="mx-2"/>
-                                        <base-button
-                                            fixed-width="w-37"
-                                            @click="onApply()">
+                                        <base-button fixed-width="w-37"
+                                                     type="primary"
+                                                     :disabled="layoutNameAlreadyUsed"
+                                                     @click="onApply">
                                             <div class="flex items-center">
                                                 <IconSave class="mx-1"/>
-                                                <span class="mx-1 text-base font-bold">{{ 'Apply' }}</span>
+                                                <span class="mx-1 text-base font-bold">{{ $t('general.apply') }}</span>
                                             </div>
                                         </base-button>
                                     </div>
@@ -94,7 +95,7 @@
             modalWidth="456px">
             <template v-slot:title>
                 <h3 class="text-xl font-bold text-gray-950">
-                    {{ isDefaultLayout ? $t('Save Layout') : $t('Save Changes') }}
+                    {{ isDefaultLayout ? $t('layout.saveLayout') : $t('general.saveChanges') }}
                 </h3>
             </template>
             <div v-if="!isDefaultLayout" class="py-8">
@@ -105,14 +106,14 @@
                         value="newTheme"
                         checked
                     >
-                        {{ $t('Save as a new') }}
+                        {{ $t('layout.saveAsANew') }}
                     </BaseRadioButton>
                 </div>
                 <div class="ml-6 mb-11" :class="{ 'disabled-block': layoutForm.typeOfTheme !== 'newTheme'}">
                     <div class="flex items-center mb-3">
                         <div class="flex">
                             <IconExtensionsTable class="text-primary mr-2 icon"/>
-                            <div class="text font-normal">{{ $t('New Theme Name') }}</div>
+                            <div class="text font-normal">{{ $t('layout.newThemeName') }}</div>
                         </div>
                     </div>
                     <el-form :model="layoutForm" ref="layoutForm">
@@ -122,7 +123,7 @@
                                 :rules="rules.layoutName">
                                 <el-input
                                     v-model="layoutForm.layoutName"
-                                    :placeholder="$t('New Theme Name')"
+                                    :placeholder="$t('layout.newThemeName')"
                                     class="new-theme-input"
                                     :disabled="layoutForm.typeOfTheme !== 'newTheme'"
                                 />
@@ -136,14 +137,14 @@
                     group-name="group1"
                     value="existingTheme"
                 >
-                    {{ $t('Save changes in the existing theme') }}
+                    {{ $t('layout.saveChangesToExistingTheme') }}
                 </BaseRadioButton>
             </div>
             <div v-else class="py-8">
                 <div class="flex items-center mb-3">
                     <div class="flex">
                         <IconExtensionsTable class="text-primary mr-2 icon"/>
-                        <div class="text font-normal">{{ $t('New Theme Name') }}</div>
+                        <div class="text font-normal">{{ $t('layout.newThemeName') }}</div>
                     </div>
                 </div>
                 <el-form :model="layoutForm" ref="layoutForm">
@@ -153,7 +154,7 @@
                             :rules="rules.layoutName">
                             <el-input
                                 v-model="layoutForm.layoutName"
-                                :placeholder="$t('New Theme Name')"
+                                :placeholder="$t('layout.newThemeName')"
                                 class="new-theme-input"
                             />
                             <span class="el-form-item__error" slot="error" slot-scope="error">&nbsp;{{ error.error }}</span>
@@ -165,9 +166,9 @@
                 <div class="w-full flex items-center justify-center">
                     <slot name="footer-actions">
                         <base-button class="mr-4"
-                            @click="showConfirmDialog = false"
-                            variant="discard"
-                            fixed-width="w-30" size="lg">
+                                     outline
+                                     fixed-width="w-30"
+                                     @click="showConfirmDialog = false">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1" v-if="isDefaultLayout" />
                                 <span class="font-semibold">{{ $t('common.cancel') }}</span>
@@ -175,13 +176,14 @@
                         </base-button>
                         <base-button
                             class="ml-4"
-                            @click="onNewLayout"
                             key="new-layout"
                             fixed-width="w-30"
-                            :loading="storingData" size="lg"
-                            :disabled="disabledForm">
+                            type="primary"
+                            :loading="storingData"
+                            :disabled="disabledForm"
+                            @click="onNewLayout">
                             <span class="font-semibold">
-                                {{ $t('Apply') }}
+                                {{ $t('general.apply') }}
                             </span>
                         </base-button>
                     </slot>
@@ -237,8 +239,8 @@
                 },
                 rules: {
                     layoutName: [
-                        { required: true, message: this.$t('Validation required', { field: this.$t('New Theme Name') }) },
-                        { validator: validationThemeName, message: this.$t('Layout name already used, please use another name.') }
+                        { required: true, message: this.$t('general.validationRequired', { field: this.$t('layout.newThemeName') }) },
+                        { validator: validationThemeName, message: this.$t('layout.layoutNameAlreadyUsedWarning') }
                     ]
                 },
                 disabledForm: !this.isDefaultLayout,
@@ -251,6 +253,9 @@
             },
             layoutNames() {
                 return this.allLayouts.map(layout => layout.LayoutName)
+            },
+            layoutNameAlreadyUsed() {
+                return this.layoutNames.includes(this.layoutSettings.LayoutName)
             },
             currentAccountId() {
                 return this.$store.state.entities.selectedAccountID
@@ -309,7 +314,7 @@
                     this.updatingData = false
                     this.showConfirmDialog = false
                     this.editableTitle = false
-                    this.$router.push('/dashboard-settings')
+                    await this.$router.push('/dashboard-settings')
                 }
             },
             async onNewLayout() {
@@ -330,8 +335,8 @@
                         this.selectedLayout = payload
                         this.layoutSettings = this.selectedLayout
                         this.$store.commit('layout/SET_ACTIVE_LAYOUT', payload)
-                        this.$store.dispatch('layout/setupLayouts')
-                        this.$store.dispatch('layout/getGlobalLayout')
+                        await this.$store.dispatch('layout/setupLayouts')
+                        await this.$store.dispatch('layout/getGlobalLayout')
                     }
                 } else {
                     await this.onUpdateLayout()
@@ -353,8 +358,8 @@
                 await this.$store.dispatch('dashboards/updateDashboardLayout', layout.LayoutID)
                 this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
                 this.showConfirmDialog = false
-                this.$store.dispatch('layout/setupLayouts')
-                this.$store.dispatch('layout/getGlobalLayout')
+                await this.$store.dispatch('layout/setupLayouts')
+                await this.$store.dispatch('layout/getGlobalLayout')
             },
             onEditLayoutTitle() {
                 this.editableTitle = !this.editableTitle
@@ -369,11 +374,12 @@
             },
             triggerLayoutChanges() {
                 this.$nextTick(() => {
-                    if (this.realTimePreview) {
-                        this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
-                    } else {
-                        this.$store.dispatch('layout/updateActiveLayout', this.storedDashboardLayout)
-                    }
+                    // if (this.realTimePreview) {
+                    //     this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
+                    // } else {
+                    //     this.$store.dispatch('layout/updateActiveLayout', this.storedDashboardLayout)
+                    // }
+                    // TODO: updates should display in the layout preview
                 })
             },
             validateForm () {
@@ -433,5 +439,11 @@
 }
 .disabled-block .icon, .disabled-block .text {
     @apply text-gray-550 transition duration-300;
+}
+.custom-radios {
+    .custom-radio-content {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 }
 </style>

@@ -32,7 +32,7 @@
         </div>
         <div class="flex w-1/4">
             <el-input v-model="model.ConditionFilterValue"
-                      :placeholder="$t('Value')"
+                      :placeholder="$t('general.value')"
                       type="number"
                       id="value"
             />
@@ -65,15 +65,15 @@
                 ],
                 operatorOptions: [
                     {
-                        label: this.$t('Equality'),
+                        label: this.$t('report.equality'),
                         value: '=',
                     },
                     {
-                        label: this.$t('Greater'),
+                        label: this.$t('report.greater'),
                         value: '>',
                     },
                     {
-                        label: this.$t('Smaller'),
+                        label: this.$t('report.smaller'),
                         value: '<',
                     },
                 ],

@@ -5,7 +5,7 @@
             <div class="flex items-center">
                 <IconAddReport class="w-4 h-4 mx-1"/>
                 <span class="text-main-sm leading-4">
-                    {{ $t('Add New Schedule') }}
+                    {{ $t('widget.addNewSchedule') }}
                 </span>
             </div>
         </div>
@@ -17,7 +17,7 @@
         >
             <template v-slot:title>
                 <div class="flex w-full justify-center">
-                    {{ $t('Add Schedule') }}
+                    {{ $t('widget.addSchedule') }}
                 </div>
             </template>
             <div class="grid grid-cols-8 relative">
@@ -36,9 +36,9 @@
                     <div
                         class="col-span-6 border-t-2 px-16 border-gray-300 bottom-0 h-20 flex w-full items-center justify-between">
                         <base-button class="mx-4"
-                                     @click="onCancel"
-                                     variant="discard"
-                                     fixed-width="w-37">
+                                     outline
+                                     fixed-width="w-37"
+                                     @click="onCancel">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
                                 <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
@@ -49,13 +49,14 @@
                                  v-if="canGoBack"
                                  class="text-primary-300 flex items-center hover:text-primary cursor-pointer mx-16">
                                 <IconDirLeft/>
-                                <span class="mx-1">{{ $t('Back') }}</span>
+                                <span class="mx-1">{{ $t('general.back') }}</span>
                             </div>
                             <portal-target name="next-button">
                                 <base-button fixed-width="w-37"
+                                             type="primary"
                                              @click="onNext">
                                     <div class="flex items-center">
-                                        <span class="mx-1 text-base font-bold">{{ $t('Next') }}</span>
+                                        <span class="mx-1 text-base font-bold">{{ $t('general.next') }}</span>
                                         <IconDirRight class="mx-1"/>
                                     </div>
                                 </base-button>
@@ -123,7 +124,7 @@
                 return this.currentStep > 0
             },
             getActiveStep() {
-                return this.$t('Step') + ' ' + (this.currentStep+1) + ' ' + this.$t('of') + ' ' + WIZARD_CONFIG.length
+                return this.$t('general.step') + ' ' + (this.currentStep+1) + ' ' + this.$t('general.of') + ' ' + WIZARD_CONFIG.length
             },
         },
         methods: {

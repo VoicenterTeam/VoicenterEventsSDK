@@ -1,62 +1,56 @@
 <template>
-    <div class="flex relative w-64 dashboard-title_wrapper">
-        <button @click.stop="triggerMenu"
-                class="flex w-full items-center rounded cursor-pointer focus:outline-none justify-between px-4">
-            <div class="text-main-sm md:text-main-lg text-gray-500 w-56 truncate flex items-center">
-                <IconColorPicker class="w-4-5 h-4-5 text-primary"/>
-                <span class="mx-2">{{ activeDashboard.DashboardTitle }}</span>
-            </div>
-            <div class="flex">
-                <IconArrowDown class="text-gray-500 transition"
-                               :class="{'is-expanded': showMenu}"/>
-            </div>
-        </button>
-        <fade-transition :duration="350">
-            <div v-click-outside="onMenuClickOutside"
-                 class="menu-wrapper"
-                 v-if="showMenu">
-                <div class="py-3 px-4 text-gray-500 hover:text-primary cursor-pointer flex items-center"
-                     @click="newDashboard">
-                    <IconAddDashboard class="focus:outline-none"/>
-                    <span class="mx-2 mt-1">{{ $t('common.newDashboard') }}</span>
+    <div>
+        <div class="flex relative w-64 dashboard-title_wrapper" v-if="!editMode && activeDashboard">
+            <button @click.stop="triggerMenu"
+                    class="flex w-full items-center rounded cursor-pointer focus:outline-none justify-between px-4">
+                <div class="text-main-sm md:text-main-lg text-gray-500 w-56 truncate flex items-center">
+                    <button @click.stop.prevent="manageLayout()"
+                        class="btn p-1 rounded hover:bg-primary-100 mx-1">
+                        <SettingsIcon class="w-4 h-4 text-primary" />
+                    </button>
+                    <span class="mx-2">{{ activeDashboard.DashboardTitle }}</span>
                 </div>
-                <div class="dashboards">
-                    <div @click="chooseDashboard(dashboard)"
-                         class="flex flex-row items-center justify-between py-3 px-1 mx-4 cursor-pointer border-t"
-                         v-for="dashboard in allDashboards">
-                        <div class="flex-1 hover:text-primary"
-                             :class="{'text-primary': +dashboard.DashboardID === +activeDashboard.DashboardID}">
-                            {{ dashboard.DashboardTitle }}
+                <div class="flex">
+                    <IconArrowDown class="transition text-primary"
+                    :class="{'is-expanded': showMenu}"/>
+                </div>
+            </button>
+            <fade-transition :duration="350">
+                <div v-click-outside="onMenuClickOutside"
+                    class="menu-wrapper"
+                    v-if="showMenu">
+                    <div class="py-3 px-4 text-gray-500 hover:text-primary cursor-pointer flex items-center"
+                        @click="newDashboard">
+                        <IconAddDashboard class="focus:outline-none"/>
+                        <span class="mx-2 mt-1">{{ $t('common.newDashboard') }}</span>
+                    </div>
+                    <div class="dashboards">
+                        <div
+                            @click="chooseDashboard(dashboard)"
+                            class="flex flex-row items-center justify-between py-3 px-1 mx-4 cursor-pointer border-t"
+                            v-for="dashboard in allDashboards"
+                            :key="dashboard.DashboardID">
+                            <div class="flex-1 hover:text-primary"
+                                :class="{'text-primary': +dashboard.DashboardID === +activeDashboard.DashboardID}">
+                                {{ dashboard.DashboardTitle }}
+                            </div>
                         </div>
-                        <template v-if="dashboard.DashboardID !== activeDashboard.DashboardID">
-                            <el-tooltip :content="$t('common.deleteDashboard')" class="item"
-                                        effect="dark"
-                                        placement="top">
-                                <button @click.stop.prevent="tryDeleteDashboard(dashboard)"
-                                        class="btn p-1 shadow rounded bg-white hover:bg-primary-100 mx-1">
-                                    <IconDelete class="text-red w-4 h-4"/>
-                                </button>
-                            </el-tooltip>
-                        </template>
-                        <template v-else>
-                            <el-tooltip :content="$t('Manage Layout')"
-                                        lass="item"
-                                        effect="dark"
-                                        placement="top">
-                                <button @click.stop.prevent="manageLayout()"
-                                        class="btn p-1 shadow rounded bg-white hover:bg-primary-100 mx-1">
-                                    <SettingsIcon class="w-4 h-4 text-green-700"/>
-                                </button>
-                            </el-tooltip>
-                        </template>
                     </div>
                 </div>
-            </div>
-        </fade-transition>
-        <ConfirmDialog :visible.sync="showConfirmDialog"
-                       @on-cancel="showConfirmDialog = false"
-                       @on-confirm="deleteDashboard"
-        />
+            </fade-transition>
+        </div>
+        <div v-else-if="editMode || !activeDashboard" class="flex items-center justify-center">
+            <span class="text-gray-950 font-bold text-2xl" v-if="activeDashboard">{{ activeDashboard.DashboardTitle }}</span>
+            <span class="text-gray-950 font-bold text-2xl" v-else>{{ $t('common.newDashboard') }}</span>
+            <el-tooltip class="item" effect="dark" :content="$t('common.newDashboard')" placement="top">
+                <span
+                    class="py-3 px-4 text-primary cursor-pointer flex items-center"
+                    @click="newDashboard"
+                >
+                    <IconAddDashboard class="focus:outline-none"/>
+                </span>
+            </el-tooltip>
+        </div>
     </div>
 </template>
 <script>
@@ -72,16 +66,17 @@
         },
         data() {
             return {
-                showMenu: false,
-                modalWidth: '30%',
-                currentAccountId: null,
-                showConfirmDialog: false,
-                dashboardToDelete: null,
+                showMenu: false
+            }
+        },
+        props: {
+            editMode: {
+                type: Boolean
             }
         },
         computed: {
             activeDashboard() {
-                return this.$store.getters['dashboards/getActiveDashboard'] || { DashboardTitle: '--' }
+                return this.$store.getters['dashboards/getActiveDashboard'] || ''
             },
             allDashboards() {
                 return this.$store.state.dashboards.allDashboards
@@ -106,16 +101,7 @@
             chooseDashboard(dashboard) {
                 this.$store.dispatch('dashboards/selectDashboard', dashboard)
                 this.showMenu = false
-            },
-            tryDeleteDashboard(dashboard) {
-                this.dashboardToDelete = dashboard
-                this.showConfirmDialog = true
-            },
-            async deleteDashboard() {
-                await this.$store.dispatch('dashboards/deleteDashboard', this.dashboardToDelete)
-                this.showConfirmDialog = false
-                this.dashboardToDelete = null
-            },
+            }
         },
     }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="py-4 border-b">
+    <div class="py-4 border-b checkbox">
         <el-checkbox :checked="valueToBool" @change="onChange">
             {{$t(LayoutParameterName)}}
         </el-checkbox>
@@ -33,3 +33,18 @@
         },
     }
 </script>
+
+<style lang="scss" scoped>
+.checkbox::v-deep .el-checkbox__inner {
+    border-width: 2px;
+    width: 18px;
+    height: 18px;
+
+    &::after {
+        height: 10px;
+        top: -1px;
+        left: 5px;
+        border-width: 2px;
+    }
+}
+</style>

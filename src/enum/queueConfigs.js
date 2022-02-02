@@ -4,18 +4,18 @@ export const activeCallColumns = [{
     prop: 'QueueName',
     fixed: false,
     align: 'center',
-    label: i18n.t('Queue Name'),
+    label: i18n.t('queue.queueName'),
     sortable: true
 }, {
     prop: 'CallerNumber',
     fixed: false,
     align: 'center',
-    label: i18n.t('Caller Number'),
+    label: i18n.t('queue.callerNumber'),
 }, {
     prop: 'CallerName',
     fixed: false,
     align: 'center',
-    label: i18n.t('Caller Name'),
+    label: i18n.t('queue.callerName'),
     sortable: true
 }, {
     prop: 'CallerID',
@@ -27,8 +27,28 @@ export const activeCallColumns = [{
     prop: 'WaitingTime',
     fixed: false,
     align: 'center',
-    label: i18n.t('Waiting Time'),
+    label: i18n.t('queue.waitingTime'),
     sortable: true
+}]
+
+export const activeGaugeCallColumns = [{
+    prop: 'Id',
+    fixed: false,
+    align: 'center',
+    label: '#',
+    sortable: false
+}, {
+    prop: 'CallerID',
+    fixed: false,
+    align: 'center',
+    label: i18n.t('CallerID'),
+    sortable: false
+}, {
+    prop: 'WaitingTime',
+    fixed: false,
+    align: 'center',
+    label: i18n.t('Waiting Time'),
+    sortable: false
 }]
 
 export const allSeries = [

@@ -27,6 +27,7 @@ const types = {
     DELETE_DASHBOARD: 'DELETE_DASHBOARD',
     RESET_ACTIVE_DASHBOARD: 'RESET_ACTIVE_DASHBOARD',
     SET_LOADING: 'SET_LOADING',
+    SET_CONTENT_LOADING: 'SET_CONTENT_LOADING',
     UPDATE_CURRENT_DASHBOARD: 'UPDATE_CURRENT_DASHBOARD',
     MAP_ALL_WIDGETS: 'MAP_ALL_WIDGETS',
 }
@@ -36,6 +37,7 @@ const state = {
     activeWidgetGroup: null,
     editMode: false,
     loadingData: false,
+    contentLoading: false,
     allWidgets: [],
 }
 
@@ -80,6 +82,9 @@ const mutations = {
     },
     [types.SET_LOADING]: (state, loading) => {
         state.loadingData = loading
+    },
+    [types.SET_CONTENT_LOADING]: (state, loading) => {
+        state.contentLoading = loading
     },
     [types.UPDATE_CURRENT_DASHBOARD]: (state, dashboard) => {
         state.activeDashboard = dashboard
@@ -126,6 +131,9 @@ const actions = {
     },
     setLoadingData({ commit }, value) {
         commit(types.SET_LOADING, value)
+    },
+    setContentLoading({ commit }, value) {
+        commit(types.SET_CONTENT_LOADING, value)
     },
     async deleteDashboard({ commit }, dashboard) {
         await DashboardApi.destroy(dashboard.DashboardID)
@@ -179,7 +187,10 @@ const getters = {
 
         })
         return result
-    }
+    },
+    getAllDashboards: state => {
+        return state.allDashboards
+    },
 }
 
 export default {

@@ -4,7 +4,7 @@
              key="no-data">
             <IconNoData class="h-56 w-56 text-gray-500"/>
             <p class="text-gray-500 max-w-lg text-center">
-                {{ $t('Account no data') }}
+                {{ $t('account.accountNoData') }}
             </p>
             <span
                 @click="createNewDashboard()"

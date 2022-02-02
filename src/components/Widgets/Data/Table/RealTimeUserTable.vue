@@ -11,6 +11,7 @@
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
+            can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
             <template v-slot:user_id="{row}">
@@ -74,17 +75,15 @@
                 <time-frame :widget="data"/>
             </template>
             <template v-slot:search-input>
-                <div class="flex items-center w-48 px-1">
+                <div class="flex items-center w-64 px-1">
                     <el-input
                         clearable
-                        :placeholder="$t('Type text to filter')"
-                        size="medium"
-                        suffix-icon="el-icon-search"
-                        v-model="filter"/>
+                        :placeholder="$t('general.search')"
+                        size="large"
+                        v-model="filter">
+                        <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
+                    </el-input>
                 </div>
-            </template>
-            <template v-slot:additional-data>
-                <p class="text-main-sm px-2">{{ fetchTableData.length }} {{ $t('row(s)') }}</p>
             </template>
         </data-table>
     </div>
@@ -152,46 +151,51 @@
             showLoggedOutUsers() {
                 return get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
             },
-            fetchTableData() {
-                let tableData = this.tableData
-                if (!this.showLoggedOutUsers) {
-                    let userIds = this.onlineUserIds
-                    tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
-                }
-                
-                if (this.filter && this.searchableFields.length > 0) {
-                    tableData = tableData.filter(c => {
-                        return this.searchableFields.some(field => {
-                            if (c[field]) {
-                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
-                            }
-                            return false
+            fetchTableData: {
+                get: function () {
+                    let tableData = this.tableData
+                    if (!this.showLoggedOutUsers) {
+                        let userIds = this.onlineUserIds
+                        tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
+                    }
+
+                    if (this.filter && this.searchableFields.length > 0) {
+                        tableData = tableData.filter(c => {
+                            return this.searchableFields.some(field => {
+                                if (c[field]) {
+                                    return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
+                                }
+                                return false
+                            })
                         })
+                    }
+
+                    tableData = tableData.map((row) => {
+                        const extension = this.userExtension(row.user_id)
+
+                        if (!extension) {
+                            return row
+                        }
+
+                        return {
+                            ...row,
+                            online_user_id: extension.onlineUserID || '--',
+                            representant: `${extension.userID} - ${get(extension, 'summery.representative', '-')}`,
+                            extension_id: extension.number || '--',
+                            user_name: extension.userName || '--',
+                            extension_name: this.getExtensionName(row.user_id) || '--',
+                            status: this.getExtensionStatusText(row.user_id),
+                            status_duration: getInitialExtensionTime(extension, this.getSettings),
+                            caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
+                            call_info: extension.calls.length ? this.getCallInfo(extension) : '',
+                        }
                     })
+
+                    return tableData
+                },
+                set: function (newValue) {
+                    return newValue
                 }
-                
-                tableData = tableData.map((row) => {
-                    const extension = this.userExtension(row.user_id)
-                    
-                    if (!extension) {
-                        return row
-                    }
-                    
-                    return {
-                        ...row,
-                        online_user_id: extension.onlineUserID || '--',
-                        representant: `${extension.userID} - ${get(extension, 'summery.representative', '-')}`,
-                        extension_id: extension.number || '--',
-                        user_name: extension.userName || '--',
-                        extension_name: this.getExtensionName(row.user_id) || '--',
-                        status: this.getExtensionStatusText(row.user_id),
-                        status_duration: getInitialExtensionTime(extension, this.getSettings),
-                        caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
-                        call_info: extension.calls.length ? this.getCallInfo(extension) : '',
-                    }
-                })
-                
-                return tableData
             },
             extensions() {
                 return this.$store.state.extensions.extensions
@@ -289,6 +293,18 @@
                     this.drawRow = true
                 })
             },
+            /* TODO: Use this method in sort-change event handler if previous doesn't work */
+            /*onSortChange({column, prop, order}) {
+                if (prop === null) {
+                    return
+                }
+
+                if (order === 'ascending') {
+                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
+                } else if (order === 'descending') {
+                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
+                }
+            },*/
         },
     }
 </script>

@@ -5,7 +5,7 @@
                 <div class="flex flex-col w-38"
                      :class="$rtl.isRTL ? 'ml-10' : 'mr-10'">
                     <span class="mb-2">
-                        {{ $t('Frequency') }}:
+                        {{ $t('report.frequency') }}:
                     </span>
                     <base-select :value="selectedFrequency.value"
                                  id="frequency"
@@ -35,7 +35,7 @@
                             <div class="flex flex-col"
                                  :class="$rtl.isRTL ? 'mr-10' : 'ml-10'">
                                 <span class="mb-2">
-                                    {{ $t('Time') }}:
+                                    {{ $t('widget.time') }}:
                                 </span>
                                 <TimePicker id="time"
                                             class="flex w-35"
@@ -59,7 +59,7 @@
                         <div class="flex flex-col"
                              :class="$rtl.isRTL ? 'mr-10' : 'ml-10'">
                             <span class="mb-2">
-                                {{ $t('Time') }}:
+                                {{ $t('widget.time') }}:
                             </span>
                             <TimePicker id="_time"
                                         class="flex w-35"
@@ -79,7 +79,7 @@
                             </div>
                             <div class="flex flex-col mx-5 3xl:mx-10">
                                 <span class="mb-2">
-                                    {{ $t('Time range') }}:
+                                    {{ $t('widget.timeRange') }}:
                                 </span>
                                 <TimeRange id="time_range"
                                            class="flex w-38"
@@ -89,7 +89,7 @@
                             </div>
                             <div class="flex flex-col">
                                 <span class="mb-2">
-                                    {{ $t('Interval') }}:
+                                    {{ $t('widget.interval') }}:
                                 </span>
                                 <TimePicker id="interval"
                                             class="flex w-35"
@@ -100,7 +100,7 @@
                             <div class="flex flex-col"
                                  :class="$rtl.isRTL ? 'mr-5 3xl:mr-10' : 'ml:5 3xl:ml-10'">
                                 <span class="mb-2">
-                                    {{ $t('Check every') }}:
+                                    {{ $t('report.checkEvery') }}:
                                 </span>
                                 <TimePicker id="check_every"
                                             class="flex w-35"
@@ -116,10 +116,11 @@
         <Conditions/>
         <portal to="next-button">
             <base-button fixed-width="w-37"
+                         type="primary"
                          @click="goNext">
                 <div class="flex items-center">
                     <span class="mx-1 text-base font-bold">
-                        {{ $t('Next') }}
+                        {{ $t('general.next') }}
                     </span>
                     <IconDirRight class="mx-1"/>
                 </div>
@@ -132,11 +133,11 @@
     import TimePicker from '@/modules/reports/components/TimePicker'
     import BaseDatePicker from '@/components/Widgets/BaseDatePicker'
     import Conditions from '@/modules/reports/components/schedule/components/Conditions'
-    
+
     const DAILY_FREQUENCY = 'daily'
     const MONTHLY_FREQUENCY = 'monthly'
     const INTERVAL_FREQUENCY = 'interval'
-    
+
     export default {
         components: {
             TimeRange,
@@ -239,7 +240,7 @@
 .el-time-range-picker {
     .el-time-panel__footer {
         height: 40px !important;
-        
+
         .el-time-panel__btn.confirm {
             color: white !important;
             background: var(--primary-color) !important;
@@ -247,12 +248,12 @@
             border-radius: 4px !important;
             padding-left: 16px !important;
             padding-right: 16px !important;
-            
+
             &:hover {
                 opacity: 0.75 !important;
             }
         }
-        
+
         .el-time-panel__btn.cancel {
             border: 2px solid var(--gray-550) !important;
             border-radius: 4px !important;
@@ -260,7 +261,7 @@
             font-weight: 700 !important;
             color: var(--gray-550) !important;
             padding-right: 16px !important;
-            
+
             &:hover {
                 background: var(--gray-200) !important;
             }

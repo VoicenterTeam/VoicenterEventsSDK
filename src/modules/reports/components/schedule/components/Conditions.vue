@@ -13,10 +13,10 @@
         </div>
         <div class="my-6">
             <base-button @click="onNewCriteria"
-                         variant="white"
+                         type="primary"
             >
                 <span class="font-semibold">
-                    {{ $t('New Criteria') }}
+                    {{ $t('report.newCriteria') }}
                 </span>
             </base-button>
         </div>
@@ -24,7 +24,7 @@
 </template>
 <script>
     import ConditionGroup from '@/modules/reports/components/schedule/components/ConditionGroup'
-    
+
     export default {
         components: {
             ConditionGroup,

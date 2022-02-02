@@ -42,11 +42,13 @@ const types = {
     TEMPLATE_SETUP: 'TEMPLATE_SETUP',
     UPDATE_SUMMARY: 'UPDATE_SUMMARY',
     TEMPLATE_EDIT_WIDGET: 'TEMPLATE_EDIT_WIDGET',
-    TEMPLATE_UPDATE: 'TEMPLATE_UPDATE',
     RESET_COPY_TEMPLATE: 'RESET_COPY_TEMPLATE',
     COPY_TEMPLATE: 'COPY_TEMPLATE',
     UPDATE_QUICK_CREATING: 'UPDATE_QUICK_CREATING',
-    RESET_QUICK_CREATING: 'RESET_QUICK_CREATING'
+    RESET_QUICK_CREATING: 'RESET_QUICK_CREATING',
+    RESET_WIDGETS: 'RESET_WIDGETS',
+    SET_WIDGETS: 'SET_WIDGETS',
+    UPDATE_WIDGET: 'UPDATE_WIDGET'
 }
 
 const state = {
@@ -58,9 +60,9 @@ const state = {
     templateToPreview: null,
     copyOfUniqTemplatesDefaultConfig: null,
     quickCreatingWidget: {
-        isClickedOnAddBtn: false,
-        isCreatedWidget: false
-    }
+        isClickedOnAddBtn: false
+    },
+    allWidgetsWithQuantity: null
 }
 
 const mutations = {
@@ -94,9 +96,9 @@ const mutations = {
     [types.VIEW_SUMMARY]: (state) => {
         state.step = TEMPLATES_SUMMARY
     },
-    [types.TEMPLATE_SETUP]: (state, template) => {
-        state.templateToEdit = template
-        if (!template) {
+    [types.TEMPLATE_SETUP]: (state, data) => {
+        state.templateToEdit = data
+        if (!data && Object.keys(data).length === 0) {
             return
         }
         state.step = TEMPLATE_EDIT_WIDGET
@@ -106,9 +108,6 @@ const mutations = {
     },
     [types.TEMPLATE_EDIT_WIDGET]: (state) => {
         state.step = TEMPLATE_EDIT_WIDGET
-    },
-    [types.TEMPLATE_UPDATE]: (state, summary) => {
-        state.templates[summary.templateID].DefaultWidgetConfig = summary.template
     },
     [types.RESET_COPY_TEMPLATE]: (state) => {
         state.copyOfUniqTemplatesDefaultConfig = null
@@ -121,9 +120,26 @@ const mutations = {
     },
     [types.RESET_QUICK_CREATING]: (state) => {
         state.quickCreatingWidget = {
-            isClickedOnAddBtn: false,
-            isCreatedWidget: false
+            isClickedOnAddBtn: false
         }
+    },
+    [types.UPDATE_WIDGET]: (state, data) => {
+        state.allWidgetsWithQuantity[data.index].DefaultWidgetConfig = data.template
+        state.allWidgetsWithQuantity[data.index].DefaultWidgetTime = data.widgetTime
+        state.allWidgetsWithQuantity[data.index].TemplateName = data.widgetName
+        state.allWidgetsWithQuantity[data.index].TemplateName = data.widgetName
+        if (data.defaultWidgetLayout && data.defaultWidgetLayout.status) {
+            state.allWidgetsWithQuantity[data.index].DefaultWidgetLayout.status = data.defaultWidgetLayout.status
+        }
+        if (data.defaultWidgetLayout && data.defaultWidgetLayout.statistics) {
+            state.allWidgetsWithQuantity[data.index].DefaultWidgetLayout.statistics = data.defaultWidgetLayout.statistics
+        }
+    },
+    [types.RESET_WIDGETS]: (state) => {
+        state.allWidgetsWithQuantity = null
+    },
+    [types.SET_WIDGETS]: (state, data) => {
+        state.allWidgetsWithQuantity = data
     }
 }
 
@@ -146,14 +162,11 @@ const actions = {
     async goToSummary({ commit }) {
         await commit(types.VIEW_SUMMARY)
     },
-    async editTemplate({ commit }, template) {
-        await commit(types.TEMPLATE_SETUP, template)
+    async editTemplate({ commit }, template, index) {
+        await commit(types.TEMPLATE_SETUP, template, index)
     },
     async updateSummaries({ commit }, summary) {
         await commit(types.UPDATE_SUMMARY, summary)
-    },
-    async updateTemplate({ commit }, template) {
-        await commit(types.TEMPLATE_UPDATE, template)
     },
     async resetCopyTemplate({ commit }) {
         await commit(types.RESET_COPY_TEMPLATE)
@@ -167,6 +180,15 @@ const actions = {
     async resetQuickCreatingWidget({ commit }) {
         await commit(types.RESET_QUICK_CREATING)
     },
+    async resetWidgets({ commit }) {
+        await commit(types.RESET_WIDGETS)
+    },
+    async setWidgets({ commit }, widget) {
+        await commit(types.SET_WIDGETS, widget)
+    },
+    async updateWidget({ commit }, data) {
+        await commit(types.UPDATE_WIDGET, data)
+    }
 }
 
 const getters = {
@@ -178,7 +200,8 @@ const getters = {
     getSummaries: state => state.summaries,
     getTemplateToEdit: state => state.templateToEdit,
     getCopyTemplate: state => state.copyOfUniqTemplatesDefaultConfig,
-    getQuickCreatingWidget: state => state.quickCreatingWidget
+    getQuickCreatingWidget: state => state.quickCreatingWidget,
+    getAllWidgetsWithQuantity: state => state.allWidgetsWithQuantity
 }
 
 export default {

@@ -3,6 +3,7 @@ module.exports = {
     ['@vue/app', { useBuiltIns: 'entry' }]
   ],
   'plugins': [
+      'istanbul',
     [
       'component',
       {

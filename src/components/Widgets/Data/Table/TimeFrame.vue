@@ -1,6 +1,6 @@
 <template>
     <div :style="getStyles"
-         class="text-main-2xl flex items-center font-semibold truncate">
+         class="text-main-2xl text-gray-700 flex items-center font-medium truncate">
         {{ getDateInterval }}
     </div>
 </template>
@@ -16,10 +16,10 @@ export default {
     },
     computed: {
         getStyles() {
-            return this.$store.getters['layout/widgetTitleStyles']
+            return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
         },
         getDateInterval() {
-            return timeFilterToHuman(this.widget)
+            return timeFilterToHuman(this.widget, 'dd.MM.yyyy')
         },
     },
 }

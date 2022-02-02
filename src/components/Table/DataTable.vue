@@ -1,15 +1,18 @@
 <template>
     <div class="data-table__container h-full">
         <portal :to="`widget-header__${widget.WidgetID}`">
-            <slot name="search-input"/>
+            <div class="flex justify-start">
+                <slot name="search-input"/>
+                <slot name="pagination-rows-per-page"/>
+            </div>
             <slot name="time-frame"/>
             <div class="flex items-center table-row__count"
                  v-if="showManageColumns"
                  :key="`${widget.WidgetID} - ${activeLanguage}`">
-                <el-dropdown class="px-2" size="mini" trigger="click">
-                    <el-button size="small" type="primary">
+                <el-dropdown class="px-4" size="mini" trigger="click">
+                    <el-button size="small" type="_primary" plain>
+                        <i class="vc-icon-filter el-icon--left"/>
                         {{ $t('datatable.manage.columns') }}
-                        <i class="el-icon-arrow-down el-icon--right"/>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                         <manage-columns :key="`${widget.WidgetID} - ${activeLanguage}`"
@@ -20,8 +23,8 @@
                                         @on-reorder-column="reorderColumn"/>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <slot name="additional-data"/>
             </div>
+            <slot name="additional-data"/>
         </portal>
         <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
             <el-table :data="rowsData"
@@ -44,7 +47,7 @@
                         :key="column.prop"
                         :label="$t(column.prop) || column.label"
                         :min-width="column.minWidth || columnMinWidthData"
-                        :sortable="true"
+                        :sortable="canSortRows"
                         :type="column.type"
                         v-bind="column"
                         v-for="column in renderedColumns">
@@ -77,7 +80,7 @@
             </el-table>
         </div>
         <portal :to="`widget-footer__${widget.WidgetID}`">
-            <div class="flex items-center justify-between -mx-1 widget-footer" v-if="tableData.length">
+            <div class="flex items-center justify-between -mx-1 widget-footer h-12" v-if="tableData.length">
                 <export-data :tableId="tableId"
                              :widget="widget"
                              @on-update-layout="updateLayout"
@@ -157,7 +160,7 @@
                 default: () => [],
             },
             canSortRows: {
-                type: Boolean,
+                type: [Boolean, String],
                 default: false,
             },
             columnMinWidth: {
@@ -178,7 +181,8 @@
                 tableId,
                 screenWidth: screen.width,
                 showManageColumns: true,
-                columnMinWidthData: this.columnMinWidth
+                columnMinWidthData: this.columnMinWidth,
+                templateHelp: {},
             }
         },
         computed: {
@@ -375,6 +379,11 @@
                 }
                 return (this.screenWidth / pageWidth).toFixed(2) * 170
             },
+            clearDataSort() {
+                if (this.$refs['table']) {
+                    this.$refs['table'].clearSort()
+                }
+            }
         },
         watch: {
             columns: {
@@ -439,6 +448,10 @@ th > div.cell > span {
         @apply bg-gray-100;
         @apply cursor-pointer;
     }
+}
+
+.el-table ::v-deep th:hover.el-table__cell>.cell {
+    @apply flex;
 }
 
 .data-table ::v-deep .el-table td.direction-ltr {

@@ -4,7 +4,7 @@
              v-if="displayLabel">
             <IconLayoutSelection class="text-primary"/>
             <div class="mx-1 text-gray-900 text-sm font-medium truncate">
-                {{ $t('Layout Selection') }}
+                {{ $t('layout.layoutSelection') }}
             </div>
         </div>
         <el-select v-model="selectedLayout"
@@ -25,7 +25,7 @@
                         <div @click="onChooseLayout(layout)"
                              class="flex flex-col flex-1">
                             <p class="-mt-1 text-md truncate flex items-center">
-                                <el-tooltip :content="$t('This is a default layout, you will not be able to update, just clone')"
+                                <el-tooltip :content="$t('layout.defaultLayoutWarning')"
                                             v-if="layout.LayoutID === DEFAULT_LAYOUT_ID"
                                             placement="top">
                                     <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5 mx-2"/>

@@ -31,7 +31,7 @@
                         </el-dropdown>
                     </template>
                 </div>
-                <el-select :placeholder="$t('Sort by')" v-model="sortBy" class="mt-1">
+                <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" class="mt-1">
                     <template v-slot:prefix>
                         <span class="h-full flex items-center">
                             <i class="el-icon-d-caret"/>
@@ -59,7 +59,7 @@
                     <div class="flex flex-col w-full items-center"
                          key="no-data"
                          v-if="sortedExtensions.length === 0">
-                        <h3 class="text-main-xl">{{ $t('extensions.noData') }}</h3>
+                        <h3 class="text-main-xl">{{ $t('general.noData') }}</h3>
                         <icon-no-data class="w-64"/>
                     </div>
                 </fade-transition>
@@ -144,7 +144,7 @@
         },
         computed: {
             getThresholdConfig() {
-                return this.$store.getters['layout/getThresholdConfig']
+                return this.$store.getters['layout/getThresholdConfig']('activeLayout')
             },
             adminSelected() {
                 return displayUsersRelatedWithAdmin(this.data.WidgetConfig)
@@ -241,11 +241,6 @@
 <style lang="scss">
 .flip-list-move {
     transition: transform 5s;
-}
-
-.el-loading-mask .el-loading-spinner {
-    display: flex;
-    justify-content: center;
 }
 
 .el-row {

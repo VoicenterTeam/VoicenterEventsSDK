@@ -3,14 +3,14 @@
         <div class="w-full flex items-center overflow-x-auto">
             <template v-if="showTabs">
                 <div
-                    class="tab-wrapper px-3 lg:px-10 text-main-lg cursor-pointer"
+                    class="tab-wrapper text-main-lg cursor-pointer"
                     v-for="(group, index) in widgetGroupList"
                     @click="switchTab(group)"
                     :key="index">
                     <div></div>
                     <div class="flex justify-between w-full items-center"
                         :key="`edit-${group.WidgetGroupID}`">
-                        <div class="whitespace-no-wrap tab-name"
+                        <div class="whitespace-nowrap tab-name"
                             :class="[{'active': isActiveGroup(group)}, $rtl.isRTL ? 'ml-4' : 'mr-4']">
                             {{ widgetGroupName(group, index) }}
                         </div>
@@ -28,16 +28,16 @@
                     </fade-transition>
                 </div>
             </template>
-            <div v-show="editMode && !showTabs"
+            <div v-if="editMode && !showTabs"
                  class="px-14 text-gray-900 text-2xl">
-                {{ $t('Edit Mode') }}
+                {{ $t('general.editMode') }}
             </div>
         </div>
         <div class="flex items-center px-14 hidden md:flex">
             <div class="flex items-center" v-if="layoutType === 'tabbed'">
                 <create-new-widget-button
                     class="mr-5"
-                    v-if="!editMode && widgetGroupList.length"
+                    v-show="!editMode && widgetGroupList.length"
                     @click="clickToAddNewWidget"
                 />
                 <new-group-button
@@ -51,11 +51,11 @@
                            size="mini"
                            type="_primary"
                            class="h-7">
-                    {{ $t('Save') }}
+                    {{ $t('common.save') }}
                 </el-button>
                 <div class="mx-6 font-medium cursor-pointer text-steel hover:text-primary"
                      @click="onCancel">
-                    {{ $t('Cancel') }}
+                    {{ $t('common.cancel') }}
                 </div>
             </template>
         </div>
@@ -65,7 +65,6 @@
     import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
     import NewGroupButton from '@/components/NewGroupButton'
     import CreateNewWidgetButton from '@/components/CreateNewWidgetButton'
-    import bus from '@/event-bus/EventBus';
 
     export default {
         components: {
@@ -96,28 +95,12 @@
                 default: 'tabbed'
             }
         },
-        computed: {
-            onEditMode () {
-                return this.$store.getters['widgetCreation/getQuickCreatingWidget']
-            }
-        },
-        watch: {
-            onEditMode: {
-                handler (val) {
-                    if (Object.values(val).every(el => el)) {
-                        const group = this.widgetGroupList.filter(el => el.WidgetGroupID.toString() === this.activeTab.toString())
-                        this.$emit('on-edit-widget-group', group)
-                    }
-                },
-                deep: true
-            }
-        },
         methods: {
             widgetGroupName(group, index) {
                 if (group.IsNew) {
-                    return this.$t('Group') + ' ' + (index + 1)
+                    return this.$t('general.group') + ' ' + (index + 1)
                 }
-                return group.WidgetGroupTitle || this.$t('Group ID') + ': ' + group.WidgetGroupID
+                return group.WidgetGroupTitle || this.$t('dashboard.groupID') + ': ' + group.WidgetGroupID
             },
             switchTab(group) {
                 if (this.editMode) {
@@ -146,7 +129,7 @@
                 this.$emit('on-remove-widget-group', group)
             },
             clickToAddNewWidget () {
-                bus.$emit('add-new-widget-by-navbar', true);
+                this.onEditWidgetGroup(this.activeTab)
                 const data = {
                     key: 'isClickedOnAddBtn',
                     value: true
@@ -178,6 +161,9 @@
 
     &:first-child {
         margin-left: 65px;
+    }
+    &:not(:first-child) {
+        margin-left: 40px;
     }
 }
 

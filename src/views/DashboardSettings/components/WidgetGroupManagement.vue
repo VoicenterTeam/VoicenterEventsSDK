@@ -3,7 +3,7 @@
         <div class="flex items-center pb-6 border-b border-gray-300">
             <IconWidgetGroup class="text-primary"/>
             <span class="mx-1 text-xl font-bold text-gray-900">
-                {{ $t('Widget Group Management') }}
+                {{ $t('widget.widgetGroupManagement') }}
             </span>
         </div>
         <DraggableList :value="widgetGroups"
@@ -20,8 +20,9 @@
                             {{ widgetGroup.WidgetGroupTitle || `# ${widgetGroup.WidgetGroupID}` }}
                         </span>
                     </div>
-                    <div class="flex cursor-pointer">
-                        <IconDragAndDrop class="text-gray-500 hover:text-primary"/>
+                    <div class="flex items-center cursor-pointer text-primary">
+                        <span class="mr-2 font-bold">Edit</span>
+                        <IconShape/>
                     </div>
                 </div>
             </div>
@@ -31,7 +32,7 @@
 <script>
     import draggableEvents from '@/enum/draggableEvents'
     import DraggableList from '@/components/Widgets/DraggableList'
-    
+
     export default {
         components: {
             DraggableList,

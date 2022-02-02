@@ -1,5 +1,5 @@
 <template>
-    <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners"
+    <modal v-bind="$attrs" v-if="model.WidgetLayout" v-on="$listeners" :appendToBody="true"
            class="update-dialog_wrapper">
         <template v-slot:title>
             <div class="flex flex-row items-center">
@@ -22,24 +22,24 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.showStatsInPercentage">
-                            {{ $t('Show Stats in Percentage') }}
+                            {{ $t('widget.showStatsInPercentage') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayQueuesAsRow">
-                            {{ $t('Display queues as rows') }}
+                            {{ $t('widget.config.displayQueuesAsRows') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/3">
                         <el-checkbox class="pt-4" v-model="model.WidgetLayout.displayRowWithTotals">
-                            {{ $t('Display the row with totals') }}
+                            {{ $t('widget.displayTheRowWithTotals') }}
                         </el-checkbox>
                     </div>
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueGauge(widget)">
                 <div class="flex justify-between">
-                    <label>{{ $t('Maximum range value') }}</label>
+                    <label>{{ $t('widget.config.maximumRangeValue') }}</label>
                     <el-input-number :max="1000" :min="1" :step="2" type="number"
                                      v-model="model.WidgetLayout.maximumRange"/>
                 </div>
@@ -84,12 +84,12 @@
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.SumOfOthers">
-                            {{ $t('Display % of Others value') }}
+                            {{ $t('widget.displayPercentOfOthersValue') }}
                         </el-checkbox>
                     </div>
                     <div class="flex lg:w-1/2">
                         <el-checkbox v-model="model.WidgetLayout.AbsoluteNumbers">
-                            {{ $t('Display absolute numbers') }}
+                            {{ $t('widget.displayAbsoluteNumbers') }}
                         </el-checkbox>
                     </div>
                 </div>
@@ -105,17 +105,17 @@
                 <el-collapse-item class="py-4" :title="$t('widget.layout')" name="layout">
                     <el-form-item v-if="isHtmlEditor(widget)">
                         <el-checkbox v-model="model.WidgetLayout.showLastUpdateDate">
-                            {{ $t('Display last update date') }}
+                            {{ $t('widget.displayLastUpdateDate') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item v-if="isNoteListWidget(widget)">
                         <el-checkbox v-model="model.WidgetLayout.displayWidgetTitle">
-                            {{ $t('Display widget title') }}
+                            {{ $t('widget.displayWidgetTitle') }}
                         </el-checkbox>
                     </el-form-item>
                     <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
                         <div class="py-4">
-                            <label>{{ $t('Card title font size') }}</label>
+                            <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
                             <el-slider
                                 :marks="cardTitleBestOptions"
                                 :max="cardTitleFontSizes.max"
@@ -125,7 +125,7 @@
                             </el-slider>
                         </div>
                         <div class="py-4">
-                            <label>{{ $t('Card value font size') }}</label>
+                            <label>{{ $t('widget.config.cardValueFontSize') }}</label>
                             <el-slider
                                 :marks="cardValueBestOptions"
                                 :max="cardValueFontSizes.max"
@@ -136,7 +136,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
-                        <label>{{ $t('Status label font size') }}</label>
+                        <label>{{ $t('widget.statusLabelFontSize') }}</label>
                         <el-slider
                             :marks="textSizeBestOptions"
                             :max="textFontSizes.max"
@@ -145,7 +145,7 @@
                             v-model="model.WidgetLayout.labelFontSize">
                         </el-slider>
                         <div class="flex flex-row items-center pt-10">
-                            <label>{{ $t('Data labels color') }}</label>
+                            <label>{{ $t('widget.dataLabelsColor') }}</label>
                             <el-color-picker
                                 :predefine="predefinedColors"
                                 class="mx-4"
@@ -158,11 +158,6 @@
                     <widget-colors :availableColors="availableColors" :model="model"/>
                 </el-collapse-item>
             </el-collapse>
-<!--            <el-form-item v-if="isPieWidget(widget)">-->
-<!--                <el-checkbox class="pt-4" v-model="model.WidgetLayout.hideLoggedOutUsers">-->
-<!--                    {{ $t('Don`t count logged out agents') }}-->
-<!--                </el-checkbox>-->
-<!--            </el-form-item>-->
             <el-form-item>
                 <div v-if="model.WidgetTime.type">
                     <time-frame
@@ -170,12 +165,11 @@
                         :timeFrameType="model.WidgetTime.type"
                         :widgetTimeOptions="widgetTimeOptions">
                         <template v-slot:frame-types>
-                            <el-radio-group class="pb-4" v-model="model.WidgetTime.type">
-                                <el-radio :key="widgetTimeType.text" v-bind="widgetTimeType"
-                                          v-for="widgetTimeType in widgetTimeTypes">
-                                    {{ $t(widgetTimeType.text) }}
-                                </el-radio>
-                            </el-radio-group>
+                            <BaseRadioGroup
+                                v-model="model.WidgetTime.type"
+                                :radios="createWidgetTimeTypes"
+                                class="radio-groups mb-5"
+                            />
                         </template>
                     </time-frame>
                 </div>
@@ -223,7 +217,7 @@
 </template>
 <script>
     import cloneDeep from 'lodash/cloneDeep'
-    import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Radio, RadioGroup, Slider } from 'element-ui'
+    import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Slider } from 'element-ui'
     import Modal from '@/components/Common/Modal'
     import queueMixin from '@/mixins/queueMixin'
     import { allSeries } from '@/enum/queueConfigs'
@@ -267,8 +261,6 @@
             RealTimeSettings,
             TimeFrame,
             Modal,
-            [Radio.name]: Radio,
-            [RadioGroup.name]: RadioGroup,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             [Checkbox.name]: Checkbox,
@@ -293,10 +285,10 @@
         },
         data() {
             return {
-                widgetTimeOptions: widgetTimeOptions,
-                widgetTimeTypes: widgetTimeTypes,
+                widgetTimeOptions,
+                widgetTimeTypes,
                 model: {
-                    settings: cloneDeep(realTimeSettings),
+                    settings: realTimeSettings,
                     colors: cloneDeep(defaultColors),
                 },
                 activeCollapse: ['filters'],
@@ -349,7 +341,7 @@
                 return areaChartWidgetColors
             },
             predefinedColors() {
-                let options = values(this.$store.getters['layout/colors'])
+                let options = values(this.$store.getters['layout/colors']('activeLayout'))
                 return uniq(options)
             },
             rules() {
@@ -364,6 +356,14 @@
             otherFilters() {
                 return this.widget.WidgetConfig.filter(c => c.ParameterType && c.ParameterType !== this.AUTO_COMPLETE_PARAMETER_TYPE)
             },
+            createWidgetTimeTypes () {
+                return this.widgetTimeTypes
+                    .map(el => {
+                        return {
+                            label: el.text, value: el.label
+                        }
+                    })
+            }
         },
         methods: {
             isHtmlEditor,
@@ -472,5 +472,11 @@
             @apply w-full;
         }
     }
+}
+.radio-groups {
+    @apply flex;
+}
+.radio-groups .vc-form-radio:last-child {
+    @apply ml-8;
 }
 </style>

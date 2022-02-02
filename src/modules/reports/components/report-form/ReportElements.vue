@@ -31,12 +31,12 @@
                 activeSection: 'Widgets',
                 sections: [
                     {
-                        label: this.$t('Widgets'),
+                        label: this.$t('widget.widgets'),
                         key: 'Widgets',
                         icon: 'IconWidget',
                     },
                     {
-                        label: this.$t('Schedules'),
+                        label: this.$t('report.schedules'),
                         key: 'Schedules',
                         icon: 'IconSettings',
                     },

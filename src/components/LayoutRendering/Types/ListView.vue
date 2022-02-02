@@ -7,17 +7,18 @@
                  class="widget--group_section mb-3 relative">
                 <div class="widget--group_border"/>
                 <div class="p-2">
-                    <div v-show="editMode && (editedGroup.WidgetGroupID === widgetGroup.WidgetGroupID)"
+                    <div v-if="editMode && (editedGroup.WidgetGroupID === widgetGroup.WidgetGroupID)"
                         class="flex items-center justify-between pb-2">
                         <base-outline-input v-model="widgetGroup.WidgetGroupTitle"/>
                         <edit-group-buttons
+                            :activeWidgetGroupId="editedGroup.WidgetGroupID"
                             :widgetGroup="widgetGroup"
                             v-bind="$attrs"
                             v-on="$listeners"
                             @on-reorder-widget-group="onReorderWidgetGroup">
                         </edit-group-buttons>
                     </div>
-                    <div v-show="!editMode" class="flex items-center justify-between pb-2">
+                    <div v-else class="flex items-center justify-between pb-2">
                         <h3 :style="getStyles"
                             class="font-semibold text-main-2xl text-gray-800">
                             {{ widgetGroup.WidgetGroupTitle }}
@@ -79,7 +80,7 @@
         },
         computed: {
             getStyles() {
-                return this.$store.getters['layout/widgetGroupTitleStyles']
+                return this.$store.getters['layout/widgetGroupTitleStyles']('activeLayout')
             },
         },
         methods: {

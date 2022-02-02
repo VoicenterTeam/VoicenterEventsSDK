@@ -1,5 +1,5 @@
 <template>
-    <ConfirmDialog :title="$t('Edit Report Item')"
+    <ConfirmDialog :title="$t('report.editReportItem')"
                    v-bind="$attrs"
                    v-on="$listeners"
                    @close="onCancel()"
@@ -11,14 +11,14 @@
         >
             <el-form-item>
                 <label for="name">
-                    {{ $t('Widget Name') }}
+                    {{ $t('widget.widgetName') }}
                 </label>
                 <el-input id="name"
                           v-model="model.ReportItemName"/>
             </el-form-item>
             <el-form-item>
                 <label for="description">
-                    {{ $t('Description') }}
+                    {{ $t('general.description') }}
                 </label>
                 <el-input id="description"
                           v-model="model.ReportItemDescription"/>
@@ -29,14 +29,14 @@
                                  @change="onTriggerExportType($event, pdfTypeID)"
                                  :value="exportToPdf">
                         <span class="truncate">
-                            {{ $t('Export To Pdf') }}
+                            {{ $t('report.exportToPdf') }}
                         </span>
                     </el-checkbox>
                     <el-checkbox class="col-span-1"
                                  @change="onTriggerExportType($event, csvTypeID)"
                                  :value="exportToCsv">
                         <span class="truncate">
-                        {{ $t('Export To Csv') }}
+                        {{ $t('report.exportToCsv') }}
                         </span>
                     </el-checkbox>
                 </div>
@@ -45,9 +45,9 @@
         <template v-slot:footer-actions>
             <slot name="footer-actions">
                 <base-button class="mx-4"
-                             @click="onCancel()"
-                             variant="discard"
-                             fixed-width="w-37">
+                             outline
+                             fixed-width="w-37"
+                             @click="onCancel">
                     <div class="flex items-center">
                         <IconDiscard class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
@@ -56,11 +56,12 @@
                     </div>
                 </base-button>
                 <base-button fixed-width="w-37"
+                             type="primary"
                              @click="onSubmit()">
                     <div class="flex items-center">
                         <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
-                            {{ $t('Save') }}
+                            {{ $t('common.save') }}
                         </span>
                     </div>
                 </base-button>
@@ -72,7 +73,7 @@
     import get from 'lodash/get'
     import { Checkbox } from 'element-ui'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    
+
     export default {
         components: {
             ConfirmDialog,
@@ -135,7 +136,7 @@
                     this.model.ReportItemExport[0].ReportExportTypeID -= type
                 }
             },
-            
+
         },
         watch: {
             '$attrs.visible': {

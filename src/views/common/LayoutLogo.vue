@@ -10,10 +10,11 @@
         >
             <base-button class="mx-1"
                          v-if="!disabled"
-                         size="xs"
-                         fixed-width="w-20"
-                         variant="discard">
-                {{ $t('Change') }}
+                         type="primary"
+                         outline
+                         size="sml"
+                         fixed-width="w-20">
+                {{ $t('general.change') }}
             </base-button>
         </el-upload>
     </div>
@@ -21,7 +22,7 @@
 <script>
     import { getBase64 } from '@/helpers/util'
     import { Upload } from 'element-ui'
-    
+
     export default {
         inheritAttrs: false,
         components: {
@@ -55,7 +56,7 @@
                     })
                     return
                 }
-                
+
                 const logo = await getBase64(file)
                 await this.$store.dispatch('layout/setLogo', logo)
             },

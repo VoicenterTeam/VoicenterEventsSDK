@@ -15,11 +15,11 @@
                  :class="['el-dialog', { 'is-fullscreen': fullscreen, 'el-dialog--center': center }, customClass]"
                  ref="dialog"
                  :style="style">
-                <div class="flex items-center modal-header__wrapper overflow-hidden">
+                <div class="flex items-center modal-header__wrapper overflow-hidden h-16">
                     <slot name="redirect-action"/>
                     <IconVerticalLine v-if="$slots['redirect-action']"
                                       class="h-14"/>
-                    <div class="header-title border-gray-300 truncate flex-1 py-3 px-6 overflow-hidden"
+                    <div class="header-title border-gray-300 truncate flex-1 py-4 px-6 overflow-hidden"
                          :class="$rtl.isRTL ? 'border-l-2' : 'border-r-2'">
                         <div class="flex w-full items-center"
                              :class="titleCentered ? 'justify-center' : 'justify-between'">
@@ -55,7 +55,7 @@
     import 'element-ui/lib/theme-chalk/dialog.css'
     import Migrating from 'element-ui/src/mixins/migrating';
     import emitter from 'element-ui/src/mixins/emitter';
-    
+
     export default {
         name: 'Modal',
         mixins: [Popup, emitter, Migrating],
@@ -199,7 +199,6 @@
             hide(cancel) {
                 if (cancel !== false) {
                     this.$emit('update:visible', false);
-                    this.$emit('close');
                     this.closed = true;
                 }
             },

@@ -1,0 +1,9 @@
+{
+    "pluginsFile": "cypress/plugins/index.js",
+    "chromeWebSecurity": true,
+    "video": false,
+    "watchForFileChanges": false,
+    "baseUrl": "https://dashboardapidev.voicenter.co/v1",
+    "testFiles": ["test.spec.js"],
+    "ignoreTestFiles": []
+}

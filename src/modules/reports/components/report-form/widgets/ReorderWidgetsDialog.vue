@@ -5,12 +5,12 @@
             <div class="flex items-center">
                 <IconChangeOrder class="w-5 h-5 mx-1"/>
                 <span class="text-main-sm leading-4">
-                    {{ $t('Change Widget Order') }}
+                    {{ $t('widget.changeWidgetOrder') }}
                 </span>
             </div>
         </div>
         <modal :visible.sync="showDialog"
-               title="Widget Reorder"
+               title="widget.widgetReorder"
                top="15vh"
                wrapper-classes="reorder-widgets"
                :title-centered="true"
@@ -55,15 +55,16 @@
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                     <slot name="footer-actions">
                         <base-button class="mx-4"
-                                     @click="onCloseModal"
-                                     variant="discard"
-                                     fixed-width="w-37">
+                                     outline
+                                     fixed-width="w-37"
+                                     @click="onCloseModal">
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
+                                <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
                             </div>
                         </base-button>
                         <base-button fixed-width="w-37"
+                                     type="primary"
                                      @click="onSubmit()">
                             <div class="flex items-center">
                                 <IconSave class="mx-1"/>
@@ -82,7 +83,7 @@
     import DraggableList from '@/components/Widgets/DraggableList'
     import { BOTH_EXPORT_TYPE_ID } from '@/modules/reports/enum/report'
     import cloneDeep from 'lodash/cloneDeep'
-    
+
     export default {
         components: {
             Tabs,
@@ -101,12 +102,12 @@
             return {
                 sections: [
                     {
-                        label: this.$t('PDF'),
+                        label: this.$t('general.PDF'),
                         icon: 'IconPdf',
                         key: 2,
                     },
                     {
-                        label: this.$t('Spreadsheet'),
+                        label: this.$t('widget.spreadsheet'),
                         icon: 'IconSpreadsheet',
                         key: 1,
                     },
@@ -174,7 +175,7 @@
         min-height: 50vh;
         @apply overflow-y-auto overflow-x-hidden;
     }
-    
+
     .item-wrapper:hover {
         @apply text-primary;
         i > svg {

@@ -1,5 +1,5 @@
 body {
-    @apply font-montserrat font-semibold;
+    @apply font-montserrat font-medium;
     font-size: var(--font-size-base);
 
     .dashboard-wrapper {
@@ -14,4 +14,9 @@ input, .el-dropdown .el-button, .el-button .el-checkbox,
 .el-dialog__footer button, .el-collapse-item .el-collapse-item__header, .el-checkbox__label {
     @apply font-semibold;
     font-size: var(--font-size-base);
+}
+
+.el-loading-mask .el-loading-spinner {
+    display: flex;
+    justify-content: center;
 }

@@ -9,22 +9,23 @@
             >
                 <template v-slot:title>
                     <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
-                        {{ $t('Duplicate Report') }}
+                        {{ $t('report.duplicateReport') }}
                     </h3>
                 </template>
                 <div class="mx-20 mt-8 mb-20">
                     <base-input rules="required"
-                                :name="$t('Report Name')"
-                                :label="$t('Report Name')"
+                                :name="$t('report.reportName')"
+                                :label="$t('report.reportName')"
                                 label-icon="IconReportName"
                                 v-model="model.ReportName"
                                 id="ReportTypeName"
                     />
                 </div>
                 <template v-slot:footer-actions>
-                    <base-button @click="onCancel()"
-                                 variant="discard"
-                                 fixed-width="w-37">
+                    <base-button outline
+                                 fixed-width="w-37"
+                                 @click="onCancel()"
+                    >
                         <div class="flex items-center">
                             <IconDiscard class="mx-1"/>
                             <span class="mx-1 text-base font-bold">
@@ -33,11 +34,12 @@
                         </div>
                     </base-button>
                     <base-button fixed-width="w-37"
+                                 type="primary"
                                  @click="handleSubmit(onDuplicate)">
                         <div class="flex items-center">
                             <IconSave class="mx-1"/>
                             <span class="mx-1 text-base font-bold">
-                            {{ $t('Save') }}
+                            {{ $t('common.save') }}
                         </span>
                         </div>
                     </base-button>
@@ -52,7 +54,7 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import BaseForm from '@/modules/common/components/form/BaseForm'
     import BaseInput from '@/modules/common/components/form/BaseInput'
-    
+
     export default {
         components: {
             BaseForm,

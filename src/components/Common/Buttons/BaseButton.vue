@@ -5,7 +5,7 @@
         :disabled="disabled || loading"
         :name="name"
         :data-test="`button-${dataTestName}`"
-        class="btn truncate flex justify-center items-center hover:outline-none focus:outline-none focus:shadow-none active:outline-none active:shadow-none select-none"
+        class="btn truncate flex justify-center items-center focus:outline-none focus:shadow-none active:outline-none active:shadow-none select-none"
         :class="{
             'rounded': !round,
             'rounded-full': round,
@@ -20,19 +20,19 @@
             'border': outline && ['xs', 'sm', 'sml'].includes(size),
             'border-2': outline && size === 'md',
 
-            'text-red-600 bg-transparent': type === 'danger' && link,
-            'text-white bg-red-600': type === 'danger' && !outline && !link,
-            'text-red-600 bg-transparent border-red-600': type === 'danger' && outline,
-            'hover:bg-red-200 focus:bg-red-200 active:bg-red-200': type === 'danger' && !outline && !link  && !disabled && !noStates,
-            'hover:bg-red-200 focus:bg-red-200 active:bg-red-200 hover:text-red-200 focus:text-red-200 active:text-red-200' : type === 'danger' && (link || outline)  && !disabled && !noStates,
+            'text-destructive-actions bg-transparent': type === 'danger' && link,
+            'text-white bg-destructive-actions': type === 'danger' && !outline && !link,
+            'text-destructive-actions bg-transparent border-destructive-actions': type === 'danger' && outline,
+            'hover:bg-destructive-actions--focus focus:bg-destructive-actions--pressed active:bg-destructive-actions--pressed': type === 'danger' && !outline && !link  && !disabled && !noStates,
+            'hover:bg-destructive-actions-bg--focus focus:bg-destructive-actions-bg--pressed active:bg-destructive-actions-bg--pressed hover:text-destructive-actions--focus focus:text-destructive-actions--pressed active:text-destructive-actions--pressed' : type === 'danger' && (link || outline)  && !disabled && !noStates,
 
-            'text-primary-600 bg-transparent': type === 'primary' && link && !forHeaders && !isElement,
-            'text-primary-600 bg-transparent': type === 'primary' && link && forHeaders && !isElement,
-            'text-white bg-primary-600': type === 'primary' && !outline && !link && !isElement,
-            'text-primary-600 bg-transparent border-primary-600': type === 'primary' && outline && !forHeaders && !isElement,
-            'text-primary-600 bg-transparent border-primary-600': type === 'primary' && outline && forHeaders && !isElement,
-            'hover:bg-primary-900 focus:bg-primary-900 active:bg-primary-900': type === 'primary' && !outline && !link  && !disabled && !noStates && !isElement,
-            'hover:bg-primary-900 focus:bg-primary-900 active:bg-primary-900 hover:text-primary-900 focus:text-primary-900 active:text-primary-900' : type === 'primary' && (link || outline)  && !disabled && !noStates && !isElement,
+            'text-primary-actions bg-transparent': type === 'primary' && link && !forHeaders && !isElement,
+            'text-headers bg-transparent': type === 'primary' && link && forHeaders && !isElement,
+            'text-white bg-primary-actions': type === 'primary' && !outline && !link && !isElement,
+            'text-primary-actions bg-transparent border-primary-actions': type === 'primary' && outline && !forHeaders && !isElement,
+            'text-headers bg-transparent border-primary-actions': type === 'primary' && outline && forHeaders && !isElement,
+            'hover:bg-primary-actions--focus focus:bg-primary-actions--pressed active:bg-primary-actions--pressed': type === 'primary' && !outline && !link  && !disabled && !noStates && !isElement,
+            'hover:bg-primary-actions-bg--focus focus:bg-primary-actions-bg--pressed active:bg-primary-actions-bg--pressed hover:text-primary-actions--focus focus:text-primary-actions--pressed active:text-primary-actions--pressed' : type === 'primary' && (link || outline)  && !disabled && !noStates && !isElement,
 
             'text-active-elements bg-transparent': type === 'primary' && link && !forHeaders && isElement,
             'text-headers bg-transparent': type === 'primary' && link && forHeaders && isElement,
@@ -48,11 +48,8 @@
             'hover:bg-secondary-actions--focus focus:bg-secondary-actions--pressed active:bg-secondary-actions--pressed': type === 'default' && !outline && !link  && !disabled && !noStates,
             'hover:bg-secondary-actions-bg--focus focus:bg-secondary-actions-bg--pressed active:bg-secondary-actions-bg--pressed hover:text-secondary-actions--focus focus:text-secondary-actions--pressed active:text-secondary-actions--pressed' : type === 'default' && (link || outline)  && !disabled && !noStates,
 
-            'text-sm font-normal': ['xs', 'sm'].includes(size) && !customSizeParams,
-            'text-sm font-medium': size === 'sml' && !customSizeParams,
-            'text-base font-bold': size === 'md' && !customSizeParams,
-            'text-sm': !!customSizeParams,
-            ...{[customSizeParams]: !!customSizeParams},
+            'text-sm font-medium': ['xs', 'sm', 'sml'].includes(size),
+            'text-base font-bold': size === 'md',
 
             'leading-tight': ['xs', 'sm', 'sml', 'md'].includes(size),
 
@@ -101,10 +98,9 @@
         <slot v-if="!square"/>
     </component>
 </template>
-
 <script>
 export default {
-    name: 'new-base-button',
+    name: 'base-button',
     props: {
         tag: {
             type: String,
@@ -151,11 +147,7 @@ export default {
         size: {
             type: String,
             default: 'md',
-            description: 'Button size (sm|sml|md|lg)'
-        },
-        customSizeParams: {
-            type: String,
-            default: '',
+            description: 'Button size (xs|sm|sml|md|lg)'
         },
         link: {
             type: Boolean,
@@ -199,21 +191,23 @@ export default {
 <style lang="scss" scoped>
 .btn {
     @apply transition duration-300 ease-in-out;
+    font-family: Montserrat, sans-serif;
     line-height: normal;
+
 
     &:hover {
         .icon {
             .destructive {
-                @apply text-red-600;
+                @apply text-destructive-actions--focus;
             }
             .primary {
-                @apply text-primary-600;
+                @apply text-primary-actions--focus;
             }
             .active {
-                @apply text-primary-600;
+                @apply text-active-elements--focus;
             }
             .secondary {
-                @apply text-gray-600;
+                @apply text-secondary-actions--focus;
             }
         }
     }
@@ -221,16 +215,16 @@ export default {
     &:active {
         .icon {
             .destructive {
-                @apply text-red-600;
+                @apply text-destructive-actions--pressed;
             }
             .primary {
-                @apply text-primary-600;
+                @apply text-primary-actions--pressed;
             }
             .active {
-                @apply text-primary-600;
+                @apply text-active-elements--pressed;
             }
             .secondary {
-                @apply text-gray-600;
+                @apply text-secondary-actions--pressed;
             }
         }
     }
