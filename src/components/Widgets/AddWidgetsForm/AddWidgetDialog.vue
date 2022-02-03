@@ -165,7 +165,6 @@
         },
         methods: {
             onCloseDialog() {
-                console.log('closed modal')
                 this.$store.dispatch('widgetCreation/resetState')
                 this.$store.dispatch('widgetCreation/resetCopyTemplate')
                 this.$store.dispatch('widgetCreation/resetWidgets')
