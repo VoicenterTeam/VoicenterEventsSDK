@@ -16,7 +16,15 @@
             </div>
         </div>
         <div class="absolute card-action_wrapper rounded">
-            <div class="flex items-center pl-6 pt-8">
+            <div class="flex w-full justify-end pt-1">
+                <span class="px-2" @click="onInfoClick">
+                    <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
+                </span>
+                    <CardAction :editable="editable"
+                                v-on="$listeners"
+                                :main-color="mainColor"/>
+            </div>
+            <div class="flex items-center pt-4" :class="$rtl.isRTL ? '' : 'pl-6'">
                 <slot name="icon">
                     <component :is="cardIcon" class="min-w-12 status-icon mx-1 text-primary" :style="mainColor"/>
                 </slot>
@@ -27,14 +35,6 @@
                         </p>
                     </el-tooltip>
                 </slot>
-            </div>
-            <div class="flex pt-1">
-                <span class="px-2" @click="onInfoClick">
-                <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
-            </span>
-                <CardAction :editable="editable"
-                            v-on="$listeners"
-                            :main-color="mainColor"/>
             </div>
         </div>
     </div>
@@ -145,7 +145,7 @@
     top: 10px;
     right: 10px;
 
-    @apply flex w-full justify-between;
+    @apply flex w-full flex-col;
     
     &.edit-mode {
         top: 0;
