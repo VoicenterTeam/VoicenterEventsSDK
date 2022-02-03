@@ -133,6 +133,9 @@
             storedDashboardLayout() {
                 return this.$store.getters['layout/storedDashboardLayout'](this.getActiveDashboardLayoutID)
             },
+            allDashboards() {
+                return this.$store.getters['dashboards/getAllDashboards']
+            }
         },
         methods: {
             async onDiscard(goBack = true) {
@@ -155,6 +158,7 @@
                 try {
                     this.loading = true
                     await this.$store.dispatch('dashboards/deleteDashboard', this.currentDashboard)
+                    await this.$store.dispatch('dashboards/selectDashboard', this.allDashboards[this.allDashboards.length - 1])
                     await this.$router.push('/')
                 } catch (err) {
                     console.error(err)
