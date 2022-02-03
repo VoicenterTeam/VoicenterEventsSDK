@@ -20,10 +20,11 @@
                             {{ widgetGroup.WidgetGroupTitle || `# ${widgetGroup.WidgetGroupID}` }}
                         </span>
                     </div>
-                    <div class="flex items-center cursor-pointer text-primary">
+                    <!-- <div class="flex items-center cursor-pointer text-primary">
                         <span class="mr-2 font-bold">Edit</span>
                         <IconShape/>
-                    </div>
+                    </div> -->
+                    <!--TODO: need to add functionality -->
                 </div>
             </div>
         </DraggableList>
