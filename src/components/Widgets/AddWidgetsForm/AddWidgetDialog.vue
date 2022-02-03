@@ -177,6 +177,7 @@
                 }
 
                 this.$emit('add-widgets-to-group', objToEmit)
+
                 this.resetState()
             },
             resetState() {
@@ -201,6 +202,7 @@
             await this.$store.dispatch('widgetCreation/resetState')
             await this.$store.dispatch('widgetCreation/resetCopyTemplate')
             await this.$store.dispatch('widgetCreation/resetWidgets')
+            await this.$store.dispatch('widgetCreation/resetQuickCreatingWidget')
         }
     }
 </script>

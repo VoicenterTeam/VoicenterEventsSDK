@@ -44,6 +44,8 @@ const types = {
     TEMPLATE_EDIT_WIDGET: 'TEMPLATE_EDIT_WIDGET',
     RESET_COPY_TEMPLATE: 'RESET_COPY_TEMPLATE',
     COPY_TEMPLATE: 'COPY_TEMPLATE',
+    UPDATE_QUICK_CREATING: 'UPDATE_QUICK_CREATING',
+    RESET_QUICK_CREATING: 'RESET_QUICK_CREATING',
     RESET_WIDGETS: 'RESET_WIDGETS',
     SET_WIDGETS: 'SET_WIDGETS',
     UPDATE_WIDGET: 'UPDATE_WIDGET'
@@ -57,6 +59,9 @@ const state = {
     templateToEdit: false,
     templateToPreview: null,
     copyOfUniqTemplatesDefaultConfig: null,
+    quickCreatingWidget: {
+        isClickedOnAddBtn: false
+    },
     allWidgetsWithQuantity: null
 }
 
@@ -110,6 +115,14 @@ const mutations = {
     [types.COPY_TEMPLATE]: (state, data) => {
         state.copyOfUniqTemplatesDefaultConfig = data
     },
+    [types.UPDATE_QUICK_CREATING]: (state, data) => {
+        state.quickCreatingWidget[data.key] = data.value
+    },
+    [types.RESET_QUICK_CREATING]: (state) => {
+        state.quickCreatingWidget = {
+            isClickedOnAddBtn: false
+        }
+    },
     [types.UPDATE_WIDGET]: (state, data) => {
         state.allWidgetsWithQuantity[data.index].DefaultWidgetConfig = data.template
         state.allWidgetsWithQuantity[data.index].DefaultWidgetTime = data.widgetTime
@@ -161,6 +174,12 @@ const actions = {
     async copyTemplate({ commit }, template) {
         await commit(types.COPY_TEMPLATE, template)
     },
+    async updateQuickCreatingWidget({ commit }, data) {
+        await commit(types.UPDATE_QUICK_CREATING, data)
+    },
+    async resetQuickCreatingWidget({ commit }) {
+        await commit(types.RESET_QUICK_CREATING)
+    },
     async resetWidgets({ commit }) {
         await commit(types.RESET_WIDGETS)
     },
@@ -181,6 +200,7 @@ const getters = {
     getSummaries: state => state.summaries,
     getTemplateToEdit: state => state.templateToEdit,
     getCopyTemplate: state => state.copyOfUniqTemplatesDefaultConfig,
+    getQuickCreatingWidget: state => state.quickCreatingWidget,
     getAllWidgetsWithQuantity: state => state.allWidgetsWithQuantity
 }
 

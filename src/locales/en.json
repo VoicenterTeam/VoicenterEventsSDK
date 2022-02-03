@@ -200,6 +200,7 @@
     "dashboard.": "Are you sure that you want to delete this Dashboard?",
     "dashboard.addDashboard": "Add Dashboard",
     "dashboard.addGroup": "Add Group",
+    "dashboard.addNewWidgets": "Add New Widgets",
     "dashboard.addWidget": "Add Widget",
     "dashboard.backToDashboard": "Back to Dashboard",
     "dashboard.base": "Base",

@@ -191,7 +191,7 @@
                 transitionDuration: 250,
                 loading: false,
                 model: {
-                    DashboardTitle: 'New Dashboard',
+                    DashboardTitle: this.$t('common.newDashboard'),
                     DashboardLayoutID: '',
                     DashboardTemplateID: null
                 },

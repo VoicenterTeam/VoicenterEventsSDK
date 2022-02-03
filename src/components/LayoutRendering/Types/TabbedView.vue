@@ -5,8 +5,9 @@
                 <div v-if="editMode"
                      :key="tab.WidgetGroupID"
                      class="flex items-center justify-between px-2 pb-2">
-                    <base-outline-input v-model="tab.WidgetGroupTitle"/>
+                    <base-outline-input v-model="tab.WidgetGroupTitle" />
                     <edit-group-buttons
+                        :activeWidgetGroupId="activeTab"
                         :widget-groups="tabs"
                         :widget-group="tab"
                         @on-reorder-widget-group="onReorderWidgetGroup"

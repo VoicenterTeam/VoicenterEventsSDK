@@ -8,9 +8,10 @@
                 <div class="widget--group_border"/>
                 <div class="p-2">
                     <div v-if="editMode && (editedGroup.WidgetGroupID === widgetGroup.WidgetGroupID)"
-                         class="flex items-center justify-between pb-2">
+                        class="flex items-center justify-between pb-2">
                         <base-outline-input v-model="widgetGroup.WidgetGroupTitle"/>
                         <edit-group-buttons
+                            :activeWidgetGroupId="editedGroup.WidgetGroupID"
                             :widgetGroup="widgetGroup"
                             v-bind="$attrs"
                             v-on="$listeners"
@@ -56,7 +57,7 @@
                 default: false,
             },
             editedGroup: {
-                type: Object,
+                type: [Object, Array],
                 default: () => {}
             },
             widgetTemplates: {

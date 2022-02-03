@@ -10,6 +10,14 @@
                  class="sidebar-group_actions absolute w-56 bg-white z-50 mt-3 shadow-base rounded"
                  :class="$rtl.isRTL ? 'left-0' : 'right-0'"
             >
+                <div
+                    class="menu-action_item border-t border-gray-300"
+                    @click="addNewWidget()">
+                    <IconPlus class="text-blue w-4-5 h-4-5"/>
+                    <span class="mx-2 text-main-sm truncate">
+                        {{ $t('widget.addNewWidgets') }}
+                    </span>
+                </div>
                 <div class="menu-action_item"
                      @click="onEditWidgetGroup()">
                     <IconPencil class="text-green w-4-5 h-4-5"/>
@@ -64,6 +72,15 @@
             onMenuClickOutside() {
                 this.showMenuActions = false
             },
+            addNewWidget () {
+                this.$emit('on-edit-widget-group', this.group)
+                const data = {
+                    key: 'isClickedOnAddBtn',
+                    value: true
+                }
+
+                this.$store.dispatch('widgetCreation/updateQuickCreatingWidget', data)
+            }
         },
     }
 </script>

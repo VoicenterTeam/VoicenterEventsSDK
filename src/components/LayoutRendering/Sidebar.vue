@@ -35,6 +35,11 @@
         </div>
         <div class="flex items-center px-14 hidden md:flex">
             <div class="flex items-center" v-if="layoutType === 'tabbed'">
+                <create-new-widget-button
+                    class="mr-5"
+                    v-show="!editMode && widgetGroupList.length"
+                    @click="clickToAddNewWidget"
+                />
                 <new-group-button
                     :disabled="editMode"
                     @click="addNewGroup"
@@ -59,11 +64,13 @@
 <script>
     import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
     import NewGroupButton from '@/components/NewGroupButton'
+    import CreateNewWidgetButton from '@/components/CreateNewWidgetButton'
 
     export default {
         components: {
             ActionsTabbedView,
             NewGroupButton,
+            CreateNewWidgetButton
         },
         props: {
             widgetGroupList: {
@@ -108,9 +115,11 @@
                 this.$emit('add-new-group')
             },
             onCancel() {
+                this.$store.dispatch('widgetCreation/resetQuickCreatingWidget')
                 this.$emit('exit-edit-mode')
             },
             onSubmit() {
+                this.$store.dispatch('widgetCreation/resetQuickCreatingWidget')
                 this.$emit('save-dashboard')
             },
             onEditWidgetGroup(group) {
@@ -119,6 +128,14 @@
             onRemoveWidgetGroup(group) {
                 this.$emit('on-remove-widget-group', group)
             },
+            clickToAddNewWidget () {
+                this.onEditWidgetGroup(this.activeTab)
+                const data = {
+                    key: 'isClickedOnAddBtn',
+                    value: true
+                }
+                this.$store.dispatch('widgetCreation/updateQuickCreatingWidget', data)
+            }
         },
     }
 </script>

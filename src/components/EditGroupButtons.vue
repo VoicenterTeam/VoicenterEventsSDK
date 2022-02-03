@@ -93,7 +93,7 @@
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import AddWidgetDialog from '@/components/Widgets/AddWidgetsForm/AddWidgetDialog'
     import ReorderWidgetGroupDialog from '@/components/LayoutRendering/ReorderWidgetGroupDialog'
-
+    
     export default {
         inheritAttrs: false,
         name: 'edit-group-buttons',
@@ -112,6 +112,9 @@
                 type: Object,
                 default: () => ({}),
             },
+            activeWidgetGroupId: {
+                type: [String, Number]
+            }
         },
         data() {
             return {
@@ -121,12 +124,28 @@
                 layoutTypes,
                 showConfirmDialog: false,
                 selectedCategory: null,
+                addWidgetOpened: false
             }
         },
         computed: {
             getLayoutType() {
                 return localStorage.getItem('layout-type') || layoutTypes.TABBED
             },
+            isOpenModalAddWidget () {
+                return  this.$store.getters['widgetCreation/getQuickCreatingWidget']
+            }
+        },
+        watch: {
+            isOpenModalAddWidget: {
+                handler (val) {
+                    const isActiveTab = Number(this.widgetGroup.WidgetGroupID) === Number(this.activeWidgetGroupId)
+                    if (val.isClickedOnAddBtn && isActiveTab) {
+                        this.tryAddWidgets()
+                    }
+                },
+                deep: true,
+                immediate: true
+            }
         },
         methods: {
             tryAddWidgets() {
@@ -167,6 +186,6 @@
             reorderWidgetsInModal () {
                 this.onMove('move')
             }
-        },
+        }
     }
 </script>

@@ -131,7 +131,7 @@
     import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
     import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
-
+    
     export default {
         components: {
             AccountNoData,
@@ -325,7 +325,7 @@
                     this.switchTab(newVal)
                 },
             },
-        },
+        }
     }
 </script>
 <style lang="scss">
