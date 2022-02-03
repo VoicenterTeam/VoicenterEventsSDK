@@ -36,7 +36,7 @@
         <div class="flex items-center px-14 hidden md:flex">
             <div class="flex items-center" v-if="layoutType === 'tabbed'">
                 <create-new-widget-button
-                    class="mr-5"
+                    :class="$rtl.isRTL? 'ml-5':'mr-5'"
                     v-show="!editMode && widgetGroupList.length"
                     @click="clickToAddNewWidget"
                 />
@@ -142,6 +142,9 @@
 <style scoped lang="scss">
 .active {
     margin-bottom: -0.25rem;
+}
+.rtl .sidebar-tabs__container>div {
+    @apply mr-4;
 }
 
 .sidebar-tabs__container {
