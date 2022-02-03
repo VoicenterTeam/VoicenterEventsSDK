@@ -24,6 +24,9 @@ export default {
         try {
             await this.$store.dispatch('dashboards/setContentLoading', true)
 
+            await this.$store.dispatch('lang/getLanguages')
+
+            await this.$store.dispatch('lang/setLanguage', this.$store.getters['lang/getActiveLanguage'])
             await this.$store.dispatch('entities/getEntitiesList')
             await this.$store.dispatch('dashboards/getDashboards')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
@@ -87,17 +90,7 @@ export default {
             document.documentElement.style.setProperty('--font-size-xl', (fontSize + 4) + 'px');
             document.documentElement.style.setProperty('--font-size-2xl', (fontSize + 6) + 'px');
             document.documentElement.style.setProperty('--font-size-3xl', (fontSize + 12) + 'px');
-        },
-        initializeLayout(lang) {
-            if (lang === 'he') {
-                this.$rtl.enableRTL()
-            } else {
-                this.$rtl.disableRTL()
-            }
-        },
-    },
-    mounted() {
-        this.initializeLayout(this.$store.state.lang.language)
+        }
     },
     watch: {
         colors: {

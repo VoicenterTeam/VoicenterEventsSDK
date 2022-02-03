@@ -3,7 +3,7 @@ import $axios from './apiConnection'
 import parseCatch from '@/helpers/handleErrors'
 
 function getCurrentLanguageID() {
-    return store.getters['lang/getLanguageID']
+    return store.getters['lang/getActiveLanguageID']
 }
 
 export const templateApi = {

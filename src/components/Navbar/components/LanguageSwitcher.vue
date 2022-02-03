@@ -1,19 +1,19 @@
 <template>
     <div class="w-29">
-        <el-select v-model="language"
+        <el-select :value="activeLanguage"
                    value-key="locale"
                    label-key="abbName"
                    placeholder=""
                    class="language-select flex items-center text-sm font-medium"
-                   @change="onLocaleChange(language.locale)">
+                   @change="onLocaleChange">
             <template v-slot:prefix>
                 <div class="flex items-center"
                      :class="{'ml-10': $rtl.isRTL}">
                     <img class="w-6 h-4 mx-2 text-sm"
-                         :src="language.icon"
-                         :alt="language.name"
+                         :src="activeLanguage.icon"
+                         :alt="activeLanguage.name"
                     >
-                    {{ language.abbName }}
+                    {{ activeLanguage.abbName }}
                 </div>
             </template>
             <el-option v-for="language in languages"
@@ -35,18 +35,13 @@
 </template>
 <script>
     import { Option, Select } from 'element-ui'
-    import languages from '@/components/Navbar/components/languages'
-    
+
     export default {
         components: {
             ElSelect: Select,
             ElOption: Option,
         },
         props: {
-            currentLanguage: {
-                type: String,
-                default: '',
-            },
             label: String,
             prefix: {
                 type: String,
@@ -57,38 +52,20 @@
                 default: true,
             },
         },
-        data() {
-            return {
-                languages,
-                language: {},
-            }
-        },
         computed: {
+            languages() {
+                return this.$store.getters['lang/getLanguageList']
+            },
             activeLanguage() {
-                return localStorage.getItem('locale') || this.$i18n.locale
+                return this.$store.getters['lang/getActiveLanguage']
             },
         },
         methods: {
-            onLocaleChange(val) {
-                this.$store.dispatch('lang/setLanguage', val)
-                this.$i18n.locale = val
-                
-                val === 'he' ? this.$rtl.enableRTL() : this.$rtl.disableRTL()
-            },
-        },
-        watch: {
-            activeLanguage: {
-                immediate: true,
-                handler(val) {
-                    let lang = this.languages.find(l => l.locale === val)
-                    if (!lang) {
-                        this.language = this.$i18n.locale
-                        return
-                    }
-                    this.language = lang
-                },
-            },
-        },
+            onLocaleChange({Domain}) {
+                // TODO: implement redirect to Domain
+                console.log(Domain)
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
@@ -102,11 +79,11 @@
         border: none;
         box-shadow: 0 0 5px var(--gray-350);
     }
-    
+
     .el-input__prefix {
         @apply flex items-center text-gray-900;
     }
-    
+
     ::v-deep .el-select-dropdown__list {
         padding: 0;
     }
