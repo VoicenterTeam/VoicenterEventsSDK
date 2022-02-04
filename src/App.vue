@@ -25,8 +25,15 @@ export default {
             await this.$store.dispatch('dashboards/setContentLoading', true)
 
             await this.$store.dispatch('lang/getLanguages')
+            const activeLanguage = this.$store.getters['lang/getActiveLanguage'] || 'en'
 
-            await this.$store.dispatch('lang/setLanguage', this.$store.getters['lang/getActiveLanguage'])
+            await this.$store.dispatch('lang/setLanguage', activeLanguage)
+
+            if (activeLanguage) {
+                const locale = activeLanguage.locale
+                this.$i18n.setLocaleMessage(locale, this.$store.state.lang.translations)
+            }
+
             await this.$store.dispatch('entities/getEntitiesList')
             await this.$store.dispatch('dashboards/getDashboards')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
@@ -47,10 +54,9 @@ export default {
 
             await this.$store.dispatch('layout/setupActiveLayout')
             await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
-            await this.$store.dispatch('layout/setupLayouts')
+            this.$store.dispatch('layout/setupLayouts')
             await this.$store.dispatch('layout/getGlobalLayout')
             await this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
-            await this.$store.dispatch('dashboards/mapAllDashboardsWidgets')
         } finally {
             await this.$store.dispatch('dashboards/setContentLoading', false)
         }

@@ -1,9 +1,9 @@
 module.exports = {
-    devServer: {
-        https: true,
-        port: 443,
-        host: 'dashboarddev.com' // dashboarddev.co.il - for hebrew
-    },
+    // devServer: {
+    //     https: true,
+    //     port: 443,
+    //     host: 'dashboarddev.com' // dashboarddev.co.il - for hebrew
+    // },
     chainWebpack: (config) => {
         const svgRule = config.module.rule('svg');
 

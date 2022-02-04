@@ -12,3 +12,14 @@ export const LanguageApi = {
         }
     }
 }
+
+export const ContentsApi = {
+    async getAll() {
+        try {
+            const { Data } = await $axios.post('/Contents/TagsList/', {})
+            return Data
+        } catch (e) {
+            parseCatch(e, true, 'Get Layouts')
+        }
+    }
+}

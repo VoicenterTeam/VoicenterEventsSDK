@@ -1,33 +1,37 @@
 <template>
     <div class="w-29">
-        <el-select :value="activeLanguage"
-                   value-key="locale"
-                   label-key="abbName"
-                   placeholder=""
-                   class="language-select flex items-center text-sm font-medium"
-                   @change="onLocaleChange">
+        <el-select
+            v-model="activeLanguage"
+            value-key="locale"
+            label-key="abbName"
+            placeholder=""
+            class="language-select flex items-center text-sm font-medium"
+            @change="onLocaleChange">
             <template v-slot:prefix>
                 <div class="flex items-center"
-                     :class="{'ml-10': $rtl.isRTL}">
+                    :class="{'ml-10': $rtl.isRTL}"
+                >
                     <img class="w-6 h-4 mx-2 text-sm"
-                         :src="activeLanguage.icon"
-                         :alt="activeLanguage.name"
+                        :src="activeLanguage.icon"
+                        :alt="activeLanguage.name"
                     >
                     {{ activeLanguage.abbName }}
                 </div>
             </template>
-            <el-option v-for="language in languages"
-                       class="flex items-center justify-between"
-                       :value="language"
-                       :key="language.locale">
+            <el-option
+                v-for="language in languages"
+                class="flex items-center justify-between"
+                :value="language"
+                :key="language.locale"
+            >
                 <div class="flex items-center">
                     <img :src="language.icon"
                          :alt="language.name"
                          class="w-6 h-4"
                     >
                     <span class="mx-2">
-                    {{ language.name }}
-                </span>
+                        {{ language.name }}
+                    </span>
                 </div>
             </el-option>
         </el-select>
@@ -45,25 +49,36 @@
             label: String,
             prefix: {
                 type: String,
-                default: '',
+                default: ''
             },
             detectCountry: {
                 type: Boolean,
-                default: true,
-            },
+                default: true
+            }
         },
         computed: {
             languages() {
                 return this.$store.getters['lang/getLanguageList']
             },
-            activeLanguage() {
-                return this.$store.getters['lang/getActiveLanguage']
-            },
+            activeLanguage: {
+                get () {
+                    return this.$store.getters['lang/getActiveLanguage'] || {
+                        abbName: 'EN',
+                        name: 'En',
+                        icon: `/img/flags/US.png`
+                    }
+                },
+                set (newVal) {
+                    return newVal
+                }
+            }
         },
         methods: {
-            onLocaleChange({Domain}) {
-                // TODO: implement redirect to Domain
-                console.log(Domain)
+            onLocaleChange({ Domain }) {
+                const oldLocation = window.location
+                const oldDomain = oldLocation.hostname
+
+                window.location = oldLocation.href.replace(oldDomain, Domain)
             }
         }
     }

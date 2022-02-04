@@ -2,23 +2,28 @@ import en from 'element-ui/lib/locale/lang/en'
 import he from 'element-ui/lib/locale/lang/he'
 import locale from 'element-ui/lib/locale'
 import get from 'lodash/get'
-import { LanguageApi } from '@/api/languageApi'
 import Vue from 'vue'
+import { LanguageApi, ContentsApi } from '@/api/languageApi'
 
 function setElementLocale(lang) {
     locale.use(lang === 'he' ? he : en)
 }
 
 const types = {
-    SET_LANG_LIST: 'SET_LANG_LIST'
+    SET_LANG_LIST: 'SET_LANG_LIST',
+    SET_TRANSLATIONS: 'SET_TRANSLATIONS'
 };
 const state = {
-    languages: []
+    languages: [],
+    translations: []
 };
 
 const mutations = {
     [types.SET_LANG_LIST]: (state, languages) => {
         state.languages = languages
+    },
+    [types.SET_TRANSLATIONS]: (state, value) => {
+        state.translations = value
     }
 };
 
@@ -35,11 +40,8 @@ const actions = {
         if (dir === 'rtl') {
             Vue.prototype.$rtl.enableRTL()
         }
-        // TODO: need to set i18n relevant language, for some reason cannot access i18n in this point, not even sure if we need it as there is no logic to set the translations which we got from API to i18n (Орест, сорі, робив шо міг, то вже 20:51, мене змусили пити наливку, я не хотів, нє сєрчай, зробив шо міг... :с )
-        setTimeout(() => {
-            console.log(Vue.prototype)
-        }, 2000)
-        Vue.prototype.$i18n.locale = locale
+        const translations = await ContentsApi.getAll()
+        commit(types.SET_TRANSLATIONS, translations);
 
         setElementLocale(locale)
     }
