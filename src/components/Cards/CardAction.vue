@@ -1,11 +1,12 @@
 <template>
-    <div class="relative cursor-pointer">
+    <div class="card-action_container relative cursor-pointer max-h-8">
         <i class="vc-icon-menu icon-lg text-gray-500 px-2 py-1-5 rounded hover:bg-primary-100"
            :class="{'bg-primary-100': showActionsMenu}"
            @click.stop="triggerMenu"/>
         <fade-transition :duration="350">
             <div v-click-outside="onMenuClickOutside"
-                 class="menu-wrapper px-3 py-1 absolute right-0 z-50 h-auto mt-3"
+                 class="menu-wrapper px-3 py-1 absolute z-50 h-auto mt-3"
+                 :class="$rtl.isRTL ? 'left-0' : 'right-0'"
                  v-if="showActionsMenu"
             >
                 <div class="menu-action_item"
@@ -77,6 +78,9 @@
     }
 </script>
 <style lang="scss" scoped>
+.rtl .card-action_container {
+    @apply ml-4;
+}
 .menu-wrapper {
     @apply rounded z-50 bg-white w-48 flex flex-col origin-top-right overflow-auto;
     box-shadow: 0 0 5px var(--gray-350);

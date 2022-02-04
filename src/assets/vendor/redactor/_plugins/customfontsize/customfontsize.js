@@ -6,6 +6,7 @@
                 "customfontsize": "Set custom Font Size",
                 "customfontsize-label": "Type a value (between 1 and 200)",
                 "apply": "Apply",
+                "cancel": "Cancel"
             }
         },
         modals: {
@@ -51,8 +52,8 @@
                 name: 'customfontsize',
                 handle: 'submit',
                 commands: {
-                    cancel: {title: this.lang.get('common.cancel')},
-                    submit: {title: this.lang.get('general.apply')}
+                    cancel: {title: this.lang.get('cancel')},
+                    submit: {title: this.lang.get('apply')}
                 }
             };
 

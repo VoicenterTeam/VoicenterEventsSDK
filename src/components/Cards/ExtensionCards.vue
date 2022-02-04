@@ -32,11 +32,6 @@
                     </template>
                 </div>
                 <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" class="mt-1">
-                    <template v-slot:prefix>
-                        <span class="h-full flex items-center">
-                            <i class="el-icon-d-caret"/>
-                        </span>
-                    </template>
                     <el-option :key="option.label" v-bind="option" v-for="option in sortByOptions"/>
                 </el-select>
             </div>
