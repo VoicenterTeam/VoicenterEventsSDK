@@ -24,6 +24,16 @@ export default {
         try {
             await this.$store.dispatch('dashboards/setContentLoading', true)
 
+            await this.$store.dispatch('lang/getLanguages')
+            const activeLanguage = this.$store.getters['lang/getActiveLanguage'] || 'en'
+
+            await this.$store.dispatch('lang/setLanguage', activeLanguage)
+
+            if (activeLanguage) {
+                const locale = activeLanguage.locale
+                this.$i18n.setLocaleMessage(locale, this.$store.state.lang.translations)
+            }
+
             await this.$store.dispatch('entities/getEntitiesList')
             await this.$store.dispatch('dashboards/getDashboards')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
@@ -44,10 +54,9 @@ export default {
 
             await this.$store.dispatch('layout/setupActiveLayout')
             await this.$store.dispatch('templatesCategory/getAllTemplateDictionaries')
-            await this.$store.dispatch('layout/setupLayouts')
+            this.$store.dispatch('layout/setupLayouts')
             await this.$store.dispatch('layout/getGlobalLayout')
             await this.$store.dispatch('widgetTemplate/getAllWidgetTemplates')
-            await this.$store.dispatch('dashboards/mapAllDashboardsWidgets')
         } finally {
             await this.$store.dispatch('dashboards/setContentLoading', false)
         }
@@ -87,17 +96,7 @@ export default {
             document.documentElement.style.setProperty('--font-size-xl', (fontSize + 4) + 'px');
             document.documentElement.style.setProperty('--font-size-2xl', (fontSize + 6) + 'px');
             document.documentElement.style.setProperty('--font-size-3xl', (fontSize + 12) + 'px');
-        },
-        initializeLayout(lang) {
-            if (lang === 'he') {
-                this.$rtl.enableRTL()
-            } else {
-                this.$rtl.disableRTL()
-            }
-        },
-    },
-    mounted() {
-        this.initializeLayout(this.$store.state.lang.language)
+        }
     },
     watch: {
         colors: {

@@ -72,16 +72,7 @@ export default {
         },
         triggerMenu() {
             this.showMenu = !this.showMenu
-        },
-        onLocaleChange(val) {
-            this.$store.dispatch('lang/setLanguage', val)
-            this.$i18n.locale = val
-            if (val === 'he') {
-                this.$rtl.enableRTL()
-            } else {
-                this.$rtl.disableRTL()
-            }
-        },
+        }
     },
 }
 </script>

@@ -1,44 +1,73 @@
 import en from 'element-ui/lib/locale/lang/en'
 import he from 'element-ui/lib/locale/lang/he'
 import locale from 'element-ui/lib/locale'
-
-const lang = localStorage.getItem('locale') || 'en'
-
-const languageIDs = {
-    'en': 1,
-    'he': 2,
-}
+import get from 'lodash/get'
+import Vue from 'vue'
+import { LanguageApi, ContentsApi } from '@/api/languageApi'
 
 function setElementLocale(lang) {
     locale.use(lang === 'he' ? he : en)
 }
 
-setElementLocale(lang)
-
 const types = {
-    SET_LANG: 'SET_LANG',
+    SET_LANG_LIST: 'SET_LANG_LIST',
+    SET_TRANSLATIONS: 'SET_TRANSLATIONS'
 };
 const state = {
-    language: localStorage.getItem('locale') || 'en',
+    languages: [],
+    translations: []
 };
 
 const mutations = {
-    [types.SET_LANG]: (stat, lang) => {
-        state.language = lang
+    [types.SET_LANG_LIST]: (state, languages) => {
+        state.languages = languages
     },
+    [types.SET_TRANSLATIONS]: (state, value) => {
+        state.translations = value
+    }
 };
 
 const actions = {
-    async setLanguage({ commit }, lang) {
-        commit(types.SET_LANG, lang)
-        localStorage.setItem('locale', lang)
-        setElementLocale(lang)
+    async getLanguages({ commit }) {
+        const languages = await LanguageApi.getAll()
+
+        commit(types.SET_LANG_LIST, languages)
     },
+    async setLanguage({ commit }, lang) {
+        const dir = get(lang, 'DomainConfig.Direction', 'ltr')
+        const locale = lang.locale
+
+        if (dir === 'rtl') {
+            Vue.prototype.$rtl.enableRTL()
+        }
+        const translations = await ContentsApi.getAll()
+        commit(types.SET_TRANSLATIONS, translations);
+
+        setElementLocale(locale)
+    }
 };
 
 const getters = {
-    getLanguageID: state => {
-        return languageIDs[state.language]
+    getActiveLanguageID: (state, getter) => {
+        return getter.getActiveLanguage.LanguageID
+    },
+    getActiveLanguage: (state, getters) => {
+        return getters.getLanguageList.find(language => {
+            return language.Domain === window.location.hostname
+        })
+    },
+    getLanguageList: state => {
+        return state.languages.map(language => {
+            const [locale, iconName] = language.LanguageCode.split('-')
+
+            return {
+                ...language,
+                abbName: locale.toUpperCase(),
+                locale,
+                name: language.LanguageName,
+                icon: `/img/flags/${iconName}.png`
+            }
+        })
     }
 }
 

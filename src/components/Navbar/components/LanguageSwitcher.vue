@@ -1,33 +1,37 @@
 <template>
     <div class="w-29">
-        <el-select v-model="language"
-                   value-key="locale"
-                   label-key="abbName"
-                   placeholder=""
-                   class="language-select flex items-center text-sm font-medium"
-                   @change="onLocaleChange(language.locale)">
+        <el-select
+            v-model="activeLanguage"
+            value-key="locale"
+            label-key="abbName"
+            placeholder=""
+            class="language-select flex items-center text-sm font-medium"
+            @change="onLocaleChange">
             <template v-slot:prefix>
                 <div class="flex items-center"
-                     :class="{'ml-10': $rtl.isRTL}">
+                    :class="{'ml-10': $rtl.isRTL}"
+                >
                     <img class="w-6 h-4 mx-2 text-sm"
-                         :src="language.icon"
-                         :alt="language.name"
+                        :src="activeLanguage.icon"
+                        :alt="activeLanguage.name"
                     >
-                    {{ language.abbName }}
+                    {{ activeLanguage.abbName }}
                 </div>
             </template>
-            <el-option v-for="language in languages"
-                       class="flex items-center justify-between"
-                       :value="language"
-                       :key="language.locale">
+            <el-option
+                v-for="language in languages"
+                class="flex items-center justify-between"
+                :value="language"
+                :key="language.locale"
+            >
                 <div class="flex items-center">
                     <img :src="language.icon"
                          :alt="language.name"
                          class="w-6 h-4"
                     >
                     <span class="mx-2">
-                    {{ language.name }}
-                </span>
+                        {{ language.name }}
+                    </span>
                 </div>
             </el-option>
         </el-select>
@@ -35,60 +39,48 @@
 </template>
 <script>
     import { Option, Select } from 'element-ui'
-    import languages from '@/components/Navbar/components/languages'
-    
+
     export default {
         components: {
             ElSelect: Select,
             ElOption: Option,
         },
         props: {
-            currentLanguage: {
-                type: String,
-                default: '',
-            },
             label: String,
             prefix: {
                 type: String,
-                default: '',
+                default: ''
             },
             detectCountry: {
                 type: Boolean,
-                default: true,
-            },
-        },
-        data() {
-            return {
-                languages,
-                language: {},
+                default: true
             }
         },
         computed: {
-            activeLanguage() {
-                return localStorage.getItem('locale') || this.$i18n.locale
+            languages() {
+                return this.$store.getters['lang/getLanguageList']
             },
+            activeLanguage: {
+                get () {
+                    return this.$store.getters['lang/getActiveLanguage'] || {
+                        abbName: 'EN',
+                        name: 'En',
+                        icon: `/img/flags/US.png`
+                    }
+                },
+                set (newVal) {
+                    return newVal
+                }
+            }
         },
         methods: {
-            onLocaleChange(val) {
-                this.$store.dispatch('lang/setLanguage', val)
-                this.$i18n.locale = val
-                
-                val === 'he' ? this.$rtl.enableRTL() : this.$rtl.disableRTL()
-            },
-        },
-        watch: {
-            activeLanguage: {
-                immediate: true,
-                handler(val) {
-                    let lang = this.languages.find(l => l.locale === val)
-                    if (!lang) {
-                        this.language = this.$i18n.locale
-                        return
-                    }
-                    this.language = lang
-                },
-            },
-        },
+            onLocaleChange({ Domain }) {
+                const oldLocation = window.location
+                const oldDomain = oldLocation.hostname
+
+                window.location = oldLocation.href.replace(oldDomain, Domain)
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
@@ -102,11 +94,11 @@
         border: none;
         box-shadow: 0 0 5px var(--gray-350);
     }
-    
+
     .el-input__prefix {
         @apply flex items-center text-gray-900;
     }
-    
+
     ::v-deep .el-select-dropdown__list {
         padding: 0;
     }
