@@ -77,7 +77,7 @@
                                 <div class="pr-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
                                     <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span>
                                     <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
-                                        @click="onSubmit" :disabled="disableCreateBlankBtn">
+                                        @click="onSubmit" :disabled="disableCreateBlankBtn || loading">
                                         <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
                                         {{ $t('Create blank dashboard') }}
                                     </button>
