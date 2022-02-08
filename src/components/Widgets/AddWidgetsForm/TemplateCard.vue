@@ -16,7 +16,7 @@
             <slot name="title">
                 <div class="flex flex-col">
                     <div class="text-xl text-gray-950 break-normal">
-                        {{ $t(TemplateName) }}
+                        {{ $t(TemplateNameContentTag) }}
                     </div>
                     <span 
                         v-if="activeWidgets"
@@ -41,6 +41,10 @@
             TemplateName: {
                 type: String,
                 default: '- -',
+            },
+            TemplateNameContentTag: {
+                type: String,
+                default: '',
             },
             DataType: {
                 type: Object,
