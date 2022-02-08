@@ -111,6 +111,7 @@
                     @on-click="onCancel"
                 />
                 <confirm-button
+                    icon="IconSave"
                     @on-click="onConfirm"
                 />
             </template>

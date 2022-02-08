@@ -36,6 +36,7 @@
                                     <confirm-button
                                         :loading="loading"
                                         :label="this.$t('Save')"
+                                        icon="IconSave"
                                         @on-click="onSubmit"
                                     />
                                 </div>
@@ -56,6 +57,7 @@
                             <confirm-button
                                 :loading="loading"
                                 :label="this.$t('Save')"
+                                icon="IconSave"
                                 @on-click="onSubmit"
                             />
                         </div>

@@ -46,6 +46,7 @@
                         />
                         <confirm-button
                             :label="this.$t('Save')"
+                            icon="IconSave"
                             @on-click="handleSubmit(onSubmit)"
                         />
                     </div>
