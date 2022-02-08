@@ -2,7 +2,7 @@
     <default-button
         :icon="icon"
         :label="buttonLabel"
-        variant="discard"
+        outline
         v-on="$listeners"
     />
 </template>
