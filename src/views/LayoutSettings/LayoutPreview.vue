@@ -23,8 +23,11 @@
                      :class="{'min-w-screen': havePreview}"
                      id="dashboard-preview">
                     <slot>
-                        <Dashboard class="absolute pointer-events-none"
-                                   :show-loading-indicator="false"/>
+                        <Dashboard
+                            class="absolute pointer-events-none"
+                            :show-loading-indicator="false"
+                            :account-no-data="false"
+                        />
                     </slot>
                 </div>
             </div>
@@ -80,7 +83,7 @@
                 return {
                     zoom: this.zoom,
                 }
-            },
+            }
         },
         methods: {
             triggerRealTimePreview() {
@@ -154,6 +157,7 @@
         mounted() {
             document.addEventListener('keyup', this.handleEscape)
             this.handleDragToScroll()
+            this.$store.dispatch('layout/setTypeOfLayout', 'previewLayout')
         },
         destroyed() {
             document.removeEventListener('keyup', this.handleEscape)

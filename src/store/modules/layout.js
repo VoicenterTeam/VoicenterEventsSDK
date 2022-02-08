@@ -15,13 +15,15 @@ const types = {
     UPDATE_ACTIVE_LAYOUT: 'UPDATE_ACTIVE_LAYOUT',
     SET_GLOBAL_LAYOUT: 'SET_GLOBAL_LAYOUT',
     SET_PREVIEW_LAYOUT: 'SET_PREVIEW_LAYOUT',
-    RESET_ACTIVE_LAYOUT: 'RESET_ACTIVE_LAYOUT'
+    RESET_ACTIVE_LAYOUT: 'RESET_ACTIVE_LAYOUT',
+    SET_TYPE_OF_LAYOUT: 'SET_TYPE_OF_LAYOUT'
 };
 const state = {
     data: [],
     activeLayout: {},
     globalLayout: defaultLayout(null),
-    previewLayout: {}
+    previewLayout: {},
+    typeOfLayout: 'activeLayout'
 };
 
 const mutations = {
@@ -43,6 +45,9 @@ const mutations = {
     },
     [types.RESET_ACTIVE_LAYOUT]: (state) => {
         state.previewLayout = {};
+    },
+    [types.SET_TYPE_OF_LAYOUT]: (state, typeOfLayout) => {
+        state.typeOfLayout = typeOfLayout;
     }
 };
 
@@ -89,6 +94,9 @@ const actions = {
     },
     async resetPreviewLayout({ commit }) {
         commit(types.RESET_ACTIVE_LAYOUT)
+    },
+    async setTypeOfLayout({ commit }, typeOfLayout) {
+        commit(types.SET_TYPE_OF_LAYOUT, typeOfLayout)
     }
 };
 
@@ -179,7 +187,7 @@ const getters = {
     },
     widgetGroupTitleStyles: (state) => (layoutType) => {
         try {
-            const fontSize = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTitlesFontSize')
+            const fontSize = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetGroupTitlesFontSize')
             const _fontSize = Number(fontSize[0]['Value'])
             const color = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorWidgetGroupTitles')
             const _color = color[0]['Value']
@@ -265,6 +273,9 @@ const getters = {
     },
     getPreviewLayout: state => {
         return state.previewLayout
+    },
+    getTypeOfLayout: state => {
+        return state.typeOfLayout
     }
 }
 

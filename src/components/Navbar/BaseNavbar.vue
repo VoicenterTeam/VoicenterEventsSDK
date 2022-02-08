@@ -45,8 +45,11 @@
             }
         },
         computed: {
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
             getLogo() {
-                return this.$store.getters['layout/getLogo'](this.layoutType)
+                return this.$store.getters['layout/getLogo'](this.getTypeOfLayout)
             },
         },
     }

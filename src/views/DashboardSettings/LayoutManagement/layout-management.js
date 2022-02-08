@@ -36,7 +36,7 @@ export const sliderOptionConfigs = {
         max: 24,
         step: 1,
         marks: {
-            14: '9px',
+            9: '9px',
             16: '16px',
             20: '20px',
         },
@@ -47,8 +47,8 @@ export const sliderOptionConfigs = {
         step: 1,
         marks: {
             16: '16px',
-            22: '24px',
-            32: '40px',
+            24: '24px',
+            40: '40px',
         },
     },
     WidgetGroupTitlesFontSize: {
@@ -57,7 +57,7 @@ export const sliderOptionConfigs = {
         step: 1,
         marks: {
             16: '16px',
-            22: '24px',
+            24: '24px',
             32: '32px',
         },
     },
@@ -82,7 +82,7 @@ export const sliderOptionConfigs = {
             15: '15min',
             30: '30min',
             45: '45min',
-            60: '75min',
+            75: '75min',
         },
     },
     ReportInterval: {
@@ -91,7 +91,7 @@ export const sliderOptionConfigs = {
         step: 10,
         marks: {
             100: '120s',
-            200: '360s',
+            360: '360s',
             600: '600s',
             800: '800s',
         },
