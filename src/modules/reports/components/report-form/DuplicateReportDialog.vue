@@ -3,9 +3,13 @@
         <base-form layout="vertical"
                    class="mb-10 -mt-8"
         >
-            <ConfirmDialog v-bind="$attrs"
-                           v-on="$listeners"
-                           :modal-width="modalWidth"
+            <ConfirmDialog
+                :modal-width="modalWidth"
+                :config="dialogConfig"
+                @on-cancel="onCancel"
+                @on-confirm="handleSubmit(onDuplicate)"
+                v-bind="$attrs"
+                v-on="$listeners"
             >
                 <template v-slot:title>
                     <h3 class="w-full flex justify-center text-2xl font-semibold text-gray-700">
@@ -21,29 +25,6 @@
                                 id="ReportTypeName"
                     />
                 </div>
-                <template v-slot:footer-actions>
-                    <base-button outline
-                                 fixed-width="w-37"
-                                 @click="onCancel()"
-                    >
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">
-                                {{ 'Cancel' }}
-                            </span>
-                        </div>
-                    </base-button>
-                    <base-button fixed-width="w-37"
-                                 type="primary"
-                                 @click="handleSubmit(onDuplicate)">
-                        <div class="flex items-center">
-                            <IconSave class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">
-                            {{ $t('common.save') }}
-                        </span>
-                        </div>
-                    </base-button>
-                </template>
             </ConfirmDialog>
         </base-form>
     </ValidationObserver>
@@ -74,6 +55,9 @@
                 model: {
                     ReportName: '',
                 },
+                dialogConfig: {
+                    confirmText: this.$t('Save')
+                }
             }
         },
         methods: {

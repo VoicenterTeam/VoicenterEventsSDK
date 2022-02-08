@@ -18,7 +18,7 @@ export default {
     props: {
         icon: {
             type: String,
-            default: 'IconDiscard'
+            default: 'IconDelete'
         },
         label: {
             type: String,
@@ -27,7 +27,7 @@ export default {
     },
     computed: {
         buttonLabel () {
-            return this.label || this.$t('Reject')
+            return this.label || this.$t('Delete')
         }
     }
 }

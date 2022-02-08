@@ -40,23 +40,14 @@
                         {{ model.ReportID ? `${$t('widget.editReport')} #${model.ReportID}` : $t('report.reportCreation') }}
                     </span>
                     <div class="flex">
-                        <base-button :class="$rtl.isRTL ? 'mx-4' : 'mx-4'"
-                                     outline
-                                     fixed-width="w-37"
-                                     @click="onCancel">
-                            <div class="flex items-center">
-                                <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-semibold">{{ $t('common.cancel') }}</span>
-                            </div>
-                        </base-button>
-                        <base-button :loading="loading"
-                                     type="primary"
-                                     @click="handleSubmit(onSubmit)">
-                            <div class="flex items-center">
-                                <IconSave class="mx-1"/>
-                                <span class="mx-1 text-base font-semibold">{{ $t('general.saveChanges') }}</span>
-                            </div>
-                        </base-button>
+                        <cancel-button
+                            class="mx-4"
+                            @on-click="onCancel"
+                        />
+                        <confirm-button
+                            :label="this.$t('Save')"
+                            @on-click="handleSubmit(onSubmit)"
+                        />
                     </div>
                 </div>
             </template>
@@ -74,12 +65,16 @@
     import { reportApi } from '@/modules/reports/services/reportService'
     import ReportElements from '@/modules/reports/components/report-form/ReportElements'
     import { STATUS_IDS, STATUS_NAMES, STATUS_VALUES } from '@/modules/reports/enum/report'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton";
 
     export default {
         components: {
             BaseForm,
             BaseInput,
             ReportElements,
+            CancelButton,
+            ConfirmButton,
         },
         props: {
             report: {

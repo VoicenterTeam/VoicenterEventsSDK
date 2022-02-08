@@ -55,23 +55,14 @@
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                     <slot name="footer-actions">
-                        <base-button class="mx-4"
-                                     outline
-                                     fixed-width="w-37"
-                                     @click="showDialog = false">
-                            <div class="flex items-center">
-                                <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
-                            </div>
-                        </base-button>
-                        <base-button fixed-width="w-37"
-                                     type="primary"
-                                     @click="onSubmit()">
-                            <div class="flex items-center">
-                                <IconSave class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'Save' }}</span>
-                            </div>
-                        </base-button>
+                        <cancel-button
+                            class="mx-4"
+                            @on-click="onCancel"
+                        />
+                        <confirm-button
+                            :label="this.$t('Save')"
+                            @on-click="onSubmit"
+                        />
                     </slot>
                 </div>
             </template>
@@ -79,12 +70,13 @@
     </div>
 </template>
 <script>
-    import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox } from 'element-ui'
     import Modal from '@/components/Common/Modal'
     import { AlertCircleIcon } from 'vue-feather-icons'
     import { templateIcons } from '@/enum/widgetDataTypes'
     import WidgetGroup from '@/modules/reports/components/report-form/widgets/WidgetGroup'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
@@ -92,6 +84,8 @@
             WidgetGroup,
             AlertCircleIcon,
             [Checkbox.name]: Checkbox,
+            CancelButton,
+            ConfirmButton
         },
         props: {
             report: {
@@ -170,6 +164,9 @@
                 this.formatItems(this.widgets)
                 this.showDialog = true
             },
+            onCancel () {
+                this.showDialog = false
+            }
         },
     }
 </script>

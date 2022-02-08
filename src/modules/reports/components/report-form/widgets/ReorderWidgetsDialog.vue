@@ -54,23 +54,14 @@
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                     <slot name="footer-actions">
-                        <base-button class="mx-4"
-                                     outline
-                                     fixed-width="w-37"
-                                     @click="onCloseModal">
-                            <div class="flex items-center">
-                                <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
-                            </div>
-                        </base-button>
-                        <base-button fixed-width="w-37"
-                                     type="primary"
-                                     @click="onSubmit()">
-                            <div class="flex items-center">
-                                <IconSave class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'Save' }}</span>
-                            </div>
-                        </base-button>
+                        <cancel-button
+                            class="mx-4"
+                            @on-click="onCloseModal"
+                        />
+                        <confirm-button
+                            :label="this.$t('Save')"
+                            @on-click="onSubmit"
+                        />
                     </slot>
                 </div>
             </template>
@@ -83,12 +74,16 @@
     import DraggableList from '@/components/Widgets/DraggableList'
     import { BOTH_EXPORT_TYPE_ID } from '@/modules/reports/enum/report'
     import cloneDeep from 'lodash/cloneDeep'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
             Tabs,
             Modal,
             DraggableList,
+            CancelButton,
+            ConfirmButton,
         },
         props: {
             report: {
