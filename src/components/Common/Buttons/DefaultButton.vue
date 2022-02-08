@@ -2,7 +2,7 @@
     <base-button
         v-bind="$attrs"
         fixed-width="w-37"
-        :variant="variant"
+        :type="type"
         v-on="listeners">
         <slot>
             <div class="flex items-center">
@@ -26,9 +26,9 @@ export default {
             type: String,
             default: ''
         },
-        variant: {
+        type: {
             type: String,
-            default: 'primary'
+            default: 'default'
         }
     },
     computed: {

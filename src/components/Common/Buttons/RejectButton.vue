@@ -2,7 +2,7 @@
     <default-button
         :icon="icon"
         :label="buttonLabel"
-        variant="danger"
+        type="danger"
         v-on="$listeners"
     />
 </template>
