@@ -3,10 +3,12 @@
         <div class="w-full flex items-center overflow-x-auto">
             <template v-if="showTabs">
                 <div
-                    class="tab-wrapper text-main-lg cursor-pointer"
+                    class="tab-wrapper cursor-pointer"
                     v-for="(group, index) in widgetGroupList"
                     @click="switchTab(group)"
-                    :key="index">
+                    :key="index"
+                    :style="getStyles"
+                >
                     <div></div>
                     <div class="flex justify-between w-full items-center"
                         :key="`edit-${group.WidgetGroupID}`">
@@ -93,6 +95,14 @@
             layoutType: {
                 type: String,
                 default: 'tabbed'
+            }
+        },
+        computed: {
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
+            getStyles () {
+                return this.$store.getters['layout/widgetGroupTitleStyles'](this.getTypeOfLayout)
             }
         },
         methods: {

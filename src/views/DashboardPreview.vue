@@ -150,6 +150,7 @@
                 rootVariables['--font-size-xl'] = (fontSize + 4) + 'px'
                 rootVariables['--font-size-2xl'] = (fontSize + 6) + 'px'
                 rootVariables['--font-size-3xl'] = (fontSize + 12) + 'px'
+                rootVariables['--primary-actions'] = rootVariables['--primary-color']
 
                 return rootVariables
             }
