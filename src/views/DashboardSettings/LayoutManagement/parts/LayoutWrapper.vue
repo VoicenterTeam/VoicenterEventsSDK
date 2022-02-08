@@ -2,20 +2,21 @@
     <div class="layout-wrapper"
          v-if="value.LayoutID"
          :key="value.LayoutID">
-        <CollapseWrapper v-for="setting in settings"
-                         class="mb-3"
-                         :key="setting.key"
-                         v-bind="setting">
-            <div v-for="group in groupedParameters(setting.group)">
-                <component v-if="group.ParameterTypeName !== 'DashboardLogo'"
-                           v-bind="group"
-                           :key="group.LayoutParameterValueID"
-                           :is="group.ParameterTypeName"
-                           v-model="group.Value"
+        <CollapseWrapper
+            v-for="setting in settings"
+            class="mb-3"
+            :key="setting.key"
+            v-bind="setting"
+        >
+            <div v-for="group in groupedParameters(setting.group)" :key="group.LayoutParameterValueID">
+                <component
+                    v-if="group.ParameterTypeName !== 'DashboardLogo'"
+                    v-bind="group"
+                    :is="group.ParameterTypeName"
+                    v-model="group.Value"
                 />
                 <logo v-else
                       v-bind="group"
-                      :key="group.LayoutParameterValueID"
                       v-model="group.ValueText"/>
             </div>
         </CollapseWrapper>
@@ -73,7 +74,9 @@
         methods: {
             groupedParameters(section) {
                 const group = this.groupKeys[section]
-                const settings = this.value.LayoutParametersList.filter((el) => group.includes(el.LayoutParameterName))
+                const settings = this.value.LayoutParametersList
+                    .filter((el) => group.includes(el.LayoutParameterName) && el.LayoutParameterName !== 'ColorWidgetGroupFrames' && el.LayoutParameterName !== 'ColorWidgetGroupBackground')
+                // TODO: need to add opportunities to change keys: ColorWidgetGroupFrames, ColorWidgetGroupBackground
                 return mapOrder(settings, group, 'LayoutParameterName')
             }
         },

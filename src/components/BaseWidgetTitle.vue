@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-8 flex items-center">
-        <p v-if="title && showWidgetTitle" class="text-main-2xl text-gray-700 font-semibold truncate"
+        <p v-if="title && showWidgetTitle" class="text-gray-700 font-semibold truncate"
            :style="widgetTitleStyles">
             <slot>
                 {{$t(title)}}
@@ -16,11 +16,14 @@
             default: ''
         },
         computed: {
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
             showWidgetTitle() {
-                return this.$store.getters['layout/showWidgetTitles']('activeLayout')
+                return this.$store.getters['layout/showWidgetTitles'](this.getTypeOfLayout)
             },
             widgetTitleStyles() {
-                return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
+                return this.$store.getters['layout/widgetTitleStyles'](this.getTypeOfLayout)
             }
         }
     }

@@ -59,7 +59,7 @@
                     <div class="col-span-2">
                         <LayoutWrapper v-model="layoutSettings"/>
                     </div>
-                    <div class="col-span-3">
+                    <div class="col-span-3" :style="setRootColors">
                         <LayoutPreview @on-real-time-preview="onRealTimePreview">
                             <template v-slot:actions>
                                 <div class="grid grid-cols-1 mt-8">
@@ -264,12 +264,38 @@
             },
             isDefaultLayout() {
                 return this.layoutSettings.LayoutID === DEFAULT_LAYOUT_ID
+            },
+            colors() {
+                return this.$store.getters['layout/colors']('previewLayout')
+            },
+            fontSize() {
+                return this.$store.getters['layout/baseFontSize']('previewLayout')
+            },
+            setRootColors () {
+                const rootVariables = {}
+                const colors = this.colors
+                const fontSize = this.fontSize
+
+                for (let color in colors) {
+                    rootVariables[`--${color}-color`] = colors[color]
+                }
+
+                rootVariables['--font-size-xs'] = (fontSize - 4) + 'px'
+                rootVariables['--font-size-sm'] = (fontSize - 2) + 'px'
+                rootVariables['--font-size-base'] = fontSize + 'px'
+                rootVariables['--font-size-lg'] = (fontSize + 2) + 'px'
+                rootVariables['--font-size-xl'] = (fontSize + 4) + 'px'
+                rootVariables['--font-size-2xl'] = (fontSize + 6) + 'px'
+                rootVariables['--font-size-3xl'] = (fontSize + 12) + 'px'
+                rootVariables['--primary-actions'] = rootVariables['--primary-color']
+
+                return rootVariables
             }
         },
         methods: {
             onChoseLayout(layout) {
                 this.layoutSettings = cloneDeep(layout)
-                this.$store.commit('layout/SET_ACTIVE_LAYOUT', layout)
+                this.$store.dispatch('layout/setPreviewLayout', layout)
             },
             onRealTimePreview(state) {
                 this.realTimePreview = state
@@ -370,12 +396,11 @@
             },
             triggerLayoutChanges() {
                 this.$nextTick(() => {
-                    // if (this.realTimePreview) {
-                    //     this.$store.dispatch('layout/updateActiveLayout', this.layoutSettings)
-                    // } else {
-                    //     this.$store.dispatch('layout/updateActiveLayout', this.storedDashboardLayout)
-                    // }
-                    // TODO: updates should display in the layout preview
+                    if (this.realTimePreview) {
+                        this.$store.dispatch('layout/setPreviewLayout', this.layoutSettings)
+                    } else {
+                        this.$store.dispatch('layout/setPreviewLayout', this.storedDashboardLayout)
+                    }
                 })
             },
             validateForm () {

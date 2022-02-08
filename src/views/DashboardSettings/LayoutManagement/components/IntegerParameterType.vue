@@ -1,6 +1,7 @@
 <template>
 <div class="pt-3 pb-5 border-b slider">
-    <label>{{ $t(LayoutParameterName) }}</label>
+    <!-- <label>{{ $t(LayoutParameterName) }}</label> -->
+    <label>{{ LayoutParameterName }}</label> <!-- TODO: need to add translation -->
     <el-slider
         v-bind="sliderConfig"
         v-on="listeners"
