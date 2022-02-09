@@ -69,7 +69,7 @@
                                             @on-click="onDiscard(true)"
                                         />
                                         <confirm-button
-                                            :label="this.$t('general.apply')"
+                                            :label="$t('general.apply')"
                                             icon="IconSave"
                                             @on-click="onApply"
                                         />
@@ -161,7 +161,7 @@
                             @on-click="onCancelDialog"
                         />
                         <confirm-button
-                            :label="this.$t('general.apply')"
+                            :label="$t('general.apply')"
                             :loading="storingData"
                             :disabled="disabledForm"
                             @on-click="onNewLayout"
