@@ -51,7 +51,7 @@
                     @on-click="onCancel"
                 />
                 <confirm-button
-                    :label="this.$t('Save')"
+                    :label="$t('Save')"
                     icon="IconSave"
                     @on-click="onSubmit"
                 />

@@ -114,7 +114,7 @@
                     @on-click="onDiscard"
                 />
                 <confirm-button
-                    :label="this.$t('Save')"
+                    :label="$t('Save')"
                     @on-click="tryAddDashboard"
                 />
             </div>

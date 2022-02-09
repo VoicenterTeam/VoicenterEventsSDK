@@ -35,7 +35,7 @@
                                                    :dashboard="activeDashboard"/>
                                     <confirm-button
                                         :loading="loading"
-                                        :label="this.$t('Save')"
+                                        :label="$t('Save')"
                                         icon="IconSave"
                                         @on-click="onSubmit"
                                     />
@@ -56,7 +56,7 @@
                                            :dashboard="activeDashboard"/>
                             <confirm-button
                                 :loading="loading"
-                                :label="this.$t('Save')"
+                                :label="$t('Save')"
                                 icon="IconSave"
                                 @on-click="onSubmit"
                             />
