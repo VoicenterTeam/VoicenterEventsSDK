@@ -15,6 +15,7 @@ import pageSizeMixin from '@/mixins/pageSizeMixin'
 import { defaultFontSize } from '@/enum/defaultDashboardSettings'
 import NetworkStatusAlert from '@/components/Common/NetworkStatusAlert'
 
+
 export default {
     mixins: [globalMixin, pageSizeMixin],
     components: {
@@ -31,6 +32,7 @@ export default {
 
             if (activeLanguage) {
                 const locale = activeLanguage.locale
+                this.$i18n.locale = locale
                 this.$i18n.setLocaleMessage(locale, this.$store.state.lang.translations)
             }
 
