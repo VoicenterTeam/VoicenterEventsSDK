@@ -157,7 +157,6 @@
         mounted() {
             document.addEventListener('keyup', this.handleEscape)
             this.handleDragToScroll()
-            console.log('qwfqwfqwf')
             this.$store.dispatch('layout/setTypeOfLayout', 'previewLayout')
         },
         destroyed() {
