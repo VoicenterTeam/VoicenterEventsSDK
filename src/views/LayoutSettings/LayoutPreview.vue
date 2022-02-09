@@ -161,6 +161,7 @@
         },
         destroyed() {
             document.removeEventListener('keyup', this.handleEscape)
+            this.$store.dispatch('layout/setTypeOfLayout', 'activeLayout')
         },
     }
 </script>
