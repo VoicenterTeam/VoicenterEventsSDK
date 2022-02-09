@@ -52,9 +52,10 @@ const getters = {
         return getter.getActiveLanguage.LanguageID
     },
     getActiveLanguage: (state, getters) => {
+        const defaultDomainName = process.env.VUE_APP_DEFAULT_DOMAIN_NAME
         return getters.getLanguageList.find(language => {
             const currentDomain = window.location.hostname === 'localhost'?
-                process.env.VUE_APP_DEFAULT_DOMAIN_NAME:
+                defaultDomainName:
                 window.location.hostname
             return language.Domain === currentDomain
         })
