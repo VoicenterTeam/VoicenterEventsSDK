@@ -58,9 +58,11 @@
                 this.reportToDuplicate = report
             },
             async onEditReport(report) {
+                console.log('LIST onEditReport', report)
                 await this.storeReport(report)
-                this.$emit('on-update-tabs', report.ReportName)
+                this.$emit('on-update-tabs', report.ReportName, report.ReportID)
                 const editUrl = `/reports/edit/${report.ReportID}`
+                if(this.$route.path === editUrl) return
                 await this.$router.push(editUrl)
             },
             async storeReport(report) {

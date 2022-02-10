@@ -2,7 +2,7 @@
     <el-tooltip :content="$t('report.manageReports')"
                 v-if="showButton"
                 placement="bottom">
-        <a href="/reports">
+<!--        <a href="/reports">
             <div class="text-gray-400 hover:text-primary mx-3 focus:outline-none"
                  role="button">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
@@ -15,7 +15,10 @@
                         fill="currentColor"/>
                 </svg>
             </div>
-        </a>
+        </a>-->
+        <span class="mx-2 w-6 h-6 cursor-pointer" @click="goToReports">
+            <i class="vc-icon-server icon-lg text-gray-400 hover:text-primary" />
+        </span>
     </el-tooltip>
 </template>
 <script>
@@ -29,6 +32,9 @@
             updateButtonVisibility(routeName) {
                 this.showButton = !routeName.includes('reports')
             },
+            goToReports() {
+                this.$router.push('/reports')
+            }
         },
         watch: {
             '$route.name': {

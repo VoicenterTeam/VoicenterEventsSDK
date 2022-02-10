@@ -31,8 +31,8 @@
                 this.report = {
                     ...this.reportToEdit,
                 }
-                const { ReportName } = this.report
-                this.$emit('on-update-tabs', ReportName)
+                const { ReportName, ReportID} = this.report
+                this.$emit('on-update-tabs', ReportName, ReportID)
             },
             async onUpdateReport(data = {}) {
                 console.log({data})
@@ -44,6 +44,7 @@
             },
         },
         mounted() {
+            console.log('MOUNTED')
             if (!this.reportToEdit) {
                 this.$notify({
                     type: 'danger',
