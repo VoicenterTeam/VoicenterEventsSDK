@@ -12,7 +12,7 @@
                                :is="icon"
                                class="mx-1"/>
                 </slot>
-                <span class="mx-1 text-base font-bold">{{ label }}</span>
+                <span class="mx-1">{{ label }}</span>
             </div>
         </slot>
     </base-button>

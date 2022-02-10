@@ -55,8 +55,14 @@
         </el-form>
         <template slot="footer">
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                <el-button @click="toggleVisibility(false)">{{ $t('common.cancel') }}</el-button>
-                <el-button type="primary" @click="onChange">{{ $t('common.save') }}</el-button>
+                <cancel-button
+                    @on-click="toggleVisibility(false)"
+                />
+                <confirm-button
+                    :label="$t('common.save')"
+                    icon="IconSave"
+                    @on-click="onChange"
+                />
             </div>
         </template>
     </modal>
@@ -72,7 +78,9 @@
     import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
     import JsonViewer from 'vue-json-viewer'
     import WidgetRefreshInterval from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'
-    
+    import CancelButton from "@/components/Common/Buttons/CancelButton";
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton";
+
     export default {
         components: {
             [Checkbox.name]: Checkbox,
@@ -87,6 +95,8 @@
             WidgetPadding,
             StaticWidgetInfo,
             WidgetRefreshInterval,
+            CancelButton,
+            ConfirmButton,
         },
         props: {
             widget: {
