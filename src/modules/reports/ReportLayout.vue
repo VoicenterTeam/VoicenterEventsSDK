@@ -16,40 +16,40 @@
                             <router-view @on-update-tabs="onUpdateTabs"
                                          @reset-state="goToList"/>
                         </fade-transition>-->
-            <el-tabs v-model="activeTab"
+            <el-tabs v-model="activeTabName"
                      square
-                     @input="onChangeTab"
                      closable>
                 <el-tab-pane
                     class="editable-tab"
-                    v-for="item in availableTabs"
+                    v-for="item in dataTabs"
                     :key="item.id"
                     :label="item.title"
                     :name="item.id"
                     :closable="item.name !== 'create' && item.name !== 'list'">
                     <span slot="label">
-                        <i :class="item.icon" class="icon-md" /> {{item.title}}
+                        <i :class="item.icon" class="icon-md"/> {{ item.title }}
                     </span>
                     <template>
+                        <component :is="item.component" />
                         <!--                        <slot :name="item.name"
                                                       :label="item.title"
                                                       :data="item.data">
                                                     Hello content
                                                 </slot>-->
-<!--                        <div class="w-full bg-active-elements">hello</div>-->
-                        <router-view @on-update-tabs="onUpdateTabs"
-                                     @reset-state="goToList"/>
+                        <!--                        <div class="w-full bg-active-elements">hello</div>-->
+<!--                        <router-view @on-update-tabs="onUpdateTabs"
+                                     @reset-state="goToList"/>-->
                     </template>
-<!--                    <div slot="label"
-                         v-else>
-                        <div class="inline-block">
-                            <div class="flex items-center">
-                                <i v-if="item.icon" :class="item.icon" class="icon-base inline-block mx-1 tab-icon"/>
-                                <i v-else class="vc-edit-pencil icon-base inline-block mx-1 tab-icon"/>
-                                <span class="inline-block select-none">{{ item.title }}</span>
-                            </div>
-                        </div>
-                    </div>-->
+                    <!--                    <div slot="label"
+                                             v-else>
+                                            <div class="inline-block">
+                                                <div class="flex items-center">
+                                                    <i v-if="item.icon" :class="item.icon" class="icon-base inline-block mx-1 tab-icon"/>
+                                                    <i v-else class="vc-edit-pencil icon-base inline-block mx-1 tab-icon"/>
+                                                    <span class="inline-block select-none">{{ item.title }}</span>
+                                                </div>
+                                            </div>
+                                        </div>-->
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -58,9 +58,41 @@
 <script>
 import BaseNavbar from '@/components/Navbar/BaseNavbar'
 /*import EditableTabs from '@/modules/common/components/EditableTabs'*/
+import EditTemp from "@/modules/reports/EditTemp";
+import ListTemp from "@/modules/reports/ListTemp";
 
 import {TabPane, Tabs} from 'element-ui'
 
+const CREATE_TAB_NAME = 'create';
+const LIST_TAB_NAME = 'list'
+
+export default {
+    components: {
+        BaseNavbar,
+        [Tabs.name]:
+        Tabs,
+        [TabPane.name]:
+        TabPane,
+    },
+    data() {
+        return {
+            activeTab: LIST_TAB_NAME,
+            dataTabs: [
+                {
+                    title: 'Report List',
+                    name: LIST_TAB_NAME,
+                    icon: 'vc-icon-template-list',
+                },
+            ],
+            createTabName: CREATE_TAB_NAME,
+            listTabName: LIST_TAB_NAME
+        }
+    },
+
+}
+
+
+/*
 const REPORT_CREATION_TAB = {
     title: 'New Report',
     name: 'reports-create',
@@ -89,7 +121,7 @@ const AVAILABLE_ROUTES = {
 export default {
     components: {
         BaseNavbar,
-        /*EditableTabs,*/
+        /!*EditableTabs,*!/
         [Tabs.name]: Tabs,
         [TabPane.name]: TabPane,
     },
@@ -113,19 +145,11 @@ export default {
         },
         onChangeTab(tab) {
             console.log('onChangeTab', tab)
-            //const {name, id} = tab || ''
-            /*console.log("ON name", name)
-            console.log("ON id", id)*/
             console.log('this.$route.name', this.$route.name)
             if (!tab) {
                 this.$router.push('/reports')
                 return
             }
-
-            /*if (name === 'reports-edit') {
-
-            }*/
-
             this.activeTab = tab
             const tabRoute = this.getRoutePath(tab)
             console.log('tabRoute', tabRoute)
@@ -136,8 +160,6 @@ export default {
             this.goToList()
         },
         setListTab() {
-            //this.availableTabs = [REPORT_LIST_TAB]
-            //this.availableTabs = [REPORT_LIST_TAB]
             this.activeTab = 'list'
         },
         goToList() {
@@ -183,5 +205,5 @@ export default {
             },
         },
     },
-}
+}*/
 </script>
