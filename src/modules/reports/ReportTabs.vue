@@ -2,6 +2,7 @@
     <div class="my-10 mx-10 xl:mx-20">
         <el-tabs v-model="activeTabName"
                  square
+                 @tab-remove="removeTab"
                  closable>
             <el-tab-pane
                 v-for="item in dataTabs"
@@ -56,7 +57,7 @@ export default {
     },
     watch: {
         activeTabName(val) {
-            let routePath
+            /*let routePath
             if (val === this.listTabName) {
                 routePath = '/reports'
             } else if (val === this.createTabName) {
@@ -64,8 +65,10 @@ export default {
             } else {
                 routePath = `/reports/edit/${val}`
             }
+            if (this.$route.path === routePath) return*/
+
             this.$emit('update-active-tab', val)
-            this.$router.push(routePath)
+            //this.$router.push(routePath)
         },
         activeTab: {
             immediate: true,
@@ -77,6 +80,10 @@ export default {
     methods: {
         addTab() {
 
+        },
+        removeTab(tab) {
+            console.log('tab', tab)
+            this.$emit('on-remove-tab', tab)
         }
     }
 }
