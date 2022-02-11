@@ -8,6 +8,9 @@
 
 <script>
 import cloneDeep from "lodash/cloneDeep";
+import get from "lodash/get"
+
+import { reportApi } from "../services/reportService"
 
 export default {
     name: "edit-temp",
@@ -26,22 +29,18 @@ export default {
             report: {}
         }
     },
-    mounted() {
+    methods: {
+
+    },
+    async mounted() {
         if (this.data) {
-            console.log('IF', this.data)
             this.report = cloneDeep(this.data)
         } else {
-            console.log('ELSE')
-            setTimeout(() => {
-                this.report = {
-                    name: "fetched",
-                    contact: "+380954522454",
-                    country: "toto",
-                    id: '422'
-                }
-                console.log('this.reportId', this.reportId)
-                this.$emit('update-title', this.reportId, 'koko')
-            }, 5000)
+            const data = await reportApi.info(this.reportId)
+            this.report = cloneDeep(data)
+
+            const reportName = get(data, 'ReportName', '')
+            this.$emit('update-title', this.reportId, reportName)
         }
     }
 }

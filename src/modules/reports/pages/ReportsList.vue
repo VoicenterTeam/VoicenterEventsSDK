@@ -6,17 +6,17 @@
             <h2>Table</h2>
             <table>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Contact</th>
-                    <th>Country</th>
+                    <th>ReportID</th>
+                    <th>ReportName</th>
+                    <th>AccountID</th>
+                    <th>LayoutID</th>
                     <th>Actions</th>
                 </tr>
                 <tr v-for="item in tableData">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.contact }}</td>
-                    <td>{{ item.country }}</td>
+                    <td>{{ item.ReportID }}</td>
+                    <td>{{ item.ReportName }}</td>
+                    <td>{{ item.AccountID }}</td>
+                    <td>{{ item.LayoutID }}</td>
                     <td>
                         <button @click="onRowEdit(item)">Edit</button>
                     </td>
@@ -27,30 +27,16 @@
 </template>
 
 <script>
+import { reportApi } from "../services/reportService"
+
 export default {
     name: "list-temp",
     props: {
-        /*data: {
-            type: Object,
-            default: {}
-        }*/
+
     },
     data() {
         return {
-            tableData: [
-                {
-                    name: "popo",
-                    contact: "+380954545454",
-                    country: "en",
-                    id: '49'
-                },
-                {
-                    name: "dodo",
-                    contact: "+3809454545874",
-                    country: "ua",
-                    id: '115'
-                }
-            ]
+            tableData: []
         }
     },
     methods: {
@@ -59,7 +45,15 @@ export default {
         },
         onRowEdit(row) {
             this.$emit('on-edit-row', row)
+        },
+        async getReportsList() {
+            const reportsList = await reportApi.list()
+            return reportsList
         }
+    },
+    async mounted() {
+        const reports = await this.getReportsList()
+        this.tableData = reports.slice(0, 10)
     }
 }
 </script>

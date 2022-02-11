@@ -13,10 +13,7 @@
                 <template>
                     <slot :name="item.name"
                           :label="item.title"
-                          :data="item.data"
-                          :add-tab="addTab">
-                        {{ item.content }}
-                    </slot>
+                          :data="item.data" />
                 </template>
                 <span slot="label">
                     <i :class="item.icon" class="icon-md"/> {{ item.title }}
@@ -57,18 +54,7 @@ export default {
     },
     watch: {
         activeTabName(val) {
-            /*let routePath
-            if (val === this.listTabName) {
-                routePath = '/reports'
-            } else if (val === this.createTabName) {
-                routePath = '/reports/create'
-            } else {
-                routePath = `/reports/edit/${val}`
-            }
-            if (this.$route.path === routePath) return*/
-
             this.$emit('update-active-tab', val)
-            //this.$router.push(routePath)
         },
         activeTab: {
             immediate: true,
@@ -78,11 +64,7 @@ export default {
         }
     },
     methods: {
-        addTab() {
-
-        },
         removeTab(tab) {
-            console.log('tab', tab)
             this.$emit('on-remove-tab', tab)
         }
     }

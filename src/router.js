@@ -33,25 +33,25 @@ const routes = [
             {
                 path: '',
                 name: 'reports-list',
-                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/reports-list'),
+                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/ReportsList'),
             },
             {
                 path: 'edit/:id',
                 name: 'reports-edit',
-                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/reports-edit'),
+                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/ReportEdit'),
             },
             {
                 path: 'create',
                 name: 'reports-create',
-                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/reports-create'),
+                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/ReportCreate'),
             },
         ],
     },
-    {
+    /*{
         path: '/generate-pdf',
         name: 'generate-pdf',
-        component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/types/pdf/pdf-wrapper'),
-    },
+        component: () => import(/!* webpackChunkName: "modules" *!/ '@/modules/reports/types/pdf/pdf-wrapper'),
+    },*/
     {
         path: '*',
         name: 'Not Found',
