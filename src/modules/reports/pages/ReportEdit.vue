@@ -13,7 +13,7 @@ import get from "lodash/get"
 import { reportApi } from "../services/reportService"
 
 export default {
-    name: "edit-temp",
+    name: "report-edit",
     props: {
         data: {
             type: Object,

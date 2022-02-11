@@ -30,7 +30,7 @@
 import { reportApi } from "../services/reportService"
 
 export default {
-    name: "list-temp",
+    name: "reports-list",
     props: {
 
     },

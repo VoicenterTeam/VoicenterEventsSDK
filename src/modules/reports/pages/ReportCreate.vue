@@ -6,11 +6,11 @@
 
 <script>
 export default {
-    name: "create-temp",
+    name: "report-create",
     props: {
         data: {
             type: Object,
-            default: () => ({})
+            default: null
         }
     },
     data() {
