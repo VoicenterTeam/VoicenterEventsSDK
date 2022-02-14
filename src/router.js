@@ -7,43 +7,43 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import(/* webpackChunkName: "view" */ './views/DashboardPage.vue'),
+        component: () => import(/* webpackChunkName: "home" */ './views/DashboardPage.vue'),
     },
     {
         path: '/dashboard-settings',
         name: 'dashboard-settings',
-        component: () => import(/* webpackChunkName: "view" */ './views/DashboardSettings/DashboardSettings.vue'),
+        component: () => import(/* webpackChunkName: "dashboard-settings" */ './views/DashboardSettings/DashboardSettings.vue'),
     },
     {
         path: '/layout-settings',
         name: 'layout-settings',
-        component: () => import(/* webpackChunkName: "view" */ './views/LayoutSettings/LayoutSettings.vue'),
+        component: () => import(/* webpackChunkName: "layout-settings" */ './views/LayoutSettings/LayoutSettings.vue'),
     },
     {
         path: '/dashboard-creation',
         name: 'dashboard-creation',
-        component: () => import(/* webpackChunkName: "view" */ './views/DashboardCreation/DashboardCreation.vue'),
+        component: () => import(/* webpackChunkName: "dashboard-creation" */ './views/DashboardCreation/DashboardCreation.vue'),
     },
     {
         path: '/reports',
         name: 'reports',
         redirect: 'reports',
-        component: () => import(/* webpackChunkName: "modules" */'@/modules/reports/ReportsLayout'),
+        component: () => import(/* webpackChunkName: "reports" */'@/modules/reports/ReportsLayout'),
         children: [
             {
                 path: '',
                 name: 'reports-list',
-                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/ReportsList'),
+                component: () => import(/* webpackChunkName: "reports-list" */ '@/modules/reports/pages/ReportsList'),
             },
             {
                 path: 'edit/:id',
                 name: 'reports-edit',
-                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/ReportEdit'),
+                component: () => import(/* webpackChunkName: "report-edit" */ '@/modules/reports/pages/ReportEdit'),
             },
             {
                 path: 'create',
                 name: 'reports-create',
-                component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/pages/ReportCreate'),
+                component: () => import(/* webpackChunkName: "report-create" */ '@/modules/reports/pages/ReportCreate'),
             },
         ],
     },
