@@ -2,14 +2,13 @@
     <div class="my-10 mx-10 xl:mx-20">
         <el-tabs v-model="activeTabName"
                  square
-                 @tab-remove="removeTab"
-                 closable>
+                 @tab-remove="removeTab">
             <el-tab-pane
                 v-for="item in dataTabs"
                 :key="item.name"
                 :label="item.title"
                 :name="item.name"
-                :closable="item.name !== createTabName && item.name !== listTabName">
+                :closable="item.name !== listTabName">
                 <template>
                     <slot :name="item.name"
                           :label="item.title"
