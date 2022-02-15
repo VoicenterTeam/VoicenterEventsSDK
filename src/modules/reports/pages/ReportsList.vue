@@ -1,8 +1,10 @@
 <template>
     <div class="w-full">
         <reports-table
+            sortable="custom"
             :tableData="tableData"
             :tableProps="tableProps"
+            @sort-change="onSortChange"
             :tableActionProps="tableActionProps">
             <template v-slot:expand="{row}">
                 {{ row }}
@@ -18,12 +20,36 @@
                 </div>
             </template>
             <template v-slot:ReportItemList="{row}">
-                {{ getReportWidgetsList(get(row, 'ReportItemList', [])) }}
+                <template v-if="row.ReportItemList && row.ReportItemList.length">
+                    <delimited-list :list="get(row, 'ReportItemList', [])" :limit="5" separator=",">
+                        <template v-slot:list-item="{item}">
+                            <rec-item
+                                :item="item"
+                                :name="get(item, 'WidgetTitle', '- -')"/>
+                        </template>
+                        <template v-slot:other-icon="{data}">
+                            <tag content-class="icon-ellipsis">+ {{ data }}</tag>
+                        </template>
+                        <template v-slot:other-content="{list}">
+                            <div class="max-w-xs">
+                                <div v-for="(item, index) in list" :key="index"
+                                     class="flex-1 items-center justify-start p-1">
+                                    <tag>
+                                        {{ get(item, 'WidgetTitle', '- -') }}
+                                    </tag>
+                                </div>
+                            </div>
+                        </template>
+                    </delimited-list>
+                </template>
+                <template v-else>
+                    - -
+                </template>
             </template>
 
             <template v-slot:ReportTriggerList="{row}">
                 <template v-if="row.ReportTriggerList && row.ReportTriggerList.length">
-                    <delimited-list :list="get(row, 'ReportTriggerList', [])" :limit="3" separator=",">
+                    <delimited-list :list="get(row, 'ReportTriggerList', [])" :limit="4" separator=",">
                         <template v-slot:list-item="{item}">
                             <rec-item
                                 :item="item"
@@ -136,7 +162,7 @@ export default {
                     minWidth: '100'
                 }
             ],
-            reportSearch: ''
+            reportSearch: '',
         }
     },
     methods: {
@@ -167,12 +193,36 @@ export default {
             return reportsList
         },
         getReportWidgetsList(widgets) {
+            console.log('getReportWidgetsList')
             return widgets.map(widget => widget.WidgetTitle).join()
-        }
+        },
+        isEllipsisActive(e) {
+            console.log('e.offsetWidth', e.offsetWidth)
+            console.log('e.scrollWidth', e.scrollWidth)
+            return (e.offsetWidth < e.scrollWidth);
+        },
+        onSortChange({column, prop, order}) {
+            if (prop === null) {
+                return
+            }
+
+            if (order === 'ascending') {
+                this.tableData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
+            } else if (order === 'descending') {
+                this.tableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
+            }
+        },
     },
     async mounted() {
         const reports = await this.getReportsList()
-        this.tableData = reports.slice(0, 10)
-    }
+        this.tableData = reports//.slice(0, 10)
+    },
 }
 </script>
+
+<style scoped lang="scss">
+.aa {
+    width: 90%;
+    max-width: 90%;
+}
+</style>
