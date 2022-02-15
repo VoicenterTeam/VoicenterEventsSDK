@@ -15,8 +15,8 @@
             <el-table
                 :data="paginatedData"
                 border
-                v-on="$listeners"
                 :sortable="sortable"
+                @sort-change="onSortChange"
                 style="width: 100%">
                 <!--                <el-table-column type="expand" min-width="50">
                                     <template slot-scope="{row}">
@@ -144,9 +144,11 @@
 
 <script>
 import {Table, TableColumn, Tooltip, Dropdown, DropdownMenu, DropdownItem} from 'element-ui'
+import Fuse from 'fuse.js';
 
 import BaseButton from "@/components/Common/Buttons/BaseButton";
 import ButtonIcon from "@/modules/common/components/ButtonIcon";
+import cloneDeep from "lodash/cloneDeep";
 
 export default {
     name: "reports-table",
@@ -185,6 +187,7 @@ export default {
             searchData: [],
             currentPage: 1,
             perPage: 10,
+            fuseSearch: null,
             /*totalPages: [
                 1,
                 2,
@@ -200,18 +203,46 @@ export default {
         onPageSelect(page) {
             this.currentPage = page
             console.log(page)
-        }
+        },
+        initFuseSearch() {
+            console.log('before initFuseSearch')
+            console.log('props', this.tableProps.map(column => column.prop))
+            console.log('initFuseSearch this.tableData', this.tableData)
+            this.fuseSearch = new Fuse(this.tableData, {
+                keys: ['ReportID', 'ReportName'],//this.tableProps.map(column => column.prop),
+                threshold: 0.3
+            });
+            console.log('after initFuseSearch')
+            /*if (this.defaultSort) {
+                this.onSortChange(this.defaultSort)
+            }*/
+        },
+        onSortChange({column, prop, order}) {
+            if (prop === null) {
+                return
+            }
+
+            if (order === 'ascending') {
+                this.searchData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
+            } else if (order === 'descending') {
+                this.searchData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
+            }
+        },
     },
     computed: {
         paginatedData() {
             console.log('COMPUTED paginatedData')
+            if (this.searchData.length < this.perPage) {
+                return this.searchData
+            }
             const f = this.perPage * this.currentPage
-            return this.tableData.slice(f - this.perPage, f)
+            console.log('this.searchData AA', this.searchData)
+            return this.searchData.slice(f - this.perPage, f)
         },
         totalPages() {
             console.log('COMPUTED totalPages')
-            const length = this.tableData.length / this.perPage
-            const fullLength = this.tableData.length % this.perPage?
+            const length = this.searchData.length / this.perPage
+            const fullLength = this.searchData.length % this.perPage?
                 length  + 1:
                 length
 
@@ -223,9 +254,40 @@ export default {
         }
     },
     watch: {
+        tableData: {
+            handler(newV) {
+                this.initFuseSearch()
+                //this.reportSearch = ''
+                // TODO: reset table data
+                console.log('watch 1')
+                this.searchData = cloneDeep(newV)
+                    //this.searchData = this.fuseSearch.search()
+                console.log('watch 2')
+            }
+        },
         reportSearch(newV) {
+            let result
+            console.log('newV AA', newV)
 
+            //if (newV !== '') {
+            if (newV !== '') {
+                /*console.log('Here')
+                let fuses = new Fuse(this.tableData, {
+                    keys: ['ReportID', 'ReportName'],//this.tableProps.map(column => column.prop),
+                    threshold: 0.3
+                });*/
+                result = this.fuseSearch.search(newV).map(el => el.item);
+            } else {
+                result = this.tableData
+            }
+
+            console.log('result', result)
+            this.searchData = result;
+            //this.searchData =
         }
+    },
+    mounted() {
+        //this.initFuseSearch()
     }
 }
 </script>
