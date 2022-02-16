@@ -27,27 +27,15 @@
         </div>
         <template slot="footer">
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                <base-button class="mx-4"
-                             outline
-                             fixed-width="w-37"
-                             @click="$emit('on-cancel')">
-                    <div class="flex items-center">
-                        <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">
-                        {{ $t('general.discard') }}
-                    </span>
-                    </div>
-                </base-button>
-                <base-button fixed-width="w-37"
-                             type="primary"
-                             @click="onSubmit()">
-                    <div class="flex items-center">
-                        <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">
-                        {{ $t('common.save') }}
-                    </span>
-                    </div>
-                </base-button>
+                <cancel-button
+                    class="mx-4"
+                    @on-click="onCancel"
+                />
+                <confirm-button
+                    :label="$t('Save')"
+                    icon="IconSave"
+                    @on-click="onSubmit"
+                />
             </div>
         </template>
     </modal>
@@ -56,11 +44,15 @@
     import Modal from '@/components/Common/Modal'
     import draggableEvents from '@/enum/draggableEvents'
     import DraggableList from '@/components/Widgets/DraggableList'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
             Modal,
             DraggableList,
+            CancelButton,
+            ConfirmButton
         },
         props: {
             widgetGroupList: {
@@ -98,6 +90,9 @@
 
                 this.$emit('reorder-widgets-in-modal')
             },
+            onCancel () {
+                this.$emit('on-cancel')
+            }
         },
         watch: {
             widgetGroupList: {

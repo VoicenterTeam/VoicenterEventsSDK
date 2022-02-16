@@ -84,8 +84,14 @@
             </template>
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
-                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                    <cancel-button
+                        @on-click="showModal = false"
+                    />
+                    <confirm-button
+                        :label="$t('common.save')"
+                        icon="IconSave"
+                        @on-click="onChange"
+                    />
                 </div>
             </template>
         </update-dialog>
@@ -106,6 +112,8 @@
     import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import { Checkbox, Collapse, CollapseItem, Option, Select, Tooltip } from 'element-ui'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         mixins: [cardWidgetMixin],
@@ -121,6 +129,8 @@
             [CollapseItem.name]: CollapseItem,
             [Select.name]: Select,
             [Option.name]: Option,
+            CancelButton,
+            ConfirmButton,
         },
         props: {
             data: {

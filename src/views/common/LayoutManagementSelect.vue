@@ -106,22 +106,14 @@
                        :description="$t('layout.enableLayoutConfirmation')"
                        :title="$t('layout.updateStatus')">
             <template v-slot:footer-actions>
-                <base-button class="mx-4"
-                             outline
-                             fixed-width="w-37"
-                             @click="onCancel">
-                    <div class="flex items-center">
-                        <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
-                    </div>
-                </base-button>
-                <base-button :loading="localLoading"
-                             @click="onConfirm">
-                    <div class="flex items-center">
-                        <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ 'common.confirm' }}</span>
-                    </div>
-                </base-button>
+                <cancel-button
+                    class="mx-4"
+                    @on-click="onCancel"
+                />
+                <confirm-button
+                    icon="IconSave"
+                    @on-click="onConfirm"
+                />
             </template>
         </ConfirmDialog>
         <DeleteLayout v-if="showDeleteDialog"
@@ -144,6 +136,8 @@
         ENABLED_STATUS_ID,
         DELETED_STATUS_ID,
     } from '@/views/DashboardSettings/LayoutManagement/layout-management'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     const MAP_LAYOUT_STATUSES = {
         true: ENABLED_STATUS_ID,
@@ -157,6 +151,8 @@
             ConfirmDialog,
             AlertTriangleIcon,
             [Switch.name]: Switch,
+            CancelButton,
+            ConfirmButton,
         },
         data() {
             return {
