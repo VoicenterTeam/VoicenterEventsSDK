@@ -121,10 +121,8 @@
                     Pages:
                     <el-dropdown class="" placement="top-end" trigger="click" @command="onPageSelect">
                         <span class="el-dropdown-link mx-2 align-bottom">
-<!--                            <span class="">-->
-                                {{currentPage}}
-                                <i class="vc-icon-down icon-md text-primary"></i>
-<!--                            </span>-->
+                            {{currentPage}}
+                            <i class="vc-icon-down icon-md text-primary"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
@@ -136,7 +134,29 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
-                <div>Hello</div>
+                <div class="flex">
+                    <span>
+                        {{paginationFrom}} - {{paginationTo}}
+                    </span>
+                    <span class="text-gray-500 mx-1">
+                        of
+                    </span>
+                    <span>
+                        {{paginationTotal}}
+                    </span>
+                    <div class="mx-6">
+                        <span @click="goToPrevPage">
+                            <i class="vc-icon-left icon-lg text-primary mr-2 cursor-pointer"/>
+                        </span>
+                        <span @click="goToNextPage">
+                            <i class="vc-icon-right icon-lg text-primary ml-2 cursor-pointer"/>
+                        </span>
+                    </div>
+<!--                    <div>
+                        <button-icon icon="vc-icon-left" description="" @click="goToPrevPage"/>
+                        <button-icon icon="vc-icon-right" description="" @click="goToNextPage"/>
+                    </div>-->
+                </div>
             </div>
         </div>
     </div>
@@ -208,8 +228,17 @@ export default {
             console.log('before initFuseSearch')
             console.log('props', this.tableProps.map(column => column.prop))
             console.log('initFuseSearch this.tableData', this.tableData)
+
+            const fuseProps = this.tableProps.map(column => {
+                return column.prop === 'ReportItemList'? // || column.prop === 'ReportTriggerList'?
+                    column.prop + '.WidgetTitle':
+                    column.prop === 'ReportTriggerList'?
+                        column.prop + '.ReportTriggerName':
+                        column.prop
+            })
+
             this.fuseSearch = new Fuse(this.tableData, {
-                keys: ['ReportID', 'ReportName'],//this.tableProps.map(column => column.prop),
+                keys: fuseProps,//['ReportID', 'ReportName', 'ReportItemList.WidgetTitle', 'ReportTriggerList.ReportTriggerName'],//this.tableProps.map(column => column.prop),
                 threshold: 0.3
             });
             console.log('after initFuseSearch')
@@ -228,6 +257,16 @@ export default {
                 this.searchData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
             }
         },
+        goToPrevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--
+            }
+        },
+        goToNextPage() {
+            if (this.currentPage < this.totalPages.length) {
+                this.currentPage++
+            }
+        },
     },
     computed: {
         paginatedData() {
@@ -235,6 +274,7 @@ export default {
             if (this.searchData.length < this.perPage) {
                 return this.searchData
             }
+
             const f = this.perPage * this.currentPage
             console.log('this.searchData AA', this.searchData)
             return this.searchData.slice(f - this.perPage, f)
@@ -251,7 +291,26 @@ export default {
                 pages.push(i)
             }
             return pages
-        }
+        },
+        paginationFrom() {
+            if (!this.searchData.length) return 0
+
+            return this.currentPage * this.perPage - this.perPage + 1
+        },
+        paginationTo() {
+            if (!this.searchData.length) return 0
+
+            if (this.totalPages.length === this.currentPage) {
+                const remainder = this.searchData.length % this.perPage
+                if (remainder) {
+                    return this.currentPage * this.perPage - this.perPage + remainder
+                }
+            }
+            return this.currentPage * this.perPage
+        },
+        paginationTotal() {
+            return this.searchData.length
+        },
     },
     watch: {
         tableData: {
@@ -269,6 +328,7 @@ export default {
             let result
             console.log('newV AA', newV)
 
+            this.currentPage = 1
             //if (newV !== '') {
             if (newV !== '') {
                 /*console.log('Here')

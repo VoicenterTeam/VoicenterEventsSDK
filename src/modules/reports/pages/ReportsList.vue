@@ -5,6 +5,7 @@
             :tableData="tableData"
             :tableProps="tableProps"
             @sort-change="onSortChange"
+            @on-create-report="addCreateTab"
             :tableActionProps="tableActionProps">
             <template v-slot:expand="{row}">
                 {{ row }}
@@ -162,7 +163,6 @@ export default {
                     minWidth: '100'
                 }
             ],
-            reportSearch: '',
         }
     },
     methods: {
@@ -215,14 +215,14 @@ export default {
     },
     async mounted() {
         const reports = await this.getReportsList()
-        this.tableData = reports//.slice(0, 10)
+        this.tableData = reports
     },
 }
 </script>
 
 <style scoped lang="scss">
-.aa {
+/*.aa {
     width: 90%;
     max-width: 90%;
-}
+}*/
 </style>
