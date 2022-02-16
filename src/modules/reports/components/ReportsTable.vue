@@ -6,7 +6,7 @@
                    slot="prefix"/>
             </el-input>
 
-            <base-button type="primary" link @click="addCreateTab">
+            <base-button type="primary" size="xs" link @click="addCreateTab">
                 <i class="vc-icon-add icon-md mx-2"/>
                 Add New Report
             </base-button>
@@ -361,5 +361,9 @@ export default {
 
 .el-table ::v-deep th:hover.el-table__cell>.cell {
     @apply flex;
+}
+
+.el-table ::v-deep .el-table__expanded-cell {
+    @apply p-0;
 }
 </style>

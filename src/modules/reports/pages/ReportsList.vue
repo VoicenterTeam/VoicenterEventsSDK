@@ -8,7 +8,20 @@
             @on-create-report="addCreateTab"
             :tableActionProps="tableActionProps">
             <template v-slot:expand="{row}">
-                {{ row }}
+                <div class="border-l-5 p-4 border-primary">
+                    Schedule List
+                    <div class="grid grid-cols-2 gap-4">
+                        <schedule-card>
+
+                        </schedule-card>
+                        <schedule-card>
+
+                        </schedule-card>
+                        <schedule-card>
+
+                        </schedule-card>
+                    </div>
+                </div>
             </template>
             <template v-slot:ReportID="{row}">
                 <div class="flex justify-center">
@@ -72,7 +85,10 @@
                     </delimited-list>
                 </template>
                 <template v-else>
-                    - -
+                        <button class="aa" @click="onAddSchedule(row.ReportID)">
+                            <i class="vc-icon-plus-linear icon-lg text-primary" />
+                            <span class="mx-2">Add Schedule</span>
+                        </button>
                 </template>
             </template>
 
@@ -95,7 +111,7 @@
 </template>
 
 <script>
-import {Table, TableColumn, Tooltip} from 'element-ui'
+import {Table, TableColumn, Tooltip, Card} from 'element-ui'
 import get from 'lodash/get'
 
 import {reportApi} from "../services/reportService"
@@ -105,6 +121,7 @@ import ReportsTable from "@/modules/reports/components/ReportsTable";
 import RecItem from "@/modules/reports/components/RecItem";
 import DelimitedList from "@/modules/reports/components/DelimitedList";
 import Tag from "@/modules/reports/components/Tag"
+import ScheduleCard from "@/modules/reports/components/ScheduleCard";
 
 export default {
     name: "reports-list",
@@ -113,11 +130,13 @@ export default {
         [Table.name]: Table,
         [Tooltip.name]: Tooltip,
         [TableColumn.name]: TableColumn,
+        [Card.name]: Card,
         ButtonIcon,
         ReportsTable,
         RecItem,
         DelimitedList,
-        Tag
+        Tag,
+        ScheduleCard
     },
     props: {},
     data() {
@@ -188,6 +207,9 @@ export default {
         onExportAsHtml(row) {
             alert('Export as HTML')
         },
+        onAddSchedule(reportId) {
+            console.log('Add Schedule')
+        },
         async getReportsList() {
             const reportsList = await reportApi.list()
             return reportsList
@@ -225,4 +247,10 @@ export default {
     width: 90%;
     max-width: 90%;
 }*/
+.aa {
+    @apply flex align-middle text-primary;
+    padding: 0.2rem 0.4rem;
+    border-radius: 1.25rem;
+    border: 1px dashed var(--primary-color);
+}
 </style>
