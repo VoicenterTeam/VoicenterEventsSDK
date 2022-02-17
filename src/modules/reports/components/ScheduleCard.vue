@@ -2,7 +2,7 @@
     <el-card class="f-full">
         <div slot="header" class="flex align-middle justify-between">
             <!--            <div class="inline-block text-center">-->
-            Schedule for Sales Team
+            {{triggerName}}
             <!--            </div>-->
             <div class="flex align-middle justify-center">
                 <div class="inline-block">
@@ -91,6 +91,10 @@ export default {
         },
         recipients: {
             type: Array
+        },
+        triggerName: {
+            type: String,
+            default: ''
         }
     },
     data() {

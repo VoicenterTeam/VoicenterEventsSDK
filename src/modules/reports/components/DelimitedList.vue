@@ -31,6 +31,7 @@
 <script>
     import { Popover } from 'element-ui'
     import { getRefElement } from '@/util/vueHelpers'
+    import pageSizeMixin from "@/mixins/pageSizeMixin";
     
     export default {
         components: {
@@ -54,6 +55,7 @@
                 default: true,
             },
         },
+        mixins: [pageSizeMixin],
         data() {
             return {
                 localLimit: 1,
@@ -62,8 +64,7 @@
             }
         },
         watch: {
-            windowWidth() {
-                console.log('this.windowWidth', this.windowWidth)
+            pageWidth() {
                 this.updateList()
             },
             limit() {
@@ -74,6 +75,9 @@
             },
         },
         computed: {
+            pageWidth() {
+                return this.$store.getters['utils/pageWidth']
+            },
             shortList() {
                 return this.list.slice(0, this.localLimit)
             },
@@ -100,7 +104,7 @@
                     listWidth = list.clientWidth
                     listWrapperWidth = listWrapper.clientWidth
                     
-                    if (listWidth > listWrapperWidth) {
+                    if (listWidth >= listWrapperWidth) {
                         if (this.localLimit > this.minLimit && this.localLimit <= this.limit) {
                             this.localLimit--
                         } else if (this.localLimit > this.limit) {
@@ -113,7 +117,7 @@
                 }
             },
             async isListBigger({ listWidth, listWrapperWidth, list, listWrapper }) {
-                while (listWidth > listWrapperWidth) {
+                while (listWidth >= listWrapperWidth) {
                     if (this.localLimit < this.minLimit) {
                         this.localLimit = this.minLimit
                         break;

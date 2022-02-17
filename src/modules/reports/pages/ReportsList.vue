@@ -12,8 +12,8 @@
                     <div class="m-2 text-lg font-medium">Schedule List</div>
                     <div class="grid grid-cols-2 gap-4">
                         <schedule-card
-                            v-if="row.ReportTriggerList.length"
                             v-for="(trigger, index) in row.ReportTriggerList"
+                            :trigger-name="trigger.ReportTriggerName"
                             :key="index"
                             :conditions="trigger.ReportTriggerCondition"
                             :recipients="trigger.ReportRecipient">
@@ -43,7 +43,7 @@
                             <tag content-class="icon-ellipsis">+ {{ data }}</tag>
                         </template>
                         <template v-slot:other-content="{list}">
-                            <div class="max-w-xs">
+                            <div class="max-w-lg">
                                 <div v-for="(item, index) in list" :key="index"
                                      class="flex-1 items-center justify-start p-1">
                                     <tag>

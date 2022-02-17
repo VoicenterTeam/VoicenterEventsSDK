@@ -1,9 +1,9 @@
 <template>
-    <span class="tag-label"
+    <span class="tag-label min-w-12"
           :class="[{
                 'active-tag-label' :!disabled && type === 'default',
                 'disabled-tag-label' :disabled,
-                'tag-inactive': type === 'inactive'
+                'tag-inactive': type === 'inactive',
             },
             tagClasses,
           ]"
@@ -62,7 +62,7 @@
                 type: String,
                 default: '',
             },
-            limitWith: {
+            limitWidth: {
                 type: [Number, String],
                 default: '',
             },
@@ -99,15 +99,15 @@
                 } else {
                     classes.push('flex items-center')
                 }
-                if (this.limitWith) {
+                if (this.limitWidth) {
                     classes.push('truncate')
                 }
                 return classes
             },
             contentStyles() {
                 let styles = {}
-                if (this.limitWith) {
-                    styles['max-width'] = parseInt(this.limitWith) + 'px'
+                if (this.limitWidth) {
+                    styles['max-width'] = parseInt(this.limitWidth) + 'px'
                 }
                 return styles
             },
