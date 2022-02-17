@@ -9,16 +9,14 @@
             :tableActionProps="tableActionProps">
             <template v-slot:expand="{row}">
                 <div class="border-l-5 p-4 border-primary">
-                    Schedule List
+                    <div class="m-2 text-lg font-medium">Schedule List</div>
                     <div class="grid grid-cols-2 gap-4">
-                        <schedule-card>
-
-                        </schedule-card>
-                        <schedule-card>
-
-                        </schedule-card>
-                        <schedule-card>
-
+                        <schedule-card
+                            v-if="row.ReportTriggerList.length"
+                            v-for="(trigger, index) in row.ReportTriggerList"
+                            :key="index"
+                            :conditions="trigger.ReportTriggerCondition"
+                            :recipients="trigger.ReportRecipient">
                         </schedule-card>
                     </div>
                 </div>

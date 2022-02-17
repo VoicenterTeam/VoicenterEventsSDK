@@ -1,5 +1,5 @@
 <template>
-    <tag limit-with="300">
+    <tag limit-with="300" v-bind="$attrs">
         <component :is="icon"
                    class="h-4 w-6 mx-1 text-primary text-gray-950"/>
         <div class="truncate">

@@ -63,6 +63,7 @@
         },
         watch: {
             windowWidth() {
+                console.log('this.windowWidth', this.windowWidth)
                 this.updateList()
             },
             limit() {

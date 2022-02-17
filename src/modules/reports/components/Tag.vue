@@ -1,8 +1,9 @@
 <template>
     <span class="tag-label"
           :class="[{
-                'active-tag-label' :!disabled,
+                'active-tag-label' :!disabled && type === 'default',
                 'disabled-tag-label' :disabled,
+                'tag-inactive': type === 'inactive'
             },
             tagClasses,
           ]"
@@ -65,6 +66,13 @@
                 type: [Number, String],
                 default: '',
             },
+            type: {
+                type: String,
+                validator: function (value) {
+                    return ['default', 'inactive'].includes(value)
+                },
+                default: 'default'
+            }
         },
         computed: {
             tagClasses() {
@@ -150,6 +158,10 @@
 
     &.disabled-tag-label {
         @apply text-gray-600 border-gray-500;
+    }
+
+    &.tag-inactive {
+        @apply bg-gray-200;
     }
 }
 
