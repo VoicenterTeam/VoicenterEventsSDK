@@ -27,6 +27,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
     "lottie-vuejs": "^0.4.0",
+    "mustache": "^4.2.0",
     "portal-vue": "^2.1.7",
     "puppeteer": "^8.0.0",
     "register-service-worker": "^1.6.2",

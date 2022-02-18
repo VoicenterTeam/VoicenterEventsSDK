@@ -1,35 +1,28 @@
 <template>
     <el-card class="f-full">
         <div slot="header" class="flex align-middle justify-between">
-            <!--            <div class="inline-block text-center">-->
-            {{triggerName}}
-            <!--            </div>-->
-            <div class="flex align-middle justify-center">
-                <div class="inline-block">
-                    <i class="vc-icon-schedule-calendar icon-xl text-primary"/>
-                    <span>Daily: Mon, Wed, Fri, at 9:00 am</span>
-                </div>
+            <span class="my-auto font-medium">{{triggerName}}</span>
+            <div class="flex">
+                <i class="vc-icon-schedule-calendar icon-xl text-primary"/>
+                <span class="px-2 my-auto">
+                    Daily: Mon, Wed, Fri, at 9:00 am
+                </span>
                 <base-button type="primary" size="xs" outline @click="onSendNow">
                     <i class="vc-icon-skip-arrow icon-md mx-2"/>
                     Send Now
                 </base-button>
             </div>
-            <!--            <el-button style="float: right; padding: 3px 0" type="text">
-
-                        </el-button>-->
         </div>
-        <!--        <div v-for="o in 4" :key="o" class="text item">
-                    {{'List item ' + o }}
-                </div>-->
-        <div>
-            <div>Conditions:</div>
-            <div>
-
+        <div class="flex w-full mb-4">
+            <div class="inline-flex pr-2">
+                <i class="vc-icon-filter icon-lg mr-2 text-primary"/>
+                <span>Conditions:</span>
             </div>
+            <div class="aa" v-html="conditionsList"></div>
         </div>
         <div class="flex w-full">
-            <div class="inline-flex">
-                <i class="vc-icon-filter icon-lg mr-2"/>
+            <div class="inline-flex pr-2">
+                <i class="vc-icon-email-groups icon-lg mr-2 text-primary"/>
                 <span>Recipient List:</span>
             </div>
             <div class="aa">
@@ -66,6 +59,7 @@
 
 <script>
 import {Card} from 'element-ui'
+import Mustache from 'mustache'
 import get from 'lodash/get'
 
 import RecItem from "@/modules/reports/components/RecItem";
@@ -103,6 +97,50 @@ export default {
     methods: {
         onSendNow() {
             console.log('Send now')
+        }
+    },
+    computed: {
+        conditionsList() {
+            const template = '<span>{{column}} {{operator}} {{value}}</span>'
+            //const template = '{{column}} {{operator}} {{value}}'
+            const template2 = '<span>and {{column}} {{operator}} {{value}}</span>'
+            //const template2 = 'and {{column}} {{operator}} {{value}}'
+            let conditionsToRender = ''
+            this.conditions.forEach(el => {
+                if(!conditionsToRender) {
+                    conditionsToRender += '<div class=""> <span>If ('
+                    //conditionsToRender += 'If ('
+                } else {
+                    conditionsToRender += '<span> or If ('
+                    //conditionsToRender += ' or If ('
+                }
+
+                for(let i = 1; i <= el.ReportTriggerConditionFilter.length; i++) {
+                    const condition = el.ReportTriggerConditionFilter[i - 1]
+                    const column = condition.ConditionFilterColumnName
+                    const operator = condition.ConditionFilterOperatorSymbol
+                    const value = condition.ConditionFilterValue
+
+                    console.log('operator', operator)
+
+                    if(i > 1) {
+                        conditionsToRender += Mustache.render(template2, {column, operator, value});
+                    } else {
+                        conditionsToRender += Mustache.render(template, {column, operator, value});
+                    }
+                    /*if(i > 1) {
+                        conditionsToRender += '<span>and {{column}} {{operator}} {{value}}</span>'
+                    } else {
+                        conditionsToRender += '<span>{{column}} {{operator}} {{value}}</span>'
+                    }*/
+
+                }
+                //conditionsToRender += ')'
+                conditionsToRender += ')</span>'
+            })
+            conditionsToRender += '</div>'
+            console.log('conditionsToRender', conditionsToRender)
+            return conditionsToRender
         }
     }
 }
