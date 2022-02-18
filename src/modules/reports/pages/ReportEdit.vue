@@ -2,18 +2,23 @@
     <div class="w-full bg-gray-200">
         Edit page
         <br>
-        <div v-if="report">{{ report }}</div>
+        <!-- <div v-if="report">qwf</div> -->
+        <ScheduleForm :data="report" />
     </div>
 </template>
 
 <script>
 import cloneDeep from "lodash/cloneDeep";
 import get from "lodash/get"
+import ScheduleForm from '@/modules/reports/components/schedule/ScheduleForm'
 
 import { reportApi } from "../services/reportService"
 
 export default {
     name: "report-edit",
+    components: {
+        ScheduleForm
+    },
     props: {
         data: {
             type: Object,

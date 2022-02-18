@@ -38,6 +38,7 @@ import ReportTabs from "@/modules/reports/components/ReportTabs";
 import EditTemp from "@/modules/reports/pages/ReportEdit";
 import ListTemp from "@/modules/reports/pages/ReportsList";
 import CreateTemp from "@/modules/reports/pages/ReportCreate";
+import { reportApi } from "./services/reportService"
 
 const CREATE_TAB_NAME = 'create';
 const LIST_TAB_NAME = 'list'
@@ -166,8 +167,9 @@ export default {
             }
         }
     },
-    mounted() {
-
+    async mounted () {
+        const confData = await reportApi.getReportConfData()
+        this.$store.dispatch('report/setConfData', confData)
     }
 }
 </script>
