@@ -46,8 +46,12 @@
                 @on-cancel="showAddWidgetDialog = false"
             />
         </div>
-        <ConfirmDialog v-if="showConfirmDialog"
-                       :visible.sync="showConfirmDialog">
+        <ConfirmDialog
+            v-if="showConfirmDialog"
+            :visible.sync="showConfirmDialog"
+            @on-cancel="onCancel"
+            @on-confirm="addAllWidgetsFromCategory"
+        >
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
                     {{ $t('general.saveChanges') }}
@@ -60,20 +64,12 @@
             </div>
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
-                    <base-button class="mx-4"
-                                 outline
-                                 fixed-width="w-37"
-                                 @click="onCancel">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
-                        </div>
-                    </base-button>
-                    <base-button @click="addAllWidgetsFromCategory"
-                                 type="primary"
-                                 key="store">
-                        {{ $t('common.confirm') }}
-                    </base-button>
+                    <cancel-button
+                        @on-click="onCancel"
+                    />
+                    <confirm-button
+                        @on-click="addAllWidgetsFromCategory"
+                    />
                 </slot>
             </template>
         </ConfirmDialog>
@@ -99,6 +95,8 @@
             ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
             AddWidgetDialog: () => import('@/components/Widgets/AddWidgetsForm/AddWidgetDialog'),
             ReorderWidgetGroupDialog: () => import('@/components/LayoutRendering/ReorderWidgetGroupDialog'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widgetGroup: {

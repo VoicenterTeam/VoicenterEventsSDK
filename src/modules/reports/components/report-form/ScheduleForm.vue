@@ -35,15 +35,9 @@
                     </fade-transition>
                     <div
                         class="col-span-6 border-t-2 px-16 border-gray-300 bottom-0 h-20 flex w-full items-center justify-between">
-                        <base-button class="mx-4"
-                                     outline
-                                     fixed-width="w-37"
-                                     @click="onCancel">
-                            <div class="flex items-center">
-                                <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
-                            </div>
-                        </base-button>
+                        <cancel-button
+                            class="mx-4"
+                            @on-click="onCancel"/>
                         <div class="flex items-center">
                             <div @click="onBack"
                                  v-if="canGoBack"
@@ -82,6 +76,7 @@
     import Step0 from '@/modules/reports/components/schedule/components/Step0'
     import Step1 from '@/modules/reports/components/schedule/components/Step1'
     import WizardSummary from '@/modules/reports/components/wizard/components/wizard-summary'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
 
     const WIZARD_CONFIG = [
         {
@@ -107,6 +102,7 @@
             Step0,
             Step1,
             Wizard,
+            CancelButton
         },
         data() {
             return {

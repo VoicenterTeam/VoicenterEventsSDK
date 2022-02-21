@@ -80,8 +80,14 @@
             </template>
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
-                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                    <cancel-button
+                        @on-click="showModal = false"
+                    />
+                    <confirm-button
+                        :label="$t('common.save')"
+                        icon="IconSave"
+                        @on-click="onChange"
+                    />
                 </div>
             </template>
         </update-dialog>
@@ -96,7 +102,7 @@
     import { Checkbox, Collapse, CollapseItem, Tooltip } from 'element-ui'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
-    
+
     export default {
         mixins: [cardWidgetMixin],
         components: {
@@ -109,6 +115,8 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             data: {
@@ -187,7 +195,7 @@
                     })
                 } catch (e) {
                 }
-                
+
                 if (this.model.WidgetTime.type === 'relative') {
                     let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                     this.model.WidgetTime = {
@@ -195,24 +203,24 @@
                         ...widgetTime,
                     }
                 }
-                
+
                 let data = {
                     showText: this.displayCardText,
                     displayBorder: this.displayCardBorder,
                 }
-                
+
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
                     colors: this.model.colors,
-                    
+
                 }
-                
+
                 this.data.WidgetTime = this.model.WidgetTime
                 this.data.WidgetConfig = this.model.WidgetConfig
                 this.data.Title = this.model.Title
-                
+
                 this.$emit('on-update', this.data)
                 this.showModal = false
             },

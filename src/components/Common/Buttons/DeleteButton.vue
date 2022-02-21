@@ -2,22 +2,23 @@
     <default-button
         :icon="icon"
         :label="buttonLabel"
-        type="primary"
+        type="danger"
         v-bind="$attrs"
         v-on="$listeners"
     />
 </template>
 
 <script>
+import DefaultButton from "@/components/Common/Buttons/DefaultButton"
 
 export default {
     components: {
-        DefaultButton: () => import("@/components/Common/Buttons/DefaultButton")
+        DefaultButton
     },
     props: {
         icon: {
             type: String,
-            default: 'IconConfirm'
+            default: 'IconDelete'
         },
         label: {
             type: String,
@@ -26,7 +27,7 @@ export default {
     },
     computed: {
         buttonLabel () {
-            return this.label || this.$t('Confirm')
+            return this.label || this.$t('Delete')
         }
     }
 }

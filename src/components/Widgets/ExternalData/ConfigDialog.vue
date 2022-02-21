@@ -55,8 +55,14 @@
         </el-form>
         <template slot="footer">
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                <el-button @click="toggleVisibility(false)">{{ $t('common.cancel') }}</el-button>
-                <el-button type="primary" @click="onChange">{{ $t('common.save') }}</el-button>
+                <cancel-button
+                    @on-click="toggleVisibility(false)"
+                />
+                <confirm-button
+                    :label="$t('common.save')"
+                    icon="IconSave"
+                    @on-click="onChange"
+                />
             </div>
         </template>
     </modal>
@@ -81,7 +87,9 @@
             WidgetColors: () => import('../WidgetUpdateForm/WidgetLayout/WidgetColors'),
             WidgetPadding: () => import('../WidgetUpdateForm/WidgetLayout/WidgetPadding'),
             StaticWidgetInfo: () => import('../WidgetUpdateForm/StaticWidgetInfo'),
-            WidgetRefreshInterval: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval')
+            WidgetRefreshInterval: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widget: {

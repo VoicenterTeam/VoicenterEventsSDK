@@ -33,15 +33,12 @@
                                     </base-button>
                                     <CopyDashboard class="mx-4"
                                                    :dashboard="activeDashboard"/>
-                                    <base-button fixed-width="w-37"
-                                                 type="primary"
-                                                 :loading="loading"
-                                                 @click="onSubmit">
-                                        <div class="flex items-center">
-                                            <IconSave class="mx-1"/>
-                                            <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
-                                        </div>
-                                    </base-button>
+                                    <confirm-button
+                                        :loading="loading"
+                                        :label="$t('Save')"
+                                        icon="IconSave"
+                                        @on-click="onSubmit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -57,15 +54,12 @@
                             </base-button>
                             <CopyDashboard class="mx-4"
                                            :dashboard="activeDashboard"/>
-                            <base-button fixed-width="w-37"
-                                         type="primary"
-                                         :loading="loading"
-                                         @click="onSubmit">
-                                <div class="flex items-center">
-                                    <IconSave class="mx-1"/>
-                                    <span class="mx-1 text-base font-bold">{{ $t('common.save') }}</span>
-                                </div>
-                            </base-button>
+                            <confirm-button
+                                :loading="loading"
+                                :label="$t('Save')"
+                                icon="IconSave"
+                                @on-click="onSubmit"
+                            />
                         </div>
                     </div>
                 </slot>
@@ -103,7 +97,9 @@
             ColorParameterType: () => import('@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'),
             DashboardSettings: () => import('@/views/DashboardSettings/sections/DashboardSettings'),
             [Popover.name]: Popover,
-            ConfirmDialog: () => import('@/components/Common/ConfirmDialog')
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         data() {
             return {

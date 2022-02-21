@@ -47,6 +47,8 @@
         <ConfirmDialog
             :visible.sync="showConfirmDialog"
             top="18vh"
+            @on-cancel="onCancel"
+            @on-confirm="onConfirm"
         >
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
@@ -60,28 +62,18 @@
             </div>
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
-                    <base-button
-                        outline
-                        fixed-width="w-32"
-                        @click="onCancel">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
-                        </div>
-                    </base-button>
-                    <base-button
-                        type="primary"
-                        @click="onConfirm"
-                        fixed-width="w-32"
-                        key="store"
-                    >
-                        <span class="mx-1 text-base font-bold">{{ $t('common.confirm') }}</span>
-                    </base-button>
+                    <cancel-button
+                        @on-click="onCancel"
+                    />
+                    <confirm-button
+                        @on-click="onConfirm"
+                    />
                 </slot>
             </template>
         </ConfirmDialog>
     </div>
 </template>
+
 <script>
     import get from 'lodash/get'
     import sum from 'lodash/sum'
@@ -96,7 +88,9 @@
             TemplatesSettingSetup: () => import('@/components/Widgets/AddWidgetsForm/TemplatesSettingSetup'),
             TemplateCategoryPreview: () => import('@/components/Widgets/AddWidgetsForm/TemplateCategoryPreview'),
             TemplatesEditWidget: () => import('@/components/Widgets/AddWidgetsForm/TemplatesEditWidget'),
-            ConfirmDialog: () => import('@/components/Common/ConfirmDialog')
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             modalWidth: {
