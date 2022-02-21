@@ -10,6 +10,14 @@ export const reportApi = {
             parseCatch(e, true, 'Report List')
         }
     },
+    async info(id) {
+        try {
+            const { Data } = await $axios.get(`/Report/Info/${id}`)
+            return Data
+        } catch (e) {
+            parseCatch(e, true, 'Report List')
+        }
+    },
     async store(payload) {
         try {
             const { Data } = await $axios.post('/Report/Add/', payload)
