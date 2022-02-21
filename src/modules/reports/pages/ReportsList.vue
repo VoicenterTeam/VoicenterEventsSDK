@@ -7,7 +7,7 @@
             @sort-change="onSortChange"
             @on-create-report="addCreateTab"
             :tableActionProps="tableActionProps">
-            <template v-slot:expand="{row}">
+            <template v-slot:expand-content="{row}">
                 <div class="border-l-5 p-4 border-primary">
                     <div class="m-2 text-lg font-medium">Schedule List</div>
                     <div class="grid grid-cols-2 gap-4">
@@ -105,12 +105,23 @@
                              @click="onReportDelete(row)"/>
             </template>
         </reports-table>
+        <delete-dialog
+            v-if="showDeleteDialog"
+            :visible.sync="showDeleteDialog"
+            :config="{descriptionIcon: ''}"
+            description="Are you sure you want to delete this report?"
+            @on-close="onCancelDelete"
+            @on-cancel="onCancelDelete"
+            @on-confirm="deleteReport"/>
     </div>
 </template>
 
 <script>
 import {Table, TableColumn, Tooltip, Card} from 'element-ui'
 import get from 'lodash/get'
+
+import DeleteReportDialog from "@/modules/reports/components/DeleteReportDialog";
+import DeleteDialog from "@/components/Dialogs/DeleteDialog";
 
 import {reportApi} from "../services/reportService"
 import BaseButton from "@/components/Common/Buttons/BaseButton";
@@ -120,6 +131,9 @@ import RecItem from "@/modules/reports/components/RecItem";
 import DelimitedList from "@/modules/reports/components/DelimitedList";
 import Tag from "@/modules/reports/components/Tag"
 import ScheduleCard from "@/modules/reports/components/ScheduleCard";
+
+const REPORT_ENABLED_STATUS = 1
+const REPORT_DISABLED_STATUS = 2
 
 export default {
     name: "reports-list",
@@ -134,7 +148,8 @@ export default {
         RecItem,
         DelimitedList,
         Tag,
-        ScheduleCard
+        ScheduleCard,
+        DeleteDialog,
     },
     props: {},
     data() {
@@ -180,6 +195,8 @@ export default {
                     minWidth: '100'
                 }
             ],
+            showDeleteDialog: false,
+            reportToDelete: null
         }
     },
     methods: {
@@ -191,10 +208,40 @@ export default {
             this.$emit('on-edit-row', row)
         },
         onReportCopy(row) {
-            alert('Copy')
+            console.log('row', row)
         },
         onReportDelete(row) {
-            alert('Delete')
+            this.reportToDelete = get(row, 'ReportID', null)
+            if (!this.reportToDelete) {
+                return
+            }
+            this.showDeleteDialog = true
+            //alert('Delete')
+        },
+        async deleteReport() {
+            //console.log('send request for ', this.reportToDelete)
+            try {
+                await this.$store.dispatch('dashboards/setContentLoading', true)
+                const payload = {
+                    ReportID: 5465445,//this.reportToDelete,
+                    ReportStatusID: REPORT_DISABLED_STATUS
+                }
+                await reportApi.changeStatus(payload)
+                this.reportToDelete = null
+                this.showDeleteDialog = false
+
+                const reports = await this.getReportsList()
+                this.tableData = reports
+            } catch (err) {
+                console.error(err)
+            } finally {
+                await this.$store.dispatch('dashboards/setContentLoading', false)
+            }
+        },
+        onCancelDelete() {
+            console.log('Cancel')
+            this.reportToDelete = null
+            this.showDeleteDialog = false
         },
         onExportAsPdf(row) {
             alert('Export as PDF')
@@ -209,18 +256,21 @@ export default {
             console.log('Add Schedule')
         },
         async getReportsList() {
-            const reportsList = await reportApi.list()
+            const payload = {
+                ReportStatusID: [REPORT_ENABLED_STATUS]
+            }
+            const reportsList = await reportApi.list(payload)
             return reportsList
         },
         getReportWidgetsList(widgets) {
             console.log('getReportWidgetsList')
             return widgets.map(widget => widget.WidgetTitle).join()
         },
-        isEllipsisActive(e) {
+        /*isEllipsisActive(e) {
             console.log('e.offsetWidth', e.offsetWidth)
             console.log('e.scrollWidth', e.scrollWidth)
             return (e.offsetWidth < e.scrollWidth);
-        },
+        },*/
         onSortChange({column, prop, order}) {
             if (prop === null) {
                 return

@@ -1,3 +1,18 @@
+.el-table {
+    /*border: 1px solid var(--gray-300) !important;
+    border-bottom: 0 !important;
+
+    .el-table__cell:not(:last-child):not(.el-table__expand-column) {
+        border-right: 1px solid var(--gray-300) !important;
+    }
+
+    .el-table__expand-column {
+        .el-table__expand-icon {
+            @apply text-primary;
+        }
+    }*/
+}
+
 .el-table__empty-text, .el-table td {
     font-size: var(--font-size-sm);
 }
@@ -6,6 +21,7 @@
     .header-handle, .caret-wrapper {
         display: none;
     }
+
     font-size: var(--font-size-sm);
 }
 
@@ -23,6 +39,7 @@
 
 .el-table th {
     color: var(--greyish-brown);
+
     &.is-left > .cell {
         @apply flex;
         @apply items-center;
@@ -40,6 +57,7 @@
 
 .el-table thead th {
     padding: 6px 0;
+
     .cell {
         line-height: 34px;
     }

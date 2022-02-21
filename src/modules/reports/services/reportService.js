@@ -2,9 +2,9 @@ import $axios from '@/api/apiConnection'
 import parseCatch from '@/helpers/handleErrors'
 
 export const reportApi = {
-    async list() {
+    async list(payload = {}) {
         try {
-            const { Data } = await $axios.post('/Report/List/', {})
+            const { Data } = await $axios.post('/Report/List/', payload)
             return Data
         } catch (e) {
             parseCatch(e, true, 'Report List')
@@ -36,7 +36,7 @@ export const reportApi = {
     },
     async changeStatus(payload) {
         try {
-            const { Data } = await $axios.post('/Report/ChangeStatus/', payload)
+            const Data = await $axios.post('/Report/ChangeStatus/', payload)
             return Data
         } catch (e) {
             parseCatch(e, true, 'Change Status')

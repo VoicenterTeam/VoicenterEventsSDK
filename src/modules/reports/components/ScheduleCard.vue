@@ -103,12 +103,12 @@ export default {
         conditionsList() {
             const template = '<span>{{column}} {{operator}} {{value}}</span>'
             //const template = '{{column}} {{operator}} {{value}}'
-            const template2 = '<span>and {{column}} {{operator}} {{value}}</span>'
+            const templateAnd = '<span>and {{column}} {{operator}} {{value}}</span>'
             //const template2 = 'and {{column}} {{operator}} {{value}}'
             let conditionsToRender = ''
             this.conditions.forEach(el => {
                 if(!conditionsToRender) {
-                    conditionsToRender += '<div class=""> <span>If ('
+                    conditionsToRender += '<div class="flex flex-wrap"> <span>If ('
                     //conditionsToRender += 'If ('
                 } else {
                     conditionsToRender += '<span> or If ('
@@ -124,7 +124,7 @@ export default {
                     console.log('operator', operator)
 
                     if(i > 1) {
-                        conditionsToRender += Mustache.render(template2, {column, operator, value});
+                        conditionsToRender += Mustache.render(templateAnd, {column, operator, value});
                     } else {
                         conditionsToRender += Mustache.render(template, {column, operator, value});
                     }
