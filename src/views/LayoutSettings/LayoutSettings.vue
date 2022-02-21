@@ -195,7 +195,13 @@
         data() {
             let validationThemeName = (rule, value, callback) => {
                 const validationThemeName = this.layoutNames.includes(value)
+                if (validationThemeName) {
                     callback(new Error(''))
+                } else {
+                    callback()
+                }
+            }
+            return {
                 updatingData: false,
                 storingData: false,
                 editableTitle: false,
