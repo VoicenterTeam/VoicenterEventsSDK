@@ -81,15 +81,13 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox } from 'element-ui'
-    import Modal from '@/components/Common/Modal'
     import { AlertCircleIcon } from 'vue-feather-icons'
     import { templateIcons } from '@/enum/widgetDataTypes'
-    import WidgetGroup from '@/modules/reports/components/report-form/widgets/WidgetGroup'
 
     export default {
         components: {
-            Modal,
-            WidgetGroup,
+            Modal: () => import('@/components/Common/Modal'),
+            WidgetGroup: () => import('@/modules/reports/components/report-form/widgets/WidgetGroup'),
             AlertCircleIcon,
             [Checkbox.name]: Checkbox,
         },

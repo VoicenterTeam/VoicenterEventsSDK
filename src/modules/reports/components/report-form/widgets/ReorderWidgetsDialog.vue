@@ -78,17 +78,14 @@
     </div>
 </template>
 <script>
-    import Modal from '@/components/Common/Modal'
-    import Tabs from '@/modules/common/components/Tabs'
-    import DraggableList from '@/components/Widgets/DraggableList'
     import { BOTH_EXPORT_TYPE_ID } from '@/modules/reports/enum/report'
     import cloneDeep from 'lodash/cloneDeep'
 
     export default {
         components: {
-            Tabs,
-            Modal,
-            DraggableList,
+            Tabs: () => import('@/modules/common/components/Tabs'),
+            Modal: () => import('@/components/Common/Modal'),
+            DraggableList: () => import('@/components/Widgets/DraggableList')
         },
         props: {
             report: {

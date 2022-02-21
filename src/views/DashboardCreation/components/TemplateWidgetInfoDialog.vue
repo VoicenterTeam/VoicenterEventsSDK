@@ -45,14 +45,13 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import Modal from '@/components/Common/Modal'
 
     const ONE_REM_IN_PX = 16
 
     export default {
         inheritAttrs: false,
         components: {
-            Modal,
+            Modal: () => import('@/components/Common/Modal'),
         },
         props: {
             widget: {

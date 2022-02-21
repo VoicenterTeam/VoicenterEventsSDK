@@ -21,11 +21,10 @@
     </div>
 </template>
 <script>
-    import CallInfo from '@/components/Cards/CallInfo'
 
     export default {
         components: {
-            CallInfo
+            CallInfo: () => import('@/components/Cards/CallInfo')
         },
         props: {
             extension: {

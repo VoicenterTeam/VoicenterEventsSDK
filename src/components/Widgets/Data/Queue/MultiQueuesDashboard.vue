@@ -72,11 +72,9 @@
     </div>
 </template>
 <script>
-    import TimeFrame from '../Table/TimeFrame'
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import { Option, Pagination, Select, Tooltip } from 'element-ui'
-    import DataTable from '@/components/Table/DataTable'
     import {
         defaultVisibleColumns,
         defaultAvailableColumns,
@@ -85,8 +83,6 @@
     } from '@/helpers/multiQueueDashboard'
     import minBy from 'lodash/minBy'
     import dataTableMixin from '@/mixins/dataTableMixin'
-    import CallerCount from './CallerCount'
-    import MaxWaitTime from './MaxWaitTime'
     import { getOptionsList } from '@/helpers/entitiesList'
     import { mapOrder } from '@/helpers/util'
     
@@ -94,10 +90,10 @@
         name: 'queues-table',
         mixins: [dataTableMixin],
         components: {
-            CallerCount,
-            MaxWaitTime,
-            DataTable,
-            TimeFrame,
+            CallerCount: () => import('./CallerCount'),
+            MaxWaitTime: () => import('./MaxWaitTime'),
+            DataTable: () => import('@/components/Table/DataTable'),
+            TimeFrame: () => import('../Table/TimeFrame'),
             [Select.name]: Select,
             [Option.name]: Option,
             [Tooltip.name]: Tooltip,

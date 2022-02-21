@@ -99,14 +99,13 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import { CopyIcon } from 'vue-feather-icons'
-    import Modal from '@/components/Common/Modal'
     import { templateIcons } from '@/enum/widgetDataTypes'
     import { Collapse, CollapseItem, Checkbox } from 'element-ui'
     import { DashboardApi } from '@/api/dashboardApi'
 
     export default {
         components: {
-            Modal,
+            Modal: () => import('@/components/Common/Modal'),
             CopyIcon,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,

@@ -137,8 +137,6 @@
     import { RotateCcwIcon } from 'vue-feather-icons'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
-    import DeleteLayout from '@/views/common/DeleteLayout'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import {
         DEFAULT_GROUP_KEYS,
         ENABLED_STATUS_ID,
@@ -152,9 +150,9 @@
 
     export default {
         components: {
-            DeleteLayout,
+            DeleteLayout: () => import('@/views/common/DeleteLayout'),
             RotateCcwIcon,
-            ConfirmDialog,
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
             AlertTriangleIcon,
             [Switch.name]: Switch,
         },

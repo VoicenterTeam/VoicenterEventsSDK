@@ -66,33 +66,11 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import UpdateDialog from './UpdateDialog'
     import { Switch, Tooltip } from 'element-ui'
-    import TableData from './Data/Table/TableData'
-    import HtmlWidget from './ExternalData/HtmlWidget'
-    import PieChart from '@/components/Charts/PieChart'
-    import AreaChart from '@/components/Charts/AreaChart'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import ConfigDialog from './ExternalData/ConfigDialog'
     import { TABLE_TYPE_ID } from '@/enum/widgetDataTypes'
-    import QueueCards from '@/components/Cards/QueueCards'
-    import GaugeChart from '@/components/Charts/GaugeChart'
-    import QueueChart from '@/components/Charts/QueueChart'
-    import XaxisChart from '@/components/Charts/XaxisChart'
-    import StatusCards from '@/components/Cards/StatusCards'
-    import QueueDashboard from './Data/Queue/QueueDashboard'
-    import QueueActiveCall from './Data/Queue/QueueActiveCall'
     import { defaultColors } from '@/enum/defaultWidgetSettings'
-    import WidgetAction from '@/components/Widgets/WidgetAction'
-    import TimeLineChart from '@/components/Charts/TimeLineChart'
-    import ExtensionCards from '@/components/Cards/ExtensionCards'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
-    import WidgetNoteList from '@/components/Widgets/WidgetNoteList'
-    import StatisticsCards from '@/components/Cards/StatisticsCards'
-    import ExternalDataWidget from './ExternalData/ExternalDataWidget'
-    import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
-    import AverageCallDuration from '@/components/Cards/AverageCallDuration'
-    import TemplatePreviewInfoDialog from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog";
     import {
         getWidgetDataType,
         getWidgetEndpoint,
@@ -119,30 +97,30 @@
 
     export default {
         components: {
-            PieChart,
-            TableData,
-            GaugeChart,
-            QueueChart,
-            QueueCards,
-            AreaChart,
-            HtmlWidget,
-            XaxisChart,
-            StatusCards,
-            UpdateDialog,
-            ConfigDialog,
-            WidgetAction,
-            TimeLineChart,
-            WidgetNoteList,
-            ExtensionCards,
-            QueueDashboard,
-            StatisticsCards,
-            QueueActiveCall,
-            TotalOutgoingCall,
-            ExternalDataWidget,
-            AverageCallDuration,
+            PieChart: () => import('@/components/Charts/PieChart'),
+            TableData: () => import('./Data/Table/TableData'),
+            GaugeChart: () => import('@/components/Charts/GaugeChart'),
+            QueueChart: () => import('@/components/Charts/QueueChart'),
+            QueueCards: () => import('@/components/Cards/QueueCards'),
+            AreaChart: () => import('@/components/Charts/AreaChart'),
+            HtmlWidget: () => import('./ExternalData/HtmlWidget'),
+            XaxisChart: () => import('@/components/Charts/XaxisChart'),
+            StatusCards: () => import('@/components/Cards/StatusCards'),
+            UpdateDialog: () => import('./UpdateDialog'),
+            ConfigDialog: () => import('./ExternalData/ConfigDialog'),
+            WidgetAction: () => import('@/components/Widgets/WidgetAction'),
+            TimeLineChart: () => import('@/components/Charts/TimeLineChart'),
+            WidgetNoteList: () => import('@/components/Widgets/WidgetNoteList'),
+            ExtensionCards: () => import('@/components/Cards/ExtensionCards'),
+            QueueDashboard: () => import('./Data/Queue/QueueDashboard'),
+            StatisticsCards: () => import('@/components/Cards/StatisticsCards'),
+            QueueActiveCall: () => import('./Data/Queue/QueueActiveCall'),
+            TotalOutgoingCall: () => import('@/components/Cards/TotalOutgoingCall'),
+            ExternalDataWidget: () => import('./ExternalData/ExternalDataWidget'),
+            AverageCallDuration: () => import('@/components/Cards/AverageCallDuration'),
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
-            TemplatePreviewInfoDialog,
+            TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog")
         },
         props: {
             editable: {

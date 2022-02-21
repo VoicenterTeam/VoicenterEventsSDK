@@ -163,28 +163,22 @@
 <script>
     import get from 'lodash/get'
     import { Notification } from 'element-ui'
-    import NavBar from '@/views/common/NavBar'
     import { WidgetApi } from '@/api/widgetApi'
     import { templateApi } from '@/api/templateApi'
     import { DashboardApi } from '@/api/dashboardApi'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { widgetGroupModel } from '@/models/instances'
     import { WidgetGroupsApi } from '@/api/widgetGroupApi'
-    import LayoutSelect from '@/views/common/LayoutSelect'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import { getLayoutsWithPrimaryColor } from '@/helpers/layoutUtil'
-    import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
-    import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
-    import TemplateDetailedPreview from '@/views/DashboardCreation/components/TemplateDetailedPreview'
 
     export default {
         components: {
-            TemplateDetailedPreview,
-            TemplateCategories,
-            TemplatesPreview,
-            ConfirmDialog,
-            LayoutSelect,
-            NavBar,
+            TemplateDetailedPreview: () => import('@/views/DashboardCreation/components/TemplateDetailedPreview'),
+            TemplateCategories: () => import('@/views/DashboardCreation/components/TemplateCategories'),
+            TemplatesPreview: () => import('@/views/DashboardCreation/components/TemplatesPreview'),
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            LayoutSelect: () => import('@/views/common/LayoutSelect'),
+            NavBar: () => import('@/views/common/NavBar')
         },
         data() {
             return {

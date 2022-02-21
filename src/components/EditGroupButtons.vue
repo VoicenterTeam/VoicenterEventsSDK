@@ -90,18 +90,15 @@
     import { layoutTypes } from '@/enum/layout'
     import { Trash2Icon } from 'vue-feather-icons'
     import { getDefaultGridLayout } from '@/helpers/util'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import AddWidgetDialog from '@/components/Widgets/AddWidgetsForm/AddWidgetDialog'
-    import ReorderWidgetGroupDialog from '@/components/LayoutRendering/ReorderWidgetGroupDialog'
     
     export default {
         inheritAttrs: false,
         name: 'edit-group-buttons',
         components: {
             Trash2Icon,
-            ConfirmDialog,
-            AddWidgetDialog,
-            ReorderWidgetGroupDialog,
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            AddWidgetDialog: () => import('@/components/Widgets/AddWidgetsForm/AddWidgetDialog'),
+            ReorderWidgetGroupDialog: () => import('@/components/LayoutRendering/ReorderWidgetGroupDialog'),
         },
         props: {
             widgetGroup: {

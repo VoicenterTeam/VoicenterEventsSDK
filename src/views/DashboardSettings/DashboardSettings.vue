@@ -87,15 +87,9 @@
     import get from 'lodash/get'
     import { Popover } from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
-    import NavBar from '@/views/common/NavBar'
     import { LayoutApi } from '@/api/layoutApi'
     import { DashboardApi } from '@/api/dashboardApi'
     import { WidgetGroupsApi } from '@/api/widgetGroupApi'
-    import DeleteLayout from '@/views/common/DeleteLayout'
-    import CopyDashboard from '@/views/DashboardSettings/sections/CopyDashboard'
-    import DashboardSettings from '@/views/DashboardSettings/sections/DashboardSettings'
-    import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import map from "lodash/map";
     import {removeDummyWidgets} from "@/services/widgetService";
     import {dashboardOperation} from "@/models/instances";
@@ -103,13 +97,13 @@
 
     export default {
         components: {
-            NavBar,
-            DeleteLayout,
-            CopyDashboard,
-            ColorParameterType,
-            DashboardSettings,
+            NavBar: () => import('@/views/common/NavBar'),
+            DeleteLayout: () => import('@/views/common/DeleteLayout'),
+            CopyDashboard: () => import('@/views/DashboardSettings/sections/CopyDashboard'),
+            ColorParameterType: () => import('@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'),
+            DashboardSettings: () => import('@/views/DashboardSettings/sections/DashboardSettings'),
             [Popover.name]: Popover,
-            ConfirmDialog
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog')
         },
         data() {
             return {

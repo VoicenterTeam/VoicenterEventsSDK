@@ -5,11 +5,10 @@
     </div>
 </template>
 <script>
-    import WizardWrapper from '@/modules/reports/components/wizard/components/WizardWrapper'
-    
+   
     export default {
         components: {
-            WizardWrapper,
+            WizardWrapper: () => import('@/modules/reports/components/wizard/components/WizardWrapper')
         },
         props: {
             currentStep: {

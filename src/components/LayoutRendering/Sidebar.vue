@@ -64,15 +64,11 @@
     </div>
 </template>
 <script>
-    import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
-    import NewGroupButton from '@/components/NewGroupButton'
-    import CreateNewWidgetButton from '@/components/CreateNewWidgetButton'
-
     export default {
         components: {
-            ActionsTabbedView,
-            NewGroupButton,
-            CreateNewWidgetButton
+            ActionsTabbedView: () => import('@/components/LayoutRendering/ActionsTabbedView'),
+            NewGroupButton: () => import('@/components/NewGroupButton'),
+            CreateNewWidgetButton: () => import('@/components/CreateNewWidgetButton')
         },
         props: {
             widgetGroupList: {

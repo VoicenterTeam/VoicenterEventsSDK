@@ -8,11 +8,10 @@
 </template>
 
 <script>
-import DefaultButton from "@/components/Common/Buttons/DefaultButton"
 
 export default {
     components: {
-        DefaultButton
+        DefaultButton: () => import("@/components/Common/Buttons/DefaultButton")
     },
     props: {
         icon: {

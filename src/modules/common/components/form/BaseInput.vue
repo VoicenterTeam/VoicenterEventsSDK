@@ -49,13 +49,12 @@
 </template>
 <script>
     import { XCircleIcon, HelpCircleIcon } from 'vue-feather-icons'
-    import BaseInputError from '@/modules/common/components/form/BaseInputError'
     
     export default {
         components: {
             XCircleIcon,
             HelpCircleIcon,
-            BaseInputError,
+            BaseInputError: () => import('@/modules/common/components/form/BaseInputError')
         },
         inheritAttrs: false,
         props: {

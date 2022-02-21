@@ -17,12 +17,11 @@
 </template>
 
 <script>
-import BaseRadioButton from './BaseRadioButton.vue'
 
 export default {
   name: 'BaseRadioGroup',
   components: {
-    BaseRadioButton
+    BaseRadioButton: () => import('./BaseRadioButton.vue')
   },
   model: {
     prop: 'value'

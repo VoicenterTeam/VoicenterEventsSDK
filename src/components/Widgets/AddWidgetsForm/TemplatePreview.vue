@@ -47,11 +47,10 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import TemplatePreviewInfo from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfo";
 
     export default {
         components: {
-            TemplatePreviewInfo
+            TemplatePreviewInfo: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfo")
         },
         computed: {
             getTemplate() {

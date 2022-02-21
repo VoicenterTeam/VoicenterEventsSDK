@@ -16,11 +16,10 @@
 </template>
 
 <script>
-import ColorPicker from '@/components/Common/ColorPicker'
 
 export default {
     components: {
-        ColorPicker
+        ColorPicker: () => import('@/components/Common/ColorPicker')
     },
     props: [
         'value',

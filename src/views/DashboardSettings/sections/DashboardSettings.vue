@@ -137,24 +137,19 @@
 </template>
 <script>
     import { PenToolIcon } from 'vue-feather-icons'
-    import LayoutLogo from '@/views/common/LayoutLogo'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
-    import LayoutManagementSelect from '@/views/common/LayoutManagementSelect'
-    import WidgetGroupManagement from '@/views/DashboardSettings/components/WidgetGroupManagement'
-    import ColorParameterType from '@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'
     import { DEFAULT_GROUP_KEYS, PRIMARY_COLOR_KEY } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    import BaseInput from '@/components/Common/BaseInput'
 
     export default {
         components: {
-            LayoutLogo,
+            LayoutLogo: () => import('@/views/common/LayoutLogo'),
             PenToolIcon,
             AlertTriangleIcon,
-            ColorParameterType,
-            WidgetGroupManagement,
-            LayoutManagementSelect,
-            BaseInput
+            ColorParameterType: () => import('@/views/DashboardSettings/LayoutManagement/components/ColorParameterType'),
+            WidgetGroupManagement: () => import('@/views/DashboardSettings/components/WidgetGroupManagement'),
+            LayoutManagementSelect: () => import('@/views/common/LayoutManagementSelect'),
+            BaseInput: () => import('@/components/Common/BaseInput')
         },
         props: {
             value: {

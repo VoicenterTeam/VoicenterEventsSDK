@@ -74,14 +74,12 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import UpdateDialog from './UpdateDialog'
     import extensionMixin from '@/mixins/extensionMixin'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
     import { defaultCardColors } from '@/enum/defaultWidgetSettings'
     import { Checkbox, Collapse, CollapseItem, Option, Select, Tooltip } from 'element-ui'
     import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
-    import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     
     export default {
         mixins: [extensionMixin, cardWidgetMixin],
@@ -104,8 +102,8 @@
             },
         },
         components: {
-            UpdateDialog,
-            AutoComplete,
+            UpdateDialog: () => import('./UpdateDialog'),
+            AutoComplete: () => import('@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'),
             [Option.name]: Option,
             [Select.name]: Select,
             [Tooltip.name]: Tooltip,

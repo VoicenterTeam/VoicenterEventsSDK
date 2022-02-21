@@ -53,14 +53,12 @@
     </modal>
 </template>
 <script>
-    import Modal from '@/components/Common/Modal'
     import draggableEvents from '@/enum/draggableEvents'
-    import DraggableList from '@/components/Widgets/DraggableList'
 
     export default {
         components: {
-            Modal,
-            DraggableList,
+            Modal: () => import('@/components/Common/Modal'),
+            DraggableList: () => import('@/components/Widgets/DraggableList')
         },
         props: {
             widgetGroupList: {

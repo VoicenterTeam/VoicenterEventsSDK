@@ -49,12 +49,11 @@
     </div>
 </template>
 <script>
-    import Dashboard from '@/views/Dashboard'
     import { EyeIcon } from 'vue-feather-icons'
 
     export default {
         components: {
-            Dashboard,
+            Dashboard: () => import('@/views/Dashboard'),
             EyeIcon,
         },
         props: {

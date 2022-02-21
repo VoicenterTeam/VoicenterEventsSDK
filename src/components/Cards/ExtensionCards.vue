@@ -70,7 +70,6 @@
     import { Option, Select, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
     import { FadeTransition } from 'vue2-transitions'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
-    import ExtensionCard from '@/components/Cards/ExtensionCard'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { ADMIN_USER_ID, displayUsersRelatedWithAdmin } from '@/helpers/util'
     import EXTENSION_ID from '@/enum/parameters'
@@ -84,8 +83,8 @@
             [Dropdown.name]: Dropdown,
             [DropdownMenu.name]: DropdownMenu,
             [DropdownItem.name]: DropdownItem,
-            ExtensionCard,
-            FadeTransition,
+            ExtensionCard: () => import('@/components/Cards/ExtensionCard'),
+            FadeTransition
         },
         props: {
             editable: {

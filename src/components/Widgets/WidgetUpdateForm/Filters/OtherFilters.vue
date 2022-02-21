@@ -32,12 +32,11 @@
 </template>
 <script>
     import {componentTypes} from '@/enum/widgetTemplateConfigs'
-    import Input from './Types/Input'
     import { InputNumber } from 'element-ui'
 
     export default {
         components: {
-            Input,
+            Input: () => import('./Types/Input'),
             InputNumber
         },
         props: {

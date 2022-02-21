@@ -58,12 +58,10 @@
     </div>
 </template>
 <script>
-    import ConditionCard from '@/modules/reports/components/schedule/components/ConditionCard'
-
     export default {
         inheritAttrs: false,
         components: {
-            ConditionCard,
+            ConditionCard: () => import('@/modules/reports/components/schedule/components/ConditionCard')
         },
         props: {
             conditions: {

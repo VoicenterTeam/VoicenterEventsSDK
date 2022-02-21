@@ -49,10 +49,9 @@
 </template>
 <script>
     import { InputNumber } from 'element-ui'
-    import TemplateCard from '@/components/Widgets/AddWidgetsForm/TemplateCard'
     export default {
         components: {
-            TemplateCard,
+            TemplateCard: () => import('@/components/Widgets/AddWidgetsForm/TemplateCard'),
             [InputNumber.name]: InputNumber,
         },
         props: {

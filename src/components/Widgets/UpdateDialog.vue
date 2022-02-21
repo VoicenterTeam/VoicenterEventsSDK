@@ -218,22 +218,12 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Slider } from 'element-ui'
-    import Modal from '@/components/Common/Modal'
     import queueMixin from '@/mixins/queueMixin'
     import { allSeries } from '@/enum/queueConfigs'
-    import RefreshButton from '@/components/RefreshButton'
     import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
-    import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
-    import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
-    import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
-    import StaticWidgetInfo from './WidgetUpdateForm/StaticWidgetInfo'
-    import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
-    import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
-    import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import { defaultAreaChartColors, defaultColors, realTimeSettings } from '@/enum/defaultWidgetSettings'
-    import WidgetRefreshInterval from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'
     import {
         isAreaChartWidget,
         isHtmlEditor,
@@ -247,7 +237,6 @@
         isQueueTable,
         isRealtimeWidget,
     } from '@/helpers/widgetUtils'
-    import ActivityGaugeConfig from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig'
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
@@ -258,9 +247,9 @@
         inheritAttrs: false,
         mixins: [queueMixin],
         components: {
-            RealTimeSettings,
-            TimeFrame,
-            Modal,
+            RealTimeSettings: () => import('./WidgetUpdateForm/RealTimeSettings'),
+            TimeFrame: () => import('./WidgetUpdateForm/WidgetTime/TimeFrame'),
+            Modal: () => import('@/components/Common/Modal'),
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             [Checkbox.name]: Checkbox,
@@ -268,14 +257,14 @@
             [InputNumber.name]: InputNumber,
             [Slider.name]: Slider,
             [ColorPicker.name]: ColorPicker,
-            AutoComplete,
-            OtherFilters,
-            WidgetColors,
-            WidgetPadding,
-            RefreshButton,
-            StaticWidgetInfo,
-            ActivityGaugeConfig,
-            WidgetRefreshInterval,
+            AutoComplete: () => import('./WidgetUpdateForm/Filters/AutoComplete'),
+            OtherFilters: () => import('./WidgetUpdateForm/Filters/OtherFilters'),
+            WidgetColors: () => import('./WidgetUpdateForm/WidgetLayout/WidgetColors'),
+            WidgetPadding: () => import('./WidgetUpdateForm/WidgetLayout/WidgetPadding'),
+            RefreshButton: () => import('@/components/RefreshButton'),
+            StaticWidgetInfo: () => import('./WidgetUpdateForm/StaticWidgetInfo'),
+            ActivityGaugeConfig: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig'),
+            WidgetRefreshInterval: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval')
         },
         props: {
             widget: {

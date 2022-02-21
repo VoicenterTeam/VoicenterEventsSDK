@@ -12,12 +12,11 @@
     </div>
 </template>
 <script>
-    import TemplateCategoryCard from '@/components/Widgets/AddWidgetsForm/TemplateCategoryCard'
     import cloneDeep from 'lodash/cloneDeep'
     
     export default {
         components: {
-            TemplateCategoryCard,
+            TemplateCategoryCard: () => import('@/components/Widgets/AddWidgetsForm/TemplateCategoryCard'),
         },
         computed: {
             getTemplateCategories() {
