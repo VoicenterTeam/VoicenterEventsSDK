@@ -2,7 +2,8 @@
     <default-button
         :icon="icon"
         :label="buttonLabel"
-        outline
+        :outline="outline"
+        v-bind="$attrs"
         v-on="$listeners"
     />
 </template>
@@ -22,7 +23,11 @@ export default {
         label: {
             type: String,
             default: ''
-        }
+        },
+        outline: {
+            type: Boolean,
+            default: true
+        },
     },
     computed: {
         buttonLabel () {

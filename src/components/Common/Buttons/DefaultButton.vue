@@ -6,10 +6,13 @@
         v-on="listeners">
         <slot>
             <div class="flex items-center">
-                <component v-if="icon"
-                           :is="icon"
-                           class="mx-1"/>
-                <span class="mx-1 text-base font-bold">{{ label }}</span>
+                <slot v-if="$slots.icon || icon"
+                      name="icon">
+                    <component v-if="icon"
+                               :is="icon"
+                               class="mx-1"/>
+                </slot>
+                <span class="mx-1">{{ label }}</span>
             </div>
         </slot>
     </base-button>

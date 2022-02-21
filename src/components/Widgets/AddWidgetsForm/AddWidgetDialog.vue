@@ -47,6 +47,8 @@
         <ConfirmDialog
             :visible.sync="showConfirmDialog"
             top="18vh"
+            @on-cancel="onCancel"
+            @on-confirm="onConfirm"
         >
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
@@ -60,28 +62,18 @@
             </div>
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
-                    <base-button
-                        outline
-                        fixed-width="w-32"
-                        @click="onCancel">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
-                        </div>
-                    </base-button>
-                    <base-button
-                        type="primary"
-                        @click="onConfirm"
-                        fixed-width="w-32"
-                        key="store"
-                    >
-                        <span class="mx-1 text-base font-bold">{{ $t('common.confirm') }}</span>
-                    </base-button>
+                    <cancel-button
+                        @on-click="onCancel"
+                    />
+                    <confirm-button
+                        @on-click="onConfirm"
+                    />
                 </slot>
             </template>
         </ConfirmDialog>
     </div>
 </template>
+
 <script>
     import get from 'lodash/get'
     import sum from 'lodash/sum'
@@ -94,6 +86,8 @@
     import TemplateCategoryPreview from '@/components/Widgets/AddWidgetsForm/TemplateCategoryPreview'
     import TemplatesEditWidget from '@/components/Widgets/AddWidgetsForm/TemplatesEditWidget'
     import ConfirmDialog from '@/components/Common/ConfirmDialog'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
@@ -104,7 +98,9 @@
             TemplatesSettingSetup,
             TemplateCategoryPreview,
             TemplatesEditWidget,
-            ConfirmDialog
+            ConfirmDialog,
+            CancelButton,
+            ConfirmButton
         },
         props: {
             modalWidth: {
