@@ -74,12 +74,6 @@
     import { Checkbox } from 'element-ui'
     import { AlertCircleIcon } from 'vue-feather-icons'
     import { templateIcons } from '@/enum/widgetDataTypes'
-<<<<<<< HEAD
-=======
-    import WidgetGroup from '@/modules/reports/components/report-form/widgets/WidgetGroup'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
->>>>>>> production
 
     export default {
         components: {
@@ -87,8 +81,8 @@
             WidgetGroup: () => import('@/modules/reports/components/report-form/widgets/WidgetGroup'),
             AlertCircleIcon,
             [Checkbox.name]: Checkbox,
-            CancelButton,
-            ConfirmButton
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             report: {

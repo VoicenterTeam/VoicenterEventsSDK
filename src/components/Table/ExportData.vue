@@ -55,7 +55,6 @@
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
     import { isARealtimeTableWidget, timeFilterToHuman } from '@/helpers/widgetUtils'
     import { DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
-    import CancelButton from "@/components/Common/Buttons/CancelButton";
 
     export default {
         inheritAttrs: false,
@@ -66,12 +65,8 @@
             StaticWidgetInfo: () => import('@/components/Widgets/WidgetUpdateForm/StaticWidgetInfo'),
             ManageColumns: () => import('./ManageColumns'),
             DownloadIcon,
-<<<<<<< HEAD
-            Modal: () => import('@/components/Common/Modal')
-=======
-            Modal,
-            CancelButton,
->>>>>>> production
+            Modal: () => import('@/components/Common/Modal'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton")
         },
         props: {
             tableId: {
