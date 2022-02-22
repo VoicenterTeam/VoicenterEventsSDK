@@ -18,14 +18,14 @@
                 <i class="vc-icon-filter icon-lg mr-2 text-primary"/>
                 <span>Conditions:</span>
             </div>
-            <div class="aa" v-html="conditionsList"></div>
+            <div class="flex-grow" v-html="conditionsList"></div>
         </div>
         <div class="flex w-full">
             <div class="inline-flex pr-2">
                 <i class="vc-icon-email-groups icon-lg mr-2 text-primary"/>
                 <span>Recipient List:</span>
             </div>
-            <div class="aa">
+            <div class="flex-grow">
                 <div class="w-full" v-if="recipients && recipients.length">
                     <delimited-list :list="recipients" :limit="5" separator=" ">
                         <template v-slot:list-item="{item}">
@@ -60,7 +60,6 @@
 <script>
 import {Card} from 'element-ui'
 import Mustache from 'mustache'
-import get from 'lodash/get'
 
 import RecItem from "@/modules/reports/components/RecItem";
 import DelimitedList from "@/modules/reports/components/DelimitedList";
@@ -102,17 +101,14 @@ export default {
     computed: {
         conditionsList() {
             const template = '<span>{{column}} {{operator}} {{value}}</span>'
-            //const template = '{{column}} {{operator}} {{value}}'
             const templateAnd = '<span>and {{column}} {{operator}} {{value}}</span>'
-            //const template2 = 'and {{column}} {{operator}} {{value}}'
+
             let conditionsToRender = ''
             this.conditions.forEach(el => {
                 if(!conditionsToRender) {
                     conditionsToRender += '<div class="flex flex-wrap"> <span>If ('
-                    //conditionsToRender += 'If ('
                 } else {
                     conditionsToRender += '<span> or If ('
-                    //conditionsToRender += ' or If ('
                 }
 
                 for(let i = 1; i <= el.ReportTriggerConditionFilter.length; i++) {
@@ -121,33 +117,17 @@ export default {
                     const operator = condition.ConditionFilterOperatorSymbol
                     const value = condition.ConditionFilterValue
 
-                    console.log('operator', operator)
-
                     if(i > 1) {
                         conditionsToRender += Mustache.render(templateAnd, {column, operator, value});
                     } else {
                         conditionsToRender += Mustache.render(template, {column, operator, value});
                     }
-                    /*if(i > 1) {
-                        conditionsToRender += '<span>and {{column}} {{operator}} {{value}}</span>'
-                    } else {
-                        conditionsToRender += '<span>{{column}} {{operator}} {{value}}</span>'
-                    }*/
-
                 }
-                //conditionsToRender += ')'
                 conditionsToRender += ')</span>'
             })
             conditionsToRender += '</div>'
-            console.log('conditionsToRender', conditionsToRender)
             return conditionsToRender
         }
     }
 }
 </script>
-
-<style scoped lang="scss">
-.aa {
-    flex-grow : 1;
-}
-</style>

@@ -20,8 +20,7 @@ export const reportApi = {
     },
     async store(payload) {
         try {
-            const { Data } = await $axios.post('/Report/Add/', payload)
-            return Data
+            return await $axios.post('/Report/Add/', payload)
         } catch (e) {
             parseCatch(e, true, 'Add Report')
         }
@@ -36,8 +35,7 @@ export const reportApi = {
     },
     async changeStatus(payload) {
         try {
-            const Data = await $axios.post('/Report/ChangeStatus/', payload)
-            return Data
+            return await $axios.post('/Report/ChangeStatus/', payload)
         } catch (e) {
             parseCatch(e, true, 'Change Status')
         }

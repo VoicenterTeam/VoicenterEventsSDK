@@ -83,7 +83,7 @@
                     </delimited-list>
                 </template>
                 <template v-else>
-                        <button class="aa" @click="onAddSchedule(row.ReportID)">
+                        <button class="schedule-add-button" @click="onAddSchedule(row.ReportID)">
                             <i class="vc-icon-plus-linear icon-lg text-primary" />
                             <span class="mx-2">Add Schedule</span>
                         </button>
@@ -113,14 +113,24 @@
             @on-close="onCancelDelete"
             @on-cancel="onCancelDelete"
             @on-confirm="deleteReport"/>
+        <copy-report-dialog
+            v-if="showCopyDialog"
+            :visible.sync="showCopyDialog"
+            :report-copy-name.sync="reportCopyName"
+            :is-duplicate-schedules.sync="isDuplicateSchedules"
+            :is-duplicate-widgets.sync="isDuplicateWidgets"
+            @on-close="onCancelCopy"
+            @on-cancel="onCancelCopy"
+            @on-confirm="copyReport"/>
     </div>
 </template>
 
 <script>
 import {Table, TableColumn, Tooltip, Card} from 'element-ui'
 import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
 
-import DeleteReportDialog from "@/modules/reports/components/DeleteReportDialog";
+import CopyReportDialog from "@/modules/reports/components/CopyReportDialog";
 import DeleteDialog from "@/components/Dialogs/DeleteDialog";
 
 import {reportApi} from "../services/reportService"
@@ -150,6 +160,7 @@ export default {
         Tag,
         ScheduleCard,
         DeleteDialog,
+        CopyReportDialog
     },
     props: {},
     data() {
@@ -196,7 +207,12 @@ export default {
                 }
             ],
             showDeleteDialog: false,
-            reportToDelete: null
+            reportToDelete: null,
+            showCopyDialog: false,
+            reportToCopy: null,
+            reportCopyName: '',
+            isDuplicateWidgets: true,
+            isDuplicateSchedules: true,
         }
     },
     methods: {
@@ -209,14 +225,14 @@ export default {
         },
         onReportCopy(row) {
             console.log('row', row)
+            this.reportToCopy = row
+            if (!this.reportToCopy) return
+            this.showCopyDialog = true
         },
         onReportDelete(row) {
             this.reportToDelete = get(row, 'ReportID', null)
-            if (!this.reportToDelete) {
-                return
-            }
+            if (!this.reportToDelete) return
             this.showDeleteDialog = true
-            //alert('Delete')
         },
         async deleteReport() {
             //console.log('send request for ', this.reportToDelete)
@@ -238,10 +254,51 @@ export default {
                 await this.$store.dispatch('dashboards/setContentLoading', false)
             }
         },
+        async copyReport() {
+            try {
+                await this.$store.dispatch('dashboards/setContentLoading', true)
+                /*const payload = {
+                    ReportID: 5465445,//this.reportToDelete,
+                    ReportStatusID: REPORT_DISABLED_STATUS
+                }*/
+                let newReport = cloneDeep(this.reportToCopy)
+                if (!this.isDuplicateSchedules && !this.isDuplicateWidgets) {
+                    newReport.ReportItemList = []
+                    newReport.ReportTriggerList = []
+                } else if (!this.isDuplicateSchedules && this.isDuplicateWidgets) {
+                    newReport.ReportTriggerList = []
+                } else if (this.isDuplicateSchedules && !this.isDuplicateWidgets) {
+
+                }
+
+                if (this.reportCopyName) {
+                    newReport.ReportName = this.reportCopyName
+                } else {
+                    newReport.ReportName += '-copy'
+                }
+
+                await reportApi.store(newReport)
+                this.reportToCopy = null
+                this.showCopyDialog = false
+
+                console.log('23432423')
+                const reports = await this.getReportsList()
+                this.tableData = reports
+            } catch (err) {
+                console.error(err)
+            } finally {
+                await this.$store.dispatch('dashboards/setContentLoading', false)
+            }
+        },
         onCancelDelete() {
             console.log('Cancel')
             this.reportToDelete = null
             this.showDeleteDialog = false
+        },
+        onCancelCopy() {
+            console.log('Cancel')
+            this.reportToCopy = null
+            this.showCopyDialog = false
         },
         onExportAsPdf(row) {
             alert('Export as PDF')
@@ -291,11 +348,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/*.aa {
-    width: 90%;
-    max-width: 90%;
-}*/
-.aa {
+.schedule-add-button {
     @apply flex align-middle text-primary;
     padding: 0.2rem 0.4rem;
     border-radius: 1.25rem;
