@@ -18,6 +18,15 @@
                 @sort-change="onSortChange"
                 style="width: 100%">
 
+                <template slot="empty">
+                    <div v-if="isContentLoading">
+                        Loading...
+                    </div>
+                    <div v-else>
+                        No Data
+                    </div>
+                </template>
+
                 <el-table-column type="expand" min-width="50">
                     <template slot-scope="{row}">
                         <slot name="expand-content" :row="row"></slot>
@@ -258,6 +267,9 @@ export default {
         paginationTotal() {
             return this.searchData.length
         },
+        isContentLoading() {
+            return this.$store.state.dashboards.contentLoading
+        }
     },
     watch: {
         tableData: {

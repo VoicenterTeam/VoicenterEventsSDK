@@ -224,7 +224,6 @@ export default {
             this.$emit('on-edit-row', row)
         },
         onReportCopy(row) {
-            console.log('row', row)
             this.reportToCopy = row
             if (!this.reportToCopy) return
             this.showCopyDialog = true
@@ -235,11 +234,10 @@ export default {
             this.showDeleteDialog = true
         },
         async deleteReport() {
-            //console.log('send request for ', this.reportToDelete)
             try {
                 await this.$store.dispatch('dashboards/setContentLoading', true)
                 const payload = {
-                    ReportID: 5465445,//this.reportToDelete,
+                    ReportID: this.reportToDelete,
                     ReportStatusID: REPORT_DISABLED_STATUS
                 }
                 await reportApi.changeStatus(payload)
@@ -257,10 +255,7 @@ export default {
         async copyReport() {
             try {
                 await this.$store.dispatch('dashboards/setContentLoading', true)
-                /*const payload = {
-                    ReportID: 5465445,//this.reportToDelete,
-                    ReportStatusID: REPORT_DISABLED_STATUS
-                }*/
+
                 let newReport = cloneDeep(this.reportToCopy)
                 if (!this.isDuplicateSchedules && !this.isDuplicateWidgets) {
                     newReport.ReportItemList = []
@@ -268,8 +263,54 @@ export default {
                 } else if (!this.isDuplicateSchedules && this.isDuplicateWidgets) {
                     newReport.ReportTriggerList = []
                 } else if (this.isDuplicateSchedules && !this.isDuplicateWidgets) {
+                    let triggerWidgetIds = []
+                    newReport.ReportTriggerList.forEach(trigger => {
+                        trigger.ReportTriggerCondition.forEach(condition => {
+                            condition.ReportTriggerConditionFilter.forEach(filter => {
+                                triggerWidgetIds.push(filter.WidgetID)
+                            })
+                        })
+                    })
 
+                    const reportWidgets = newReport.ReportItemList.filter(el => {
+                        return triggerWidgetIds.includes(el.WidgetID)
+                    })
+
+                    newReport.ReportItemList = reportWidgets
                 }
+
+                delete newReport.ReportID
+                delete newReport.ReportLayout
+
+                newReport.ReportItemList.forEach(el => {
+                    delete el.ReportID
+                    delete el.ReportItemID
+
+                    el.ReportItemExport.forEach(item => {
+                        delete item.ReportItemExportID
+                    })
+                })
+
+                newReport.ReportTriggerList.forEach(el => {
+                    delete el.ReportID
+                    delete el.ReportTriggerID
+
+                    el.ReportTriggerCondition.forEach(trigger => {
+                        delete trigger.ReportTriggerID
+                        delete trigger.ReportTriggerConditionID
+                        trigger.ReportTriggerConditionFilter.forEach(trigger => {
+                            delete trigger.ReportTriggerConditionID
+                            delete trigger.ReportTriggerConditionFilterID
+                        })
+                    })
+
+                    el.ReportRecipient.forEach(rec => {
+                        delete rec.RecipientID
+                        delete rec.ReportID
+                        delete rec.ReportRecipientID
+                        delete rec.ReportTriggerID
+                    })
+                })
 
                 if (this.reportCopyName) {
                     newReport.ReportName = this.reportCopyName
@@ -281,7 +322,6 @@ export default {
                 this.reportToCopy = null
                 this.showCopyDialog = false
 
-                console.log('23432423')
                 const reports = await this.getReportsList()
                 this.tableData = reports
             } catch (err) {
@@ -291,12 +331,10 @@ export default {
             }
         },
         onCancelDelete() {
-            console.log('Cancel')
             this.reportToDelete = null
             this.showDeleteDialog = false
         },
         onCancelCopy() {
-            console.log('Cancel')
             this.reportToCopy = null
             this.showCopyDialog = false
         },
@@ -320,14 +358,8 @@ export default {
             return reportsList
         },
         getReportWidgetsList(widgets) {
-            console.log('getReportWidgetsList')
             return widgets.map(widget => widget.WidgetTitle).join()
         },
-        /*isEllipsisActive(e) {
-            console.log('e.offsetWidth', e.offsetWidth)
-            console.log('e.scrollWidth', e.scrollWidth)
-            return (e.offsetWidth < e.scrollWidth);
-        },*/
         onSortChange({column, prop, order}) {
             if (prop === null) {
                 return
@@ -341,8 +373,16 @@ export default {
         },
     },
     async mounted() {
-        const reports = await this.getReportsList()
-        this.tableData = reports
+        try {
+            await this.$store.dispatch('dashboards/setContentLoading', true)
+            const reports = await this.getReportsList()
+            this.tableData = reports
+        } catch (e) {
+            console.error(e)
+        } finally {
+            await this.$store.dispatch('dashboards/setContentLoading', false)
+        }
+
     },
 }
 </script>

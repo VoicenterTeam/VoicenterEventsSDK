@@ -8,7 +8,7 @@
                             {{ currentPage }}
                             <i class="vc-icon-down icon-md text-primary"></i>
                         </span>
-                    <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-menu slot="dropdown" class="max-h-48 overflow-y-auto">
                         <el-dropdown-item
                             v-for="item in totalPages"
                             :key="item"
