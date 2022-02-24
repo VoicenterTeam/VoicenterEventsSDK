@@ -26,11 +26,11 @@
             <div class="flex items-center"
                  v-if="showGroupedIndicator">
                 <div class="flex flex-col accolade-height mx-6">
-                    <div class="w-1 h-1 w-5 bg-gray-550"></div>
-                    <div class="flex h-full w-1 bg-gray-550 justify-center items-center whitespace-nowrap">
+                    <div class="w-1 h-px w-5 bg-gray-550"></div>
+                    <div class="flex h-full w-px bg-gray-550 justify-center items-center whitespace-nowrap">
                         <span class="uppercase bg-white whitespace-nowrap">{{ $t('general.and') }}</span>
                     </div>
-                    <div class="w-1 h-1 w-5 bg-gray-550"></div>
+                    <div class="w-1 h-px w-5 bg-gray-550"></div>
                 </div>
             </div>
             <div class="flex flex-col w-full">
@@ -53,7 +53,7 @@
                 </ConditionCard>
             </div>
         </div>
-        <div class="h-1 relative bg-gray-550 ml-6 my-6 font-semibold" v-if="amountOfReportDataLength - 1 !== index">
+        <div class="h-px relative bg-gray-550 ml-6 my-6 font-semibold" v-if="amountOfReportDataLength - 1 !== index">
             <div class="absolute uppercase bg-white -mt-4-5 ml-20 p-2">
                 {{ $t('general.or') }}
             </div>

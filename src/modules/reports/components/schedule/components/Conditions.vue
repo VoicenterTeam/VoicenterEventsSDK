@@ -19,6 +19,7 @@
             <base-button
                 @click="onNewCriteria"
                 type="primary"
+                outline
             >
                 <span class="font-semibold">
                     {{ $t('report.newCriteria') }}

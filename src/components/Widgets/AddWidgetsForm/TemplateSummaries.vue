@@ -50,7 +50,7 @@
                 <confirm-button
                     :label="$t('common.save')"
                     icon="IconSave"
-                    @on-click="onChange"
+                    @on-click="onSubmit"
                 />
             </div>
         </portal>

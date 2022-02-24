@@ -193,12 +193,7 @@
                 return componentName
             },
             onChange (item) {
-                // if (item.component.ParameterName === 'TriggerTimeRange') {
-                //     this.model[`${item.component.ParameterName}Start`] = item.value[0]
-                //     this.model[`${item.component.ParameterName}End`] = item.value[1]
-                // }
                 this.model[item.component.ParameterName] = item.value
-                // this.$store.dispatch('report/updateReportDataScheduleSettings', this.model)
             }
         },
         mounted () {

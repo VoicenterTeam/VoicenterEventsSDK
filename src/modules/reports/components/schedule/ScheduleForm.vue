@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="schedule-form">
         <div class="cursor-pointer text-primary-300 hover:text-primary"
              @click="showDialog = true">
             <div class="flex items-center">
@@ -35,6 +35,7 @@
                             v-bind="$attrs"
                             @on-update="onUpdateStepData"
                             :reportItemData="data"
+                            @on-back="onBack"
                             class="step-wrapper px-16"
                         />
                     </fade-transition>
@@ -50,12 +51,6 @@
                             </div>
                         </base-button>
                         <div class="flex items-center">
-                            <div @click="onBack"
-                                 v-if="canGoBack"
-                                 class="text-primary-300 flex items-center hover:text-primary cursor-pointer mx-16">
-                                <IconDirLeft/>
-                                <span class="mx-1">{{ $t('general.back') }}</span>
-                            </div>
                             <portal-target name="next-button">
                                 <base-button
                                     fixed-width="w-37"
@@ -143,9 +138,6 @@
         computed: {
             getStepComponent() {
                 return `Step${this.currentStep}`
-            },
-            canGoBack() {
-                return this.currentStep > 0
             },
             getActiveStep() {
                 return this.$t('general.step') + ' ' + (this.currentStep+1) + ' ' + this.$t('general.of') + ' ' + WIZARD_CONFIG.length

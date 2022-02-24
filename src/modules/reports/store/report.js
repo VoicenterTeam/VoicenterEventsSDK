@@ -24,14 +24,15 @@ const setDefaultReportConditionData = () => {
 const defaultReportData = {
     ReportTriggerTypeID: null,
     ReportTriggerName: '',
+    ReportID: '',
+    EmailSubject: '',
+    EmailBody: '',
+    ReportTriggerRecipient: [],
     ScheduleData: {},
     0: [
         [
             setDefaultReportConditionData()
         ]
-    ],
-    1: [
-        {}
     ]
 }
 
@@ -72,8 +73,9 @@ const mutations = {
         state.reportData[data.step].splice(data.index, 1)
     },
     [types.UPDATE_REPORT_DATA]: (state, data) => {
-        state.reportData.ReportTriggerTypeID = data.ReportTriggerTypeID
-        state.reportData.ReportTriggerName = data.ReportTriggerName
+        Object.keys(data).forEach(el => {
+            state.reportData[el] = data[el]
+        })
     },
     [types.RESET_REPORT_DATA]: (state) => {
         state.reportData = setDefaultReportData()
