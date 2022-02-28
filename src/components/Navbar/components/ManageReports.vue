@@ -2,7 +2,6 @@
     <el-tooltip :content="$t('report.manageReports')"
                 v-if="showButton"
                 placement="bottom">
-<!--        <a href="/reports"><i class="vc-icon-server icon-lg mx-2 w-6 h-6 text-gray-400 hover:text-primary" /></a>-->
         <router-link to="/reports">
             <i class="vc-icon-server icon-lg mx-2 w-6 h-6 text-gray-400 hover:text-primary" />
         </router-link>
