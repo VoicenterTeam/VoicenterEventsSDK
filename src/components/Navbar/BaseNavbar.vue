@@ -11,7 +11,7 @@
                 </i>
                 <IconHorisontalLine class="hidden lg:flex mx-4 xl:mx-12"/>
                 <DashboardMenu :editMode="editMode" v-if="layoutType === 'activeLayout'" />
-                <ManageReports/>
+                <!-- <ManageReports/> -->
             </div>
             <div class="flex items-center p-2 sm:justify-between sm:w-full lg:w-auto">
                 <slot name="dashboard-operations"/>

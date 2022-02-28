@@ -58,8 +58,8 @@
 <script>
 import BaseNavbar from '@/components/Navbar/BaseNavbar'
 /*import EditableTabs from '@/modules/common/components/EditableTabs'*/
-import EditTemp from "@/modules/reports/EditTemp";
-import ListTemp from "@/modules/reports/ListTemp";
+// import EditTemp from "@/modules/reports/EditTemp";
+// import ListTemp from "@/modules/reports/ListTemp";
 
 import {TabPane, Tabs} from 'element-ui'
 
