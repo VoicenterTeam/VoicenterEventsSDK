@@ -36,6 +36,7 @@
                             @on-update="onUpdateStepData"
                             :reportItemData="data"
                             @on-back="onBack"
+                            @0n-finish="onFinish"
                             class="step-wrapper px-16"
                         />
                     </fade-transition>
@@ -141,7 +142,7 @@
             },
             getActiveStep() {
                 return this.$t('general.step') + ' ' + (this.currentStep+1) + ' ' + this.$t('general.of') + ' ' + WIZARD_CONFIG.length
-            },
+            }
         },
         methods: {
             onCancel() {
@@ -162,9 +163,11 @@
             onEditStep(stepIndex) {
                 this.currentStep = stepIndex
             },
-            onSubmit() {
-                console.log('onSubmit')
-            },
+            onFinish () {
+                this.$store.dispatch('report/resetReportData')
+                this.currentStep = 0
+                this.showDialog = false
+            }
         },
     }
 </script>

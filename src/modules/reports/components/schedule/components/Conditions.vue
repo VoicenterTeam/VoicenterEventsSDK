@@ -59,14 +59,15 @@
         },
         computed: {
             canDelete() {
-                return true
+                // console.log(this.reportTriggerTypeList, this.reportItemData, this.reportData)
+                return this.reportData.length > 1
             }
         },
         methods: {
             onAddCondition(index) {
                 const data = {
                     index,
-                    step: 0
+                    step: 'ReportTriggerCondition'
                 }
 
                 this.$store.dispatch('report/createNewCondition', data)
@@ -74,7 +75,7 @@
             onDeleteCondition(groupIndex, itemIndex) {
                 const data = {
                     groupIndex,
-                    step: 0,
+                    step: 'ReportTriggerCondition',
                     itemIndex
                 }
 
@@ -83,12 +84,12 @@
             onDeleteGroup(index) {
                 const data = {
                     index,
-                    step: 0
+                    step: 'ReportTriggerCondition'
                 }
                 this.$store.dispatch('report/deleteCriteria', data)
             },
             onNewCriteria() {
-                this.$store.dispatch('report/createNewCriteria', 0)
+                this.$store.dispatch('report/createNewCriteria', 'ReportTriggerCondition')
             }
         }
     }

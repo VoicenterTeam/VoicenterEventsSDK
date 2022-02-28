@@ -29,7 +29,7 @@ const defaultReportData = {
     EmailBody: '',
     ReportTriggerRecipient: [],
     ScheduleData: {},
-    0: [
+    ReportTriggerCondition: [
         [
             setDefaultReportConditionData()
         ]

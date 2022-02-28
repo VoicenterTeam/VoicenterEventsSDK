@@ -52,14 +52,11 @@
         },
         mounted () {
             if (this.isCondition) {
-            this.model = this.inputValue
-        } else {
-            this.model = this.getReportScheduleData[this.$attrs.ParameterName]
-        }
-        // this.model = this.inputValue && this.inputValue.length ? this.inputValue : this.getReportScheduleData[this.$attrs.ParameterName]
-        // if (this.getReportData[`${this.$attrs.ParameterName}Start`] && this.getReportData[`${this.$attrs.ParameterName}End`]) {
-        //     this.model = [this.getReportData[`${this.$attrs.ParameterName}Start`], this.getReportData[`${this.$attrs.ParameterName}End`]]
-        // }
+                this.model = this.inputValue
+            } else {
+                this.model = this.getReportScheduleData[this.$attrs.ComponentTag]
+            }
+
         },
         computed: {
             getReportScheduleData () {

@@ -10767,7 +10767,7 @@
 
             this.app.opts.availableVariables.forEach(el => {
                 if (editor.html().search(el.value) !== -1) {
-                    const newHtml = editor.html().replace(el.value, `<span class="redactor-component" data-redactor-type="variable" tabindex="-1" contenteditable="false">${el.text}</span>`)
+                    const newHtml = editor.html().replaceAll(el.value, `<span class="redactor-component" data-redactor-type="variable" tabindex="-1" contenteditable="false">${el.text}</span>`)
                     editor.html(newHtml)
                 }
             })
@@ -11433,7 +11433,6 @@
     
             this.app.broadcast('synced', html);
             this.app.broadcast('changed', html);
-            console.log($source, '$source')
         },
         _isSync: function(html)
         {
@@ -11449,7 +11448,6 @@
         {
             var $source = this.source.getElement();
             var html = $source.val();
-            console.log($source, '$source')
     
             this.app.broadcast('changed', html);
             this.app.broadcast('source.changed', html);

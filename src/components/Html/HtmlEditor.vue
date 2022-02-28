@@ -1,6 +1,6 @@
 <template>
     <div class="relative w-full">
-        <textarea ref="redactor" :name="name" :placeholder="placeholder" :value="currentContent"/>
+        <textarea ref="redactor" :name="name" :placeholder="placeholder" :value="value"/>
         <div class="flex save-buttons"
              v-if="hasButtons">
             <el-tooltip class="item" effect="dark" :content="$t('common.revert.changes')" placement="top">
@@ -77,7 +77,6 @@
         },
         watch: {
             value(newValue) {
-                console.log(newValue, 'newValue')
                 if (!this.redactor) {
                     return
                 }
@@ -102,9 +101,6 @@
                 }
                 window.$R(this.$refs.redactor, 'destroy')
                 this.init()
-            },
-            currentContent (val) {
-                console.log(val, 'vqwr')
             }
         },
         async mounted() {
@@ -136,7 +132,6 @@
                 try {
                     const callbacks = {
                         changed: html => {
-                            console.log('changed', html)
                             this.handleInput(html)
                             return html
                         },

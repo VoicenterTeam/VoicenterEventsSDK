@@ -63,9 +63,8 @@ export default {
         if (this.isCondition) {
             this.model = this.inputValue && this.inputValue.length ? this.inputValue : []
         } else {
-            this.model = this.getReportScheduleData[this.$attrs.ParameterName] && this.getReportScheduleData[this.$attrs.ParameterName].length ? this.getReportScheduleData[this.$attrs.ParameterName] : []
+            this.model = this.getReportScheduleData[this.$attrs.ComponentTag] && this.getReportScheduleData[this.$attrs.ComponentTag].length ? this.getReportScheduleData[this.$attrs.ComponentTag] : []
         }
-        // this.model = this.inputValue && this.inputValue.length ? this.inputValue : this.getReportScheduleData[this.$attrs.ParameterName] && this.getReportScheduleData[this.$attrs.ParameterName].length ? this.getReportScheduleData[this.$attrs.ParameterName] : []
     },
     computed: {
         getReportScheduleData () {

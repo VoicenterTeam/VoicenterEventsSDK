@@ -114,7 +114,7 @@
                 return reportTriggerParameters.sort((a, b) => a.ParameterOrder - b.ParameterOrder)
             },
             getReportDataByStep () {
-                return this.$store.getters['report/getReportDataByStep'](0)
+                return this.$store.getters['report/getReportDataByStep']('ReportTriggerCondition')
             },
             getReportData () {
                 return this.$store.getters['report/getReportData']
@@ -145,7 +145,10 @@
                     return haveTriggerComponent.length === this.activeTrigger.length && allFieldsValid
                 }
                 const isConditionGroupsFieldsNotEmpty = () => {
-                    return this.getReportData[0].map(field => {
+                    if (!this.getReportData['ReportTriggerCondition'] || this.getReportData['ReportTriggerCondition'].length) {
+                        return false
+                    }
+                    return this.getReportData['ReportTriggerCondition'].map(field => {
                         return field.every(el => {
                             if (!el.WidgetID) {
                                 return true
@@ -160,7 +163,7 @@
                         })
                     })
                 }
-                if (!isScheduleFieldsNotEmpty() || isConditionGroupsFieldsNotEmpty().some(el => !el)) {
+                if (!isScheduleFieldsNotEmpty() || typeof isConditionGroupsFieldsNotEmpty() === 'boolean' || isConditionGroupsFieldsNotEmpty().some(el => !el)) {
                     return
                 }
 
@@ -169,8 +172,10 @@
                 }
                 const data = {
                     ReportTriggerTypeID: this.model.ReportTriggerTypeID,
-                    ReportTriggerName: this.model.ReportTriggerName
+                    ReportTriggerName: this.model.ReportTriggerName,
+                    ReportID: Number(this.$route.params.id)
                 }
+
                 this.$store.dispatch('report/updateReportData', data)
                 delete this.model.ReportTriggerName
                 delete this.model.ReportTriggerTypeID
@@ -179,21 +184,23 @@
                 this.$emit('on-update', objToEmit)
             },
             getComponentName (component) {
-                const componentName = 'Base' + component.ParameterTypeName
-                if (componentName === 'BaseTime' || componentName === 'BaseInterval') {
-                    return 'BaseInterval'
-                }
-                if (componentName === 'BaseDayOfMonth') {
-                    return 'BaseDate'
-                }
-                if (componentName === 'BaseText') {
-                    return 'BaseInputText'
-                }
+                const componentTag = 'Base' + component.ParameterTypeName
+                // ParameterTypeName ComponentTag
 
-                return componentName
+                if (componentTag === 'BaseTime') {
+                    return 'BaseTime'
+                } else if (componentTag === 'BaseInterval') {
+                    return 'BaseInterval'
+                } else if (componentTag === 'BaseDayOfMonth') {
+                    return 'BaseDate'
+                } else if (componentTag === 'BaseText') {
+                    return 'BaseInputText'
+                } else {
+                    return componentTag
+                }
             },
             onChange (item) {
-                this.model[item.component.ParameterName] = item.value
+                this.model[item.component.ComponentTag] = item.value
             }
         },
         mounted () {

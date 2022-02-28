@@ -29,16 +29,15 @@
                 <html-editor
                     :has-buttons="hasButtons"
                     ref="editor"
-                    :value="model.subject"
+                    v-model="model.subject"
                     :config="{
                         plugins: ['variable'],
-                        imageResizable: true,
-                        imagePosition: true,
-                        minHeight: '200px',
+                        minHeight: '150px',
                         focus: false
                     }"
                     :availableVariables="reportTemplateVariableList"
                     :buttonsHide="['html', 'format', 'bold', 'italic', 'lists', 'link', 'Strikethrough', 'imagemanager', 'image', 'deleted']"
+                    @change="onChangeSubject"
                 />
             </el-form-item>
             <el-form-item>
@@ -49,13 +48,12 @@
                     :value="model.text"
                     :config="{
                         plugins: ['variable'],
-                        imageResizable: true,
-                        imagePosition: true,
                         minHeight: '200px',
                         focus: false
                     }"
                     :availableVariables="reportTemplateVariableList"
                     :buttonsHide="['html', 'format', 'bold', 'italic', 'lists', 'link', 'Strikethrough', 'imagemanager', 'image', 'deleted']"
+                    @change="onChangeText"
                 />
             </el-form-item>
         </el-form>
@@ -88,7 +86,8 @@
 <script>
     import { Select, Option } from 'element-ui'
     import HtmlEditor from '@/components/Html/HtmlEditor'
-    import { makeRandomID, validateEmail } from '@/helpers/util'
+    import { validateEmail } from '@/helpers/util'
+    import { reportTriggerApi } from "@/modules/reports/services/reportTriggerService"
 
     const ReportRecipientTypeIDS = {
         User: 1,
@@ -113,6 +112,10 @@
                 hasButtons: false,
                 recipients: [],
                 model: {
+                    subject: '',
+                    text: ''
+                },
+                locale: {
                     subject: '',
                     text: ''
                 }
@@ -157,8 +160,17 @@
             }
         },
         methods: {
-            onFinish() {
-                alert('onFinish')
+            async onFinish() {
+                await this.updateReportData()
+
+                try {
+                    const data = this.getReportData
+
+                    reportTriggerApi.createReportTrigger(data)
+                    this.$emit('on-finish')
+                } catch {
+
+                }
             },
             tryAddEmail(values) {
                 const targetItem = values[values.length - 1]
@@ -173,27 +185,8 @@
                     }
                 }
             },
-            onBack () {
-                console.log(this.model)
-                const recipients = this.recipients.map(el => {
-                    let newObject = {}
-                    if (/^-?\d+$/.test(el)) {
-                        newObject.RecipientID = el,
-                        newObject.ReportRecipientTypeID = this.searchReportRecipientTypeIDById(el)
-                    } else {
-                        newObject.Email = el
-                        newObject.ReportRecipientTypeID = ReportRecipientTypeIDS.Email
-                    }
-
-                    return newObject
-                })
-
-                const data = {
-                    EmailSubject: this.model.subject,
-                    EmailBody: this.model.text,
-                    ReportTriggerRecipient: recipients
-                }
-                this.$store.dispatch('report/updateReportData', data)
+            async onBack () {
+                await this.updateReportData()
 
                 this.$emit('on-back')
             },
@@ -208,6 +201,41 @@
                     return ReportRecipientTypeIDS.Account
                 }
                 return
+            },
+            onChangeSubject (msg) {
+                this.replaceHTMLTagsAndVariables(msg, 'subject')
+            },
+            onChangeText (msg) {
+                this.replaceHTMLTagsAndVariables(msg, 'text')
+            },
+            replaceHTMLTagsAndVariables (message, typeOfMsg) {
+                let msg = message.replace(new RegExp('<[^>]*>', 'g'), '').replace('&nbsp;', ' ')
+                this.reportTemplateVariableList.forEach(el => {
+                    msg = msg.replaceAll(el.text, el.value)
+                });
+                this.locale[typeOfMsg] = msg
+            },
+            async updateReportData () {
+                const recipients = this.recipients.map(el => {
+                    let newObject = {}
+                    if (/^-?\d+$/.test(el)) {
+                        newObject.RecipientID = el,
+                        newObject.ReportRecipientTypeID = this.searchReportRecipientTypeIDById(el)
+                    } else {
+                        newObject.Email = el
+                        newObject.ReportRecipientTypeID = ReportRecipientTypeIDS.Email
+                    }
+
+                    return newObject
+                })
+
+                const data = {
+                    EmailSubject: this.locale.subject,
+                    EmailBody: this.locale.text,
+                    ReportTriggerRecipient: recipients
+                }
+
+                await this.$store.dispatch('report/updateReportData', data)
             }
         },
         mounted () {
@@ -215,11 +243,9 @@
                 this.recipients = this.getReportData.ReportTriggerRecipient.map(el => el.Email || el.RecipientID)
             }
             if (this.getReportData.EmailSubject && this.getReportData.EmailBody) {
-                console.log(1)
                 this.model.subject = this.getReportData.EmailSubject
                 this.model.text = this.getReportData.EmailBody
             } else {
-                console.log(2)
                 this.model.subject = this.$t('report.trigger.email.subject')
                 this.model.text = this.$t('report.trigger.email.body')
             }

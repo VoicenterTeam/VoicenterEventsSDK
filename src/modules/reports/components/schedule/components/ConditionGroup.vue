@@ -90,6 +90,7 @@
         },
         computed: {
             showGroupedIndicator() {
+                console.log(this.conditions.length > 1, this.conditions, 'qwf')
                 return this.conditions.length > 1
             },
         },
