@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
     // devServer: {
     //     https: true,
@@ -7,6 +8,9 @@ module.exports = {
     // //     https: true,
     // //     port: 443,
     // //     host: 'dashboarddev.voicenter.co' // dashboarddev2.voicenter.co - for hebrew
+    // },
+    // alias: {
+    //     "@": path.resolve(__dirname, 'src/')
     // },
     configureWebpack: {
         optimization: {
@@ -35,6 +39,7 @@ module.exports = {
         svgRule
             .use('vue-svg-loader')
             .loader('vue-svg-loader');
+        config.resolve.alias.set('@', path.resolve('src/')); 
     },
 
     pluginOptions: {
