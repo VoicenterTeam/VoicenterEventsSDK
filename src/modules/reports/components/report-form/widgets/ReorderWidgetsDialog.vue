@@ -54,23 +54,15 @@
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
                     <slot name="footer-actions">
-                        <base-button class="mx-4"
-                                     outline
-                                     fixed-width="w-37"
-                                     @click="onCloseModal">
-                            <div class="flex items-center">
-                                <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'common.cancel' }}</span>
-                            </div>
-                        </base-button>
-                        <base-button fixed-width="w-37"
-                                     type="primary"
-                                     @click="onSubmit()">
-                            <div class="flex items-center">
-                                <IconSave class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ 'Save' }}</span>
-                            </div>
-                        </base-button>
+                        <cancel-button
+                            class="mx-4"
+                            @on-click="onCloseModal"
+                        />
+                        <confirm-button
+                            :label="$t('Save')"
+                            icon="IconSave"
+                            @on-click="onSubmit"
+                        />
                     </slot>
                 </div>
             </template>
@@ -85,7 +77,9 @@
         components: {
             Tabs: () => import('@/modules/common/components/Tabs'),
             Modal: () => import('@/components/Common/Modal'),
-            DraggableList: () => import('@/components/Widgets/DraggableList')
+            DraggableList: () => import('@/components/Widgets/DraggableList'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             report: {

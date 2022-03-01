@@ -49,16 +49,18 @@
             </div>
             <template v-if="editMode">
                 <IconVerticalLine class="mx-6 h-12"/>
-                <el-button @click="onSubmit"
-                           size="mini"
-                           type="_primary"
-                           class="h-7">
-                    {{ $t('common.save') }}
-                </el-button>
-                <div class="mx-6 font-medium cursor-pointer text-steel hover:text-primary"
-                     @click="onCancel">
-                    {{ $t('common.cancel') }}
-                </div>
+                <confirm-button
+                    :label="$t('common.save')"
+                    icon="IconSave"
+                    size="sml"
+                    @on-click="onSubmit"
+                />
+                <cancel-button
+                    link
+                    :outline="false"
+                    size="sml"
+                    @on-click="onCancel"
+                />
             </template>
         </div>
     </div>
@@ -68,7 +70,9 @@
         components: {
             ActionsTabbedView: () => import('@/components/LayoutRendering/ActionsTabbedView'),
             NewGroupButton: () => import('@/components/NewGroupButton'),
-            CreateNewWidgetButton: () => import('@/components/CreateNewWidgetButton')
+            CreateNewWidgetButton: () => import('@/components/CreateNewWidgetButton'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widgetGroupList: {

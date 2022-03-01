@@ -73,24 +73,14 @@
             </div>
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 flex items-center justify-between px-6">
-                    <base-button class="md:mx-4"
-                                 outline
-                                 fixed-width="w-37"
-                                 @click="showDialog = false">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="font-semibold">{{ 'Cancel' }}</span>
-                        </div>
-                    </base-button>
-                    <base-button key="new-layout"
-                                 fixed-width="w-37"
-                                 type="primary"
-                                 :loading="loading"
-                                 @click="onCopy">
-                        <span class="font-semibold">
-                            {{ $t('common.confirm') }}
-                        </span>
-                    </base-button>
+                    <cancel-button
+                        class="md:mx-4"
+                        @on-click="onCancel"
+                    />
+                    <confirm-button
+                        :loading="loading"
+                        @on-click="onCopy"
+                    />
                 </div>
             </template>
         </Modal>
@@ -102,6 +92,8 @@
     import { templateIcons } from '@/enum/widgetDataTypes'
     import { Collapse, CollapseItem, Checkbox } from 'element-ui'
     import { DashboardApi } from '@/api/dashboardApi'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
@@ -110,6 +102,8 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            CancelButton,
+            ConfirmButton,
         },
         props: {
             dashboard: {
@@ -215,6 +209,9 @@
             },
             fillAccount() {
                 this.account = this.currentAccountId
+            },
+            onCancel () {
+                this.showDialog = false
             }
         },
         mounted() {

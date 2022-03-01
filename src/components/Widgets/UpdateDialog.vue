@@ -209,8 +209,14 @@
         </el-form>
         <template v-slot:footer>
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                <el-button @click="toggleVisibility(false)">{{ $t('common.cancel') }}</el-button>
-                <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                <cancel-button
+                    @on-click="toggleVisibility(false)"
+                />
+                <confirm-button
+                    :label="$t('common.save')"
+                    icon="IconSave"
+                    @on-click="onChange"
+                />
             </div>
         </template>
     </modal>
@@ -240,6 +246,8 @@
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -264,7 +272,9 @@
             RefreshButton: () => import('@/components/RefreshButton'),
             StaticWidgetInfo: () => import('./WidgetUpdateForm/StaticWidgetInfo'),
             ActivityGaugeConfig: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig'),
-            WidgetRefreshInterval: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval')
+            WidgetRefreshInterval: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widget: {

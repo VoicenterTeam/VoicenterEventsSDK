@@ -64,8 +64,14 @@
             </template>
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
-                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                    <cancel-button
+                        @on-click="showModal = false"
+                    />
+                    <confirm-button
+                        :label="$t('common.save')"
+                        icon="IconSave"
+                        @on-click="onChange"
+                    />
                 </div>
             </template>
         </update-dialog>
@@ -80,7 +86,7 @@
     import { Checkbox, Collapse, CollapseItem, Option, Select, Tooltip } from 'element-ui'
     import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
-    
+
     export default {
         mixins: [extensionMixin, cardWidgetMixin],
         props: {
@@ -110,6 +116,8 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         data() {
             return {
@@ -134,7 +142,7 @@
                 const storeStatuses = this.$store.getters['entities/accountStatuses']
                 let localStatuses = Object.values(statusTypes)
                 let finalStatuses = []
-                
+
                 if (storeStatuses.length) {
                     finalStatuses = this.getStoreStatuses()
                 } else {
@@ -146,11 +154,11 @@
                         }
                     })
                 }
-                
+
                 finalStatuses.push(statusTypes[callStatuses.CALLING])
                 finalStatuses.push(statusTypes[callStatuses.HOLD])
                 finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
-                
+
                 return finalStatuses
             },
             userToDisplay() {
@@ -158,11 +166,11 @@
             },
             cardValue() {
                 const userToDisplay = this.userToDisplay
-                
+
                 if (this.status === otherStatuses.AT_WORK) {
                     return this.extensionWithCalls.filter(el => el.representativeStatus !== LOGOUT_STATUS && userToDisplay.includes(el.userID)).length || '0'
                 }
-                
+
                 return this.extensionWithCalls.filter(el => el.representativeStatus === this.status && userToDisplay.includes(el.userID)).length || '0'
             },
             cardIcon() {
@@ -207,22 +215,22 @@
                 } catch (e) {
                     console.warn(e)
                 }
-                
+
                 let data = {
                     status: this.selectedStatus,
                     showText: this.showStatusText,
                     displayBorder: this.displayItemBorder,
                 }
-                
+
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
                     colors: this.model.colors,
                 };
-                
+
                 this.data.WidgetConfig = this.model.WidgetConfig
-                
+
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },

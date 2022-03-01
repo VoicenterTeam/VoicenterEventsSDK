@@ -57,8 +57,14 @@
             </template>
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
-                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                    <cancel-button
+                        @on-click="showModal = false"
+                    />
+                    <confirm-button
+                        :label="$t('common.save')"
+                        icon="IconSave"
+                        @on-click="onChange"
+                    />
                 </div>
             </template>
         </update-dialog>
@@ -76,7 +82,7 @@
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
     import { getOptionsList } from '@/helpers/entitiesList';
     import get from 'lodash/get';
-    
+
     export default {
         mixins: [queueMixin, cardWidgetMixin],
         props: {
@@ -113,6 +119,8 @@
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         data() {
             return {
@@ -173,7 +181,7 @@
                 if (this.selectedType !== typeKeys.MAXIMUM_WAITING_ID) {
                     return 0
                 }
-                
+
                 const queueStats = this.getQueueStats()
                 if (queueStats.queueCalls === 0) {
                     return 0
@@ -194,22 +202,22 @@
                 } catch (e) {
                     console.warn(e)
                 }
-                
+
                 let data = {
                     queueType: this.selectedType,
                     showText: this.showStatusText,
                     displayBorder: this.displayItemBorder,
                 }
-                
+
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
                     colors: this.model.colors,
                 }
-                
+
                 this.data.WidgetConfig = this.model.WidgetConfig
-                
+
                 this.$emit('on-update', this.data);
                 this.showModal = false;
             },

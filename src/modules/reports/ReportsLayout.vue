@@ -1,32 +1,65 @@
 <template>
     <div>
         <BaseNavbar/>
-        <report-tabs :dataTabs="dataTabs"
-                     :active-tab="activeTab"
-                     @update-active-tab="updateActiveTab"
-                     @on-remove-tab="removeTab">
-            <template v-slot:list>
-                <list-temp @on-create-report="openCreateReportTab" @on-edit-row="onEditRow" />
-            </template>
-
-            <template v-for="tab in editableTabs"
-                      v-slot:[tab.name]="{data}">
-                <edit-temp :data="tab.data" :report-id="tab.name" @update-title="onUpdateTitle" />
-            </template>
-
-            <template v-slot:create>
-                <create-temp/>
-            </template>
-        </report-tabs>
+        <div class="my-10 mx-10 xl:mx-20">
+            <!--            <editable-tabs ref="tab"
+                                       @on-change="onChangeTab"
+                                       @on-tab-remove="onRemoveTab"
+                                       :active-tab="activeTab"
+                                       :options="availableTabs">
+                            <template v-slot:edit>
+                                {{ edit }}
+                            </template>
+                        </editable-tabs>
+                        <fade-transition mode="out-in"
+                                         :duration="300">
+                            <router-view @on-update-tabs="onUpdateTabs"
+                                         @reset-state="goToList"/>
+                        </fade-transition>-->
+            <el-tabs v-model="activeTabName"
+                     square
+                     closable>
+                <el-tab-pane
+                    class="editable-tab"
+                    v-for="item in dataTabs"
+                    :key="item.id"
+                    :label="item.title"
+                    :name="item.id"
+                    :closable="item.name !== 'create' && item.name !== 'list'">
+                    <span slot="label">
+                        <i :class="item.icon" class="icon-md"/> {{ item.title }}
+                    </span>
+                    <template>
+                        <component :is="item.component" />
+                        <!--                        <slot :name="item.name"
+                                                      :label="item.title"
+                                                      :data="item.data">
+                                                    Hello content
+                                                </slot>-->
+                        <!--                        <div class="w-full bg-active-elements">hello</div>-->
+<!--                        <router-view @on-update-tabs="onUpdateTabs"
+                                     @reset-state="goToList"/>-->
+                    </template>
+                    <!--                    <div slot="label"
+                                             v-else>
+                                            <div class="inline-block">
+                                                <div class="flex items-center">
+                                                    <i v-if="item.icon" :class="item.icon" class="icon-base inline-block mx-1 tab-icon"/>
+                                                    <i v-else class="vc-edit-pencil icon-base inline-block mx-1 tab-icon"/>
+                                                    <span class="inline-block select-none">{{ item.title }}</span>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                </el-tab-pane>
+            </el-tabs>
+        </div>
     </div>
 </template>
 <script>
 import BaseNavbar from '@/components/Navbar/BaseNavbar'
-import ReportTabs from "@/modules/reports/ReportTabs";
 /*import EditableTabs from '@/modules/common/components/EditableTabs'*/
-import EditTemp from "@/modules/reports/EditTemp";
-import ListTemp from "@/modules/reports/ListTemp";
-import CreateTemp from "@/modules/reports/CreateTemp";
+// import EditTemp from "@/modules/reports/EditTemp";
+// import ListTemp from "@/modules/reports/ListTemp";
 
 import {TabPane, Tabs} from 'element-ui'
 
@@ -40,10 +73,6 @@ export default {
         Tabs,
         [TabPane.name]:
         TabPane,
-        ReportTabs,
-        EditTemp,
-        ListTemp,
-        CreateTemp
     },
     data() {
         return {
@@ -54,167 +83,127 @@ export default {
                     name: LIST_TAB_NAME,
                     icon: 'vc-icon-template-list',
                 },
-                /*{
-                    title: 'momo',
-                    name: '10',
-                    icon: 'vc-icon-template-list',
-                },
-                {
-                    title: 'lolo',
-                    name: '49',
-                    icon: 'vc-icon-template-list',
-                },*//*
-                {
-                    title: 'Create',
-                    name: CREATE_TAB_NAME,
-                    icon: 'vc-icon-plus-linear',
-                }*/
             ],
             createTabName: CREATE_TAB_NAME,
             listTabName: LIST_TAB_NAME
         }
     },
-    computed: {
-        editableTabs() {
-            return this.dataTabs.filter(t => t.name !== LIST_TAB_NAME && t.name !== CREATE_TAB_NAME);
-        },
+
+}
+
+
+/*
+const REPORT_CREATION_TAB = {
+    title: 'New Report',
+    name: 'reports-create',
+    id: 'create',
+    icon: 'IconStore',
+}
+
+const REPORT_EDIT_TAB = {
+    name: 'reports-edit',
+    id: 'edit',
+    icon: 'IconEdit',
+}
+
+const REPORT_LIST_TAB = {
+    title: 'Report List',
+    name: 'list',
+    id: 'list',
+    icon: 'vc-icon-template-list',
+}
+
+const AVAILABLE_ROUTES = {
+    'list': '/reports',
+    'create': '/reports/create',
+}
+
+export default {
+    components: {
+        BaseNavbar,
+        /!*EditableTabs,*!/
+        [Tabs.name]: Tabs,
+        [TabPane.name]: TabPane,
+    },
+    data() {
+        return {
+            REPORT_CREATION_TAB,
+            activeTab: 'list',
+            availableTabs: [
+                {
+                    ...REPORT_LIST_TAB,
+                },
+            ],
+        }
     },
     methods: {
-        updateActiveTab(tab) {
-            let routePath
-            if (tab === this.listTabName) {
-                routePath = '/reports'
-            } else if (tab === this.createTabName) {
-                routePath = '/reports/create'
-            } else {
-                routePath = `/reports/edit/${tab}`
+        getRoutePath(id) {
+            if (id !== 'list' && id !== 'create') {
+                return `/reports/edit/${id}`
             }
-            if (this.$route.path === routePath) return
-
-            this.$router.push(routePath)
-            //this.activeTab = tab
+            return AVAILABLE_ROUTES[id]
         },
-        removeTab(tab) {
-            const deleteIndex = this.dataTabs.findIndex(t => t.name === tab)
-            console.log('deleteIndex', deleteIndex)
-            if (deleteIndex !== -1 && tab !== LIST_TAB_NAME) {
-                if (this.activeTab === tab) {
-                    this.activeTab = LIST_TAB_NAME
-                }
-                this.dataTabs.splice(deleteIndex, 1)
+        onChangeTab(tab) {
+            console.log('onChangeTab', tab)
+            console.log('this.$route.name', this.$route.name)
+            if (!tab) {
+                this.$router.push('/reports')
+                return
             }
+            this.activeTab = tab
+            const tabRoute = this.getRoutePath(tab)
+            console.log('tabRoute', tabRoute)
+            console.log('this.$route.path', this.$route.path)
+            this.$router.push(tabRoute)
         },
-        openCreateReportTab() {
-            const createReportTab = this.dataTabs.find(tab => tab.name === this.createTabName)
-            if (createReportTab) {
-                this.activeTab = createReportTab.name
-            } else {
-                this.dataTabs.push({
-                    title: 'Create',
-                    name: CREATE_TAB_NAME,
-                    icon: 'vc-icon-plus-linear',
-                })
-
-                this.$nextTick(() => {
-                    this.activeTab = CREATE_TAB_NAME
-                })
+        onRemoveTab() {
+            this.goToList()
+        },
+        setListTab() {
+            this.activeTab = 'list'
+        },
+        goToList() {
+            console.log('RESET STATE')
+            this.setListTab()
+            this.$router.push('/reports')
+        },
+        parseRouteData(route) {
+            const {name} = route
+            if (!name) {
+                this.setListTab()
+                return
             }
-        },
-        onUpdateTitle(id, title) {
-            const updateIndex = this.dataTabs.findIndex(t => t.name === id)
-
-            console.log('onUpdateTitle', id, title)
-            if (updateIndex !== -1) {
-                this.dataTabs[updateIndex].title = title
+            if (name === 'reports-create') {
+                this.availableTabs = [REPORT_LIST_TAB, REPORT_CREATION_TAB]
+                this.activeTab = REPORT_CREATION_TAB.id
             }
         },
-        onEditRow(row) {
-            const editTabExists = this.dataTabs.find(tab => tab.name === row.id)
-
-            if (!editTabExists) {
-                this.dataTabs.push({
-                    title: row.name,
-                    name: row.id,
-                    data: row,
-                    icon: 'vc-icon-template-list',
-                })
+        onUpdateTabs(reportName, reportId) {
+            this.addEditReportTab(reportName, reportId)
+        },
+        addEditReportTab(reportName, reportId) {
+            const editTabId = `${reportId}`
+            const editTab = {
+                ...REPORT_EDIT_TAB,
+                id: editTabId,
+                title: reportName,
             }
-
+            this.availableTabs = [REPORT_LIST_TAB, editTab]
+            console.log('this.availableTabs', ...this.availableTabs)
+            //this.availableTabs = [...this.availableTabs, editTab]
             this.$nextTick(() => {
-                this.activeTab = row.id
+                this.activeTab = editTabId
             })
-        }
+        },
     },
     watch: {
         '$route': {
             immediate: true,
-            handler(route) {
-                const routePath = route.path
-                const routeEditId = route.params.id
-
-                const baseRoute = '/reports'
-                const createRoute = '/reports/create'
-
-                if (routeEditId) {
-                    //const editRoute = baseRoute + '/edit/' + routeEditId
-                    const editTabExists = this.dataTabs.find(tab => tab.name === routeEditId)
-
-                    if (!editTabExists) {
-                        this.dataTabs.push({
-                            title: routeEditId,
-                            name: routeEditId,
-                            icon: 'vc-icon-template-list',
-                        })
-                    }
-
-                    this.$nextTick(() => {
-                        this.activeTab = routeEditId
-                    })
-
-                    /*{
-                    title: 'momo',
-                    name: '10',
-                    icon: 'vc-icon-template-list',
-                }*/
-
-
-                } else if (routePath === createRoute) {
-                    this.openCreateReportTab()
-                } else {
-                    this.activeTab = LIST_TAB_NAME
-                }
-
-
-                /*console.log('route.path', route.path)
-                const baseRoute = '/reports'
-                console.log('route.params.id', route.params.id)
-                if (!route.params.id) return
-
-                const editRoute = baseRoute + '/edit/' + route.params.id
-                if (route.path === editRoute) {
-                    this.activeTab = route.params.id
-                }*/
-            }
-        }
+            deep: true,
+            handler(state) {
+                this.parseRouteData(state)
+            },
+        },
     },
-    mounted() {
-        /*const routePath = this.$route.path
-        const routeEditId = this.$route.params.id
-
-        const baseRoute = '/reports'
-        const createRoute = '/reports/create'
-
-        if (routeEditId) {
-            const editRoute = baseRoute + '/edit/' + routeEditId
-
-
-        } else if (routePath === createRoute) {
-            this.openCreateReportTab()
-        } else {
-            this.activeTab = LIST_TAB_NAME
-        }*/
-
-
-    }
-}
+}*/
 </script>

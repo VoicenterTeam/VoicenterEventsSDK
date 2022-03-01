@@ -35,7 +35,9 @@
             <slot :onManageExport="onManageExport"/>
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                    <el-button @click="showExportDialog = false">{{ $t('common.cancel') }}</el-button>
+                    <cancel-button
+                        @on-click="showExportDialog = false"
+                    />
                     <el-button @click="exportTableData"
                                :disabled="loading || !columnsToExport.length"
                                :loading="loading"
@@ -53,7 +55,7 @@
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
     import { isARealtimeTableWidget, timeFilterToHuman } from '@/helpers/widgetUtils'
     import { DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
-    
+
     export default {
         inheritAttrs: false,
         name: 'export-data',
@@ -63,7 +65,8 @@
             StaticWidgetInfo: () => import('@/components/Widgets/WidgetUpdateForm/StaticWidgetInfo'),
             ManageColumns: () => import('./ManageColumns'),
             DownloadIcon,
-            Modal: () => import('@/components/Common/Modal')
+            Modal: () => import('@/components/Common/Modal'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton")
         },
         props: {
             tableId: {
@@ -118,30 +121,30 @@
             getFileName() {
                 let fileName = this.fileName || this.$t('widget.title')
                 let timeRange = timeFilterToHuman(this.widget, 'dd-MM-yyyy')
-                
+
                 return fileName + ' ' + timeRange + this.exportFormat
             },
             exportTableData() {
                 this.loading = true
                 let fileName = this.getFileName()
-                
+
                 if (isARealtimeTableWidget(this.widget)) {
                     this.$emit('on-update-layout', true)
                     this.showExportDialog = false
-                    
+
                     const tableId = this.tableId
-                    
+
                     let tableElement = document.getElementById(tableId)
                     let excelWorkBook = XLSX.utils.table_to_book(tableElement)
-                    
+
                     XLSX.writeFile(excelWorkBook, fileName)
-                    
+
                     return
                 }
-                
+
                 const columnsToExport = this.columnsToExport
                 let records = []
-                
+
                 this.allRecords.forEach((record) => {
                     let data = {}
                     columnsToExport.forEach(key => {
@@ -149,13 +152,13 @@
                     })
                     records.push(data)
                 })
-                
+
                 let data = XLSX.utils.json_to_sheet(records)
                 let excelWorkBook = XLSX.utils.book_new()
-                
+
                 XLSX.utils.book_append_sheet(excelWorkBook, data, 'data')
                 XLSX.writeFile(excelWorkBook, fileName)
-                
+
                 this.$emit('on-update-layout', true)
                 this.loading = false
                 this.showExportDialog = false

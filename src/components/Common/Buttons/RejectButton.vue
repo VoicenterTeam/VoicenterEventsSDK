@@ -3,6 +3,7 @@
         :icon="icon"
         :label="buttonLabel"
         type="danger"
+        v-bind="$attrs"
         v-on="$listeners"
     />
 </template>

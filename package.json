@@ -14,8 +14,7 @@
     "test:e2e-local": "vue-cli-service test:e2e --url=http://localhost:8080",
     "test:e2e": "vue-cli-service test:e2e",
     "test": "vue-cli-service test:e2e --headless",
-    "generate-locale-file": "node script/generate-json-locale-file.js",
-    "build-report": "vue-cli-service build --report"
+    "generate-locale-file": "node script/generate-json-locale-file.js"
   },
   "dependencies": {
     "axios": "^0.19.0",

@@ -29,7 +29,7 @@ export default {
 
             await this.$store.dispatch('lang/setLanguage', activeLanguage)
 
-            if (activeLanguage) {
+            if (activeLanguage && process.env === 'production') {
                 const locale = activeLanguage.locale
                 this.$i18n.locale = locale
                 this.$i18n.setLocaleMessage(locale, this.$store.state.lang.translations)

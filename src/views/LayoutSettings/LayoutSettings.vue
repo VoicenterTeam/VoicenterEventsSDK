@@ -64,23 +64,15 @@
                             <template v-slot:actions>
                                 <div class="grid grid-cols-1 mt-8">
                                     <div class="col-span-1 flex justify-end">
-                                        <base-button outline
-                                                     fixed-width="w-37"
-                                                     @click="onDiscard(true)">
-                                            <div class="flex items-center">
-                                                <IconDiscard class="mx-1"/>
-                                                <span class="mx-1 text-base font-bold">{{ 'Discard' }}</span>
-                                            </div>
-                                        </base-button>
-                                        <div class="mx-2"/>
-                                        <base-button fixed-width="w-37"
-                                                     type="primary"
-                                                     @click="onApply">
-                                            <div class="flex items-center">
-                                                <IconSave class="mx-1"/>
-                                                <span class="mx-1 text-base font-bold">{{ $t('general.apply') }}</span>
-                                            </div>
-                                        </base-button>
+                                        <cancel-button
+                                            class="mx-4"
+                                            @on-click="onDiscard(true)"
+                                        />
+                                        <confirm-button
+                                            :label="$t('general.apply')"
+                                            icon="IconSave"
+                                            @on-click="onApply"
+                                        />
                                     </div>
                                 </div>
                             </template>
@@ -164,27 +156,16 @@
             <template v-slot:footer-actions>
                 <div class="w-full flex items-center justify-center">
                     <slot name="footer-actions">
-                        <base-button class="mr-4"
-                                     outline
-                                     fixed-width="w-30"
-                                     @click="showConfirmDialog = false">
-                            <div class="flex items-center">
-                                <IconDiscard class="mx-1" v-if="isDefaultLayout" />
-                                <span class="font-semibold">{{ $t('common.cancel') }}</span>
-                            </div>
-                        </base-button>
-                        <base-button
-                            class="ml-4"
-                            key="new-layout"
-                            fixed-width="w-30"
-                            type="primary"
+                        <cancel-button
+                            class="mx-4"
+                            @on-click="onCancelDialog"
+                        />
+                        <confirm-button
+                            :label="$t('general.apply')"
                             :loading="storingData"
                             :disabled="disabledForm"
-                            @click="onNewLayout">
-                            <span class="font-semibold">
-                                {{ $t('general.apply') }}
-                            </span>
-                        </base-button>
+                            @on-click="onNewLayout"
+                        />
                     </slot>
                 </div>
             </template>
@@ -207,7 +188,9 @@
             LayoutPreview: () => import('@/views/LayoutSettings/LayoutPreview'),
             LayoutWrapper: () => import('@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'),
             AlertTriangleIcon,
-            BaseRadioButton: () => import('@/components/BaseRadioButton')
+            BaseRadioButton: () => import('@/components/BaseRadioButton'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         data() {
             let validationThemeName = (rule, value, callback) => {
@@ -405,6 +388,9 @@
                         return false
                     }
                 })
+            },
+            onCancelDialog () {
+                this.showConfirmDialog = false
             }
         },
         mounted() {

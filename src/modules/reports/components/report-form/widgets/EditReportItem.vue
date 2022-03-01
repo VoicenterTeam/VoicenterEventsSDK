@@ -1,10 +1,13 @@
 <template>
     <ConfirmDialog :title="$t('report.editReportItem')"
+                   :modal-width="modalWidth"
+                   :title-centered="true"
+                   @on-cancel="onCancel"
+                   @on-submit="onSubmit"
+                   @close="onCancel"
                    v-bind="$attrs"
                    v-on="$listeners"
-                   @close="onCancel()"
-                   :modal-width="modalWidth"
-                   :title-centered="true">
+    >
         <el-form @submit.native.prevent="onSubmit"
                  ref="duplicateForm"
                  :model="model"
@@ -44,31 +47,19 @@
         </el-form>
         <template v-slot:footer-actions>
             <slot name="footer-actions">
-                <base-button class="mx-4"
-                             outline
-                             fixed-width="w-37"
-                             @click="onCancel">
-                    <div class="flex items-center">
-                        <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">
-                                {{ 'Cancel' }}
-                        </span>
-                    </div>
-                </base-button>
-                <base-button fixed-width="w-37"
-                             type="primary"
-                             @click="onSubmit()">
-                    <div class="flex items-center">
-                        <IconSave class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">
-                            {{ $t('common.save') }}
-                        </span>
-                    </div>
-                </base-button>
+                <cancel-button
+                    @on-click="onCancel"
+                />
+                <confirm-button
+                    :label="$t('Save')"
+                    icon="IconSave"
+                    @on-click="onSubmit"
+                />
             </slot>
         </template>
     </ConfirmDialog>
 </template>
+
 <script>
     import get from 'lodash/get'
     import { Checkbox } from 'element-ui'
@@ -77,6 +68,8 @@
         components: {
             ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
             [Checkbox.name]: Checkbox,
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             item: {
