@@ -70,6 +70,7 @@
                     fixed-width="w-37"
                     size="md"
                     type="primary"
+                    :disabled="!recipients.length"
                     @click="onFinish"
                 >
                     <div class="flex items-center">

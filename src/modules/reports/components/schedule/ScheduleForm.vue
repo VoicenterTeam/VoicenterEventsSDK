@@ -149,6 +149,10 @@
                 this.showDialog = false
             },
             onNext() {
+                if (this.currentStep === 1) {
+                    return
+                }
+
                 this.currentStep++
             },
             onBack() {

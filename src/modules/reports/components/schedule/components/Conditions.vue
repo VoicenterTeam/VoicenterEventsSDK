@@ -60,7 +60,7 @@
         computed: {
             canDelete() {
                 // console.log(this.reportTriggerTypeList, this.reportItemData, this.reportData)
-                return this.reportData.length > 1
+                return true
             }
         },
         methods: {

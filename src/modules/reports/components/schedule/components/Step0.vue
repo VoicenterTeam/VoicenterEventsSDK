@@ -146,7 +146,7 @@
                 }
                 const isConditionGroupsFieldsNotEmpty = () => {
                     if (!this.getReportData['ReportTriggerCondition'] || this.getReportData['ReportTriggerCondition'].length) {
-                        return false
+                        return [true]
                     }
                     return this.getReportData['ReportTriggerCondition'].map(field => {
                         return field.every(el => {
@@ -163,7 +163,7 @@
                         })
                     })
                 }
-                if (!isScheduleFieldsNotEmpty() || typeof isConditionGroupsFieldsNotEmpty() === 'boolean' || isConditionGroupsFieldsNotEmpty().some(el => !el)) {
+                if (!isScheduleFieldsNotEmpty() || isConditionGroupsFieldsNotEmpty().some(el => !el)) {
                     return
                 }
 
