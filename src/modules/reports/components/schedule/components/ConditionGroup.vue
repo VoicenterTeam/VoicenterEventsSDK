@@ -35,7 +35,7 @@
             </div>
             <div class="flex flex-col w-full">
                 <ConditionCard
-                    v-for="(condition, index) in conditions"
+                    v-for="(condition, index) in conditions.ReportTriggerConditionFilter"
                     :key="`condition-${index}`"
                     :index="condition"
                     class="my-2"
@@ -71,8 +71,8 @@
         },
         props: {
             conditions: {
-                type: Array,
-                default: () => [],
+                type: Object,
+                default: () => ({}),
             },
             canDelete: Boolean,
             reportItemData: {
@@ -90,7 +90,7 @@
         },
         computed: {
             showGroupedIndicator() {
-                return this.conditions.length > 1
+                return this.conditions.ReportTriggerConditionFilter.length > 1
             },
         },
         methods: {

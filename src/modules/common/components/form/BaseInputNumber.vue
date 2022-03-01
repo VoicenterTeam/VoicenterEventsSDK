@@ -3,7 +3,7 @@
         <div class="interval-label" v-if="label">
             {{ $t(label) }}
         </div>
-        <el-input-number v-model="model" @input="onChange" :placeholder="placeholder" :disabled="disabled"></el-input-number>
+        <el-input-number v-model="model" @input="onChange" :min="0" :placeholder="placeholder" :disabled="disabled"></el-input-number>
         <div class="el-form-item__error" v-show="isNotValidField">
           Field is required
         </div>
@@ -53,14 +53,15 @@ export default {
     },
     data () {
         return {
-            model: null
+            model: 0
         }
     },
     mounted () {
         if (this.isCondition) {
             this.model = this.inputValue
         } else {
-            this.model = this.getReportScheduleData[this.$attrs.ComponentTag]
+            const scheduleDataKey = 'ParameterTag' in this.$attrs ? this.$attrs.ParameterTag : this.$attrs.ComponentTag
+            this.model = this.getReportScheduleData[scheduleDataKey]
         }
     },
     computed: {

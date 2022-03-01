@@ -50,7 +50,8 @@ export default {
         if (this.isCondition) {
             this.model = this.inputValue
         } else {
-            this.model = this.getReportScheduleData[this.$attrs.ComponentTag]
+            const scheduleDataKey = 'ParameterTag' in this.$attrs ? this.$attrs.ParameterTag : this.$attrs.ComponentTag
+            this.model = this.getReportScheduleData[scheduleDataKey]
         }
     },
     computed: {

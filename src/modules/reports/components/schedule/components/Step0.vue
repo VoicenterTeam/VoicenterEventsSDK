@@ -68,13 +68,6 @@
     </div>
 </template>
 <script>
-    import BaseTimeRange from '@/modules/common/components/form/BaseTimeRange'
-    import BaseInterval from '@/modules/common/components/form/BaseInterval'
-    import BaseDate from '@/components/Widgets/BaseDate'
-    import Conditions from '@/modules/reports/components/schedule/components/Conditions'
-    import BaseDayOfTheWeek from '@/modules/common/components/form/BaseDayOfTheWeek'
-    import BaseInputText from '@/modules/common/components/form/BaseInputText'
-    import BaseInputNumber from '@/modules/common/components/form/BaseInputNumber'
 
     export default {
         props: {
@@ -84,13 +77,15 @@
             }
         },
         components: {
-            BaseTimeRange,
-            BaseInterval,
-            Conditions,
-            BaseDate,
-            BaseDayOfTheWeek,
-            BaseInputText,
-            BaseInputNumber
+            BaseTimeRange: () => import('@/modules/common/components/form/BaseTimeRange'),
+            BaseInterval: () => import('@/modules/common/components/form/BaseInterval'),
+            Conditions: () => import('@/modules/reports/components/schedule/components/Conditions'),
+            BaseDate: () => import('@/components/Widgets/BaseDate'),
+            BaseDayOfTheWeek: () => import('@/modules/common/components/form/BaseDayOfTheWeek'),
+            BaseInputText: () => import('@/modules/common/components/form/BaseInputText'),
+            BaseInputNumber: () => import('@/modules/common/components/form/BaseInputNumber'),
+            BaseUserSelect: () => import('@/modules/common/components/form/BaseUserSelect'),
+            BaseAccountSelect: () => import('@/modules/common/components/form/BaseAccountSelect')
         },
         data () {
             return {
@@ -184,23 +179,23 @@
                 this.$emit('on-update', objToEmit)
             },
             getComponentName (component) {
-                const componentTag = 'Base' + component.ParameterTypeName
-                // ParameterTypeName ComponentTag
+                const componentTag = 'Base' + component.ComponentTag
 
                 if (componentTag === 'BaseTime') {
-                    return 'BaseTime'
-                } else if (componentTag === 'BaseInterval') {
                     return 'BaseInterval'
                 } else if (componentTag === 'BaseDayOfMonth') {
                     return 'BaseDate'
                 } else if (componentTag === 'BaseText') {
                     return 'BaseInputText'
+                } else if (componentTag === 'BaseNumber') {
+                    return 'BaseInputNumber'
                 } else {
                     return componentTag
                 }
             },
             onChange (item) {
-                this.model[item.component.ComponentTag] = item.value
+                console.log(item.component, 'item.component')
+                this.model[item.component.ParameterTag] = item.value
             }
         },
         mounted () {
@@ -269,10 +264,10 @@
 .trigger-component:not(:last-child) {
     @apply mr-10;
 }
-.trigger-component .el-input {
+.trigger-component .el-input, .trigger-component .el-input-number {
     @apply w-32;
 }
-.time-picker .el-input__inner {
+.time-picker .el-date-editor.el-input__inner {
     @apply w-32;
 }
 .el-range-editor.is-active, .el-range-editor.is-active {

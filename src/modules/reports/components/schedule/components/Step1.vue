@@ -89,6 +89,7 @@
     import HtmlEditor from '@/components/Html/HtmlEditor'
     import { validateEmail } from '@/helpers/util'
     import { reportTriggerApi } from "@/modules/reports/services/reportTriggerService"
+    import cloneDeep from 'lodash/cloneDeep'
 
     const ReportRecipientTypeIDS = {
         User: 1,
@@ -106,7 +107,7 @@
         components: {
             HtmlEditor,
             [Select.name]: Select,
-            [Option.name]: Option,
+            [Option.name]: Option
         },
         data() {
             return {
@@ -163,15 +164,20 @@
         methods: {
             async onFinish() {
                 await this.updateReportData()
+                console.log(this.getReportData, 'this.getReportData')
 
-                try {
-                    const data = this.getReportData
+                // try {
+                //     const data = cloneDeep(this.getReportData)
+                //     data.ReportTriggerCondition
+                //         .forEach(condition => condition.ReportTriggerConditionFilter.filter(el => el.WidgetID))
+                //     data.ReportTriggerCondition = data.ReportTriggerCondition
+                //         .map(condition => !condition.length ? {} : condition)
 
-                    reportTriggerApi.createReportTrigger(data)
-                    this.$emit('on-finish')
-                } catch {
+                //     reportTriggerApi.createReportTrigger(data)
+                //     this.$emit('on-finish')
+                // } catch {
 
-                }
+                // }
             },
             tryAddEmail(values) {
                 const targetItem = values[values.length - 1]

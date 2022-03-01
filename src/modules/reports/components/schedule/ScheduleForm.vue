@@ -36,7 +36,7 @@
                             @on-update="onUpdateStepData"
                             :reportItemData="data"
                             @on-back="onBack"
-                            @0n-finish="onFinish"
+                            @on-finish="onFinish"
                             class="step-wrapper px-16"
                         />
                     </fade-transition>
@@ -80,10 +80,7 @@
     </div>
 </template>
 <script>
-    import Modal from '@/components/Common/Modal'
     // import Wizard from './modules/reports/components/wizard/Wizard'
-    import Step0 from '@/modules/reports/components/schedule/components/Step0'
-    import Step1 from '@/modules/reports/components/schedule/components/Step1'
     // import WizardSummary from '@/modules/reports/components/wizard/components/wizard-summary'
 
     const WIZARD_CONFIG = [
@@ -112,10 +109,9 @@
             }
         },
         components: {
-            Modal,
-            Step0,
-            Step1,
-            // Wizard,
+            Modal: () => import('@/components/Common/Modal'),
+            Step0: () => import('@/modules/reports/components/schedule/components/Step0'),
+            Step1: () => import('@/modules/reports/components/schedule/components/Step1')
         },
         data() {
             return {
@@ -168,11 +164,10 @@
                 this.currentStep = stepIndex
             },
             onFinish () {
-                this.$store.dispatch('report/resetReportData')
-                this.currentStep = 0
                 this.showDialog = false
+                this.$store.dispatch('report/resetReportData')
             }
-        },
+        }
     }
 </script>
 <style lang="scss">

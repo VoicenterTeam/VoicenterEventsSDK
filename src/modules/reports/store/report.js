@@ -30,9 +30,11 @@ const defaultReportData = {
     ReportTriggerRecipient: [],
     ScheduleData: {},
     ReportTriggerCondition: [
-        [
-            setDefaultReportConditionData()
-        ]
+        {
+            ReportTriggerConditionFilter: [
+                setDefaultReportConditionData()
+            ]
+        }
     ]
 }
 
@@ -56,18 +58,20 @@ const mutations = {
     },
     [types.CREATE_NEW_CRITERIA]: (state, step) => {
         state.reportData[step].push(
-            [
-                setDefaultReportConditionData()
-            ]
+            {
+                ReportTriggerConditionFilter: [
+                    setDefaultReportConditionData()
+                ]
+            }
         )
     },
     [types.CREATE_NEW_CONDITION]: (state, data) => {
-        state.reportData[data.step][data.index].push(
+        state.reportData[data.step][data.index].ReportTriggerConditionFilter.push(
             setDefaultReportConditionData()
         )
     },
     [types.DELETE_CONDITION]: (state, data) => {
-        state.reportData[data.step][data.groupIndex].splice(data.itemIndex, 1)
+        state.reportData[data.step][data.groupIndex].ReportTriggerConditionFilter.splice(data.itemIndex, 1)
     },
     [types.DELETE_CRITERIA]: (state, data) => {
         state.reportData[data.step].splice(data.index, 1)

@@ -88,13 +88,6 @@
     </div>
 </template>
 <script>
-    import BaseTimeRange from '@/modules/common/components/form/BaseTimeRange'
-    import BaseInterval from '@/modules/common/components/form/BaseInterval'
-    import BaseDate from '@/components/Widgets/BaseDate'
-    import BaseDayOfTheWeek from '@/modules/common/components/form/BaseDayOfTheWeek'
-    import BaseInputText from '@/modules/common/components/form/BaseInputText'
-    import BaseInputNumber from '@/modules/common/components/form/BaseInputNumber'
-
     export default {
         props: {
             condition: {
@@ -107,12 +100,14 @@
             }
         },
         components: {
-            BaseTimeRange,
-            BaseInterval,
-            BaseDate,
-            BaseDayOfTheWeek,
-            BaseInputText,
-            BaseInputNumber
+            BaseTimeRange: () => import('@/modules/common/components/form/BaseTimeRange'),
+            BaseInterval: () =>  import('@/modules/common/components/form/BaseInterval'),
+            BaseDate: () =>  import('@/components/Widgets/BaseDate'),
+            BaseDayOfTheWeek: () =>  import('@/modules/common/components/form/BaseDayOfTheWeek'),
+            BaseInputText: () =>  import('@/modules/common/components/form/BaseInputText'),
+            BaseInputNumber: () =>  import('@/modules/common/components/form/BaseInputNumber'),
+            BaseUserSelect: () => import('@/modules/common/components/form/BaseUserSelect'),
+            BaseAccountSelect: () => import('@/modules/common/components/form/BaseAccountSelect')
         },
         watch: {
             'condition.WidgetID' (val) {
@@ -193,20 +188,21 @@
         },
         methods: {
             getComponentName (component) {
-                const componentName = 'Base' + component.ParameterTypeName
-                if (componentName === 'BaseTime' || componentName === 'BaseInterval') {
+                const componentTag = 'Base' + component.ComponentTag
+                if (componentTag === 'BaseTime') {
                     return 'BaseInterval'
                 }
-                if (componentName === 'BaseDayOfMonth') {
+                if (componentTag === 'BaseDayOfMonth') {
                     return 'BaseDate'
                 }
-                if (componentName === 'BaseText') {
+                if (componentTag === 'BaseText') {
                     return 'BaseInputText'
                 }
-                if (componentName === 'BaseInteger' || componentName === 'BaseNumber') {
+                if (componentTag === 'BaseInteger' || componentTag === 'BaseNumber') {
                     return 'BaseInputNumber'
                 }
-                return componentName
+
+                return componentTag
             },
             onChange (data) {
                 this.condition.ConditionFilterValue = data.value

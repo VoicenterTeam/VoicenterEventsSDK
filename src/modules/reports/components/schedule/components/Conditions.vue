@@ -29,8 +29,6 @@
     </div>
 </template>
 <script>
-    import ConditionGroup from '@/modules/reports/components/schedule/components/ConditionGroup'
-
     export default {
         props: {
             reportTriggerTypeList: {
@@ -55,11 +53,10 @@
             }
         },
         components: {
-            ConditionGroup
+            ConditionGroup: () => import('@/modules/reports/components/schedule/components/ConditionGroup')
         },
         computed: {
             canDelete() {
-                // console.log(this.reportTriggerTypeList, this.reportItemData, this.reportData)
                 return true
             }
         },

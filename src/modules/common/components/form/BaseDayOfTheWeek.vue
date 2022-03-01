@@ -63,7 +63,8 @@ export default {
         if (this.isCondition) {
             this.model = this.inputValue && this.inputValue.length ? this.inputValue : []
         } else {
-            this.model = this.getReportScheduleData[this.$attrs.ComponentTag] && this.getReportScheduleData[this.$attrs.ComponentTag].length ? this.getReportScheduleData[this.$attrs.ComponentTag] : []
+            const scheduleDataKey = 'ParameterTag' in this.$attrs ? this.$attrs.ParameterTag : this.$attrs.ComponentTag
+            this.model = this.getReportScheduleData[scheduleDataKey] && this.getReportScheduleData[scheduleDataKey].length ? this.getReportScheduleData[scheduleDataKey] : []
         }
     },
     computed: {
