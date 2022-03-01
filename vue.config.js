@@ -4,13 +4,6 @@ module.exports = {
     //     https: true,
     //     port: 443,
     //     host: 'dashboarddev.voicenter.co' // dashboarddev2.voicenter.co - for hebrew
-    // // devServer: {
-    // //     https: true,
-    // //     port: 443,
-    // //     host: 'dashboarddev.voicenter.co' // dashboarddev2.voicenter.co - for hebrew
-    // },
-    // alias: {
-    //     "@": path.resolve(__dirname, 'src/')
     // },
     configureWebpack: {
         optimization: {
