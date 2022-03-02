@@ -5,18 +5,18 @@
             <slot name="label" />
         </div>
         <el-select
-            :placeholder="$t('ConditionFilterColumnType.Distributor_ID_id_list')"
             @change="onChange"
             class="w-full"
-            v-model="model">
+            v-model="model"
+            multiple
+        >
             <el-option
-                :key="option.value"
-                :label="$t(option.text)"
-                v-bind="option"
-                v-for="option in allAccounts"
-                :value="option.AccountID">
+                :key="`item-${item}`"
+                v-for="item in 30"
+                :value="item"
+            >
                 <div class="flex">
-                    {{ option.dist_name }}
+                    {{ item }}
                 </div>
             </el-option>
         </el-select>
@@ -39,7 +39,8 @@
                 default: false
             },
             inputValue: {
-                type: Number
+                type: Array,
+                default: () => []
             },
             isCondition: {
                 type: Boolean,
@@ -70,9 +71,6 @@
             },
             isNotValidField () {
                 return this.isClickedOnNextBtn && !this.model
-            },
-            allAccounts () {
-                return this.$store.getters['entities/getEntityList']('Accounts')
             }
         },
         methods: {

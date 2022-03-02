@@ -6,12 +6,12 @@
         </div>
         <div class="flex">
             <div v-for="day in daysAbbr"
-                :key="day"
-                @click="onChoseDay(day)"
+                :key="day.name"
+                @click="onChoseDay(day.value)"
                 class="transition flex text-sm mx-1 font-normal cursor-pointer rounded-full w-8 h-8 border border-gray-550 text-gray-550 items-center justify-center select-none"
-                :class="{'active': model.includes(day)}"
+                :class="{'active': model.includes(day.value)}"
             >
-                {{ day }}
+                {{ day.name }}
             </div>
         </div>
         <div class="el-form-item__error" v-show="isNotValidField">
@@ -43,7 +43,14 @@ export default {
     data () {
         return {
             daysAbbr: [
-                'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'
+                // 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'
+                { name: 'Su', value: 7 },
+                { name: 'Mo', value: 1 },
+                { name: 'Tu', value: 2 },
+                { name: 'We', value: 3 },
+                { name: 'Th', value: 4 },
+                { name: 'Fr', value: 5 },
+                { name: 'Sa', value: 6 }
             ],
             model: []
         }
@@ -76,10 +83,10 @@ export default {
         }
     },
     methods: {
-        onChoseDay(day) {
-            const index = this.model.findIndex(el => el === day)
+        onChoseDay(value) {
+            const index = this.model.findIndex(el => el.value === value)
             if (index === -1) {
-                this.model.push(day)
+                this.model.push(value)
                 return
             }
             this.model.splice(index, 1)

@@ -164,20 +164,37 @@
         methods: {
             async onFinish() {
                 await this.updateReportData()
-                console.log(this.getReportData, 'this.getReportData')
 
-                // try {
-                //     const data = cloneDeep(this.getReportData)
-                //     data.ReportTriggerCondition
-                //         .forEach(condition => condition.ReportTriggerConditionFilter.filter(el => el.WidgetID))
-                //     data.ReportTriggerCondition = data.ReportTriggerCondition
-                //         .map(condition => !condition.length ? {} : condition)
+                try {
+                    const data = cloneDeep(this.getReportData)
 
-                //     reportTriggerApi.createReportTrigger(data)
-                //     this.$emit('on-finish')
-                // } catch {
+                    if (data.ReportTriggerCondition.length) {
+                        data.ReportTriggerCondition = data.ReportTriggerCondition
+                            .map(condition => {
+                                const filteredReportTriggerConditionFilter = condition.ReportTriggerConditionFilter.filter(el => el.WidgetID)
 
-                // }
+                                return filteredReportTriggerConditionFilter.length ? condition : {}
+                            })
+                    } else {
+                        data.ReportTriggerCondition = [{}]
+                    }
+
+                    if ('TriggerTimeRange' in data.ScheduleData) {
+                        const timeRange = data.ScheduleData.TriggerTimeRange
+                        data.ScheduleData.TriggerTimeRange = {
+                            Start: timeRange[0],
+                            End: timeRange[1]
+                        }
+                    }
+                    if ('TriggerDayOfWeek' in data.ScheduleData) {
+                        data.ScheduleData.TriggerDayOfWeek.sort((a, b) => a - b)
+                    }
+
+                    reportTriggerApi.createReportTrigger(data)
+                    this.$emit('on-finish')
+                } catch {
+
+                }
             },
             tryAddEmail(values) {
                 const targetItem = values[values.length - 1]

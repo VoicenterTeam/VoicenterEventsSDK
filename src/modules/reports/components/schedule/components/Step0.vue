@@ -85,7 +85,8 @@
             BaseInputText: () => import('@/modules/common/components/form/BaseInputText'),
             BaseInputNumber: () => import('@/modules/common/components/form/BaseInputNumber'),
             BaseUserSelect: () => import('@/modules/common/components/form/BaseUserSelect'),
-            BaseAccountSelect: () => import('@/modules/common/components/form/BaseAccountSelect')
+            BaseAccountSelect: () => import('@/modules/common/components/form/BaseAccountSelect'),
+            BaseDayOfMonth: () => import('@/modules/common/components/form/BaseDayOfMonth')
         },
         data () {
             return {
@@ -119,7 +120,10 @@
             async onChangeFrequency (val) {
                 const copyOfModel = JSON.parse(JSON.stringify(this.model))
                 await this.$store.dispatch('report/updateReportDataScheduleSettings', {})
-                this.model = {}
+                this.model = {
+                    ReportTriggerTypeID: null,
+                    ReportTriggerName: null
+                }
                 this.model.ReportTriggerTypeID = val
                 this.model.ReportTriggerName = copyOfModel.ReportTriggerName
                 this.showTriggerComponents = false
@@ -184,7 +188,7 @@
                 if (componentTag === 'BaseTime') {
                     return 'BaseInterval'
                 } else if (componentTag === 'BaseDayOfMonth') {
-                    return 'BaseDate'
+                    return 'BaseDayOfMonth'
                 } else if (componentTag === 'BaseText') {
                     return 'BaseInputText'
                 } else if (componentTag === 'BaseNumber') {
@@ -194,7 +198,6 @@
                 }
             },
             onChange (item) {
-                console.log(item.component, 'item.component')
                 this.model[item.component.ParameterTag] = item.value
             }
         },
