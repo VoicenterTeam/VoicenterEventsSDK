@@ -129,9 +129,6 @@
                 }
             }
         },
-        async mounted () {
-            await this.$store.dispatch('report/resetReportData')
-        },
         computed: {
             getStepComponent() {
                 return `Step${this.currentStep}`

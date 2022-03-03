@@ -21,7 +21,6 @@
                         v-model="model.ReportTriggerTypeID"
                         labelKey="ReportTriggerTypeName"
                         valueKey="ReportTriggerTypeID"
-                        size="small"
                         :multiple="false"
                         :filterable="false"
                         :data="reportTriggerTypeList"

@@ -2,8 +2,18 @@
     <div class="w-full bg-gray-200">
         Edit page
         <br>
+        <!-- <div
+            v-for="(item, index) in report.ReportTriggerList"
+            :key="`item-${index}`"
+        >
+            {{ item }}
+            <ScheduleForm :data="item[0]" />
+        </div> -->
         <!-- <div v-if="report">qwf</div> -->
         <ScheduleForm :data="report" />
+        <div @click="setData">
+            qwfqwf
+        </div>
     </div>
 </template>
 
@@ -35,7 +45,15 @@ export default {
         }
     },
     methods: {
+        setData () {
+            const data = cloneDeep(this.report.ReportTriggerList[30])
 
+            if ('TriggerTimeRange' in data.ScheduleData) {
+                const timeRange = data.ScheduleData.TriggerTimeRange
+                data.ScheduleData.TriggerTimeRange = [timeRange.Start, timeRange.End]
+            }
+            this.$store.dispatch('report/updateReportData', data)
+        }
     },
     async mounted() {
         if (this.data) {
@@ -47,6 +65,8 @@ export default {
             const reportName = get(data, 'ReportName', '')
             this.$emit('update-title', this.reportId, reportName)
         }
+
+        this.$store.dispatch('report/resetReportData')
     }
 }
 </script>
