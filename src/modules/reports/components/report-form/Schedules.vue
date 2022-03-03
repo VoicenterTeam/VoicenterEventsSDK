@@ -16,13 +16,11 @@
     </div>
 </template>
 <script>
-    import ScheduleCard from '@/modules/reports/components/report-form/ScheduleCard'
-    import ScheduleForm from '@/modules/reports/components/report-form/ScheduleForm'
     
     export default {
         components: {
-            ScheduleCard,
-            ScheduleForm,
+            ScheduleCard: () => import('@/modules/reports/components/report-form/ScheduleCard'),
+            ScheduleForm: () => import('@/modules/reports/components/report-form/ScheduleForm')
         },
         props: {
             type: Object,

@@ -142,9 +142,6 @@
     import get from 'lodash/get'
     import { Checkbox } from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
-    import PageLimit from '@/modules/common/components/PageLimit'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import DataTable from '@/modules/common/components/DataTable'
     import {
         STATUS_IDS,
         STATUS_VALUES,
@@ -154,21 +151,18 @@
         HTML_EXPORT_TYPE_ID,
         BOTH_EXPORT_TYPE_ID,
     } from '@/modules/reports/enum/report'
-    import EditReportItem from '@/modules/reports/components/report-form/widgets/EditReportItem'
-    import ManageWidgetDialog from '@/modules/reports/components/report-form/widgets/ManageWidgetDialog'
-    import ReorderWidgetsDialog from '@/modules/reports/components/report-form/widgets/ReorderWidgetsDialog'
     
     const PDF = 'pdf'
     const SPREADSHEET = 'spreadsheet'
     
     export default {
         components: {
-            PageLimit,
-            DataTable,
-            ConfirmDialog,
-            EditReportItem,
-            ManageWidgetDialog,
-            ReorderWidgetsDialog,
+            PageLimit: () => import('@/modules/common/components/PageLimit'),
+            DataTable: () => import('@/modules/common/components/DataTable'),
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            EditReportItem: () => import('@/modules/reports/components/report-form/widgets/EditReportItem'),
+            ManageWidgetDialog: () => import('@/modules/reports/components/report-form/widgets/ManageWidgetDialog'),
+            ReorderWidgetsDialog: () => import('@/modules/reports/components/report-form/widgets/ReorderWidgetsDialog'),
             [Checkbox.name]: Checkbox,
         },
         props: {

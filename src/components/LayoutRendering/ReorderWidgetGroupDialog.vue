@@ -41,18 +41,14 @@
     </modal>
 </template>
 <script>
-    import Modal from '@/components/Common/Modal'
     import draggableEvents from '@/enum/draggableEvents'
-    import DraggableList from '@/components/Widgets/DraggableList'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
-            Modal,
-            DraggableList,
-            CancelButton,
-            ConfirmButton
+            Modal: () => import('@/components/Common/Modal'),
+            DraggableList: () => import('@/components/Widgets/DraggableList'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widgetGroupList: {

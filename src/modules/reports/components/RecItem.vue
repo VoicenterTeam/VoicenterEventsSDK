@@ -8,11 +8,10 @@
     </tag>
 </template>
 <script>
-    import Tag from '@/modules/reports/components/Tag'
-    
+   
     export default {
         components: {
-            Tag,
+            Tag: () => import('@/modules/reports/components/Tag')
         },
         props: {
             name: String,

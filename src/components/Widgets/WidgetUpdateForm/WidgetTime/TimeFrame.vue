@@ -22,14 +22,12 @@
 </template>
 <script>
     import {Collapse, CollapseItem} from 'element-ui'
-    import TimeAbsolute from './TimeAbsolute'
-    import TimeRelative from './TimeRelative'
     import {capitalizeFirstLetter} from '@/helpers/util'
 
     export default {
         components: {
-            TimeAbsolute,
-            TimeRelative,
+            TimeAbsolute: () => import('./TimeAbsolute'),
+            TimeRelative: () => import('./TimeRelative'),
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
         },

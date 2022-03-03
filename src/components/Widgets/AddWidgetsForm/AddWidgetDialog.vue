@@ -78,29 +78,19 @@
     import get from 'lodash/get'
     import sum from 'lodash/sum'
     import isEmpty from 'lodash/isEmpty'
-    import Modal from '@/components/Common/Modal'
-    import TemplatePreview from '@/components/Widgets/AddWidgetsForm/TemplatePreview'
-    import TemplateSummaries from '@/components/Widgets/AddWidgetsForm/TemplateSummaries'
-    import TemplateCategories from '@/components/Widgets/AddWidgetsForm/TemplateCategories'
-    import TemplatesSettingSetup from '@/components/Widgets/AddWidgetsForm/TemplatesSettingSetup'
-    import TemplateCategoryPreview from '@/components/Widgets/AddWidgetsForm/TemplateCategoryPreview'
-    import TemplatesEditWidget from '@/components/Widgets/AddWidgetsForm/TemplatesEditWidget'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
-            Modal,
-            TemplatePreview,
-            TemplateSummaries,
-            TemplateCategories,
-            TemplatesSettingSetup,
-            TemplateCategoryPreview,
-            TemplatesEditWidget,
-            ConfirmDialog,
-            CancelButton,
-            ConfirmButton
+            Modal: () => import('@/components/Common/Modal'),
+            TemplatePreview: () => import('@/components/Widgets/AddWidgetsForm/TemplatePreview'),
+            TemplateSummaries: () => import('@/components/Widgets/AddWidgetsForm/TemplateSummaries'),
+            TemplateCategories: () => import('@/components/Widgets/AddWidgetsForm/TemplateCategories'),
+            TemplatesSettingSetup: () => import('@/components/Widgets/AddWidgetsForm/TemplatesSettingSetup'),
+            TemplateCategoryPreview: () => import('@/components/Widgets/AddWidgetsForm/TemplateCategoryPreview'),
+            TemplatesEditWidget: () => import('@/components/Widgets/AddWidgetsForm/TemplatesEditWidget'),
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             modalWidth: {

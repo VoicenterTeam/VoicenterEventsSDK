@@ -27,16 +27,12 @@
         </tabs>
     </div>
 </template>
-<script>
-    import Tabs from '@/components/Tabs'
-    import WidgetList from '@/components/Widgets/WidgetList'
-    import EditGroupButtons from '@/components/EditGroupButtons'
-    
+<script>   
     export default {
         components: {
-            EditGroupButtons,
-            WidgetList,
-            Tabs,
+            EditGroupButtons: () => import('@/components/EditGroupButtons'),
+            WidgetList: () => import('@/components/Widgets/WidgetList'),
+            Tabs: () => import('@/components/Tabs')
         },
         props: {
             storingData: {

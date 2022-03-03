@@ -41,18 +41,16 @@
 </template>
 <script>
     import { LayoutApi } from '@/api/layoutApi'
-    import Modal from '@/components/Common/Modal'
     import { DashboardApi } from '@/api/dashboardApi'
     import { Alert, Option, Select } from 'element-ui'
-    import LayoutSelect from '@/views/common/LayoutSelect'
     import { statusDictionary } from '@/views/DashboardSettings/LayoutManagement/layout-management'
     import CancelButton from "@/components/Common/Buttons/CancelButton"
     import DeleteButton from "@/components/Common/Buttons/DeleteButton"
 
     export default {
         components: {
-            Modal,
-            LayoutSelect,
+            Modal: () => import('@/components/Common/Modal'),
+            LayoutSelect: () => import('@/views/common/LayoutSelect'),
             [Alert.name]: Alert,
             [Select.name]: Select,
             [Option.name]: Option,

@@ -9,11 +9,10 @@
     </div>
 </template>
 <script>
-    import ReportForm from '@/modules/reports/components/report-form/ReportForm'
     
     export default {
         components: {
-            ReportForm,
+            ReportForm: () => import('@/modules/reports/components/report-form/ReportForm')
         },
         data() {
             return {
@@ -31,8 +30,8 @@
                 this.report = {
                     ...this.reportToEdit,
                 }
-                const { ReportName } = this.report
-                this.$emit('on-update-tabs', ReportName)
+                const { ReportName, ReportID} = this.report
+                this.$emit('on-update-tabs', ReportName, ReportID)
             },
             async onUpdateReport(data = {}) {
                 console.log({data})
@@ -44,6 +43,7 @@
             },
         },
         mounted() {
+            console.log('MOUNTED')
             if (!this.reportToEdit) {
                 this.$notify({
                     type: 'danger',

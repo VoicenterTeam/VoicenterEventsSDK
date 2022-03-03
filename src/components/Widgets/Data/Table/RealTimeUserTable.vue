@@ -90,13 +90,8 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import TimeFrame from './TimeFrame'
-    import CallsInfo from './CallsInfo'
-    import UserStatus from './UserStatus'
     import cloneDeep from 'lodash/cloneDeep'
-    import StatusDuration from './StatusDuration'
     import dataTableMixin from '@/mixins/dataTableMixin'
-    import DataTable from '@/components/Table/DataTable'
     import { extensionColor } from '@/util/extensionStyles'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
     import { dynamicRows } from '@/enum/realTimeTableConfigs'
@@ -107,11 +102,11 @@
     export default {
         mixins: [dataTableMixin],
         components: {
-            CallsInfo,
-            DataTable,
-            TimeFrame,
-            UserStatus,
-            StatusDuration,
+            CallsInfo: () => import('./CallsInfo'),
+            DataTable: () => import('@/components/Table/DataTable'),
+            TimeFrame: () => import('./TimeFrame'),
+            UserStatus: () => import('./UserStatus'),
+            StatusDuration: () => import('./StatusDuration')
         },
         props: {
             data: {

@@ -70,21 +70,16 @@
     </div>
 </template>
 <script>
-    import Modal from '@/components/Common/Modal'
-    import Tabs from '@/modules/common/components/Tabs'
-    import DraggableList from '@/components/Widgets/DraggableList'
     import { BOTH_EXPORT_TYPE_ID } from '@/modules/reports/enum/report'
     import cloneDeep from 'lodash/cloneDeep'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
-            Tabs,
-            Modal,
-            DraggableList,
-            CancelButton,
-            ConfirmButton,
+            Tabs: () => import('@/modules/common/components/Tabs'),
+            Modal: () => import('@/components/Common/Modal'),
+            DraggableList: () => import('@/components/Widgets/DraggableList'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             report: {

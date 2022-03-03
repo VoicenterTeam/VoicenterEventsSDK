@@ -53,7 +53,6 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import { Select, Option } from 'element-ui'
-    import HtmlEditor from '@/components/Html/HtmlEditor'
     import { makeRandomID, validateEmail } from '@/helpers/util'
     import { recipientObject } from '@/modules/reports/enum/report'
 
@@ -65,7 +64,7 @@
             },
         },
         components: {
-            HtmlEditor,
+            HtmlEditor: () => import('@/components/Html/HtmlEditor'),
             [Select.name]: Select,
             [Option.name]: Option,
         },

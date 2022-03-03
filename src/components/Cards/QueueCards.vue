@@ -73,7 +73,6 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox, Option, Select, Tooltip, Collapse, CollapseItem } from 'element-ui'
-    import UpdateDialog from './UpdateDialog'
     import { typeKeys, typeNames, types } from '@/enum/queueCounters'
     import { EditIcon, MoreVerticalIcon, TrashIcon } from 'vue-feather-icons'
     import { defaultCardColors } from '@/enum/defaultWidgetSettings'
@@ -83,9 +82,6 @@
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
     import { getOptionsList } from '@/helpers/entitiesList';
     import get from 'lodash/get';
-    import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         mixins: [queueMixin, cardWidgetMixin],
@@ -115,16 +111,16 @@
             TrashIcon,
             EditIcon,
             MoreVerticalIcon,
-            UpdateDialog,
-            AutoComplete,
+            UpdateDialog: () => import('./UpdateDialog'),
+            AutoComplete: () => import('@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'),
             [Select.name]: Select,
             [Option.name]: Option,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
-            CancelButton,
-            ConfirmButton,
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         data() {
             return {

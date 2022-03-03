@@ -24,22 +24,7 @@
     import PdfDraw from '@/mixins/pdf-draw-mixin'
     import { getWidgetDataType, getWidgetEndpoint } from '@/helpers/widgetUtils'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
-    
-    import PieChart from '@/components/Charts/PieChart'
-    import AreaChart from '@/components/Charts/AreaChart'
-    import QueueChart from '@/components/Charts/QueueChart'
-    import GaugeChart from '@/components/Charts/GaugeChart'
-    import XaxisChart from '@/components/Charts/XaxisChart'
-    import StatusCards from '@/components/Cards/StatusCards'
-    import TimeLineChart from '@/components/Charts/TimeLineChart'
-    import ExtensionCards from '@/components/Cards/ExtensionCards'
-    import TableData from '@/components/Widgets/Data/Table/TableData'
-    import TotalOutgoingCall from '@/components/Cards/TotalOutgoingCall'
-    import HtmlWidget from '@/components/Widgets/ExternalData/HtmlWidget'
-    import QueueDashboard from '@/components/Widgets/Data/Queue/QueueDashboard'
-    import QueueActiveCall from '@/components/Widgets/Data/Queue/QueueActiveCall'
-    import ExternalDataWidget from '@/components/Widgets/ExternalData/ExternalDataWidget'
-    
+
     function delay(time) {
         return new Promise((resolve) => {
             return setTimeout(resolve, time)
@@ -51,20 +36,20 @@
     export default {
         mixins: [PdfDraw],
         components: {
-            TableData,
-            HtmlWidget,
-            PieChart,
-            AreaChart,
-            QueueChart,
-            GaugeChart,
-            XaxisChart,
-            StatusCards,
-            TimeLineChart,
-            ExtensionCards,
-            QueueDashboard,
-            QueueActiveCall,
-            TotalOutgoingCall,
-            ExternalDataWidget,
+            TableData: () => import('@/components/Widgets/Data/Table/TableData'),
+            HtmlWidget: () => import('@/components/Widgets/ExternalData/HtmlWidget'),
+            PieChart: () => import('@/components/Charts/PieChart'),
+            AreaChart: () => import('@/components/Charts/AreaChart'),
+            QueueChart: () => import('@/components/Charts/QueueChart'),
+            GaugeChart: () => import('@/components/Charts/GaugeChart'),
+            XaxisChart: () => import('@/components/Charts/XaxisChart'),
+            StatusCards: () => import('@/components/Cards/StatusCards'),
+            TimeLineChart: () => import('@/components/Charts/TimeLineChart'),
+            ExtensionCards: () => import('@/components/Cards/ExtensionCards'),
+            QueueDashboard: () => import('@/components/Widgets/Data/Queue/QueueDashboard'),
+            QueueActiveCall: () => import('@/components/Widgets/Data/Queue/QueueActiveCall'),
+            TotalOutgoingCall: () => import('@/components/Cards/TotalOutgoingCall'),
+            ExternalDataWidget: () => import('@/components/Widgets/ExternalData/ExternalDataWidget')
         },
         props: {
             widgetGroupList: {

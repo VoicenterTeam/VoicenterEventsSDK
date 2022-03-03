@@ -55,11 +55,9 @@
     </div>
 </template>
 <script>
-    import RecipientCard from '@/modules/reports/components/report-form/RecipientCard'
-
     export default {
         components: {
-            RecipientCard,
+            RecipientCard: () => import('@/modules/reports/components/report-form/RecipientCard')
         },
         props: {
             schedule: {

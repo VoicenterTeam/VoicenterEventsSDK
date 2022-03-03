@@ -112,21 +112,12 @@
     import get from 'lodash/get'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
-    import AccountNoData from '@/views/AccountNoData'
     import { targets, types } from '@/enum/operations'
-    import NewGroupButton from '@/components/NewGroupButton'
     import { dashboardOperation } from '@/models/instances'
-    import Sidebar from '@/components/LayoutRendering/Sidebar'
-    import DeleteDialog from '@/components/Dialogs/DeleteDialog'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
     import { retrySocketConnection } from '@/plugins/initRealTimeSdk'
     import { runDashboardOperations } from '@/services/dashboardService'
-    import ListView from '@/components/LayoutRendering/Types/ListView'
-    import SocketStatusAlert from '@/components/Common/SocketStatusAlert'
-    import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
-    import SocketStatusButton from '@/components/Common/SocketStatusButton'
-    import ManageDashboardButtons from '@/components/ManageDashboardButtons'
     import addEntitiesMixin from '@/mixins/dashobardOperation/addEntitiesMixin'
     import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
@@ -134,16 +125,16 @@
     
     export default {
         components: {
-            AccountNoData,
-            ManageDashboardButtons,
+            AccountNoData: () => import('@/views/AccountNoData'),
+            ManageDashboardButtons: () => import('@/components/ManageDashboardButtons'),
             [Switcher.name]: Switcher,
-            NewGroupButton,
-            ListView,
-            TabbedView,
-            Sidebar,
-            SocketStatusButton,
-            SocketStatusAlert,
-            DeleteDialog,
+            NewGroupButton: () => import('@/components/NewGroupButton'),
+            ListView: () => import('@/components/LayoutRendering/Types/ListView'),
+            TabbedView: () => import('@/components/LayoutRendering/Types/TabbedView'),
+            Sidebar: () => import('@/components/LayoutRendering/Sidebar'),
+            SocketStatusButton: () => import('@/components/Common/SocketStatusButton'),
+            SocketStatusAlert: () => import('@/components/Common/SocketStatusAlert'),
+            DeleteDialog: () => import('@/components/Dialogs/DeleteDialog')
         },
         mixins: [removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
         props: {

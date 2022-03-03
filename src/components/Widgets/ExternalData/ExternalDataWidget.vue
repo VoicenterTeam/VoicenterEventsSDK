@@ -15,23 +15,17 @@
     </div>
 </template>
 <script>
-    import TableData from '../Data/Table/TableData'
-    import PieChart from '@/components/Charts/PieChart'
-    import GaugeChart from '@/components/Charts/GaugeChart'
-    import CounterCard from '@/components/Cards/CounterCard'
     import { defaultColors } from '@/enum/defaultWidgetSettings'
-    import TimeLineChart from '@/components/Charts/TimeLineChart'
-    import Funnel3DChart from '@/components/Charts/Funnel3DChart'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     
     export default {
         components: {
-            Funnel3DChart,
-            CounterCard,
-            GaugeChart,
-            TableData,
-            TimeLineChart,
-            PieChart,
+            Funnel3DChart: () => import('@/components/Charts/Funnel3DChart'),
+            CounterCard: () => import('@/components/Cards/CounterCard'),
+            GaugeChart: () => import('@/components/Charts/GaugeChart'),
+            TableData: () => import('../Data/Table/TableData'),
+            TimeLineChart: () => import('@/components/Charts/TimeLineChart'),
+            PieChart: () => import('@/components/Charts/PieChart')
         },
         props: {
             data: {

@@ -70,17 +70,10 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import { Alert, Checkbox, Collapse, CollapseItem, Option, Select } from 'element-ui'
-    import Modal from '@/components/Common/Modal';
     import { isPieWidget } from '@/helpers/widgetUtils'
     import { dictionary, options } from '@/enum/externalDataWidgetConfig'
-    import WidgetColors from '../WidgetUpdateForm/WidgetLayout/WidgetColors'
-    import WidgetPadding from '../WidgetUpdateForm/WidgetLayout/WidgetPadding'
-    import StaticWidgetInfo from '../WidgetUpdateForm/StaticWidgetInfo'
     import JsonViewer from 'vue-json-viewer'
-    import WidgetRefreshInterval from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'
-    import CancelButton from "@/components/Common/Buttons/CancelButton";
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton";
-
+    
     export default {
         components: {
             [Checkbox.name]: Checkbox,
@@ -89,14 +82,14 @@
             [Alert.name]: Alert,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
-            Modal,
-            JsonViewer,
-            WidgetColors,
-            WidgetPadding,
-            StaticWidgetInfo,
-            WidgetRefreshInterval,
-            CancelButton,
-            ConfirmButton,
+            Modal: () => import('@/components/Common/Modal'),
+            JsonViewer: JsonViewer,
+            WidgetColors: () => import('../WidgetUpdateForm/WidgetLayout/WidgetColors'),
+            WidgetPadding: () => import('../WidgetUpdateForm/WidgetLayout/WidgetPadding'),
+            StaticWidgetInfo: () => import('../WidgetUpdateForm/StaticWidgetInfo'),
+            WidgetRefreshInterval: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widget: {

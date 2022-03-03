@@ -23,30 +23,10 @@
     </div>
 </template>
 <script>
-    import ConditionGroup from '@/modules/reports/components/schedule/components/ConditionGroup'
 
     export default {
         components: {
-            ConditionGroup,
-        },
-        data() {
-            return {
-                emptyCondition: {
-                    props: {},
-                },
-                emptyCriteria: [
-                    {
-                        props: {},
-                    },
-                ],
-                groups: [
-                    [
-                        {
-                            props: {},
-                        },
-                    ],
-                ],
-            }
+            ConditionGroup: () => import('@/modules/reports/components/schedule/components/ConditionGroup')
         },
         computed: {
             canDelete() {

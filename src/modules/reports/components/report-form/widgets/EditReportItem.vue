@@ -63,16 +63,13 @@
 <script>
     import get from 'lodash/get'
     import { Checkbox } from 'element-ui'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
-            ConfirmDialog,
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
             [Checkbox.name]: Checkbox,
-            CancelButton,
-            ConfirmButton
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             item: {

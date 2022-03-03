@@ -8,12 +8,10 @@
         />
     </div>
 </template>
-<script>
-    import WizardStep from '@/modules/reports/components/wizard/components/WizardStep'
-    
+<script>    
     export default {
         components: {
-            WizardStep,
+            WizardStep: () => import('@/modules/reports/components/wizard/components/WizardStep')
         },
         props: {
             steps: {

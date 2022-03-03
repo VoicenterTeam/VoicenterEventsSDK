@@ -86,22 +86,17 @@
     import { layoutTypes } from '@/enum/layout'
     import { Trash2Icon } from 'vue-feather-icons'
     import { getDefaultGridLayout } from '@/helpers/util'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import AddWidgetDialog from '@/components/Widgets/AddWidgetsForm/AddWidgetDialog'
-    import ReorderWidgetGroupDialog from '@/components/LayoutRendering/ReorderWidgetGroupDialog'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
     
     export default {
         inheritAttrs: false,
         name: 'edit-group-buttons',
         components: {
             Trash2Icon,
-            ConfirmDialog,
-            AddWidgetDialog,
-            ReorderWidgetGroupDialog,
-            CancelButton,
-            ConfirmButton,
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            AddWidgetDialog: () => import('@/components/Widgets/AddWidgetsForm/AddWidgetDialog'),
+            ReorderWidgetGroupDialog: () => import('@/components/LayoutRendering/ReorderWidgetGroupDialog'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widgetGroup: {

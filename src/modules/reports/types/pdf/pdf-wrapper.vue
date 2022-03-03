@@ -29,15 +29,12 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import WidgetList from '@/modules/reports/types/pdf/widget-list'
     import { DashboardApi } from '@/api/dashboardApi'
-    
-    import ListView from '@/components/LayoutRendering/Types/ListView'
     
     export default {
         components: {
-            WidgetList,
-            ListView,
+            WidgetList: () => import('@/modules/reports/types/pdf/widget-list'),
+            ListView: () => import('@/components/LayoutRendering/Types/ListView')
         },
         data() {
             return {

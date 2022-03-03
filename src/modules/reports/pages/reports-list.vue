@@ -33,16 +33,13 @@
     </div>
 </template>
 <script>
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import ReportsTable from '@/modules/reports/components/ReportsTable'
-    import DuplicateReportDialog from '@/modules/reports/components/report-form/DuplicateReportDialog'
     import { reportApi } from '@/modules/reports/services/reportService'
     
     export default {
         components: {
-            ReportsTable,
-            ConfirmDialog,
-            DuplicateReportDialog,
+            ReportsTable: () => import('@/modules/reports/components/ReportsTable'),
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            DuplicateReportDialog: () => import('@/modules/reports/components/report-form/DuplicateReportDialog')
         },
         data() {
             return {
@@ -58,9 +55,11 @@
                 this.reportToDuplicate = report
             },
             async onEditReport(report) {
+                console.log('LIST onEditReport', report)
                 await this.storeReport(report)
-                this.$emit('on-update-tabs', report.ReportName)
+                this.$emit('on-update-tabs', report.ReportName, report.ReportID)
                 const editUrl = `/reports/edit/${report.ReportID}`
+                if(this.$route.path === editUrl) return
                 await this.$router.push(editUrl)
             },
             async storeReport(report) {
