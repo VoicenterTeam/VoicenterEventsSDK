@@ -84,12 +84,12 @@ export default {
     },
     methods: {
         onChoseDay(value) {
-            const index = this.model.findIndex(el => el.value === value)
+            const index = this.model.findIndex(el => el === value)
             if (index === -1) {
                 this.model.push(value)
-                return
+            } else {
+                this.model.splice(index, 1)
             }
-            this.model.splice(index, 1)
         }
     }
 }
