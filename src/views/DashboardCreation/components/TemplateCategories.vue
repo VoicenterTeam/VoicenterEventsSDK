@@ -22,11 +22,10 @@
 </template>
 <script>
     import { Tooltip } from 'element-ui'
-    import Template from '@/views/DashboardCreation/components/Template'
 
     export default {
         components: {
-            Template,
+            Template: () => import('@/views/DashboardCreation/components/Template'),
             [Tooltip.name]: Tooltip,
         },
         props: {

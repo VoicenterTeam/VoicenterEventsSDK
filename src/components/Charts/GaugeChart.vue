@@ -38,8 +38,6 @@
     import solidGaugeInit from 'highcharts/modules/solid-gauge'
     import { isExternalDataWidget } from '@/helpers/widgetUtils'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
-    import DataTable from '@/components/Table/DataTable'
-    import WaitingTime from '@/components/Widgets/Data/Queue/WaitingTime'
     import {activeGaugeCallColumns} from "@/enum/queueConfigs";
     import orderBy from "lodash/orderBy";
     
@@ -52,8 +50,8 @@
             TrashIcon,
             highcharts: Chart,
             [Tooltip.name]: Tooltip,
-            DataTable,
-            WaitingTime,
+            DataTable: () => import('@/components/Table/DataTable'),
+            WaitingTime: () => import('@/components/Widgets/Data/Queue/WaitingTime')
         },
         props: {
             data: {

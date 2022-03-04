@@ -85,33 +85,28 @@
     </div>
 </template>
 <script>
-    import RealTimeUserTable from './RealTimeUserTable'
-    import TimeFrame from './TimeFrame'
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
     import { Option, Select } from 'element-ui'
-    import AudioPlayer from '@/components/Audio/AudioPlayer'
-    import DataTable from '@/components/Table/DataTable'
     import { isMultiQueuesDashboard, isRealtimeWidget } from '@/helpers/widgetUtils'
     import { getDefaultTimeDelay } from '@/enum/generic'
     import { getWidgetData } from '@/services/widgetService'
     import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
-    import Pagination from '@/modules/common/components/Pagination'
 
     export default {
         mixins: [dataTableMixin],
         components: {
-            DataTable,
-            TimeFrame,
-            AudioPlayer,
-            RealTimeUserTable,
-            Pagination,
+            DataTable: () => import('@/components/Table/DataTable'),
+            TimeFrame: () => import('./TimeFrame'),
+            AudioPlayer: () => import('@/components/Audio/AudioPlayer'),
+            RealTimeUserTable: () => import('./RealTimeUserTable'),
+            Pagination: () => import('@/modules/common/components/Pagination'),
             [Select.name]: Select,
             [Option.name]: Option,
-            [MultiQueuesDashboard.name]: MultiQueuesDashboard,
+            [MultiQueuesDashboard.name]: MultiQueuesDashboard
         },
         props: {
             data: {

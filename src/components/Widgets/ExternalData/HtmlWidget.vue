@@ -16,14 +16,12 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import HtmlEditor from '../../Html/HtmlEditor'
     import { defaultColors } from '@/enum/defaultWidgetSettings'
-    import WidgetNoteList from '@/components/Widgets/WidgetNoteList'
 
     export default {
         components: {
-            WidgetNoteList,
-            HtmlEditor,
+            WidgetNoteList: () => import('@/components/Widgets/WidgetNoteList'),
+            HtmlEditor: () => import('../../Html/HtmlEditor')
         },
         props: {
             data: {

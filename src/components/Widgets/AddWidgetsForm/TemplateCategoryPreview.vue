@@ -118,11 +118,10 @@
     import sum from 'lodash/sum'
     import cloneDeep from 'lodash/cloneDeep'
     import {InputNumber, Tooltip} from 'element-ui'
-    import TemplateCard from '@/components/Widgets/AddWidgetsForm/TemplateCard'
 
     export default {
         components: {
-            TemplateCard,
+            TemplateCard: () => import('@/components/Widgets/AddWidgetsForm/TemplateCard'),
             [Tooltip.name]: Tooltip,
             [InputNumber.name]: InputNumber,
         },

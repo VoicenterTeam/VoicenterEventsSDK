@@ -5,14 +5,11 @@
 </template>
 
 <script>
-    import WidgetErrorBoundary from "@/components/WidgetErrorBoundary";
-    import VueAudio from 'vue-audio/src/VueAudio';
-
     export default {
         name: "audio-player",
         components: {
-            VueAudio,
-            WidgetErrorBoundary,
+            VueAudio: () => import('vue-audio/src/VueAudio'),
+            WidgetErrorBoundary: () => import("@/components/WidgetErrorBoundary"),
         },
         props: {
             url: {

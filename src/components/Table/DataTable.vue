@@ -106,7 +106,6 @@
 <script>
     import Sortable from 'sortablejs'
     import cloneDeep from 'lodash/cloneDeep'
-    import ManageColumns from './ManageColumns'
     import ExportDataDialog from './ExportData'
     import { makeRandomID } from '@/helpers/util'
     import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
@@ -118,7 +117,7 @@
     export default {
         inheritAttrs: false,
         components: {
-            ManageColumns,
+            ManageColumns: () => import('./ManageColumns'),
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
             [Dropdown.name]: Dropdown,

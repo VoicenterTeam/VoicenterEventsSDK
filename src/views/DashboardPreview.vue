@@ -60,19 +60,16 @@
     </div>
 </template>
 <script>
-    import NewGroupButton from '@/components/NewGroupButton'
-    import Sidebar from '@/components/LayoutRendering/Sidebar'
     import Switcher from '@/components/LayoutRendering/Switcher'
     import DashboardOperations from '@/helpers/DashboardOperations'
-    import TabbedView from '@/components/LayoutRendering/Types/TabbedView'
     import { widgetGroupModel } from '@/models/instances'
 
     export default {
         components: {
             [Switcher.name]: Switcher,
-            NewGroupButton,
-            TabbedView,
-            Sidebar
+            NewGroupButton: () => import('@/components/NewGroupButton'),
+            TabbedView: () => import('@/components/LayoutRendering/Types/TabbedView'),
+            Sidebar: () => import('@/components/LayoutRendering/Sidebar')
         },
         props: {
             showLoadingIndicator: {

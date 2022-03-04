@@ -41,14 +41,12 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import Widget from './Widget'
     import bus from '@/event-bus/EventBus'
-    import WidgetErrorBoundary from '@/components/WidgetErrorBoundary'
 
     export default {
         components: {
-            Widget,
-            WidgetErrorBoundary,
+            Widget: () => import('./Widget'),
+            WidgetErrorBoundary: () => import('@/components/WidgetErrorBoundary'),
         },
         data() {
             return {

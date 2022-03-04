@@ -42,11 +42,10 @@
 <script>
     import get from 'lodash/get'
     import bus from '@/event-bus/EventBus'
-    import CardAction from '@/components/Cards/CardAction'
     
     export default {
         components: {
-            CardAction,
+            CardAction: () => import('@/components/Cards/CardAction')
         },
         props: {
             editable: {

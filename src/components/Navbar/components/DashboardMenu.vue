@@ -56,12 +56,11 @@
 <script>
     import { Tooltip } from 'element-ui'
     import { SettingsIcon } from 'vue-feather-icons'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     
     export default {
         components: {
             SettingsIcon,
-            ConfirmDialog,
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
             [Tooltip.name]: Tooltip,
         },
         data() {

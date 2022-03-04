@@ -10,13 +10,12 @@
 </template>
 
 <script>
-    import Dialog from '@/components/Dialogs/Dialog'
     import dialogMixin from '@/mixins/dialogMixin'
 
     export default {
         mixins: [ dialogMixin ],
         components: {
-            Dialog,
+            Dialog: () => import('@/components/Dialogs/Dialog')
         },
         data () {
             return {

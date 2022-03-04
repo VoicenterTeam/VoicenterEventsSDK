@@ -47,13 +47,11 @@
         </div>
         <portal to="form-footer">
             <div class="px-10">
-                <el-button
-                    @click="onSubmit"
-                    class="font-bold btn-save"
-                    type="primary"
-                >
-                    {{ $t('common.save') }}
-                </el-button>
+                <confirm-button
+                    :label="$t('common.save')"
+                    icon="IconSave"
+                    @on-click="onSubmit"
+                />
             </div>
         </portal>
     </div>
@@ -65,10 +63,12 @@
     import { getDefaultGridLayout } from '@/helpers/util'
     import { templateIcons } from '@/enum/widgetDataTypes'
     import { widgetTimeOptions } from '@/enum/widgetTimeOptions'
-    
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton";
+
     export default {
         components: {
             [Checkbox.name]: Checkbox,
+            ConfirmButton,
         },
         props: {
             summaryActions: String,

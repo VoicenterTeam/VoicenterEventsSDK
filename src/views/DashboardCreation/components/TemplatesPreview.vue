@@ -13,11 +13,9 @@
     </div>
 </template>
 <script>
-    import WidgetTemplate from '@/views/DashboardCreation/components/Template'
-
     export default {
         components: {
-            WidgetTemplate
+            WidgetTemplate: () => import('@/views/DashboardCreation/components/Template')
         },
         props: {
             dashboardCategory: {

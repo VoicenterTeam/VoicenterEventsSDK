@@ -21,13 +21,12 @@
     import uniq from 'lodash/uniq'
     import values from 'lodash/values'
     import { defaultWidgetColors } from '@/enum/layout';
-    import WidgetColor from "@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetColor";
 
     const BACKGROUND_COLOR_KEY = ['background'];
 
     export default {
         components: {
-            WidgetColor,
+            WidgetColor: () => import("@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetColor")
         },
         props: {
             model: {

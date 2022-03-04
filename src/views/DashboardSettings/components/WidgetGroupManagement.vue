@@ -32,11 +32,10 @@
 </template>
 <script>
     import draggableEvents from '@/enum/draggableEvents'
-    import DraggableList from '@/components/Widgets/DraggableList'
 
     export default {
         components: {
-            DraggableList,
+            DraggableList: () => import('@/components/Widgets/DraggableList'),
         },
         props: {
             widgetGroupList: {
