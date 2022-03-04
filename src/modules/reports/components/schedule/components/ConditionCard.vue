@@ -131,7 +131,7 @@
                 return this.$store.getters['report/getConfData'].ConditionFilterColumnTypeList
             },
             widgetTemplateList () {
-                if (!this.condition.WidgetID) {
+                if (this.checkIfValueIsEmpty(this.condition.WidgetID)) {
                     return
                 }
                 const widgetTemplateID = this.reportItemData.ReportItemList.find(el => el.WidgetID === this.condition.WidgetID).WidgetTemplateID
@@ -140,17 +140,17 @@
                     .find(el => el.WidgetTemplateID === widgetTemplateID).WidgetTemplateColumnList
             },
             widgetTemplateColumnOperatorList () {
-                if (!this.condition.WidgetID || !this.condition.WidgetTemplateColumnID) {
+                if (this.checkIfValueIsEmpty(this.condition.WidgetID) || this.checkIfValueIsEmpty(this.condition.WidgetTemplateColumnID)) {
                     return []
                 }
 
                 return this.widgetTemplateList.find(el => el.WidgetTemplateColumnsID === this.condition.WidgetTemplateColumnID).WidgetTemplateColumnOperatorList
             },
             disableField () {
-                return !this.condition.WidgetID || !this.widgetTemplateList.length
+                return this.checkIfValueIsEmpty(this.condition.WidgetID) || !this.widgetTemplateList.length
             },
             getComponentNameOfValueField () {
-                if (!this.condition.WidgetTemplateColumnID) {
+                if (this.checkIfValueIsEmpty(this.condition.WidgetTemplateColumnID)) {
                     return
                 }
 
@@ -158,32 +158,32 @@
 
             },
             isValidWidgetTemplateColumnID () {
-                if (!this.condition.WidgetID) {
+                if (this.checkIfValueIsEmpty(this.condition.WidgetID)) {
                     return
                 }
 
-                return !this.condition.WidgetTemplateColumnID && this.widgetTemplateList.length
+                return this.checkIfValueIsEmpty(this.condition.WidgetTemplateColumnID) && this.widgetTemplateList.length
             },
             isValidConditionFilterOperatorID () {
-                if (!this.condition.WidgetID) {
+                if (this.checkIfValueIsEmpty(this.condition.WidgetID)) {
                     return
                 }
 
-                return !this.condition.ConditionFilterOperatorID && this.widgetTemplateList.length
+                return this.checkIfValueIsEmpty(this.condition.ConditionFilterOperatorID) && this.widgetTemplateList.length
             },
             isValidConditionFilterColumnTypeID () {
-                if (!this.condition.WidgetID) {
+                if (this.checkIfValueIsEmpty(this.condition.WidgetID)) {
                     return
                 }
 
-                return !this.condition.ConditionFilterColumnTypeID && this.widgetTemplateList.length
+                return this.checkIfValueIsEmpty(this.condition.ConditionFilterColumnTypeID) && this.widgetTemplateList.length
             },
             isValidConditionFilterValue () {
-                if (!this.condition.WidgetID) {
+                if (this.checkIfValueIsEmpty(this.condition.WidgetID)) {
                     return
                 }
 
-                return !this.condition.ConditionFilterValue && this.condition.WidgetTemplateColumnID && this.widgetTemplateList.length
+                return this.checkIfValueIsEmpty(this.condition.ConditionFilterValue) && this.condition.WidgetTemplateColumnID && this.widgetTemplateList.length
             }
         },
         methods: {
@@ -206,6 +206,9 @@
             },
             onChange (data) {
                 this.condition.ConditionFilterValue = data.value
+            },
+            checkIfValueIsEmpty (value) {
+                return value === '' || value === null
             }
         }
     }

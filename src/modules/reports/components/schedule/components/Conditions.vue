@@ -57,7 +57,7 @@
         },
         computed: {
             canDelete() {
-                return true
+                return this.reportData.length > 1
             }
         },
         methods: {

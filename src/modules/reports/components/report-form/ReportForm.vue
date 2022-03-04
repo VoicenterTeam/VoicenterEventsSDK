@@ -93,7 +93,7 @@
                     ReportTypeName: '',
                     ReportItemList: [],
                     ReportTriggerLis: [],
-                    ReportTriggerRecipient: [],
+                    ReportRecipient: [],
                 },
             }
         },

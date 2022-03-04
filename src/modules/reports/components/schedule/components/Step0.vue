@@ -12,8 +12,10 @@
         </div>
         <div class="flex justify-between mb-8">
             <div class="flex">
-                <div class="flex flex-col w-38"
-                     :class="$rtl.isRTL ? 'ml-10' : 'mr-10'">
+                <div
+                    class="flex flex-col w-38"
+                    :class="$rtl.isRTL ? 'ml-10' : 'mr-10'"
+                >
                     <span class="mb-2">
                         {{ $t('report.Frequency') }}:
                     </span>
@@ -143,18 +145,20 @@
                     return haveTriggerComponent.length === this.activeTrigger.length && allFieldsValid
                 }
                 const isConditionGroupsFieldsNotEmpty = () => {
-                    if (!this.getReportData['ReportTriggerCondition'] || this.getReportData['ReportTriggerCondition'].length) {
-                        return [true]
-                    }
-                    return this.getReportData['ReportTriggerCondition'].map(field => {
-                        return field.every(el => {
-                            if (!el.WidgetID) {
+                    return this.getReportData.ReportTriggerCondition.map(field => {
+                        return field.ReportTriggerConditionFilter.every(el => {
+                            if (this.checkIfValueIsEmpty(el.WidgetID)) {
                                 return true
                             }
-                            if (el.WidgetID && (!el.WidgetTemplateColumnID || !el.ConditionFilterValue || !el.ConditionFilterOperatorID || !el.ConditionFilterColumnTypeID)) {
+                            const isAdditionalFieldsNotEmpty = this.checkIfValueIsEmpty(el.WidgetTemplateColumnID) ||
+                                this.checkIfValueIsEmpty(el.ConditionFilterValue) ||
+                                this.checkIfValueIsEmpty(el.ConditionFilterOperatorID) ||
+                                this.checkIfValueIsEmpty(el.ConditionFilterColumnTypeID)
+
+                            if (el.WidgetID && isAdditionalFieldsNotEmpty) {
                                 return false
                             }
-                            if (Object.values(el).every(el => el)) {
+                            if (Object.values(el).every(el => !this.checkIfValueIsEmpty(el))) {
                                 return true
                             }
                             return false
@@ -186,8 +190,6 @@
 
                 if (componentTag === 'BaseTime') {
                     return 'BaseInterval'
-                } else if (componentTag === 'BaseDayOfMonth') {
-                    return 'BaseDayOfMonth'
                 } else if (componentTag === 'BaseText') {
                     return 'BaseInputText'
                 } else if (componentTag === 'BaseNumber') {
@@ -198,6 +200,9 @@
             },
             onChange (item) {
                 this.model[item.component.ParameterTag] = item.value
+            },
+            checkIfValueIsEmpty (value) {
+                return value === '' || value === null
             }
         },
         mounted () {

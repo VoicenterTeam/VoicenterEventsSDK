@@ -256,15 +256,15 @@
                 const data = {
                     EmailSubject: this.locale.subject,
                     EmailBody: this.locale.text,
-                    ReportTriggerRecipient: recipients
+                    ReportRecipient: recipients
                 }
 
                 await this.$store.dispatch('report/updateReportData', data)
             }
         },
         mounted () {
-            if (this.getReportData.ReportTriggerRecipient) {
-                this.recipients = this.getReportData.ReportTriggerRecipient.map(el => el.Email || el.RecipientID)
+            if (this.getReportData.ReportRecipient) {
+                this.recipients = this.getReportData.ReportRecipient.map(el => el.Email || el.RecipientID)
             }
             if (this.getReportData.EmailSubject && this.getReportData.EmailBody) {
                 this.model.subject = this.getReportData.EmailSubject

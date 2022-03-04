@@ -2,18 +2,10 @@
     <div class="w-full bg-gray-200">
         Edit page
         <br>
-        <!-- <div
-            v-for="(item, index) in report.ReportTriggerList"
-            :key="`item-${index}`"
-        >
-            {{ item }}
-            <ScheduleForm :data="item[0]" />
-        </div> -->
-        <!-- <div v-if="report">qwf</div> -->
         <ScheduleForm :data="report" />
-        <div @click="setData">
-            qwfqwf
-        </div>
+        <button @click="setData" class="m-2">
+            Set data for edit report Schedule
+        </button>
     </div>
 </template>
 
@@ -46,7 +38,8 @@ export default {
     },
     methods: {
         setData () {
-            const data = cloneDeep(this.report.ReportTriggerList[30])
+            const data = cloneDeep(this.report.ReportTriggerList[60])
+            // 47 50 60
 
             if ('TriggerTimeRange' in data.ScheduleData) {
                 const timeRange = data.ScheduleData.TriggerTimeRange
