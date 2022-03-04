@@ -200,7 +200,6 @@ export default {
             });
             if (this.defaultSort) {
                 this.$nextTick(() => {
-                    console.log('initFuseSearch this.searchData', this.searchData)
                     this.onSortChange(this.defaultSort)
                 })
             }
