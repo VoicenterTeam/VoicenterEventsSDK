@@ -1,7 +1,7 @@
 <template>
     <div class="content-wrapper">
         <el-form>
-            <el-form-item>
+            <el-form-item class="relative">
                 <label>{{ $t('general.to') }}</label>
                 <div class="w-full">
                     <el-select
@@ -14,7 +14,6 @@
                         allow-create
                         default-first-option
                         :placeholder="$t('report.recipients')"
-                        collapse-tags
                     >
                         <el-option
                             v-for="(item, index) in reportRecipients"
@@ -23,6 +22,9 @@
                             :value="item.value"
                         />
                     </el-select>
+                </div>
+                <div class="el-form-item__error" v-show="isRecipientsListIsEmpty">
+                    {{ $t('validation.error.fieldIsRequired') }}
                 </div>
             </el-form-item>
             <el-form-item>
@@ -71,7 +73,6 @@
                     fixed-width="w-37"
                     size="md"
                     type="primary"
-                    :disabled="!recipients.length"
                     @click="onFinish"
                 >
                     <div class="flex items-center">
@@ -121,7 +122,8 @@
                 locale: {
                     subject: '',
                     text: ''
-                }
+                },
+                isRecipientsListIsEmpty: false
             }
         },
         computed: {
@@ -160,10 +162,23 @@
                 const allUsers = this.allUsers
 
                 return allAccounts.concat(allUsers)
+            },
+            recipientsLength () {
+                return this.recipients.length
+            }
+        },
+        watch: {
+            recipientsLength (val) {
+                this.isRecipientsListIsEmpty = !val
             }
         },
         methods: {
             async onFinish() {
+                this.isRecipientsListIsEmpty = !this.recipientsLength
+                if (!this.recipientsLength) {
+
+                    return
+                }
                 await this.updateReportData()
 
                 try {
