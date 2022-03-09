@@ -28,7 +28,7 @@
                 valueKey="WidgetTemplateColumnsID"
             />
             <div class="el-form-item__error" v-show="isValidWidgetTemplateColumnID">
-                Field is required
+                {{ $t('validation.error.fieldIsRequired') }}
             </div>
         </div>
         <div class="flex w-1/4 relative"
@@ -45,7 +45,7 @@
                 valueKey="ConditionFilterColumnTypeID"
             />
             <div class="el-form-item__error" v-show="isValidConditionFilterColumnTypeID">
-                Field is required
+                {{ $t('validation.error.fieldIsRequired') }}
             </div>
         </div>
         <div class="flex w-1/4 relative"
@@ -62,24 +62,26 @@
                 valueKey="ConditionFilterOperatorID"
             />
             <div class="el-form-item__error" v-show="isValidConditionFilterOperatorID">
-                Field is required
+                {{ $t('validation.error.fieldIsRequired') }}
             </div>
         </div>
-        <div class="flex w-1/4 relative">
-            <component
-                v-for="(component, compIndex) in getComponentNameOfValueField"
-                :is="getComponentName(component)"
-                :key="compIndex"
-                v-bind="component"
-                @change="onChange"
-                :disabled="disableField"
-                :placeholder="$t('general.value')"
-                :input-value="condition.ConditionFilterValue"
-                is-condition
-                class="w-full"
-            />
-            <div class="el-form-item__error" v-show="isValidConditionFilterValue">
-                Field is required
+        <div class="w-1/4 relative">
+            <div class="flex">
+                <component
+                    v-if="isChangedWidgetTemplateColumnID && getComponentNameOfValueField"
+                    :is="getComponentName(getComponentNameOfValueField)"
+                    :key="getComponentNameOfValueField.ComponentTag"
+                    v-bind="getComponentNameOfValueField"
+                    @change="onChange"
+                    :disabled="disableField"
+                    :placeholder="$t('general.value')"
+                    :input-value="condition.ConditionFilterValue"
+                    is-condition
+                    class="w-full"
+                />
+                <div class="el-form-item__error" v-show="isValidConditionFilterValue && getComponentNameOfValueField">
+                    {{ $t('validation.error.fieldIsRequired') }}
+                </div>
             </div>
         </div>
         <div class="mx-4">
@@ -123,7 +125,16 @@
                     this.condition.ConditionFilterOperatorID = null
                     this.condition.ConditionFilterColumnTypeID = null
                     this.condition.ConditionFilterValue = null
+                    this.isChangedWidgetTemplateColumnID = false
+                    this.$nextTick(() => {
+                        this.isChangedWidgetTemplateColumnID = true
+                    })
                 }
+            }
+        },
+        data () {
+            return {
+                isChangedWidgetTemplateColumnID: true
             }
         },
         computed: {
@@ -154,7 +165,7 @@
                     return
                 }
 
-                return [this.widgetTemplateList.find(el => el.WidgetTemplateColumnsID === this.condition.WidgetTemplateColumnID).WidgetTemplateColumnParameter]
+                return this.widgetTemplateList.find(el => el.WidgetTemplateColumnsID === this.condition.WidgetTemplateColumnID).WidgetTemplateColumnParameter
 
             },
             isValidWidgetTemplateColumnID () {
@@ -183,7 +194,7 @@
                     return
                 }
 
-                return this.checkIfValueIsEmpty(this.condition.ConditionFilterValue) && this.condition.WidgetTemplateColumnID && this.widgetTemplateList.length
+                return this.checkIfValueIsEmpty(this.condition.ConditionFilterValue)
             }
         },
         methods: {

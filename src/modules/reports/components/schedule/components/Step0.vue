@@ -208,7 +208,7 @@
         mounted () {
             this.model = {
                 ReportTriggerTypeID: this.getReportData.ReportTriggerTypeID,
-                ReportTriggerName: this.getReportData.ReportTriggerName
+                ReportTriggerName: this.getReportData.ReportTriggerName ? this.getReportData.ReportTriggerName : this.$t('report.name')
             }
             if (this.getReportData.ScheduleData && Object.keys(this.getReportData.ScheduleData).length) {
                 Object.assign(this.model, this.getReportData.ScheduleData)

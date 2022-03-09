@@ -10,7 +10,7 @@
             type="date"
         />
         <div class="el-form-item__error" v-show="isNotValidField">
-          Field is required
+          {{ $t('validation.error.fieldIsRequired') }}
         </div>
     </div>
 </template>

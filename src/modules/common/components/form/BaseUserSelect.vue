@@ -13,14 +13,15 @@
                 :key="option.value"
                 v-bind="option"
                 v-for="option in allUsers"
-                :value="option.user_id">
+                :value="option.user_id"
+                :label="$t(option.user_name)">
                 <div class="flex">
                     {{ option.user_name }}
                 </div>
             </el-option>
         </el-select>
-        <div class="el-form-item__error" v-show="isNotValidField">
-          Field is required
+        <div class="el-form-item__error" v-show="isNotValidField && !isCondition">
+          {{ $t('validation.error.fieldIsRequired') }}
         </div>
     </div>
 </template>

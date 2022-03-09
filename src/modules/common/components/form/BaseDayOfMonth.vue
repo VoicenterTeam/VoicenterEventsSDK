@@ -9,10 +9,11 @@
             class="w-full"
             v-model="model"
             multiple
+            collapse-tags
         >
             <el-option
                 :key="`item-${item}`"
-                v-for="item in 30"
+                v-for="item in 31"
                 :value="item"
             >
                 <div class="flex">
@@ -20,8 +21,8 @@
                 </div>
             </el-option>
         </el-select>
-        <div class="el-form-item__error" v-show="isNotValidField">
-          Field is required
+        <div class="el-form-item__error" v-show="isNotValidField && !isCondition">
+          {{ $t('validation.error.fieldIsRequired') }}
         </div>
     </div>
 </template>

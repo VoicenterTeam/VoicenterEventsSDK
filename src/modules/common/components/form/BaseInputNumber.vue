@@ -4,8 +4,8 @@
             {{ $t(label) }}
         </div>
         <el-input-number v-model="model" @input="onChange" :min="0" :placeholder="placeholder" :disabled="disabled"></el-input-number>
-        <div class="el-form-item__error" v-show="isNotValidField">
-          Field is required
+        <div class="el-form-item__error" v-show="isNotValidField && !isCondition">
+          {{ $t('validation.error.fieldIsRequired') }}
         </div>
     </span>
 </template>

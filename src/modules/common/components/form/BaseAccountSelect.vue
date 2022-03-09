@@ -11,17 +11,18 @@
             v-model="model">
             <el-option
                 :key="option.value"
-                :label="$t(option.text)"
+                :label="$t(option.dist_name)"
                 v-bind="option"
                 v-for="option in allAccounts"
-                :value="option.AccountID">
+                :value="option.AccountID"
+            >
                 <div class="flex">
                     {{ option.dist_name }}
                 </div>
             </el-option>
         </el-select>
-        <div class="el-form-item__error" v-show="isNotValidField">
-          Field is required
+        <div class="el-form-item__error" v-show="isNotValidField && !isCondition">
+          {{ $t('validation.error.fieldIsRequired') }}
         </div>
     </div>
 </template>

@@ -15,8 +15,8 @@
             value-format="HH:mm"
             format="HH:mm"
         />
-        <div class="el-form-item__error" v-show="isNotValidField">
-          Field is required
+        <div class="el-form-item__error" v-show="isNotValidField && !isCondition">
+          {{ $t('validation.error.fieldIsRequired') }}
         </div>
     </div>
 </template>

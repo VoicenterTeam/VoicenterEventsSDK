@@ -149,6 +149,9 @@
                 this.currentStep++
             },
             onBack() {
+                if (this.currentStep === 0) {
+                    return
+                }
                 this.currentStep--
             },
             onUpdateStepData(data = {}) {

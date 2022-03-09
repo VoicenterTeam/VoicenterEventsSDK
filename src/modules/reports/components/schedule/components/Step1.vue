@@ -14,6 +14,7 @@
                         allow-create
                         default-first-option
                         :placeholder="$t('report.recipients')"
+                        collapse-tags
                     >
                         <el-option
                             v-for="(item, index) in reportRecipients"
