@@ -15,7 +15,7 @@
                     :open-delay="200"
                     placement="top">
                     <span class="mx-2 truncate">
-                        <IconInfo/>
+                        <i class="vc-icon-info cursor-help text-primary text-2xl"></i>
                     </span>
                 </el-tooltip>
             </div>
