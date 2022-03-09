@@ -13,13 +13,12 @@
 import globalMixin from '@/mixins/globalMixin'
 import pageSizeMixin from '@/mixins/pageSizeMixin'
 import { defaultFontSize } from '@/enum/defaultDashboardSettings'
-import NetworkStatusAlert from '@/components/Common/NetworkStatusAlert'
 
 
 export default {
     mixins: [globalMixin, pageSizeMixin],
     components: {
-        NetworkStatusAlert,
+        NetworkStatusAlert: () => import('@/components/Common/NetworkStatusAlert')
     },
     async created() {
         try {

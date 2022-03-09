@@ -4,11 +4,10 @@
     </fade-transition>
 </template>
 <script>
-    import Dashboard from '@/views/Dashboard'
     
     export default {
         components: {
-            Dashboard,
+            Dashboard: () => import('@/views/Dashboard'),
         },
         computed: {
             accountNoData() {

@@ -13,18 +13,15 @@
 </template>
 
 <script>
-import Modal from '@/components/Common/Modal'
-import ConfirmDialog from '@/components/Common/ConfirmDialog'
-import TemplatePreviewInfo from "@/components/Widgets/AddWidgetsForm/TemplatePreviewInfo";
 import get from "lodash/get";
 
 export default {
     name: "template-preview-info-dialog",
     inheritAttrs: false,
     components: {
-        TemplatePreviewInfo,
-        Modal,
-        ConfirmDialog
+        TemplatePreviewInfo: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfo"),
+        Modal: () => import('@/components/Common/Modal'),
+        ConfirmDialog: () => import('@/components/Common/ConfirmDialog')
     },
     props: {
         modalWidth: {

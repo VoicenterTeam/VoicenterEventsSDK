@@ -71,7 +71,6 @@
 </template>
 <script>
     import { Tooltip } from 'element-ui'
-    import NewGroupButton from './NewGroupButton'
     import { CheckIcon, EditIcon, XIcon } from 'vue-feather-icons'
     import { ACTIVE_WIDGET_GROUP_KEY, layoutTypes } from '@/enum/layout'
 
@@ -81,7 +80,7 @@
             XIcon,
             EditIcon,
             CheckIcon,
-            NewGroupButton,
+            NewGroupButton: () => import('./NewGroupButton'),
             [Tooltip.name]: Tooltip,
         },
         props: {

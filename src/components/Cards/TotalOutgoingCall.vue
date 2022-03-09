@@ -96,33 +96,27 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import UpdateDialog from './UpdateDialog'
     import RefreshButton from '@/components/RefreshButton'
     import { getWidgetData } from '@/services/widgetService'
     import { defaultCardColors } from '@/enum/defaultWidgetSettings'
     import { Checkbox, Collapse, CollapseItem, Tooltip } from 'element-ui'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
-    import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
-    import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
-    import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
-    import CancelButton from "@/components/Common/Buttons/CancelButton";
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton";
 
     export default {
         mixins: [cardWidgetMixin],
         components: {
-            TimeFrame,
-            OtherFilters,
-            AutoComplete,
-            UpdateDialog,
+            TimeFrame: () => import('@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'),
+            OtherFilters: () => import('@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'),
+            AutoComplete: () => import('@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'),
+            UpdateDialog: () => import('./UpdateDialog'),
             RefreshButton,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
-            CancelButton,
-            ConfirmButton,
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             data: {

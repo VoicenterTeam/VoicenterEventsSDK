@@ -69,14 +69,12 @@
     </div>
 </template>
 <script>
-    import TemplateWidget from '@/views/DashboardCreation/components/TemplateWidget'
     import { DEFAULT_GROUP_KEYS } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    import DashboardPreview from '@/views/DashboardPreview'
     
     export default {
         components: {
-            TemplateWidget,
-            DashboardPreview
+            TemplateWidget: () => import('@/views/DashboardCreation/components/TemplateWidget'),
+            DashboardPreview: () => import('@/views/DashboardPreview')
         },
         props: {
             template: {

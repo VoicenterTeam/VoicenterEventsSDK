@@ -38,19 +38,16 @@
 </template>
 
 <script>
-import Modal from '@/components/Common/Modal'
 import dialogMixin from "@/mixins/dialogMixin"
-import CancelButton from "@/components/Common/Buttons/CancelButton"
-import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
 export default {
     name: 'Dialog',
     mixins: [ dialogMixin ],
     components: {
-        Modal,
-        CancelButton,
-        ConfirmButton
-    },
+        Modal: () => import('@/components/Common/Modal'),
+        CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+        ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
+    }
 }
 </script>
 

@@ -52,13 +52,9 @@
     import XLSX from 'xlsx'
     import { format } from 'date-fns'
     import { Alert, Radio } from 'element-ui'
-    import ManageColumns from './ManageColumns'
-    import Modal from '@/components/Common/Modal'
     import DownloadIcon from 'vue-feather-icons/icons/DownloadIcon'
     import { isARealtimeTableWidget, timeFilterToHuman } from '@/helpers/widgetUtils'
-    import StaticWidgetInfo from '@/components/Widgets/WidgetUpdateForm/StaticWidgetInfo'
     import { DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
-    import CancelButton from "@/components/Common/Buttons/CancelButton";
 
     export default {
         inheritAttrs: false,
@@ -66,11 +62,11 @@
         components: {
             [Alert.name]: Alert,
             [Radio.name]: Radio,
-            StaticWidgetInfo,
-            ManageColumns,
+            StaticWidgetInfo: () => import('@/components/Widgets/WidgetUpdateForm/StaticWidgetInfo'),
+            ManageColumns: () => import('./ManageColumns'),
             DownloadIcon,
-            Modal,
-            CancelButton,
+            Modal: () => import('@/components/Common/Modal'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton")
         },
         props: {
             tableId: {

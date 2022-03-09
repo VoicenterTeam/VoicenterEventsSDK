@@ -28,7 +28,7 @@ const routes = [
         path: '/reports',
         name: 'reports',
         redirect: 'reports',
-        component: () => import(/* webpackChunkName: "reports" */'@/modules/reports/ReportsLayout'),
+        component: () => import(/* webpackChunkName: "modules" */ '@/modules/reports/ReportsLayout'),
         children: [
             {
                 path: '',

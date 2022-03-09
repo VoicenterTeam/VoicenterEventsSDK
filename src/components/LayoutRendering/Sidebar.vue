@@ -66,19 +66,13 @@
     </div>
 </template>
 <script>
-    import ActionsTabbedView from '@/components/LayoutRendering/ActionsTabbedView'
-    import NewGroupButton from '@/components/NewGroupButton'
-    import CreateNewWidgetButton from '@/components/CreateNewWidgetButton'
-    import CancelButton from "@/components/Common/Buttons/CancelButton";
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton";
-
     export default {
         components: {
-            ActionsTabbedView,
-            NewGroupButton,
-            CreateNewWidgetButton,
-            CancelButton,
-            ConfirmButton,
+            ActionsTabbedView: () => import('@/components/LayoutRendering/ActionsTabbedView'),
+            NewGroupButton: () => import('@/components/NewGroupButton'),
+            CreateNewWidgetButton: () => import('@/components/CreateNewWidgetButton'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widgetGroupList: {

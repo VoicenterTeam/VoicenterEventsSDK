@@ -26,12 +26,11 @@
 </template>
 
 <script>
-import LottieAnimation from "lottie-vuejs/src/LottieAnimation.vue";
 
 export default {
   name: "NotFound",
   components: {
-    LottieAnimation
+    LottieAnimation: () => import("lottie-vuejs/src/LottieAnimation.vue")
   },
   methods:{
     goToMainPage(){

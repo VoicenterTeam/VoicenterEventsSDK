@@ -176,30 +176,21 @@
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import { LayoutApi } from '@/api/layoutApi'
-    import NavBar from '@/views/common/NavBar'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
-    import DeleteLayout from '@/views/common/DeleteLayout'
-    import LayoutSelect from '@/views/common/LayoutSelect'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
-    import LayoutPreview from '@/views/LayoutSettings/LayoutPreview'
-    import LayoutWrapper from '@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'
-    import BaseRadioButton from '@/components/BaseRadioButton'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     export default {
         components: {
-            NavBar,
-            ConfirmDialog,
-            LayoutSelect,
-            DeleteLayout,
-            LayoutPreview,
-            LayoutWrapper,
+            NavBar: () => import('@/views/common/NavBar'),
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            LayoutSelect: () => import('@/views/common/LayoutSelect'),
+            DeleteLayout: () => import('@/views/common/DeleteLayout'),
+            LayoutPreview: () => import('@/views/LayoutSettings/LayoutPreview'),
+            LayoutWrapper: () => import('@/views/DashboardSettings/LayoutManagement/parts/LayoutWrapper'),
             AlertTriangleIcon,
-            BaseRadioButton,
-            CancelButton,
-            ConfirmButton
+            BaseRadioButton: () => import('@/components/BaseRadioButton'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         data() {
             let validationThemeName = (rule, value, callback) => {

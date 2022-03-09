@@ -25,17 +25,15 @@
     import get from 'lodash/get'
     import orderBy from 'lodash/orderBy'
     import cloneDeep from 'lodash/cloneDeep'
-    import WaitingTime from './WaitingTime'
     import {WidgetApi} from '@/api/widgetApi'
     import queueMixin from '@/mixins/queueMixin'
-    import DataTable from '@/components/Table/DataTable'
     import {activeCallColumns} from '@/enum/queueConfigs'
 
     export default {
         mixins: [queueMixin],
         components: {
-            DataTable,
-            WaitingTime,
+            DataTable: () => import('@/components/Table/DataTable'),
+            WaitingTime: () => import('./WaitingTime')
         },
         props: {
             data: {

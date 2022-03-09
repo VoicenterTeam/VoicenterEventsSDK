@@ -107,7 +107,7 @@
             },
         },
         components: {
-            HtmlEditor,
+            HtmlEditor: () => import('@/components/Html/HtmlEditor'),
             [Select.name]: Select,
             [Option.name]: Option
         },

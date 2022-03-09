@@ -41,7 +41,6 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import CallInfo from './CallInfo'
     import Timer from '@/util/Timer'
     import { Tooltip } from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
@@ -50,7 +49,7 @@
     
     export default {
         components: {
-            CallInfo,
+            CallInfo: () => import('./CallInfo'),
             [Tooltip.name]: Tooltip,
         },
         props: {

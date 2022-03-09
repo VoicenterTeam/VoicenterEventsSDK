@@ -43,18 +43,15 @@
 </template>
 <script>
 import { InfoIcon } from 'vue-feather-icons'
-import Modal from '@/components/Common/Modal'
 import { Collapse, CollapseItem, Popover, Slider } from 'element-ui'
-import StaticWidgetInfo from '../Widgets/WidgetUpdateForm/StaticWidgetInfo'
-import WidgetColors from '../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'
 
 export default {
     inheritAttrs: false,
     components: {
-        Modal,
+        Modal: () => import('@/components/Common/Modal'),
         InfoIcon,
-        WidgetColors,
-        StaticWidgetInfo,
+        WidgetColors: () => import('../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'),
+        StaticWidgetInfo: () => import('../Widgets/WidgetUpdateForm/StaticWidgetInfo'),
         [Slider.name]: Slider,
         [Popover.name]: Popover,
         [Collapse.name]: Collapse,
