@@ -2,17 +2,17 @@
     <default-button
         :icon="icon"
         :label="buttonLabel"
-        outline
+        :outline="outline"
+        v-bind="$attrs"
         v-on="$listeners"
     />
 </template>
 
 <script>
-import DefaultButton from "@/components/Common/Buttons/DefaultButton"
 
 export default {
     components: {
-        DefaultButton
+        DefaultButton: () => import("@/components/Common/Buttons/DefaultButton")
     },
     props: {
         icon: {
@@ -22,7 +22,11 @@ export default {
         label: {
             type: String,
             default: ''
-        }
+        },
+        outline: {
+            type: Boolean,
+            default: true
+        },
     },
     computed: {
         buttonLabel () {

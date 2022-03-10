@@ -57,11 +57,10 @@
     import get from 'lodash/get'
     import { sectionsToManage } from '@/enum/dataTable'
     import draggableEvents from '@/enum/draggableEvents'
-    import ManageColumnsSection from './ManageColumnsSection'
 
     export default {
         components: {
-            ManageColumnsSection,
+            ManageColumnsSection: () => import('./ManageColumnsSection')
         },
         props: {
             availableColumns: {

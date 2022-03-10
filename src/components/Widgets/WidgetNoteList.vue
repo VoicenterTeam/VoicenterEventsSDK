@@ -54,11 +54,9 @@
     </div>
 </template>
 <script>
-    import Modal from '@/components/Common/Modal'
     import get from 'lodash/get'
     import format from 'date-fns/format'
     import { Tooltip } from 'element-ui'
-    import HtmlEditor from '@/components/Html/HtmlEditor'
     import { Edit3Icon, EyeIcon, EyeOffIcon, Trash2Icon } from 'vue-feather-icons'
 
     export default {
@@ -67,9 +65,9 @@
             EyeOffIcon,
             Trash2Icon,
             Edit3Icon,
-            HtmlEditor,
+            HtmlEditor: () => import('@/components/Html/HtmlEditor'),
             EyeIcon,
-            Modal,
+            Modal: () => import('@/components/Common/Modal')
         },
         props: {
             data: {

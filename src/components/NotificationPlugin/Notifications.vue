@@ -13,11 +13,10 @@
   </div>
 </template>
 <script>
-import Notification from './Notification.vue';
 
 export default {
   components: {
-    Notification
+    Notification: () => import('./Notification.vue')
   },
   props: {
     transitionName: {

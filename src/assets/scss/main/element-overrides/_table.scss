@@ -6,6 +6,7 @@
     .header-handle, .caret-wrapper {
         display: none;
     }
+
     font-size: var(--font-size-sm);
 }
 
@@ -23,6 +24,7 @@
 
 .el-table th {
     color: var(--greyish-brown);
+
     &.is-left > .cell {
         @apply flex;
         @apply items-center;
@@ -40,6 +42,7 @@
 
 .el-table thead th {
     padding: 6px 0;
+
     .cell {
         line-height: 34px;
     }

@@ -123,11 +123,8 @@
 <script>
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
-    import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
-    import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
     import ENUM from '@/enum/parameters'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
-    import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
     import statusTypes, { callStatuses, otherStatuses } from '@/enum/statusTypes'
     import { Option, Select, Checkbox } from 'element-ui'
     import { isCounterAgentsInStatus, isQueueDashboardWidget } from '@/helpers/widgetUtils'
@@ -136,9 +133,9 @@
 
     export default {
         components: {
-            AutoComplete,
-            OtherFilters,
-            TimeFrame,
+            AutoComplete: () => import('@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'),
+            OtherFilters: () => import('@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'),
+            TimeFrame: () => import('@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'),
             [Option.name]: Option,
             [Select.name]: Select,
             [Checkbox.name]: Checkbox

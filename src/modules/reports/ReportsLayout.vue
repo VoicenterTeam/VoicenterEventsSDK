@@ -7,7 +7,7 @@
             @update-active-tab="updateActiveTab"
             @on-remove-tab="removeTab">
             <template v-slot:list>
-                <list-temp
+                <reports-list
                     v-show="listTabName === activeTab"
                     @on-create-report="openCreateReportTab"
                     @on-edit-row="onEditRow"/>
@@ -15,7 +15,7 @@
 
             <template v-for="tab in editableTabs"
                       v-slot:[tab.name]="{data}">
-                <edit-temp
+                <report-edit
                     v-show="tab.name === activeTab"
                     :data="tab.data"
                     :report-id="tab.name"
@@ -23,7 +23,7 @@
             </template>
 
             <template v-slot:create>
-                <create-temp v-show="createTabName === activeTab"/>
+                <report-create v-show="createTabName === activeTab"/>
             </template>
         </report-tabs>
     </div>
@@ -35,9 +35,9 @@ import {TabPane, Tabs} from 'element-ui'
 import BaseNavbar from '@/components/Navbar/BaseNavbar'
 import ReportTabs from "@/modules/reports/components/ReportTabs";
 
-import EditTemp from "@/modules/reports/pages/ReportEdit";
-import ListTemp from "@/modules/reports/pages/ReportsList";
-import CreateTemp from "@/modules/reports/pages/ReportCreate";
+import ReportEdit from "@/modules/reports/pages/ReportEdit";
+import ReportsList from "@/modules/reports/pages/ReportsList";
+import ReportCreate from "@/modules/reports/pages/ReportCreate";
 
 const CREATE_TAB_NAME = 'create';
 const LIST_TAB_NAME = 'list'
@@ -50,16 +50,16 @@ export default {
         [TabPane.name]:
         TabPane,
         ReportTabs,
-        EditTemp,
-        ListTemp,
-        CreateTemp
+        ReportEdit,
+        ReportsList,
+        ReportCreate
     },
     data() {
         return {
             activeTab: LIST_TAB_NAME,
             dataTabs: [
                 {
-                    title: 'Report List', // TODO: Use translation for Report List
+                    title: this.$t('report.tab.reportList'),
                     name: LIST_TAB_NAME,
                     icon: 'vc-icon-template-list',
                 },
@@ -102,7 +102,7 @@ export default {
                 this.activeTab = createReportTab.name
             } else {
                 this.dataTabs.push({
-                    title: 'Create',
+                    title: this.$t('general.create'),
                     name: CREATE_TAB_NAME,
                     icon: 'vc-icon-plus-linear',
                 })

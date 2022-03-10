@@ -209,8 +209,14 @@
         </el-form>
         <template v-slot:footer>
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                <el-button @click="toggleVisibility(false)">{{ $t('common.cancel') }}</el-button>
-                <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                <cancel-button
+                    @on-click="toggleVisibility(false)"
+                />
+                <confirm-button
+                    :label="$t('common.save')"
+                    icon="IconSave"
+                    @on-click="onChange"
+                />
             </div>
         </template>
     </modal>
@@ -218,22 +224,12 @@
 <script>
     import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Slider } from 'element-ui'
-    import Modal from '@/components/Common/Modal'
     import queueMixin from '@/mixins/queueMixin'
     import { allSeries } from '@/enum/queueConfigs'
-    import RefreshButton from '@/components/RefreshButton'
     import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
-    import TimeFrame from './WidgetUpdateForm/WidgetTime/TimeFrame'
-    import OtherFilters from './WidgetUpdateForm/Filters/OtherFilters'
-    import RealTimeSettings from './WidgetUpdateForm/RealTimeSettings'
-    import StaticWidgetInfo from './WidgetUpdateForm/StaticWidgetInfo'
-    import AutoComplete from './WidgetUpdateForm/Filters/AutoComplete'
-    import WidgetColors from './WidgetUpdateForm/WidgetLayout/WidgetColors'
-    import WidgetPadding from './WidgetUpdateForm/WidgetLayout/WidgetPadding'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import { defaultAreaChartColors, defaultColors, realTimeSettings } from '@/enum/defaultWidgetSettings'
-    import WidgetRefreshInterval from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'
     import {
         isAreaChartWidget,
         isHtmlEditor,
@@ -247,10 +243,11 @@
         isQueueTable,
         isRealtimeWidget,
     } from '@/helpers/widgetUtils'
-    import ActivityGaugeConfig from '@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig'
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -258,9 +255,9 @@
         inheritAttrs: false,
         mixins: [queueMixin],
         components: {
-            RealTimeSettings,
-            TimeFrame,
-            Modal,
+            RealTimeSettings: () => import('./WidgetUpdateForm/RealTimeSettings'),
+            TimeFrame: () => import('./WidgetUpdateForm/WidgetTime/TimeFrame'),
+            Modal: () => import('@/components/Common/Modal'),
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
             [Checkbox.name]: Checkbox,
@@ -268,14 +265,16 @@
             [InputNumber.name]: InputNumber,
             [Slider.name]: Slider,
             [ColorPicker.name]: ColorPicker,
-            AutoComplete,
-            OtherFilters,
-            WidgetColors,
-            WidgetPadding,
-            RefreshButton,
-            StaticWidgetInfo,
-            ActivityGaugeConfig,
-            WidgetRefreshInterval,
+            AutoComplete: () => import('./WidgetUpdateForm/Filters/AutoComplete'),
+            OtherFilters: () => import('./WidgetUpdateForm/Filters/OtherFilters'),
+            WidgetColors: () => import('./WidgetUpdateForm/WidgetLayout/WidgetColors'),
+            WidgetPadding: () => import('./WidgetUpdateForm/WidgetLayout/WidgetPadding'),
+            RefreshButton: () => import('@/components/RefreshButton'),
+            StaticWidgetInfo: () => import('./WidgetUpdateForm/StaticWidgetInfo'),
+            ActivityGaugeConfig: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/exceptions/ActivityGaugeConfig'),
+            WidgetRefreshInterval: () => import('@/components/Widgets/WidgetUpdateForm/WidgetLayout/WidgetRefreshInterval'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             widget: {

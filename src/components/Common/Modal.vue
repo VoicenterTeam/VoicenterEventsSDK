@@ -199,6 +199,7 @@
             hide(cancel) {
                 if (cancel !== false) {
                     this.$emit('update:visible', false);
+                    this.$emit('on-close')
                     this.closed = true;
                 }
             },

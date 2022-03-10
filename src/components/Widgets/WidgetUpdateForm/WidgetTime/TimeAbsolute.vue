@@ -9,7 +9,6 @@
 </template>
 <script>
     import {TIME_LINE_TIMESTAMP} from '@/enum/generic'
-    import DateTimePicker from '../../../Common/DateTimePicker'
     import {format} from 'date-fns'
     import get from 'lodash/get'
 
@@ -28,7 +27,7 @@
             }
         },
         components: {
-            DateTimePicker
+            DateTimePicker: () => import('../../../Common/DateTimePicker')
         },
         data() {
             return {

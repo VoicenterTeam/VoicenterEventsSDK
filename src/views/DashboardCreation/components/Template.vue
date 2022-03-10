@@ -23,13 +23,12 @@
 </template>
 <script>
     import { Popover } from 'element-ui'
-    import TemplateWrapper from '@/views/DashboardCreation/components/TemplateWrapper'
 
     export default {
         inheritAttrs: false,
         components: {
-            TemplateWrapper,
-            [Popover.name]: Popover,
+            TemplateWrapper: () => import('@/views/DashboardCreation/components/TemplateWrapper'),
+            [Popover.name]: Popover
         },
         props: {
             template: {

@@ -11,13 +11,12 @@
 </template>
 
 <script>
-import Dialog from '@/components/Dialogs/Dialog'
 import dialogMixin from '@/mixins/dialogMixin'
 
 export default {
     mixins: [ dialogMixin ],
     components: {
-        Dialog,
+        Dialog: () => import('@/components/Dialogs/Dialog')
     },
     data () {
         return {
@@ -25,7 +24,8 @@ export default {
             descriptionDefault: this.$t('dialog.delete.description'),
             configDefault: {
                 confirmIcon: 'IconDelete',
-                confirmText: this.$t('Delete')
+                confirmText: this.$t('Delete'),
+                ...this.config
             }
         }
     },

@@ -27,24 +27,13 @@
         </div>
         <template v-slot:footer>
             <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                <base-button class="mx-4"
-                             outline
-                             fixed-width="w-37"
-                             @click="$emit('on-close')">
-                    <div class="flex items-center">
-                        <IconDiscard class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ 'Cancel' }}</span>
-                    </div>
-                </base-button>
-                <base-button fixed-width="w-37"
-                             :loading="loading"
-                             type="danger"
-                             @click="onDelete">
-                    <div class="flex items-center">
-                        <IconDelete class="mx-1"/>
-                        <span class="mx-1 text-base font-bold">{{ 'Delete' }}</span>
-                    </div>
-                </base-button>
+                <cancel-button
+                    class="mx-4"
+                    @on-click="onCancel"
+                />
+                <delete-button
+                    @on-click="onDelete"
+                />
             </div>
         </template>
 
@@ -52,19 +41,21 @@
 </template>
 <script>
     import { LayoutApi } from '@/api/layoutApi'
-    import Modal from '@/components/Common/Modal'
     import { DashboardApi } from '@/api/dashboardApi'
     import { Alert, Option, Select } from 'element-ui'
-    import LayoutSelect from '@/views/common/LayoutSelect'
     import { statusDictionary } from '@/views/DashboardSettings/LayoutManagement/layout-management'
+    import CancelButton from "@/components/Common/Buttons/CancelButton"
+    import DeleteButton from "@/components/Common/Buttons/DeleteButton"
 
     export default {
         components: {
-            Modal,
-            LayoutSelect,
+            Modal: () => import('@/components/Common/Modal'),
+            LayoutSelect: () => import('@/views/common/LayoutSelect'),
             [Alert.name]: Alert,
             [Select.name]: Select,
             [Option.name]: Option,
+            CancelButton,
+            DeleteButton
         },
         props: {
             isActiveLayout: {
@@ -172,6 +163,9 @@
                     this.loading = false
                 }
             },
+            onCancel () {
+                this.$emit('on-close')
+            }
         },
     }
 </script>

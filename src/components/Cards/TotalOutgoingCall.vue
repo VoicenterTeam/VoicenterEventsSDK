@@ -80,8 +80,14 @@
             </template>
             <template v-slot:footer>
                 <div class="border-t-2 border-gray-300 py-4 px-10 flex items-center justify-between">
-                    <el-button @click="showModal = false">{{ $t('common.cancel') }}</el-button>
-                    <el-button @click="onChange" type="primary">{{ $t('common.save') }}</el-button>
+                    <cancel-button
+                        @on-click="showModal = false"
+                    />
+                    <confirm-button
+                        :label="$t('common.save')"
+                        icon="IconSave"
+                        @on-click="onChange"
+                    />
                 </div>
             </template>
         </update-dialog>
@@ -90,29 +96,27 @@
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
-    import UpdateDialog from './UpdateDialog'
     import RefreshButton from '@/components/RefreshButton'
     import { getWidgetData } from '@/services/widgetService'
     import { defaultCardColors } from '@/enum/defaultWidgetSettings'
     import { Checkbox, Collapse, CollapseItem, Tooltip } from 'element-ui'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
-    import OtherFilters from '@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'
-    import AutoComplete from '@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'
     import cardWidgetMixin from '@/mixins/cardWidgetMixin'
-    import TimeFrame from '@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'
-    
+
     export default {
         mixins: [cardWidgetMixin],
         components: {
-            TimeFrame,
-            OtherFilters,
-            AutoComplete,
-            UpdateDialog,
+            TimeFrame: () => import('@/components/Widgets/WidgetUpdateForm/WidgetTime/TimeFrame'),
+            OtherFilters: () => import('@/components/Widgets/WidgetUpdateForm/Filters/OtherFilters'),
+            AutoComplete: () => import('@/components/Widgets/WidgetUpdateForm/Filters/AutoComplete'),
+            UpdateDialog: () => import('./UpdateDialog'),
             RefreshButton,
             [Tooltip.name]: Tooltip,
             [Checkbox.name]: Checkbox,
             [Collapse.name]: Collapse,
             [CollapseItem.name]: CollapseItem,
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         props: {
             data: {
@@ -191,7 +195,7 @@
                     })
                 } catch (e) {
                 }
-                
+
                 if (this.model.WidgetTime.type === 'relative') {
                     let widgetTime = widgetTimeOptions.find((el) => el.Date_interval === this.model.WidgetTime.Date_interval)
                     this.model.WidgetTime = {
@@ -199,24 +203,24 @@
                         ...widgetTime,
                     }
                 }
-                
+
                 let data = {
                     showText: this.displayCardText,
                     displayBorder: this.displayCardBorder,
                 }
-                
+
                 this.data.WidgetLayout = {
                     ...this.data.WidgetLayout,
                     ...data,
                     ...this.layoutConfig,
                     colors: this.model.colors,
-                    
+
                 }
-                
+
                 this.data.WidgetTime = this.model.WidgetTime
                 this.data.WidgetConfig = this.model.WidgetConfig
                 this.data.Title = this.model.Title
-                
+
                 this.$emit('on-update', this.data)
                 this.showModal = false
             },
