@@ -8,7 +8,7 @@
 
             <base-button type="primary" size="xs" link @click="addCreateTab">
                 <i class="vc-icon-add icon-md mx-2"/>
-                Add New Report
+                {{ $t('report.addNewReport') }}
             </base-button>
         </div>
         <div class="reports-table__wrapper mt-4">
@@ -20,10 +20,10 @@
 
                 <template slot="empty">
                     <div v-if="isContentLoading">
-                        Loading...
+                        {{ $t('general.loading') }}
                     </div>
                     <div v-else>
-                        No Data
+                        {{ $t('general.noData') }}
                     </div>
                 </template>
 
@@ -76,51 +76,11 @@
             @go-to-prev-page="goToPrevPage"
             @go-to-next-page="goToNextPage"
             @on-page-select="onPageSelect"/>
-<!--        <div class="pagination_wrapper">
-            <div class="flex w-full justify-between">
-                <div>
-                    Pages:
-                    <el-dropdown class="" placement="top-end" trigger="click" @command="onPageSelect">
-                        <span class="el-dropdown-link mx-2 align-bottom">
-                            {{currentPage}}
-                            <i class="vc-icon-down icon-md text-primary"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item
-                                v-for="item in totalPages"
-                                :key="item"
-                                :command="item">
-                                {{item}}
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-                <div class="flex">
-                    <span>
-                        {{paginationFrom}} - {{paginationTo}}
-                    </span>
-                    <span class="text-gray-500 mx-1">
-                        of
-                    </span>
-                    <span>
-                        {{paginationTotal}}
-                    </span>
-                    <div class="mx-6">
-                        <span @click="goToPrevPage">
-                            <i class="vc-icon-left icon-lg text-primary mr-2 cursor-pointer"/>
-                        </span>
-                        <span @click="goToNextPage">
-                            <i class="vc-icon-right icon-lg text-primary ml-2 cursor-pointer"/>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>-->
     </div>
 </template>
 
 <script>
-import {Table, TableColumn, Tooltip, Dropdown, DropdownMenu, DropdownItem} from 'element-ui'
+import {Table, TableColumn, Tooltip} from 'element-ui'
 import Fuse from 'fuse.js';
 
 import BaseButton from "@/components/Common/Buttons/BaseButton";
@@ -137,10 +97,6 @@ export default {
         [TableColumn.name]: TableColumn,
         ButtonIcon,
         ReportsPagination
-        /*[Dropdown.name]: Dropdown,
-        [DropdownMenu.name]: DropdownMenu,
-        [DropdownItem.name]: DropdownItem,*/
-
     },
     props: {
         tableData: {

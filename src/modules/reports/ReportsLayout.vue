@@ -59,7 +59,7 @@ export default {
             activeTab: LIST_TAB_NAME,
             dataTabs: [
                 {
-                    title: 'Report List', // TODO: Use translation for Report List
+                    title: this.$t('report.tab.reportList'),
                     name: LIST_TAB_NAME,
                     icon: 'vc-icon-template-list',
                 },
@@ -102,7 +102,7 @@ export default {
                 this.activeTab = createReportTab.name
             } else {
                 this.dataTabs.push({
-                    title: 'Create',
+                    title: this.$t('general.create'),
                     name: CREATE_TAB_NAME,
                     icon: 'vc-icon-plus-linear',
                 })

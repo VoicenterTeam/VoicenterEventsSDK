@@ -17,14 +17,14 @@
                     <div class="w-3/5">
                         <label class="flex flex-wrap mb-2">
                             <i class="vc-icon-name icon-lg mx-1 text-primary"/>
-                            <span class="my-auto">Report Name</span>
+                            <span class="my-auto">{{ $t('report.reportName' )}}</span>
                         </label>
                         <el-input placeholder="Report Name (copy)" v-model="reportCopyName"></el-input>
                     </div>
                 </div>
                 <div class="w-full">
-                    <el-checkbox v-model="isDuplicateSchedules">Duplicate Schedules settings</el-checkbox>
-                    <el-checkbox v-model="isDuplicateWidgets">Duplicate Widgets settings</el-checkbox>
+                    <el-checkbox v-model="isDuplicateSchedules">{{ $t('report.schedule.duplicateSchedulesSettings') }}</el-checkbox>
+                    <el-checkbox v-model="isDuplicateWidgets">{{ $t('report.schedule.duplicateWidgetsSettings') }}</el-checkbox>
                 </div>
             </div>
         </template>
@@ -43,7 +43,7 @@ export default {
     },
     data() {
         return {
-            title: 'Duplicate Report',
+            title: this.$t('report.duplicateReport'),
             reportCopyName: '',
             isDuplicateWidgets: true,
             isDuplicateSchedules: true,

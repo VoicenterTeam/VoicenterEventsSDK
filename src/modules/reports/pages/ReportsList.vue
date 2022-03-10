@@ -9,7 +9,7 @@
             :tableActionProps="tableActionProps">
             <template v-slot:expand-content="{row}">
                 <div class="border-l-5 p-4 border-primary">
-                    <div class="m-2 text-lg font-medium">Schedule List</div>
+                    <div class="m-2 text-lg font-medium">{{ $t('widget.scheduleList') }}</div>
                     <div class="grid grid-cols-2 gap-4">
                         <schedule-card
                             v-for="(trigger, index) in row.ReportTriggerList"
@@ -85,23 +85,23 @@
                 <template v-else>
                         <button class="schedule-add-button" @click="onAddSchedule(row.ReportID)">
                             <i class="vc-icon-plus-linear icon-lg text-primary" />
-                            <span class="mx-2">Add Schedule</span>
+                            <span class="mx-2">{{ $t('widget.addSchedule') }}</span>
                         </button>
                 </template>
             </template>
 
             <template v-slot:format="{row}">
-                <button-icon icon="vc-icon-confirm-action" description="Export as PDF" type="default"
+                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsPDF')" type="default"
                              @click="onExportAsPdf(row)"/>
-                <button-icon icon="vc-icon-confirm-action" description="Export as CSV" type="default"
+                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsCSV')" type="default"
                              @click="onExportAsCSV(row)"/>
-                <button-icon icon="vc-icon-confirm-action" description="Export as HTML" type="default"
+                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsHTML')" type="default"
                              @click="onExportAsHtml(row)"/>
             </template>
             <template v-slot:action="{row}">
-                <button-icon icon="vc-icon-copy" description="Copy Report" @click="onReportCopy(row)"/>
-                <button-icon icon="vc-icon-edit-pencil" description="Edit Report" @click="onReportEdit(row)"/>
-                <button-icon icon="vc-icon-recycle-bin" description="Delete Report" type="danger"
+                <button-icon icon="vc-icon-copy" :description="$t('report.tooltip.copyReport')" @click="onReportCopy(row)"/>
+                <button-icon icon="vc-icon-edit-pencil" :description="$t('report.tooltip.editReport')" @click="onReportEdit(row)"/>
+                <button-icon icon="vc-icon-recycle-bin" :description="$t('report.tooltip.deleteReport')" type="danger"
                              @click="onReportDelete(row)"/>
             </template>
         </reports-table>
@@ -109,7 +109,7 @@
             v-if="showDeleteDialog"
             :visible.sync="showDeleteDialog"
             :config="{descriptionIcon: ''}"
-            description="Are you sure you want to delete this report?"
+            :description="$t('report.deleteReportConfirmation')"
             @on-close="onCancelDelete"
             @on-cancel="onCancelDelete"
             @on-confirm="deleteReport"/>
@@ -169,25 +169,25 @@ export default {
             tableProps: [
                 {
                     prop: 'ReportID',
-                    label: '№',
+                    label: this.$t('general.l.№'),
                     icon: '',
                     minWidth: '50'
                 },
                 {
                     prop: 'ReportName',
-                    label: 'Report Name',
+                    label: this.$t('report.reportName'),
                     icon: 'vc-icon-name',
                     minWidth: '200'
                 },
                 {
                     prop: 'ReportItemList',
-                    label: 'Widget Name',
+                    label: this.$t('widget.widgetName'),
                     icon: 'vc-icon-code',
                     minWidth: '280'
                 },
                 {
                     prop: 'ReportTriggerList',
-                    label: 'Schedule',
+                    label: this.$t('report.schedule'),
                     icon: 'vc-icon-schedule-calendar',
                     minWidth: '320'
                 }
@@ -195,13 +195,13 @@ export default {
             tableActionProps: [
                 {
                     prop: 'format',
-                    label: 'Format',
+                    label: this.$t('report.format'),
                     icon: 'vc-icon-confirm-action',
                     minWidth: '100'
                 },
                 {
                     prop: 'action',
-                    label: 'Action',
+                    label: this.$t('general.action'),
                     icon: 'vc-icon-settings',
                     minWidth: '100'
                 }

@@ -2,7 +2,7 @@
     <div class="pagination_wrapper">
         <div class="flex w-full justify-between">
             <div>
-                Pages:
+                {{ $t('general.pages') }}:
                 <el-dropdown class="" placement="top-end" trigger="click" @command="onPageSelect">
                         <span class="el-dropdown-link mx-2 align-bottom">
                             {{ currentPage }}

@@ -9,21 +9,21 @@
                 </span>
                 <base-button type="primary" size="xs" outline @click="onSendNow">
                     <i class="vc-icon-skip-arrow icon-md mx-2"/>
-                    Send Now
+                    {{ $t('report.schedules.sendNow') }}
                 </base-button>
             </div>
         </div>
         <div class="flex w-full mb-4">
             <div class="inline-flex pr-2">
                 <i class="vc-icon-filter icon-lg mr-2 text-primary"/>
-                <span>Conditions:</span>
+                <span>{{ $t('widget.conditions') }}:</span>
             </div>
             <div class="flex-grow" v-html="conditionsList"></div>
         </div>
         <div class="flex w-full">
             <div class="inline-flex pr-2">
                 <i class="vc-icon-email-groups icon-lg mr-2 text-primary"/>
-                <span>Recipient List:</span>
+                <span>{{ $t('report.recipientList') }}:</span>
             </div>
             <div class="flex-grow">
                 <div class="w-full" v-if="recipients && recipients.length">
