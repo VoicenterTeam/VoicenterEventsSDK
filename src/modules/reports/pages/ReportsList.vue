@@ -83,11 +83,11 @@
                     </delimited-list>
                 </template>
                 <template v-else>
-                        <button class="schedule-add-button" @click="onAddSchedule(row.ReportID)">
+                        <span class="schedule-add-button">
                             <span class="mx-2">
                                 <ScheduleForm :buttonLabel="$t('widget.addSchedule')" icon="vc-icon-plus-linear" :reportId="row.ReportID" />
                             </span>
-                        </button>
+                        </span>
                 </template>
             </template>
 
@@ -350,12 +350,6 @@ export default {
         onExportAsHtml(row) {
             alert('Export as HTML')
         },
-        onAddSchedule(reportId) {
-            // this.$refs.scheduleForm.showDialog = true
-            // console.log(this.$refs.scheduleForm, 'this.$refs.scheduleForm')
-            // console.log(this.$refs, 'qwf')
-            // console.log('Add Schedule')
-        },
         async getReportsList() {
             const payload = {
                 ReportStatusID: [REPORT_ENABLED_STATUS]
@@ -395,7 +389,7 @@ export default {
 
 <style scoped lang="scss">
 .schedule-add-button {
-    @apply flex align-middle text-primary;
+    @apply inline-flex align-middle text-primary;
     padding: 0.2rem 0.4rem;
     border-radius: 1.25rem;
     border: 1px dashed var(--primary-color);
