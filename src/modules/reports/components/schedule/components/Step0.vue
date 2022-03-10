@@ -75,6 +75,9 @@
             reportItemData: {
                 type: Object,
                 default: () => ({})
+            },
+            reportId: {
+                type: Number
             }
         },
         components: {
@@ -175,7 +178,7 @@
                 const data = {
                     ReportTriggerTypeID: this.model.ReportTriggerTypeID,
                     ReportTriggerName: this.model.ReportTriggerName,
-                    ReportID: Number(this.$route.params.id)
+                    ReportID: Number(this.$route.params.id) || this.reportId
                 }
 
                 this.$store.dispatch('report/updateReportData', data)

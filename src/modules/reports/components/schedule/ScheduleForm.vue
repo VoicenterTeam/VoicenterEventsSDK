@@ -3,9 +3,9 @@
         <div class="cursor-pointer text-primary-300 hover:text-primary"
              @click="showDialog = true">
             <div class="flex items-center">
-                <IconAddReport class="w-4 h-4 mx-1"/>
+                <i class="icon-lg text-primary" :class="icon" />
                 <span class="text-main-sm leading-4">
-                    {{ $t('widget.addNewSchedule') }}
+                    {{ buttonLabel }}
                 </span>
             </div>
         </div>
@@ -38,6 +38,7 @@
                             @on-back="onBack"
                             @on-finish="onFinish"
                             class="step-wrapper px-16"
+                            :reportId="reportId"
                         />
                     </fade-transition>
                     <div
@@ -68,44 +69,27 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col-span-2 bg-gray-light p-6">
-                    <Wizard :wizard-data="wizardData"
-                            v-if="drawWizard"
-                            @on-edit-step="onEditStep"
-                            :current-step="currentStep"
-                    />
-                </div> -->
             </div>
         </modal>
     </div>
 </template>
 <script>
-    // import Wizard from './modules/reports/components/wizard/Wizard'
-    // import WizardSummary from '@/modules/reports/components/wizard/components/wizard-summary'
-
-    const WIZARD_CONFIG = [
-        {
-            icon: 'IconCondition',
-            name: 'Date and Conditions',
-            isActive: true,
-            summary: '',
-            canEdit: false,
-        },
-        {
-            icon: 'IconEmailGroup',
-            name: 'Message Settings',
-            isActive: false,
-            summary: '',
-            canEdit: false,
-            isLast: true,
-        },
-    ]
-
     export default {
         props: {
             data: {
                 type: Object,
                 default: () => ({})
+            },
+            buttonLabel: {
+                type: String,
+                default: 'Add Schedule'
+            },
+            icon: {
+                type: String,
+                default: false
+            },
+            reportId: {
+                type: Number
             }
         },
         components: {
@@ -134,7 +118,7 @@
                 return `Step${this.currentStep}`
             },
             getActiveStep() {
-                return this.$t('general.step') + ' ' + (this.currentStep+1) + ' ' + this.$t('general.of') + ' ' + WIZARD_CONFIG.length
+                return this.$t('general.step') + ' ' + (this.currentStep + 1)
             }
         },
         methods: {

@@ -19,5 +19,9 @@ export default {
     mounted() {
         this.actualResizeHandler();
         window.addEventListener('resize', this.resizeThrottler, false);
-    }
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.resizeThrottler);
+    },
+
 };

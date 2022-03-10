@@ -90,10 +90,7 @@
                                     class="item"
                                     effect="dark"
                                     placement="top">
-                            <IconInfo
-                                class="cursor-help text-primary"
-                                @click="onPreviewTemplate(template)"
-                            />
+                            <i class="vc-icon-info cursor-help text-primary text-2xl" @click="onPreviewTemplate(template)"></i>
                         </el-tooltip>
                     </template>
                 </TemplateCard>

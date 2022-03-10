@@ -7,21 +7,22 @@
             @update-active-tab="updateActiveTab"
             @on-remove-tab="removeTab">
             <template v-slot:list>
-                <list-temp
+                <reports-list
                     v-show="listTabName === activeTab"
                     @on-create-report="openCreateReportTab"
                     @on-edit-row="onEditRow"/>
             </template>
-            <template v-for="tab in editableTabs"
-                v-slot:[tab.name]="{data}">
-                <edit-temp
+            <template v-for="(tab, index) in editableTabs"
+                      v-slot:[tab.name]="{data}">
+                <report-edit
+                    :key="index"
                     v-show="tab.name === activeTab"
                     :data="tab.data"
                     :report-id="tab.name"
                     @update-title="onUpdateTitle"/>
             </template>
             <template v-slot:create>
-                <create-temp v-show="createTabName === activeTab"/>
+                <report-create v-show="createTabName === activeTab"/>
             </template>
         </report-tabs>
     </div>
@@ -33,10 +34,12 @@ import get from "lodash/get"
 import {TabPane, Tabs} from 'element-ui'
 import BaseNavbar from '@/components/Navbar/BaseNavbar'
 import ReportTabs from "@/modules/reports/components/ReportTabs";
-import EditTemp from "@/modules/reports/pages/ReportEdit";
-import ListTemp from "@/modules/reports/pages/ReportsList";
-import CreateTemp from "@/modules/reports/pages/ReportCreate";
-import { reportApi } from "./services/reportService"
+
+import ReportEdit from "@/modules/reports/pages/ReportEdit";
+import ReportsList from "@/modules/reports/pages/ReportsList";
+import ReportCreate from "@/modules/reports/pages/ReportCreate";
+import { reportApi } from '@/modules/reports/services/reportService'
+
 const CREATE_TAB_NAME = 'create';
 const LIST_TAB_NAME = 'list'
 
@@ -48,16 +51,16 @@ export default {
         [TabPane.name]:
         TabPane,
         ReportTabs,
-        EditTemp,
-        ListTemp,
-        CreateTemp
+        ReportEdit,
+        ReportsList,
+        ReportCreate
     },
     data() {
         return {
             activeTab: LIST_TAB_NAME,
             dataTabs: [
                 {
-                    title: 'Report List', // TODO: Use translation for Report List
+                    title: this.$t('report.tab.reportList'),
                     name: LIST_TAB_NAME,
                     icon: 'vc-icon-template-list',
                 }
@@ -69,7 +72,7 @@ export default {
     computed: {
         editableTabs() {
             return this.dataTabs.filter(t => t.name !== LIST_TAB_NAME && t.name !== CREATE_TAB_NAME);
-        }
+        },
     },
     methods: {
         updateActiveTab(tab) {
@@ -100,7 +103,7 @@ export default {
                 this.activeTab = createReportTab.name
             } else {
                 this.dataTabs.push({
-                    title: 'Create',
+                    title: this.$t('general.create'),
                     name: CREATE_TAB_NAME,
                     icon: 'vc-icon-plus-linear',
                 })

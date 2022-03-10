@@ -15,9 +15,16 @@ const sdkMessages = {
 
 const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '') => {
     let message;
-    
-    if (get(apiError.response, 'data')) {
-        message = apiError.response.data.message
+
+    const responseData = get(apiError.response, 'data')
+    if (responseData) {
+        const responseMessage = get(responseData, 'message')
+        const responseDescription = get(responseData, 'Description')
+        if (responseDescription) {
+            message = responseDescription
+        } else if (responseMessage) {
+            message = responseMessage
+        }
     } else if (apiError.message) {
         message = apiError.message
     }
@@ -42,6 +49,8 @@ const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '')
             ...messageConfig,
             
         })
+
+        throw new Error(apiError)
     }
 };
 

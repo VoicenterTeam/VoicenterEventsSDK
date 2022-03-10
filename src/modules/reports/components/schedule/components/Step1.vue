@@ -292,3 +292,9 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+.el-form {
+    @apply text-left;
+}
+</style>

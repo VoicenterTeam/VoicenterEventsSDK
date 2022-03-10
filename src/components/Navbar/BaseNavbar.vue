@@ -23,13 +23,18 @@
         </nav>
     </div>
 </template>
-<script>   
+<script>
+    import AccountMenu from '@/components/Navbar/components/AccountMenu'
+    import ManageReports from '@/components/Navbar/components/ManageReports'
+    import DashboardMenu from '@/components/Navbar/components/DashboardMenu'
+    import LanguageSwitcher from '@/components/Navbar/components/LanguageSwitcher'
+    
     export default {
         components: {
-            AccountMenu: () => import('@/components/Navbar/components/AccountMenu'),
-            ManageReports: () => import('@/components/Navbar/components/ManageReports'),
-            DashboardMenu: () => import('@/components/Navbar/components/DashboardMenu'),
-            LanguageSwitcher: () => import('@/components/Navbar/components/LanguageSwitcher')
+            AccountMenu,
+            ManageReports,
+            DashboardMenu,
+            LanguageSwitcher,
         },
         props: {
             editMode: {
