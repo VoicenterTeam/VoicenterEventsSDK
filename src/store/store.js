@@ -29,6 +29,6 @@ export default new Vuex.Store({
         widgetTemplate,
         widgetCreation,
         templatesCategory,
-        report,
-    },
+        report
+    }
 })

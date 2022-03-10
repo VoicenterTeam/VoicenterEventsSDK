@@ -85,7 +85,12 @@
                 <template v-else>
                         <span class="schedule-add-button">
                             <span class="mx-2">
-                                <ScheduleForm :buttonLabel="$t('widget.addSchedule')" icon="vc-icon-plus-linear" :reportId="row.ReportID" />
+                                <ScheduleForm
+                                    :buttonLabel="$t('widget.addSchedule')"
+                                    icon="vc-icon-plus-linear"
+                                    :reportId="row.ReportID"
+                                    @addedSchedule="addedSchedule"
+                                />
                             </span>
                         </span>
                 </template>
@@ -371,19 +376,26 @@ export default {
                 this.tableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
             }
         },
+        async loadData () {
+            this.tableData = []
+            try {
+                await this.$store.dispatch('dashboards/setContentLoading', true)
+                const reports = await this.getReportsList()
+
+                return reports
+            } catch (e) {
+                console.error(e)
+            } finally {
+                await this.$store.dispatch('dashboards/setContentLoading', false)
+            }
+        },
+        async addedSchedule () {
+            this.tableData = await this.loadData()
+        }
     },
     async mounted() {
-        try {
-            await this.$store.dispatch('dashboards/setContentLoading', true)
-            const reports = await this.getReportsList()
-            this.tableData = reports
-        } catch (e) {
-            console.error(e)
-        } finally {
-            await this.$store.dispatch('dashboards/setContentLoading', false)
-        }
-
-    },
+        this.tableData = await this.loadData()
+    }
 }
 </script>
 

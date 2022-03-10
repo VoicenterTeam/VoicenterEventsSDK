@@ -150,6 +150,7 @@
             onFinish () {
                 this.showDialog = false
                 this.$store.dispatch('report/resetReportData')
+                this.$emit('addedSchedule')
             }
         }
     }
