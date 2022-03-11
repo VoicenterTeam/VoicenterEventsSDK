@@ -167,6 +167,11 @@
     height: calc(100% - 80px);
 }
 
+.content-wrapper {
+    height: 450px;
+    @apply overflow-auto;
+}
+
 .transition {
     transition: all 0.3s ease-out;
 }

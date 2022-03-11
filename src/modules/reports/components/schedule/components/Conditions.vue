@@ -100,7 +100,7 @@
 </script>
 <style lang="scss" scoped>
 .content-wrapper_step-1 {
-    max-height: 200px;
+    max-height: 150px;
     @apply overflow-auto;
 }
 </style>
