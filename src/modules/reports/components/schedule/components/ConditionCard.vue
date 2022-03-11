@@ -10,7 +10,6 @@
                 :placeholder="$t('report.condition.field.selectWidget')"
                 :data="reportItemData.ReportItemList"
                 v-model="condition.WidgetID"
-                id="parameter"
                 labelKey="WidgetTitle"
                 valueKey="WidgetID"
             />
@@ -23,7 +22,6 @@
                 :placeholder="$t('report.condition.field.widgetColumn')"
                 :data="widgetTemplateList"
                 v-model="condition.WidgetTemplateColumnID"
-                id="parameter"
                 labelKey="WidgetTemplateColumnsName"
                 valueKey="WidgetTemplateColumnsID"
             />
@@ -40,7 +38,6 @@
                 :placeholder="$t('report.condition.field.selectAggregation')"
                 :data="conditionFilterColumnTypeList"
                 v-model="condition.ConditionFilterColumnTypeID"
-                id="operator"
                 labelKey="ConditionFilterColumnName"
                 valueKey="ConditionFilterColumnTypeID"
             />
@@ -57,7 +54,6 @@
                 :placeholder="$t('report.condition.field.selectOperator')"
                 :data="widgetTemplateColumnOperatorList"
                 v-model="condition.ConditionFilterOperatorID"
-                id="operator"
                 labelKey="ConditionFilterOperatorSymbol"
                 valueKey="ConditionFilterOperatorID"
             />
@@ -139,7 +135,7 @@
         },
         computed: {
             conditionFilterColumnTypeList () {
-                return this.$store.getters['report/getConfData'].ConditionFilterColumnTypeList
+                return this.$store.getters['reportTrigger/getConfData'].ConditionFilterColumnTypeList
             },
             widgetTemplateList () {
                 if (this.checkIfValueIsEmpty(this.condition.WidgetID)) {
@@ -147,7 +143,7 @@
                 }
                 const widgetTemplateID = this.reportItemData.ReportItemList.find(el => el.WidgetID === this.condition.WidgetID).WidgetTemplateID
 
-                return this.$store.getters['report/getConfData'].WidgetTemplateList
+                return this.$store.getters['reportTrigger/getConfData'].WidgetTemplateList
                     .find(el => el.WidgetTemplateID === widgetTemplateID).WidgetTemplateColumnList
             },
             widgetTemplateColumnOperatorList () {

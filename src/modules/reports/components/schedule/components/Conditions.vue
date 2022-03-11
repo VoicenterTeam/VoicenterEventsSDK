@@ -67,7 +67,7 @@
                     step: 'ReportTriggerCondition'
                 }
 
-                this.$store.dispatch('report/createNewCondition', data)
+                this.$store.dispatch('reportTrigger/createNewCondition', data)
             },
             onDeleteCondition(groupIndex, itemIndex) {
                 const data = {
@@ -76,17 +76,17 @@
                     itemIndex
                 }
 
-                this.$store.dispatch('report/deleteCondition', data)
+                this.$store.dispatch('reportTrigger/deleteCondition', data)
             },
             onDeleteGroup(index) {
                 const data = {
                     index,
                     step: 'ReportTriggerCondition'
                 }
-                this.$store.dispatch('report/deleteCriteria', data)
+                this.$store.dispatch('reportTrigger/deleteCriteria', data)
             },
             onNewCriteria() {
-                this.$store.dispatch('report/createNewCriteria', 'ReportTriggerCondition')
+                this.$store.dispatch('reportTrigger/createNewCriteria', 'ReportTriggerCondition')
                 this.$nextTick(() => {
                     const element = document.getElementById('content-wrapper_step-1')
                     element.scrollTo({
@@ -98,7 +98,7 @@
         }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .content-wrapper_step-1 {
     max-height: 300px;
     @apply overflow-auto;

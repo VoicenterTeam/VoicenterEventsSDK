@@ -162,7 +162,7 @@ export default {
     },
     async mounted () {
         const confData = await reportApi.getReportConfData()
-        this.$store.dispatch('report/setConfData', confData)
+        this.$store.dispatch('reportTrigger/setConfData', confData)
     }
 }
 </script>

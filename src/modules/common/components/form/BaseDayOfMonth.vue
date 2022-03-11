@@ -68,7 +68,7 @@
         },
         computed: {
             getReportScheduleData () {
-                return this.$store.getters['report/getReportData'].ScheduleData
+                return this.$store.getters['reportTrigger/getReportData'].ScheduleData
             },
             isNotValidField () {
                 return this.isClickedOnNextBtn && !this.model
@@ -86,7 +86,7 @@
         }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .el-date-editor .el-range-editor {
     padding: 3px 0 !important;
 }

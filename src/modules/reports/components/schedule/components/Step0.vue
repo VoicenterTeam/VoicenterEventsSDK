@@ -103,7 +103,7 @@
         },
         computed: {
             reportTriggerTypeList() {
-                return this.$store.getters['report/getConfData'].ReportTriggerTypeList
+                return this.$store.getters['reportTrigger/getConfData'].ReportTriggerTypeList
             },
             activeTrigger () {
                 if (!this.model.ReportTriggerTypeID) {
@@ -113,16 +113,16 @@
                 return reportTriggerParameters.sort((a, b) => a.ParameterOrder - b.ParameterOrder)
             },
             getReportDataByStep () {
-                return this.$store.getters['report/getReportDataByStep']('ReportTriggerCondition')
+                return this.$store.getters['reportTrigger/getReportDataByStep']('ReportTriggerCondition')
             },
             getReportData () {
-                return this.$store.getters['report/getReportData']
+                return this.$store.getters['reportTrigger/getReportData']
             }
         },
         methods: {
             async onChangeFrequency (val) {
                 const copyOfModel = JSON.parse(JSON.stringify(this.model))
-                await this.$store.dispatch('report/updateReportDataScheduleSettings', {})
+                await this.$store.dispatch('reportTrigger/updateReportDataScheduleSettings', {})
                 this.model = {
                     ReportTriggerTypeID: null,
                     ReportTriggerName: null
@@ -180,11 +180,11 @@
                     ReportID: Number(this.$route.params.id) || this.reportId
                 }
 
-                this.$store.dispatch('report/updateReportData', data)
+                this.$store.dispatch('reportTrigger/updateReportData', data)
                 delete this.model.ReportTriggerName
                 delete this.model.ReportTriggerTypeID
 
-                this.$store.dispatch('report/updateReportDataScheduleSettings', this.model)
+                this.$store.dispatch('reportTrigger/updateReportDataScheduleSettings', this.model)
                 this.$emit('on-update', objToEmit)
             },
             getComponentName (component) {

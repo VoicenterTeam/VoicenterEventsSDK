@@ -108,7 +108,7 @@
         watch: {
             async showDialog (val) {
                 if (!val) {
-                    await this.$store.dispatch('report/resetReportData')
+                    await this.$store.dispatch('reportTrigger/resetReportData')
                     this.currentStep = 0
                 }
             }
@@ -149,7 +149,7 @@
             },
             onFinish () {
                 this.showDialog = false
-                this.$store.dispatch('report/resetReportData')
+                this.$store.dispatch('reportTrigger/resetReportData')
                 this.$emit('addedSchedule')
             }
         }

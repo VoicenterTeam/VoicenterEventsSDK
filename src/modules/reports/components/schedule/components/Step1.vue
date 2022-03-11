@@ -128,7 +128,7 @@
         },
         computed: {
             reportTemplateVariableList() {
-                return this.$store.getters['report/getConfData'].ReportTemplateVariableList
+                return this.$store.getters['reportTrigger/getConfData'].ReportTemplateVariableList
                     .map(el => {
                         return {
                             text: this.$t(el.ReportTemplateVariableNameTag),
@@ -137,7 +137,7 @@
                     })
             },
             getReportData () {
-                return this.$store.getters['report/getReportData']
+                return this.$store.getters['reportTrigger/getReportData']
             },
             allAccounts () {
                 return this.$store.getters['entities/getEntityList']('Accounts')
@@ -275,7 +275,7 @@
                     ReportRecipient: recipients
                 }
 
-                await this.$store.dispatch('report/updateReportData', data)
+                await this.$store.dispatch('reportTrigger/updateReportData', data)
             }
         },
         mounted () {

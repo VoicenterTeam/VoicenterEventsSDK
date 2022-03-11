@@ -1,5 +1,5 @@
 <template>
-    <div class="transition day-of-week mb-5">
+    <div class="transition day-of-week">
         <div class="day-of-week-label" v-if="label">
             {{ $t(label) }}
             <slot name="label" />
@@ -76,7 +76,7 @@ export default {
     },
     computed: {
         getReportScheduleData () {
-            return this.$store.getters['report/getReportData'].ScheduleData
+            return this.$store.getters['reportTrigger/getReportData'].ScheduleData
         },
         isNotValidField () {
             return this.isClickedOnNextBtn && !this.model.length
@@ -105,7 +105,7 @@ export default {
     @apply relative;
 }
 .day-of-week-label {
-    @apply mb-3;
+    @apply mb-4;
 }
 [dir="rtl"] .day-of-week-label {
     @apply ml-3;
