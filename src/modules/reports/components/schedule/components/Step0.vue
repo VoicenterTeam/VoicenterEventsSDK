@@ -1,6 +1,6 @@
 <template>
     <div class="content-wrapper leading-5 text-sm font-normal text-gray-950">
-        <div class="w-60 mb-5">
+        <div class="w-60 mb-5 flex flex-col items-start">
             <div class="report-label">
                 {{ $t('report.name') }}
             </div>
@@ -13,8 +13,7 @@
         <div class="flex justify-between mb-8">
             <div class="flex">
                 <div
-                    class="flex flex-col w-38"
-                    :class="$rtl.isRTL ? 'ml-10' : 'mr-10'"
+                    class="flex flex-col w-38 items-start trigger"
                 >
                     <span class="mb-2">
                         {{ $t('report.frequency') }}:
@@ -271,9 +270,15 @@
         }
     }
 }
-.trigger-component:not(:last-child) {
+
+[dir="rtl"] .trigger-component:not(:last-child) {
+    @apply ml-10;
+}
+
+[dir="ltr"] .trigger-component:not(:last-child) {
     @apply mr-10;
 }
+
 .trigger-component .el-input, .trigger-component .el-input-number {
     @apply w-32;
 }
@@ -291,5 +296,11 @@
 }
 [dir="ltr"] .report-label {
     @apply mr-3;
+}
+[dir="rtl"] .trigger {
+    @apply ml-10;
+}
+[dir="ltr"] .trigger {
+    @apply mr-10;
 }
 </style>

@@ -3,7 +3,7 @@
         <div class="cursor-pointer text-primary-300 hover:text-primary"
              @click="showDialog = true">
             <div class="flex items-center">
-                <i class="icon-lg text-primary" :class="icon" />
+                <i class="icon-base text-primary add-schedule-btn-text" :class="icon" />
                 <span class="text-main-sm leading-4">
                     {{ buttonLabel }}
                 </span>
@@ -165,12 +165,18 @@
 }
 
 .content-wrapper {
-    min-height: 65vh;
-    max-height: 65vh;
+    height: 65vh;
     @apply overflow-auto;
 }
 
 .transition {
     transition: all 0.3s ease-out;
+}
+
+[dir="rtl"] .add-schedule-btn-text {
+    @apply ml-2;
+}
+[dir="ltr"] .add-schedule-btn-text {
+    @apply mr-2;
 }
 </style>

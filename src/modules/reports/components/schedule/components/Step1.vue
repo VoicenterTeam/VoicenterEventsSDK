@@ -294,7 +294,10 @@
 </script>
 
 <style lang="scss" scoped>
-.el-form {
+[dir="rtl"] .el-form {
+    @apply text-right;
+}
+[dir="ltr"] .el-form {
     @apply text-left;
 }
 </style>

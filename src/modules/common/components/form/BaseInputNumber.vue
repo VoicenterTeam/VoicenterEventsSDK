@@ -61,7 +61,7 @@ export default {
             this.model = this.inputValue
         } else {
             const scheduleDataKey = 'ParameterTag' in this.$attrs ? this.$attrs.ParameterTag : this.$attrs.ComponentTag
-            this.model = this.getReportScheduleData[scheduleDataKey]
+            this.model = this.getReportScheduleData[scheduleDataKey] !== undefined ? this.getReportScheduleData[scheduleDataKey] : 0
         }
     },
     computed: {

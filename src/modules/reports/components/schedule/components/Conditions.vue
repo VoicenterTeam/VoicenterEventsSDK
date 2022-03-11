@@ -1,6 +1,6 @@
 <template>
     <div ref="conditions">
-        <div class="w-full flex flex-col content-wrapper_step-1">
+        <div class="w-full flex flex-col content-wrapper_step-1" id="content-wrapper_step-1">
             <ConditionGroup
                 v-for="(group, index) in reportData"
                 class="flex w-full px-1"
@@ -87,13 +87,20 @@
             },
             onNewCriteria() {
                 this.$store.dispatch('report/createNewCriteria', 'ReportTriggerCondition')
+                this.$nextTick(() => {
+                    const element = document.getElementById('content-wrapper_step-1')
+                    element.scrollTo({
+                        top: element.scrollHeight,
+                        behavior: 'smooth'
+                    })
+                })
             }
         }
     }
 </script>
 <style lang="scss">
 .content-wrapper_step-1 {
-    max-height: calc(100vh - 500px);
+    max-height: 300px;
     @apply overflow-auto;
 }
 </style>

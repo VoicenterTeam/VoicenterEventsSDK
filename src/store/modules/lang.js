@@ -39,6 +39,8 @@ const actions = {
 
         if (dir === 'rtl') {
             Vue.prototype.$rtl.enableRTL()
+        } else {
+            Vue.prototype.$rtl.disableRTL()
         }
         const translations = await ContentsApi.getAll()
         commit(types.SET_TRANSLATIONS, translations);

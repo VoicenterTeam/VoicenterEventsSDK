@@ -12,11 +12,10 @@
                 <div v-if="canDelete"
                      class="flex items-center text-red-300 cursor-pointer hover:text-red"
                      @click="onDeleteGroup">
-                    <i>
+                    <i class="mx-2">
                         <IconClose class="w-2 h-2"/>
                     </i>
-                    <span class="text-sm"
-                          :class="$rtl.isRTL ? 'ml-auto mr-1': 'mr-auto ml-1'">
+                    <span class="text-sm">
                         {{ $t('general.remove') }}
                     </span>
                 </div>
