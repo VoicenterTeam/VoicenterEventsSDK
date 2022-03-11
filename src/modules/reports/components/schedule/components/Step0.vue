@@ -17,7 +17,7 @@
                     :class="$rtl.isRTL ? 'ml-10' : 'mr-10'"
                 >
                     <span class="mb-2">
-                        {{ $t('report.Frequency') }}:
+                        {{ $t('report.frequency') }}:
                     </span>
                     <base-select
                         v-model="model.ReportTriggerTypeID"

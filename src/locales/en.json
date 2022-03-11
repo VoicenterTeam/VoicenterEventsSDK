@@ -1083,5 +1083,11 @@
 	"widget.title.table.incoming.calls.and.IVR.statistics.per.number.with.DTMF": "Table - Incoming calls and IVR statistics per number with DTMF",
 	"widget.title.table.incoming.calls.and.IVR.statistics.per.number.with.no.DTMF": "Table - Incoming calls and IVR statistics per number with no DTMF",
 	"ConditionFilterColumnType.Table__Calls_&_employment_statictics_per_user_with_utilization_rate_for_all_calls": "Table - Calls & employment statictics per user with utilization rate for all calls",
-	"ConditionFilterColumnType.Table__Calls_&_employment_statictics_per_user_with_Reps_Productivity__for_all_calls": "Table - Calls & employment statictics per user with Reps Productivity  for all calls"
+	"ConditionFilterColumnType.Table__Calls_&_employment_statictics_per_user_with_Reps_Productivity__for_all_calls": "Table - Calls & employment statictics per user with Reps Productivity  for all calls",
+	"report.name": "Report name",
+	"validation.error.fieldIsRequired": "Field is required",
+	"report.condition.field.selectWidget": "Select Widget",
+	"report.condition.field.widgetColumn": "Widget Column",
+	"report.condition.field.selectAggregation": "Select Aggregation",
+	"report.condition.field.selectOperator": "Select Operator"
 }
