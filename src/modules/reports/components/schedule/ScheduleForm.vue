@@ -17,7 +17,7 @@
             wrapper-classes="full-height"
         >
             <template v-slot:title>
-                <div class="flex w-full justify-center">
+                <div class="flex w-full justify-center text-xl">
                     {{ $t('widget.addSchedule') }}
                 </div>
             </template>
@@ -74,6 +74,8 @@
     </div>
 </template>
 <script>
+    const wizardLength = 2
+
     export default {
         props: {
             data: {
@@ -118,7 +120,7 @@
                 return `Step${this.currentStep}`
             },
             getActiveStep() {
-                return this.$t('general.step') + ' ' + (this.currentStep + 1)
+                return this.$t('general.step') + ' ' + (this.currentStep + 1) + ' ' + this.$t('general.of') + ' ' + wizardLength
             }
         },
         methods: {

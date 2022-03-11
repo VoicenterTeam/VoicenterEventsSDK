@@ -7,14 +7,12 @@
             <div class="flex items-center font-semibold">
                 <div class="text-primary-300 flex text-sm items-center hover:text-primary cursor-pointer mx-2"
                      @click="onAddCondition">
-                    + {{ $t('general.add') }}
+                    <i class="vc-icon-plus-linear hover:text-primary mx-1" /> {{ $t('general.add') }}
                 </div>
                 <div v-if="canDelete"
                      class="flex items-center text-red-300 cursor-pointer hover:text-red"
                      @click="onDeleteGroup">
-                    <i class="mx-2">
-                        <IconClose class="w-2 h-2"/>
-                    </i>
+                    <i class="mx-2 vc-icon-close text-xs" />
                     <span class="text-sm">
                         {{ $t('general.remove') }}
                     </span>
