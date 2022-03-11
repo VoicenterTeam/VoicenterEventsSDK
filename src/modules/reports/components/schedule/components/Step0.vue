@@ -237,8 +237,44 @@
 .active {
     @apply bg-primary text-white border-primary;
 }
+[dir="rtl"] .trigger-component:not(:last-child) {
+    @apply ml-10;
+}
+
+[dir="ltr"] .trigger-component:not(:last-child) {
+    @apply mr-10;
+}
+.el-range-editor.is-active, .el-range-editor.is-active {
+    @apply border-primary;
+}
+.report-label {
+    @apply mb-3;
+}
+[dir="rtl"] .report-label {
+    @apply ml-3;
+}
+[dir="ltr"] .report-label {
+    @apply mr-3;
+}
+[dir="rtl"] .trigger {
+    @apply ml-10;
+}
+[dir="ltr"] .trigger {
+    @apply mr-10;
+}
+.interval ::v-deep .el-date-editor.el-input, .interval ::v-deep .el-date-editor.el-input__inner {
+    @apply w-32;
+}
 </style>
+
 <style lang="scss">
+.trigger-component .el-input, .trigger-component .el-input-number {
+    @apply w-32;
+}
+.time-picker .el-date-editor.el-input__inner {
+    @apply w-32;
+}
+
 .el-time-range-picker {
     .el-time-panel__footer {
         height: 40px !important;
@@ -269,38 +305,5 @@
             }
         }
     }
-}
-
-[dir="rtl"] .trigger-component:not(:last-child) {
-    @apply ml-10;
-}
-
-[dir="ltr"] .trigger-component:not(:last-child) {
-    @apply mr-10;
-}
-
-.trigger-component .el-input, .trigger-component .el-input-number {
-    @apply w-32;
-}
-.time-picker .el-date-editor.el-input__inner {
-    @apply w-32;
-}
-.el-range-editor.is-active, .el-range-editor.is-active {
-    @apply border-primary;
-}
-.report-label {
-    @apply mb-3;
-}
-[dir="rtl"] .report-label {
-    @apply ml-3;
-}
-[dir="ltr"] .report-label {
-    @apply mr-3;
-}
-[dir="rtl"] .trigger {
-    @apply ml-10;
-}
-[dir="ltr"] .trigger {
-    @apply mr-10;
 }
 </style>

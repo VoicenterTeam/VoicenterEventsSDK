@@ -157,18 +157,14 @@
         }
     }
 </script>
+
 <style lang="scss">
 .grid-wrapper {
     @apply bg-white shadow-base rounded-md;
 }
 
 .step-wrapper {
-    max-height: 65vh;
-}
-
-.content-wrapper {
-    height: 65vh;
-    @apply overflow-auto;
+    height: calc(100% - 80px);
 }
 
 .transition {
