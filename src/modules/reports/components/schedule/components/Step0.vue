@@ -80,16 +80,16 @@
             }
         },
         components: {
-            BaseTimeRange: () => import('@/modules/common/components/form/BaseTimeRange'),
-            BaseInterval: () => import('@/modules/common/components/form/BaseInterval'),
+            TimeRange: () => import('@/modules/common/components/form/TimeRange'),
+            Interval: () => import('@/modules/common/components/form/Interval'),
             Conditions: () => import('@/modules/reports/components/schedule/components/Conditions'),
-            BaseDate: () => import('@/components/Widgets/BaseDate'),
-            BaseDayOfTheWeek: () => import('@/modules/common/components/form/BaseDayOfTheWeek'),
-            BaseInputText: () => import('@/modules/common/components/form/BaseInputText'),
-            BaseInputNumber: () => import('@/modules/common/components/form/BaseInputNumber'),
-            BaseUserSelect: () => import('@/modules/common/components/form/BaseUserSelect'),
-            BaseAccountSelect: () => import('@/modules/common/components/form/BaseAccountSelect'),
-            BaseDayOfMonth: () => import('@/modules/common/components/form/BaseDayOfMonth')
+            Date: () => import('@/components/Widgets/BaseDate'),
+            DayOfTheWeek: () => import('@/modules/common/components/form/DayOfTheWeek'),
+            InputText: () => import('@/modules/common/components/form/InputText'),
+            InputNumber: () => import('@/modules/common/components/form/InputNumber'),
+            UserSelect: () => import('@/modules/common/components/form/UserSelect'),
+            AccountSelect: () => import('@/modules/common/components/form/AccountSelect'),
+            DayOfMonth: () => import('@/modules/common/components/form/DayOfMonth')
         },
         data () {
             return {
@@ -188,14 +188,14 @@
                 this.$emit('on-update', objToEmit)
             },
             getComponentName (component) {
-                const componentTag = 'Base' + component.ComponentTag
+                const componentTag = component.ComponentTag
 
-                if (componentTag === 'BaseTime') {
-                    return 'BaseInterval'
-                } else if (componentTag === 'BaseText') {
-                    return 'BaseInputText'
-                } else if (componentTag === 'BaseNumber') {
-                    return 'BaseInputNumber'
+                if (componentTag === 'Time') {
+                    return 'Interval'
+                } else if (componentTag === 'Text') {
+                    return 'InputText'
+                } else if (componentTag === 'Number') {
+                    return 'InputNumber'
                 } else {
                     return componentTag
                 }
