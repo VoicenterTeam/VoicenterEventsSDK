@@ -1,6 +1,6 @@
 <template>
-    <div class="time-picker">
-        <div class="time-picker-label" v-if="label">
+    <div class="account-select">
+        <div class="account-select-label" v-if="label">
             {{ $t(label) }}
             <slot name="label" />
         </div>
@@ -89,43 +89,19 @@
     }
 </script>
 <style lang="scss" scoped>
-.el-date-editor .el-range-editor {
-    padding: 3px 0 !important;
-}
-.el-range__icon, .el-range__close-icon {
-    display: none !important;
-}
-.el-date-editor .el-range-input {
-    width: 50% !important;
-}
-
-.el-time-range-picker > .el-time-range-picker__content {
-    .el-time-spinner__item:not(.active):hover {
-        @apply text-white bg-primary rounded-full;
-    }
-    .el-time-spinner__item.active {
-        @apply text-primary;
-    }
-}
-.el-time-panel__btn.confirm {
-    @apply text-primary;
-}
-.el-range-editor.is-active, .el-range-editor.is-active:hover {
-    @apply border-primary
-}
-.time-picker-label {
+.account-select-label {
     @apply mb-3;
 }
-[dir="rtl"] .time-picker-label {
+[dir="rtl"] .account-select-label {
     @apply ml-3;
 }
-[dir="ltr"] .time-picker-label {
+[dir="ltr"] .account-select-label {
     @apply mr-3;
 }
 .el-form-item__error {
     @apply pt-2;
 }
-.time-picker {
+.account-select {
     @apply relative;
 }
 </style>

@@ -108,7 +108,4 @@
 .date-picker {
     @apply relative;
 }
-.date-picker-label {
-    @apply mb-3;
-}
 </style>

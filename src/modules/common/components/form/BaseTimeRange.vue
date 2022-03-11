@@ -79,7 +79,7 @@
         }
     }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .el-date-editor .el-range-editor {
     padding: 3px 0 !important;
 }

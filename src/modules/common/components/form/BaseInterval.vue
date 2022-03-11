@@ -5,6 +5,7 @@
         </div>
         <el-time-select
             v-model="model"
+            class="interval-time-select"
             :placeholder="placeholder"
             @change="onChange"
             :disabled="disabled"
@@ -39,7 +40,7 @@ export default {
         },
         placeholder: {
             type: String,
-            default: '' 
+            default: 'Time'
         },
         isRange: {
             type: Boolean,
@@ -106,9 +107,15 @@ export default {
     @apply mr-3;
 }
 .el-form-item__error {
-    @apply pt-2;
+    @apply pt-4;
 }
 .interval {
     @apply relative;
+}
+</style>
+
+<style lang="scss">
+.time-select .time-select-item.selected:not(.disabled) {
+    @apply text-primary;
 }
 </style>

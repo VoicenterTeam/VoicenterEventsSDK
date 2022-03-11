@@ -1,6 +1,6 @@
 <template>
-    <span class="interval">
-        <div class="interval-label" v-if="label">
+    <span class="input-text">
+        <div class="input-text-label" v-if="label">
             {{ $t(label) }}
         </div>
         <el-input v-model="model" @input="onChange" @change="onChange" :placeholder="placeholder" :disabled="disabled"></el-input>
@@ -85,22 +85,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.interval-label {
+.input-text-label {
     @apply mb-3;
 }
-[dir="rtl"] .interval-label {
+[dir="rtl"] .input-text-label {
     @apply ml-3;
 }
-[dir="ltr"] .interval-label {
+[dir="ltr"] .input-text-label {
     @apply mr-3;
 }
 .el-form-item__error {
-    @apply pt-2;
+    @apply pt-4;
 }
-.interval {
+.input-text {
     @apply relative;
-}
-.interval-label {
-    @apply mb-3;
 }
 </style>

@@ -103,7 +103,7 @@
         },
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .accolade-height {
     height: calc(100% - 6rem);
 }

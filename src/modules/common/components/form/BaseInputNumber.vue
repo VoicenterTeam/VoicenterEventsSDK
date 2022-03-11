@@ -103,4 +103,7 @@ export default {
 .interval-label {
     @apply mb-3;
 }
+::v-deep .el-input-number__decrease:hover:not(.is-disabled)~.el-input .el-input__inner:not(.is-disabled), ::v-deep .el-input-number__increase:hover:not(.is-disabled)~.el-input .el-input__inner:not(.is-disabled) {
+    @apply border-primary;
+}
 </style>
