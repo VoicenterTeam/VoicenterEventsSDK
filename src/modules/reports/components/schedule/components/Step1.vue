@@ -206,7 +206,7 @@
                         data.ScheduleData.TriggerDayOfWeek.sort((a, b) => a - b)
                     }
 
-                    reportTriggerApi.createReportTrigger(data)
+                    await reportTriggerApi.createReportTrigger(data)
                     this.$emit('on-finish')
                 } catch {
 
