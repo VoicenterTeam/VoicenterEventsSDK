@@ -23,7 +23,7 @@
             </template>
 
             <template v-slot:create>
-                <report-create v-show="createTabName === activeTab"/>
+                <report-create v-show="createTabName === activeTab" @on-close-create-report-tab="onCloseCreateReportTab" />
             </template>
         </report-tabs>
     </div>
@@ -135,6 +135,9 @@ export default {
             this.$nextTick(() => {
                 this.activeTab = tabName
             })
+        },
+        onCloseCreateReportTab () {
+            this.removeTab(this.activeTab)
         }
     },
     watch: {
