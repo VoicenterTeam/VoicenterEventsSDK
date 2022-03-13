@@ -152,13 +152,13 @@
                             if (this.checkIfValueIsEmpty(el.WidgetID)) {
                                 return true
                             }
-                            const isAdditionalFieldsNotEmpty = this.checkIfValueIsEmpty(el.WidgetTemplateColumnID) ||
-                                this.checkIfValueIsEmpty(el.ConditionFilterValue) ||
-                                this.checkIfValueIsEmpty(el.ConditionFilterOperatorID) ||
+                            const isAdditionalFieldsNotEmpty = this.checkIfValueIsEmpty(el.WidgetTemplateColumnID) &&
+                                this.checkIfValueIsEmpty(el.ConditionFilterValue) &&
+                                this.checkIfValueIsEmpty(el.ConditionFilterOperatorID) &&
                                 this.checkIfValueIsEmpty(el.ConditionFilterColumnTypeID)
 
                             if (el.WidgetID && isAdditionalFieldsNotEmpty) {
-                                return false
+                                return true
                             }
                             if (Object.values(el).every(el => !this.checkIfValueIsEmpty(el))) {
                                 return true

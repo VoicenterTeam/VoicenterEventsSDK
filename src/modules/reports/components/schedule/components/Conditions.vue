@@ -100,7 +100,9 @@
 </script>
 <style lang="scss" scoped>
 .content-wrapper_step-1 {
-    max-height: 150px;
+    height: 100%;
+    min-height: calc(95vh - 570px);
+    max-height: calc(95vh - 570px);
     @apply overflow-auto;
 }
 </style>

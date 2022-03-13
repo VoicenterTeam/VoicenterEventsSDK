@@ -1,7 +1,7 @@
 <template>
     <div class="schedule-form">
         <div class="cursor-pointer text-primary-300 hover:text-primary"
-             @click="showDialog = true">
+             @click="openModal">
             <div class="flex items-center">
                 <i class="icon-base text-primary add-schedule-btn-text" :class="icon" />
                 <span class="text-main-sm leading-4">
@@ -41,40 +41,45 @@
                             :reportId="reportId"
                         />
                     </fade-transition>
-                    <div
-                        class="border-t-2 px-16 border-gray-300 bottom-0 h-20 flex w-full items-center justify-between">
-                        <base-button class="mx-4"
-                                     outline
-                                     fixed-width="w-37"
-                                     @click="onCancel">
-                            <div class="flex items-center">
-                                <IconDiscard class="mx-1"/>
-                                <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
-                            </div>
-                        </base-button>
-                        <div class="flex items-center">
-                            <portal-target name="next-button">
-                                <base-button
-                                    fixed-width="w-37"
-                                    type="primary"
-                                    @click="onNext"
-                                >
-                                    <div class="flex items-center">
-                                        <span class="mx-1 text-base font-bold">{{ $t('general.next') }}</span>
-                                        <IconDirRight class="mx-1"/>
-                                    </div>
-                                </base-button>
-                            </portal-target>
-                            <portal-target name="additional-actions"/>
-                        </div>
-                    </div>
                 </div>
             </div>
+            <template #footer>
+                <div
+                    class="border-t-2 px-16 border-gray-300 bottom-0 h-20 flex w-full items-center justify-between">
+                    <base-button
+                        class="mx-4"
+                        outline
+                        fixed-width="w-37"
+                        @click="onCancel"
+                    >
+                        <div class="flex items-center">
+                            <IconDiscard class="mx-1"/>
+                            <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
+                        </div>
+                    </base-button>
+                    <div class="flex items-center">
+                        <portal-target name="next-button">
+                            <base-button
+                                fixed-width="w-37"
+                                type="primary"
+                                @click="onNext"
+                            >
+                                <div class="flex items-center">
+                                    <span class="mx-1 text-base font-bold">{{ $t('general.next') }}</span>
+                                    <IconDirRight class="mx-1"/>
+                                </div>
+                            </base-button>
+                        </portal-target>
+                        <portal-target name="additional-actions"/>
+                    </div>
+                </div>
+            </template>
         </modal>
     </div>
 </template>
 <script>
     const wizardLength = 2
+    import { Notification } from 'element-ui'
 
     export default {
         props: {
@@ -153,6 +158,13 @@
                 this.showDialog = false
                 this.$store.dispatch('reportTrigger/resetReportData')
                 this.$emit('addedSchedule')
+            },
+            openModal () {
+                if (!this.data || !this.data.ReportItemList.length) {
+                    Notification.warning(this.$t('report.schedule.needAddAtLeastOneWidget'))
+                    return
+                }
+                this.showDialog = true
             }
         }
     }
@@ -164,11 +176,9 @@
 }
 
 .step-wrapper {
-    height: calc(100% - 80px);
-}
-
-.content-wrapper {
-    height: 450px;
+    height: 100%;
+    min-height: calc(95vh - 280px);
+    max-height: calc(95vh - 280px);
     @apply overflow-auto;
 }
 

@@ -90,6 +90,7 @@
                                     icon="vc-icon-plus-linear"
                                     :reportId="row.ReportID"
                                     @addedSchedule="addedSchedule"
+                                    :data="row"
                                 />
                             </span>
                         </span>

@@ -43,14 +43,13 @@ export default {
     data () {
         return {
             daysAbbr: [
-                // 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'
-                { name: 'Su', value: 7 },
-                { name: 'Mo', value: 1 },
-                { name: 'Tu', value: 2 },
-                { name: 'We', value: 3 },
-                { name: 'Th', value: 4 },
-                { name: 'Fr', value: 5 },
-                { name: 'Sa', value: 6 }
+                { name: this.$t('general.dayOfWeek.sunday'), value: 7 },
+                { name: this.$t('general.dayOfWeek.monday'), value: 1 },
+                { name: this.$t('general.dayOfWeek.tuesday'), value: 2 },
+                { name: this.$t('general.dayOfWeek.wednesday'), value: 3 },
+                { name: this.$t('general.dayOfWeek.thursday'), value: 4 },
+                { name: this.$t('general.dayOfWeek.friday'), value: 5 },
+                { name: this.$t('general.dayOfWeek.saturday'), value: 6 }
             ],
             model: []
         }

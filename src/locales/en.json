@@ -1089,5 +1089,13 @@
 	"report.condition.field.selectWidget": "Select Widget",
 	"report.condition.field.widgetColumn": "Widget Column",
 	"report.condition.field.selectAggregation": "Select Aggregation",
-	"report.condition.field.selectOperator": "Select Operator"
+	"report.condition.field.selectOperator": "Select Operator",
+	"report.schedule.needAddAtLeastOneWidget": "Need to add at least one widget",
+	"general.dayOfWeek.sunday": "Su",
+	"general.dayOfWeek.monday": "Mo",
+	"general.dayOfWeek.tuesday": "Tu",
+	"general.dayOfWeek.wednesday": "We",
+	"general.dayOfWeek.thursday": "Th",
+	"general.dayOfWeek.friday": "Fr",
+	"general.dayOfWeek.saturday": "Sa"
 }
