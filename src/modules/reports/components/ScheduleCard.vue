@@ -12,8 +12,12 @@
                     {{ $t('report.schedules.sendNow') }}
                 </base-button>
             </div>
+            <span v-if="actionsWithSchedule">
+                <i class="vc-icon-edit-pencil text-primary mr-4 cursor-pointer" @click="editSchedule" />
+                <i class="vc-icon-recycle-bin text-red-600 cursor-pointer" @click="deleteSchedule" />
+            </span>
         </div>
-        <div class="flex w-full mb-4">
+        <div class="flex w-full mb-4" v-if="conditions.length">
             <div class="inline-flex pr-2">
                 <i class="vc-icon-filter icon-lg mr-2 text-primary"/>
                 <span>{{ $t('widget.conditions') }}:</span>
@@ -92,6 +96,14 @@ export default {
         showBtnSendNow: {
             type: Boolean,
             default: false
+        },
+        actionsWithSchedule: {
+            type: Boolean,
+            default: false
+        },
+        triggerId: {
+            type: [Number, String],
+            default: null
         }
     },
     data() {
@@ -100,6 +112,12 @@ export default {
     methods: {
         onSendNow() {
             console.log('Send now')
+        },
+        editSchedule () {
+            console.log(this.triggerId)
+        },
+        deleteSchedule () {
+            console.log(this.triggerId)
         }
     },
     computed: {
