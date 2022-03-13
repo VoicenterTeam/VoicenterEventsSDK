@@ -6,7 +6,7 @@
             <button
                 class="btn ml-2 p-2 shadow rounded bg-white text-primary hover:bg-primary hover:text-white mx-1 border hover:border-primary"
                 @click="$emit('retry')">
-                <ZapIcon class="w-3 h-3" :class="{'loading': loading}"/> q
+                <ZapIcon class="w-3 h-3" :class="{'loading': loading}"/>
             </button>
         </div>
     </transition>
