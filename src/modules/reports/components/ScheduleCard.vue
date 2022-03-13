@@ -7,7 +7,7 @@
                 <span class="px-2 my-auto">
                     Daily: Mon, Wed, Fri, at 9:00 am
                 </span>
-                <base-button type="primary" size="xs" outline @click="onSendNow">
+                <base-button v-if="showBtnSendNow" type="primary" size="xs" outline @click="onSendNow">
                     <i class="vc-icon-skip-arrow icon-md mx-2"/>
                     {{ $t('report.schedules.sendNow') }}
                 </base-button>
@@ -88,6 +88,10 @@ export default {
         triggerName: {
             type: String,
             default: ''
+        },
+        showBtnSendNow: {
+            type: Boolean,
+            default: false
         }
     },
     data() {

@@ -1,8 +1,10 @@
 <template>
-    <div class="my-10 mx-10 xl:mx-20">
-        <el-tabs v-model="activeTabName"
-                 square
-                 @tab-remove="removeTab">
+    <div class="py-10 px-10 xl:px-2 bg-gray-200">
+        <el-tabs
+            v-model="activeTabName"
+            square
+            @tab-remove="removeTab"
+        >
             <el-tab-pane
                 v-for="item in dataTabs"
                 :key="item.name"
@@ -10,9 +12,11 @@
                 :name="item.name"
                 :closable="item.name !== listTabName">
                 <template>
-                    <slot :name="item.name"
-                          :label="item.title"
-                          :data="item.data" />
+                    <slot 
+                        :name="item.name"
+                        :label="item.title"
+                        :data="item.data"
+                    />
                 </template>
                 <span slot="label">
                     <i :class="item.icon" class="icon-md"/> {{ item.title }}

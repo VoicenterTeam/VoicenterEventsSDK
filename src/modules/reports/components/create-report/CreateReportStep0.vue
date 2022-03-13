@@ -73,7 +73,7 @@ export default {
             this.$emit('on-update-step-number', { nextStep: true })
         },
         checkIfValuesIsEmpty () {
-            return Object.values(this.report).every(el => el === '' || el === null )
+            return Object.values(this.report).some(el => el === '' || el === null )
         },
         checkIfValueIsEmpty (value) {
             return value === '' || value === null

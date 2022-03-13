@@ -1,7 +1,7 @@
 <template>
     <div class="h-full">
         <div>
-            qwf
+            <schedule-list />
         </div>
         <portal to="prev-button">
             <base-button
@@ -37,6 +37,9 @@
 
 <script>
 export default {
+    components: {
+        ScheduleList: () => import('@/modules/reports/components/ScheduleList.vue')
+    },
     methods: {
         goNext () {
             this.$emit('on-update-step-number', { nextStep: true })

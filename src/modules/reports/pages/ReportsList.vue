@@ -16,7 +16,9 @@
                             :trigger-name="trigger.ReportTriggerName"
                             :key="index"
                             :conditions="trigger.ReportTriggerCondition"
-                            :recipients="trigger.ReportRecipient">
+                            :recipients="trigger.ReportRecipient"
+                            showBtnSendNow
+                        >
                         </schedule-card>
                     </div>
                 </div>
