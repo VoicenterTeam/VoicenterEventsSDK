@@ -631,6 +631,7 @@ var defaultOptions = {
   store: null,
   extensionsModuleName: 'sdkExtensions',
   queuesModuleName: 'sdkQueues',
+  dialersModuleName: 'sdkDialers',
   serverFetchStrategy: 'remote',
   // get servers from external url options: remote | static
   serverType: null // can be 1 or 2. 2 is used for chrome extension
