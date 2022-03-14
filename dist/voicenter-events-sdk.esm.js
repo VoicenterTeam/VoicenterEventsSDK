@@ -491,21 +491,17 @@ var actions$2 = {
 var getters$2 = {
   getAllDialers: function getAllDialers(state) {
     return state.all;
-  } // allQueueCalls: (state, getters) => {
-  //   const allCalls = []
-  //   getters.queueWithActiveCalls.forEach((queue) => {
-  //     const calls = queue.Calls || []
-  //     allCalls.push(...calls)
-  //   })
-  //   return allCalls
-  // },
-  // filterQueuesByIds: (state) => queueIds => {
-  //   if (!queueIds || !Array.isArray(queueIds)) {
-  //     return state.all
-  //   }
-  //   return state.all.filter(e => queueIds.includes(e.QueueID))
-  // }
-
+  },
+  getAllDialersWithTypeIVR: function getAllDialersWithTypeIVR(state) {
+    return state.all.filter(function (el) {
+      return el.type === 'IVR';
+    });
+  },
+  getAllDialersWithTypeAUTOMATIC: function getAllDialersWithTypeAUTOMATIC(state) {
+    return state.all.filter(function (el) {
+      return el.type === 'Automatic';
+    });
+  }
 };
 var dialersModule = {
   namespaced: true,
