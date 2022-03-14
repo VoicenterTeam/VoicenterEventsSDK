@@ -36,8 +36,9 @@ export default async function initRealTimeSdk() {
             store: store,
             extensionsModuleName: 'extensions',
             queuesModuleName: 'queues',
+            dialersModuleName: 'dialers',
             serverFetchStrategy: process.env.VUE_APP_EVENTS_SERVER_FETCH_STRATEGY,
-            useLoginApi: true,
+            useLoginApi: true
         }
         if (process.env.VUE_APP_EVENTS_SDK_URL) {
             config.url = process.env.VUE_APP_EVENTS_SDK_URL
