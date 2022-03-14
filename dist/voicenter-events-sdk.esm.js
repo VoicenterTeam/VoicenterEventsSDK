@@ -111,7 +111,8 @@ var eventTypes = {
   KEEP_ALIVE: 'keepalive',
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
   CLOSE: 'closeme',
-  ERROR: 'error'
+  ERROR: 'error',
+  ALL_DIALERS_STATUS: 'AllDialersStatus'
 };
 
 var defaultServers = [{
@@ -233,7 +234,8 @@ function onNewEvent(_ref) {
   var eventData = _ref.eventData,
       store = _ref.store,
       extensionsModuleName = _ref.extensionsModuleName,
-      queuesModuleName = _ref.queuesModuleName;
+      queuesModuleName = _ref.queuesModuleName,
+      dialersModuleName = _ref.dialersModuleName;
   var name = eventData.name,
       data = eventData.data;
   store.commit("".concat(extensionsModuleName, "/SET_IS_SOCKET_OFFLINE"), isSocketOffline(eventData));
@@ -283,6 +285,10 @@ function onNewEvent(_ref) {
         });
       }
 
+      break;
+
+    case eventTypes.ALL_DIALERS_STATUS:
+      store.dispatch("".concat(dialersModuleName, "/setDialers"), data.dialers);
       break;
   }
 }
