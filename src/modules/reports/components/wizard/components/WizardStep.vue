@@ -1,0 +1,284 @@
+<template>
+    <div class="summary-step inactive"
+         :class="{
+            'active': isActive,
+            'visited': isVisited,
+            'passed': isPassed
+         }"
+        >
+        <template>
+            <div class="summary-step-progress">
+                <div v-if="!isLast" class="summary-step-progress-line">
+                    <div class="flex flex-col justify-around items-center h-full w-full absolute">
+                       <div v-for="i in 3" :key="i">
+                           <i  class="vc-icon-down icon-base text-white"/>
+                       </div>
+                    </div>
+
+                    <i class="summary-step-progress-line-inner h-0" :class="isVisited ? 'h-full' : 'h-0'"></i>
+                </div>
+                <div class="summary-step-progress-circle">
+                    <div class="summary-step-progress-circle-point"></div>
+                    <div class="summary-step-progress-circle-icon">
+                        <i :class="[isVisited ? 'text-primary' : 'text-inactive-elements']" class="vc-icon-settings icon-2xl min-w-8"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="summary-step-content hidden md:block">
+                <div class="flex justify-between">
+                    <span class="summary-step-content-header leading-none">
+                        <slot name="header">
+                            <h2 class="mb-0 text-sm lg:text-base font-bold uppercase">
+                                {{ index }}.&nbsp;
+                            </h2>
+                        </slot>
+                    </span>
+                    <FadeTransition :duration="200" mode="out-in">
+                        <i class="vc-icon-edit-pencil icon-base text-active-elements" v-if="isVisited && !isActive"/>
+                    </FadeTransition>
+                </div>
+                <ScaleTransition :duration="200" mode="out-in">
+                    <div v-if="isVisited" class="summary-step-content-list mt-4 hidden md:block">
+                        <slot name="summary"/>
+                    </div>
+                </ScaleTransition>
+            </div>
+        </template>
+    </div>
+</template>
+<script>
+import {FadeTransition, ScaleTransition} from 'vue2-transitions';
+    export default {
+        inheritAttrs: false,
+        props: {
+            icon: {
+                type: String,
+                default: 'IconWidgetName',
+            },
+            name: {
+                type: String,
+                default: 'Widget Selection',
+            },
+            // isActive: {
+            //     type: Boolean,
+            //     default: false,
+            // },
+            // isLast: {
+            //     type: Boolean,
+            //     default: false,
+            // },
+            canEdit: {
+                type: Boolean,
+                default: false,
+            },
+            index: Number,
+            summary: String,
+            steps: {
+                type: Number,
+                default: 0
+            },
+            currentStep: {
+                type: Number,
+                default: 0
+            }
+        },
+        components: {
+            ScaleTransition,
+            FadeTransition
+        },
+        data() {
+            return {
+                transitionDuration: 300
+                // isVisited: true,
+                // isActive: true,
+                // isPassed: true
+            }
+        },
+        computed: {
+            isActive() {
+                return this.currentStep === this.index
+            },
+            isLast() {
+                return this.index === this.steps
+            },
+            isVisited() {
+                return this.index <= this.lastVisitedStep
+            },
+            isPassed() {
+                return this.index <= this.lastPassed
+            }
+        },
+        methods: {
+            onEditStep() {
+                this.$emit('on-edit-step')
+            }
+        }
+    }
+</script>
+<style lang="scss" scoped>
+.wizard-step {
+    @apply flex items-center;
+    .progress-circle-outer {
+        @apply rounded-full w-7 h-7;
+        border: solid 1px var(--primary-color);
+    }
+}
+
+
+svg {
+    path {
+        transition: fill 0.3s ease-out;
+    }
+}
+
+.is-active {
+    transition: all 0.3s ease-out;
+
+    .progress-line {
+        transition: all 0.3s ease-out;
+        // @apply bg-primary;
+        background: var(--gray-550);
+    }
+
+
+    svg {
+        path, circle {
+            transition: stroke 0.3s ease-out;
+            stroke: var(--primary-color);
+        }
+    }
+}
+</style>
+
+<style lang="scss" scoped>
+    $point-size: 16px;
+    $point-circle-size: 30px;
+
+    .summary-step {
+        display: -webkit-box;
+
+        &.inactive, &.active, &.visited {
+            .summary-step-progress {
+                @apply border-gray-500;
+            }
+        }
+
+        &.passed {
+            .summary-step-progress {
+                @apply border-progress-line-done;
+            }
+        }
+
+        &.active {
+            .summary-step-content-header, .summary-step-content-header > * {
+                @apply text-primary;
+            }
+
+            .summary-step-progress-circle {
+                @apply border-primary;
+                background-color: rgba(var(--primary_rgba-color), 0.25);
+            }
+        }
+
+        &.visited:hover {
+            .summary-step-content-header {
+                @apply text-primary;
+            }
+        }
+
+        &.visited, &.active {
+            @apply cursor-pointer;
+
+            .summary-step-progress-circle-point {
+                @apply border-primary;
+            }
+
+            .summary-step-progress-circle-icon {
+                @apply text-primary;
+            }
+        }
+    }
+
+    .summary-step-progress {
+        @apply relative flex-grow-0;
+        min-height: 80px;
+        width: $point-size;
+    }
+
+    .summary-step-progress-circle {
+        @apply absolute rounded-full border;
+        width: $point-circle-size;
+        height: $point-circle-size;
+        transform: translateY(-$point-size / 2);
+        left: -50%;
+        background: transparent;
+        border-color: transparent;
+        z-index: 1;
+        transition: .3s ease-out;
+    }
+
+    .summary-step-progress-circle-point {
+        @apply absolute border-4 border-gray-500 bg-white rounded-full;
+        width: $point-size;
+        height: $point-size;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+    }
+
+    .summary-step-progress-circle-icon {
+        @apply absolute;
+        right: calc(100% + 15px);
+
+        svg {
+            path {
+                transition: fill .3s ease-out;
+            }
+        }
+    }
+
+    .summary-step-progress-line {
+        width: 6px;
+        top: $point-size - 2px;
+        bottom: 0;
+        left: 4px;
+        border-color: inherit;
+        @apply bg-progress-line-not-done absolute;
+
+        .summary-step-progress-line-inner {
+            @apply block w-0;
+            border-width: 3px;
+            border-color: inherit;
+            transition: .3s ease-out;
+        }
+    }
+
+    .summary-step-content {
+        @apply w-full text-left flex-grow whitespace-normal;
+        padding-left: 15px;
+        margin-bottom: 50px;
+
+        .summary-step-content-header, .summary-step-content-header > h2 {
+            transition: color .1s ease-out;
+        }
+
+        &__field {
+            @apply text-sm;
+        }
+    }
+
+    .rtl {
+        .summary-step-content {
+            padding-left: 0;
+            padding-right: 15px;
+        }
+        .summary-step-progress-circle-icon {
+            @apply absolute;
+            right: unset;
+            left: calc(100% + 15px);
+        }
+        .summary-step-content-list {
+            text-align: right;
+        }
+    }
+</style>

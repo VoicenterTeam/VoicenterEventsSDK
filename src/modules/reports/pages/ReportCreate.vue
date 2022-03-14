@@ -7,13 +7,22 @@
             <div class="report-create-container--steps">
                 {{ getActiveStep }}
             </div>
-            <div class="report-create-container--body">
-                <component
-                    :is="getStepComponent"
-                    :key="currentStep"
-                    @on-update-step-number="onUpdateStepData"
-                    @on-back="onBack"
-                />
+            <div class="report-create-container--body flex">
+                <div class="report-create-container--body-step">
+                    <component
+                        :is="getStepComponent"
+                        :key="currentStep"
+                        @on-update-step-number="onUpdateStepData"
+                        @on-back="onBack"
+                    />
+                </div>
+                <div class="report-create-container--body-wizard">
+                    <Wizard
+                        :steps="wizardLength"
+                        v-if="wizardLength"
+                    />
+                </div>
+                    
             </div>
             <div class="report-create-container--actions">
                 <div
@@ -52,14 +61,35 @@
 </template>
 
 <script>
-const wizardLength = 3
+// const wizardLength = 3
+import WizardSummary from '@/modules/reports/components/wizard/components/wizard-summary'
+import Wizard from '@/modules/reports/components/wizard/Wizard'
+
+// const WIZARD_CONFIG = [
+//         {
+//             icon: 'IconCondition',
+//             name: 'Date and Conditions',
+//             isActive: true,
+//             summary: '',
+//             canEdit: false,
+//         },
+//         {
+//             icon: 'IconEmailGroup',
+//             name: 'Message Settings',
+//             isActive: false,
+//             summary: '',
+//             canEdit: false,
+//             isLast: true,
+//         },
+//     ]
 
 export default {
     name: "report-create",
     components: {
         CreateReportStep0: () => import('@/modules/reports/components/create-report/CreateReportStep0.vue'),
         CreateReportStep1: () => import('@/modules/reports/components/create-report/CreateReportStep1.vue'),
-        CreateReportStep2: () => import('@/modules/reports/components/create-report/CreateReportStep2.vue')
+        CreateReportStep2: () => import('@/modules/reports/components/create-report/CreateReportStep2.vue'),
+        Wizard
     },
     props: {
         data: {
@@ -69,7 +99,9 @@ export default {
     },
     data() {
         return {
-            currentStep: 0
+            currentStep: 0,
+            drawWizard: true,
+            wizardLength: 3
         }
     },
     computed: {
@@ -77,7 +109,7 @@ export default {
             return `CreateReportStep${this.currentStep}`
         },
         getActiveStep() {
-            return this.$t('general.step') + ' ' + (this.currentStep + 1) + ' ' + this.$t('general.of') + ' ' + wizardLength
+            return this.$t('general.step') + ' ' + (this.currentStep + 1) + ' ' + this.$t('general.of') + ' ' + this.wizardLength
         }
     },
     methods: {
@@ -103,6 +135,9 @@ export default {
             if (nextStep) {
                 this.onNext()
             }
+        },
+        onEditStep(stepIndex) {
+            this.currentStep = stepIndex
         }
     },
     async beforeDestroy() {
@@ -125,6 +160,13 @@ export default {
         &--body {
             height: 495px;
             @apply px-16;
+            &-step {
+                width: calc(100% - 425px);
+            }
+            &-wizard {
+                max-width: 425px;
+                width: 100%;
+            }
         }
         &--actions {
 
