@@ -27,21 +27,13 @@ const actions = {
 const getters = {
   getAllDialers: (state) => {
     return state.all
+  },
+  getAllDialersWithTypeIVR: (state) => {
+    return state.all.filter(el => el.type === 'IVR')
+  },
+  getAllDialersWithTypeAUTOMATIC: (state) => {
+    return state.all.filter(el => el.type === 'Automatic')
   }
-  // allQueueCalls: (state, getters) => {
-  //   const allCalls = []
-  //   getters.queueWithActiveCalls.forEach((queue) => {
-  //     const calls = queue.Calls || []
-  //     allCalls.push(...calls)
-  //   })
-  //   return allCalls
-  // },
-  // filterQueuesByIds: (state) => queueIds => {
-  //   if (!queueIds || !Array.isArray(queueIds)) {
-  //     return state.all
-  //   }
-  //   return state.all.filter(e => queueIds.includes(e.QueueID))
-  // }
 }
 export default {
     namespaced: true,
