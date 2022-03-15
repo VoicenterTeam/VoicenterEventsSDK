@@ -112,7 +112,8 @@ var eventTypes = {
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
   CLOSE: 'closeme',
   ERROR: 'error',
-  ALL_DIALERS_STATUS: 'AllDialersStatus'
+  ALL_DIALERS_STATUS: 'AllDialersStatus',
+  DIALER_EVENT: 'DialerEvent'
 };
 
 var defaultServers = [{
@@ -289,6 +290,10 @@ function onNewEvent(_ref) {
 
     case eventTypes.ALL_DIALERS_STATUS:
       store.dispatch("".concat(dialersModuleName, "/setDialers"), data.dialers);
+      break;
+
+    case eventTypes.DIALER_EVENT:
+      store.dispatch("".concat(dialersModuleName, "/updateDialers"), data.dialers);
       break;
   }
 }
