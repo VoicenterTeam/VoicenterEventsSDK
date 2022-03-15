@@ -50,7 +50,6 @@
                 </div>
             </div>
         </div>
-        <Conditions :reportItemData="reportItemData" :reportData="getReportDataByStep" />
         <portal to="next-button">
             <base-button
                 fixed-width="w-37"
@@ -71,10 +70,6 @@
 
     export default {
         props: {
-            reportItemData: {
-                type: Object,
-                default: () => ({})
-            },
             reportId: {
                 type: Number
             }
@@ -112,9 +107,6 @@
                 const reportTriggerParameters = this.reportTriggerTypeList.find(el => el.ReportTriggerTypeID === this.model.ReportTriggerTypeID).ReportTriggerParameters
                 return reportTriggerParameters.sort((a, b) => a.ParameterOrder - b.ParameterOrder)
             },
-            getReportDataByStep () {
-                return this.$store.getters['reportTrigger/getReportDataByStep']('ReportTriggerCondition')
-            },
             getReportData () {
                 return this.$store.getters['reportTrigger/getReportData']
             }
@@ -146,28 +138,8 @@
 
                     return haveTriggerComponent.length === this.activeTrigger.length && allFieldsValid
                 }
-                const isConditionGroupsFieldsNotEmpty = () => {
-                    return this.getReportData.ReportTriggerCondition.map(field => {
-                        return field.ReportTriggerConditionFilter.every(el => {
-                            if (this.checkIfValueIsEmpty(el.WidgetID)) {
-                                return true
-                            }
-                            const isAdditionalFieldsNotEmpty = this.checkIfValueIsEmpty(el.WidgetTemplateColumnID) &&
-                                this.checkIfValueIsEmpty(el.ConditionFilterValue) &&
-                                this.checkIfValueIsEmpty(el.ConditionFilterOperatorID) &&
-                                this.checkIfValueIsEmpty(el.ConditionFilterColumnTypeID)
 
-                            if (el.WidgetID && isAdditionalFieldsNotEmpty) {
-                                return true
-                            }
-                            if (Object.values(el).every(el => !this.checkIfValueIsEmpty(el))) {
-                                return true
-                            }
-                            return false
-                        })
-                    })
-                }
-                if (!isScheduleFieldsNotEmpty() || isConditionGroupsFieldsNotEmpty().some(el => !el)) {
+                if (!isScheduleFieldsNotEmpty()) {
                     return
                 }
 
@@ -202,9 +174,6 @@
             },
             onChange (item) {
                 this.model[item.component.ParameterTag] = item.value
-            },
-            checkIfValueIsEmpty (value) {
-                return value === '' || value === null
             }
         },
         mounted () {
@@ -264,6 +233,9 @@
 }
 .interval ::v-deep .el-date-editor.el-input, .interval ::v-deep .el-date-editor.el-input__inner {
     @apply w-32;
+}
+.content-wrapper {
+    @apply flex flex-col justify-center;
 }
 </style>
 

@@ -101,8 +101,8 @@
 <style lang="scss" scoped>
 .content-wrapper_step-1 {
     height: 100%;
-    min-height: calc(95vh - 570px);
-    max-height: calc(95vh - 570px);
+    min-height: 400px;
+    max-height: calc(95vh - 370px);
     @apply overflow-auto;
 }
 </style>

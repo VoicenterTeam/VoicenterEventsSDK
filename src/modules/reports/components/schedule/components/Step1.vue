@@ -1,65 +1,6 @@
 <template>
-    <div class="content-wrapper">
-        <el-form>
-            <el-form-item class="relative">
-                <label>{{ $t('general.to') }}</label>
-                <div class="w-full">
-                    <el-select
-                        id="email-wrapper"
-                        class="w-full"
-                        v-model="recipients"
-                        multiple
-                        @change="tryAddEmail"
-                        filterable
-                        allow-create
-                        default-first-option
-                        :placeholder="$t('report.recipients')"
-                    >
-                        <el-option
-                            v-for="(item, index) in reportRecipients"
-                            :key="`recipient-${index}`"
-                            :label="item.text"
-                            :value="item.value"
-                        />
-                    </el-select>
-                </div>
-                <div class="el-form-item__error" v-show="isRecipientsListIsEmpty">
-                    {{ $t('validation.error.fieldIsRequired') }}
-                </div>
-            </el-form-item>
-            <el-form-item>
-                <label>{{ $t('report.subject') }}</label>
-                <html-editor
-                    :has-buttons="hasButtons"
-                    ref="editor"
-                    v-model="model.subject"
-                    :config="{
-                        plugins: ['variable'],
-                        minHeight: '150px',
-                        focus: false
-                    }"
-                    :availableVariables="reportTemplateVariableList"
-                    :buttonsHide="['html', 'format', 'bold', 'italic', 'lists', 'link', 'Strikethrough', 'imagemanager', 'image', 'deleted']"
-                    @change="onChangeSubject"
-                />
-            </el-form-item>
-            <el-form-item>
-                <label>{{ $t('report.editor.text') }}</label>
-                <html-editor
-                    :has-buttons="hasButtons"
-                    ref="editor"
-                    :value="model.text"
-                    :config="{
-                        plugins: ['variable'],
-                        minHeight: '200px',
-                        focus: false
-                    }"
-                    :availableVariables="reportTemplateVariableList"
-                    :buttonsHide="['html', 'format', 'bold', 'italic', 'lists', 'link', 'Strikethrough', 'imagemanager', 'image', 'deleted']"
-                    @change="onChangeText"
-                />
-            </el-form-item>
-        </el-form>
+    <div class="content-wrapper leading-5 text-sm font-normal text-gray-950">
+        <Conditions :reportItemData="reportItemData" :reportData="getReportDataByStep" />
         <portal to="next-button">
             <div class="flex">
                 <div
@@ -71,15 +12,14 @@
                 </div>
                 <base-button
                     fixed-width="w-37"
-                    size="md"
                     type="primary"
-                    @click="onFinish"
+                    @click="goNext"
                 >
                     <div class="flex items-center">
-                        <IconSave class="mx-1"/>
                         <span class="mx-1 text-base font-bold">
-                            {{ $t('general.finish') }}
+                            {{ $t('general.next') }}
                         </span>
+                        <IconDirRight class="mx-1" />
                     </div>
                 </base-button>
             </div>
@@ -87,217 +27,184 @@
     </div>
 </template>
 <script>
-    import { Select, Option } from 'element-ui'
-    import HtmlEditor from '@/components/Html/HtmlEditor'
-    import { validateEmail } from '@/helpers/util'
-    import { reportTriggerApi } from "@/modules/reports/services/reportTriggerService"
-    import cloneDeep from 'lodash/cloneDeep'
-
-    const ReportRecipientTypeIDS = {
-        User: 1,
-        Account: 2,
-        Email: 3
-    }
 
     export default {
         props: {
-            report: {
+            reportItemData: {
                 type: Object,
-                default: () => ({}),
-            },
+                default: () => ({})
+            }
         },
         components: {
-            HtmlEditor: () => import('@/components/Html/HtmlEditor'),
-            [Select.name]: Select,
-            [Option.name]: Option
+            TimeRange: () => import('@/modules/common/components/form/TimeRange'),
+            Interval: () => import('@/modules/common/components/form/Interval'),
+            Conditions: () => import('@/modules/reports/components/schedule/components/Conditions'),
+            Date: () => import('@/components/Widgets/BaseDate'),
+            DayOfTheWeek: () => import('@/modules/common/components/form/DayOfTheWeek'),
+            InputText: () => import('@/modules/common/components/form/InputText'),
+            InputNumber: () => import('@/modules/common/components/form/InputNumber'),
+            UserSelect: () => import('@/modules/common/components/form/UserSelect'),
+            AccountSelect: () => import('@/modules/common/components/form/AccountSelect'),
+            DayOfMonth: () => import('@/modules/common/components/form/DayOfMonth')
         },
-        data() {
+        data () {
             return {
-                hasButtons: false,
-                recipients: [],
-                model: {
-                    subject: '',
-                    text: ''
-                },
-                locale: {
-                    subject: '',
-                    text: ''
-                },
-                isRecipientsListIsEmpty: false
+                clickedOnNextBtn: false
             }
         },
         computed: {
-            reportTemplateVariableList() {
-                return this.$store.getters['reportTrigger/getConfData'].ReportTemplateVariableList
-                    .map(el => {
-                        return {
-                            text: this.$t(el.ReportTemplateVariableNameTag),
-                            value: el.ReportTemplateVariableTag
-                        }
-                    })
+            reportTriggerTypeList() {
+                return this.$store.getters['reportTrigger/getConfData'].ReportTriggerTypeList
+            },
+            getReportDataByStep () {
+                return this.$store.getters['reportTrigger/getReportDataByStep']('ReportTriggerCondition')
             },
             getReportData () {
                 return this.$store.getters['reportTrigger/getReportData']
-            },
-            allAccounts () {
-                return this.$store.getters['entities/getEntityList']('Accounts')
-                    .map(el => {
-                        return {
-                            text: el.dist_name,
-                            value: el.AccountID
-                        }
-                    })
-            },
-            allUsers () {
-                return this.$store.getters['entities/getEntityList']('Users')
-                    .map(el => {
-                        return {
-                            text: el.user_name,
-                            value: el.user_id
-                        }
-                    })
-            },
-            reportRecipients () {
-                const allAccounts = this.allAccounts
-                const allUsers = this.allUsers
-
-                return allAccounts.concat(allUsers)
-            },
-            recipientsLength () {
-                return this.recipients.length
-            }
-        },
-        watch: {
-            recipientsLength (val) {
-                this.isRecipientsListIsEmpty = !val
             }
         },
         methods: {
-            async onFinish() {
-                this.isRecipientsListIsEmpty = !this.recipientsLength
-                if (!this.recipientsLength) {
+            goNext() {
+                this.clickedOnNextBtn = true
+                const isConditionGroupsFieldsNotEmpty = () => {
+                    return this.getReportData.ReportTriggerCondition.map(field => {
+                        return field.ReportTriggerConditionFilter.every(el => {
+                            if (this.checkIfValueIsEmpty(el.WidgetID)) {
+                                return true
+                            }
+                            const isAdditionalFieldsNotEmpty = this.checkIfValueIsEmpty(el.WidgetTemplateColumnID) &&
+                                this.checkIfValueIsEmpty(el.ConditionFilterValue) &&
+                                this.checkIfValueIsEmpty(el.ConditionFilterOperatorID) &&
+                                this.checkIfValueIsEmpty(el.ConditionFilterColumnTypeID)
 
-                    return
+                            if (el.WidgetID && isAdditionalFieldsNotEmpty) {
+                                return true
+                            }
+                            if (Object.values(el).every(el => !this.checkIfValueIsEmpty(el))) {
+                                return true
+                            }
+                            return false
+                        })
+                    })
                 }
-                await this.updateReportData()
-
-                try {
-                    const data = cloneDeep(this.getReportData)
-
-                    if (data.ReportTriggerCondition.length) {
-                        data.ReportTriggerCondition = data.ReportTriggerCondition
-                            .map(condition => {
-                                const filteredReportTriggerConditionFilter = condition.ReportTriggerConditionFilter.filter(el => el.WidgetID)
-
-                                return filteredReportTriggerConditionFilter.length ? condition : {}
-                            })
-                    } else {
-                        data.ReportTriggerCondition = [{}]
-                    }
-
-                    if ('TriggerTimeRange' in data.ScheduleData) {
-                        const timeRange = data.ScheduleData.TriggerTimeRange
-                        data.ScheduleData.TriggerTimeRange = {
-                            Start: timeRange[0],
-                            End: timeRange[1]
-                        }
-                    }
-                    if ('TriggerDayOfWeek' in data.ScheduleData) {
-                        data.ScheduleData.TriggerDayOfWeek.sort((a, b) => a - b)
-                    }
-
-                    await reportTriggerApi.createReportTrigger(data)
-                    this.$emit('on-finish')
-                } catch {
-
-                }
-            },
-            tryAddEmail(values) {
-                const targetItem = values[values.length - 1]
-                if (validateEmail(targetItem) || (/^-?\d+$/.test(targetItem) && this.reportRecipients.some(el => Number(el.value) === Number(targetItem)))) {
+                if (isConditionGroupsFieldsNotEmpty().some(el => !el)) {
                     return
                 }
 
-                if (!validateEmail(targetItem) || /^-?\d+$/.test(targetItem)) {
-                    const indexToRemove = this.recipients.indexOf(targetItem)
-                    if (indexToRemove !== -1) {
-                        this.recipients.splice(indexToRemove, 1)
-                    }
+                const objToEmit = {
+                    nextStep: true
+                }
+
+                this.$emit('on-update', objToEmit)
+            },
+            getComponentName (component) {
+                const componentTag = component.ComponentTag
+
+                if (componentTag === 'Time') {
+                    return 'Interval'
+                } else if (componentTag === 'Text') {
+                    return 'InputText'
+                } else if (componentTag === 'Number') {
+                    return 'InputNumber'
+                } else {
+                    return componentTag
                 }
             },
-            async onBack () {
-                await this.updateReportData()
-
+            onChange (item) {
+                this.model[item.component.ParameterTag] = item.value
+            },
+            checkIfValueIsEmpty (value) {
+                return value === '' || value === null
+            },
+            onBack () {
                 this.$emit('on-back')
-            },
-            searchReportRecipientTypeIDById (id) {
-                const user = this.allUsers.find(el => Number(el.value) === Number(id))
-                const account = this.allAccounts.find(el => Number(el.value) === Number(id))
-
-                if (user) {
-                    return ReportRecipientTypeIDS.User
-                }
-                if (account) {
-                    return ReportRecipientTypeIDS.Account
-                }
-                return
-            },
-            onChangeSubject (msg) {
-                this.replaceHTMLTagsAndVariables(msg, 'subject')
-            },
-            onChangeText (msg) {
-                this.replaceHTMLTagsAndVariables(msg, 'text')
-            },
-            replaceHTMLTagsAndVariables (message, typeOfMsg) {
-                let msg = message.replace(new RegExp('<[^>]*>', 'g'), '').replace('&nbsp;', ' ')
-                this.reportTemplateVariableList.forEach(el => {
-                    msg = msg.replaceAll(el.text, el.value)
-                });
-                this.locale[typeOfMsg] = msg
-            },
-            async updateReportData () {
-                const recipients = this.recipients.map(el => {
-                    let newObject = {}
-                    if (/^-?\d+$/.test(el)) {
-                        newObject.RecipientID = el,
-                        newObject.ReportRecipientTypeID = this.searchReportRecipientTypeIDById(el)
-                    } else {
-                        newObject.Email = el
-                        newObject.ReportRecipientTypeID = ReportRecipientTypeIDS.Email
-                    }
-
-                    return newObject
-                })
-
-                const data = {
-                    EmailSubject: this.locale.subject,
-                    EmailBody: this.locale.text,
-                    ReportRecipient: recipients
-                }
-
-                await this.$store.dispatch('reportTrigger/updateReportData', data)
-            }
-        },
-        mounted () {
-            if (this.getReportData.ReportRecipient) {
-                this.recipients = this.getReportData.ReportRecipient.map(el => el.Email || el.RecipientID)
-            }
-            if (this.getReportData.EmailSubject && this.getReportData.EmailBody) {
-                this.model.subject = this.getReportData.EmailSubject
-                this.model.text = this.getReportData.EmailBody
-            } else {
-                this.model.subject = this.$t('report.trigger.email.subject')
-                this.model.text = this.$t('report.trigger.email.body')
             }
         }
     }
 </script>
-
 <style lang="scss" scoped>
-[dir="rtl"] .el-form {
-    @apply text-right;
+.menu-wrapper {
+    @apply z-50 rounded bg-white mt-12 absolute w-40 flex flex-col origin-top-right right-0 shadow-base;
 }
-[dir="ltr"] .el-form {
-    @apply text-left;
+
+.is-expanded {
+    transform: rotate(-180deg);
+}
+
+.transition {
+    transition: all 0.3s ease-out;
+}
+
+.active {
+    @apply bg-primary text-white border-primary;
+}
+[dir="rtl"] .trigger-component:not(:last-child) {
+    @apply ml-10;
+}
+
+[dir="ltr"] .trigger-component:not(:last-child) {
+    @apply mr-10;
+}
+.el-range-editor.is-active, .el-range-editor.is-active {
+    @apply border-primary;
+}
+.report-label {
+    @apply mb-3;
+}
+[dir="rtl"] .report-label {
+    @apply ml-3;
+}
+[dir="ltr"] .report-label {
+    @apply mr-3;
+}
+[dir="rtl"] .trigger {
+    @apply ml-10;
+}
+[dir="ltr"] .trigger {
+    @apply mr-10;
+}
+.interval ::v-deep .el-date-editor.el-input, .interval ::v-deep .el-date-editor.el-input__inner {
+    @apply w-32;
+}
+</style>
+
+<style lang="scss">
+.trigger-component .el-input, .trigger-component .el-input-number {
+    @apply w-32;
+}
+.time-picker .el-date-editor.el-input__inner {
+    @apply w-32;
+}
+
+.el-time-range-picker {
+    .el-time-panel__footer {
+        height: 40px !important;
+
+        .el-time-panel__btn.confirm {
+            color: white !important;
+            background: var(--primary-color) !important;
+            border: 1px solid var(--primary-color) !important;
+            border-radius: 4px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+
+            &:hover {
+                opacity: 0.75 !important;
+            }
+        }
+
+        .el-time-panel__btn.cancel {
+            border: 2px solid var(--gray-550) !important;
+            border-radius: 4px !important;
+            padding-left: 16px !important;
+            font-weight: 700 !important;
+            color: var(--gray-550) !important;
+            padding-right: 16px !important;
+
+            &:hover {
+                background: var(--gray-200) !important;
+            }
+        }
+    }
 }
 </style>

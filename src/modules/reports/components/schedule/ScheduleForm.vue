@@ -78,7 +78,7 @@
     </div>
 </template>
 <script>
-    const wizardLength = 2
+    const wizardLength = 3
     import { Notification } from 'element-ui'
 
     export default {
@@ -102,7 +102,8 @@
         components: {
             Modal: () => import('@/components/Common/Modal'),
             Step0: () => import('@/modules/reports/components/schedule/components/Step0'),
-            Step1: () => import('@/modules/reports/components/schedule/components/Step1')
+            Step1: () => import('@/modules/reports/components/schedule/components/Step1'),
+            Step2: () => import('@/modules/reports/components/schedule/components/Step2')
         },
         data() {
             return {
@@ -133,7 +134,7 @@
                 this.showDialog = false
             },
             onNext() {
-                if (this.currentStep === 1) {
+                if (this.currentStep === 2) {
                     return
                 }
 
