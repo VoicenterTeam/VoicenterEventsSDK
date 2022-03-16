@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full">
+    <div class="h-full w-full">
         <div class="h-full flex items-center flex-wrap step-first">
             <div class="field">
                 <div class="mb-2 flex items-center">
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <portal to="next-button">
+        <!-- <portal to="next-button">
             <base-button
                 fixed-width="w-37"
                 type="primary"
@@ -35,7 +35,7 @@
                     <IconDirRight class="mx-1" />
                 </div>
             </base-button>
-        </portal>
+        </portal> -->
     </div>
 </template>
 

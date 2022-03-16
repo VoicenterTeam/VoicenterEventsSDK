@@ -1,5 +1,5 @@
 <template>
-    <div class="report-create">
+    <!-- <div class="report-create">
         <div class="report-create--title">
             {{ $t('report.create.title') }}
         </div>
@@ -7,7 +7,7 @@
             <div class="report-create-container--steps">
                 {{ getActiveStep }}
             </div>
-            <div class="report-create-container--body flex">
+            <div class="report-create-container--body flex flex-wrap">
                 <div class="report-create-container--body-step">
                     <component
                         :is="getStepComponent"
@@ -20,6 +20,7 @@
                     <Wizard
                         :steps="wizardLength"
                         v-if="wizardLength"
+                        :currentStep="currentStep"
                     />
                 </div>
                     
@@ -57,13 +58,16 @@
                 </div>
             </div>
         </div>
+    </div> -->
+    <div>
+        <create-report-wizard />
     </div>
 </template>
 
 <script>
 // const wizardLength = 3
-import WizardSummary from '@/modules/reports/components/wizard/components/wizard-summary'
-import Wizard from '@/modules/reports/components/wizard/Wizard'
+// import WizardSummary from '@/modules/reports/components/wizard/components/wizard-summary'
+// import Wizard from '@/modules/reports/components/wizard/Wizard'
 
 // const WIZARD_CONFIG = [
 //         {
@@ -86,10 +90,11 @@ import Wizard from '@/modules/reports/components/wizard/Wizard'
 export default {
     name: "report-create",
     components: {
-        CreateReportStep0: () => import('@/modules/reports/components/create-report/CreateReportStep0.vue'),
-        CreateReportStep1: () => import('@/modules/reports/components/create-report/CreateReportStep1.vue'),
-        CreateReportStep2: () => import('@/modules/reports/components/create-report/CreateReportStep2.vue'),
-        Wizard
+        // CreateReportStep0: () => import('@/modules/reports/components/create-report/CreateReportStep0.vue'),
+        // CreateReportStep1: () => import('@/modules/reports/components/create-report/CreateReportStep1.vue'),
+        // CreateReportStep2: () => import('@/modules/reports/components/create-report/CreateReportStep2.vue'),
+        // Wizard,
+        CreateReportWizard: () => import('@/modules/reports/components/create-report/CreateReportWizard.vue'),
     },
     props: {
         data: {
@@ -161,11 +166,12 @@ export default {
             height: 495px;
             @apply px-16;
             &-step {
-                width: calc(100% - 425px);
+                width: calc(100% - 250px);
             }
             &-wizard {
-                max-width: 425px;
+                max-width: 200px;
                 width: 100%;
+                margin-left: 50px;
             }
         }
         &--actions {

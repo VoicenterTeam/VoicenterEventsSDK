@@ -25,12 +25,13 @@
                 <WizardSummaryRow :label="`${$t('accountForm.genera')}:`"
                                   :value="summary.timezone"/>
             </template>
-<!-- 
-            <AccountWizardGeneralStep ref="generalStep"
+
+            <!-- <AccountWizardGeneralStep ref="generalStep"
                                       :account-entity="accountEntity"
                                       :model-validations="modelValidations"
                                       :model="model"
                                       :summary="summary"/> -->
+            <CreateReportStepFirst />
 
         </WizardStep>
 
@@ -51,6 +52,8 @@
                 <WizardSummaryRow :label="`${$t('accountForm.general.label.dialAuthenticationType')}:`"
                                   :value="summary.dialAuthenticationType"/>
             </template>
+
+            <create-report-step-second />
 
             <!-- <AccountWizardIdStep ref="idStep"
                                  :account-entity="accountEntity"
@@ -77,6 +80,8 @@
                                   :value="model.AccountDescription"/>
             </template>
 
+            <create-report-step-third />
+
             <!-- <AccountWizardFinalStep ref="finalStep"
                                     :model-validations="modelValidations"
                                     :model="model"
@@ -89,15 +94,6 @@
 </template>
 
 <script>
-    // import get from 'lodash/get'
-    import Wizard from '@/modules/reports/components/newWizard/Wizard/Wizard';
-    import WizardStep from '@/modules/reports/components/newWizard/Wizard/WizardStep';
-    import WizardSummaryRow from '@/modules/reports/components/newWizard/Wizard/WizardSummaryRow';
-    // import AccountWizardGeneralStep from './AccountWizardGeneralStep'
-    // import AccountWizardIdStep from './AccountWizardIdStep'
-    // import AccountWizardFinalStep from './AccountWizardFinalStep';
-    // import {generateDefaultAvatar} from 'src/api/apiCalls'
-
     export default {
         props: {
             loading: {
@@ -106,12 +102,12 @@
             }
         },
         components: {
-            // AccountWizardFinalStep,
-            Wizard,
-            WizardStep,
-            WizardSummaryRow,
-            // AccountWizardGeneralStep,
-            // AccountWizardIdStep
+            CreateReportStepFirst: () => import('./CreateReportStepFirst.vue'),
+            CreateReportStepSecond: () => import('./CreateReportStepThird.vue'),
+            CreateReportStepThird: () => import('./CreateReportStepThird.vue'),
+            Wizard: () => import('@/modules/reports/components/wizard/Wizard'),
+            WizardStep: () => import('@/modules/reports/components/wizard/WizardStep'),
+            WizardSummaryRow: () => import('@/modules/reports/components/wizard/WizardSummaryRow')
         },
         data() {
             return {

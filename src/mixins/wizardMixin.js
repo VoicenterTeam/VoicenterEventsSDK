@@ -166,10 +166,10 @@ export const wizardMixin = {
             this.$emit('finish', {
                 createAnotherData: this.createAnotherData
             });
-        },
-        onHelp() {
-            this.$emit('help')
         }
+        // onHelp() {
+        //     this.$emit('help')
+        // }
     },
     mounted() {
         this.activeIndex = this.stepIndex;

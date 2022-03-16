@@ -13,7 +13,7 @@
 <script>
     import {mapGetters} from "vuex";
     // import MobileWizard from "@/modules/reports/newWizard/components/Wizard/MobileWizard";
-    import DefaultWizard from "@/modules/reports/components/newWizard/Wizard/DefaultWizard";
+    import DefaultWizard from "@/modules/reports/components/wizard/DefaultWizard";
     // import EventBus from 'src/util/eventBus';
 
     export default {

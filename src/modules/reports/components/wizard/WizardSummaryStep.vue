@@ -14,8 +14,6 @@
                            <i  class="vc-icon-down icon-base text-white"/>
                        </div>
                     </div>
-
-                    <i class="summary-step-progress-line-inner h-0" :class="isVisited ? 'h-full' : 'h-0'"></i>
                 </div>
                 <div class="summary-step-progress-circle">
                     <div class="summary-step-progress-circle-point"></div>
@@ -58,7 +56,7 @@
         components: {
             ScaleTransition,
             FadeTransition
-        },
+        }
     }
 </script>
 
@@ -97,10 +95,11 @@
                 @apply text-active-elements;
             }
         }
+        &.visited {
+            @apply cursor-pointer;
+        }
 
         &.visited, &.active {
-            @apply cursor-pointer;
-
             .summary-step-progress-circle-point {
                 @apply border-active-elements;
             }

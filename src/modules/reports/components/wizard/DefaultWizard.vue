@@ -8,13 +8,13 @@
         <div class="wizard-step flex flex-wrap" :class="{'full-width': !showSummary}" v-loading="dataLoading">
             <div class="w-full xxl:px-24 xxl:pt-10 pt-5 px-5 flex justify-between" v-if="showTopBar">
                 <span class="steps-topbar-pagination text-sm">
-                    {{$t('wizard.step')}} {{ activeIndex + 1 }} {{$t('wizard.step.of')}} {{ steps.length }}
+                    {{ $t('general.step') }} {{ activeIndex + 1 }} {{ $t('general.of') }} {{ steps.length }}
                 </span>
-                <span class="cursor-pointer flex align-center"
+                <!-- <span class="cursor-pointer flex align-center"
                       @click="onHelp">
                     <i class="vc-help icon-base text-active-elements"/>
                     <span class="steps-topbar-get-help">{{$t('wizard.getHelp')}}</span>
-                </span>
+                </span> -->
             </div>
 
             <div class="steps-wrapper w-full">
@@ -23,52 +23,63 @@
             <div class="w-full navigation">
                 <div class="xxl:mx-24 xxl:my-10 my-5 mx-5">
                     <div class="flex justify-between">
-                        <!-- <cancel-button :size="buttonSize"
-                                       @click="onCancel"
-                                       outline
-                                       data-test-name="wizard-cancel"/> -->
+                        <base-button
+                            outline
+                            fixed-width="w-37"
+                            @click="onCancel"
+                        >
+                            <div class="flex items-center">
+                                <IconDiscard class="mx-1"/>
+                                <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
+                            </div>
+                        </base-button>
                         <div class="flex">
                             <slot name="extra-actions"></slot>
-                            <base-button v-if="!onFirstStep && showPreviousButton"
-                                         class="mx-2"
-                                         @click="onPrevious"
-                                         data-test-name="wizard-prev"
-                                         icon="vc-back"
-                                         link type="primary">
-                                {{ $t('generic.back') }}
+                            <base-button
+                                v-if="!onFirstStep && showPreviousButton"
+                                class="mx-2"
+                                @click="onPrevious"
+                                data-test-name="wizard-prev"
+                                icon="vc-icon-back"
+                                link type="primary"
+                            >
+                                {{ $t('general.back') }}
                             </base-button>
-                            <base-button v-if="!onLastStep"
-                                         @click="onNext"
-                                         data-test-name="wizard-next"
-                                         :disabled="!nextButtonCheck"
-                                         type="primary">
-                                {{ $t('generic.next') }}
-                                <i class="vc-next icon-base ml-2"/>
+                            <base-button
+                                v-if="!onLastStep"
+                                @click="onNext"
+                                data-test-name="wizard-next"
+                                :disabled="!nextButtonCheck"
+                                type="primary"
+                            >
+                                {{ $t('general.next') }}
+                                <i class="vc-icon-next icon-base ml-2"/>
                             </base-button>
-                            <base-button v-if="onLastStep"
-                                         @click="onFinish"
-                                         :loading="dataLoading"
-                                         data-test-name="wizard-finish"
-                                         :disabled="disableFinishButton"
-                                         type="primary">
+                            <base-button
+                                v-if="onLastStep"
+                                @click="onFinish"
+                                :loading="dataLoading"
+                                data-test-name="wizard-finish"
+                                :disabled="disableFinishButton"
+                                type="primary"
+                            >
                                 {{ $t('generic.finish') }}
                             </base-button>
-                            <!-- <base-checkbox v-if="showCreateAnotherData && onLastStep"
-                                           class="actions-create-checkbox inline-block mt-2"
-                                           data-test-name="create-another"
-                                           v-model="createAnotherData">
-                                {{ $t('general.message.form.createAnotherEntity', {entity: entityName}) }}
-                            </base-checkbox> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="bg-gray-100 wizard-summary" v-if="showSummary">
-            <wizard-summary :active="activeIndex"
-                            ref="summary"
-                            :model="model"
-                            :steps="steps">
+        <div
+            class="bg-gray-100 wizard-summary"
+            v-if="showSummary"
+        >
+            <wizard-summary
+                :active="activeIndex"
+                ref="summary"
+                :model="model"
+                :steps="steps"
+            >
 
                 <slot-renderer v-for="(step, index) in steps" :key="index" :step="step"/>
 
