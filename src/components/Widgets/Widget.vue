@@ -120,7 +120,8 @@
             AverageCallDuration: () => import('@/components/Cards/AverageCallDuration'),
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
-            TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog")
+            TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog"),
+            SocketsRealTimeTable: () => import('./Data/Table/SocketsRealTimeTable')
         },
         props: {
             editable: {
@@ -217,6 +218,7 @@
                 this.$emit('update-item', widget)
             },
             getComponentTypeAndSetData(widget) {
+                console.log(widget, 'widget')
                 let dataTypeId = getWidgetDataType(widget)
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
@@ -252,7 +254,7 @@
             }
         },
         mounted() {
-            this.getComponentTypeAndSetData(this.widget)
+            // this.getComponentTypeAndSetData(this.widget)
             this.checkWidgetTimeConfig()
 
             const { editMode } = this.widget.WidgetLayout || false

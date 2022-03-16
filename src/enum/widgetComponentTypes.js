@@ -22,4 +22,5 @@ export default {
     [widgetDataTypes.RICH_TEXT_EDITOR_LIST]: 'WidgetNoteList',
     [widgetDataTypes.AVERAGE_CALLS_DURATION]: 'AverageCallDuration',
     [widgetDataTypes.FUNNEL_3D_TYPE_ID]: 'Funnel3DChart',
+    [widgetDataTypes.DIALERS_TYPE_ID]: 'SocketsRealTimeTable',
 }

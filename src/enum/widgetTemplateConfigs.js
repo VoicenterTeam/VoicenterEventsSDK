@@ -85,6 +85,16 @@ const accountListConfig = {
     icon: 'IconAccounts'
 }
 
+const campaignIvrListConfig = {
+    ParameterName: '{|campaign_ivr_list|}',
+    EndPoint: '​/User/List/',
+    label: 'camp_name',
+    value: 'camp_id',
+    EntitiesListKey: 'Campaigns',
+    icon: 'IconAccounts',
+    filterByType: 'ivr'
+}
+
 export const filters = {
     [USER_LIST_PARAMETER_NAME]: userListConfig,
     '{|extension_list|}': extensionListConfig,
@@ -93,6 +103,7 @@ export const filters = {
     '{|distributor_id_id_list|}': accountListConfig,
     '{|campaign_list|}': campaignListConfig,
     '{|automaticcampaign_list|}': campaignListConfig,
+    '{|campaign_ivr_list|}': campaignIvrListConfig
 }
 
 export const otherFilters = {
