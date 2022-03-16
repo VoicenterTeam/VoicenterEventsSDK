@@ -16,6 +16,7 @@
     import { Tooltip } from 'element-ui'
     import { CheckIcon, XIcon } from 'vue-feather-icons'
     import '@/assets/vendor/redactor/_scss/redactor.scss'
+    import '@/assets/vendor/redactor/_plugins/variable/variable.css'
     
     export default {
         name: 'html-editor',
@@ -57,9 +58,17 @@
                     imageResizable: true,
                     imagePosition: true,
                     minHeight: '200px',
-                    focus: true,
+                    focus: true
                 }),
             },
+            availableVariables: {
+                type: Array,
+                default: () => []
+            },
+            buttonsHide: {
+                type: Array,
+                default: () => []
+            }
         },
         data() {
             return {
@@ -86,6 +95,13 @@
                 window.$R(this.$refs.redactor, 'destroy')
                 this.init()
             },
+            availableVariables() {
+                if (!this.redactor) {
+                    return
+                }
+                window.$R(this.$refs.redactor, 'destroy')
+                this.init()
+            }
         },
         async mounted() {
             await import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/redactor')
@@ -99,6 +115,7 @@
                 import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/fontcolor/fontcolor'),
                 import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/textdirection/textdirection'),
                 import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/customfontsize/customfontsize'),
+                import(/* webpackChunkName: "redactor" */ '@/assets/vendor/redactor/_plugins/variable/variable'),
             ])
             this.init()
         },
@@ -128,6 +145,7 @@
                     this.$set(this.config, 'callbacks', callbacks);
                     const finalConfig = {
                         ...this.config,
+                        ...(this.buttonsHide && this.buttonsHide.length && { buttonsHide: this.buttonsHide }),
                         toolbarFixedTarget: target,
                         lang: this.$i18n.locale,
                         direction: this.$rtl.isRTL ? 'rtl' : 'ltr',
@@ -151,6 +169,8 @@
                                 })
                             }
                         },
+                        variables: this.availableVariables.map(variable => variable.text),
+                        availableVariables: this.availableVariables
                     }
                     // in case the target doesn't exist, delete it
                     if (!target) {

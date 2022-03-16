@@ -1022,7 +1022,6 @@
 	"widget.doYouWantToRemoveChangesAndGoToTheSettings": "Do you want to remove changes and go to the settings?",
 	"widget.title.table.time.reporting.with.percentage": "Table - Time reporting with percentage",
 	"ConditionFilterColumnType.chart_field_end_hour_day": "End hour of the day (0-24)",
-	"report.report.trigger.template.variable.reportName": "Report Name",
 	"report.trigger.template.variable.reportTriggerName": "Report Trigger Name",
 	"widget.title.table.daily.recurring.call.statistics": "Table - Daily recurring call statistics",
 	"widget.title.table.hourly.queue.statistics.per.day": "Table - Hourly queue statistics per day",
@@ -1097,5 +1096,13 @@
 	"report.type": "Report type",
 	"report.status": "Report status",
 	"report.switch.disable": "Disabled",
-	"report.create.title": "Report title"
+	"report.create.title": "Report title",
+	"report.schedule.needAddAtLeastOneWidget": "Need to add at least one widget",
+	"general.dayOfWeek.sunday": "Su",
+	"general.dayOfWeek.monday": "Mo",
+	"general.dayOfWeek.tuesday": "Tu",
+	"general.dayOfWeek.wednesday": "We",
+	"general.dayOfWeek.thursday": "Th",
+	"general.dayOfWeek.friday": "Fr",
+	"general.dayOfWeek.saturday": "Sa"
 }

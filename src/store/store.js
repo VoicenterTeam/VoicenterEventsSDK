@@ -11,7 +11,8 @@ import widgetTemplate from './modules/widgetTemplate'
 import widgetCreation from '@/store/modules/widgetCreation'
 import templatesCategory from './modules/templatesCategory'
 
-import report from '@/modules/reports/store/report'
+// import report from '@/modules/reports/store/report'
+import reportTrigger from '@/modules/reports/store/reportTrigger'
 
 Vue.use(Vuex)
 
@@ -29,6 +30,7 @@ export default new Vuex.Store({
         widgetTemplate,
         widgetCreation,
         templatesCategory,
-        report,
-    },
+        // report,
+        reportTrigger
+    }
 })

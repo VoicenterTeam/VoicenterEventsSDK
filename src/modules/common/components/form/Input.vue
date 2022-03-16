@@ -107,7 +107,7 @@
         },
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .base-input-errors {
     input.form-input-error.el-input__inner {
         border: 1px solid var(--red) !important;
