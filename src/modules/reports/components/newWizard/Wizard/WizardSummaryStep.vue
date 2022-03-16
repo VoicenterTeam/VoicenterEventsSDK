@@ -5,8 +5,8 @@
             'visited': isVisited,
             'passed': isPassed
          }"
-        >
-        <template>
+         @click="onClick">
+        <template v-if="stepData">
             <div class="summary-step-progress">
                 <div v-if="!isLast" class="summary-step-progress-line">
                     <div class="flex flex-col justify-around items-center h-full w-full absolute">
@@ -20,7 +20,7 @@
                 <div class="summary-step-progress-circle">
                     <div class="summary-step-progress-circle-point"></div>
                     <div class="summary-step-progress-circle-icon">
-                        <i :class="[isVisited ? 'text-primary' : 'text-inactive-elements']" class="vc-icon-settings icon-2xl min-w-8"></i>
+                        <i :class="[stepData.icon, isVisited ? 'text-active-elements' : 'text-inactive-elements']" class="vc-icon-settings icon-2xl min-w-8"></i>
                     </div>
                 </div>
             </div>
@@ -29,12 +29,12 @@
                     <span class="summary-step-content-header leading-none">
                         <slot name="header">
                             <h2 class="mb-0 text-sm lg:text-base font-bold uppercase">
-                                {{ index }}.&nbsp;
+                                {{ index + 1 }}.&nbsp; <!-- TODO: need to add translations -->
                             </h2>
                         </slot>
                     </span>
                     <FadeTransition :duration="200" mode="out-in">
-                        <i class="vc-icon-edit-pencil icon-base text-active-elements" v-if="isVisited && !isActive"/>
+                        <i class="vc-edit-pencil icon-base text-active-elements" v-if="isVisited && !isActive"/>
                     </FadeTransition>
                 </div>
                 <ScaleTransition :duration="200" mode="out-in">
@@ -45,110 +45,22 @@
             </div>
         </template>
     </div>
+
 </template>
+
 <script>
-import {FadeTransition, ScaleTransition} from 'vue2-transitions';
+    import {FadeTransition, ScaleTransition} from 'vue2-transitions';
+    import {wizardStepMixin} from "@/mixins/wizardStepMixin";
+
     export default {
-        inheritAttrs: false,
-        props: {
-            icon: {
-                type: String,
-                default: 'IconWidgetName',
-            },
-            name: {
-                type: String,
-                default: 'Widget Selection',
-            },
-            // isActive: {
-            //     type: Boolean,
-            //     default: false,
-            // },
-            // isLast: {
-            //     type: Boolean,
-            //     default: false,
-            // },
-            canEdit: {
-                type: Boolean,
-                default: false,
-            },
-            index: Number,
-            summary: String,
-            steps: {
-                type: Number,
-                default: 0
-            },
-            currentStep: {
-                type: Number,
-                default: 0
-            }
-        },
+        name: 'WizardSummaryStep',
+        mixins: [wizardStepMixin],
         components: {
             ScaleTransition,
             FadeTransition
         },
-        data() {
-            return {
-                transitionDuration: 300
-                // isVisited: true,
-                // isActive: true,
-                // isPassed: true
-            }
-        },
-        computed: {
-            isActive() {
-                return this.currentStep === this.index
-            },
-            isLast() {
-                return this.index === this.steps
-            },
-            isVisited() {
-                return this.index <= this.lastVisitedStep
-            },
-            isPassed() {
-                return this.index <= this.lastPassed
-            }
-        },
-        methods: {
-            onEditStep() {
-                this.$emit('on-edit-step')
-            }
-        }
     }
 </script>
-<style lang="scss" scoped>
-.wizard-step {
-    @apply flex items-center;
-    .progress-circle-outer {
-        @apply rounded-full w-7 h-7;
-        border: solid 1px var(--primary-color);
-    }
-}
-
-
-svg {
-    path {
-        transition: fill 0.3s ease-out;
-    }
-}
-
-.is-active {
-    transition: all 0.3s ease-out;
-
-    .progress-line {
-        transition: all 0.3s ease-out;
-        // @apply bg-primary;
-        background: var(--gray-550);
-    }
-
-
-    svg {
-        path, circle {
-            transition: stroke 0.3s ease-out;
-            stroke: var(--primary-color);
-        }
-    }
-}
-</style>
 
 <style lang="scss" scoped>
     $point-size: 16px;
@@ -171,18 +83,18 @@ svg {
 
         &.active {
             .summary-step-content-header, .summary-step-content-header > * {
-                @apply text-primary;
+                @apply text-active-elements;
             }
 
             .summary-step-progress-circle {
-                @apply border-primary;
-                background-color: rgba(var(--primary_rgba-color), 0.25);
+                @apply border-active-elements;
+                background-color: rgba(var(--active-elements--rgb), 0.25);
             }
         }
 
         &.visited:hover {
             .summary-step-content-header {
-                @apply text-primary;
+                @apply text-active-elements;
             }
         }
 
@@ -190,11 +102,11 @@ svg {
             @apply cursor-pointer;
 
             .summary-step-progress-circle-point {
-                @apply border-primary;
+                @apply border-active-elements;
             }
 
             .summary-step-progress-circle-icon {
-                @apply text-primary;
+                @apply text-active-elements;
             }
         }
     }
