@@ -55,7 +55,18 @@
                     </delimited-list>
                 </template>
                 <template v-else>
-                    - -
+                    <span class="quick-add-button">
+                            <span class="mx-2">
+<!--                                TODO: Implement Add Wizard button and modal-->
+                                <ScheduleForm
+                                    buttonLabel="Add Widget"
+                                    icon="vc-icon-plus-linear"
+                                    :reportId="row.ReportID"
+                                    @addedSchedule="addedSchedule"
+                                    :data="row"
+                                />
+                            </span>
+                        </span>
                 </template>
             </template>
 
@@ -83,7 +94,7 @@
                     </delimited-list>
                 </template>
                 <template v-else>
-                        <span class="schedule-add-button">
+                        <span class="quick-add-button">
                             <span class="mx-2">
                                 <ScheduleForm
                                     :buttonLabel="$t('widget.addSchedule')"
@@ -401,7 +412,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.schedule-add-button {
+.quick-add-button {
     @apply inline-flex align-middle text-primary;
     padding: 0.2rem 0.4rem;
     border-radius: 1.25rem;
