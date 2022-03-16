@@ -12,32 +12,33 @@
                     @on-create-report="openCreateReportTab"
                     @on-edit-row="onEditRow"/>
             </template>
-
-            <template v-for="tab in editableTabs"
+            <template v-for="(tab, index) in editableTabs"
                       v-slot:[tab.name]="{data}">
                 <report-edit
+                    :key="index"
                     v-show="tab.name === activeTab"
                     :data="tab.data"
                     :report-id="tab.name"
                     @update-title="onUpdateTitle"/>
             </template>
-
             <template v-slot:create>
                 <report-create v-show="createTabName === activeTab"/>
             </template>
         </report-tabs>
     </div>
 </template>
+
 <script>
+
 import get from "lodash/get"
 import {TabPane, Tabs} from 'element-ui'
-
 import BaseNavbar from '@/components/Navbar/BaseNavbar'
 import ReportTabs from "@/modules/reports/components/ReportTabs";
 
 import ReportEdit from "@/modules/reports/pages/ReportEdit";
 import ReportsList from "@/modules/reports/pages/ReportsList";
 import ReportCreate from "@/modules/reports/pages/ReportCreate";
+import { reportApi } from '@/modules/reports/services/reportService'
 
 const CREATE_TAB_NAME = 'create';
 const LIST_TAB_NAME = 'list'
@@ -62,7 +63,7 @@ export default {
                     title: this.$t('report.tab.reportList'),
                     name: LIST_TAB_NAME,
                     icon: 'vc-icon-template-list',
-                },
+                }
             ],
             createTabName: CREATE_TAB_NAME,
             listTabName: LIST_TAB_NAME
@@ -82,9 +83,9 @@ export default {
                 routePath = '/reports/create'
             } else {
                 routePath = `/reports/edit/${tab}`
+
             }
             if (this.$route.path === routePath) return
-
             this.$router.push(routePath)
         },
         removeTab(tab) {
@@ -106,7 +107,6 @@ export default {
                     name: CREATE_TAB_NAME,
                     icon: 'vc-icon-plus-linear',
                 })
-
                 this.$nextTick(() => {
                     this.activeTab = CREATE_TAB_NAME
                 })
@@ -114,7 +114,6 @@ export default {
         },
         onUpdateTitle(id, title) {
             const updateIndex = this.dataTabs.findIndex(t => t.name === id)
-
             if (updateIndex !== -1) {
                 this.dataTabs[updateIndex].title = title
             }
@@ -123,7 +122,6 @@ export default {
             const tabName = get(row, 'ReportID', '').toString()
             const reportName = get(row, 'ReportName', '')
             const editTabExists = this.dataTabs.find(tab => tab.name === tabName)
-
             if (!editTabExists) {
                 this.dataTabs.push({
                     title: reportName,
@@ -131,7 +129,6 @@ export default {
                     data: row
                 })
             }
-
             this.$nextTick(() => {
                 this.activeTab = tabName
             })
@@ -144,17 +141,14 @@ export default {
                 const routePath = route.path
                 const routeEditId = route.params.id
                 const createRoute = '/reports/create'
-
                 if (routeEditId) {
                     const editTabExists = this.dataTabs.find(tab => tab.name === routeEditId)
-
                     if (!editTabExists) {
                         this.dataTabs.push({
                             title: routeEditId,
                             name: routeEditId
                         })
                     }
-
                     this.$nextTick(() => {
                         this.activeTab = routeEditId
                     })
@@ -166,8 +160,9 @@ export default {
             }
         }
     },
-    mounted() {
-
+    async mounted () {
+        const confData = await reportApi.getReportConfData()
+        this.$store.dispatch('reportTrigger/setConfData', confData)
     }
 }
 </script>

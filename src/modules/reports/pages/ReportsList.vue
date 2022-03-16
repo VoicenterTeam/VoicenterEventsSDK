@@ -83,10 +83,17 @@
                     </delimited-list>
                 </template>
                 <template v-else>
-                        <button class="schedule-add-button" @click="onAddSchedule(row.ReportID)">
-                            <i class="vc-icon-plus-linear icon-lg text-primary" />
-                            <span class="mx-2">{{ $t('widget.addSchedule') }}</span>
-                        </button>
+                        <span class="schedule-add-button">
+                            <span class="mx-2">
+                                <ScheduleForm
+                                    :buttonLabel="$t('widget.addSchedule')"
+                                    icon="vc-icon-plus-linear"
+                                    :reportId="row.ReportID"
+                                    @addedSchedule="addedSchedule"
+                                    :data="row"
+                                />
+                            </span>
+                        </span>
                 </template>
             </template>
 
@@ -141,6 +148,7 @@ import RecItem from "@/modules/reports/components/RecItem";
 import DelimitedList from "@/modules/reports/components/DelimitedList";
 import Tag from "@/modules/reports/components/Tag"
 import ScheduleCard from "@/modules/reports/components/ScheduleCard";
+import ScheduleForm from '@/modules/reports/components/schedule/ScheduleForm.vue'
 
 const REPORT_ENABLED_STATUS = 1
 const REPORT_DISABLED_STATUS = 2
@@ -160,7 +168,8 @@ export default {
         Tag,
         ScheduleCard,
         DeleteDialog,
-        CopyReportDialog
+        CopyReportDialog,
+        ScheduleForm
     },
     props: {},
     data() {
@@ -347,9 +356,6 @@ export default {
         onExportAsHtml(row) {
             alert('Export as HTML')
         },
-        onAddSchedule(reportId) {
-            console.log('Add Schedule')
-        },
         async getReportsList() {
             const payload = {
                 ReportStatusID: [REPORT_ENABLED_STATUS]
@@ -371,25 +377,32 @@ export default {
                 this.tableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
             }
         },
+        async loadData () {
+            this.tableData = []
+            try {
+                await this.$store.dispatch('dashboards/setContentLoading', true)
+                const reports = await this.getReportsList()
+
+                return reports
+            } catch (e) {
+                console.error(e)
+            } finally {
+                await this.$store.dispatch('dashboards/setContentLoading', false)
+            }
+        },
+        async addedSchedule () {
+            this.tableData = await this.loadData()
+        }
     },
     async mounted() {
-        try {
-            await this.$store.dispatch('dashboards/setContentLoading', true)
-            const reports = await this.getReportsList()
-            this.tableData = reports
-        } catch (e) {
-            console.error(e)
-        } finally {
-            await this.$store.dispatch('dashboards/setContentLoading', false)
-        }
-
-    },
+        this.tableData = await this.loadData()
+    }
 }
 </script>
 
 <style scoped lang="scss">
 .schedule-add-button {
-    @apply flex align-middle text-primary;
+    @apply inline-flex align-middle text-primary;
     padding: 0.2rem 0.4rem;
     border-radius: 1.25rem;
     border: 1px dashed var(--primary-color);

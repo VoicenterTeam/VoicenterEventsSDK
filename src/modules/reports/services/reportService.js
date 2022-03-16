@@ -64,5 +64,13 @@ export const reportApi = {
             parseCatch(e, true, 'Report Item Status Upsert')
         }
     },
+    async getReportConfData () {
+        try {
+            const { Data } = await $axios.get('/Report/GetReportConfData/')
+            return Data
+        } catch (e) {
+            parseCatch(e, true, 'Report Conf Data')
+        }
+    }
     
 }

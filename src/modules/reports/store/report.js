@@ -1,6 +1,5 @@
-import {reportApi} from '@/modules/reports/services/reportService'
-
 const types = {
+    
 }
 
 const state = {
@@ -12,11 +11,9 @@ const mutations = {
 }
 
 const actions = {
-
 }
 
 const getters = {
-
 }
 
 export default {
@@ -24,5 +21,5 @@ export default {
     state,
     mutations,
     getters,
-    actions,
+    actions
 };
