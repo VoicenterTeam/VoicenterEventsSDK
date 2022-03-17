@@ -1,8 +1,5 @@
 <template>
-    <!-- <mobile-wizard v-if="isMobile" v-bind="$attrs" v-on="$listeners" ref="wizard">
-        <slot></slot>
-    </mobile-wizard> -->
-    <default-wizard v-bind="$attrs" v-on="$listeners" ref="wizard" :data-test-name="dataTestName">
+    <default-wizard v-bind="$attrs" v-on="$listeners" ref="wizard" :data-test-name="dataTestName" @on-cancel="onCancel">
         <slot></slot>
         <template slot="extra-actions">
             <slot name="extra-actions"></slot>
@@ -12,9 +9,7 @@
 
 <script>
     import {mapGetters} from "vuex";
-    // import MobileWizard from "@/modules/reports/newWizard/components/Wizard/MobileWizard";
     import DefaultWizard from "@/modules/reports/components/wizard/DefaultWizard";
-    // import EventBus from 'src/util/eventBus';
 
     export default {
         name: 'Wizard',
@@ -27,14 +22,9 @@
                 type: String,
                 default: ''
             }
-            // TODO: add loading
         },
         components: {
             DefaultWizard
-            // MobileWizard,
-        },
-        computed: {
-            ...mapGetters('utils', ['isMobile', 'isTablet']),
         },
         methods:{
             reset(value){
@@ -42,15 +32,10 @@
             },
             goToStep(value){
                 this.$refs.wizard.goToStep(value, 'right')
+            },
+            onCancel () {
+                this.$emit('on-cancel')
             }
-        },
-        // created() {
-        //     EventBus.$on('wizard-reset', (value) => {
-        //         this.reset(value)
-        //     })
-        // },
-        // beforeDestroy() {
-        //     EventBus.$off('wizard-reset')
-        // }
+        }
     }
 </script>

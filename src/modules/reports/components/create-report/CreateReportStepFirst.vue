@@ -22,20 +22,6 @@
                 </div>
             </div>
         </div>
-        <!-- <portal to="next-button">
-            <base-button
-                fixed-width="w-37"
-                type="primary"
-                @click="goNext"
-            >
-                <div class="flex items-center">
-                    <span class="mx-1 text-base font-bold">
-                        {{ $t('general.next') }}
-                    </span>
-                    <IconDirRight class="mx-1" />
-                </div>
-            </base-button>
-        </portal> -->
     </div>
 </template>
 
@@ -55,14 +41,15 @@ export default {
             return this.$store.getters['report/getReportData']
         }
     },
-    mounted () {
+    async mounted () {
         this.report = {
-            ReportName: this.getReportData.ReportName,
+            ReportName: this.getReportData.ReportName || this.$t('report.name'),
             ReportStatusID: this.getReportData.ReportStatusID
         }
+        await this.$store.dispatch('report/updateReportData', this.report)
     },
     methods: {
-        async goNext () {
+        async validate () {
             this.clickedOnNextBtn = true
 
             if (this.checkIfValuesIsEmpty()) {
@@ -70,7 +57,8 @@ export default {
             }
 
             await this.$store.dispatch('report/updateReportData', this.report)
-            this.$emit('on-update-step-number', { nextStep: true })
+
+            return true
         },
         checkIfValuesIsEmpty () {
             return Object.values(this.report).some(el => el === '' || el === null )
@@ -93,5 +81,12 @@ export default {
     @apply mr-8;
     max-width: 392px;
     width: 100%;
+}
+.el-switch.is-checked .el-switch__core {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+}
+.el-switch__label.is-active {
+    @apply text-primary;
 }
 </style>

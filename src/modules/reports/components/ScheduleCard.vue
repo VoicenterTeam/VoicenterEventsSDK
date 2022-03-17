@@ -12,8 +12,14 @@
                     {{ $t('report.schedules.sendNow') }}
                 </base-button>
             </div>
-            <span v-if="actionsWithSchedule">
-                <i class="vc-icon-edit-pencil text-primary mr-4 cursor-pointer" @click="editSchedule" />
+            <span v-if="actionsWithSchedule" class="flex">
+                <!-- <span @click.prevent.stop="editSchedule">
+                    <schedule-form
+                        icon="vc-icon-edit-pencil"
+                        :reportId="null"
+                        :data="getReportData"
+                    />
+                </span> -->
                 <i class="vc-icon-recycle-bin text-red-600 cursor-pointer" @click="deleteSchedule" />
             </span>
         </div>
@@ -81,6 +87,7 @@ export default {
         RecItem,
         DelimitedList,
         Tag,
+        ScheduleForm: () => import('@/modules/reports/components/schedule/ScheduleForm.vue')
     },
     props: {
         conditions: {
@@ -104,6 +111,10 @@ export default {
         triggerId: {
             type: [Number, String],
             default: null
+        },
+        index: {
+            type: Number,
+            default: null
         }
     },
     data() {
@@ -113,11 +124,13 @@ export default {
         onSendNow() {
             console.log('Send now')
         },
-        editSchedule () {
-            console.log(this.triggerId)
+        async editSchedule () {
+            const qwe = this.getReportData.ReportTriggerList[this.index]
+            console.log(qwe, 'qwe')
+            await this.$store.dispatch('reportTrigger/updateReportTriggerData', qwe)
         },
         deleteSchedule () {
-            console.log(this.triggerId)
+            this.$store.dispatch('report/deleteReportTriggerItem', this.index)
         }
     },
     computed: {
@@ -133,22 +146,27 @@ export default {
                     conditionsToRender += '<span> or If ('
                 }
 
-                for(let i = 1; i <= el.ReportTriggerConditionFilter.length; i++) {
-                    const condition = el.ReportTriggerConditionFilter[i - 1]
-                    const column = condition.ConditionFilterColumnName
-                    const operator = condition.ConditionFilterOperatorSymbol
-                    const value = condition.ConditionFilterValue
+                if (el.ReportTriggerConditionFilter && el.ReportTriggerConditionFilter.length) {
+                    for(let i = 1; i <= el.ReportTriggerConditionFilter.length; i++) {
+                        const condition = el.ReportTriggerConditionFilter[i - 1]
+                        const column = condition.ConditionFilterColumnName
+                        const operator = condition.ConditionFilterOperatorSymbol
+                        const value = condition.ConditionFilterValue
 
-                    if(i > 1) {
-                        conditionsToRender += Mustache.render(templateAnd, {column, operator, value});
-                    } else {
-                        conditionsToRender += Mustache.render(template, {column, operator, value});
+                        if(i > 1) {
+                            conditionsToRender += Mustache.render(templateAnd, {column, operator, value});
+                        } else {
+                            conditionsToRender += Mustache.render(template, {column, operator, value});
+                        }
                     }
                 }
                 conditionsToRender += ')</span>'
             })
             conditionsToRender += '</div>'
             return conditionsToRender
+        },
+        getReportData () {
+            return this.$store.getters['report/getReportData']
         }
     }
 }

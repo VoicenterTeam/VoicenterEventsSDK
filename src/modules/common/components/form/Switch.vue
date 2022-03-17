@@ -56,7 +56,7 @@ export default {
     },
     computed: {
         getReportScheduleData () {
-            return this.$store.getters['reportTrigger/getReportData'].ScheduleData
+            return this.$store.getters['reportTrigger/getReportTriggerData'].ScheduleData
         }
     },
     methods: {

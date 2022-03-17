@@ -7,7 +7,8 @@ const types = {
     DELETE_CONDITION: 'DELETE_CONDITION',
     DELETE_CRITERIA: 'DELETE_CRITERIA',
     UPDATE_REPORT_DATA: 'UPDATE_REPORT_DATA',
-    RESET_REPORT_DATA: 'RESET_REPORT_DATA'
+    RESET_REPORT_DATA: 'RESET_REPORT_DATA',
+    UPDATE_CREATE_LOCAL_REPORT_TRIGGER: 'UPDATE_CREATE_LOCAL_REPORT_TRIGGER'
     
 }
 
@@ -21,7 +22,7 @@ const defaultReportConditionData = {
 const setDefaultReportConditionData = () => {
     return JSON.parse(JSON.stringify(defaultReportConditionData))
 }
-const defaultReportData = {
+const defaultReportTriggerData = {
     ReportTriggerTypeID: null,
     ReportTriggerName: '',
     ReportID: '',
@@ -38,12 +39,13 @@ const defaultReportData = {
     ]
 }
 
-const setDefaultReportData = () => {
-    return JSON.parse(JSON.stringify(defaultReportData))
+const setDefaultReportTriggerData = () => {
+    return JSON.parse(JSON.stringify(defaultReportTriggerData))
 }
 const state = {
     confData: [],
-    reportData: setDefaultReportData()
+    reportTriggerData: setDefaultReportTriggerData(),
+    createLocalReportTrigger: false
 }
 
 const mutations = {
@@ -51,13 +53,13 @@ const mutations = {
         state.confData = data
     },
     [types.UPDATE_REPORT_DATA_BY_STEP]: (state, data) => {
-        state.reportData[data.step] = data.value
+        state.reportTriggerData[data.step] = data.value
     },
     [types.UPDATE_REPORT_DATA_SCHEDULE_SETTINGS]: (state, data) => {
-        state.reportData.ScheduleData = data
+        state.reportTriggerData.ScheduleData = data
     },
     [types.CREATE_NEW_CRITERIA]: (state, step) => {
-        state.reportData[step].push(
+        state.reportTriggerData[step].push(
             {
                 ReportTriggerConditionFilter: [
                     setDefaultReportConditionData()
@@ -66,23 +68,26 @@ const mutations = {
         )
     },
     [types.CREATE_NEW_CONDITION]: (state, data) => {
-        state.reportData[data.step][data.index].ReportTriggerConditionFilter.push(
+        state.reportTriggerData[data.step][data.index].ReportTriggerConditionFilter.push(
             setDefaultReportConditionData()
         )
     },
     [types.DELETE_CONDITION]: (state, data) => {
-        state.reportData[data.step][data.groupIndex].ReportTriggerConditionFilter.splice(data.itemIndex, 1)
+        state.reportTriggerData[data.step][data.groupIndex].ReportTriggerConditionFilter.splice(data.itemIndex, 1)
     },
     [types.DELETE_CRITERIA]: (state, data) => {
-        state.reportData[data.step].splice(data.index, 1)
+        state.reportTriggerData[data.step].splice(data.index, 1)
     },
     [types.UPDATE_REPORT_DATA]: (state, data) => {
         Object.keys(data).forEach(el => {
-            state.reportData[el] = data[el]
+            state.reportTriggerData[el] = data[el]
         })
     },
     [types.RESET_REPORT_DATA]: (state) => {
-        state.reportData = setDefaultReportData()
+        state.reportTriggerData = setDefaultReportTriggerData()
+    },
+    [types.UPDATE_CREATE_LOCAL_REPORT_TRIGGER]: (state, value) => {
+        state.createLocalReportTrigger = value
     }
 }
 
@@ -90,10 +95,10 @@ const actions = {
     async setConfData({ commit }, data) {
         commit(types.SET_CONF_DATA, data)
     },
-    async updateReportDataByStep({ commit }, data) {
+    async updateReportTriggerDataByStep({ commit }, data) {
         commit(types.UPDATE_REPORT_DATA_BY_STEP, data)
     },
-    async updateReportDataScheduleSettings({ commit }, data) {
+    async updateReportTriggerDataScheduleSettings({ commit }, data) {
         commit(types.UPDATE_REPORT_DATA_SCHEDULE_SETTINGS, data)
     },
     async createNewCriteria({ commit }, step) {
@@ -108,11 +113,14 @@ const actions = {
     async deleteCriteria({ commit }, step) {
         commit(types.DELETE_CRITERIA, step)
     },
-    async updateReportData({ commit }, data) {
+    async updateReportTriggerData({ commit }, data) {
         commit(types.UPDATE_REPORT_DATA, data)
     },
-    async resetReportData({ commit }) {
+    async resetReportTriggerData({ commit }) {
         commit(types.RESET_REPORT_DATA)
+    },
+    async updateValueOfCreateLocalReportTrigger({ commit }, value) {
+        commit(types.UPDATE_CREATE_LOCAL_REPORT_TRIGGER, value)
     }
 }
 
@@ -120,11 +128,11 @@ const getters = {
     getConfData: state =>  {
         return state.confData
     },
-    getReportDataByStep: (state) => (numberOfStep) => {
-        return state.reportData[numberOfStep]
+    getReportTriggerDataByStep: (state) => (numberOfStep) => {
+        return state.reportTriggerData[numberOfStep]
     },
-    getReportData: state => {
-        return state.reportData
+    getReportTriggerData: state => {
+        return state.reportTriggerData
     }
 }
 

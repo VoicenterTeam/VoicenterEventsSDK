@@ -1,96 +1,71 @@
 <template>
-    <Wizard :entity-name="$t('account.entityName')"
-            :step-index="0"
-            ref="wizard"
-            :data-loading="loading || validationLoading"
-            data-test-name="account-add"
-            :model="model"
-            @finish="onFinish"
-            @cancel="onCancel">
+    <wizard 
+        :entity-name="$t('account.entityName')"
+        :step-index="0"
+        ref="wizard"
+        :data-loading="loading || validationLoading"
+        data-test-name="account-add"
+        :model="model"
+        @finish="onFinish"
+        @on-cancel="onCancel"
+        class="mx-14"
+    >
 
-        <WizardStep icon="vc-settings"
-                    v-loading="loading"
-                    :name="$t('account.wizard.generalStep')"
-                    :title="$t('account.wizard.generalStep')"
-                    :before-leave="validateGeneralStep"
-                    class="flex items-center">
+        <wizard-step 
+            icon="vc-icon-extensions"
+            v-loading="loading"
+            :name="$t('account.wizard.generalStep')"
+            :title="$t('account.wizard.generalStep')"
+            class="flex items-center"
+            :before-leave="validateGeneralStep"
+        >
 
             <template v-slot:summary>
-                <WizardSummaryRow :label="`${$t('accountForm.general')}:`"
-                                  :value="model.AccountName"/>
-                <WizardSummaryRow :label="`${$t('accountForm.general')}:`"
-                                  :value="summary.parentAccount"/>
-                <WizardSummaryRow :label="`${$t('accountForm.genera')}:`"
-                                  :value="summary.language"/>
-                <WizardSummaryRow :label="`${$t('accountForm.genera')}:`"
-                                  :value="summary.timezone"/>
+                <wizard-summary-row
+                    :label="`${$t('report.name')}:`"
+                    :value="getReportData.ReportName"
+                />
+                <wizard-summary-row
+                    :label="`${$t('report.status')}:`"
+                    :value="getReportData.ReportStatusID"
+                />
             </template>
 
-            <!-- <AccountWizardGeneralStep ref="generalStep"
-                                      :account-entity="accountEntity"
-                                      :model-validations="modelValidations"
-                                      :model="model"
-                                      :summary="summary"/> -->
-            <CreateReportStepFirst />
+            <create-report-step-first ref="generalStep" />
 
-        </WizardStep>
+        </wizard-step>
 
-        <WizardStep icon="vc-id"
+        <wizard-step icon="vc-icon-id"
                     v-loading="loading"
                     :name="$t('account.wizard.idStep')"
                     :title="$t('account.wizard.idStep')"
-                    :before-leave="validateIdStep"
                     class="flex items-center">
 
             <template v-slot:summary>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.mainDID')}:`"
-                                  :value="summary.MainDID"/>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.e911CallerID')}:`"
-                                  :value="summary.E911Did"/>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.SMSCallerID')}:`"
-                                  :value="summary.SMSDid"/>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.dialAuthenticationType')}:`"
-                                  :value="summary.dialAuthenticationType"/>
+                <!-- TODO: need to add summaries -->
             </template>
 
-            <create-report-step-second />
+            <create-report-step-second /> <!-- TODO: need to add ref (idStep) -->
+        </wizard-step>
 
-            <!-- <AccountWizardIdStep ref="idStep"
-                                 :account-entity="accountEntity"
-                                 :model-validations="modelValidations"
-                                 :model="model"
-                                 :summary="summary"/> -->
-        </WizardStep>
-
-        <WizardStep icon="vc-filter"
-                    v-loading="loading"
-                    :name="$t('account.wizard.finalStep')"
-                    :title="$t('account.wizard.finalStep')"
-                    :before-leave="validateFinalStep"
-                    class="flex items-center">
+        <wizard-step
+            icon="vc-icon-filter"
+            v-loading="loading"
+            :name="$t('account.wizard.finalStep')"
+            :title="$t('account.wizard.finalStep')"
+        >
 
             <template v-slot:summary>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.accountPhone')}:`"
-                                  :value="model.AccountPhone"/>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.accountFax')}:`"
-                                  :value="model.AccountFax"/>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.accountEmail')}:`"
-                                  :value="model.AccountEmail"/>
-                <WizardSummaryRow :label="`${$t('accountForm.general.label.accountDescription')}:`"
-                                  :value="model.AccountDescription"/>
+                <wizard-summary-row
+                    :label="`${$t('report.scheduleList.length')}:`"
+                    :value="getReportData.ReportTriggerList.length"
+                />
             </template>
 
-            <create-report-step-third />
+            <create-report-step-third ref="finalStep" />
+        </wizard-step>
 
-            <!-- <AccountWizardFinalStep ref="finalStep"
-                                    :model-validations="modelValidations"
-                                    :model="model"
-                                    :name="nameInitials"
-                                    @color-change="(value) => avatarColor = value"
-                                    :summary="summary"/> -->
-        </WizardStep>
-
-    </Wizard>
+    </wizard>
 </template>
 
 <script>
@@ -103,7 +78,7 @@
         },
         components: {
             CreateReportStepFirst: () => import('./CreateReportStepFirst.vue'),
-            CreateReportStepSecond: () => import('./CreateReportStepThird.vue'),
+            CreateReportStepSecond: () => import('./CreateReportStepSecond.vue'),
             CreateReportStepThird: () => import('./CreateReportStepThird.vue'),
             Wizard: () => import('@/modules/reports/components/wizard/Wizard'),
             WizardStep: () => import('@/modules/reports/components/wizard/WizardStep'),
@@ -111,62 +86,12 @@
         },
         data() {
             return {
-                model: {
-                    AvatarID: '',
-                    AccountName: '',
-                    AccountStatus: 1,
-                    ParentAccount: '',
-                    AccountDescription: '',
-                    AccountLanguage: null,
-                    MainDID: '',
-                    E911DidId: null,
-                    SMSDidId: null,
-                    DialAuthenticationType: '',
-                    AccountTimeZoneId: null,
-                    AccountPhone: '',
-                    AccountEmail: '',
-                    AccountFax: '',
-                },
-                avatarColor: '',
-                confData: {},
-                summary: {
-                    parentAccount: '',
-                    dialAuthenticationType: '',
-                    timezone: '',
-                    language: '',
-                    MainDID: '',
-                    E911Did: '',
-                    SMSDid: ''
-                },
-                modelValidations: {
-                    required: {
-                        required: true
-                    },
-                    number: {
-                        numeric: true
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    phone: {
-                        phoneNumber: true,
-                        required: true,
-                        numeric: true,
-                    },
-                },
                 validationLoading: false
             }
         },
         computed: {
-            nameInitials() {
-                if (this.model.AccountName === '') {
-                    return ''
-                }
-                let name = this.model.AccountName.split(' ')
-                let firstName = name[0] ? name[0].charAt(0).toUpperCase() : ''
-                let lastName = name[1] ? name[1].charAt(0).toUpperCase() : ''
-                return firstName + lastName
+            getReportData () {
+                return this.$store.getters['report/getReportData']
             }
         },
         methods: {
@@ -178,44 +103,6 @@
             },
             validateFinalStep() {
                 return this.$refs['finalStep'].validate()
-            },
-            async refresh() {
-                this.resetModel();
-                this.resetSummary();
-
-                if (this.$refs.wizard) {
-                    this.$refs.wizard.reset(0)
-                }
-
-                await this.$validator.reset()
-            },
-            resetModel() {
-                this.$set(this, 'model', {
-                    AccountName: '',
-                    AccountStatus: 1,
-                    ParentAccount: '',
-                    AccountDescription: '',
-                    AccountLanguage: null,
-                    MainDID: '',
-                    E911DidId: null,
-                    SMSDidId: null,
-                    DialAuthenticationType: '',
-                    AccountTimeZoneId: null,
-                    AccountPhone: '',
-                    AccountEmail: '',
-                    AccountFax: ''
-                });
-            },
-            resetSummary() {
-                this.$set(this, 'summary', {
-                    parentAccount: '',
-                    dialAuthenticationType: '',
-                    timezone: '',
-                    language: '',
-                    MainDID: '',
-                    E911Did: '',
-                    SMSDid: ''
-                })
             },
             async onFinish({createAnotherData}) {
                 this.validationLoading = true
@@ -250,23 +137,26 @@
                 // }
             },
             async onCancel() {
-                const params = {
-                    title: this.$t('general.cancelConfirmation'),
-                    message: this.$t('general.cancelConfirmationText'),
-                    type: 'confirm-cancel'
-                };
+                // const params = {
+                //     title: this.$t('general.cancelConfirmation'),
+                //     message: this.$t('general.cancelConfirmationText'),
+                //     type: 'confirm-cancel'
+                // };
 
-                const result = await this.$confirmModal(params);
+                // const result = await this.$confirmModal(params);
 
-                if (!result) {
-                    return
-                }
-                await this.refresh();
-                this.$emit('cancel');
+                // if (!result) {
+                //     return
+                // }
+                // await this.refresh();
+                this.$emit('on-cancel');
             }
         },
-        // created() {
-        //     this.$set(this, 'confData', this.getLoginStatusParameters() || {})
-        // }
+        created() {
+            this.$store.dispatch('reportTrigger/updateValueOfCreateLocalReportTrigger', true)
+        },
+        beforeDestroy () {
+            this.$store.dispatch('reportTrigger/updateValueOfCreateLocalReportTrigger', false)
+        }
     }
 </script>

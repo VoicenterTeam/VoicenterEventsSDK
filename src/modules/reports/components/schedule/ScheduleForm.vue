@@ -89,7 +89,7 @@
             },
             buttonLabel: {
                 type: String,
-                default: 'Add Schedule'
+                default: ''
             },
             icon: {
                 type: String,
@@ -116,7 +116,7 @@
         watch: {
             async showDialog (val) {
                 if (!val) {
-                    await this.$store.dispatch('reportTrigger/resetReportData')
+                    await this.$store.dispatch('reportTrigger/resetReportTriggerData')
                     this.currentStep = 0
                 }
             }
@@ -157,7 +157,7 @@
             },
             onFinish () {
                 this.showDialog = false
-                this.$store.dispatch('reportTrigger/resetReportData')
+                this.$store.dispatch('reportTrigger/resetReportTriggerData')
                 this.$emit('addedSchedule')
             },
             openModal () {

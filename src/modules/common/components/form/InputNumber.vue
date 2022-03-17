@@ -66,7 +66,7 @@ export default {
     },
     computed: {
         getReportScheduleData () {
-            return this.$store.getters['reportTrigger/getReportData'].ScheduleData
+            return this.$store.getters['reportTrigger/getReportTriggerData'].ScheduleData
         },
         isNotValidField () {
             return this.isClickedOnNextBtn && !this.model

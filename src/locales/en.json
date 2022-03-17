@@ -1104,5 +1104,6 @@
 	"general.dayOfWeek.wednesday": "We",
 	"general.dayOfWeek.thursday": "Th",
 	"general.dayOfWeek.friday": "Fr",
-	"general.dayOfWeek.saturday": "Sa"
+	"general.dayOfWeek.saturday": "Sa",
+	"report.scheduleList.length": "Schedule list length"
 }

@@ -2,7 +2,7 @@
     <div ref="conditions">
         <div class="w-full flex flex-col content-wrapper_step-1" id="content-wrapper_step-1">
             <ConditionGroup
-                v-for="(group, index) in reportData"
+                v-for="(group, index) in reportTriggerData"
                 class="flex w-full px-1"
                 :key="index"
                 @on-delete-condition="onDeleteCondition"
@@ -12,7 +12,7 @@
                 :conditions="group"
                 :reportItemData="reportItemData"
                 :index="index"
-                :amountOfReportDataLength="reportData.length"
+                :amountOfReportTriggerDataLength="reportTriggerData.length"
             />
         </div>
         <div class="my-6">
@@ -43,7 +43,7 @@
                 type: Array,
                 default: () => []
             },
-            reportData: {
+            reportTriggerData: {
                 type: Array,
                 default: () => []
             },
@@ -57,7 +57,7 @@
         },
         computed: {
             canDelete() {
-                return this.reportData.length > 1
+                return this.reportTriggerData.length > 1
             }
         },
         methods: {

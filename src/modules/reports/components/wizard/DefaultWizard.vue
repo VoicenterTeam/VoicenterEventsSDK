@@ -6,45 +6,42 @@
             'wizard-height-lg': height === 'lg',
          }">
         <div class="wizard-step flex flex-wrap" :class="{'full-width': !showSummary}" v-loading="dataLoading">
-            <div class="w-full xxl:px-24 xxl:pt-10 pt-5 px-5 flex justify-between" v-if="showTopBar">
+            <div class="w-full xxl:px-24 xxl:pt-10 pt-7 px-14 flex justify-between" v-if="showTopBar">
                 <span class="steps-topbar-pagination text-sm">
                     {{ $t('general.step') }} {{ activeIndex + 1 }} {{ $t('general.of') }} {{ steps.length }}
                 </span>
-                <!-- <span class="cursor-pointer flex align-center"
-                      @click="onHelp">
-                    <i class="vc-help icon-base text-active-elements"/>
-                    <span class="steps-topbar-get-help">{{$t('wizard.getHelp')}}</span>
-                </span> -->
             </div>
 
-            <div class="steps-wrapper w-full">
+            <div class="steps-wrapper w-full px-14">
                 <slot></slot>
             </div>
             <div class="w-full navigation">
-                <div class="xxl:mx-24 xxl:my-10 my-5 mx-5">
+                <div class="xxl:mx-24 xxl:my-10 my-5 mx-14">
                     <div class="flex justify-between">
                         <base-button
                             outline
                             fixed-width="w-37"
                             @click="onCancel"
+                            v-if="onFirstStep"
                         >
                             <div class="flex items-center">
                                 <IconDiscard class="mx-1"/>
                                 <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
                             </div>
                         </base-button>
+                        <base-button
+                            outline
+                            fixed-width="w-37"
+                            @click="onPrevious"
+                            v-if="!onFirstStep && showPreviousButton"
+                        >
+                            <div class="flex items-center">
+                                <i class="vc-icon-back icon-base mx-1" />
+                                <span class="mx-1 text-base font-bold">{{ $t('general.back') }}</span>
+                            </div>
+                        </base-button>
                         <div class="flex">
                             <slot name="extra-actions"></slot>
-                            <base-button
-                                v-if="!onFirstStep && showPreviousButton"
-                                class="mx-2"
-                                @click="onPrevious"
-                                data-test-name="wizard-prev"
-                                icon="vc-icon-back"
-                                link type="primary"
-                            >
-                                {{ $t('general.back') }}
-                            </base-button>
                             <base-button
                                 v-if="!onLastStep"
                                 @click="onNext"
@@ -63,7 +60,7 @@
                                 :disabled="disableFinishButton"
                                 type="primary"
                             >
-                                {{ $t('generic.finish') }}
+                                {{ $t('general.finish') }}
                             </base-button>
                         </div>
                     </div>
@@ -92,7 +89,6 @@
     import {wizardMixin} from '@/mixins/wizardMixin';
     import WizardSummary from './WizardSummary';
     import WizardSummaryStep from './WizardSummaryStep';
-    // import CancelButton from '@/components/CancelButton';
 
     export default {
         name: 'default-wizard',
@@ -109,7 +105,6 @@
         mixins: [wizardMixin],
         components: {
             WizardSummary,
-            // CancelButton,
             slotRenderer: {
                 props: ['step'],
                 components: {
@@ -121,6 +116,11 @@
                         h('template', {slot: 'summary'}, [this.step.$slots.summary])
                     ])
                 }
+            }
+        },
+        methods: {
+            onCancel () {
+                this.$emit('on-cancel')
             }
         }
     }

@@ -22,7 +22,7 @@
         name: 'WizardSummaryRow',
         props: {
             label: [String, Number],
-            value: [String, Number, Array, Object],
+            value: [String, Number, Array, Object, Boolean],
             format: {
                 type: String,
                 default: '',

@@ -1,11 +1,13 @@
 <template>
-    <div class="summary-step inactive"
-         :class="{
-            'active': isActive,
-            'visited': isVisited,
-            'passed': isPassed
-         }"
-         @click="onClick">
+    <div
+        class="summary-step inactive"
+        :class="{
+        'active': isActive,
+        'visited': isVisited,
+        'passed': isPassed
+        }"
+        @click="onClick"
+    >
         <template v-if="stepData">
             <div class="summary-step-progress">
                 <div v-if="!isLast" class="summary-step-progress-line">
@@ -18,7 +20,7 @@
                 <div class="summary-step-progress-circle">
                     <div class="summary-step-progress-circle-point"></div>
                     <div class="summary-step-progress-circle-icon">
-                        <i :class="[stepData.icon, isVisited ? 'text-active-elements' : 'text-inactive-elements']" class="vc-icon-settings icon-2xl min-w-8"></i>
+                        <i :class="[stepData.icon, isVisited ? 'text-active-elements' : 'text-inactive-elements']" class="icon-2xl min-w-8"></i>
                     </div>
                 </div>
             </div>
@@ -86,7 +88,7 @@
 
             .summary-step-progress-circle {
                 @apply border-active-elements;
-                background-color: rgba(var(--active-elements--rgb), 0.25);
+                background-color: rgba(var(--primary_rgba-color), 0.25);
             }
         }
 

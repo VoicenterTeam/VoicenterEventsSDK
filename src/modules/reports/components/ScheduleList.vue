@@ -3,44 +3,82 @@
         <div class="flex items-center justify-between pb-5">
             <div class="text-lg font-medium">{{ $t('widget.scheduleList') }}</div>
             <div>
-                Add new schedule
+                <schedule-form
+                    buttonLabel="Add New Schedule"
+                    icon="vc-icon-add"
+                    :reportId="null"
+                    @addedSchedule="addedSchedule"
+                    :data="copyOfGetReportData"
+                />
             </div>
         </div>
-        <div class="border-l-5 p-4 border-primary">
-            <div class="">
-                <schedule-card
-                    class="schedule-card-item"
-                    v-for="(trigger, index) in qwe"
-                    :trigger-name="trigger.ReportTriggerName"
-                    :trigger-id="trigger.ReportTriggerID"
-                    :key="index"
-                    :conditions="trigger.ReportTriggerCondition"
-                    :recipients="trigger.ReportRecipient"
-                    actionsWithSchedule
-                 />
-            </div>
+        <div
+            id="schedule-card"
+            v-if="getReportData.ReportTriggerList.length"
+            class="border-l-5 p-4 border-primary schedule-card-container"
+        >
+            <schedule-card
+                class="schedule-card-item"
+                v-for="(trigger, index) in getReportData.ReportTriggerList"
+                :trigger-name="trigger.ReportTriggerName"
+                :trigger-id="trigger.ReportTriggerID"
+                :key="index"
+                :conditions="trigger.ReportTriggerCondition"
+                :recipients="trigger.ReportRecipient"
+                actionsWithSchedule
+                :index="index"
+            />
         </div>
     </div>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep'
+
 export default {
     components: {
-        ScheduleCard: () => import('@/modules/reports/components/ScheduleCard')
+        ScheduleCard: () => import('@/modules/reports/components/ScheduleCard'),
+        ScheduleForm: () => import('@/modules/reports/components/schedule/ScheduleForm.vue')
     },
-    data () {
-        return {
-            qwe: [
-                { "ReportID": 255, "EmailBody": "I am a {{ReportName}} from a {{ReportTriggerName}}", "EmailSubject": "Hello, here is your report: {{ReportName}}", "ScheduleData": { "TriggerTime": "00:15", "TriggerDayOfWeek": [ 1 ] }, "LastCheckTime": "2022-03-11 09:34:31.000000", "NextCheckTime": "2022-03-11 09:34:31.000000", "ReportRecipient": [ { "Email": "", "ReportID": 255, "RecipientID": 640, "ReportTriggerID": 737, "ReportRecipientID": 4091, "ReportRecipientTypeID": 2, "ReportRecipientStatusID": 1, "ReportRecipientTypeName": "Account", "ReportRecipientStatusName": "sended" } ], "ReportTriggerID": 737, "ReportTriggerName": "Special", "ReportTriggerTypeID": 2, "ReportTriggerStatusID": 1, "ReportTriggerTypeName": "Daily", "ReportTriggerCondition": [], "ReportTriggerStatusName": "enable" },
-                { "ReportID": 255, "EmailBody": "I am a {{ReportName}} from a {{ReportTriggerName}}", "EmailSubject": "Hello, here is your report: {{ReportName}}", "ScheduleData": { "TriggerTime": "00:15", "TriggerDayOfWeek": [ 1 ] }, "LastCheckTime": "2022-03-11 09:34:31.000000", "NextCheckTime": "2022-03-11 09:34:31.000000", "ReportRecipient": [ { "Email": "", "ReportID": 255, "RecipientID": 640, "ReportTriggerID": 737, "ReportRecipientID": 4091, "ReportRecipientTypeID": 2, "ReportRecipientStatusID": 1, "ReportRecipientTypeName": "Account", "ReportRecipientStatusName": "sended" } ], "ReportTriggerID": 737, "ReportTriggerName": "Special", "ReportTriggerTypeID": 2, "ReportTriggerStatusID": 1, "ReportTriggerTypeName": "Daily", "ReportTriggerCondition": [], "ReportTriggerStatusName": "enable" }
-            ]
+    computed: {
+        getReportData () {
+            return this.$store.getters['report/getReportData']
+        },
+        copyOfGetReportData () {
+            return cloneDeep(this.getReportData)
         }
-    } 
+    },
+    methods: {
+        addedSchedule () {
+            this.$nextTick(() => {
+                const element = document.getElementById('schedule-card')
+                element.scrollTo({
+                    top: element.scrollHeight,
+                    behavior: 'smooth'
+                })
+            })
+        }
+    },
+    mounted () {
+        if (this.getReportData.ReportTriggerList.length) {
+          this.$store.dispatch('report/updateReportNameInReportTriggerList', this.getReportData.ReportName)  
+        }
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 .schedule-card-item:not(:last-child) {
     @apply mb-3;
+}
+.schedule-card-container {
+    height: 100%;
+    min-height: 350px;
+    max-height: 350px;
+    overflow-y: auto;
+
+    border: 1px solid #BEC2C9;
+    border-radius: 6px;
+    @apply bg-gray-150;
 }
 </style>
