@@ -27,9 +27,6 @@
             DefaultWizard
         },
         methods:{
-            reset(value){
-                this.$refs.wizard.reset(value)
-            },
             goToStep(value){
                 this.$refs.wizard.goToStep(value, 'right')
             },

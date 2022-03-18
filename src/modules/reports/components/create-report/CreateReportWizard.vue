@@ -14,7 +14,7 @@
         <wizard-step 
             icon="vc-icon-extensions"
             v-loading="loading"
-            :name="$t('account.wizard.generalStep')"
+            :name="$t('report.wizard.generalStep')"
             :title="$t('account.wizard.generalStep')"
             class="flex items-center"
             :before-leave="validateGeneralStep"
@@ -37,12 +37,15 @@
 
         <wizard-step icon="vc-icon-id"
                     v-loading="loading"
-                    :name="$t('account.wizard.idStep')"
-                    :title="$t('account.wizard.idStep')"
+                    :name="$t('report.wizard.idStep')"
+                    :title="$t('report.wizard.idStep')"
                     class="flex items-center">
 
             <template v-slot:summary>
-                <!-- TODO: need to add summaries -->
+                <wizard-summary-row
+                    :label="`${$t('report.wizard.idStep')}:`"
+                    :value="getReportData.ReportItemList.length"
+                />
             </template>
 
             <create-report-step-second /> <!-- TODO: need to add ref (idStep) -->
@@ -51,8 +54,8 @@
         <wizard-step
             icon="vc-icon-filter"
             v-loading="loading"
-            :name="$t('account.wizard.finalStep')"
-            :title="$t('account.wizard.finalStep')"
+            :name="$t('report.wizard.finalStep')"
+            :title="$t('report.wizard.finalStep')"
         >
 
             <template v-slot:summary>
@@ -86,6 +89,22 @@
         },
         data() {
             return {
+                model: {
+                    AvatarID: '',
+                    AccountName: '',
+                    AccountStatus: 1,
+                    ParentAccount: '',
+                    AccountDescription: '',
+                    AccountLanguage: null,
+                    MainDID: '',
+                    E911DidId: null,
+                    SMSDidId: null,
+                    DialAuthenticationType: '',
+                    AccountTimeZoneId: null,
+                    AccountPhone: '',
+                    AccountEmail: '',
+                    AccountFax: '',
+                },
                 validationLoading: false
             }
         },

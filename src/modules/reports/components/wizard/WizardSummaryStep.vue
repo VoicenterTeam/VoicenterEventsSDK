@@ -29,7 +29,7 @@
                     <span class="summary-step-content-header leading-none">
                         <slot name="header">
                             <h2 class="mb-0 text-sm lg:text-base font-bold uppercase">
-                                {{ index + 1 }}.&nbsp; <!-- TODO: need to add translations -->
+                                {{ index + 1 }}.&nbsp; {{ stepData.name }}
                             </h2>
                         </slot>
                     </span>
