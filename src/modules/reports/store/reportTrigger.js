@@ -8,7 +8,8 @@ const types = {
     DELETE_CRITERIA: 'DELETE_CRITERIA',
     UPDATE_REPORT_DATA: 'UPDATE_REPORT_DATA',
     RESET_REPORT_DATA: 'RESET_REPORT_DATA',
-    UPDATE_CREATE_LOCAL_REPORT_TRIGGER: 'UPDATE_CREATE_LOCAL_REPORT_TRIGGER'
+    UPDATE_CREATE_LOCAL_REPORT_TRIGGER: 'UPDATE_CREATE_LOCAL_REPORT_TRIGGER',
+    UPDATE_REPORT_TRIGGER_CONDITION: 'UPDATE_REPORT_TRIGGER_CONDITION'
     
 }
 
@@ -88,6 +89,15 @@ const mutations = {
     },
     [types.UPDATE_CREATE_LOCAL_REPORT_TRIGGER]: (state, value) => {
         state.createLocalReportTrigger = value
+    },
+    [types.UPDATE_REPORT_TRIGGER_CONDITION]: (state) => {
+        state.reportTriggerData.ReportTriggerCondition = [
+            {
+                ReportTriggerConditionFilter: [
+                    setDefaultReportConditionData()
+                ]
+            }
+        ]
     }
 }
 
@@ -121,6 +131,9 @@ const actions = {
     },
     async updateValueOfCreateLocalReportTrigger({ commit }, value) {
         commit(types.UPDATE_CREATE_LOCAL_REPORT_TRIGGER, value)
+    },
+    async updateReportTriggerCondition({ commit }) {
+        commit(types.UPDATE_REPORT_TRIGGER_CONDITION)
     }
 }
 

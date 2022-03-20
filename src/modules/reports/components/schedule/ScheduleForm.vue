@@ -178,7 +178,18 @@
                 this.showDialog = true
                 const { reportTriggerData } = this.dataToEdit
                 if (this.dataToEdit && Object.keys(this.dataToEdit).length) {
+                    const isReportDoesNotHaveTriggerCondition = reportTriggerData.ReportTriggerCondition.every(el => !Object.keys(el).length)
+                    reportTriggerData.ReportTriggerCondition = reportTriggerData.ReportTriggerCondition
+                        .filter(el => {
+                            if (el && el.ReportTriggerConditionFilter && el.ReportTriggerConditionFilter.length) {
+                                el.ReportTriggerConditionFilter = el.ReportTriggerConditionFilter.filter(el => Object.values(el).every(el => el !== '' && el !== null))
+                            }
+                            return el && Object.keys(el).length
+                        })
                     await this.$store.dispatch('reportTrigger/updateReportTriggerData', cloneDeep(reportTriggerData))
+                    if (isReportDoesNotHaveTriggerCondition) {
+                        await this.$store.dispatch('reportTrigger/updateReportTriggerCondition')
+                    }
                 }
             }
         }
