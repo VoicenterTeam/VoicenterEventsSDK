@@ -88,7 +88,7 @@
 </script>
 <style lang="scss" scoped>
 .day-of-month-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .day-of-month-label {
     @apply ml-3;

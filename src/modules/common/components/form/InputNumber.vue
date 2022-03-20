@@ -86,7 +86,7 @@ export default {
 
 <style lang="scss" scoped>
 .interval-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .interval-label {
     @apply ml-3;
@@ -99,9 +99,6 @@ export default {
 }
 .interval {
     @apply relative;
-}
-.interval-label {
-    @apply mb-3;
 }
 ::v-deep .el-input-number__decrease:hover:not(.is-disabled)~.el-input .el-input__inner:not(.is-disabled), ::v-deep .el-input-number__increase:hover:not(.is-disabled)~.el-input .el-input__inner:not(.is-disabled) {
     @apply border-primary;

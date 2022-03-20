@@ -90,7 +90,7 @@
 </script>
 <style lang="scss" scoped>
 .account-select-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .account-select-label {
     @apply ml-3;

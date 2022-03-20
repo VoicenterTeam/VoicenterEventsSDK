@@ -86,7 +86,7 @@ export default {
 
 <style lang="scss" scoped>
 .input-text-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .input-text-label {
     @apply ml-3;

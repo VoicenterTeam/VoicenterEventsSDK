@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss" scoped>
 .interval-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .interval-label {
     @apply ml-3;

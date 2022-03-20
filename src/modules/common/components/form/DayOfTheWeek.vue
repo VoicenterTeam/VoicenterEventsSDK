@@ -104,7 +104,7 @@ export default {
     @apply relative;
 }
 .day-of-week-label {
-    @apply mb-4;
+    @apply mb-3;
 }
 [dir="rtl"] .day-of-week-label {
     @apply ml-3;

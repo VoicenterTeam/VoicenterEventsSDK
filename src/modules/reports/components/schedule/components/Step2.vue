@@ -107,6 +107,7 @@
                 default: () => ({}),
             },
         },
+        inject: ['dataToEdit'],
         components: {
             HtmlEditor: () => import('@/components/Html/HtmlEditor'),
             [Select.name]: Select,
@@ -189,7 +190,15 @@
                 const reportTriggerData = await this.updateReportTriggerData()
 
                 if (this.getCreateLocalReportTrigger) {
-                    await this.$store.dispatch('report/pushReportTriggerData', reportTriggerData)
+                    if (!this.dataToEdit || !Object.keys(this.dataToEdit).length) {
+                        await this.$store.dispatch('report/pushReportTriggerData', reportTriggerData)
+                    } else {
+                        const data = {
+                            indexToEdit: this.dataToEdit.indexToEdit,
+                            value: reportTriggerData
+                        }
+                        await this.$store.dispatch('report/updateReportTriggerItem', data)
+                    }
                     this.$emit('on-finish')
                     return
                 }

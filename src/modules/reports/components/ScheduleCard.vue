@@ -13,13 +13,14 @@
                 </base-button>
             </div>
             <span v-if="actionsWithSchedule" class="flex">
-                <!-- <span @click.prevent.stop="editSchedule">
+                <!-- <span @click.prevent.stop="editSchedule"> -->
                     <schedule-form
                         icon="vc-icon-edit-pencil"
                         :reportId="null"
                         :data="getReportData"
+                        :dataToEdit="dataToEdit"
                     />
-                </span> -->
+                <!-- </span> -->
                 <i class="vc-icon-recycle-bin text-red-600 cursor-pointer" @click="deleteSchedule" />
             </span>
         </div>
@@ -76,7 +77,7 @@ import DelimitedList from "@/modules/reports/components/DelimitedList";
 import Tag from "@/modules/reports/components/Tag"
 import BaseButton from "@/components/Common/Buttons/BaseButton";
 import ButtonIcon from "@/modules/common/components/ButtonIcon";
-
+import cloneDeep from 'lodash/cloneDeep'
 
 export default {
     name: "schedule-card",
@@ -124,11 +125,6 @@ export default {
         onSendNow() {
             console.log('Send now')
         },
-        async editSchedule () {
-            const qwe = this.getReportData.ReportTriggerList[this.index]
-            console.log(qwe, 'qwe')
-            await this.$store.dispatch('reportTrigger/updateReportTriggerData', qwe)
-        },
         deleteSchedule () {
             this.$store.dispatch('report/deleteReportTriggerItem', this.index)
         }
@@ -167,6 +163,16 @@ export default {
         },
         getReportData () {
             return this.$store.getters['report/getReportData']
+        },
+        dataToEdit () {
+            const reportTriggerData = cloneDeep(this.getReportData.ReportTriggerList[this.index])
+            if ('TriggerTimeRange' in reportTriggerData.ScheduleData) {
+                reportTriggerData.ScheduleData.TriggerTimeRange = Object.values(reportTriggerData.ScheduleData.TriggerTimeRange)
+            }
+            return {
+                reportTriggerData: reportTriggerData,
+                indexToEdit: this.index
+            }
         }
     }
 }

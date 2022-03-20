@@ -94,7 +94,7 @@
     }
 }
 .date-picker-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .date-picker-label {
     @apply ml-3;

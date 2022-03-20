@@ -80,6 +80,7 @@
 <script>
     const wizardLength = 3
     import { Notification } from 'element-ui'
+    import cloneDeep from 'lodash/cloneDeep'
 
     export default {
         props: {
@@ -97,6 +98,15 @@
             },
             reportId: {
                 type: Number
+            },
+            dataToEdit: {
+                type: Object,
+                default: () => ({})
+            }
+        },
+        provide () {
+            return {
+                dataToEdit: this.dataToEdit
             }
         },
         components: {
@@ -160,12 +170,16 @@
                 this.$store.dispatch('reportTrigger/resetReportTriggerData')
                 this.$emit('addedSchedule')
             },
-            openModal () {
+            async openModal () {
                 if (!this.data || !this.data.ReportItemList.length) {
                     Notification.warning(this.$t('report.schedule.needAddAtLeastOneWidget'))
                     return
                 }
                 this.showDialog = true
+                const { reportTriggerData } = this.dataToEdit
+                if (this.dataToEdit && Object.keys(this.dataToEdit).length) {
+                    await this.$store.dispatch('reportTrigger/updateReportTriggerData', cloneDeep(reportTriggerData))
+                }
             }
         }
     }

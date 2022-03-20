@@ -52,10 +52,12 @@ export default {
         addedSchedule () {
             this.$nextTick(() => {
                 const element = document.getElementById('schedule-card')
-                element.scrollTo({
-                    top: element.scrollHeight,
-                    behavior: 'smooth'
-                })
+                if (element) {
+                    element.scrollTo({
+                        top: element.scrollHeight,
+                        behavior: 'smooth'
+                    })
+                }
             })
         }
     },
