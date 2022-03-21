@@ -9,6 +9,7 @@
                     :reportId="null"
                     @addedSchedule="addedSchedule"
                     :data="copyOfGetReportData"
+                    :title="$t('widget.addSchedule')"
                 />
             </div>
         </div>

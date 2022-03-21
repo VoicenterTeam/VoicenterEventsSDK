@@ -18,7 +18,7 @@
         >
             <template v-slot:title>
                 <div class="flex w-full justify-center text-xl">
-                    {{ $t('widget.addSchedule') }}
+                    {{ title }}
                 </div>
             </template>
             <div class="relative">
@@ -102,6 +102,10 @@
             dataToEdit: {
                 type: Object,
                 default: () => ({})
+            },
+            title: {
+                type: String,
+                default: ''
             }
         },
         provide () {

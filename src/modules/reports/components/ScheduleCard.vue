@@ -13,14 +13,13 @@
                 </base-button>
             </div>
             <span v-if="actionsWithSchedule" class="flex">
-                <!-- <span @click.prevent.stop="editSchedule"> -->
-                    <schedule-form
-                        icon="vc-icon-edit-pencil"
-                        :reportId="null"
-                        :data="getReportData"
-                        :dataToEdit="dataToEdit"
-                    />
-                <!-- </span> -->
+                <schedule-form
+                    icon="vc-icon-edit-pencil"
+                    :reportId="null"
+                    :data="getReportData"
+                    :dataToEdit="dataToEdit"
+                    :title="$t('widget.editSchedule')"
+                />
                 <i class="vc-icon-recycle-bin text-red-600 cursor-pointer" @click="deleteSchedule" />
             </span>
         </div>

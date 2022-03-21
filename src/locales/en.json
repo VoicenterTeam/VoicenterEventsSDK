@@ -1110,5 +1110,6 @@
 	"report.wizard.idStep": "Widget list",
 	"report.wizard.finalStep": "Schedule list",
 	"report.wizard.enabled": "Enabled",
-	"report.schedule.name": "Schedule name"
+	"report.schedule.name": "Schedule name",
+	"widget.editSchedule": "Edit Schedule"
 }
