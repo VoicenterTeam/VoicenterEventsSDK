@@ -1,5 +1,5 @@
 <template>
-    <div class="py-10 px-10 xl:px-8 bg-gray-200">
+    <div class="py-10 px-10 xl:px-8">
         <el-tabs
             v-model="activeTabName"
             square

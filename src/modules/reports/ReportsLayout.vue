@@ -166,6 +166,16 @@ export default {
     async mounted () {
         const confData = await reportApi.getReportConfData()
         this.$store.dispatch('reportTrigger/setConfData', confData)
+        document.body.classList.add('bg-gray-200')
+    },
+    beforeDestroy () {
+        document.body.classList.remove('bg-gray-200')
     }
 }
 </script>
+
+<style lang="scss" scoped>
+::v-deep html {
+    background: red !important;
+}
+</style>
