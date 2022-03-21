@@ -3,7 +3,6 @@ const types = {
     RESET_REPORT_DATA: 'RESET_REPORT_DATA',
     PUSH_REPORT_TRIGGER_DATA: 'PUSH_REPORT_TRIGGER_DATA',
     DELETE_REPORT_TRIGGER_ITEM: 'DELETE_REPORT_TRIGGER_ITEM',
-    UPDATE_REPORT_NAME_IN_TRIGGER: 'UPDATE_REPORT_NAME_IN_TRIGGER',
     UPDATE_REPORT_TRIGGER_ITEM: 'UPDATE_REPORT_TRIGGER_ITEM'
 }
 
@@ -162,9 +161,6 @@ const mutations = {
     [types.DELETE_REPORT_TRIGGER_ITEM]: (state, index) => {
         state.reportData.ReportTriggerList.splice(index, 1)
     },
-    [types.UPDATE_REPORT_NAME_IN_TRIGGER]: (state, reportTriggerName) => {
-        state.reportData.ReportTriggerList.map(el => el.ReportTriggerName = reportTriggerName)
-    },
     [types.UPDATE_REPORT_TRIGGER_ITEM]: (state, data) => {
         Object.keys(state.reportData.ReportTriggerList[data.indexToEdit]).forEach(el => {
             state.reportData.ReportTriggerList[data.indexToEdit][el] = data.value[el]
@@ -184,9 +180,6 @@ const actions = {
     },
     async deleteReportTriggerItem({ commit }, index) {
         commit(types.DELETE_REPORT_TRIGGER_ITEM, index)
-    },
-    async updateReportNameInReportTriggerList({ commit }, index) {
-        commit(types.UPDATE_REPORT_NAME_IN_TRIGGER, index)
     },
     async updateReportTriggerItem({ commit }, data) {
         commit(types.UPDATE_REPORT_TRIGGER_ITEM, data)

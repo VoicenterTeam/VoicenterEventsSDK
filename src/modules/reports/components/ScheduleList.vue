@@ -60,11 +60,6 @@ export default {
                 }
             })
         }
-    },
-    mounted () {
-        if (this.getReportData.ReportTriggerList.length) {
-          this.$store.dispatch('report/updateReportNameInReportTriggerList', this.getReportData.ReportName)  
-        }
     }
 }
 </script>

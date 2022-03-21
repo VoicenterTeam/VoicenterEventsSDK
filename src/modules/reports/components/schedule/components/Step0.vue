@@ -2,12 +2,11 @@
     <div class="content-wrapper leading-5 text-sm font-normal text-gray-950">
         <div class="w-60 mb-5 flex flex-col items-start">
             <div class="report-label">
-                {{ $t('report.name') }}
+                {{ $t('report.schedule.name') }}
             </div>
             <el-input
-                :disabled="getCreateLocalReportTrigger"
                 v-model="model.ReportTriggerName"
-                :placeholder="$t('report.name')"
+                :placeholder="$t('report.schedule.name')"
                 type="text"
             />
         </div>
@@ -111,9 +110,6 @@
             getReportTriggerData () {
                 return this.$store.getters['reportTrigger/getReportTriggerData']
             },
-            getCreateLocalReportTrigger () {
-                return this.$store.state.reportTrigger.createLocalReportTrigger
-            },
             getReportData () {
                 return this.$store.getters['report/getReportData']
             }
@@ -181,17 +177,13 @@
             },
             onChange (item) {
                 this.model[item.component.ParameterTag] = item.value
-            },
-            setValuesInModel (createLocalReportTrigger) {
-                const valueOfReportName = createLocalReportTrigger ? this.getReportData.ReportName : this.getReportTriggerData.ReportTriggerName
-                this.model = {
-                    ReportTriggerTypeID: this.getReportTriggerData.ReportTriggerTypeID,
-                    ReportTriggerName: valueOfReportName ? valueOfReportName : this.$t('report.name')
-                }
             }
         },
         mounted () {
-            this.setValuesInModel(this.getCreateLocalReportTrigger)
+            this.model = {
+                ReportTriggerTypeID: this.getReportTriggerData.ReportTriggerTypeID,
+                ReportTriggerName: this.getReportTriggerData.ReportTriggerName ? this.getReportTriggerData.ReportTriggerName : this.$t('report.schedule.name')
+            }
 
             if (this.getReportTriggerData.ScheduleData && Object.keys(this.getReportTriggerData.ScheduleData).length) {
                 Object.assign(this.model, this.getReportTriggerData.ScheduleData)

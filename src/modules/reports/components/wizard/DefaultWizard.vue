@@ -57,9 +57,11 @@
                                 @click="onFinish"
                                 :loading="dataLoading"
                                 data-test-name="wizard-finish"
-                                :disabled="disableFinishButton"
+                                :disabled="true"
                                 type="primary"
                             >
+                                <!-- TODO: need to change :disabled="disableFinishButton" -->
+                                <IconSave class="mx-1"/>
                                 {{ $t('general.finish') }}
                             </base-button>
                         </div>

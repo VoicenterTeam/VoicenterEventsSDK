@@ -1108,5 +1108,7 @@
 	"report.scheduleList.length": "Schedule list length",
 	"report.wizard.generalStep": "Report data",
 	"report.wizard.idStep": "Widget list",
-	"report.wizard.finalStep": "Schedule list"
+	"report.wizard.finalStep": "Schedule list",
+	"report.wizard.enabled": "Enabled",
+	"report.schedule.name": "Schedule name"
 }
