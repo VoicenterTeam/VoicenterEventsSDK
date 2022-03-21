@@ -17,7 +17,7 @@
                 <div class="h-10 flex items-center">
                     <el-switch
                         v-model="report.ReportStatusID"
-                        :active-text="report.ReportStatusID ? $t('report.switch.disable') : $t('report.wizard.enabled')"
+                        :active-text="report.ReportStatusID ? $t('report.wizard.enabled') : $t('report.switch.disable')"
                         inactive-text="" />
                 </div>
             </div>
