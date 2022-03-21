@@ -88,22 +88,6 @@
         },
         data() {
             return {
-                model: {
-                    AvatarID: '',
-                    AccountName: '',
-                    AccountStatus: 1,
-                    ParentAccount: '',
-                    AccountDescription: '',
-                    AccountLanguage: null,
-                    MainDID: '',
-                    E911DidId: null,
-                    SMSDidId: null,
-                    DialAuthenticationType: '',
-                    AccountTimeZoneId: null,
-                    AccountPhone: '',
-                    AccountEmail: '',
-                    AccountFax: '',
-                },
                 validationLoading: false
             }
         },
@@ -122,7 +106,7 @@
             validateFinalStep() {
                 return this.$refs['finalStep'].validate()
             },
-            async onFinish({createAnotherData}) {
+            async onFinish() {
                 this.validationLoading = true
                 const isValid = await this.validateFinalStep();
 
@@ -130,43 +114,8 @@
                     this.validationLoading = false
                     return
                 }
-
-                // try {
-                //     if (!this.model.AvatarID) {
-                //         let params = {
-                //             AvatarAccountID: Number(this.model.ParentAccount),
-                //             AvatarData: {
-                //                 Hex: this.avatarColor,
-                //                 Content: this.nameInitials
-                //             }
-                //         };
-                //         let {data} = await generateDefaultAvatar(params);
-                //         this.model.AvatarID = get(data, 'AvatarID', '')
-                //     }
-
-                //     this.$emit('submit', {
-                //         data: this.model,
-                //         createAnotherData
-                //     })
-                // } catch (e) {
-                //     console.error(e)
-                // } finally {
-                //     this.validationLoading = false
-                // }
             },
             async onCancel() {
-                // const params = {
-                //     title: this.$t('general.cancelConfirmation'),
-                //     message: this.$t('general.cancelConfirmationText'),
-                //     type: 'confirm-cancel'
-                // };
-
-                // const result = await this.$confirmModal(params);
-
-                // if (!result) {
-                //     return
-                // }
-                // await this.refresh();
                 this.$emit('on-cancel');
             }
         },
