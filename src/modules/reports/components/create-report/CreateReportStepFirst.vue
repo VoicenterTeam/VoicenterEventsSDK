@@ -70,7 +70,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-form-item__error {
     @apply pt-2;
 }
@@ -82,11 +82,11 @@ export default {
     max-width: 392px;
     width: 100%;
 }
-.el-switch.is-checked .el-switch__core {
+::v-deep .el-switch.is-checked .el-switch__core {
     border-color: var(--primary-color);
     background-color: var(--primary-color);
 }
-.el-switch__label.is-active {
+::v-deep .el-switch__label.is-active {
     @apply text-primary;
 }
 </style>
