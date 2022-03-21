@@ -1,11 +1,11 @@
 <template>
-    <div class="wizard-wrapper flex flex-wrap relative w-full bg-white rounded-lg shadow-card"
+    <div class="wizard-wrapper flex flex-wrap relative shadow-card rounded-tr-lg rounded-br-lg"
          :data-test="`wizard-${dataTestName}`"
          :class="{
             'wizard-height-sm': height === 'sm',
             'wizard-height-lg': height === 'lg',
          }">
-        <div class="wizard-step flex flex-wrap" :class="{'full-width': !showSummary}" v-loading="dataLoading">
+        <div class="wizard-step flex flex-wrap bg-white rounded-tl-lg rounded-bl-lg" :class="{'full-width': !showSummary}" v-loading="dataLoading">
             <div class="w-full xxl:px-24 xxl:pt-10 pt-7 px-14 flex justify-between" v-if="showTopBar">
                 <span class="steps-topbar-pagination text-sm">
                     {{ $t('general.step') }} {{ activeIndex + 1 }} {{ $t('general.of') }} {{ steps.length }}
@@ -70,7 +70,7 @@
             </div>
         </div>
         <div
-            class="bg-gray-100 wizard-summary"
+            class="bg-gray-100 wizard-summary rounded-tr-lg rounded-br-lg"
             v-if="showSummary"
         >
             <wizard-summary
@@ -223,4 +223,7 @@
             }
         }
     }
+.shadow-card {
+    @apply mb-3 mr-3 shadow-base;
+}
 </style>

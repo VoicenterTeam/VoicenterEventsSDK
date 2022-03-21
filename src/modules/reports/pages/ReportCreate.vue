@@ -1,8 +1,5 @@
 <template>
     <div class="report-create">
-        <div class="report-create--title">
-            {{ $t('report.create.title') }}
-        </div>
         <create-report-wizard @on-cancel="onCancel" />
     </div>
 </template>

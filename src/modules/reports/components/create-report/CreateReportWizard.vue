@@ -8,7 +8,6 @@
         :model="model"
         @finish="onFinish"
         @on-cancel="onCancel"
-        class="mx-14"
     >
 
         <wizard-step 
