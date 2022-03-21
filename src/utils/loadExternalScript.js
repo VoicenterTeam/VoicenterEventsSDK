@@ -25,7 +25,13 @@ async function loadExtensionScript(url) {
   }
 }
 
-export async function loadExternalScript(url, environment) {
+export async function loadExternalScript(url, environment, getSocketIOFunction) {
+  if (typeof getSocketIOFunction === 'function') {
+    self.io = getSocketIOFunction(url)
+
+    return
+  }
+
   switch (environment) {
     case environments.BROWSER:
       await loadBrowserScript(url)
