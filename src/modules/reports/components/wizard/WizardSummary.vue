@@ -1,6 +1,6 @@
 <template>
     <div class="summary-steps-wrapper lg:mt-24 mt-6">
-        <div class="summary-steps" v-if="model">
+        <div class="summary-steps">
             <slot></slot>
         </div>
     </div>
@@ -16,9 +16,6 @@
             steps: {
                 type: Array,
                 required: true
-            },
-            model: {
-                type: Object
             }
         },
         data() {

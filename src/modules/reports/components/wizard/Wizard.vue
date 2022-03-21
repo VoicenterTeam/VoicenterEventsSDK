@@ -8,7 +8,6 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
     import DefaultWizard from "@/modules/reports/components/wizard/DefaultWizard";
 
     export default {

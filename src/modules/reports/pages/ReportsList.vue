@@ -98,12 +98,13 @@
                 <template v-else>
                         <span class="quick-add-button">
                             <span class="mx-2">
-                                <ScheduleForm
+                                <schedule-form
                                     :buttonLabel="$t('widget.addSchedule')"
                                     icon="vc-icon-plus-linear"
                                     :reportId="row.ReportID"
                                     @addedSchedule="addedSchedule"
                                     :data="row"
+                                    :title="$t('widget.addSchedule')"
                                 />
                             </span>
                         </span>

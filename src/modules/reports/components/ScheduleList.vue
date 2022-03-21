@@ -4,11 +4,12 @@
             <div class="text-lg font-medium">{{ $t('widget.scheduleList') }}</div>
             <div>
                 <schedule-form
-                    buttonLabel="Add New Schedule"
+                    :buttonLabel="$t('widget.addSchedule')"
                     icon="vc-icon-add"
                     :reportId="null"
                     @addedSchedule="addedSchedule"
                     :data="copyOfGetReportData"
+                    :title="$t('widget.addSchedule')"
                 />
             </div>
         </div>
