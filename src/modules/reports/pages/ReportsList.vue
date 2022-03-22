@@ -69,7 +69,7 @@
             </template>
 
             <template v-slot:ReportTriggerList="{row}">
-                <template v-if="!row.ReportTriggerList && !row.ReportTriggerList.length">
+                <template v-if="row.ReportTriggerList && row.ReportTriggerList.length">
                     <delimited-list :list="get(row, 'ReportTriggerList', [])" :limit="4" separator=",">
                         <template v-slot:list-item="{item}">
                             <rec-item

@@ -5,7 +5,7 @@
             <div class="flex ">
                 <i class="vc-icon-schedule-calendar icon-xl text-primary ml-2"/>
                 <span class="px-2 my-auto">
-                    {{triggerSchedule}}
+                    {{ triggerSchedule }}
                 </span>
                 <base-button type="primary" size="xs" class="min-w-36" outline @click="onSendNow">
                     <i class="vc-icon-skip-arrow icon-md mx-2"/>
@@ -69,15 +69,17 @@ import Tag from "@/modules/reports/components/Tag"
 import BaseButton from "@/components/Common/Buttons/BaseButton";
 import ButtonIcon from "@/modules/common/components/ButtonIcon";
 
-const weekDays= {
-    1: 'Mon',
-    2: 'Tue',
-    3: 'Wed',
-    4: 'Thu',
-    5: 'Fri',
-    6: 'Sat',
-    7: 'Sun'
+const weekDays = {
+    1: 'general.dayOfWeek.monday',
+    2: 'general.dayOfWeek.tuesday',
+    3: 'general.dayOfWeek.wednesday',
+    4: 'general.dayOfWeek.thursday',
+    5: 'general.dayOfWeek.friday',
+    6: 'general.dayOfWeek.saturday',
+    7: 'general.dayOfWeek.sunday'
 }
+
+const HEBREW_LANG_ID = 285
 
 export default {
     name: "schedule-card",
@@ -107,12 +109,12 @@ export default {
                 const userItem = this.userEntitiesList.find((user) => {
                     return user.ID === item.RecipientID
                 })
-                return userItem? userItem.name: undefined
+                return userItem ? userItem.name : undefined
             } else if (item.ReportRecipientTypeID === 2) {
                 const accountItem = this.accountEntitiesList.find((account) => {
                     return account.ID === item.RecipientID
                 })
-                return accountItem? accountItem.name: undefined
+                return accountItem ? accountItem.name : undefined
             } else if (item.ReportRecipientTypeID === 3) {
                 return item.Email
             }
@@ -129,8 +131,15 @@ export default {
             const reportTriggerTypeID = get(this.data, 'ReportTriggerTypeID')
             const reportTriggerTypeName = get(this.data, 'ReportTriggerTypeName')
             const scheduleData = get(this.data, 'ScheduleData')
+            const isHebrew = this.$store.getters['lang/getActiveLanguageID'] === HEBREW_LANG_ID
 
-            let triggerScheduleData = `${reportTriggerTypeName}: `
+            const translations = {
+                'Interval': 'widget.interval',
+                'Daily': 'widget.daily',
+                'Monthly': 'widget.monthly'
+            }
+
+            let triggerScheduleData = `${this.$t(translations[reportTriggerTypeName])} : `
             if (reportTriggerTypeID === 1) {
                 // Interval
                 let scheduleDays = []
@@ -139,18 +148,19 @@ export default {
                 const triggerTimeRange = get(scheduleData, 'TriggerTimeRange', {})
 
                 triggerDayOfWeek.forEach(day => {
-                    scheduleDays.push(weekDays[day])
+                    scheduleDays.push(this.$t(weekDays[day]))
                 })
                 const intervalScheduleDays = scheduleDays.join(', ')
 
-                const intervalScheduleTimeRange = `Start: ${triggerTimeRange.Start}, End: ${triggerTimeRange.End}`
+                const intervalScheduleTimeRange = `${this.$t('report.schedules.start')} ${triggerTimeRange.Start}, ` +
+                    `${this.$t('report.schedules.end')} ${triggerTimeRange.End}`
 
                 const duration = moment.duration(triggerInterval, 'milliseconds');
                 const hours = Math.floor(duration.asHours())
                 const minutes = Math.floor(duration.asMinutes()) - hours * 60
                 const seconds = Math.floor(duration.asSeconds()) - Math.floor(duration.asMinutes()) * 60
 
-                const intervalScheduleTime = `Every ${hours}h:${minutes}m:${seconds}s`
+                const intervalScheduleTime = `${this.$t('report.schedules.every')} ${hours}h:${minutes}m:${seconds}s`
                 triggerScheduleData += [intervalScheduleDays, intervalScheduleTimeRange, intervalScheduleTime].join(', ')
             } else if (reportTriggerTypeID === 2) {
                 // Daily
@@ -159,11 +169,11 @@ export default {
 
                 let scheduleDays = []
                 triggerDays.forEach(day => {
-                    scheduleDays.push(weekDays[day])
+                    scheduleDays.push(this.$t(weekDays[day]))
                 })
 
                 const dailyTriggerDays = scheduleDays.join(', ')
-                const dailyTriggerTime = `Trigger Time: ${triggerTime}`
+                const dailyTriggerTime = `${this.$t('report.schedules.time')} ${triggerTime}`
 
                 triggerScheduleData += [dailyTriggerDays, dailyTriggerTime].join(', ')
             } else if (reportTriggerTypeID === 3) {
@@ -171,10 +181,13 @@ export default {
                 const triggerDayOfMonth = get(scheduleData, 'TriggerDayOfMonth', []).join(', ')
                 const triggerTime = get(scheduleData, 'TriggerTime')
 
-                const monthlyDaysOfMonth = `Days of the Month: ${triggerDayOfMonth}`
-                const monthlyTriggerTime = `at ${triggerTime}`
+                const monthlyDaysOfMonth = `${this.$t('report.schedules.daysOfTheMonth')} ${triggerDayOfMonth}`
+                const monthlyTriggerTime = `${this.$t('report.schedules.at')} ${triggerTime}`
 
                 triggerScheduleData += [monthlyDaysOfMonth, monthlyTriggerTime].join(' ')
+            }
+            if (isHebrew) {
+                triggerScheduleData = triggerScheduleData.split(" ").reverse().join(" ")
             }
             return triggerScheduleData
         },
@@ -186,9 +199,9 @@ export default {
             const conditions = get(this.data, 'ReportTriggerCondition', [])
             conditions.forEach(el => {
                 if (!conditionsToRender) {
-                    conditionsToRender += '<div class="flex flex-wrap"> <span>If ('
+                    conditionsToRender += `<div class="flex flex-wrap"> <span>${this.$t('report.condition.operator.if')} (`
                 } else {
-                    conditionsToRender += '<span> or If ('
+                    conditionsToRender += `<span> ${this.$t('report.condition.operator.orIf')} (`
                 }
 
                 for (let i = 1; i <= el.ReportTriggerConditionFilter.length; i++) {
