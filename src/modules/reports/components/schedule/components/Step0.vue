@@ -1,222 +1,193 @@
 <template>
     <div class="content-wrapper leading-5 text-sm font-normal text-gray-950">
+        <div class="w-60 mb-5 flex flex-col items-start">
+            <div class="report-label">
+                {{ $t('report.name') }}
+            </div>
+            <el-input
+                v-model="model.ReportTriggerName"
+                :placeholder="$t('report.name')"
+                type="text"
+            />
+        </div>
         <div class="flex justify-between mb-8">
             <div class="flex">
-                <div class="flex flex-col w-38"
-                     :class="$rtl.isRTL ? 'ml-10' : 'mr-10'">
+                <div
+                    class="flex flex-col w-38 items-start trigger"
+                >
                     <span class="mb-2">
                         {{ $t('report.frequency') }}:
                     </span>
-                    <base-select :value="selectedFrequency.value"
-                                 id="frequency"
-                                 key="frequency"
-                                 size="small"
-                                 :multiple="false"
-                                 :filterable="false"
-                                 :options="frequencyOptions"
-                                 @change="onChangeFrequency">
+                    <base-select
+                        v-model="model.ReportTriggerTypeID"
+                        labelKey="ReportTriggerTypeName"
+                        valueKey="ReportTriggerTypeID"
+                        :multiple="false"
+                        :filterable="false"
+                        :data="reportTriggerTypeList"
+                        @change="onChangeFrequency"
+                    >
                         <template v-slot:prefix>
-                            <component class="text-primary w-4 h-4 mt-1-5"
-                                       :class="$rtl.isRTL ? 'mr-1' : 'ml-1'"
-                                       :is="selectedFrequency.icon"/>
+                            <component
+                                class="text-primary w-4 h-4 mt-1-5"
+                                :class="$rtl.isRTL ? 'mr-1' : 'ml-1'"
+                                :is="model.icon"
+                            />
                         </template>
                     </base-select>
                 </div>
-                <div class="transition flex">
-                    <template v-if="selectedFrequency.value === DAILY_FREQUENCY">
-                        <div class="flex transition">
-                            <div v-for="day in daysAbbr"
-                                 :key="day"
-                                 @click="onChoseDay(day)"
-                                 class="transition mt-6-6 text-sm mx-1 font-normal cursor-pointer rounded-full w-8 h-8 border border-gray-550 text-gray-550 items-center justify-center flex select-none"
-                                 :class="{'active': model.selectedDays.includes(day)}">
-                                {{ day }}
-                            </div>
-                            <div class="flex flex-col"
-                                 :class="$rtl.isRTL ? 'mr-10' : 'ml-10'">
-                                <span class="mb-2">
-                                    {{ $t('widget.time') }}:
-                                </span>
-                                <TimePicker id="time"
-                                            class="flex w-35"
-                                            size="small"
-                                            v-model="model.time"
-                                />
-                            </div>
-                        </div>
-                    </template>
-                    <template v-if="selectedFrequency.value === MONTHLY_FREQUENCY">
-                        <div class="flex flex-col">
-                            <span class="mb-2">
-                                {{ $t('Day') }}:
-                            </span>
-                            <base-date-picker id="day"
-                                              class="flex"
-                                              size="small"
-                                              v-model="model.day"
-                            />
-                        </div>
-                        <div class="flex flex-col"
-                             :class="$rtl.isRTL ? 'mr-10' : 'ml-10'">
-                            <span class="mb-2">
-                                {{ $t('widget.time') }}:
-                            </span>
-                            <TimePicker id="_time"
-                                        class="flex w-35"
-                                        size="small"
-                                        v-model="model.time"
-                            />
-                        </div>
-                    </template>
-                    <template v-if="selectedFrequency.value === INTERVAL_FREQUENCY">
-                        <div class="flex">
-                            <div v-for="day in daysAbbr"
-                                 :key="`interval-${day}`"
-                                 @click="onChoseDay(day)"
-                                 class="transition mt-6-6 text-sm mx-1 font-normal cursor-pointer rounded-full w-8 h-8 border border-gray-550 text-gray-550 items-center justify-center flex select-none"
-                                 :class="{'active': model.selectedDays.includes(day)}">
-                                {{ day }}
-                            </div>
-                            <div class="flex flex-col mx-5 3xl:mx-10">
-                                <span class="mb-2">
-                                    {{ $t('widget.timeRange') }}:
-                                </span>
-                                <TimeRange id="time_range"
-                                           class="flex w-38"
-                                           size="small"
-                                           v-model="model.time_range"
-                                />
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="mb-2">
-                                    {{ $t('widget.interval') }}:
-                                </span>
-                                <TimePicker id="interval"
-                                            class="flex w-35"
-                                            size="small"
-                                            v-model="model.interval"
-                                />
-                            </div>
-                            <div class="flex flex-col"
-                                 :class="$rtl.isRTL ? 'mr-5 3xl:mr-10' : 'ml:5 3xl:ml-10'">
-                                <span class="mb-2">
-                                    {{ $t('report.checkEvery') }}:
-                                </span>
-                                <TimePicker id="check_every"
-                                            class="flex w-35"
-                                            size="small"
-                                            v-model="model.check_every"
-                                />
-                            </div>
-                        </div>
-                    </template>
+                <div class="transition flex flex-wrap items-start" v-if="showTriggerComponents">
+                    <component
+                        v-for="(component, index) in activeTrigger"
+                        :is="getComponentName(component)"
+                        :key="index"
+                        @change="onChange"
+                        class="trigger-component"
+                        v-bind="component"
+                        :label="component.TriggerParameterTag"
+                        :isClickedOnNextBtn="clickedOnNextBtn"
+                    />
                 </div>
             </div>
         </div>
-        <Conditions/>
         <portal to="next-button">
-            <base-button fixed-width="w-37"
-                         type="primary"
-                         @click="goNext">
+            <base-button
+                fixed-width="w-37"
+                type="primary"
+                @click="goNext"
+            >
                 <div class="flex items-center">
                     <span class="mx-1 text-base font-bold">
                         {{ $t('general.next') }}
                     </span>
-                    <IconDirRight class="mx-1"/>
+                    <IconDirRight class="mx-1" />
                 </div>
             </base-button>
         </portal>
     </div>
 </template>
 <script>
-    import TimeRange from '@/modules/reports/components/TimeRange'
-    import TimePicker from '@/modules/reports/components/TimePicker'
-    import BaseDatePicker from '@/components/Widgets/BaseDatePicker'
-    import Conditions from '@/modules/reports/components/schedule/components/Conditions'
-
-    const DAILY_FREQUENCY = 'daily'
-    const MONTHLY_FREQUENCY = 'monthly'
-    const INTERVAL_FREQUENCY = 'interval'
 
     export default {
-        components: {
-            TimeRange,
-            TimePicker,
-            Conditions,
-            BaseDatePicker,
+        props: {
+            reportId: {
+                type: Number
+            }
         },
-        data() {
+        components: {
+            TimeRange: () => import('@/modules/common/components/form/TimeRange'),
+            Interval: () => import('@/modules/common/components/form/Interval'),
+            Conditions: () => import('@/modules/reports/components/schedule/components/Conditions'),
+            Date: () => import('@/components/Widgets/BaseDate'),
+            DayOfTheWeek: () => import('@/modules/common/components/form/DayOfTheWeek'),
+            InputText: () => import('@/modules/common/components/form/InputText'),
+            InputNumber: () => import('@/modules/common/components/form/InputNumber'),
+            UserSelect: () => import('@/modules/common/components/form/UserSelect'),
+            AccountSelect: () => import('@/modules/common/components/form/AccountSelect'),
+            DayOfMonth: () => import('@/modules/common/components/form/DayOfMonth')
+        },
+        data () {
             return {
-                DAILY_FREQUENCY,
-                MONTHLY_FREQUENCY,
-                INTERVAL_FREQUENCY,
-                daysAbbr: [
-                    'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa',
-                ],
-                frequencyOptions: [
-                    {
-                        label: 'Daily',
-                        value: DAILY_FREQUENCY,
-                        icon: 'IconDaily',
-                    },
-                    {
-                        label: 'Monthly',
-                        value: MONTHLY_FREQUENCY,
-                        icon: 'IconCalendar',
-                    },
-                    {
-                        label: 'Interval',
-                        value: INTERVAL_FREQUENCY,
-                        icon: 'IconInterval',
-                    },
-                ],
-                showMenu: false,
-                selectedFrequency: {
-                    label: 'Interval',
-                    value: INTERVAL_FREQUENCY,
-                    icon: 'IconInterval',
-                },
                 model: {
-                    selectedDays: ['Su', 'Tu', 'We'],
-                    time: '00:00',
-                    time_range: '',
-                    interval: '',
-                    check_every: '',
+                    ReportTriggerTypeID: null,
+                    ReportTriggerName: null
                 },
+                showTriggerComponents: true,
+                clickedOnNextBtn: false
             }
         },
         computed: {
-            reportToEdit() {
-                return this.$store.getters['report/getReportData']
+            reportTriggerTypeList() {
+                return this.$store.getters['reportTrigger/getConfData'].ReportTriggerTypeList
             },
-        },
-        methods: {
-            onMenuClickOutside() {
-                this.showMenu = false
-            },
-            triggerMenu() {
-                this.showMenu = !this.showMenu
-            },
-            onChoseDay(day) {
-                const index = this.model.selectedDays.findIndex(el => el === day)
-                if (index === -1) {
-                    this.model.selectedDays.push(day)
+            activeTrigger () {
+                if (!this.model.ReportTriggerTypeID) {
                     return
                 }
-                this.model.selectedDays.splice(index, 1)
+                const reportTriggerParameters = this.reportTriggerTypeList.find(el => el.ReportTriggerTypeID === this.model.ReportTriggerTypeID).ReportTriggerParameters
+                return reportTriggerParameters.sort((a, b) => a.ParameterOrder - b.ParameterOrder)
             },
-            onChangeFrequency(frq) {
-                const frequencyObj = this.frequencyOptions.find(frequency => frequency.value === frq)
-                this.selectedFrequency = { ...frequencyObj }
+            getReportData () {
+                return this.$store.getters['reportTrigger/getReportData']
+            }
+        },
+        methods: {
+            async onChangeFrequency (val) {
+                const copyOfModel = JSON.parse(JSON.stringify(this.model))
+                await this.$store.dispatch('reportTrigger/updateReportDataScheduleSettings', {})
+                this.model = {
+                    ReportTriggerTypeID: null,
+                    ReportTriggerName: null
+                }
+                this.model.ReportTriggerTypeID = val
+                this.model.ReportTriggerName = copyOfModel.ReportTriggerName
+                this.showTriggerComponents = false
+                this.$nextTick(() => {
+                    this.showTriggerComponents = true
+                })
+
+                this.clickedOnNextBtn = false
             },
             goNext() {
-                const objToEmit = {
-                    summary: '',
-                    nextStep: true,
+                this.clickedOnNextBtn = true
+                const isScheduleFieldsNotEmpty = () => {
+                    const haveTriggerComponent = Object.keys(this.model).filter(field => !field.includes('ReportTrigger'))
+                    const allFieldsValid = Object.entries(this.model)
+                        .filter(field => !field[0].includes('ReportTrigger'))
+                        .every(field => field[1])
+
+                    return haveTriggerComponent.length === this.activeTrigger.length && allFieldsValid
                 }
+
+                if (!isScheduleFieldsNotEmpty()) {
+                    return
+                }
+
+                const objToEmit = {
+                    nextStep: true
+                }
+                const data = {
+                    ReportTriggerTypeID: this.model.ReportTriggerTypeID,
+                    ReportTriggerName: this.model.ReportTriggerName,
+                    ReportID: Number(this.$route.params.id) || this.reportId
+                }
+
+                this.$store.dispatch('reportTrigger/updateReportData', data)
+                delete this.model.ReportTriggerName
+                delete this.model.ReportTriggerTypeID
+
+                this.$store.dispatch('reportTrigger/updateReportDataScheduleSettings', this.model)
                 this.$emit('on-update', objToEmit)
             },
+            getComponentName (component) {
+                const componentTag = component.ComponentTag
+
+                if (componentTag === 'Time') {
+                    return 'Interval'
+                } else if (componentTag === 'Text') {
+                    return 'InputText'
+                } else if (componentTag === 'Number') {
+                    return 'InputNumber'
+                } else {
+                    return componentTag
+                }
+            },
+            onChange (item) {
+                this.model[item.component.ParameterTag] = item.value
+            }
         },
+        mounted () {
+            this.model = {
+                ReportTriggerTypeID: this.getReportData.ReportTriggerTypeID,
+                ReportTriggerName: this.getReportData.ReportTriggerName ? this.getReportData.ReportTriggerName : this.$t('report.name')
+            }
+            if (this.getReportData.ScheduleData && Object.keys(this.getReportData.ScheduleData).length) {
+                Object.assign(this.model, this.getReportData.ScheduleData)
+            }
+            if (this.reportTriggerTypeList && !Object.keys(this.getReportData.ScheduleData).length) {
+                this.model.ReportTriggerTypeID = this.reportTriggerTypeList[0].ReportTriggerTypeID
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
@@ -235,8 +206,47 @@
 .active {
     @apply bg-primary text-white border-primary;
 }
+[dir="rtl"] .trigger-component:not(:last-child) {
+    @apply ml-10;
+}
+
+[dir="ltr"] .trigger-component:not(:last-child) {
+    @apply mr-10;
+}
+.el-range-editor.is-active, .el-range-editor.is-active {
+    @apply border-primary;
+}
+.report-label {
+    @apply mb-3;
+}
+[dir="rtl"] .report-label {
+    @apply ml-3;
+}
+[dir="ltr"] .report-label {
+    @apply mr-3;
+}
+[dir="rtl"] .trigger {
+    @apply ml-10;
+}
+[dir="ltr"] .trigger {
+    @apply mr-10;
+}
+.interval ::v-deep .el-date-editor.el-input, .interval ::v-deep .el-date-editor.el-input__inner {
+    @apply w-32;
+}
+.content-wrapper {
+    @apply flex flex-col justify-center;
+}
 </style>
+
 <style lang="scss">
+.trigger-component .el-input, .trigger-component .el-input-number {
+    @apply w-32;
+}
+.time-picker .el-date-editor.el-input__inner {
+    @apply w-32;
+}
+
 .el-time-range-picker {
     .el-time-panel__footer {
         height: 40px !important;

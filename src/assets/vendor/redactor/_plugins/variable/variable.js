@@ -4,7 +4,8 @@
         translations: {
             en: {
                 "change": "Change",
-                "variable": "Variable",
+                "variable-title": "Select Variable",
+                "variable-btn": "Insert Variable",
                 "variable-select": "Please, select a variable"
             }
         },
@@ -63,17 +64,16 @@
             if (!this.opts.variables) return;
 
             var obj = {
-                title: this.lang.get('variable'),
+                title: this.lang.get('variable-btn'),
                 api: 'plugin.variable.open'
             };
 
-            var $button = this.toolbar.addButton('variable', obj);
-            $button.setIcon('<i class="re-icon-variable"></i>');
+            this.toolbar.addButton('variable', obj);
         },
         open: function()
 		{
             var options = {
-                title: this.lang.get('variable'),
+                title: this.lang.get('variable-title'),
                 width: '600px',
                 name: 'variable'
             };

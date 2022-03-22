@@ -15,13 +15,11 @@
     </div>
 </template>
 <script>
-    import AccountMenu from '@/components/Navbar/components/AccountMenu'
-    import LanguageSwitcher from '@/components/Navbar/components/LanguageSwitcher'
     
     export default {
         components: {
-            AccountMenu,
-            LanguageSwitcher,
+            AccountMenu: () => import('@/components/Navbar/components/AccountMenu'),
+            LanguageSwitcher: () => import('@/components/Navbar/components/LanguageSwitcher')
         },
         computed: {
             getLogo() {

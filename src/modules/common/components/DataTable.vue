@@ -98,14 +98,12 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import PageLimit from '@/modules/common/components/PageLimit'
     import { Table, TableColumn, Tooltip } from 'element-ui'
-    import Pagination from '@/modules/common/components/Pagination'
 
     export default {
         components: {
-            PageLimit,
-            Pagination,
+            PageLimit: () => import('@/modules/common/components/PageLimit'),
+            Pagination: () => import('@/modules/common/components/Pagination'),
             [Table.name]: Table,
             [Tooltip.name]: Tooltip,
             [TableColumn.name]: TableColumn,

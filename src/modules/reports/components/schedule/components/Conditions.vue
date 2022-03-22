@@ -1,19 +1,25 @@
 <template>
-    <div>
-        <div class="w-full flex flex-col content-wrapper_step-1">
-            <ConditionGroup v-for="(group, index) in groups"
-                            class="flex w-full px-1"
-                            :key="index"
-                            @on-delete-condition="data => onDeleteCondition(data, index)"
-                            @on-add-condition="onAddCondition(index)"
-                            @on-delete-group="onDeleteGroup(index)"
-                            :can-delete="canDelete"
-                            :conditions="group"
+    <div ref="conditions">
+        <div class="w-full flex flex-col content-wrapper_step-1" id="content-wrapper_step-1">
+            <ConditionGroup
+                v-for="(group, index) in reportData"
+                class="flex w-full px-1"
+                :key="index"
+                @on-delete-condition="onDeleteCondition"
+                @on-add-condition="onAddCondition(index)"
+                @on-delete-group="onDeleteGroup(index)"
+                :can-delete="canDelete"
+                :conditions="group"
+                :reportItemData="reportItemData"
+                :index="index"
+                :amountOfReportDataLength="reportData.length"
             />
         </div>
         <div class="my-6">
-            <base-button @click="onNewCriteria"
-                         type="primary"
+            <base-button
+                @click="onNewCriteria"
+                type="primary"
+                outline
             >
                 <span class="font-semibold">
                     {{ $t('report.newCriteria') }}
@@ -23,63 +29,80 @@
     </div>
 </template>
 <script>
-    import ConditionGroup from '@/modules/reports/components/schedule/components/ConditionGroup'
-
     export default {
-        components: {
-            ConditionGroup,
-        },
-        data() {
-            return {
-                emptyCondition: {
-                    props: {},
-                },
-                emptyCriteria: [
-                    {
-                        props: {},
-                    },
-                ],
-                groups: [
-                    [
-                        {
-                            props: {},
-                        },
-                    ],
-                ],
+        props: {
+            reportTriggerTypeList: {
+                type: Array,
+                default: () => []
+            },
+            conditionFilterColumnTypeList: {
+                type: Array,
+                default: () => []
+            },
+            widgetTemplateList: {
+                type: Array,
+                default: () => []
+            },
+            reportData: {
+                type: Array,
+                default: () => []
+            },
+            reportItemData: {
+                type: Object,
+                default: () => ({})
             }
+        },
+        components: {
+            ConditionGroup: () => import('@/modules/reports/components/schedule/components/ConditionGroup')
         },
         computed: {
             canDelete() {
-                return this.groups.length > 1
-            },
+                return this.reportData.length > 1
+            }
         },
         methods: {
             onAddCondition(index) {
-                this.groups[index].push(this.emptyCondition)
-            },
-            onDeleteCondition(data = {}, groupIndex) {
-                const { group, index } = data
-                group.splice(index, 1)
-                this.groups[groupIndex] = group
-                if (!group.length) {
-                    this.groups.splice(groupIndex, 1)
+                const data = {
+                    index,
+                    step: 'ReportTriggerCondition'
                 }
+
+                this.$store.dispatch('reportTrigger/createNewCondition', data)
+            },
+            onDeleteCondition(groupIndex, itemIndex) {
+                const data = {
+                    groupIndex,
+                    step: 'ReportTriggerCondition',
+                    itemIndex
+                }
+
+                this.$store.dispatch('reportTrigger/deleteCondition', data)
             },
             onDeleteGroup(index) {
-                this.groups.splice(index, 1)
-            },
-            emitter(event) {
-                this.$emit(event)
+                const data = {
+                    index,
+                    step: 'ReportTriggerCondition'
+                }
+                this.$store.dispatch('reportTrigger/deleteCriteria', data)
             },
             onNewCriteria() {
-                this.groups.push(this.emptyCriteria)
-            },
-        },
+                this.$store.dispatch('reportTrigger/createNewCriteria', 'ReportTriggerCondition')
+                this.$nextTick(() => {
+                    const element = document.getElementById('content-wrapper_step-1')
+                    element.scrollTo({
+                        top: element.scrollHeight,
+                        behavior: 'smooth'
+                    })
+                })
+            }
+        }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .content-wrapper_step-1 {
-    max-height: calc(100vh - 500px);
+    height: 100%;
+    min-height: calc(95vh - 370px);
+    max-height: calc(95vh - 370px);
     @apply overflow-auto;
 }
 </style>

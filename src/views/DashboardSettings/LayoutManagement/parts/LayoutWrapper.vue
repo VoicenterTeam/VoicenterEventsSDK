@@ -24,7 +24,6 @@
 </template>
 <script>
     import { mapOrder } from '@/helpers/util'
-    import CollapseWrapper from '@/views/common/CollapseWrapper'
     import ColorParameterType from '../components/ColorParameterType'
     import ImageParameterType from '../components/ImageParameterType'
     import IntegerParameterType from '../components/IntegerParameterType'
@@ -34,7 +33,7 @@
     export default {
         inheritAttrs: false,
         components: {
-            CollapseWrapper,
+            CollapseWrapper: () => import('@/views/common/CollapseWrapper'),
             [ColorParameterType.name]: ColorParameterType,
             [ImageParameterType.name]: ImageParameterType,
             [BooleanParameterType.name]: BooleanParameterType,

@@ -1,5 +1,5 @@
 <template>
-    <tag limit-with="150">
+    <tag limit-width="500" v-bind="$attrs">
         <component :is="icon"
                    class="h-4 w-6 mx-1 text-primary text-gray-950"/>
         <div class="truncate">
@@ -8,11 +8,10 @@
     </tag>
 </template>
 <script>
-    import Tag from '@/modules/reports/components/Tag'
-    
+   
     export default {
         components: {
-            Tag,
+            Tag: () => import('@/modules/reports/components/Tag')
         },
         props: {
             name: String,

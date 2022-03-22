@@ -41,15 +41,11 @@
     </div>
 </template>
 <script>
-    import WidgetList from '@/components/Widgets/WidgetList'
-    import EditGroupButtons from '@/components/EditGroupButtons'
-    import ActionsListView from '@/components/LayoutRendering/ActionsListView'
-
     export default {
         components: {
-            EditGroupButtons,
-            ActionsListView,
-            WidgetList,
+            EditGroupButtons: () => import('@/components/EditGroupButtons'),
+            ActionsListView: () => import('@/components/LayoutRendering/ActionsListView'),
+            WidgetList: () => import('@/components/Widgets/WidgetList')
         },
         props: {
             editMode: {

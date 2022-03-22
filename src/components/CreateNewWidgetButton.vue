@@ -15,12 +15,10 @@
     
 </template>
 <script>
-    import BaseButton from "@/components/Common/Buttons/BaseButton";
-
     export default {
         inheritAttrs: false,
         components: {
-            BaseButton
+            BaseButton: () => import("@/components/Common/Buttons/BaseButton")
         }
     }
 

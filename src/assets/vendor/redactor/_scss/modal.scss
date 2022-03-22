@@ -205,8 +205,8 @@
         &:hover {
             opacity: 1;
         }
-        &:before {
-            content: '\00d7';
+        & svg {
+            @apply h-4 w-4 inline-block text-gray-600;
         }
     }
     & button {

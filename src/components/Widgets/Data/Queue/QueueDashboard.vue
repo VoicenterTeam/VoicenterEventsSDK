@@ -49,16 +49,14 @@
         statistics,
         TOTAL_CALLS_KEY,
     } from '@/enum/queueDashboardStatistics'
-    import StatisticCard from './StatisticCard'
     import {getDefaultTimeDelay} from '@/enum/generic'
     import {getWidgetData} from '@/services/widgetService'
     import {isQueueActivityGauge} from '@/helpers/widgetUtils'
-    import QueueActivity from '@/components/Charts/QueueActivity'
 
     export default {
         components: {
-            StatisticCard,
-            QueueActivity,
+            StatisticCard: () => import('./StatisticCard'),
+            QueueActivity: () => import('@/components/Charts/QueueActivity')
         },
         props: {
             data: Object,

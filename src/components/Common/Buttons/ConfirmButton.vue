@@ -3,16 +3,16 @@
         :icon="icon"
         :label="buttonLabel"
         type="primary"
+        v-bind="$attrs"
         v-on="$listeners"
     />
 </template>
 
 <script>
-import DefaultButton from "@/components/Common/Buttons/DefaultButton"
 
 export default {
     components: {
-        DefaultButton
+        DefaultButton: () => import("@/components/Common/Buttons/DefaultButton")
     },
     props: {
         icon: {

@@ -11,10 +11,11 @@
 </template>
 <script>
     import { WidgetDataApi } from '@/api/widgetDataApi'
-    import BaseWidgetTitle from '@/components/BaseWidgetTitle';
     
     export default {
-        components: { BaseWidgetTitle },
+        components: {
+            BaseWidgetTitle: () => import('@/components/BaseWidgetTitle')
+        },
         props: {
             data: {
                 type: Object,

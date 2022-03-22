@@ -109,52 +109,33 @@
         </div>
         <div class="flex w-full items-center border-t py-6">
             <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
-                <base-button class="dashboard-creation-btn"
-                             outline
-                             @click="onDiscard"
-                >
-                    <div class="flex items-center">
-                        <span class="mx-1 text-base font-bold">{{ $t('Cancel') }}</span>
-                    </div>
-                </base-button>
-                <base-button class="dashboard-creation-btn"
-                             type="primary"
-                             :loading="loading"
-                             :disabled="!isFormValid"
-                             @click="tryAddDashboard">
-                    <div class="flex items-center">
-                        <span class="mx-1 text-base font-bold">{{ $t('Save') }}</span>
-                    </div>
-                </base-button>
+                <cancel-button
+                    class="mx-4"
+                    @on-click="onDiscard"
+                />
+                <confirm-button
+                    :label="$t('Save')"
+                    @on-click="tryAddDashboard"
+                />
             </div>
         </div>
         <ConfirmDialog
             :visible.sync="showConfirmDialog"
             title="Add Dashboard"
             description="Please confirm you action?"
+            @on-cancel="onCancelDialog"
+            @on-submit="onSubmit"
         >
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
-                    <base-button class="mx-4"
-                                 outline
-                                 fixed-width="w-37"
-                                 @click="showConfirmDialog = false">
-                        <div class="flex items-center">
-                            <IconDiscard class="mx-1"/>
-                            <span class="mx-1 text-base font-bold">
-                                {{ 'Cancel' }}
-                            </span>
-                        </div>
-                    </base-button>
-                    <base-button
-                        fixed-width="w-37"
-                        key="store"
-                        type="primary"
+                    <cancel-button
+                        class="mx-4"
+                        @on-click="onCancelDialog"
+                    />
+                    <confirm-button
                         :loading="loading"
-                        @click="onSubmit"
-                    >
-                        {{ $t('Confirm') }}
-                    </base-button>
+                        @on-click="onSubmit"
+                    />
                 </slot>
             </template>
         </ConfirmDialog>
@@ -163,28 +144,24 @@
 <script>
     import get from 'lodash/get'
     import { Notification } from 'element-ui'
-    import NavBar from '@/views/common/NavBar'
     import { WidgetApi } from '@/api/widgetApi'
     import { templateApi } from '@/api/templateApi'
     import { DashboardApi } from '@/api/dashboardApi'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { widgetGroupModel } from '@/models/instances'
     import { WidgetGroupsApi } from '@/api/widgetGroupApi'
-    import LayoutSelect from '@/views/common/LayoutSelect'
-    import ConfirmDialog from '@/components/Common/ConfirmDialog'
     import { getLayoutsWithPrimaryColor } from '@/helpers/layoutUtil'
-    import TemplatesPreview from '@/views/DashboardCreation/components/TemplatesPreview'
-    import TemplateCategories from '@/views/DashboardCreation/components/TemplateCategories'
-    import TemplateDetailedPreview from '@/views/DashboardCreation/components/TemplateDetailedPreview'
 
     export default {
         components: {
-            TemplateDetailedPreview,
-            TemplateCategories,
-            TemplatesPreview,
-            ConfirmDialog,
-            LayoutSelect,
-            NavBar,
+            TemplateDetailedPreview: () => import('@/views/DashboardCreation/components/TemplateDetailedPreview'),
+            TemplateCategories: () => import('@/views/DashboardCreation/components/TemplateCategories'),
+            TemplatesPreview: () => import('@/views/DashboardCreation/components/TemplatesPreview'),
+            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
+            LayoutSelect: () => import('@/views/common/LayoutSelect'),
+            NavBar: () => import('@/views/common/NavBar'),
+            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
+            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
         },
         data() {
             return {
@@ -245,6 +222,9 @@
                     this.$router.push('/')
                     await this.$store.dispatch('layout/resetPreviewLayout')
                 }
+            },
+            onCancelDialog () {
+                this.showConfirmDialog = false
             },
             onDiscard() {
                 this.selectedTemplate = false

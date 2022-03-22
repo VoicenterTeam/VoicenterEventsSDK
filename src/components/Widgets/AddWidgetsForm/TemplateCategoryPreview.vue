@@ -90,10 +90,7 @@
                                     class="item"
                                     effect="dark"
                                     placement="top">
-                            <IconInfo
-                                class="cursor-help text-primary"
-                                @click="onPreviewTemplate(template)"
-                            />
+                            <i class="vc-icon-info cursor-help text-primary text-2xl" @click="onPreviewTemplate(template)"></i>
                         </el-tooltip>
                     </template>
                 </TemplateCard>
@@ -118,11 +115,10 @@
     import sum from 'lodash/sum'
     import cloneDeep from 'lodash/cloneDeep'
     import {InputNumber, Tooltip} from 'element-ui'
-    import TemplateCard from '@/components/Widgets/AddWidgetsForm/TemplateCard'
 
     export default {
         components: {
-            TemplateCard,
+            TemplateCard: () => import('@/components/Widgets/AddWidgetsForm/TemplateCard'),
             [Tooltip.name]: Tooltip,
             [InputNumber.name]: InputNumber,
         },

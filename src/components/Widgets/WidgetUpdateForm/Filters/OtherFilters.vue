@@ -15,7 +15,7 @@
                     :open-delay="200"
                     placement="top">
                     <span class="mx-2 truncate">
-                        <IconInfo/>
+                        <i class="vc-icon-info cursor-help text-primary text-2xl"></i>
                     </span>
                 </el-tooltip>
             </div>
@@ -32,12 +32,11 @@
 </template>
 <script>
     import {componentTypes} from '@/enum/widgetTemplateConfigs'
-    import Input from './Types/Input'
     import { InputNumber } from 'element-ui'
 
     export default {
         components: {
-            Input,
+            Input: () => import('./Types/Input'),
             InputNumber
         },
         props: {

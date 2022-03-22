@@ -27,14 +27,13 @@
     import {EditIcon} from 'vue-feather-icons'
     import {Checkbox, Tooltip} from 'element-ui'
     import {timeFormatter} from "@/helpers/timeFormatter";
-    import UpdateDialog from '@/components/Cards/UpdateDialog'
     import {AVG_RING_TIME_KEY, MAX_RING_TIME_KEY} from "@/enum/queueDashboardStatistics";
 
     export default {
         components: {
             [Checkbox.name]: Checkbox,
             [Tooltip.name]: Tooltip,
-            UpdateDialog,
+            UpdateDialog: () => import('@/components/Cards/UpdateDialog'),
             EditIcon,
         },
         props: {
