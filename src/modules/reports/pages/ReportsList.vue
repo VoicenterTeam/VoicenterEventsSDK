@@ -13,10 +13,8 @@
                     <div class="grid grid-cols-2 gap-4">
                         <schedule-card
                             v-for="(trigger, index) in row.ReportTriggerList"
-                            :trigger-name="trigger.ReportTriggerName"
-                            :key="index"
-                            :conditions="trigger.ReportTriggerCondition"
-                            :recipients="trigger.ReportRecipient">
+                            :data="trigger"
+                            :key="index">
                         </schedule-card>
                     </div>
                 </div>
@@ -71,7 +69,7 @@
             </template>
 
             <template v-slot:ReportTriggerList="{row}">
-                <template v-if="row.ReportTriggerList && row.ReportTriggerList.length">
+                <template v-if="!row.ReportTriggerList && !row.ReportTriggerList.length">
                     <delimited-list :list="get(row, 'ReportTriggerList', [])" :limit="4" separator=",">
                         <template v-slot:list-item="{item}">
                             <rec-item
