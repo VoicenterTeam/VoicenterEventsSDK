@@ -1,18 +1,13 @@
 <template>
     <div>
-        <div class="py-2 bg-white flex items-center cursor-pointer border-b -mx-4"
+        <div class="py-2 bg-white flex items-center cursor-pointer border-b"
              @click="onSelectCategory">
-            <div class="flex items-center justify-between w-full py-4 px-10 text-steel">
+            <div class="flex items-center justify-between w-full py-4 px-2.5 text-steel">
                 <div class="flex items-center flex-1">
-                    <slot name="icon">
-                        <component class="w-10 h-10 text-primary"
-                                   :is="getCategoryImage"
-                        />
-                    </slot>
-                    <div class="mx-6-5">
+                    <div>
                         <slot name="title">
                             <p class="text-2xl font-bold text-gray-950">
-                                {{ widgetGroup.WidgetGroupTitle || '-' }}
+                                {{ widgetGroupTitle }}
                             </p>
                         </slot>
                         <slot name="description">
@@ -25,7 +20,7 @@
                 </div>
                 <div class="flex items-center text-primary">
                     <span class="mx-3 font-bold text-base">
-                        {{ getTemplatesListLength }}
+                        {{ getWidgetsListLength }}
                         {{ setWidgetTranslation }}
                     </span>
                     <IconShapeMini/>
@@ -61,19 +56,14 @@ export default {
         },
     },
     computed: {
-        getCategoryImage() {
-            const widgetGroupImage = this.widgetGroupImage || ''
-            let iconName = widgetGroupImage.split('.')[0] || '' // get rid of extension
-            if (iconName.length > 2) {
-                iconName = iconName.charAt(0).toUpperCase() + iconName.slice(1)
-            }
-            return 'Icon' + (iconName || 'Settings')
+        widgetGroupTitle() {
+            return this.widgetGroup.WidgetGroupTitle || '-'
         },
-        getWidgetGroupListLength () {
-            return get(this.widgetGroup, 'TemplatesList.length', 0)
+        getWidgetsListLength () {
+            return get(this.widgetGroup, 'WidgetList.length', 0)
         },
         setWidgetTranslation () {
-            return this.getWidgetGroupListLength === 1 ? this.$t('widget.widget') : this.$t('widget.widgets')
+            return this.getWidgetsListLength === 1 ? this.$t('widget.widget') : this.$t('widget.widgets')
         }
     },
 }

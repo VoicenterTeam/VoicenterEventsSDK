@@ -3,6 +3,21 @@
         <portal to="form-title">
             {{ $t('widget.allCategories') }}
         </portal>
+        <div class="search">
+            <div class="w-full flex justify-center py-4">
+                <div class="w-full max-w-md">
+                    <el-input
+                        v-model="search"
+                        :placeholder="$t('general.search')"
+                        class="input-search"
+                    >
+                        <template v-slot:prefix>
+                            <i class="el-input__icon vc-icon-search text-primary text-xl" />
+                        </template>
+                    </el-input>
+                </div>
+            </div>
+        </div>
         <WidgetGroupCard
             v-for="widgetGroup in widgetGroups"
             v-bind="widgetGroup"
@@ -24,6 +39,16 @@ export default {
         widgetGroups: {
             type: Array,
             default: []
+        }
+    },
+    data() {
+        return {
+            search: ''
+        }
+    },
+    watch: {
+        search() {
+            // run search functionality
         }
     },
     computed: {

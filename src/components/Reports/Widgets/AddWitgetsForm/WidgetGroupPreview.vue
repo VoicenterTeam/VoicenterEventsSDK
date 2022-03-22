@@ -2,7 +2,7 @@
     <div>
         <portal to="redirect-action">
           <span class="text-primary redirect-action"
-                @click="allTemplateCategories()">
+                @click="goToWidgetGroups">
                 <IconDirLeft class="mx-2"/>
                 {{ $t('widget.allCategories') }}
             </span>
@@ -46,11 +46,11 @@
         <div class="flex flex-col -mx-4-5">
             <div :key="widget.WidgetID"
                  class="w-full"
-                 v-for="widget in widgetGroup">
+                 v-for="widget in widgetList">
                 <WidgetCard
                     class="w-full"
-                    :key="widget.TemplateID"
-                    v-bind="widget"
+                    :widget="widget"
+                    v-on="$listeners"
                 >
                     <template v-slot:new-one>
                         <el-button
@@ -136,18 +136,30 @@ export default {
         templateCategory() {
             return this.$store.getters['widgetCreation/getCategoryTemplates']
         },
-        templateList() {
-            return this.templateCategory.TemplatesList || []
+        widgetList() {
+            return get(this.widgetGroup, 'WidgetList', [])
         },
-        filteredTemplates() {
-            if (!this.templateList || !this.templateList.length) {
-                return
+        filteredWidgetList() {
+            if (!this.widgetList || !this.widgetList.length) {
+                return []
             }
-            return this.templateList.filter((template) => {
-                const templateName = this.translateTemplateName(template.TemplateName)
-                return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
+            return this.widgetList.filter((widget) => {
+                const widgetName = widget.Title
+                return widget.TemplateID.toString() === this.search.toString() || widgetName.toLowerCase().includes(this.search.toLowerCase())
             })
         },
+        // templateList() {
+        //     return this.templateCategory.TemplatesList || []
+        // },
+        // filteredTemplates() {
+        //     if (!this.templateList || !this.templateList.length) {
+        //         return
+        //     }
+        //     return this.templateList.filter((template) => {
+        //         const templateName = this.translateTemplateName(template.TemplateName)
+        //         return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
+        //     })
+        // },
         groupWidgetsCount() {
             const group = this.widgetGroup
             return get(group, 'WidgetList', []).length
@@ -171,17 +183,17 @@ export default {
         translateTemplateName(tName) {
             return this.$t(tName) || tName
         },
-        manageWidgets(value, template) {
-            this.quantities[template.TemplateID] = value
-            this.summaries[template.TemplateName] = value
-            template.quantity = value
+        manageWidgets(value, widget) {
+            this.quantities[widget.WidgetID] = value
+            this.summaries[widget.WidgetID] = value
+            // widget.quantity = value
 
-            this.templates[`${template.TemplateID}`] = template
+            // this.templates[`${widget.TemplateID}`] = widget
 
             if (!value) {
-                delete this.summaries[template.TemplateName]
-                delete this.templates[template.TemplateID]
-                delete this.quantities[template.TemplateName]
+                delete this.summaries[widget.WidgetID]
+                // delete this.templates[widget.TemplateID]
+                delete this.quantities[widget.WidgetID]
             }
         },
         async onPreviewTemplate(template) {
@@ -189,11 +201,12 @@ export default {
                 template,
                 data: this.composeSummary(),
             }
-            await this.$store.dispatch('widgetCreation/previewTemplate', objectToStore)
+            // await this.$store.dispatch('widgetCreation/previewTemplate', objectToStore)
         },
-        async allTemplateCategories() {
-            await this.$store.dispatch('widgetCreation/resetState')
-            await this.$store.dispatch('widgetCreation/resetCopyTemplate')
+        async goToWidgetGroups() {
+            await this.$emit('goToWidgetGroups')
+            // await this.$store.dispatch('widgetCreation/resetState')
+            // await this.$store.dispatch('widgetCreation/resetCopyTemplate')
         },
         composeSummary() {
             return {
@@ -206,7 +219,7 @@ export default {
         },
         async onSetupWidgets() {
             const data = this.composeSummary()
-            await this.$store.dispatch('widgetCreation/goToSetupTemplates', data)
+            // await this.$store.dispatch('widgetCreation/goToSetupTemplates', data)
         },
         fillProgress() {
             if (!this.getSummaries) {
@@ -215,13 +228,13 @@ export default {
             const summaries = this.getSummaries
             this.quantities = cloneDeep(summaries.quantities)
             this.summaries = cloneDeep(summaries.summaryText)
-            this.templates = cloneDeep(this.getTemplate) || {}
+            // this.templates = cloneDeep(this.getTemplate) || {}
         },
         tryAddAllWidgetsFromCategory() {
-            this.filteredTemplates.forEach(el => {
+            this.filteredWidgetList.forEach(el => {
                 this.manageWidgets(1, el)
             })
-            this.$emit('try-store-category', this.templateCategory)
+            //this.$emit('try-store-category', this.templateCategory)
         },
         tryUpdateSummary() {
             const summaries = {
@@ -233,11 +246,8 @@ export default {
     },
     mounted() {
         this.fillProgress()
-        this.filteredTemplates.forEach(el => {
-            if (el.quantity) {
-                const quantity = el.quantity !== 1 ? el.quantity : 1
-                this.manageWidgets(quantity, el)
-            }
+        this.filteredWidgetList.forEach(widget => {
+            this.manageWidgets(1, widget)
         })
     },
     watch: {

@@ -32,6 +32,8 @@
                     :summary-actions="getSummaryActions"
                     @reset-state="resetState"
                     @select-widget-group="selectWidgetGroup"
+                    @select-widget="selectWidget"
+                    @go-to-widget-groups="goToWidgetGroups"
                 />
             </fade-transition>
             <template v-slot:footer>
@@ -127,6 +129,7 @@ export default {
             showConfirmDialog: false,
             widgetGroups: [],
             widgetGroup: {},
+            widgets: [],
             step: 'step0',
             steps: {
                 'step0': {
@@ -158,7 +161,9 @@ export default {
             return this.steps[this.step].hasSummary
         },
         getQuantities() {
-            return get(this.$store.getters['widgetCreation/getSummaries'], 'quantities')
+            // return get(this.$store.getters['widgetCreation/getSummaries'], 'quantities')
+            const widgetList = get(this.widgetGroup, 'WidgetList', [])
+            return widgetList.filter(widget => widget.isChecked)
         },
         groupWidgetsCount() {
             const group = this.widgetGroup
@@ -239,6 +244,29 @@ export default {
             } catch (e) {
                 console.error(e)
             }
+        },
+        selectWidget ({ widgetId, value }) {
+            console.log('selectWidget')
+            console.log('widgetId', widgetId)
+            console.log('value', value)
+            const widgetList = get(this.widgetGroup, 'WidgetList', [])
+            const widget = widgetList.find(widget => widget.WidgetID === widgetId)
+            this.$set(widget, 'isChecked', value)
+            // add widget to widgets array
+            if (value) {
+                this.addWidget(widget)
+                return
+            }
+            this.removeWidget(widget)
+        },
+        addWidget (widget) {
+
+        },
+        removeWidget (widget) {
+
+        },
+        goToWidgetGroups () {
+            this.step = "WidgetGroups"
         }
     },
     async beforeDestroy () {
