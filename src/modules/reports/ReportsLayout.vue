@@ -8,18 +8,25 @@
             @on-remove-tab="removeTab">
             <template v-slot:list>
                 <reports-list
+                    ref="reports-list"
                     v-show="listTabName === activeTab"
                     @on-create-report="openCreateReportTab"
-                    @on-edit-row="onEditRow"/>
+                    @on-edit-row="onEditRow"
+                />
             </template>
-            <template v-for="(tab, index) in editableTabs"
-                      v-slot:[tab.name]="{data}">
+            <template
+                v-for="(tab, index) in editableTabs"
+                v-slot:[tab.name]="{data}"
+            >
                 <report-edit
                     :key="index"
                     v-show="tab.name === activeTab"
                     :data="tab.data"
                     :report-id="tab.name"
-                    @update-title="onUpdateTitle"/>
+                    @update-title="onUpdateTitle"
+                    @on-close-create-report-tab="onCloseCreateReportTab"
+                    @on-reload-data-reports-list="onReloadDataReportsList"
+                />
             </template>
             <template v-slot:create>
                 <report-create v-show="createTabName === activeTab" @on-close-create-report-tab="onCloseCreateReportTab" />
@@ -135,6 +142,10 @@ export default {
         },
         onCloseCreateReportTab () {
             this.removeTab(this.activeTab)
+        },
+        onReloadDataReportsList () {
+            this.removeTab(this.activeTab)
+            this.$refs['reports-list'].reloadData()
         }
     },
     watch: {

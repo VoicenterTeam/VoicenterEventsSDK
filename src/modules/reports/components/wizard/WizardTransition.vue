@@ -1,10 +1,12 @@
 <template>
-    <component :is="componentType"
-               v-bind="$attrs"
-               v-on="hooks"
-               :enter-active-class="enterClass"
-               move-class="slide-move"
-               :leave-active-class="leaveClass">
+    <component
+        :is="componentType"
+        v-bind="$attrs"
+        v-on="hooks"
+        :enter-active-class="enterClass"
+        move-class="slide-move"
+        :leave-active-class="leaveClass"
+    >
         <slot></slot>
     </component>
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-18">
+    <div class="schedule-list-container">
         <div class="flex items-center justify-between pb-5">
             <div class="text-lg font-medium">{{ $t('widget.scheduleList') }}</div>
             <div>
@@ -78,5 +78,8 @@ export default {
     border: 1px solid #BEC2C9;
     border-radius: 6px;
     @apply bg-gray-150;
+}
+.schedule-list-container {
+    @apply mt-18;
 }
 </style>
