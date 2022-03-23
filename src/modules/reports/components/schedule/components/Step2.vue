@@ -107,6 +107,7 @@
                 default: () => ({}),
             },
         },
+        inject: ['dataToEdit'],
         components: {
             HtmlEditor: () => import('@/components/Html/HtmlEditor'),
             [Select.name]: Select,
@@ -137,8 +138,8 @@
                         }
                     })
             },
-            getReportData () {
-                return this.$store.getters['reportTrigger/getReportData']
+            getReportTriggerData () {
+                return this.$store.getters['reportTrigger/getReportTriggerData']
             },
             allAccounts () {
                 return this.$store.getters['entities/getEntityList']('Accounts')
@@ -168,6 +169,9 @@
             },
             recipientsLength () {
                 return this.recipients.length
+            },
+            getCreateLocalReportTrigger () {
+                return this.$store.state.reportTrigger.createLocalReportTrigger
             }
         },
         watch: {
@@ -182,34 +186,25 @@
 
                     return
                 }
-                await this.updateReportData()
+                await this.updateReportTriggerRecipientsData()
+                const reportTriggerData = await this.updateReportTriggerData()
+
+                if (this.getCreateLocalReportTrigger) {
+                    if (!this.dataToEdit || !Object.keys(this.dataToEdit).length) {
+                        await this.$store.dispatch('report/pushReportTriggerData', reportTriggerData)
+                    } else {
+                        const data = {
+                            indexToEdit: this.dataToEdit.indexToEdit,
+                            value: reportTriggerData
+                        }
+                        await this.$store.dispatch('report/updateReportTriggerItem', data)
+                    }
+                    this.$emit('on-finish')
+                    return
+                }
 
                 try {
-                    const data = cloneDeep(this.getReportData)
-
-                    if (data.ReportTriggerCondition.length) {
-                        data.ReportTriggerCondition = data.ReportTriggerCondition
-                            .map(condition => {
-                                const filteredReportTriggerConditionFilter = condition.ReportTriggerConditionFilter.filter(el => el.WidgetID)
-
-                                return filteredReportTriggerConditionFilter.length ? condition : {}
-                            })
-                    } else {
-                        data.ReportTriggerCondition = [{}]
-                    }
-
-                    if ('TriggerTimeRange' in data.ScheduleData) {
-                        const timeRange = data.ScheduleData.TriggerTimeRange
-                        data.ScheduleData.TriggerTimeRange = {
-                            Start: timeRange[0],
-                            End: timeRange[1]
-                        }
-                    }
-                    if ('TriggerDayOfWeek' in data.ScheduleData) {
-                        data.ScheduleData.TriggerDayOfWeek.sort((a, b) => a - b)
-                    }
-
-                    await reportTriggerApi.createReportTrigger(data)
+                    await reportTriggerApi.createReportTrigger(reportTriggerData)
                     this.$emit('on-finish')
                 } catch {
 
@@ -229,7 +224,7 @@
                 }
             },
             async onBack () {
-                await this.updateReportData()
+                await this.updateReportTriggerRecipientsData()
 
                 this.$emit('on-back')
             },
@@ -258,7 +253,7 @@
                 });
                 this.locale[typeOfMsg] = msg
             },
-            async updateReportData () {
+            async updateReportTriggerRecipientsData () {
                 const recipients = this.recipients.map(el => {
                     let newObject = {}
                     if (/^-?\d+$/.test(el)) {
@@ -278,16 +273,42 @@
                     ReportRecipient: recipients
                 }
 
-                await this.$store.dispatch('reportTrigger/updateReportData', data)
+                await this.$store.dispatch('reportTrigger/updateReportTriggerData', data)
+            },
+            async updateReportTriggerData () {
+                const data = cloneDeep(this.getReportTriggerData)
+
+                if (data.ReportTriggerCondition.length) {
+                    data.ReportTriggerCondition = data.ReportTriggerCondition
+                        .map(condition => {
+                            const filteredReportTriggerConditionFilter = condition.ReportTriggerConditionFilter.filter(el => el.WidgetID)
+
+                            return filteredReportTriggerConditionFilter.length ? condition : {}
+                        })
+                } else {
+                    data.ReportTriggerCondition = [{}]
+                }
+
+                if ('TriggerTimeRange' in data.ScheduleData) {
+                    const timeRange = data.ScheduleData.TriggerTimeRange
+                    data.ScheduleData.TriggerTimeRange = {
+                        Start: timeRange[0],
+                        End: timeRange[1]
+                    }
+                }
+                if ('TriggerDayOfWeek' in data.ScheduleData) {
+                    data.ScheduleData.TriggerDayOfWeek.sort((a, b) => a - b)
+                }
+                return data
             }
         },
         mounted () {
-            if (this.getReportData.ReportRecipient) {
-                this.recipients = this.getReportData.ReportRecipient.map(el => el.Email || el.RecipientID)
+            if (this.getReportTriggerData.ReportRecipient) {
+                this.recipients = this.getReportTriggerData.ReportRecipient.map(el => el.Email || el.RecipientID)
             }
-            if (this.getReportData.EmailSubject && this.getReportData.EmailBody) {
-                this.model.subject = this.getReportData.EmailSubject
-                this.model.text = this.getReportData.EmailBody
+            if (this.getReportTriggerData.EmailSubject && this.getReportTriggerData.EmailBody) {
+                this.model.subject = this.getReportTriggerData.EmailSubject
+                this.model.text = this.getReportTriggerData.EmailBody
             } else {
                 this.model.subject = this.$t('report.trigger.email.subject')
                 this.model.text = this.$t('report.trigger.email.body')

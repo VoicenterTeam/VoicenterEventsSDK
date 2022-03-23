@@ -7,13 +7,23 @@
                 <span class="px-2 my-auto">
                     {{ triggerSchedule }}
                 </span>
-                <base-button type="primary" size="xs" class="min-w-36" outline @click="onSendNow">
+                <base-button v-if="showBtnSendNow" type="primary" size="xs" class="min-w-36" outline @click="onSendNow">
                     <i class="vc-icon-skip-arrow icon-md mx-2"/>
                     {{ $t('report.schedules.sendNow') }}
                 </base-button>
             </div>
+            <span v-if="actionsWithSchedule" class="flex">
+                <schedule-form
+                    icon="vc-icon-edit-pencil"
+                    :reportId="null"
+                    :data="getReportData"
+                    :dataToEdit="dataToEdit"
+                    :title="$t('widget.editSchedule')"
+                />
+                <i class="vc-icon-recycle-bin text-red-600 cursor-pointer" @click="deleteSchedule" />
+            </span>
         </div>
-        <div class="flex w-full mb-4">
+        <div class="flex w-full mb-4" v-if="get(data, 'ReportTriggerCondition', []).length">
             <div class="inline-flex pr-2">
                 <i class="vc-icon-filter icon-lg mr-2 text-primary"/>
                 <span>{{ $t('widget.conditions') }}:</span>
@@ -61,6 +71,7 @@
 import {Card} from 'element-ui'
 import get from 'lodash/get'
 import Mustache from 'mustache'
+import cloneDeep from 'lodash/cloneDeep'
 import moment from 'moment'
 
 import RecItem from "@/modules/reports/components/RecItem";
@@ -90,10 +101,23 @@ export default {
         RecItem,
         DelimitedList,
         Tag,
+        ScheduleForm: () => import('@/modules/reports/components/schedule/ScheduleForm.vue')
     },
     props: {
         data: {
             type: Object
+        },
+        showBtnSendNow: {
+            type: Boolean,
+            default: false
+        },
+        actionsWithSchedule: {
+            type: Boolean,
+            default: false
+        },
+        index: {
+            type: Number,
+            default: null
         }
     },
     data() {
@@ -118,6 +142,9 @@ export default {
             } else if (item.ReportRecipientTypeID === 3) {
                 return item.Email
             }
+        },
+        deleteSchedule () {
+            this.$store.dispatch('report/deleteReportTriggerItem', this.index)
         }
     },
     computed: {
@@ -204,22 +231,37 @@ export default {
                     conditionsToRender += `<span> ${this.$t('report.condition.operator.orIf')} (`
                 }
 
-                for (let i = 1; i <= el.ReportTriggerConditionFilter.length; i++) {
-                    const condition = el.ReportTriggerConditionFilter[i - 1]
-                    const column = condition.ConditionFilterColumnName
-                    const operator = condition.ConditionFilterOperatorSymbol
-                    const value = condition.ConditionFilterValue
+                if (el.ReportTriggerConditionFilter && el.ReportTriggerConditionFilter.length) {
+                    for(let i = 1; i <= el.ReportTriggerConditionFilter.length; i++) {
+                        const condition = el.ReportTriggerConditionFilter[i - 1]
+                        const column = condition.ConditionFilterColumnName
+                        const operator = condition.ConditionFilterOperatorSymbol
+                        const value = condition.ConditionFilterValue
 
-                    if (i > 1) {
-                        conditionsToRender += Mustache.render(templateAnd, {column, operator, value});
-                    } else {
-                        conditionsToRender += Mustache.render(template, {column, operator, value});
+                        if (i > 1) {
+                            conditionsToRender += Mustache.render(templateAnd, {column, operator, value});
+                        } else {
+                            conditionsToRender += Mustache.render(template, {column, operator, value});
+                        }
                     }
                 }
                 conditionsToRender += ')</span>'
             })
             conditionsToRender += '</div>'
             return conditionsToRender
+        },
+        getReportData () {
+            return this.$store.getters['report/getReportData']
+        },
+        dataToEdit () {
+            const reportTriggerData = cloneDeep(this.getReportData.ReportTriggerList[this.index])
+            if ('TriggerTimeRange' in reportTriggerData.ScheduleData) {
+                reportTriggerData.ScheduleData.TriggerTimeRange = Object.values(reportTriggerData.ScheduleData.TriggerTimeRange)
+            }
+            return {
+                reportTriggerData: reportTriggerData,
+                indexToEdit: this.index
+            }
         }
     }
 }

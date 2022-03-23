@@ -1,6 +1,6 @@
 <template>
     <div class="content-wrapper leading-5 text-sm font-normal text-gray-950">
-        <Conditions :reportItemData="reportItemData" :reportData="getReportDataByStep" />
+        <Conditions :reportItemData="reportItemData" :reportTriggerData="getReportTriggerDataByStep" />
         <portal to="next-button">
             <div class="flex">
                 <div
@@ -56,18 +56,18 @@
             reportTriggerTypeList() {
                 return this.$store.getters['reportTrigger/getConfData'].ReportTriggerTypeList
             },
-            getReportDataByStep () {
-                return this.$store.getters['reportTrigger/getReportDataByStep']('ReportTriggerCondition')
+            getReportTriggerDataByStep () {
+                return this.$store.getters['reportTrigger/getReportTriggerDataByStep']('ReportTriggerCondition')
             },
-            getReportData () {
-                return this.$store.getters['reportTrigger/getReportData']
+            getReportTriggerData () {
+                return this.$store.getters['reportTrigger/getReportTriggerData']
             }
         },
         methods: {
             goNext() {
                 this.clickedOnNextBtn = true
                 const isConditionGroupsFieldsNotEmpty = () => {
-                    return this.getReportData.ReportTriggerCondition.map(field => {
+                    return this.getReportTriggerData.ReportTriggerCondition.map(field => {
                         return field.ReportTriggerConditionFilter.every(el => {
                             if (this.checkIfValueIsEmpty(el.WidgetID)) {
                                 return true
