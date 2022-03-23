@@ -1,9 +1,9 @@
 <template>
-    <div class="h-full w-full">
+    <div class="h-full w-full create-report">
         <div class="h-full flex items-center flex-wrap step-first">
             <div class="field">
                 <div class="mb-2 flex items-center">
-                    <i class="vc-icon-name mr-2 text-primary" /> {{ $t('report.name') }}
+                    <i class="vc-icon-name label-icon text-primary" /> {{ $t('report.name') }}
                 </div>
                 <el-input :placeholder="$t('report.name')" v-model="report.ReportName"></el-input>
                 <div class="el-form-item__error" v-show="clickedOnNextBtn && checkIfValueIsEmpty(report.ReportName)">
@@ -12,7 +12,7 @@
             </div>
             <div class="field">
                 <div class="mb-2 flex items-center">
-                    <i class="vc-icon-real-time mr-2 text-primary" /> {{ $t('report.status') }}
+                    <i class="vc-icon-real-time label-icon text-primary" /> {{ $t('report.status') }}
                 </div>
                 <div class="h-10 flex items-center">
                     <el-switch
@@ -79,8 +79,14 @@ export default {
 .field {
     @apply relative;
 }
-.field:not(:last-child) {
+
+[dir="ltr"] .field {
     @apply mr-8;
+}
+[dir="rtl"] .field {
+    @apply ml-8;
+}
+.field:not(:last-child) {
     max-width: 392px;
     width: 100%;
 }
@@ -90,5 +96,20 @@ export default {
 }
 ::v-deep .el-switch__label.is-active {
     @apply text-primary;
+}
+[dir="rtl"] .label-icon {
+    @apply ml-2;
+}
+[dir="ltr"] .label-icon  {
+    @apply mr-2;
+}
+</style>
+
+<style lang="scss">
+[dir="rtl"] .create-report .el-switch__label {
+    @apply mr-2;
+}
+[dir="ltr"] .create-report .el-switch__label {
+    @apply ml-2;
 }
 </style>

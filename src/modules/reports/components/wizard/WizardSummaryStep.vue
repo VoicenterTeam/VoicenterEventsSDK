@@ -141,13 +141,18 @@
 
     .summary-step-progress-circle-icon {
         @apply absolute;
-        right: calc(100% + 15px);
 
         svg {
             path {
                 transition: fill .3s ease-out;
             }
         }
+    }
+    [dir="ltr"] .summary-step-progress-circle-icon {
+        right: calc(100% + 15px);
+    }
+    [dir="rtl"] .summary-step-progress-circle-icon {
+        left: calc(100% + 15px);
     }
 
     .summary-step-progress-line {
@@ -165,10 +170,15 @@
             transition: .3s ease-out;
         }
     }
+    [dir="ltr"] .summary-step-content {
+        @apply ml-4;
+    }
+    [dir="rtl"] .summary-step-content {
+        @apply mr-4;
+    }
 
     .summary-step-content {
         @apply w-full text-left flex-grow whitespace-normal;
-        padding-left: 15px;
         margin-bottom: 50px;
 
         .summary-step-content-header, .summary-step-content-header > h2 {

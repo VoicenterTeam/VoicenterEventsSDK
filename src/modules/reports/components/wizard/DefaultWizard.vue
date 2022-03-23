@@ -25,7 +25,7 @@
                             v-if="onFirstStep"
                         >
                             <div class="flex items-center">
-                                <IconDiscard class="mx-1"/>
+                                <IconDiscard class="button-icon"/>
                                 <span class="mx-1 text-base font-bold">{{ $t('common.cancel') }}</span>
                             </div>
                         </base-button>
@@ -36,7 +36,7 @@
                             v-if="!onFirstStep && showPreviousButton"
                         >
                             <div class="flex items-center">
-                                <i class="vc-icon-back icon-base mx-1" />
+                                <i class="vc-icon-back icon-base button-icon" />
                                 <span class="mx-1 text-base font-bold">{{ $t('general.back') }}</span>
                             </div>
                         </base-button>
@@ -50,7 +50,7 @@
                                 type="primary"
                             >
                                 {{ $t('general.next') }}
-                                <i class="vc-icon-next icon-base ml-2"/>
+                                <i class="vc-icon-next icon-base button-icon"/>
                             </base-button>
                             <base-button
                                 v-if="onLastStep"
@@ -61,7 +61,7 @@
                                 type="primary"
                             >
                                 <!-- TODO: need to change :disabled="disableFinishButton" -->
-                                <IconSave class="mx-1"/>
+                                <IconSave class="button-icon"/>
                                 {{ $t('general.finish') }}
                             </base-button>
                         </div>
@@ -225,5 +225,11 @@
     }
 .shadow-card {
     @apply mb-3 mr-3 shadow-base;
+}
+[dir="rtl"] .button-icon {
+    @apply mr-2;
+}
+[dir="ltr"] .button-icon {
+    @apply mr-2;
 }
 </style>
