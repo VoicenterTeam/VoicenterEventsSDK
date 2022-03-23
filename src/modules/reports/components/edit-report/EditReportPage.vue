@@ -56,23 +56,16 @@
                 </div>
                 <div class="report-edit-fields-item">
                     <div class="report-label">
-                        <i class="vc-icon-settings mr-2 text-primary" />{{ $t('report.name') }}
+                        <i class="vc-icon-real-time mr-2 text-primary" /> {{ $t('report.status') }}
                     </div>
-                    <el-input
-                        v-model="report.ReportName"
-                        :placeholder="$t('report.name')"
-                        type="text"
-                    />
-                </div>
-                <div class="report-edit-fields-item">
-                    <div class="report-label">
-                        <i class="vc-icon-settings mr-2 text-primary" />{{ $t('report.name') }}
+                    <div class="flex items-center h-10">
+                        <el-switch
+                            v-model="report.ReportStatusID"
+                            :active-text="report.ReportStatusID ? $t('report.wizard.enabled') : $t('report.switch.disable')"
+                            inactive-text=""
+                            :active-value="1"
+                            :inactive-value="0" />
                     </div>
-                    <el-input
-                        v-model="report.ReportName"
-                        :placeholder="$t('report.name')"
-                        type="text"
-                    />
                 </div>
             </div>
             <div class="report-edit-tabs">
@@ -165,6 +158,12 @@ export default {
         'report.ReportName' (val) {
             const data = {
                 ReportName: val
+            }
+            this.$store.dispatch('report/updateReportData', data)
+        },
+        'report.ReportStatusID' (val) {
+            const data = {
+                ReportStatusID: val
             }
             this.$store.dispatch('report/updateReportData', data)
         }

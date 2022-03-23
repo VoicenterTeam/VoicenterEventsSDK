@@ -18,7 +18,9 @@
                     <el-switch
                         v-model="report.ReportStatusID"
                         :active-text="report.ReportStatusID ? $t('report.wizard.enabled') : $t('report.switch.disable')"
-                        inactive-text="" />
+                        inactive-text=""
+                        :active-value="1"
+                        :inactive-value="0" />
                 </div>
             </div>
         </div>
