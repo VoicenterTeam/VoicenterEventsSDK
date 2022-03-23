@@ -67,7 +67,7 @@
         },
         computed: {
             getReportScheduleData () {
-                return this.$store.getters['reportTrigger/getReportData'].ScheduleData
+                return this.$store.getters['reportTrigger/getReportTriggerData'].ScheduleData
             },
             isNotValidField () {
                 return this.isClickedOnNextBtn && !this.model
@@ -90,7 +90,7 @@
 </script>
 <style lang="scss" scoped>
 .account-select-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .account-select-label {
     @apply ml-3;

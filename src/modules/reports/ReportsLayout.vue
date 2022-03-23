@@ -8,21 +8,28 @@
             @on-remove-tab="removeTab">
             <template v-slot:list>
                 <reports-list
+                    ref="reports-list"
                     v-show="listTabName === activeTab"
                     @on-create-report="openCreateReportTab"
-                    @on-edit-row="onEditRow"/>
+                    @on-edit-row="onEditRow"
+                />
             </template>
-            <template v-for="(tab, index) in editableTabs"
-                      v-slot:[tab.name]="{data}">
+            <template
+                v-for="(tab, index) in editableTabs"
+                v-slot:[tab.name]="{data}"
+            >
                 <report-edit
                     :key="index"
                     v-show="tab.name === activeTab"
                     :data="tab.data"
                     :report-id="tab.name"
-                    @update-title="onUpdateTitle"/>
+                    @update-title="onUpdateTitle"
+                    @on-close-create-report-tab="onCloseCreateReportTab"
+                    @on-reload-data-reports-list="onReloadDataReportsList"
+                />
             </template>
             <template v-slot:create>
-                <report-create v-show="createTabName === activeTab"/>
+                <report-create v-show="createTabName === activeTab" @on-close-create-report-tab="onCloseCreateReportTab" />
             </template>
         </report-tabs>
     </div>
@@ -132,6 +139,13 @@ export default {
             this.$nextTick(() => {
                 this.activeTab = tabName
             })
+        },
+        onCloseCreateReportTab () {
+            this.removeTab(this.activeTab)
+        },
+        onReloadDataReportsList () {
+            this.removeTab(this.activeTab)
+            this.$refs['reports-list'].reloadData()
         }
     },
     watch: {
@@ -163,6 +177,16 @@ export default {
     async mounted () {
         const confData = await reportApi.getReportConfData()
         this.$store.dispatch('reportTrigger/setConfData', confData)
+        document.body.classList.add('bg-gray-200')
+    },
+    beforeDestroy () {
+        document.body.classList.remove('bg-gray-200')
     }
 }
 </script>
+
+<style lang="scss" scoped>
+::v-deep html {
+    background: red !important;
+}
+</style>

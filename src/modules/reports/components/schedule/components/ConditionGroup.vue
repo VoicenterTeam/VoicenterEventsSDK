@@ -50,7 +50,7 @@
                 </ConditionCard>
             </div>
         </div>
-        <div class="h-px relative bg-gray-550 ml-6 my-6 font-semibold" v-if="amountOfReportDataLength - 1 !== index">
+        <div class="h-px relative bg-gray-550 ml-6 my-6 font-semibold" v-if="amountOfReportTriggerDataLength - 1 !== index">
             <div class="absolute uppercase bg-white -mt-4-5 ml-20 p-2">
                 {{ $t('general.or') }}
             </div>
@@ -78,7 +78,7 @@
                 type: Number,
                 default: null
             },
-            amountOfReportDataLength: {
+            amountOfReportTriggerDataLength: {
                 type: Number,
                 default: null
             },

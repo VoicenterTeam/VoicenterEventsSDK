@@ -2,11 +2,11 @@
     <div class="content-wrapper leading-5 text-sm font-normal text-gray-950">
         <div class="w-60 mb-5 flex flex-col items-start">
             <div class="report-label">
-                {{ $t('report.name') }}
+                {{ $t('report.schedule.name') }}
             </div>
             <el-input
                 v-model="model.ReportTriggerName"
-                :placeholder="$t('report.name')"
+                :placeholder="$t('report.schedule.name')"
                 type="text"
             />
         </div>
@@ -107,14 +107,17 @@
                 const reportTriggerParameters = this.reportTriggerTypeList.find(el => el.ReportTriggerTypeID === this.model.ReportTriggerTypeID).ReportTriggerParameters
                 return reportTriggerParameters.sort((a, b) => a.ParameterOrder - b.ParameterOrder)
             },
+            getReportTriggerData () {
+                return this.$store.getters['reportTrigger/getReportTriggerData']
+            },
             getReportData () {
-                return this.$store.getters['reportTrigger/getReportData']
+                return this.$store.getters['report/getReportData']
             }
         },
         methods: {
             async onChangeFrequency (val) {
                 const copyOfModel = JSON.parse(JSON.stringify(this.model))
-                await this.$store.dispatch('reportTrigger/updateReportDataScheduleSettings', {})
+                await this.$store.dispatch('reportTrigger/updateReportTriggerDataScheduleSettings', {})
                 this.model = {
                     ReportTriggerTypeID: null,
                     ReportTriggerName: null
@@ -152,11 +155,11 @@
                     ReportID: Number(this.$route.params.id) || this.reportId
                 }
 
-                this.$store.dispatch('reportTrigger/updateReportData', data)
+                this.$store.dispatch('reportTrigger/updateReportTriggerData', data)
                 delete this.model.ReportTriggerName
                 delete this.model.ReportTriggerTypeID
 
-                this.$store.dispatch('reportTrigger/updateReportDataScheduleSettings', this.model)
+                this.$store.dispatch('reportTrigger/updateReportTriggerDataScheduleSettings', this.model)
                 this.$emit('on-update', objToEmit)
             },
             getComponentName (component) {
@@ -178,13 +181,14 @@
         },
         mounted () {
             this.model = {
-                ReportTriggerTypeID: this.getReportData.ReportTriggerTypeID,
-                ReportTriggerName: this.getReportData.ReportTriggerName ? this.getReportData.ReportTriggerName : this.$t('report.name')
+                ReportTriggerTypeID: this.getReportTriggerData.ReportTriggerTypeID,
+                ReportTriggerName: this.getReportTriggerData.ReportTriggerName ? this.getReportTriggerData.ReportTriggerName : this.$t('report.schedule.name')
             }
-            if (this.getReportData.ScheduleData && Object.keys(this.getReportData.ScheduleData).length) {
-                Object.assign(this.model, this.getReportData.ScheduleData)
+
+            if (this.getReportTriggerData.ScheduleData && Object.keys(this.getReportTriggerData.ScheduleData).length) {
+                Object.assign(this.model, this.getReportTriggerData.ScheduleData)
             }
-            if (this.reportTriggerTypeList && !Object.keys(this.getReportData.ScheduleData).length) {
+            if (this.reportTriggerTypeList && !Object.keys(this.getReportTriggerData.ScheduleData).length) {
                 this.model.ReportTriggerTypeID = this.reportTriggerTypeList[0].ReportTriggerTypeID
             }
         }

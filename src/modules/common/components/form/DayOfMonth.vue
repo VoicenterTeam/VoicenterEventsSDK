@@ -68,7 +68,7 @@
         },
         computed: {
             getReportScheduleData () {
-                return this.$store.getters['reportTrigger/getReportData'].ScheduleData
+                return this.$store.getters['reportTrigger/getReportTriggerData'].ScheduleData
             },
             isNotValidField () {
                 return this.isClickedOnNextBtn && !this.model
@@ -88,7 +88,7 @@
 </script>
 <style lang="scss" scoped>
 .day-of-month-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .day-of-month-label {
     @apply ml-3;

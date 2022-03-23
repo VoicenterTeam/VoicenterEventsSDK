@@ -16,7 +16,9 @@
                             :trigger-name="trigger.ReportTriggerName"
                             :key="index"
                             :conditions="trigger.ReportTriggerCondition"
-                            :recipients="trigger.ReportRecipient">
+                            :recipients="trigger.ReportRecipient"
+                            showBtnSendNow
+                        >
                         </schedule-card>
                     </div>
                 </div>
@@ -58,11 +60,11 @@
                     <span class="quick-add-button">
                             <span class="mx-2">
 <!--                                TODO: Implement Add Wizard button and modal-->
-                                <ScheduleForm
+                                <schedule-form
                                     buttonLabel="Add Widget"
                                     icon="vc-icon-plus-linear"
                                     :reportId="row.ReportID"
-                                    @addedSchedule="addedSchedule"
+                                    @addedSchedule="reloadData"
                                     :data="row"
                                 />
                             </span>
@@ -96,12 +98,13 @@
                 <template v-else>
                         <span class="quick-add-button">
                             <span class="mx-2">
-                                <ScheduleForm
+                                <schedule-form
                                     :buttonLabel="$t('widget.addSchedule')"
                                     icon="vc-icon-plus-linear"
                                     :reportId="row.ReportID"
-                                    @addedSchedule="addedSchedule"
+                                    @addedSchedule="reloadData"
                                     :data="row"
+                                    :title="$t('widget.addSchedule')"
                                 />
                             </span>
                         </span>
@@ -401,7 +404,7 @@ export default {
                 await this.$store.dispatch('dashboards/setContentLoading', false)
             }
         },
-        async addedSchedule () {
+        async reloadData () {
             this.tableData = await this.loadData()
         }
     },
