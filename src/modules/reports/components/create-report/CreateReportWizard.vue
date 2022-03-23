@@ -5,7 +5,6 @@
         ref="wizard"
         :data-loading="loading || validationLoading"
         data-test-name="account-add"
-        :model="model"
         @finish="onFinish"
         @on-cancel="onCancel"
     >
