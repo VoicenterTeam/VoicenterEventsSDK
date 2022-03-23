@@ -291,6 +291,13 @@ export default {
 [dir="ltr"] .label-icon  {
     @apply mr-2;
 }
+::v-deep .el-switch__label.is-active {
+    @apply text-primary;
+}
+::v-deep .el-switch.is-checked .el-switch__core {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+}
 </style>
 
 <style lang="scss">
