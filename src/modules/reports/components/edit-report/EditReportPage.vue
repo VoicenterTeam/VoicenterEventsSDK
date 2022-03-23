@@ -43,7 +43,7 @@
             <div class="report-edit-fields">
                 <div class="report-edit-fields-item">
                     <div class="report-label">
-                        <i class="vc-icon-settings mr-2 text-primary" />{{ $t('report.name') }}<span class="require-icon">*</span>
+                        <i class="vc-icon-settings label-icon text-primary" />{{ $t('report.name') }}<span class="require-icon">*</span>
                     </div>
                     <el-input
                         v-model="report.ReportName"
@@ -56,7 +56,7 @@
                 </div>
                 <div class="report-edit-fields-item">
                     <div class="report-label">
-                        <i class="vc-icon-real-time mr-2 text-primary" /> {{ $t('report.status') }}
+                        <i class="vc-icon-real-time label-icon text-primary" /> {{ $t('report.status') }}
                     </div>
                     <div class="flex items-center h-10">
                         <el-switch
@@ -248,8 +248,11 @@ export default {
         &--title {
             @apply text-gray-950 text-2xl;
         }
-        &--button:not(:last-child) {
+        [dir="ltr"] &--button:not(:last-child){
             @apply mr-8;
+        }
+        [dir="rtl"] &--button:not(:last-child) {
+            @apply ml-8;
         }
         &--button-delete {
             @apply h-10 w-10;
@@ -265,15 +268,36 @@ export default {
             width: 100%;
             @apply mb-2 relative;
         }
-        &-item:not(:last-child) {
+        [dir="ltr"] &-item:not(:last-child) {
             @apply mr-8;
+        }
+        [dir="rtl"] &-item:not(:last-child) {
+            @apply ml-8;
         }
     }
 }
-.require-icon {
+[dir="rtl"] .require-icon {
+    @apply text-primary mr-2;
+}
+[dir="ltr"] .require-icon  {
     @apply text-primary ml-2;
 }
 .el-form-item__error {
     @apply pt-2;
+}
+[dir="rtl"] .label-icon {
+    @apply ml-2;
+}
+[dir="ltr"] .label-icon  {
+    @apply mr-2;
+}
+</style>
+
+<style lang="scss">
+[dir="rtl"] .report-edit .el-switch__label {
+    @apply mr-2;
+}
+[dir="ltr"] .report-edit .el-switch__label {
+    @apply ml-2;
 }
 </style>
