@@ -21,13 +21,10 @@
             <schedule-card
                 class="schedule-card-item"
                 v-for="(trigger, index) in getReportData.ReportTriggerList"
-                :trigger-name="trigger.ReportTriggerName"
-                :trigger-id="trigger.ReportTriggerID"
                 :key="index"
-                :conditions="trigger.ReportTriggerCondition"
-                :recipients="trigger.ReportRecipient"
                 actionsWithSchedule
                 :index="index"
+                :data="trigger"
             />
         </div>
     </div>
