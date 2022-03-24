@@ -89,7 +89,7 @@
     const EXCEPTIONS = [
         widgetDataTypes.COUNTER_TYPE_ID,
         widgetDataTypes.HISTORY_COUNTERS,
-        widgetDataTypes.INFO_TYPE_ID,
+        // widgetDataTypes.INFO_TYPE_ID,
         widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
         widgetDataTypes.TOTAL_OUTGOING_CALLS,
         widgetDataTypes.AVERAGE_CALLS_DURATION,
@@ -121,7 +121,8 @@
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
             TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog"),
-            SocketsRealTimeTable: () => import('./Data/Table/SocketsRealTimeTable')
+            SocketsRealTimeTable: () => import('./Data/Table/SocketsRealTimeTable'),
+            SocketsRealTimeFunnel: () => import('@/components/Charts/FunnelChart.vue')
         },
         props: {
             editable: {
@@ -162,6 +163,7 @@
             showDeleteButton() {
 
                 let dataType = getWidgetDataType(this.widget)
+                console.log(this.widget, 'q')
                 return !EXCEPTIONS.includes(dataType)
             },
             getDialogComponent() {
@@ -223,6 +225,7 @@
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
+                console.log(componentType, 'componentType', dataTypeId)
 
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)

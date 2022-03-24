@@ -14,7 +14,7 @@ export default {
     [widgetDataTypes.QUEUE_COUNTER_TYPE_ID]: 'QueueCards',
     [widgetDataTypes.QUEUE_ACTIVE_CALL]: 'QueueActiveCall',
     [widgetDataTypes.EXTERNAL_DATA_TYPE_ID]: 'ExternalDataWidget',
-    [widgetDataTypes.INFO_TYPE_ID]: 'CounterCard',
+    // [widgetDataTypes.INFO_TYPE_ID]: 'CounterCard',
     [widgetDataTypes.PIE_TYPE_ID]: 'PieChart',
     [widgetDataTypes.RICH_TEXT_EDITOR_ID]: 'HtmlWidget',
     [widgetDataTypes.TOTAL_OUTGOING_CALLS]: 'TotalOutgoingCall',
@@ -23,4 +23,5 @@ export default {
     [widgetDataTypes.AVERAGE_CALLS_DURATION]: 'AverageCallDuration',
     [widgetDataTypes.FUNNEL_3D_TYPE_ID]: 'Funnel3DChart',
     [widgetDataTypes.DIALERS_TYPE_ID]: 'SocketsRealTimeTable',
+    [widgetDataTypes.INFO_TYPE_ID]: 'SocketsRealTimeFunnel',
 }

@@ -1,5 +1,7 @@
 <template>
     <div>
+        <!-- {{ availableColumns}} -->
+        <!-- {{ widget }} -->
         <data-table
             :widget="data"
             :border="border"
