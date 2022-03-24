@@ -13,12 +13,9 @@
                     <div class="grid grid-cols-2 gap-4">
                         <schedule-card
                             v-for="(trigger, index) in row.ReportTriggerList"
-                            :trigger-name="trigger.ReportTriggerName"
-                            :key="index"
-                            :conditions="trigger.ReportTriggerCondition"
-                            :recipients="trigger.ReportRecipient"
+                            :data="trigger"
                             showBtnSendNow
-                        >
+                            :key="index">
                         </schedule-card>
                     </div>
                 </div>

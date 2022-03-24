@@ -49,6 +49,15 @@ const getters = {
             }
         })
     },
+    usersList: state => {
+        const users = get(state, 'entitiesList.Users', [])
+        return users.map(user => {
+            return {
+                name: user.user_name,
+                ID: user.user_id
+            }
+        })
+    },
     accountStatuses: state => {
         const accountID = state.selectedAccountID
         const accounts = get(state, 'entitiesList.Accounts', [])
