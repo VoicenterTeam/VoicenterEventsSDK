@@ -28,19 +28,29 @@
                     v-on="$listeners"
                     :widgetGroup="widgetGroup"
                     :widgetGroups="widgetGroups"
-                    :submit-disabled="invalidData"
+                    :selectedWidgets="selectedWidgets"
                     :summary-actions="getSummaryActions"
-                    @reset-state="resetState"
                     @select-widget-group="selectWidgetGroup"
                     @select-widget="selectWidget"
                     @go-to-widget-groups="goToWidgetGroups"
+                    @add-all-widgets-from-group="addAllWidgetsFromGroup"
                 />
             </fade-transition>
             <template v-slot:footer>
-                <div class="border-t-2 border-gray-300 py-4 flex items-center justify-between"
-                     v-if="componentHasSummary">
-                    <div class="px-6">
+                <div class="border-t-2 border-gray-300 py-4 flex items-center justify-between">
+                    <div class="px-6"
+                         v-if="componentHasSummary">
                         <p class="text-xs leading-4 text-gray-900 font-bold mb-1">{{ getSummaryActions }}</p>
+                    </div>
+                    <div class="px-10">
+                        <el-button
+                            @click="submitWidgets"
+                            :disabled="submitDisabled"
+                            class="button-set-up-widgets font-bold"
+                            type="primary"
+                        >
+                            {{ $t('report.addWidgets') }}
+                        </el-button>
                     </div>
                 </div>
             </template>
@@ -48,15 +58,16 @@
         <ConfirmDialog
             :visible.sync="showConfirmDialog"
             top="18vh"
+            @on-close="onCancel"
         >
             <template v-slot:title>
                 <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('widget.removeChanges') }}
+                    {{ $t('report.addWidgetsTitle') }}
                 </h3>
             </template>
             <div class="flex justify-center w-full">
                 <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p px-3">
-                    {{ $t('widget.doYouWantToRemoveChangesAndGoToTheSettings') }}
+                    {{ $t('report.addWidgetsDesc') }}
                 </div>
             </div>
             <template v-slot:footer-actions>
@@ -114,10 +125,10 @@ export default {
             type: String,
             default: '1210px',
         },
-        // widgetGroup: {
-        //     type: Object,
-        //     default: () => ({}),
-        // },
+        widgets: {
+            type: Array,
+            default: () => []
+        },
         transitionDuration: 100,
         visible: {
             type: Boolean,
@@ -129,17 +140,19 @@ export default {
             showConfirmDialog: false,
             widgetGroups: [],
             widgetGroup: {},
-            widgets: [],
+            selectedWidgets: [],
             step: 'step0',
             steps: {
                 'step0': {
-                    component: 'WidgetGroups'
+                    component: 'WidgetGroups',
+                    hasSummary: true
                 },
                 'step1': {
                     component: 'WidgetGroupPreview',
                     hasSummary: true
                 }
-            }
+            },
+            submitDisabled: false
         }
     },
     computed: {
@@ -149,76 +162,33 @@ export default {
                 visible: this.visible
             }
         },
-        invalidData() {
-            return isEmpty(this.getSummary.summaryText)
-        },
         getComponentByStep() {
-            //return this.$store.getters['widgetCreation/getComponent']
             return this.steps[this.step].component
         },
         componentHasSummary() {
-            // return this.$store.getters['widgetCreation/componentHasSummary']
             return this.steps[this.step].hasSummary
         },
-        getQuantities() {
-            // return get(this.$store.getters['widgetCreation/getSummaries'], 'quantities')
-            const widgetList = get(this.widgetGroup, 'WidgetList', [])
-            return widgetList.filter(widget => widget.isChecked)
-        },
-        groupWidgetsCount() {
-            const group = this.widgetGroup
-            return get(group, 'WidgetList', []).length
-        },
-        afterAdding() {
-            const activeWidgets = this.groupWidgetsCount || 0
-            const newWidgetsCount = this.getQuantities ? sum(Object.values(this.getQuantities || 0)) : 0
-            if (newWidgetsCount > 0) {
-                return +newWidgetsCount + +activeWidgets
-            }
-            return +activeWidgets
-        },
         getSummaryActions() {
-            return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
-        },
-        getSummary() {
-           // return this.$store.getters['widgetCreation/getSummaries']
-            return {}
-        },
-        getSummaryTexts() {
-            return get(this.getSummary, 'summaryText')
+            const widgetsBefore = this.widgets.length
+            const widgetsAfter = this.selectedWidgets.length
+            return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${ widgetsBefore }, ${this.$t('widget.afterAdding')} - ${ widgetsAfter })`
         },
     },
     methods: {
         onCloseDialog() {
-            // this.$store.dispatch('widgetCreation/resetState')
-            // this.$store.dispatch('widgetCreation/resetCopyTemplate')
-            // this.$store.dispatch('widgetCreation/resetWidgets')
             this.$emit('update:visible', false)
+            this.resetDialog()
         },
-        addWidgetsToGroup(templates) {
-            const widgetTemplatesToAdd = templates.filter(template => template.toStore)
-            const objToEmit = {
-                widgets: widgetTemplatesToAdd,
-                group: this.widgetGroup,
-            }
-
-            this.$emit('add-widgets-to-group', objToEmit)
-
-            this.resetState()
-        },
-        resetState() {
-            // this.$store.dispatch('widgetCreation/resetState')
-            this.$emit('on-submit')
-        },
-        async onUpdateSummary(summaries) {
-            // await this.$store.dispatch('widgetCreation/updateSummaries', summaries)
+        resetDialog() {
+            this.selectedWidgets.splice(0, this.selectedWidgets.length)
         },
         onGoToSettings () {
             this.showConfirmDialog = true
         },
         async onConfirm () {
+            this.$emit('on-submit', this.selectedWidgets)
+            this.selectedWidgets.splice(0, this.selectedWidgets.length)
             this.showConfirmDialog = false
-            // await this.$store.dispatch('widgetCreation/goToSetupTemplates', false)
         },
         onCancel () {
             this.showConfirmDialog = false
@@ -235,7 +205,6 @@ export default {
         async getWidgetGroups() {
             try {
                 const currentAccount = 640 // this.$store.state.entities.selectedAccountID
-                console.log('currentAccount', currentAccount)
                 const {WidgetsGroupsList} = await WidgetGroupsApi.list({
                     AccountID: [currentAccount]
                 })
@@ -245,48 +214,47 @@ export default {
                 console.error(e)
             }
         },
-        selectWidget ({ widgetId, value }) {
-            console.log('selectWidget')
-            console.log('widgetId', widgetId)
-            console.log('value', value)
-            const widgetList = get(this.widgetGroup, 'WidgetList', [])
-            const widget = widgetList.find(widget => widget.WidgetID === widgetId)
-            this.$set(widget, 'isChecked', value)
+        selectWidget (widgetId, newSelectedStatus = null) {
+            const isSelected = newSelectedStatus === null ? this.selectedWidgets.includes(widgetId) : !newSelectedStatus
+
             // add widget to widgets array
-            if (value) {
-                this.addWidget(widget)
-                return
+            if (!isSelected) {
+                const widgetIndex = this.selectedWidgets.indexOf(widgetId)
+                if (widgetIndex === -1) {
+                    this.selectedWidgets.push(widgetId)
+                }
+            } else {
+                const widgetIndex = this.selectedWidgets.indexOf(widgetId)
+                this.selectedWidgets.splice(widgetIndex, 1)
             }
-            this.removeWidget(widget)
         },
-        addWidget (widget) {
-
-        },
-        removeWidget (widget) {
-
+        addAllWidgetsFromGroup (widgetGroupId) {
+            const group = this.widgetGroups.find(group => group.WidgetGroupID === widgetGroupId)
+            group.WidgetList.forEach(widget => {
+                this.selectWidget(widget.WidgetID, true)
+            })
         },
         goToWidgetGroups () {
-            this.step = "WidgetGroups"
+            const keys = Object.keys(this.steps)
+            const currentIndex = keys.indexOf(this.step)
+            this.step = keys[currentIndex > 0 ? currentIndex - 1 : 0]
+            this.widgetGroup = null
+        },
+        submitWidgets () {
+            this.showConfirmDialog = true
+        }
+    },
+    watch: {
+        widgets (newV) {
+            this.selectedWidgets = cloneDeep(newV)
         }
     },
     async beforeDestroy () {
-        this.resetState()
-        // await this.$store.dispatch('widgetCreation/resetState')
-        // await this.$store.dispatch('widgetCreation/resetCopyTemplate')
-        // await this.$store.dispatch('widgetCreation/resetWidgets')
-        // await this.$store.dispatch('widgetCreation/resetQuickCreatingWidget')
+        this.resetDialog()
     },
     created() {
         this.getWidgetGroups()
     },
-    mounted() {
-        this.$nextTick(() => {
-            document.getElementById('componentStep').getElementsByClassName('el-dialog__body')[0].scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            })
-        })
-    }
 }
 </script>
 

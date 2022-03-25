@@ -4,7 +4,7 @@
           <span class="text-primary redirect-action"
                 @click="goToWidgetGroups">
                 <IconDirLeft class="mx-2"/>
-                {{ $t('widget.allCategories') }}
+                {{ $t('general.back') }}
             </span>
         </portal>
         <portal to="form-title">
@@ -15,7 +15,7 @@
                 class="mr-2"
             >
                 <el-button
-                    @click="tryAddAllWidgetsFromCategory()"
+                    @click="addAllWidgetsFromWidgetGroup"
                     type="_primary"
                     class="button-add-all"
                 >
@@ -121,6 +121,10 @@ export default {
         submitDisabled: {
             type: Boolean,
             default: true
+        },
+        selectedWidgets: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
@@ -204,8 +208,8 @@ export default {
             // await this.$store.dispatch('widgetCreation/previewTemplate', objectToStore)
         },
         async goToWidgetGroups() {
-            await this.$emit('goToWidgetGroups')
-            // await this.$store.dispatch('widgetCreation/resetState')
+            console.log('click back')
+            await this.$emit('go-to-widget-groups')
             // await this.$store.dispatch('widgetCreation/resetCopyTemplate')
         },
         composeSummary() {
@@ -230,11 +234,12 @@ export default {
             this.summaries = cloneDeep(summaries.summaryText)
             // this.templates = cloneDeep(this.getTemplate) || {}
         },
-        tryAddAllWidgetsFromCategory() {
-            this.filteredWidgetList.forEach(el => {
-                this.manageWidgets(1, el)
-            })
+        addAllWidgetsFromWidgetGroup() {
+            // this.filteredWidgetList.forEach(el => {
+            //     this.manageWidgets(1, el)
+            // })
             //this.$emit('try-store-category', this.templateCategory)
+            this.$emit('add-all-widgets-from-group', this.widgetGroup.WidgetGroupID)
         },
         tryUpdateSummary() {
             const summaries = {
@@ -243,12 +248,24 @@ export default {
             }
             this.$emit('on-update-summary', summaries)
         },
+        handleCheckedWidgets (selectedWidgets = this.selectedWidgets) {
+            const widgetList = get(this.widgetGroup, 'WidgetList', [])
+            widgetList.forEach(widget => {
+                const isChecked = selectedWidgets.includes(widget.WidgetID)
+                console.log('widget.WidgetID', widget.WidgetID)
+                console.log('isChecked', isChecked)
+                this.$set(widget, 'isChecked', isChecked)
+            })
+            console.log('widgetList', widgetList)
+        }
     },
     mounted() {
-        this.fillProgress()
-        this.filteredWidgetList.forEach(widget => {
-            this.manageWidgets(1, widget)
-        })
+        console.log('WidgetGroupPreview mounted')
+        // this.fillProgress()
+        // this.filteredWidgetList.forEach(widget => {
+        //     this.manageWidgets(1, widget)
+        // })
+        this.handleCheckedWidgets()
     },
     watch: {
         quantities: {
@@ -256,6 +273,13 @@ export default {
             handler() {
                 this.tryUpdateSummary()
             }
+        },
+        'selectedWidgets': {
+            handler (newV) {
+                console.log('watch selectedWidgets')
+                this.handleCheckedWidgets(newV)
+            },
+            deep: true,
         }
     }
 }

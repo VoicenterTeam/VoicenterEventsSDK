@@ -87,6 +87,7 @@
 	"widget.timers": "Timers",
 	"widget.update": "Update widget",
 	"widget.widget": "Widget",
+    "widget.widgetAdd": "Widget Add",
 	"call.XferCalls": "Xfer calls",
 	"call.agentName": "Agent Name",
 	"call.date&time": "Date & time",
@@ -310,6 +311,11 @@
 	"report.addNewReport": "Add New Report",
 	"report.emailSubject": "Email Subject",
 	"report.reportStatus": "Report Status",
+	"report.addWidgets": "Add",
+    "report": {
+        "addWidgetsTitle": "Add widgets",
+        "addWidgetsDesc": "Do you want to add widgets?"
+    },
 	"settings.add.filter": "Add filter",
 	"settings.time.frame": "Time frame",
 	"tooltip.edit.styles": "Edit styles",

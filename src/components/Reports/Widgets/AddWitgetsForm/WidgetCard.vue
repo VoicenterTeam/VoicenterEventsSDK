@@ -60,11 +60,14 @@ export default {
         }
     },
     watch: {
+        'widget.isChecked' (newV) {
+            this.isChecked = newV
+        },
         isChecked(newV) {
             if(Object.keys(this.widget).includes('isChecked') && newV === get(this.widget, 'isChecked', false)) {
                 return
             }
-            this.$emit('select-widget', { widgetId: this.widget.WidgetID, value: newV })
+            this.$emit('select-widget', this.widget.WidgetID )
         }
     },
     computed: {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <portal to="form-title">
-            {{ $t('widget.allCategories') }}
+            {{ $t('widget.widgetAdd') }}
         </portal>
         <div class="search">
             <div class="w-full flex justify-center py-4">
@@ -51,22 +51,10 @@ export default {
             // run search functionality
         }
     },
-    computed: {
-        getWidgetGroups() {
-            return cloneDeep(this.$store.state.templatesCategory.all)
-        },
-    },
     methods: {
-        async resetState() {
-            // await this.$store.dispatch('widgetCreation/resetState')
-            this.$emit('reset-state')
-        },
         selectWidgetGroup(group) {
             this.$emit('select-widget-group', group)
         }
-    },
-    mounted() {
-        this.resetState()
     },
 }
 </script>

@@ -34,7 +34,6 @@
                 </div>
             </template>
         </base-navbar>
-      <div @click="openAddWidgetDialog">Open Add widget dialog</div>
         <AccountNoData v-if="accountNoData"/>
         <div class="dashboard"
              v-else
@@ -107,9 +106,6 @@
             @on-cancel="showConfirmDialog = false"
             @on-confirm="removeWidgetGroup"
         />
-      <add-widgets-dialog
-          :visible.sync="showAddWidgetsDialog"
-      />
     </div>
 </template>
 
@@ -128,8 +124,6 @@
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
     import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
 
-    import AddWidgetsDialog from '@/components/Reports/Widgets/AddWidgetsDialog'
-
     export default {
         components: {
             AccountNoData: () => import('@/views/AccountNoData'),
@@ -142,7 +136,6 @@
             SocketStatusButton: () => import('@/components/Common/SocketStatusButton'),
             SocketStatusAlert: () => import('@/components/Common/SocketStatusAlert'),
             DeleteDialog: () => import('@/components/Dialogs/DeleteDialog'),
-            AddWidgetsDialog,
         },
         mixins: [removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
         props: {
@@ -172,8 +165,6 @@
                 storingData: false,
                 onFullScreen: false,
                 showSidebar: true,
-
-              showAddWidgetsDialog: false
             }
         },
         computed: {
@@ -306,10 +297,6 @@
                 let dashboard = cloneDeep(this.$store.getters['dashboards/getActiveDashboard'])
                 this.sortDashboardEntities(dashboard)
             },
-
-          openAddWidgetDialog() {
-              this.showAddWidgetsDialog = true
-          }
         },
         created() {
             window.grids = []
