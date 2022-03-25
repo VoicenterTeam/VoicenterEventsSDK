@@ -66,7 +66,7 @@ export default {
     },
     computed: {
         getReportScheduleData () {
-            return this.$store.getters['reportTrigger/getReportData'].ScheduleData
+            return this.$store.getters['reportTrigger/getReportTriggerData'].ScheduleData
         },
         isNotValidField () {
             return this.isClickedOnNextBtn && !this.model
@@ -86,7 +86,7 @@ export default {
 
 <style lang="scss" scoped>
 .input-text-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .input-text-label {
     @apply ml-3;

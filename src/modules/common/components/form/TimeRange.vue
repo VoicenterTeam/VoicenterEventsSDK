@@ -61,7 +61,7 @@
         },
         computed: {
             getReportScheduleData () {
-                return this.$store.getters['reportTrigger/getReportData'].ScheduleData
+                return this.$store.getters['reportTrigger/getReportTriggerData'].ScheduleData
             },
             isNotValidField () {
                 return this.isClickedOnNextBtn && !this.model
@@ -91,7 +91,7 @@
     @apply border-primary
 }
 .time-picker-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .time-picker-label {
     @apply ml-3;

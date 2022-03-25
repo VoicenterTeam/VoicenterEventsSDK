@@ -13,10 +13,9 @@
                     <div class="grid grid-cols-2 gap-4">
                         <schedule-card
                             v-for="(trigger, index) in row.ReportTriggerList"
-                            :trigger-name="trigger.ReportTriggerName"
-                            :key="index"
-                            :conditions="trigger.ReportTriggerCondition"
-                            :recipients="trigger.ReportRecipient">
+                            :data="trigger"
+                            showBtnSendNow
+                            :key="index">
                         </schedule-card>
                     </div>
                 </div>
@@ -58,11 +57,11 @@
                     <span class="quick-add-button">
                             <span class="mx-2">
 <!--                                TODO: Implement Add Wizard button and modal-->
-                                <ScheduleForm
+                                <schedule-form
                                     buttonLabel="Add Widget"
                                     icon="vc-icon-plus-linear"
                                     :reportId="row.ReportID"
-                                    @addedSchedule="addedSchedule"
+                                    @addedSchedule="reloadData"
                                     :data="row"
                                 />
                             </span>
@@ -96,12 +95,13 @@
                 <template v-else>
                         <span class="quick-add-button">
                             <span class="mx-2">
-                                <ScheduleForm
+                                <schedule-form
                                     :buttonLabel="$t('widget.addSchedule')"
                                     icon="vc-icon-plus-linear"
                                     :reportId="row.ReportID"
-                                    @addedSchedule="addedSchedule"
+                                    @addedSchedule="reloadData"
                                     :data="row"
+                                    :title="$t('widget.addSchedule')"
                                 />
                             </span>
                         </span>
@@ -401,7 +401,7 @@ export default {
                 await this.$store.dispatch('dashboards/setContentLoading', false)
             }
         },
-        async addedSchedule () {
+        async reloadData () {
             this.tableData = await this.loadData()
         }
     },

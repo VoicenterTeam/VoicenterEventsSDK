@@ -79,7 +79,7 @@ export default {
 
 <style scoped lang="scss">
 .pagination_wrapper {
-    @apply p-4 rounded-b-1xl;
+    @apply p-4 rounded-b-1xl bg-white;
     border: 1px solid var(--gray-300);//#EBEEF5; //var(--gray-400);
     border-top: 0;
 }

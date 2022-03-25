@@ -56,7 +56,7 @@ export default {
     },
     computed: {
         getReportScheduleData () {
-            return this.$store.getters['reportTrigger/getReportData'].ScheduleData
+            return this.$store.getters['reportTrigger/getReportTriggerData'].ScheduleData
         }
     },
     methods: {
@@ -73,7 +73,7 @@ export default {
 
 <style lang="scss" scoped>
 .switch-label {
-    @apply mb-3;
+    @apply mb-2;
 }
 [dir="rtl"] .switch-label {
     @apply ml-3;

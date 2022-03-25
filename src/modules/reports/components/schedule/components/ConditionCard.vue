@@ -61,7 +61,7 @@
                 {{ $t('validation.error.fieldIsRequired') }}
             </div>
         </div>
-        <div class="w-1/4 relative">
+        <div class="w-1/4 relative max-width">
             <div class="flex">
                 <component
                     v-if="isChangedWidgetTemplateColumnID && getComponentNameOfValueField"
@@ -224,6 +224,9 @@
 <style lang="scss" scoped>
 .time-picker .el-input__inner, ::v-deep .interval .el-date-editor, ::v-deep .el-input-number {
     @apply w-full;
+}
+.max-width {
+    max-width: 235px;
 }
 .el-form-item__error {
     @apply pt-1;

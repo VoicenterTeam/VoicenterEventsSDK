@@ -18,7 +18,7 @@
         >
             <template v-slot:title>
                 <div class="flex w-full justify-center text-xl">
-                    {{ $t('widget.addSchedule') }}
+                    {{ title }}
                 </div>
             </template>
             <div class="relative">
@@ -80,6 +80,7 @@
 <script>
     const wizardLength = 3
     import { Notification } from 'element-ui'
+    import cloneDeep from 'lodash/cloneDeep'
 
     export default {
         props: {
@@ -89,7 +90,7 @@
             },
             buttonLabel: {
                 type: String,
-                default: 'Add Schedule'
+                default: ''
             },
             icon: {
                 type: String,
@@ -97,6 +98,19 @@
             },
             reportId: {
                 type: Number
+            },
+            dataToEdit: {
+                type: Object,
+                default: () => ({})
+            },
+            title: {
+                type: String,
+                default: ''
+            }
+        },
+        provide () {
+            return {
+                dataToEdit: this.dataToEdit
             }
         },
         components: {
@@ -116,7 +130,7 @@
         watch: {
             async showDialog (val) {
                 if (!val) {
-                    await this.$store.dispatch('reportTrigger/resetReportData')
+                    await this.$store.dispatch('reportTrigger/resetReportTriggerData')
                     this.currentStep = 0
                 }
             }
@@ -157,15 +171,30 @@
             },
             onFinish () {
                 this.showDialog = false
-                this.$store.dispatch('reportTrigger/resetReportData')
+                this.$store.dispatch('reportTrigger/resetReportTriggerData')
                 this.$emit('addedSchedule')
             },
-            openModal () {
+            async openModal () {
                 if (!this.data || !this.data.ReportItemList.length) {
                     Notification.warning(this.$t('report.schedule.needAddAtLeastOneWidget'))
                     return
                 }
                 this.showDialog = true
+                const { reportTriggerData } = this.dataToEdit
+                if (this.dataToEdit && Object.keys(this.dataToEdit).length) {
+                    const isReportDoesNotHaveTriggerCondition = reportTriggerData.ReportTriggerCondition.every(el => !Object.keys(el).length)
+                    reportTriggerData.ReportTriggerCondition = reportTriggerData.ReportTriggerCondition
+                        .filter(el => {
+                            if (el && el.ReportTriggerConditionFilter && el.ReportTriggerConditionFilter.length) {
+                                el.ReportTriggerConditionFilter = el.ReportTriggerConditionFilter.filter(el => Object.values(el).every(el => el !== '' && el !== null))
+                            }
+                            return el && Object.keys(el).length
+                        })
+                    await this.$store.dispatch('reportTrigger/updateReportTriggerData', cloneDeep(reportTriggerData))
+                    if (isReportDoesNotHaveTriggerCondition) {
+                        await this.$store.dispatch('reportTrigger/updateReportTriggerCondition')
+                    }
+                }
             }
         }
     }
