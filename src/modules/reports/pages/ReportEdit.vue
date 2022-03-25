@@ -1,6 +1,10 @@
 <template>
     <div class="w-full bg-gray-200">
-        <edit-report-page :report="report" @on-cancel="onCancel" @on-reload-data-reports-list="onReloadDataReportsList" />
+        <edit-report-page
+            v-if="report && Object.keys(report).length"
+            :report="report"
+            @on-cancel="onCancel"
+            @on-reload-data-reports-list="onReloadDataReportsList" />
     </div>
 </template>
 

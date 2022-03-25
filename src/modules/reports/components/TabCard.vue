@@ -197,7 +197,7 @@
 
             & > .el-tabs__content {
                 background: #FFFFFF;
-                box-shadow: 0px 1px 6px #D1D5DF;
+                box-shadow: 0px 1px 6px #E0E2E5;
                 border-radius: 0 6px 6px 6px;
                 overflow: visible;
                 margin: 0 1.5px;
