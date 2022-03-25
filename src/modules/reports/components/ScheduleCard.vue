@@ -1,18 +1,18 @@
 <template>
     <el-card class="f-full">
         <div slot="header" class="flex align-middle justify-between">
-            <span class="my-auto font-medium mx-2">{{ get(data, 'ReportTriggerName', '') }}</span>
-            <div class="flex ">
+            <span class="my-auto font-medium mx-2" :class="actionsWithSchedule ? 'w-1/3' : 'w-2/5'">{{ get(data, 'ReportTriggerName', '') }}</span>
+            <div class="flex items-center" :class="actionsWithSchedule ? 'w-1/3 justify-start' : 'w-3/5 justify-end'">
                 <i class="vc-icon-schedule-calendar icon-xl text-primary ml-2"/>
                 <span class="px-2 my-auto">
                     {{ triggerSchedule }}
                 </span>
-                <base-button v-if="showBtnSendNow" type="primary" size="xs" class="min-w-36" outline @click="onSendNow">
+                <base-button v-if="showBtnSendNow" type="primary" size="xs" class="min-w-36 h-7" outline @click="onSendNow">
                     <i class="vc-icon-skip-arrow icon-md mx-2"/>
                     {{ $t('report.schedules.sendNow') }}
                 </base-button>
             </div>
-            <span v-if="actionsWithSchedule" class="flex">
+            <div v-if="actionsWithSchedule" class="flex w-1/3 items-center justify-end">
                 <schedule-form
                     icon="vc-icon-edit-pencil"
                     :reportId="null"
@@ -21,7 +21,7 @@
                     :title="$t('widget.editSchedule')"
                 />
                 <i class="vc-icon-recycle-bin text-red-600 cursor-pointer" @click="deleteSchedule" />
-            </span>
+            </div>
         </div>
         <div class="flex w-full mb-4" v-if="get(data, 'ReportTriggerCondition', []).length">
             <div class="inline-flex pr-2">
