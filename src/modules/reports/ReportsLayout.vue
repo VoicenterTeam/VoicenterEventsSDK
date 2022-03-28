@@ -1,7 +1,6 @@
 <template>
     <div>
         <BaseNavbar/>
-        <div @click="openAddWidgetDialog">Open Add widget dialog</div>
         <report-tabs
             :dataTabs="dataTabs"
             :active-tab="activeTab"
@@ -33,9 +32,6 @@
                 <report-create v-show="createTabName === activeTab" @on-close-create-report-tab="onCloseCreateReportTab" />
             </template>
         </report-tabs>
-        <add-widgets-dialog
-            :visible.sync="showAddWidgetsDialog"
-        />
     </div>
 </template>
 
@@ -54,9 +50,6 @@ import { reportApi } from '@/modules/reports/services/reportService'
 const CREATE_TAB_NAME = 'create';
 const LIST_TAB_NAME = 'list'
 
-
-import AddWidgetsDialog from '@/components/Reports/Widgets/AddWidgetsDialog'
-
 export default {
     components: {
         BaseNavbar,
@@ -68,7 +61,6 @@ export default {
         ReportEdit,
         ReportsList,
         ReportCreate,
-        AddWidgetsDialog,
     },
     data() {
         return {
@@ -82,8 +74,6 @@ export default {
             ],
             createTabName: CREATE_TAB_NAME,
             listTabName: LIST_TAB_NAME,
-
-            showAddWidgetsDialog: false
         }
     },
     computed: {
@@ -157,10 +147,6 @@ export default {
             this.removeTab(this.activeTab)
             this.$refs['reports-list'].reloadData()
         },
-        openAddWidgetDialog() {
-            console.log('click')
-            this.showAddWidgetsDialog = true
-        }
     },
     watch: {
         '$route': {
