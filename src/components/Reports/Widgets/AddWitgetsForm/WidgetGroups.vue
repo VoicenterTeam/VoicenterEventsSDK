@@ -19,7 +19,7 @@
             </div>
         </div>
         <WidgetGroupCard
-            v-for="widgetGroup in widgetGroups"
+            v-for="widgetGroup in searchedWidgetGroups"
             v-bind="widgetGroup"
             :key="widgetGroup.WidgetGroupID"
             :widget-group="widgetGroup"
@@ -27,8 +27,8 @@
         />
     </div>
 </template>
+
 <script>
-import cloneDeep from 'lodash/cloneDeep'
 import WidgetGroupCard from "@/components/Reports/Widgets/AddWitgetsForm/WidgetGroupCard";
 
 export default {
@@ -46,6 +46,16 @@ export default {
             search: ''
         }
     },
+    computed: {
+        searchedWidgetGroups () {
+            if (!this.search) {
+                return this.widgetGroups
+            }
+            return this.widgetGroups.filter(widgetGroup => {
+                return widgetGroup.WidgetGroupTitle && widgetGroup.WidgetGroupTitle.toLowerCase().includes(this.search.toLowerCase())
+            })
+        }
+    },
     watch: {
         search() {
             // run search functionality
@@ -54,7 +64,10 @@ export default {
     methods: {
         selectWidgetGroup(group) {
             this.$emit('select-widget-group', group)
-        }
+        },
     },
+    mounted () {
+        this.search = ''
+    }
 }
 </script>

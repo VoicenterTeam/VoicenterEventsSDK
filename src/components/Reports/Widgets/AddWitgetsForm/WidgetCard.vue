@@ -23,10 +23,10 @@
                         </div>
                     </slot>
                 </div>
-                <div v-if="widget.Description || true"
+                <div v-if="widget.Description"
                      class="widget-description">
                     <div class="text-sm text-gray-700">
-                        {{ widget.Description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.' }}
+                        {{ widget.Description }}
                     </div>
                 </div>
             </div>
@@ -74,24 +74,6 @@ export default {
         widgetIcon () {
             return get(this.widget, 'icon', this.defaultIcon)
         }
-        // dashboard() {
-        //     return this.$store.getters['dashboards/getActiveDashboard']
-        // },
-        // dashboardWidgets() {
-        //     let widgets = []
-        //     this.dashboard.WidgetGroupList.forEach(el => {
-        //         widgets = widgets.concat(el.WidgetList)
-        //     })
-        //     return widgets
-        // },
-        // activeWidgets() {
-        //     try {
-        //         return this.dashboardWidgets.filter(el => el.TemplateID.toString() === this.TemplateID.toString()).length
-        //     } catch (e) {
-        //         console.warn(e)
-        //         return 0
-        //     }
-        // },
     },
 }
 </script>

@@ -49,7 +49,7 @@
                             class="button-set-up-widgets font-bold"
                             type="primary"
                         >
-                            {{ $t('report.addWidgets') }}
+                            {{ $t('general.add') }}
                         </el-button>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
             </template>
             <div class="flex justify-center w-full">
                 <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p px-3">
-                    {{ $t('report.addWidgetsDesc') }}
+                    {{ $tc('report.addWidgetsDesc', selectedWidgets.length, {count: selectedWidgets.length}) }}
                 </div>
             </div>
             <template v-slot:footer-actions>
@@ -96,22 +96,12 @@
 </template>
 
 <script>
-import get from 'lodash/get'
-import sum from 'lodash/sum'
-import isEmpty from 'lodash/isEmpty'
 import Modal from '@/components/Common/Modal'
 import WidgetGroups from "@/components/Reports/Widgets/AddWitgetsForm/WidgetGroups"
 import WidgetGroupPreview from "@/components/Reports/Widgets/AddWitgetsForm/WidgetGroupPreview";
 import ConfirmDialog from '@/components/Common/ConfirmDialog'
 import cloneDeep from "lodash/cloneDeep";
 import {WidgetGroupsApi} from "@/api/widgetGroupApi";
-
-// import TemplatePreview from '@/components/Widgets/AddWidgetsForm/TemplatePreview'
-// import TemplateSummaries from '@/components/Widgets/AddWidgetsForm/TemplateSummaries'
-// import TemplateCategories from '@/components/Widgets/AddWidgetsForm/TemplateCategories'
-// import TemplatesSettingSetup from '@/components/Widgets/AddWidgetsForm/TemplatesSettingSetup'
-// import TemplateCategoryPreview from '@/components/Widgets/AddWidgetsForm/TemplateCategoryPreview'
-// import TemplatesEditWidget from '@/components/Widgets/AddWidgetsForm/TemplatesEditWidget'
 
 export default {
     components: {
@@ -151,8 +141,7 @@ export default {
                     component: 'WidgetGroupPreview',
                     hasSummary: true
                 }
-            },
-            submitDisabled: false
+            }
         }
     },
     computed: {
@@ -173,6 +162,9 @@ export default {
             const widgetsAfter = this.selectedWidgets.length
             return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${ widgetsBefore }, ${this.$t('widget.afterAdding')} - ${ widgetsAfter })`
         },
+        submitDisabled () {
+            return !(this.selectedWidgets.length > 0 && !this.widgets.filter(widget => this.selectedWidgets.indexOf(widget) === -1).length)
+        }
     },
     methods: {
         onCloseDialog() {
@@ -204,12 +196,11 @@ export default {
         },
         async getWidgetGroups() {
             try {
-                const currentAccount = 640 // this.$store.state.entities.selectedAccountID
+                const currentAccount = this.$store.state.entities.selectedAccountID
                 const {WidgetsGroupsList} = await WidgetGroupsApi.list({
                     AccountID: [currentAccount]
                 })
                 this.widgetGroups = WidgetsGroupsList
-                console.log('widgetGroups', this.widgetGroups)
             } catch (e) {
                 console.error(e)
             }

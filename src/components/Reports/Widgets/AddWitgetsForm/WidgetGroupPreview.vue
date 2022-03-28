@@ -8,7 +8,7 @@
             </span>
         </portal>
         <portal to="form-title">
-            {{ $t(templateCategory.CategoryName) }}
+            {{ widgetGroupName }}
         </portal>
         <portal to="additional-action">
             <span
@@ -46,64 +46,35 @@
         <div class="flex flex-col -mx-4-5">
             <div :key="widget.WidgetID"
                  class="w-full"
-                 v-for="widget in widgetList">
+                 v-for="widget in searchedWidgets">
                 <WidgetCard
                     class="w-full"
                     :widget="widget"
                     v-on="$listeners"
                 >
-                    <template v-slot:new-one>
-                        <el-button
-                            @click="manageWidgets(1, widget)"
-                            size="mini"
-                            class="button-add-one-widget text-center"
-                            :key="widget.TemplateID"
-                            type="_primary"
-                        >
-                            <div class="flex items-center justify-center">
-                                <IconAdd class="mb-0-5"
-                                         :class="$rtl.isRTL ? 'ml-1' : 'mr-1'"/>
-                                <span
-                                    class="text-sm"
-                                >
-                                    {{ $t('general.add') }}
-                                </span>
-                            </div>
-                        </el-button>
-                    </template>
                     <template v-slot:template-preview>
                         <el-tooltip :content="$t('widget.templateDictionary')"
                                     :open-delay="openDelay"
                                     class="item"
                                     effect="dark"
                                     placement="top">
-                            <IconInfo
-                                class="cursor-help text-primary"
-                                @click="onPreviewTemplate(widget)"
-                            />
+                            <div class="flex items-center">
+                                <IconInfo
+                                    class="cursor-help text-primary"
+                                    @click="onWidgetHelp(widget)"
+                                />
+                                <div class="break-normal ml-2 text-primary">{{ $t('general.help') }}</div>
+                            </div>
                         </el-tooltip>
                     </template>
                 </WidgetCard>
             </div>
         </div>
-        <portal to="form-footer">
-            <div class="px-10">
-                <el-button
-                    @click="onSetupWidgets"
-                    :disabled="submitDisabled"
-                    class="button-set-up-widgets font-bold"
-                    type="primary"
-                >
-                    {{ $t('widget.setUpWidgets') }}
-                </el-button>
-            </div>
-        </portal>
     </div>
 </template>
+
 <script>
 import get from 'lodash/get'
-import sum from 'lodash/sum'
-import cloneDeep from 'lodash/cloneDeep'
 import {InputNumber, Tooltip} from 'element-ui'
 import WidgetCard from "@/components/Reports/Widgets/AddWitgetsForm/WidgetCard";
 
@@ -137,153 +108,54 @@ export default {
         }
     },
     computed: {
-        templateCategory() {
-            return this.$store.getters['widgetCreation/getCategoryTemplates']
+        widgetGroupName () {
+            return get(this.widgetGroup, 'WidgetGroupTitle', '')
         },
-        widgetList() {
+        widgetList () {
             return get(this.widgetGroup, 'WidgetList', [])
         },
-        filteredWidgetList() {
-            if (!this.widgetList || !this.widgetList.length) {
-                return []
+        searchedWidgets () {
+            if (!this.search) {
+                return this.widgetList
             }
-            return this.widgetList.filter((widget) => {
-                const widgetName = widget.Title
-                return widget.TemplateID.toString() === this.search.toString() || widgetName.toLowerCase().includes(this.search.toLowerCase())
+            return this.widgetList.filter(widget => {
+                return widget.Title && widget.Title.toLowerCase().includes(this.search.toLowerCase())
             })
-        },
-        // templateList() {
-        //     return this.templateCategory.TemplatesList || []
-        // },
-        // filteredTemplates() {
-        //     if (!this.templateList || !this.templateList.length) {
-        //         return
-        //     }
-        //     return this.templateList.filter((template) => {
-        //         const templateName = this.translateTemplateName(template.TemplateName)
-        //         return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
-        //     })
-        // },
-        groupWidgetsCount() {
-            const group = this.widgetGroup
-            return get(group, 'WidgetList', []).length
-        },
-        afterAdding() {
-            const activeWidgets = this.groupWidgetsCount || 0
-            const newWidgetsCount = sum(Object.values(this.quantities)) || 0
-            return +newWidgetsCount + +activeWidgets
-        },
-        getSummaryActions() {
-            return `${this.$t('widget.summary')}: (${this.$t('widget.before')} - ${this.groupWidgetsCount}, ${this.$t('widget.afterAdding')} - ${this.afterAdding})`
-        },
-        getSummaries() {
-            return this.$store.state.widgetCreation.summaries
-        },
-        getTemplate() {
-            return this.$store.state.widgetCreation.templates
         },
     },
     methods: {
-        translateTemplateName(tName) {
-            return this.$t(tName) || tName
-        },
-        manageWidgets(value, widget) {
-            this.quantities[widget.WidgetID] = value
-            this.summaries[widget.WidgetID] = value
-            // widget.quantity = value
-
-            // this.templates[`${widget.TemplateID}`] = widget
-
-            if (!value) {
-                delete this.summaries[widget.WidgetID]
-                // delete this.templates[widget.TemplateID]
-                delete this.quantities[widget.WidgetID]
-            }
-        },
-        async onPreviewTemplate(template) {
-            const objectToStore = {
-                template,
-                data: this.composeSummary(),
-            }
-            // await this.$store.dispatch('widgetCreation/previewTemplate', objectToStore)
+        async onWidgetHelp (widget) {
+            // some functionality
         },
         async goToWidgetGroups() {
-            console.log('click back')
             await this.$emit('go-to-widget-groups')
-            // await this.$store.dispatch('widgetCreation/resetCopyTemplate')
-        },
-        composeSummary() {
-            return {
-                templates: this.templates,
-                summaries: {
-                    summaryText: this.summaries,
-                    quantities: this.quantities,
-                },
-            }
-        },
-        async onSetupWidgets() {
-            const data = this.composeSummary()
-            // await this.$store.dispatch('widgetCreation/goToSetupTemplates', data)
-        },
-        fillProgress() {
-            if (!this.getSummaries) {
-                return
-            }
-            const summaries = this.getSummaries
-            this.quantities = cloneDeep(summaries.quantities)
-            this.summaries = cloneDeep(summaries.summaryText)
-            // this.templates = cloneDeep(this.getTemplate) || {}
         },
         addAllWidgetsFromWidgetGroup() {
-            // this.filteredWidgetList.forEach(el => {
-            //     this.manageWidgets(1, el)
-            // })
-            //this.$emit('try-store-category', this.templateCategory)
             this.$emit('add-all-widgets-from-group', this.widgetGroup.WidgetGroupID)
         },
-        tryUpdateSummary() {
-            const summaries = {
-                summaryText: this.summaries,
-                quantities: this.quantities,
-            }
-            this.$emit('on-update-summary', summaries)
-        },
-        handleCheckedWidgets (selectedWidgets = this.selectedWidgets) {
+        onWidgetsSelect (selectedWidgets = this.selectedWidgets) {
             const widgetList = get(this.widgetGroup, 'WidgetList', [])
             widgetList.forEach(widget => {
                 const isChecked = selectedWidgets.includes(widget.WidgetID)
-                console.log('widget.WidgetID', widget.WidgetID)
-                console.log('isChecked', isChecked)
                 this.$set(widget, 'isChecked', isChecked)
             })
-            console.log('widgetList', widgetList)
         }
     },
     mounted() {
-        console.log('WidgetGroupPreview mounted')
-        // this.fillProgress()
-        // this.filteredWidgetList.forEach(widget => {
-        //     this.manageWidgets(1, widget)
-        // })
-        this.handleCheckedWidgets()
+        this.search = ''
+        this.onWidgetsSelect()
     },
     watch: {
-        quantities: {
-            deep: true,
-            handler() {
-                this.tryUpdateSummary()
-            }
-        },
-        'selectedWidgets': {
+        selectedWidgets: {
             handler (newV) {
-                console.log('watch selectedWidgets')
-                this.handleCheckedWidgets(newV)
+                this.onWidgetsSelect(newV)
             },
             deep: true,
         }
     }
 }
 </script>
+
 <style lang="scss" scoped>
 .widget-menu-footer {
     border-top: solid 1px var(--silver-color);
