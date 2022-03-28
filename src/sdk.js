@@ -16,6 +16,7 @@ import md5 from "js-md5";
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
   environment: environments.BROWSER,
+  getSocketIOFunction: undefined,
   fallbackServer: {
     Domain: 'monitor5.voicenter.co.il',
     Priority: 0,
@@ -205,7 +206,7 @@ class EventsSDK {
 
   async _onLoginResponse(data) {
     if (data.Client) {
-      await loadExternalScript(data.Client, this.options.environment)
+      await loadExternalScript(data.Client, this.options.environment, this.options.getSocketIOFunction)
     }
     if (data.URL) {
       this.server = {

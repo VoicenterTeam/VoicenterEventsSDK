@@ -120,6 +120,11 @@ var eventTypes = {
   DIALER_EVENT: 'DialerEvent'
 };
 
+var environments = {
+  BROWSER: 'browser',
+  CHROME_EXTENSION: 'chrome-extension'
+};
+
 var defaultServers = [{
   'URLID': 59,
   'Priority': 5,
@@ -596,8 +601,8 @@ async function refreshToken(url, oldRefreshToken) {
   return res.json();
 }
 
-function loadExternalScript(url) {
-  return new Promise(function (resolve) {
+function loadBrowserScript(url) {
+  return new Promise(function (resolve, reject) {
     var script = document.createElement('script');
     script.src = url;
 
@@ -613,8 +618,36 @@ function loadExternalScript(url) {
   });
 }
 
+async function loadExtensionScript(url) {
+  try {
+    var script = await fetch(url);
+    script = await script.text();
+    eval(script);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+async function loadExternalScript(url, environment, getSocketIOFunction) {
+  if (typeof getSocketIOFunction === 'function') {
+    self.io = getSocketIOFunction(url);
+    return;
+  }
+
+  switch (environment) {
+    case environments.BROWSER:
+      await loadBrowserScript(url);
+      break;
+
+    case environments.CHROME_EXTENSION:
+      await loadExtensionScript(url);
+  }
+}
+
 var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
+  environment: environments.BROWSER,
+  getSocketIOFunction: undefined,
   fallbackServer: {
     Domain: 'monitor5.voicenter.co.il',
     Priority: 0
@@ -855,7 +888,7 @@ var EventsSDK = /*#__PURE__*/function () {
     key: "_onLoginResponse",
     value: async function _onLoginResponse(data) {
       if (data.Client) {
-        await loadExternalScript('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=2.4.0');
+        await loadExternalScript(data.Client, this.options.environment, this.options.getSocketIOFunction);
       }
 
       if (data.URL) {
@@ -993,7 +1026,7 @@ var EventsSDK = /*#__PURE__*/function () {
         };
       }
 
-      this.socket = window.io(url, options);
+      this.socket = self.io(url, options);
       allConnections.push(this.socket);
       this.connectionEstablished = true;
     }
@@ -1316,27 +1349,34 @@ var EventsSDK = /*#__PURE__*/function () {
   }, {
     key: "_getTabsSession",
     value: function _getTabsSession() {
+      if (this.options.environment !== environments.BROWSER) {
+        return Promise.resolve();
+      }
+
       if (!window.sessionStorage.length) {
         // Ask other tabs for session storage
         localStorage.setItem('getSessionStorage', Date.now());
       }
-      window.addEventListener('storage', function (event) {
-        //console.log('storage event', event);
-        if (event.key == 'getSessionStorage') {
-          // Some tab asked for the sessionStorage -> send it
-          localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
-          localStorage.removeItem('sessionStorage');
-        } else if (event.key == 'sessionStorage' && !sessionStorage.length) {
-          // sessionStorage is empty -> fill it
-          var data = JSON.parse(event.newValue);
 
-          for (var key in data) {
-            window.sessionStorage.setItem(key, data[key]);
-          }
-        }
-      });
       return new Promise(function (resolve) {
-        return setTimeout(resolve, 200);
+        window.addEventListener('storage', function (event) {
+          if (event.key === 'getSessionStorage') {
+            // Some tab asked for the sessionStorage -> send it
+            localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
+            localStorage.removeItem('sessionStorage');
+          } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
+            // sessionStorage is empty -> fill it
+            var data = JSON.parse(event.newValue);
+
+            for (var key in data) {
+              if (data.hasOwnProperty(key)) {
+                window.sessionStorage.setItem(key, data[key]);
+              }
+            }
+
+            resolve();
+          }
+        });
       });
     }
     /**
@@ -1386,7 +1426,11 @@ var EventsSDK = /*#__PURE__*/function () {
           var url = getExternalLoginUrl(_this5.options.loginUrl, type);
           var res = await externalLogin(url, payload);
           await _this5._onLoginResponse(res);
-          window.sessionStorage.setItem(key, JSON.stringify(res));
+
+          if (_this5.options.environment === environments.BROWSER) {
+            window.sessionStorage.setItem(key, JSON.stringify(res));
+          }
+
           resolve(res);
         } catch (err) {
           _this5.servers = _this5.argumentOptions.servers || defaultServers;
