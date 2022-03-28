@@ -26,4 +26,6 @@ export default {
   KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
   CLOSE: 'closeme',
   ERROR: 'error',
+  ALL_DIALERS_STATUS: 'AllDialersStatus',
+  DIALER_EVENT: 'DialerEvent'
 }

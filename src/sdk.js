@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce'
 import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
+import dialersModule from './store/dialers'
 import { getServerWithHighestPriority, isValidDate } from './utils';
 import { externalLogin, refreshToken, getExternalLoginUrl } from './utils/externalLogin';
 import { loadExternalScript } from './utils/loadExternalScript'
@@ -37,6 +38,7 @@ const defaultOptions = {
   store: null,
   extensionsModuleName: 'sdkExtensions',
   queuesModuleName: 'sdkQueues',
+  dialersModuleName: 'sdkDialers',
   serverFetchStrategy: 'remote', // get servers from external url options: remote | static
   serverType: null, // can be 1 or 2. 2 is used for chrome extension
 };
@@ -73,6 +75,7 @@ class EventsSDK {
     this._handleLocalEvents = false;
     this._registerExtensionsModule();
     this._registerQueueModule();
+    this._registerDialerModule();
   }
 
   getLastEventTimestamp() {
@@ -98,6 +101,15 @@ class EventsSDK {
       return
     }
     this.options.store.registerModule(moduleName, queuesModule)
+    this._handleLocalEvents = true
+  }
+
+  _registerDialerModule() {
+    const moduleName = this.options.dialersModuleName || 'sdkDialers'
+    if (!this._validateStoreModule(moduleName)) {
+      return
+    }
+    this.options.store.registerModule(moduleName, dialersModule)
     this._handleLocalEvents = true
   }
 
