@@ -11,7 +11,8 @@
                 </i>
                 <IconHorisontalLine class="hidden lg:flex mx-4 xl:mx-12"/>
                 <DashboardMenu :editMode="editMode" v-if="layoutType === 'activeLayout'" />
-                <ManageReports/>
+                <!-- TODO commented before reports branch will be merged in production -->
+                <!-- <ManageReports/> -->
             </div>
             <div class="flex items-center p-2 sm:justify-between sm:w-full lg:w-auto">
                 <slot name="dashboard-operations"/>
@@ -24,17 +25,12 @@
     </div>
 </template>
 <script>
-    import AccountMenu from '@/components/Navbar/components/AccountMenu'
-    import ManageReports from '@/components/Navbar/components/ManageReports'
-    import DashboardMenu from '@/components/Navbar/components/DashboardMenu'
-    import LanguageSwitcher from '@/components/Navbar/components/LanguageSwitcher'
-    
     export default {
         components: {
-            AccountMenu,
-            ManageReports,
-            DashboardMenu,
-            LanguageSwitcher,
+            AccountMenu: () => import('@/components/Navbar/components/AccountMenu'),
+            ManageReports: () => import('@/components/Navbar/components/ManageReports'),
+            DashboardMenu: () => import('@/components/Navbar/components/DashboardMenu'),
+            LanguageSwitcher: () => import('@/components/Navbar/components/LanguageSwitcher')
         },
         props: {
             editMode: {
