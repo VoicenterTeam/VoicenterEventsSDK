@@ -11,7 +11,6 @@ const mutations = {
     state.all = value
   },
   [types.UPDATE_DIALERS]: (state, data) => {
-    console.log('update', 'qwer')
     state.all = data
   }
 }
@@ -30,7 +29,6 @@ const getters = {
     return state.all
   },
   getAllDialersWithTypeIVR: (state) => {
-    console.log(state, 'state', state.all)
     return state.all.filter(el => el.type === 'IVR')
   },
   getAllDialersWithTypeAUTOMATIC: (state) => {

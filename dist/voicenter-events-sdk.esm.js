@@ -239,7 +239,6 @@ function onNewEvent(_ref) {
       dialersModuleName = _ref.dialersModuleName;
   var name = eventData.name,
       data = eventData.data;
-  console.log(name, data, 'dialersModuleName', 'dialersModuleName');
   store.commit("".concat(extensionsModuleName, "/SET_IS_SOCKET_OFFLINE"), isSocketOffline(eventData));
 
   switch (name) {
@@ -482,7 +481,6 @@ var state$2 = {
 var mutations$2 = (_mutations$2 = {}, _defineProperty(_mutations$2, types$2.SET_DIALERS, function (state, value) {
   state.all = value;
 }), _defineProperty(_mutations$2, types$2.UPDATE_DIALERS, function (state, data) {
-  console.log('update', 'qwer');
   state.all = data;
 }), _mutations$2);
 var actions$2 = {
@@ -500,7 +498,6 @@ var getters$2 = {
     return state.all;
   },
   getAllDialersWithTypeIVR: function getAllDialersWithTypeIVR(state) {
-    console.log(state, 'state', state.all);
     return state.all.filter(function (el) {
       return el.type === 'IVR';
     });
