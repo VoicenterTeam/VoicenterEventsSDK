@@ -11,6 +11,7 @@ const mutations = {
     state.all = value
   },
   [types.UPDATE_DIALERS]: (state, data) => {
+    console.log('update', 'qwer')
     state.all = data
   }
 }
