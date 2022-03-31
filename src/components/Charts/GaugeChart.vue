@@ -40,10 +40,10 @@
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import {activeGaugeCallColumns} from "@/enum/queueConfigs";
     import orderBy from "lodash/orderBy";
-    
+
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
-    
+
     export default {
         mixins: [queueMixin, actionMixin],
         components: {
@@ -134,25 +134,25 @@
                 } else {
                     this.chartData = this.getAgentsData()
                 }
-                
+
                 this.reDrawChart()
             },
             getAgentsData() {
                 let queuesCount = this.getMaximumRange || this.allQueues.length
-                
+
                 let range = {
                     min: 0,
                     max: queuesCount,
                 }
-                
+
                 let stops = [
                     [0, '#55BF3B'],
                     [queuesCount / 2 + 0.1, '#DDDF0D'],
                     [queuesCount, '#DF5353'],
                 ]
-                
+
                 const labelFontSize = this.getLabelFontSize
-                
+
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
@@ -165,11 +165,11 @@
                         },
                     },
                 }
-                
+
                 const allQueueCalls = this.allQueueCalls.length
-                
+
                 const labelStyle = `style="font-size:${labelFontSize}px"`
-                
+
                 this.data.series = [{
                     data: [allQueueCalls],
                     dataLabels: {
@@ -180,11 +180,11 @@
                         format:
                             '<div style="text-align:center">' +
                             `<span ${labelStyle}>{y}</span>&nbsp;` +
-                            `<span>${this.$t("calls")}</span>` +
+                            `<span>${this.$t("general.calls")}</span>` +
                             '</div>',
                     },
                 }]
-                
+
                 return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig } }
             },
             triggerResizeEvent() {

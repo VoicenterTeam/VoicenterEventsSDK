@@ -20,11 +20,11 @@ export default {
     },
     data () {
         return {
-            titleDefault: this.$t('Delete Confirmation'),
+            titleDefault: this.$t('general.deleteConfirmation'),
             descriptionDefault: this.$t('dialog.delete.description'),
             configDefault: {
                 confirmIcon: 'IconDelete',
-                confirmText: this.$t('Delete')
+                confirmText: this.$t('common.delete')
             }
         }
     },

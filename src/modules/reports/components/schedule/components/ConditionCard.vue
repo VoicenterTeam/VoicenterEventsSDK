@@ -4,7 +4,7 @@
         <div class="flex w-1/4">
             <base-select class="w-full"
                          :multiple="false"
-                         :placeholder="$t('Select Widget')"
+                         :placeholder="$t('report.condition.field.selectWidget')"
                          :data="parameterOptions"
                          v-model="model.ReportTriggerConditionID"
                          id="parameter"
@@ -14,7 +14,7 @@
             <base-select class="w-full"
                          :multiple="false"
                          :disabled="!model.ReportTriggerConditionID"
-                         :placeholder="$t('Widget Column')"
+                         :placeholder="$t('report.condition.field.widgetColumn')"
                          :data="parameterOptions"
                          v-model="model.ConditionFilterColumnType"
                          id="parameter"
@@ -24,7 +24,7 @@
              :class="$rtl.isRTL ? 'ml-6' : 'mr-6'">
             <base-select class="w-full"
                          :multiple="false"
-                         :placeholder="$t('Select Aggregation')"
+                         :placeholder="$t('report.condition.field.selectAggregation')"
                          :data="operatorOptions"
                          v-model="model.ConditionFilterOperatorSymbol"
                          id="operator"
@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-    
+
     export default {
         data() {
             return {

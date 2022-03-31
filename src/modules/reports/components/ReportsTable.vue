@@ -124,7 +124,7 @@
     import DelimitedList from '@/modules/reports/components/DelimitedList'
     import { reportApi } from '@/modules/reports/services/reportService'
     import { STATUS_VALUES, STATUS_IDS } from '@/modules/reports/enum/report'
-    
+
     export default {
         components: {
             Tag,
@@ -182,7 +182,7 @@
                         icon: 'IconScheduleColumn',
                     },
                     {
-                        label: this.$t('Active'),
+                        label: this.$t('widget.active'),
                         prop: 'status',
                         align: 'center',
                         minWidth: 40,

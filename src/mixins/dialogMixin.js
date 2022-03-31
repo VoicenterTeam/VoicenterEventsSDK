@@ -29,8 +29,8 @@ export default {
                 descriptionIcon: 'IconQuestion',
                 cancelIcon: 'IconDiscard',
                 confirmIcon: 'IconConfirm',
-                cancelText: this.$t('Cancel'),
-                confirmText: this.$t('Confirm')
+                cancelText: this.$t('common.cancel'),
+                confirmText: this.$t('common.confirm')
             }
         }
     },

@@ -41,7 +41,7 @@
                             class="w-48 mx-4 py-1"
                             size="large"
                             v-model="pageSize">
-                            <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
+                            <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('general.perpage')}`" v-for="option in pageSizes"/>
                             <slot>
                                 <div class="w-40 mx-2">
                                     <span class="text-xs flex justify-center pb-2">{{$t('widget.table.customValue')}}</span>

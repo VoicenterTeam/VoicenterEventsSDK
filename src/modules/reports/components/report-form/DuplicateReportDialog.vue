@@ -56,7 +56,7 @@
                     ReportName: '',
                 },
                 dialogConfig: {
-                    confirmText: this.$t('Save')
+                    confirmText: this.$t('common.save')
                 }
             }
         },

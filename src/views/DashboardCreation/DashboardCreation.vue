@@ -8,7 +8,7 @@
                     <div @click="redirectBack()"
                          class="col-span-1 flex items-center text-primary-300 hover:text-primary cursor-pointer">
                         <IconDirLeft/>
-                        <span class="mx-1">{{ $t('Back') }}</span>
+                        <span class="mx-1">{{ $t('general.back') }}</span>
                     </div>
                     <span class="mx-8">
                     <svg width="1" height="88" viewBox="0 0 1 88" fill="none"
@@ -17,7 +17,7 @@
                     </svg>
                 </span>
                     <span class="text-2xl font-bold text-gray-900">
-                    {{ $t('Dashboard Creation') }}
+                    {{ $t('dashboard.dashboardCreation') }}
                 </span>
                 </div>
             </div>
@@ -29,13 +29,13 @@
                              key="el-form" :model="model" ref="dashboardCreationForm">
                         <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
                             <span class="label-input label-dashboard-name">
-                                {{ $t('Set the Name') }}
+                                {{ $t('dashboard.setTheName') }}
                             </span>
                             <div class="lg:w-80 lg:mx-5">
                                 <el-form-item
                                     prop="DashboardTitle"
                                     :rules="[
-                                        { required: true, message: $t('Validation required', { field: $t('Dashboard Name') }) }
+                                        { required: true, message: $t('Validation required', { field: $t('dashboard.dashboardName') }) }
                                     ]"
                                 >
                                     <el-input type="DashboardTitle" v-model="model.DashboardTitle" />
@@ -46,7 +46,7 @@
                         <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
                              class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto layout-block">
                             <span class="label-input flex-wrap">
-                                {{ $t('Choose Layout') }}
+                                {{ $t('dashboard.chooseLayout') }}
                             </span>
                             <div>
                                 <LayoutSelect
@@ -65,7 +65,7 @@
                         <div class="flex">
                             <div>
                                 <div class="flex flex-row items-center justify-between text-main-base font-medium mb-4">
-                                    {{ $t("types") }}
+                                    {{ $t("general.types") }}
                                 </div>
                                 <TemplateCategories class="col-span-1 w-48 mr-6"
                                     key="categories"
@@ -79,7 +79,7 @@
                                     <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
                                         @click="onSubmit" :disabled="disableCreateBlankBtn || loading">
                                         <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
-                                        {{ $t('Create blank dashboard') }}
+                                        {{ $t('dashboard.createBlankDashboard') }}
                                     </button>
                                 </div>
                                 <fade-transition mode="out-in" :duration="transitionDuration">
@@ -114,7 +114,7 @@
                     @on-click="onDiscard"
                 />
                 <confirm-button
-                    :label="$t('Save')"
+                    :label="$t('common.save')"
                     @on-click="tryAddDashboard"
                 />
             </div>

@@ -48,7 +48,7 @@
                     <template v-if="selectedFrequency.value === MONTHLY_FREQUENCY">
                         <div class="flex flex-col">
                             <span class="mb-2">
-                                {{ $t('Day') }}:
+                                {{ $t('general.time.day') }}:
                             </span>
                             <base-date-picker id="day"
                                               class="flex"

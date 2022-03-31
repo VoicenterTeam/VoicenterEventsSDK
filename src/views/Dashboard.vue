@@ -122,7 +122,7 @@
     import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
     import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
-    
+
     export default {
         components: {
             AccountNoData: () => import('@/views/AccountNoData'),
@@ -204,7 +204,7 @@
             },
             showActiveWidgetGroupName () {
                 const activeWidgetGroup = this.activeDashboardData.WidgetGroupList.find(el => Number(el.WidgetGroupID) === Number(this.activeWidgetGroupID))
-                return activeWidgetGroup.WidgetGroupTitle || this.$t('Group ID') +': '+ activeWidgetGroup.WidgetGroupID
+                return activeWidgetGroup.WidgetGroupTitle || this.$t('dashboard.groupID') +': '+ activeWidgetGroup.WidgetGroupID
             }
         },
         methods: {

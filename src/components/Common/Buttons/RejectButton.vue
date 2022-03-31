@@ -26,7 +26,7 @@ export default {
     },
     computed: {
         buttonLabel () {
-            return this.label || this.$t('Reject')
+            return this.label || this.$t('general.reject')
         }
     }
 }
