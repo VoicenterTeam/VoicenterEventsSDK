@@ -35,7 +35,7 @@
                                 <el-form-item
                                     prop="DashboardTitle"
                                     :rules="[
-                                        { required: true, message: $t('Validation required', { field: $t('dashboard.dashboardName') }) }
+                                        { required: true, message: $t('validation.error.fieldIsRequired', { field: $t('dashboard.dashboardName') }) }
                                     ]"
                                 >
                                     <el-input type="DashboardTitle" v-model="model.DashboardTitle" />

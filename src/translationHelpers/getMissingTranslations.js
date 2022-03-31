@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const translationRegex = new RegExp("\\$t\\(['|\"]([^'\"]+)['|\"]\\)", "g")
+const translationRegex = new RegExp("\\$t\\(['|\"]([^'\"]+)['|\"]|['|\"]([^'\"]+)['|\"]([,\\s\\{]+[\\$t\\(['|\"]([^'\"]+)['|\"]\\)][\\}\\s]+)*\\)", "g")
 const pathToLookIn = path.join(process.cwd(), 'src')
 const existingTranslations = require(path.join(process.cwd(), 'src', 'locales', 'en.json'))
 
