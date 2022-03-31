@@ -502,6 +502,7 @@ var getters$2 = {
     return state.all;
   },
   getAllDialersWithTypeIVR: function getAllDialersWithTypeIVR(state) {
+    console.log(state, 'state', state.all);
     return state.all.filter(function (el) {
       return el.type === 'IVR';
     });

@@ -29,6 +29,7 @@ const getters = {
     return state.all
   },
   getAllDialersWithTypeIVR: (state) => {
+    console.log(state, 'state', state.all)
     return state.all.filter(el => el.type === 'IVR')
   },
   getAllDialersWithTypeAUTOMATIC: (state) => {
