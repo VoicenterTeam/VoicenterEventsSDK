@@ -27,7 +27,7 @@ export default {
     },
     computed: {
         buttonLabel () {
-            return this.label || this.$t('Delete')
+            return this.label || this.$t('common.delete')
         }
     }
 }

@@ -54,7 +54,7 @@
                     {{ $t(column.label) }}
                 </div>
             </template>
-    
+
             <template v-slot:html-header="{column, index}">
                 <el-checkbox :value="allToHtml"
                              :disabled="!widgetsExists"
@@ -72,7 +72,7 @@
                     {{ $t(column.label) }}
                 </div>
             </template>
-            
+
             <template v-slot:index="{row, index}">
                 {{ index }}
             </template>
@@ -151,10 +151,10 @@
         HTML_EXPORT_TYPE_ID,
         BOTH_EXPORT_TYPE_ID,
     } from '@/modules/reports/enum/report'
-    
+
     const PDF = 'pdf'
     const SPREADSHEET = 'spreadsheet'
-    
+
     export default {
         components: {
             PageLimit: () => import('@/modules/common/components/PageLimit'),
@@ -225,7 +225,7 @@
                         icon: 'IconEmailBody',
                     },
                     {
-                        label: this.$t('Active'),
+                        label: this.$t('widget.active'),
                         prop: 'status',
                         align: 'center',
                         minWidth: 40,
@@ -366,7 +366,7 @@
                     this.triggerExportType(row, state, exportType)
                     return row
                 })
-                
+
                 this.$nextTick(() => {
                     this.drawTable = true
                 })

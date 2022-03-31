@@ -18,7 +18,7 @@
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import { queueActivities } from '@/enum/queueDashboardStatistics'
     import activityChartConfig from '@/components/Charts/Configs/ActivityGauge'
-    
+
     export default {
         mixins: [actionMixin],
         components: {
@@ -80,47 +80,47 @@
             },
             chartOptions() {
                 let data = []
-                
+
                 let pane = {
                     startAngle: 0,
                     endAngle: 360,
                     background: [],
                 }
-                
+
                 try {
                     let activitiesToDisplay = this.activitiesToDisplay
                     let reversedCounts = false
-                    
+
                     const mainActivity = this.data.WidgetLayout.mainActivity
-                    
+
                     if (mainActivity !== 'AnswerCount') {
                         //Counts: AnswerCount, InSLACount
                         reversedCounts = true
                     }
-                    
+
                     let CallCount = get(this.statisticCounts, 'CallCount')
                     let answerPercentage = 0
                     let inSLAPercentage = 0
-                    
+
                     let AnswerCountStyles = this.data.WidgetLayout['AnswerCount']
                     let InSLACountStyles = this.data.WidgetLayout['InSLACount']
                     let InSLACount = 0
                     activitiesToDisplay.forEach((el) => {
-                        
+
                         if (el === 'AnswerCount') {
                             let AnswerCount = get(this.statisticCounts['percentage'], '[1].value')
-                            
+
                             if (CallCount) {
                                 answerPercentage = AnswerCount ? (AnswerCount / CallCount * 100).toFixed(2) : 0
                             }
-                            
+
                             if (activitiesToDisplay.length !== queueActivities.length) {
                                 reversedCounts = false
                             }
-                            
+
                             let radius = reversedCounts ? '87%' : '112%'
                             let innerRadius = reversedCounts ? '63%' : '88%'
-                            
+
                             let answerData = {
                                 name: this.$t('queue.answer'),
                                 data: [{
@@ -142,18 +142,18 @@
                         }
                         if (el === 'InSLACount') {
                             InSLACount = get(this.statisticCounts['primary'], 'InSLACount.value')
-                            
+
                             if (CallCount) {
                                 inSLAPercentage = InSLACount ? (InSLACount / CallCount * 100).toFixed(2) : 0
                             }
-                            
+
                             if (activitiesToDisplay.length !== queueActivities.length) {
                                 reversedCounts = true
                             }
-                            
+
                             let radius = reversedCounts ? '112%' : '87%'
                             let innerRadius = reversedCounts ? '88%' : '63%'
-                            
+
                             let InSLAData = {
                                 name: this.$t('queue.inSLA'),
                                 data: [{
@@ -163,7 +163,7 @@
                                     y: Number(inSLAPercentage),
                                 }],
                             }
-                            
+
                             let rgb = convertHex(InSLACountStyles['color'])
                             let InSLAPane = {
                                 outerRadius: radius,
@@ -175,25 +175,25 @@
                             pane['background'].push(InSLAPane)
                         }
                     })
-                    
+
                     let dataLabels = ['', '']
                     let yMargin = 0
-                    
+
                     if (activitiesToDisplay.includes('AnswerCount')) {
                         let index = reversedCounts ? 1 : 0
                         dataLabels[index] = `<span style="font-size: ${AnswerCountStyles['fontSize'] + 'px'}; color: ${AnswerCountStyles['color']}">${answerPercentage}%<br>${this.$t('queue.answer')}</span>`
                         yMargin = AnswerCountStyles['fontSize']
                     }
-                    
+
                     if (activitiesToDisplay.includes('InSLACount')) {
                         let index = reversedCounts ? 0 : 1
-                        dataLabels[index] = `<span style="font-size: ${InSLACountStyles['fontSize'] + 'px'}; color: ${InSLACountStyles['color']}">${inSLAPercentage}% <label style="font-size: ${InSLACountStyles['fontSize'] - 4}px;">(${InSLACount})</label><br>${this.$t('In SLA')}</span>`
+                        dataLabels[index] = `<span style="font-size: ${InSLACountStyles['fontSize'] + 'px'}; color: ${InSLACountStyles['color']}">${inSLAPercentage}% <label style="font-size: ${InSLACountStyles['fontSize'] - 4}px;">(${InSLACount})</label><br>${this.$t('queue.inSLA')}</span>`
                         yMargin += InSLACountStyles['fontSize']
                     }
-                    
+
                     dataLabels = `<p style="text-align: center;"> ${dataLabels[0]} <br> ${dataLabels[1]}<p>`
                     yMargin = (yMargin * 1.5 - activitiesToDisplay.length * 5)
-                    
+
                     this.chartData = {
                         ...activityChartConfig,
                         series: data,

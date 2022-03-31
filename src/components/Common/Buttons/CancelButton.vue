@@ -30,7 +30,7 @@ export default {
     },
     computed: {
         buttonLabel () {
-            return this.label || this.$t('Cancel')
+            return this.label || this.$t('common.cancel')
         }
     }
 }

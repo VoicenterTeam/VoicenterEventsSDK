@@ -27,7 +27,7 @@ export default {
     },
     data () {
         return {
-            titleDefault: this.$t('Warning'),
+            titleDefault: this.$t('general.notification.warning'),
             descriptionDefault: this.$t('dialog.warning.description')
         }
     },
