@@ -293,7 +293,7 @@ function onNewEvent(_ref) {
       break;
 
     case eventTypes.DIALER_EVENT:
-      store.dispatch("".concat(dialersModuleName, "/updateDialers"), _toConsumableArray(data.data));
+      store.dispatch("".concat(dialersModuleName, "/updateDialers"), _toConsumableArray(data));
       break;
   }
 }
