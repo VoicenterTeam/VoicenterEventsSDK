@@ -24,6 +24,7 @@ function isSocketOffline(event) {
 export default function onNewEvent({ eventData, store, extensionsModuleName, queuesModuleName, dialersModuleName }) {
   let { name, data } = eventData
   store.commit(`${extensionsModuleName}/SET_IS_SOCKET_OFFLINE`, isSocketOffline(eventData))
+  console.log(data, name, 'data')
   switch (name) {
     case eventTypes.ALL_EXTENSION_STATUS:
       store.dispatch(`${extensionsModuleName}/setExtensions`, data.extensions)
