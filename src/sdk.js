@@ -578,26 +578,24 @@ class EventsSDK {
       localStorage.setItem('getSessionStorage', Date.now());
     }
 
-    return new Promise((resolve) => {
-      window.addEventListener('storage', (event) => {
-        if (event.key === 'getSessionStorage') {
-          // Some tab asked for the sessionStorage -> send it
-          localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
-          localStorage.removeItem('sessionStorage');
-        } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
-          // sessionStorage is empty -> fill it
-          const data = JSON.parse(event.newValue)
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'getSessionStorage') {
+        // Some tab asked for the sessionStorage -> send it
+        localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
+        localStorage.removeItem('sessionStorage');
+      } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
+        // sessionStorage is empty -> fill it
+        const data = JSON.parse(event.newValue)
 
-          for (let key in data) {
-            if (data.hasOwnProperty(key)) {
-              window.sessionStorage.setItem(key, data[key]);
-            }
+        for (let key in data) {
+          if (data.hasOwnProperty(key)) {
+            window.sessionStorage.setItem(key, data[key]);
           }
-
-          resolve()
         }
-      })
+      }
     })
+
+    return new Promise(resolve => setTimeout((resolve), 200))
   }
 
   /**

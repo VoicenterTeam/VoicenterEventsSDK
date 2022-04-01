@@ -1358,25 +1358,24 @@ var EventsSDK = /*#__PURE__*/function () {
         localStorage.setItem('getSessionStorage', Date.now());
       }
 
-      return new Promise(function (resolve) {
-        window.addEventListener('storage', function (event) {
-          if (event.key === 'getSessionStorage') {
-            // Some tab asked for the sessionStorage -> send it
-            localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
-            localStorage.removeItem('sessionStorage');
-          } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
-            // sessionStorage is empty -> fill it
-            var data = JSON.parse(event.newValue);
+      window.addEventListener('storage', function (event) {
+        if (event.key === 'getSessionStorage') {
+          // Some tab asked for the sessionStorage -> send it
+          localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
+          localStorage.removeItem('sessionStorage');
+        } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
+          // sessionStorage is empty -> fill it
+          var data = JSON.parse(event.newValue);
 
-            for (var key in data) {
-              if (data.hasOwnProperty(key)) {
-                window.sessionStorage.setItem(key, data[key]);
-              }
+          for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+              window.sessionStorage.setItem(key, data[key]);
             }
-
-            resolve();
           }
-        });
+        }
+      });
+      return new Promise(function (resolve) {
+        return setTimeout(resolve, 200);
       });
     }
     /**
