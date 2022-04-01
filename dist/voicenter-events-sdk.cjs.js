@@ -297,9 +297,7 @@ function onNewEvent(_ref) {
       break;
 
     case eventTypes.DIALER_EVENT:
-      var dialers = [];
-      dialers.push(data.data);
-      console.log(dialers, 'dialers');
+      var dialers = [data.data];
       store.dispatch("".concat(dialersModuleName, "/updateDialers"), dialers);
       break;
   }
