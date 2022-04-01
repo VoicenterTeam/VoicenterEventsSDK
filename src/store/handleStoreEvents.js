@@ -64,8 +64,7 @@ export default function onNewEvent({ eventData, store, extensionsModuleName, que
       break;
     case eventTypes.DIALER_EVENT:
       let dialers = data.data;
-      console.log(data, 'data', [...dialers])
-      store.dispatch(`${dialersModuleName}/updateDialers`, [...dialers])
+      store.dispatch(`${dialersModuleName}/updateDialers`, [dialers])
       break;
     default:
       break;
