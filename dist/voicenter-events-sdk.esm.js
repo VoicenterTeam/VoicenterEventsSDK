@@ -293,7 +293,7 @@ function onNewEvent(_ref) {
       break;
 
     case eventTypes.DIALER_EVENT:
-      var dialers = [data.data];
+      var dialers = data.data;
       store.dispatch("".concat(dialersModuleName, "/updateDialers"), dialers);
       break;
   }
@@ -482,7 +482,7 @@ var state$2 = {
 var mutations$2 = (_mutations$2 = {}, _defineProperty(_mutations$2, types$2.SET_DIALERS, function (state, value) {
   state.all = value;
 }), _defineProperty(_mutations$2, types$2.UPDATE_DIALERS, function (state, data) {
-  state.all = data;
+  state.all.push(data);
 }), _mutations$2);
 var actions$2 = {
   setDialers: async function setDialers(_ref, value) {
