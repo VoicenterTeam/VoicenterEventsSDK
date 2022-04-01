@@ -293,7 +293,7 @@ function onNewEvent(_ref) {
       break;
 
     case eventTypes.DIALER_EVENT:
-      var dialers = data.data;
+      var dialers = data;
       store.dispatch("".concat(dialersModuleName, "/updateDialers"), [dialers]);
       break;
   }
