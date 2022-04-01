@@ -89,7 +89,6 @@
     const EXCEPTIONS = [
         widgetDataTypes.COUNTER_TYPE_ID,
         widgetDataTypes.HISTORY_COUNTERS,
-        // widgetDataTypes.INFO_TYPE_ID,
         widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
         widgetDataTypes.TOTAL_OUTGOING_CALLS,
         widgetDataTypes.AVERAGE_CALLS_DURATION,
@@ -163,7 +162,6 @@
             showDeleteButton() {
 
                 let dataType = getWidgetDataType(this.widget)
-                console.log(this.widget, 'q')
                 return !EXCEPTIONS.includes(dataType)
             },
             getDialogComponent() {
@@ -220,12 +218,10 @@
                 this.$emit('update-item', widget)
             },
             getComponentTypeAndSetData(widget) {
-                console.log(widget, 'widget')
                 let dataTypeId = getWidgetDataType(widget)
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
-                console.log(componentType, 'componentType', dataTypeId)
 
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)
@@ -257,7 +253,6 @@
             }
         },
         mounted() {
-            // this.getComponentTypeAndSetData(this.widget)
             this.checkWidgetTimeConfig()
 
             const { editMode } = this.widget.WidgetLayout || false

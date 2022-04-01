@@ -1,33 +1,39 @@
 <template>
     <div>
-        <!-- {{ availableColumns }}
-        {{ visibleColumns }}
-        {{ columns }}
-        {{ widget }} -->
         <data-table
             :widget="data"
             :border="border"
             :cell-class-name="getCellClassName"
             :cell-style="getCellStyle"
-            :columns="availableColumns"
+            :columns="[
+                {
+                    prop: 'a'
+                },
+                {
+                    prop: 'b'
+                },
+                {
+                    prop: 'c'
+                }
+            ]"
             :editable="editable"
-            :showColumns="visibleColumns"
+            :showColumns="['a', 'b', 'c']"
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
             can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
-            <template v-slot:user_id="{row}">
-                {{ row.user_id }}
+            <template v-slot:a="{row}">
+                {{ row.a }}
             </template>
-            <template v-slot:online_user_id="{row}">
-                {{ getOnlineUserID(row.user_id) }}
+            <template v-slot:b="{row}">
+                {{ row.b }}
             </template>
-            <template v-slot:representant="{row}">
-                {{ row.representant }}
+            <template v-slot:c="{row}">
+                {{ row.c }}
             </template>
-            <template v-slot:extension_id="{row}">
+            <!-- <template v-slot:extension_id="{row}">
                 {{ row.extension_id }}
             </template>
             <template v-slot:extension_name="{row}">
@@ -88,7 +94,7 @@
                         <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
                     </el-input>
                 </div>
-            </template>
+            </template> -->
         </data-table>
     </div>
 </template>
@@ -102,9 +108,10 @@
     import { getInitialExtensionTime } from '@/util/timeUtils'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { displayUsersRelatedWithAdmin, ADMIN_USER_ID } from '@/helpers/util'
+    import dialerMixin from '@/mixins/dialerMixin' 
     
     export default {
-        mixins: [dataTableMixin],
+        mixins: [dataTableMixin, dialerMixin],
         components: {
             CallsInfo: () => import('./CallsInfo'),
             DataTable: () => import('@/components/Table/DataTable'),
@@ -121,10 +128,10 @@
                 type: Boolean,
                 default: false,
             },
-            tableData: {
-                type: Array,
-                default: () => [],
-            },
+            // tableData: {
+            //     type: Array,
+            //     default: () => [],
+            // },
             columns: {
                 type: Array,
                 default: () => [],
@@ -152,11 +159,12 @@
             },
             fetchTableData: {
                 get: function () {
-                    let tableData = this.tableData
-                    if (!this.showLoggedOutUsers) {
-                        let userIds = this.onlineUserIds
-                        tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
-                    }
+                    let tableData = this.getAllDialersToDisplay
+                    // if (!this.showLoggedOutUsers) {
+                    //     let userIds = this.onlineUserIds
+                    //     tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
+                    // }
+                    // console.log(this.tableData)
 
                     if (this.filter && this.searchableFields.length > 0) {
                         tableData = tableData.filter(c => {
@@ -170,23 +178,27 @@
                     }
 
                     tableData = tableData.map((row) => {
-                        const extension = this.userExtension(row.user_id)
+                        // const extension = this.userExtension(row.user_id)
 
-                        if (!extension) {
-                            return row
-                        }
+                        // if (!extension) {
+                        //     return row
+                        // }
+                        // if (!row.data || row.data.DialerStrategy) {
+                        //     return
+                        // }
+                        // console.log(row.data.DialerStrategy.MaxConcurrentCalls, 'row')
 
                         return {
-                            ...row,
-                            online_user_id: extension.onlineUserID || '--',
-                            representant: `${extension.userID} - ${get(extension, 'summery.representative', '-')}`,
-                            extension_id: extension.number || '--',
-                            user_name: extension.userName || '--',
-                            extension_name: this.getExtensionName(row.user_id) || '--',
-                            status: this.getExtensionStatusText(row.user_id),
-                            status_duration: getInitialExtensionTime(extension, this.getSettings),
-                            caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
-                            call_info: extension.calls.length ? this.getCallInfo(extension) : '',
+                            a: 1,
+                            b: 2,
+                            c: 3
+                            // extension_id: extension.number || '--',
+                            // user_name: extension.userName || '--',
+                            // extension_name: this.getExtensionName(row.user_id) || '--',
+                            // status: this.getExtensionStatusText(row.user_id),
+                            // status_duration: getInitialExtensionTime(extension, this.getSettings),
+                            // caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
+                            // call_info: extension.calls.length ? this.getCallInfo(extension) : '',
                         }
                     })
 
@@ -214,6 +226,10 @@
             getSettings() {
                 return this.data.WidgetLayout.settings || realTimeSettings
             },
+            getAllDialersToDisplay () {
+                // console.log(this.getAllDialersWithTypeIVR)
+                return this.getAllDialersWithTypeIVR
+            }
         },
         methods: {
             getCallerInfo(userExtension) {

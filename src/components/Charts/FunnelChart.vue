@@ -1,17 +1,22 @@
 <template>
-    <div class="rounded-lg pt-2"
-         v-if="chartVisibility">
-        <highcharts
-            ref="xaxis-chart"
-            class="chart-content_wrapper"
-            :options="chartOptions"
-            :callback="onInitChartCallback"
-            :updateArgs="[true, true]"
-        />
+    <div class="rounded-lg pt-2">
+        <div v-if="chartVisibility">
+            <highcharts
+                ref="xaxis-chart"
+                class="chart-content_wrapper"
+                :options="chartOptions"
+                :callback="onInitChartCallback"
+                :updateArgs="[true, true]"
+            />
+        </div>
+        <div v-else class="flex flex-col w-full items-center">
+            <h3 class="text-main-xl">{{ $t('general.noData') }}</h3>
+            <icon-no-data class="w-64" />
+            {{ data }}
+        </div>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
     import Highcharts from 'highcharts'
     import { Chart } from 'highcharts-vue'
     import Funnel from 'highcharts/modules/funnel'
@@ -31,24 +36,19 @@
                 type: Object,
                 default: () => ({}),
             },
-            editable: {
-                type: Boolean,
-                default: false,
-            },
         },
-        data() {
+        data () {
             return {
-                chartVisibility: true,
-                fetchDataInterval: null,
+                chartVisibility: false,
                 chartOptions: {},
                 chartInstance: false,
             }
         },
-        // computed: {
-        //     campaigns() {
-        //         return this.$store.state.dialers
-        //     }
-        // },
+        computed: {
+            getAllDialersToDisplay () {
+                return this.getAllDialersWithTypeIVR
+            }
+        },
         methods: {
             onInitChartCallback(chart) {
                 this.chartInstance = chart
@@ -67,8 +67,14 @@
                 })
             },
             async getWidgetData() {
-                const allDialersWithData = this.getAllDialersWithTypeIVR
+                let allDialersWithData = this.getAllDialersToDisplay
                     .filter(el => el.data && Object.keys(el.data).length)
+
+                if (!allDialersWithData || allDialersWithData.length === 0) {
+                    this.chartVisibility = false
+                    return
+                }
+                allDialersWithData = allDialersWithData
                     .map(el => {
                         return {
                             CallStatistics: el.data.CallStatistics
@@ -86,99 +92,87 @@
                         }
                     })
 
-                    const data = {
-                        series: [{
-                            name: 'Totals',
-                            data: [
-                                ['TotalPendingCalls', allDialersWithData.TotalPendingCalls],
-                                ['TotalOriginatingCalls', allDialersWithData.TotalOriginatingCalls],
-                                ['TotalLeg1RingingCalls', allDialersWithData.TotalLeg1RingingCalls],
-                                ['TotalLeg1AnswerCalls', allDialersWithData.TotalLeg1AnswerCalls],
-                                ['TotalLeg2RingingCalls', allDialersWithData.TotalLeg2RingingCalls],
-                                ['TotalLeg2AnswerCalls', allDialersWithData.TotalLeg2AnswerCalls]
-                            ]
-                        }]
-                    }
-                    
-                    this.chartOptions = {
-                        ...data,
-                        chart: {
-                            type: 'funnel'
-                        },
-                        title: {
-                            text: 'IVR Funnel Chart'
-                        },
-                        plotOptions: {
-                            series: {
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '<b>{point.name}</b> ({point.y:,.0f})',
-                                    softConnector: true
-                                },
-                                center: ['40%', '50%'],
-                                neckWidth: '30%',
-                                neckHeight: '25%',
-                                width: '50%'
-                            }
-                        },
-                        legend: {
-                            enabled: false
-                        },
-                        responsive: {
-                            rules: [{
-                                condition: {
-                                    maxWidth: 500
-                                },
-                                chartOptions: {
-                                    plotOptions: {
-                                        series: {
-                                            dataLabels: {
-                                                inside: true
-                                            },
-                                            center: ['50%', '50%'],
-                                            width: '100%'
-                                        }
+                const hasKeyCallStatistics = 'CallStatistics' in allDialersWithData
+                if ((!hasKeyCallStatistics && Object.values(allDialersWithData).every(el => el === 0))
+                    || (hasKeyCallStatistics && Object.values(allDialersWithData.CallStatistics).every(el => el === 0)))
+                {
+                    this.chartVisibility = false
+                    return
+                }
+
+                this.chartVisibility = true
+                const dataChart = hasKeyCallStatistics ? allDialersWithData.CallStatistics : allDialersWithData
+
+                const data = {
+                    series: [{
+                        name: 'Totals',
+                        data: [
+                            ['TotalPendingCalls', dataChart.TotalPendingCalls],
+                            ['TotalOriginatingCalls', dataChart.TotalOriginatingCalls],
+                            ['TotalLeg1RingingCalls', dataChart.TotalLeg1RingingCalls],
+                            ['TotalLeg1AnswerCalls', dataChart.TotalLeg1AnswerCalls],
+                            ['TotalLeg2RingingCalls', dataChart.TotalLeg2RingingCalls],
+                            ['TotalLeg2AnswerCalls', dataChart.TotalLeg2AnswerCalls]
+                        ]
+                    }]
+                }
+                
+                this.chartOptions = {
+                    ...data,
+                    chart: {
+                        type: 'funnel'
+                    },
+                    title: {
+                        text: 'IVR Funnel Chart'
+                    },
+                    plotOptions: {
+                        series: {
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b> ({point.y:,.0f})',
+                                softConnector: true
+                            },
+                            center: ['40%', '50%'],
+                            neckWidth: '30%',
+                            neckHeight: '25%',
+                            width: '50%'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                maxWidth: 500
+                            },
+                            chartOptions: {
+                                plotOptions: {
+                                    series: {
+                                        dataLabels: {
+                                            inside: true
+                                        },
+                                        center: ['50%', '50%'],
+                                        width: '100%'
                                     }
                                 }
-                            }]
-                        }
+                            }
+                        }]
                     }
-                    
-                //     this.chartVisibility = false
-                //     this.$nextTick(() => {
-                //         this.chartVisibility = true
-                //     })
-                // } catch (e) {
-                //     console.warn(e)
-                //     let status = get(e, 'response.status')
-                //     if (status === 400) {
-                //         let refreshDelay = getDefaultTimeDelay()
-                //         this.$set(this.data, 'DefaultRefreshInterval', refreshDelay)
-                //     }
-                // }
+                }
             },
         },
         mounted() {
             this.getWidgetData()
-        //     if (this.data.DefaultRefreshInterval) {
-        //         this.fetchDataInterval = setInterval(() => {
-        //             this.getWidgetData()
-        //         }, this.data.DefaultRefreshInterval)
-        //     }
         },
-        // watch: {
-        //     data: {
-        //         immediate: true,
-        //         handler: function () {
-        //             this.getWidgetData()
-        //         },
-        //     },
-        // },
-        // beforeDestroy() {
-        //     if (this.fetchDataInterval) {
-        //         clearInterval(this.fetchDataInterval)
-        //     }
-        // },
+        watch: {
+            getAllDialersToDisplay: {
+                immediate: true,
+                handler: function () {
+                    this.getWidgetData()
+                }
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
