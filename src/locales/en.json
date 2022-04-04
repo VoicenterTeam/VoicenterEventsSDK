@@ -310,10 +310,8 @@
 	"report.addNewReport": "Add New Report",
 	"report.emailSubject": "Email Subject",
 	"report.reportStatus": "Report Status",
-    "report": {
-        "addWidgetsTitle": "Add widgets",
-        "addWidgetsDesc": "Do you want to add %{count} widget? | Do you want to add %{count} widgets?"
-    },
+	"report.addWidgetsTitle": "Add widgets",
+	"report.addWidgetsDesc": "Do you want to add %{count} widget? | Do you want to add %{count} widgets?",
 	"settings.add.filter": "Add filter",
 	"settings.time.frame": "Time frame",
 	"tooltip.edit.styles": "Edit styles",
