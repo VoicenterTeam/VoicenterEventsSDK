@@ -12,7 +12,6 @@
         <div v-else class="flex flex-col w-full items-center">
             <h3 class="text-main-xl">{{ $t('general.noData') }}</h3>
             <icon-no-data class="w-64" />
-            {{ data }}
         </div>
     </div>
 </template>
@@ -67,8 +66,10 @@
                 })
             },
             async getWidgetData() {
+                const campaigns = this.data.WidgetConfig.find(el => el.ParameterName === '{|campaign_ivr_list|}')
+                    .WidgetParameterValueJson.EntityPositive
                 let allDialersWithData = this.getAllDialersToDisplay
-                    .filter(el => el.data && Object.keys(el.data).length)
+                    .filter(el => el.data && Object.keys(el.data).length && campaigns.includes(el.campaignID))
 
                 if (!allDialersWithData || allDialersWithData.length === 0) {
                     this.chartVisibility = false
@@ -105,14 +106,14 @@
 
                 const data = {
                     series: [{
-                        name: 'Totals',
+                        name: this.$t('dialer.totals'),
                         data: [
-                            ['TotalPendingCalls', dataChart.TotalPendingCalls],
-                            ['TotalOriginatingCalls', dataChart.TotalOriginatingCalls],
-                            ['TotalLeg1RingingCalls', dataChart.TotalLeg1RingingCalls],
-                            ['TotalLeg1AnswerCalls', dataChart.TotalLeg1AnswerCalls],
-                            ['TotalLeg2RingingCalls', dataChart.TotalLeg2RingingCalls],
-                            ['TotalLeg2AnswerCalls', dataChart.TotalLeg2AnswerCalls]
+                            [this.$t('dialer.totalPendingCalls'), dataChart.TotalPendingCalls],
+                            [this.$t('dialer.totalOriginatingCalls'), dataChart.TotalOriginatingCalls],
+                            [this.$t('dialer.totalLeg1RingingCalls'), dataChart.TotalLeg1RingingCalls],
+                            [this.$t('dialer.totalLeg1AnswerCalls'), dataChart.TotalLeg1AnswerCalls],
+                            [this.$t('dialer.totalLeg2RingingCalls'), dataChart.TotalLeg2RingingCalls],
+                            [this.$t('dialer.totalLeg2AnswerCalls'), dataChart.TotalLeg2AnswerCalls]
                         ]
                     }]
                 }
@@ -123,7 +124,7 @@
                         type: 'funnel'
                     },
                     title: {
-                        text: 'IVR Funnel Chart'
+                        text: this.$t('dialer.funnelChart')
                     },
                     plotOptions: {
                         series: {
@@ -171,12 +172,18 @@
                 handler: function () {
                     this.getWidgetData()
                 }
+            },
+            data: {
+                immediate: true,
+                handler: function () {
+                    this.getWidgetData()
+                }
             }
         }
     }
 </script>
 <style lang="scss" scoped>
-.chart-content_wrapper {
-    max-height: 400px;
+::v-deep .highcharts-credits {
+    display: none;
 }
 </style>

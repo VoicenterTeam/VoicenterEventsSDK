@@ -5,85 +5,15 @@
             :border="border"
             :cell-class-name="getCellClassName"
             :cell-style="getCellStyle"
-            :columns="[
-                {
-                    prop: 'a'
-                },
-                {
-                    prop: 'b'
-                },
-                {
-                    prop: 'c'
-                }
-            ]"
+            :columns="availableColumns"
             :editable="editable"
-            :showColumns="['a', 'b', 'c']"
+            :showColumns="visibleColumns"
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
             can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
-            <template v-slot:a="{row}">
-                {{ row.a }}
-            </template>
-            <template v-slot:b="{row}">
-                {{ row.b }}
-            </template>
-            <template v-slot:c="{row}">
-                {{ row.c }}
-            </template>
-            <!-- <template v-slot:extension_id="{row}">
-                {{ row.extension_id }}
-            </template>
-            <template v-slot:extension_name="{row}">
-                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{ getExtensionName(row.user_id) }}
-                        </span>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:user_name="{row}">
-                        <span :key="row.user_id" v-if="userExtension(row.user_id) && drawRow">
-                            {{ getUserName(row.user_id) }}
-                        </span>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:status_duration="{row}">
-                <status-duration :extension="userExtension(row.user_id)"
-                                 :key="row.user_id"
-                                 :settings="getSettings"
-                                 v-if="userExtension(row.user_id) && drawRow">
-                </status-duration>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:status="{row}">
-                <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
-                             :userId="row.user_id"
-                             :ref="`user-status-${row.user_id}`"
-                             v-if="userExtension(row.user_id) && drawRow"/>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:call_info="{row}">
-                <calls-info :extension="userExtension(row.user_id)" :hideCallerInfo="true"
-                            :key="row.user_id"
-                            :userId="row.user_id"
-                            :settings="getSettings"
-                            v-if="userExtension(row.user_id) && drawRow"/>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:caller_info="{row}">
-                <calls-info :extension="userExtension(row.user_id)" :hideCallInfo="true"
-                            :key="row.user_id"
-                            :userId="row.user_id"
-                            v-if="userExtension(row.user_id) && drawRow"/>
-                <span v-else>---</span>
-            </template>
-            <template v-slot:title>
-                <base-widget-title :title="data.Title"/>
-            </template>
-            <template v-slot:time-frame>
-                <time-frame :widget="data"/>
-            </template>
             <template v-slot:search-input>
                 <div class="flex items-center w-64 px-1">
                     <el-input
@@ -94,52 +24,41 @@
                         <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
                     </el-input>
                 </div>
-            </template> -->
+            </template>
         </data-table>
     </div>
 </template>
 <script>
-    import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import dataTableMixin from '@/mixins/dataTableMixin'
-    import { extensionColor } from '@/util/extensionStyles'
-    import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
-    import { dynamicRows } from '@/enum/realTimeTableConfigs'
-    import { getInitialExtensionTime } from '@/util/timeUtils'
-    import { realTimeSettings } from '@/enum/defaultWidgetSettings'
-    import { displayUsersRelatedWithAdmin, ADMIN_USER_ID } from '@/helpers/util'
-    import dialerMixin from '@/mixins/dialerMixin' 
+    import dialerMixin from '@/mixins/dialerMixin'
     
     export default {
         mixins: [dataTableMixin, dialerMixin],
         components: {
-            CallsInfo: () => import('./CallsInfo'),
-            DataTable: () => import('@/components/Table/DataTable'),
-            TimeFrame: () => import('./TimeFrame'),
-            UserStatus: () => import('./UserStatus'),
-            StatusDuration: () => import('./StatusDuration')
+            DataTable: () => import('@/components/Table/DataTable')
         },
         props: {
             data: {
                 type: Object,
-                default: () => ({}),
+                default: () => ({})
             },
             editable: {
                 type: Boolean,
-                default: false,
+                default: false
             },
-            // tableData: {
-            //     type: Array,
-            //     default: () => [],
-            // },
-            columns: {
+            tableData: {
                 type: Array,
                 default: () => [],
+            },
+            columns: {
+                type: Array,
+                default: () => []
             },
             searchableFields: {
                 type: Array,
-                default: () => [],
-            },
+                default: () => []
+            }
         },
         data() {
             return {
@@ -151,24 +70,16 @@
             }
         },
         computed: {
-            adminSelected() {
-                return displayUsersRelatedWithAdmin(this.data.WidgetConfig)
-            },
-            showLoggedOutUsers() {
-                return get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
-            },
             fetchTableData: {
-                get: function () {
+                get () {
                     let tableData = this.getAllDialersToDisplay
-                    // if (!this.showLoggedOutUsers) {
-                    //     let userIds = this.onlineUserIds
-                    //     tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
-                    // }
-                    // console.log(this.tableData)
+                    const searchableFields = this.searchableFields
+                        .filter(el => el !== 'campaignName' && el !== 'campaignType')
+                    searchableFields.unshift('name', 'type')
 
-                    if (this.filter && this.searchableFields.length > 0) {
+                    if (this.filter && searchableFields.length > 0) {
                         tableData = tableData.filter(c => {
-                            return this.searchableFields.some(field => {
+                            return searchableFields.some(field => {
                                 if (c[field]) {
                                     return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
                                 }
@@ -178,149 +89,57 @@
                     }
 
                     tableData = tableData.map((row) => {
-                        // const extension = this.userExtension(row.user_id)
-
-                        // if (!extension) {
-                        //     return row
-                        // }
-                        // if (!row.data || row.data.DialerStrategy) {
-                        //     return
-                        // }
-                        // console.log(row.data.DialerStrategy.MaxConcurrentCalls, 'row')
+                        const additionalDialerStrategyColumns = {}
+                        const additionalCallStatisticsColumns = {}
+                        if (row.data.DialerStrategy && Object.keys(row.data.DialerStrategy).length) {
+                            const dialerStrategy = row.data.DialerStrategy
+                            for (const key in dialerStrategy) {
+                                additionalDialerStrategyColumns[key] = dialerStrategy[key] || '--'
+                            }
+                        }
+                        if (row.data.CallStatistics && Object.keys(row.data.CallStatistics).length) {
+                            const callStatistics = row.data.CallStatistics
+                            for (const key in callStatistics) {
+                                additionalCallStatisticsColumns[key] = callStatistics[key]
+                            }
+                        }
 
                         return {
-                            a: 1,
-                            b: 2,
-                            c: 3
-                            // extension_id: extension.number || '--',
-                            // user_name: extension.userName || '--',
-                            // extension_name: this.getExtensionName(row.user_id) || '--',
-                            // status: this.getExtensionStatusText(row.user_id),
-                            // status_duration: getInitialExtensionTime(extension, this.getSettings),
-                            // caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
-                            // call_info: extension.calls.length ? this.getCallInfo(extension) : '',
+                            campaignName: row.name,
+                            campaignType: row.type,
+                            campaignID: row.campaignID,
+                            ...additionalDialerStrategyColumns,
+                            ...additionalCallStatisticsColumns
                         }
                     })
 
                     return tableData
                 },
-                set: function (newValue) {
+                set (newValue) {
                     return newValue
                 }
             },
-            extensions() {
-                return this.$store.state.extensions.extensions
-            },
-            filteredExtensions() {
-                if (this.adminSelected) {
-                    return this.extensions
-                }
-                return this.extensions.filter(ext => ext.userID !== ADMIN_USER_ID)
-            },
-            onlineUserIds() {
-                return this.onlineExtensions.map((el) => el.representative)
-            },
-            onlineExtensions() {
-                return this.filteredExtensions.filter(e => e.representativeStatus !== LOGOUT_STATUS)
-            },
-            getSettings() {
-                return this.data.WidgetLayout.settings || realTimeSettings
-            },
             getAllDialersToDisplay () {
-                // console.log(this.getAllDialersWithTypeIVR)
-                return this.getAllDialersWithTypeIVR
+                const campaigns = this.data.WidgetConfig.find(el => el.ParameterName === '{|campaign_ivr_list|}')
+                    .WidgetParameterValueJson.EntityPositive
+                return this.getAllDialersWithTypeIVR.filter(el => el.data && Object.keys(el.data).length && campaigns.includes(el.campaignID))
             }
         },
         methods: {
-            getCallerInfo(userExtension) {
-                let callerInfo = ''
-                userExtension.calls.forEach((call) => {
-                    callerInfo += call.callername
-                })
-                return callerInfo
-            },
-            getExtensionStatusText(userID) {
-                const ref = this.$refs[`user-status-${userID}`]
-                if (!ref) {
-                    return '--'
-                }
-                
-                return ref.statusText
-            },
-            getExtensionName(userId) {
-                const extension = this.userExtension(userId)
-                if (!extension) {
-                    return '--'
-                }
-                return get(extension, 'userName', '--')
-            },
-            getCallInfo(userExtension) {
-                let callInfo = 0
-                userExtension.calls.forEach((call) => {
-                    callInfo += Number(call.callStarted)
-                })
-                return callInfo
-            },
-            userExtension(userId) {
-                if (!this.showLoggedOutUsers) {
-                    return this.onlineExtensions.find(e => e.representative === userId)
-                }
-                return this.filteredExtensions.find(e => e.userID === userId || e.onlineUserID === userId)
-            },
-            getUserName(userId) {
-                const extension = this.userExtension(userId)
-                if (!extension) {
-                    return '--'
-                }
-                return get(extension, 'summery.representative', extension.userName)
-            },
-            getOnlineUserID(userId) {
-                const extension = this.userExtension(userId)
-                if (!extension) {
-                    return userId
-                }
-                return get(extension, 'onlineUserID', userId)
-            },
-            getCellStyle({ row, column }) {
-                let color = 'transparent'
-                
-                if (dynamicRows.includes(column.property)) {
-                    let extension = this.userExtension(row.user_id)
-                    if (extension) {
-                        color = extensionColor(extension)
-                    }
-                }
+            getCellStyle() {
+                const color = 'transparent'
                 return { 'background-color': color }
             },
-            getCellClassName({ column, row }) {
-                let className = ''
-                let extension = this.userExtension(row.user_id)
-                
-                if (dynamicRows.includes(column.property) && extension) {
-                    className = 'text-white'
-                }
-                
-                return className
+            getCellClassName() {
+                return ''
             },
             sortChange() {
                 this.drawRow = false
                 this.$nextTick(() => {
                     this.drawRow = true
                 })
-            },
-            /* TODO: Use this method in sort-change event handler if previous doesn't work */
-            /*onSortChange({column, prop, order}) {
-                if (prop === null) {
-                    return
-                }
-
-                if (order === 'ascending') {
-                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] > b[prop]) ? 1 : -1)
-                } else if (order === 'descending') {
-                    this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
-                }
-            },*/
-        },
+            }
+        }
     }
 </script>
 <style lang="scss">

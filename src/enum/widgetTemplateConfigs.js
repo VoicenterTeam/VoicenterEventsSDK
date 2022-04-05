@@ -87,7 +87,7 @@ const accountListConfig = {
 
 const campaignIvrListConfig = {
     ParameterName: '{|campaign_ivr_list|}',
-    EndPoint: '​/User/List/',
+    EndPoint: '​/Campaigns/List/',
     label: 'camp_name',
     value: 'camp_id',
     EntitiesListKey: 'Campaigns',

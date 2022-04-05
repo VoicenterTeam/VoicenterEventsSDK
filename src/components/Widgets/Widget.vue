@@ -15,16 +15,18 @@
             <span v-if="showDeleteButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
                     <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
             </span>
-            <WidgetAction :key="widget.WidgetID"
-                          :editable="editable"
-                          :edit-mode="editMode"
-                          :widget="widget"
-                          @on-manage-notes="tryManageNotes"
-                          @on-add-note="onAddNote"
-                          v-if="showDeleteButton"
-                          @on-duplicate="duplicateWidget"
-                          @on-remove="removeWidget"
-                          @on-show-update-dialog="showUpdateDialog = true"/>
+            <WidgetAction
+                :key="widget.WidgetID"
+                :editable="editable"
+                :edit-mode="editMode"
+                :widget="widget"
+                @on-manage-notes="tryManageNotes"
+                @on-add-note="onAddNote"
+                v-if="showDeleteButton"
+                @on-duplicate="duplicateWidget"
+                @on-remove="removeWidget"
+                @on-show-update-dialog="showUpdateDialog = true"
+            />
         </div>
         <div class="flex w-full flex-col widget-container h-full contents"
              v-if="inView">
@@ -41,8 +43,9 @@
                 class="widget"
                 v-bind="widget.WidgetLayout">
             </component>
-            <portal-target v-if="haveFooterPortal"
-                           :name="`widget-footer__${widget.WidgetID}`"
+            <portal-target
+                v-if="haveFooterPortal"
+                :name="`widget-footer__${widget.WidgetID}`"
             />
         </div>
         <component
@@ -120,7 +123,6 @@
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
             TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog"),
-            SocketsRealTimeTable: () => import('./Data/Table/SocketsRealTimeTable'),
             SocketsRealTimeFunnel: () => import('@/components/Charts/FunnelChart.vue')
         },
         props: {
@@ -222,6 +224,9 @@
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
+                if (componentType === 'SocketsRealTimeTable') {
+                    componentType = 'TableData'
+                }
 
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)
