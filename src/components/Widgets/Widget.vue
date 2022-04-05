@@ -71,7 +71,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { Switch, Tooltip } from 'element-ui'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import { TABLE_TYPE_ID } from '@/enum/widgetDataTypes'
+    import { TABLE_TYPE_ID, INFO_TYPE_ID } from '@/enum/widgetDataTypes'
     import { defaultColors } from '@/enum/defaultWidgetSettings'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import {
@@ -153,7 +153,7 @@
         },
         computed: {
             haveFooterPortal() {
-                return get(this.widget, 'DataTypeID', -1) === TABLE_TYPE_ID
+                return get(this.widget, 'DataTypeID', -1) === TABLE_TYPE_ID || INFO_TYPE_ID
             },
             showWidgetTitle() {
                 return get(this.widget.WidgetLayout, 'displayWidgetTitle', true)

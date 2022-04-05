@@ -1144,5 +1144,6 @@
 	"dialer.totalLeg1RingingCalls": "TotalLeg1RingingCalls",
 	"dialer.totalLeg1AnswerCalls": "TotalLeg1AnswerCalls",
 	"dialer.totalLeg2RingingCalls": "TotalLeg2RingingCalls",
-	"dialer.totalLeg2AnswerCalls": "TotalLeg2AnswerCalls"
+	"dialer.totalLeg2AnswerCalls": "TotalLeg2AnswerCalls",
+	"widget.time.today": "Time today"
 }

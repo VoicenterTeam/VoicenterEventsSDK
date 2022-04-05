@@ -148,7 +148,7 @@ export function timeFilterToHuman(widget, toFormat = 'dd/MM/yyyy') {
 }
 
 export function isChartWidget(widget) {
-    return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget)
+    return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget) || isFunnelChartWidget(widget)
 }
 
 export function isCounterAgentsInStatus(widget) {
