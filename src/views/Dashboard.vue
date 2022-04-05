@@ -108,6 +108,7 @@
         />
     </div>
 </template>
+
 <script>
     import get from 'lodash/get'
     import orderBy from 'lodash/orderBy'
@@ -122,7 +123,7 @@
     import removeEntitiesMixin from '@/mixins/dashobardOperation/removeEntitiesMixin'
     import updateEntitiesMixin from '@/mixins/dashobardOperation/updateEntitiesMixin'
     import { ACTIVE_WIDGET_GROUP_KEY, LAYOUT_TYPE_KEY, layoutTypes } from '@/enum/layout'
-    
+
     export default {
         components: {
             AccountNoData: () => import('@/views/AccountNoData'),
@@ -134,7 +135,7 @@
             Sidebar: () => import('@/components/LayoutRendering/Sidebar'),
             SocketStatusButton: () => import('@/components/Common/SocketStatusButton'),
             SocketStatusAlert: () => import('@/components/Common/SocketStatusAlert'),
-            DeleteDialog: () => import('@/components/Dialogs/DeleteDialog')
+            DeleteDialog: () => import('@/components/Dialogs/DeleteDialog'),
         },
         mixins: [removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
         props: {

@@ -60,7 +60,7 @@ export default {
         ReportTabs,
         ReportEdit,
         ReportsList,
-        ReportCreate
+        ReportCreate,
     },
     data() {
         return {
@@ -73,7 +73,7 @@ export default {
                 }
             ],
             createTabName: CREATE_TAB_NAME,
-            listTabName: LIST_TAB_NAME
+            listTabName: LIST_TAB_NAME,
         }
     },
     computed: {
@@ -146,7 +146,7 @@ export default {
         onReloadDataReportsList () {
             this.removeTab(this.activeTab)
             this.$refs['reports-list'].reloadData()
-        }
+        },
     },
     watch: {
         '$route': {
