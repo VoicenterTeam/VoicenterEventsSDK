@@ -63,7 +63,15 @@ export default function onNewEvent({ eventData, store, extensionsModuleName, que
       store.dispatch(`${dialersModuleName}/setDialers`, data.dialers)
       break;
     case eventTypes.DIALER_EVENT:
-      const dialers = [data.data];
+      const dialer = data.data;
+      const allDialers = store.state[dialersModuleName].all || []
+      let dialerIndex = allDialers.findIndex(e => e.campaignID === dialer.campaignID)
+      if (dialerIndex !== -1) {
+        store.dispatch(`${dialersModuleName}/updateDialers`, {
+          index: dialerIndex,
+          dialer
+        })
+      }
       store.dispatch(`${dialersModuleName}/updateDialers`, dialers)
       break;
     default:

@@ -1,17 +1,18 @@
 const types = {
   SET_DIALERS: 'SET_DIALERS',
-  UPDATE_DIALERS: 'UPDATE_DIALERS',
+  UPDATE_DIALERS: 'UPDATE_DIALERS'
 }
+
 const state = {
-  all: [],
+  all: []
 }
 
 const mutations = {
   [types.SET_DIALERS]: (state, value) => {
     state.all = value
   },
-  [types.UPDATE_DIALERS]: (state, data) => {
-    state.all = data
+  [types.UPDATE_DIALERS]: (state, { index, dialer }) => {
+    state.all.splice(index, 1, dialer)
   }
 }
 

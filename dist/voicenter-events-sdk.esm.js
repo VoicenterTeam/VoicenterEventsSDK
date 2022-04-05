@@ -298,7 +298,19 @@ function onNewEvent(_ref) {
       break;
 
     case eventTypes.DIALER_EVENT:
-      var dialers = [data.data];
+      var dialer = data.data;
+      var allDialers = store.state[dialersModuleName].all || [];
+      var dialerIndex = allDialers.findIndex(function (e) {
+        return e.campaignID === dialer.campaignID;
+      });
+
+      if (dialerIndex !== -1) {
+        store.dispatch("".concat(dialersModuleName, "/updateDialers"), {
+          index: dialerIndex,
+          dialer: dialer
+        });
+      }
+
       store.dispatch("".concat(dialersModuleName, "/updateDialers"), dialers);
       break;
   }
@@ -486,16 +498,18 @@ var state$2 = {
 };
 var mutations$2 = (_mutations$2 = {}, _defineProperty(_mutations$2, types$2.SET_DIALERS, function (state, value) {
   state.all = value;
-}), _defineProperty(_mutations$2, types$2.UPDATE_DIALERS, function (state, data) {
-  state.all = data;
+}), _defineProperty(_mutations$2, types$2.UPDATE_DIALERS, function (state, _ref) {
+  var index = _ref.index,
+      dialer = _ref.dialer;
+  state.all.splice(index, 1, dialer);
 }), _mutations$2);
 var actions$2 = {
-  setDialers: async function setDialers(_ref, value) {
-    var commit = _ref.commit;
+  setDialers: async function setDialers(_ref2, value) {
+    var commit = _ref2.commit;
     commit(types$2.SET_DIALERS, value);
   },
-  updateDialers: async function updateDialers(_ref2, value) {
-    var commit = _ref2.commit;
+  updateDialers: async function updateDialers(_ref3, value) {
+    var commit = _ref3.commit;
     commit(types$2.UPDATE_DIALERS, value);
   }
 };
