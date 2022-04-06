@@ -1136,5 +1136,6 @@
     "general.calls": "Calls",
     "general.perpage": "Per Page",
     "general.reject": "Reject",
-    "general.types": "Types"
+    "general.types": "Types",
+	"dashboard.confirm.action": "Please confirm you action?"
 }

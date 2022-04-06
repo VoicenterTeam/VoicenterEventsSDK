@@ -59,7 +59,7 @@
                         </div>
                     </el-form>
                     <div
-                        class="mb-18"
+                        class="mb-18 template-categories"
                         key="TemplateCategories"
                     >
                         <div class="flex">
@@ -73,26 +73,23 @@
                                     @on-choose-category="onChooseCategory"
                                 />
                             </div>
-                            <div>
+                            <div class="w-full">
                                 <div class="pr-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
                                     <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span>
                                     <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
-                                        @click="onSubmit" :disabled="disableCreateBlankBtn || loading">
+                                        @click="tryAddDashboard(true)" :disabled="disableCreateBlankBtn || loading">
                                         <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
                                         {{ $t('dashboard.createBlankDashboard') }}
                                     </button>
                                 </div>
                                 <fade-transition mode="out-in" :duration="transitionDuration">
                                     <TemplatesPreview
-                                        class="col-span-3"
                                         key="TemplatesPreview"
-                                        @on-submit="tryAddDashboard"
                                         :selected-template="selectedTemplate"
                                         @on-select-template="onSelectTemplate"
                                         @on-detailed-view="onDetailedView"
                                         v-if="dashboardTemplateCategory && dashboardTemplateCategories"
                                         :dashboard-category="selectedCategory"
-                                        :disableCreateBlankBtn="disableCreateBlankBtn"
                                     />
                                 </fade-transition>
                             </div>
@@ -114,6 +111,7 @@
                     @on-click="onDiscard"
                 />
                 <confirm-button
+                    :disabled="disableCreateBlankBtn || loading"
                     :label="$t('common.save')"
                     @on-click="tryAddDashboard"
                 />
@@ -121,10 +119,8 @@
         </div>
         <ConfirmDialog
             :visible.sync="showConfirmDialog"
-            title="Add Dashboard"
-            description="Please confirm you action?"
-            @on-cancel="onCancelDialog"
-            @on-submit="onSubmit"
+            :title="$t('dashboard.addDashboard')"
+            :description="$t('dashboard.confirm.action')"
         >
             <template v-slot:footer-actions>
                 <slot name="footer-actions">
@@ -178,7 +174,7 @@
                 selectedTemplate: false,
                 showConfirmDialog: false,
                 onViewTemplate: false,
-                createBlankDashboard: false,
+                isCreateBlankDashboard: false,
                 isPreviewDashboardTemplate: false
             }
         },
@@ -204,9 +200,6 @@
             isFormValid () {
                 return Object.values(this.model).every(el => el !== null && el !== '')
             },
-            isCreateBlankDashboard () {
-                return this.createBlankDashboard && typeof this.createBlankDashboard === 'boolean'
-            },
             allLayouts() {
                 return this.$store.getters['layout/getAllLayouts']
             }
@@ -214,9 +207,9 @@
         methods: {
             async redirectBack() {
                 if (this.isPreviewDashboardTemplate) {
-                    this.onViewTemplate = !this.onViewTemplate
+                    this.onViewTemplate = false
                     this.isPreviewDashboardTemplate = false
-                    this.createBlankDashboard = false
+                    this.isCreateBlankDashboard = false
                     this.model.DashboardTemplateID = null
                 } else {
                     this.$router.push('/')
@@ -264,8 +257,8 @@
                     console.warn(e)
                 }
             },
-            tryAddDashboard(createBlankDashboard) {
-                this.createBlankDashboard = createBlankDashboard
+            tryAddDashboard(isCreateBlankDashboard = false) {
+                this.isCreateBlankDashboard = isCreateBlankDashboard
                 if (this.isCreateBlankDashboard) {
                     this.selectedTemplate = false
                     delete this.model.DashboardTemplateID
@@ -390,5 +383,9 @@
 }
 ::v-deep .el-input input {
     @apply text-gray-950;
+}
+.template-categories {
+    min-height: 518px;
+    height: 100%;
 }
 </style>
