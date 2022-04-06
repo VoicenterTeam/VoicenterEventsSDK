@@ -72,7 +72,6 @@ export default function onNewEvent({ eventData, store, extensionsModuleName, que
           dialer
         })
       }
-      store.dispatch(`${dialersModuleName}/updateDialers`, dialers)
       break;
     default:
       break;

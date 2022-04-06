@@ -315,7 +315,6 @@ function onNewEvent(_ref) {
         });
       }
 
-      store.dispatch("".concat(dialersModuleName, "/updateDialers"), dialers);
       break;
   }
 }
