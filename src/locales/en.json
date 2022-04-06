@@ -1145,5 +1145,7 @@
 	"dialer.totalLeg1AnswerCalls": "TotalLeg1AnswerCalls",
 	"dialer.totalLeg2RingingCalls": "TotalLeg2RingingCalls",
 	"dialer.totalLeg2AnswerCalls": "TotalLeg2AnswerCalls",
-	"widget.time.today": "Time today"
+	"widget.time.today": "Time today",
+	"widget.settings.color.fonts": "Color fonts",
+	"dialer.no.calls": "No calls"
 }

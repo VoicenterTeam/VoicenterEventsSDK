@@ -10,7 +10,7 @@
             />
         </div>
         <div v-else class="flex flex-col w-full items-center">
-            <h3 class="text-main-xl">{{ $t('general.noData') }}</h3>
+            <h3 class="text-main-xl">{{ $t('dialer.no.calls') }}</h3>
             <icon-no-data class="w-64" />
         </div>
     </div>
@@ -61,6 +61,14 @@
                 newWin.print();
             },
             tryDownloadChart(type) {
+                if (!this.$refs['funnel-chart']) {
+                    this.$notify({
+                        type: 'primary',
+                        icon: true,
+                        title: this.$t('dialer.no.calls')
+                    })
+                    return
+                }
                 this.$refs['funnel-chart'].chart.exportChart({
                     type: type
                 })
