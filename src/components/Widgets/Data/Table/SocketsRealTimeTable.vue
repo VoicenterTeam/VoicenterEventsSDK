@@ -10,6 +10,7 @@
             :showColumns="visibleColumns"
             :stripe="stripe"
             :tableData="fetchTableData"
+            :allRecords="fetchTableData"
             :widgetTitle="data.Title"
             can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"

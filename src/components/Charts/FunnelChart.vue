@@ -1,8 +1,8 @@
 <template>
-    <div class="rounded-lg pt-2">
-        <div v-if="chartVisibility">
+    <div class="rounded-lg pt-2 flex items-center justify-center bg-white">
+        <div v-if="chartVisibility" class="max-w-5xl">
             <highcharts
-                ref="xaxis-chart"
+                ref="funnel-chart"
                 class="chart-content_wrapper"
                 :options="chartOptions"
                 :callback="onInitChartCallback"
@@ -61,8 +61,8 @@
                 newWin.print();
             },
             tryDownloadChart(type) {
-                this.$refs['xaxis-chart'].chart.exportChart({
-                    type: type,
+                this.$refs['funnel-chart'].chart.exportChart({
+                    type: type
                 })
             },
             async getWidgetData() {
@@ -101,7 +101,6 @@
                     return
                 }
 
-                this.chartVisibility = true
                 const dataChart = hasKeyCallStatistics ? allDialersWithData.CallStatistics : allDialersWithData
 
                 const data = {
@@ -154,14 +153,21 @@
                                             inside: true
                                         },
                                         center: ['50%', '50%'],
-                                        width: '100%'
+                                        width: '60%'
                                     }
                                 }
                             }
                         }]
                     }
                 }
+                this.reDrawChart()
             },
+            reDrawChart() {
+                this.chartVisibility = false
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
+            }
         },
         mounted() {
             this.getWidgetData()
