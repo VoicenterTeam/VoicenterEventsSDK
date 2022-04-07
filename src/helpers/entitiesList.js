@@ -20,12 +20,6 @@ export function getOptionsList(ParameterName) {
             if (!object[field]) {
                 return false
             }
-            // console.log(object, 'object')
-            // console.log(templateConfig.filterByType in object, 'qqq')
-            // if (templateConfig.filterByType in object) {
-            //     console.log(object[field], templateConfig.filterByType)
-            //     // if (object[field])
-            // }
             return object;
         })
     })
