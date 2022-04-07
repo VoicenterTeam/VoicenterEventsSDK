@@ -126,3 +126,9 @@ export default {
     },
 }
 </script>
+
+<style lang="scss">
+[dir="rtl"] .popper__arrow::after {
+    display: none !important;
+}
+</style>
