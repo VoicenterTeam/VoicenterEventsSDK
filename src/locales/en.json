@@ -1137,5 +1137,6 @@
     "general.perpage": "Per Page",
     "general.reject": "Reject",
     "general.types": "Types",
-	"dashboard.confirm.action": "Please confirm you action?"
+	"dashboard.confirm.action": "Please confirm you action?",
+	"widget.creating.youNeedChooseOneTemplate": "You need to choose a template"
 }

@@ -23,86 +23,81 @@
             </div>
         </div>
         <div class="w-full px-4 mt-6 lg:px-16 2xl:px-40 3xl:px-64">
-            <transition-group name="flip">
-                <template v-if="!onViewTemplate">
-                    <el-form class="flex flex-row items-center my-8"
-                             key="el-form" :model="model" ref="dashboardCreationForm">
-                        <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
-                            <span class="label-input label-dashboard-name">
-                                {{ $t('dashboard.setTheName') }}
-                            </span>
-                            <div class="lg:w-80 lg:mx-5">
-                                <el-form-item
-                                    prop="DashboardTitle"
-                                    :rules="[
-                                        { required: true, message: $t('validation.error.fieldIsRequired', { field: $t('dashboard.dashboardName') }) }
-                                    ]"
-                                >
-                                    <el-input type="DashboardTitle" v-model="model.DashboardTitle" />
-                                    <span class="el-form-item__error" slot="error" slot-scope="error">&nbsp;{{error.error}}</span>
-                                </el-form-item>
-                            </div>
-                        </div>
-                        <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
-                             class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto layout-block">
-                            <span class="label-input flex-wrap">
-                                {{ $t('dashboard.chooseLayout') }}
-                            </span>
-                            <div>
-                                <LayoutSelect
-                                    :active-layout="{ LayoutID: model.DashboardLayoutID }"
-                                    class="w-64 lg:mx-4"
-                                    @on-chose-layout="onChoseLayout"
-                                    :display-label="false"
-                                />
-                            </div>
-                        </div>
-                    </el-form>
-                    <div
-                        class="mb-18 template-categories"
-                        key="TemplateCategories"
-                    >
-                        <div class="flex">
-                            <div>
-                                <div class="flex flex-row items-center justify-between text-main-base font-medium mb-4">
-                                    {{ $t("general.types") }}
-                                </div>
-                                <TemplateCategories class="col-span-1 w-48 mr-6"
-                                    key="categories"
-                                    :categories="dashboardTemplateCategories"
-                                    @on-choose-category="onChooseCategory"
-                                />
-                            </div>
-                            <div class="w-full">
-                                <div class="pr-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
-                                    <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span>
-                                    <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
-                                        @click="tryAddDashboard(true)" :disabled="disableCreateBlankBtn || loading">
-                                        <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
-                                        {{ $t('dashboard.createBlankDashboard') }}
-                                    </button>
-                                </div>
-                                <fade-transition mode="out-in" :duration="transitionDuration">
-                                    <TemplatesPreview
-                                        key="TemplatesPreview"
-                                        :selected-template="selectedTemplate"
-                                        @on-select-template="onSelectTemplate"
-                                        @on-detailed-view="onDetailedView"
-                                        v-if="dashboardTemplateCategory && dashboardTemplateCategories"
-                                        :dashboard-category="selectedCategory"
-                                    />
-                                </fade-transition>
-                            </div>
+            <div v-if="!onViewTemplate">
+                <el-form
+                    class="flex flex-row items-center my-8"
+                    :model="model"
+                    ref="dashboardCreationForm"
+                >
+                    <div class="flex flex-col lg:flex-row lg:items-center w-1/2 lg:w-auto">
+                        <span class="label-input label-dashboard-name">
+                            {{ $t('dashboard.setTheName') }}
+                        </span>
+                        <div class="lg:w-80 lg:mx-5">
+                            <el-form-item
+                                prop="DashboardTitle"
+                                :rules="[
+                                    { required: true, message: $t('validation.error.fieldIsRequired', { field: $t('dashboard.dashboardName') }) }
+                                ]"
+                            >
+                                <el-input type="DashboardTitle" v-model="model.DashboardTitle" />
+                                <span class="el-form-item__error" slot="error" slot-scope="error">&nbsp;{{error.error}}</span>
+                            </el-form-item>
                         </div>
                     </div>
-                </template>
-                <template v-else>
-                    <TemplateDetailedPreview
-                        key="to-preview"
-                        :template="selectedTemplate"
-                    />
-                </template>
-            </transition-group>
+                    <div :class="$rtl.isRTL ? 'mr-1-5':'ml-1-5'"
+                            class="flex flex-col lg:flex-row lg:items-center lg:mx-0 w-1/2 lg:w-auto layout-block">
+                        <span class="label-input flex-wrap">
+                            {{ $t('dashboard.chooseLayout') }}
+                        </span>
+                        <div>
+                            <LayoutSelect
+                                :active-layout="{ LayoutID: model.DashboardLayoutID }"
+                                class="w-64 lg:mx-4"
+                                @on-chose-layout="onChoseLayout"
+                                :display-label="false"
+                            />
+                        </div>
+                    </div>
+                </el-form>
+                <div
+                    class="mb-18 template-categories"
+                >
+                    <div class="flex">
+                        <div>
+                            <div class="flex flex-row items-center justify-between text-main-base font-medium mb-4">
+                                {{ $t("general.types") }}
+                            </div>
+                            <TemplateCategories class="col-span-1 w-48 mr-6"
+                                :categories="dashboardTemplateCategories"
+                                @on-choose-category="onChooseCategory"
+                            />
+                        </div>
+                        <div class="w-full">
+                            <div class="pr-3 flex flex-row items-center justify-between text-main-base font-medium mb-4">
+                                <span v-if="selectedCategory && selectedCategory.DashboardTemplateCategoryDescription">{{ selectedCategory.DashboardTemplateCategoryDescription }}</span>
+                                <button class="create-blank-dashboard text-primary cursor-pointer flex items-center font-medium"
+                                    @click="tryAddDashboard(true)" :disabled="disableCreateBlankBtn || loading">
+                                    <i class="vc-icon-plus-linear mx-1 font-bold text-xl" />
+                                    {{ $t('dashboard.createBlankDashboard') }}
+                                </button>
+                            </div>
+                            <TemplatesPreview
+                                :selected-template="selectedTemplate"
+                                @on-select-template="onSelectTemplate"
+                                @on-detailed-view="onDetailedView"
+                                v-if="dashboardTemplateCategory && dashboardTemplateCategories"
+                                :dashboard-category="selectedCategory"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <TemplateDetailedPreview
+                    :template="selectedTemplate"
+                />
+            </div>
         </div>
         <div class="flex w-full items-center border-t py-6">
             <div class="mx-4 lg:mx-16 2xl:mx-40 3xl:mx-64 flex w-full justify-between items-center">
@@ -111,7 +106,7 @@
                     @on-click="onDiscard"
                 />
                 <confirm-button
-                    :disabled="disableCreateBlankBtn || loading"
+                    :disabled="loading"
                     :label="$t('common.save')"
                     @on-click="tryAddDashboard"
                 />
@@ -262,6 +257,20 @@
                 if (this.isCreateBlankDashboard) {
                     this.selectedTemplate = false
                     delete this.model.DashboardTemplateID
+                    this.showConfirmDialog = true
+                    return
+                }
+                if (this.isPreviewDashboardTemplate) {
+                    this.showConfirmDialog = true
+                    return
+                }
+                if (!this.model.DashboardTemplateID) {
+                    this.$notify({
+                        type: 'primary',
+                        icon: true,
+                        title: this.$t('widget.creating.youNeedChooseOneTemplate')
+                    })
+                    return
                 }
                 this.showConfirmDialog = true
             },
