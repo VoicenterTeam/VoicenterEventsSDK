@@ -15,16 +15,18 @@
             <span v-if="showDeleteButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
                     <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
             </span>
-            <WidgetAction :key="widget.WidgetID"
-                          :editable="editable"
-                          :edit-mode="editMode"
-                          :widget="widget"
-                          @on-manage-notes="tryManageNotes"
-                          @on-add-note="onAddNote"
-                          v-if="showDeleteButton"
-                          @on-duplicate="duplicateWidget"
-                          @on-remove="removeWidget"
-                          @on-show-update-dialog="showUpdateDialog = true"/>
+            <WidgetAction
+                :key="widget.WidgetID"
+                :editable="editable"
+                :edit-mode="editMode"
+                :widget="widget"
+                @on-manage-notes="tryManageNotes"
+                @on-add-note="onAddNote"
+                v-if="showDeleteButton"
+                @on-duplicate="duplicateWidget"
+                @on-remove="removeWidget"
+                @on-show-update-dialog="showUpdateDialog = true"
+            />
         </div>
         <div class="flex w-full flex-col widget-container h-full contents"
              v-if="inView">
@@ -41,8 +43,9 @@
                 class="widget"
                 v-bind="widget.WidgetLayout">
             </component>
-            <portal-target v-if="haveFooterPortal"
-                           :name="`widget-footer__${widget.WidgetID}`"
+            <portal-target
+                v-if="haveFooterPortal"
+                :name="`widget-footer__${widget.WidgetID}`"
             />
         </div>
         <component
@@ -68,7 +71,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { Switch, Tooltip } from 'element-ui'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import { TABLE_TYPE_ID } from '@/enum/widgetDataTypes'
+    import { TABLE_TYPE_ID, INFO_TYPE_ID } from '@/enum/widgetDataTypes'
     import { defaultColors } from '@/enum/defaultWidgetSettings'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import {
@@ -89,7 +92,6 @@
     const EXCEPTIONS = [
         widgetDataTypes.COUNTER_TYPE_ID,
         widgetDataTypes.HISTORY_COUNTERS,
-        widgetDataTypes.INFO_TYPE_ID,
         widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
         widgetDataTypes.TOTAL_OUTGOING_CALLS,
         widgetDataTypes.AVERAGE_CALLS_DURATION,
@@ -120,7 +122,8 @@
             AverageCallDuration: () => import('@/components/Cards/AverageCallDuration'),
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
-            TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog")
+            TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog"),
+            SocketsRealTimeFunnel: () => import('@/components/Charts/FunnelChart.vue')
         },
         props: {
             editable: {
@@ -150,7 +153,7 @@
         },
         computed: {
             haveFooterPortal() {
-                return get(this.widget, 'DataTypeID', -1) === TABLE_TYPE_ID
+                return get(this.widget, 'DataTypeID', -1) === TABLE_TYPE_ID || INFO_TYPE_ID
             },
             showWidgetTitle() {
                 return get(this.widget.WidgetLayout, 'displayWidgetTitle', true)
@@ -221,6 +224,9 @@
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
+                if (componentType === 'SocketsRealTimeTable') {
+                    componentType = 'TableData'
+                }
 
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)
@@ -252,7 +258,6 @@
             }
         },
         mounted() {
-            this.getComponentTypeAndSetData(this.widget)
             this.checkWidgetTimeConfig()
 
             const { editMode } = this.widget.WidgetLayout || false
