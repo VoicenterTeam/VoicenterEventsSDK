@@ -66,9 +66,12 @@
                 sideBarLine: null
             }
         },
-        created () {
-            this.sideBarLine = document.getElementById('sidebar-line')
-            this.sideBarLine.addEventListener('scroll', this.actionScroll)
+        mounted () {
+            const sideBar = document.getElementById('sidebar-line')
+            if (sideBar) {
+                this.sideBarLine = sideBar
+                this.sideBarLine.addEventListener('scroll', this.actionScroll)
+            }
         },
         methods: {
             tryDeleteWidgetGroup() {
@@ -88,10 +91,9 @@
                 this.showMenuActions = false
             },
             actionScroll (event) {
-                if (event) {
+                if (event && this.showMenuActions) {
                     this.showMenuActions = false
                 }
-                console.log(event)
             }
         },
         destroyed() {
