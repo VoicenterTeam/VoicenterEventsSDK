@@ -104,7 +104,11 @@
         methods: {
             get,
             getData() {
-                this.options = getOptionsList(this.model.ParameterName)
+                if (this.model.ParameterName === '{|campaign_ivr_list|}') {
+                    this.options = getOptionsList(this.model.ParameterName).filter(el => el.camp_type === 3)
+                } else {
+                    this.options = getOptionsList(this.model.ParameterName)
+                }
 
                 this.loading = false
             },

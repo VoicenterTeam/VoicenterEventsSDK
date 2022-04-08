@@ -148,10 +148,18 @@ export function timeFilterToHuman(widget, toFormat = 'dd/MM/yyyy') {
 }
 
 export function isChartWidget(widget) {
-    return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget)
+    return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget) || isFunnelChartWidget(widget)
 }
 
 export function isCounterAgentsInStatus(widget) {
     return widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID
+}
+
+export function isFunnelChartWidget(widget) {
+    return widget.DataTypeID === widgetDataTypes.INFO_TYPE_ID
+}
+
+export function isSocketsRealTimeTableWidget (widget) {
+    return widget.DataTypeID === widgetDataTypes.DIALERS_TYPE_ID
 }
 

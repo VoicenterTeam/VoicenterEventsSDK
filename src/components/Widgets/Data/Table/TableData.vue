@@ -13,6 +13,14 @@
                 :tableData="tableData">
             </RealTimeUserTable>
         </div>
+        <div v-if="isSocketsRealTimeTableWidget(data)">
+            <SocketsRealTimeTable
+                :columns="columns"
+                :data="data"
+                :searchableFields="searchableFields"
+                :tableData="tableData">
+            </SocketsRealTimeTable>
+        </div>
         <div v-if="isSimpleTable">
             <data-table
                 ref="dataTableRef"
@@ -89,12 +97,13 @@
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
     import { Option, Select } from 'element-ui'
-    import { isMultiQueuesDashboard, isRealtimeWidget } from '@/helpers/widgetUtils'
+    import { isMultiQueuesDashboard, isRealtimeWidget, isSocketsRealTimeTableWidget } from '@/helpers/widgetUtils'
     import { getDefaultTimeDelay } from '@/enum/generic'
     import { getWidgetData } from '@/services/widgetService'
     import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
+    import { defaultDialerTableColumns } from '@/enum/dialerRealTimeTableConfigs'
 
     export default {
         mixins: [dataTableMixin],
@@ -106,7 +115,8 @@
             Pagination: () => import('@/modules/common/components/Pagination'),
             [Select.name]: Select,
             [Option.name]: Option,
-            [MultiQueuesDashboard.name]: MultiQueuesDashboard
+            [MultiQueuesDashboard.name]: MultiQueuesDashboard,
+            SocketsRealTimeTable: () => import('./SocketsRealTimeTable')
         },
         props: {
             data: {
@@ -145,7 +155,7 @@
                 return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
             },
             isSimpleTable() {
-                return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)
+                return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data) && !this.isSocketsRealTimeTableWidget(this.data)
             },
             columnsAreManaged() {
                 return !!get(this.data.WidgetLayout, 'Columns.visibleColumns')
@@ -154,9 +164,16 @@
         methods: {
             isMultiQueuesDashboard,
             isRealtimeWidget,
+            isSocketsRealTimeTableWidget,
             async getWidgetData() {
                 try {
                     let data = await getWidgetData(this.widget)
+
+                    if (this.isSocketsRealTimeTableWidget(this.widget)) {
+                        this.tableData = defaultDialerTableColumns
+                        this.columns = defaultDialerTableColumns
+                        this.searchableFields = defaultDialerTableColumns.map(el => el.prop)
+                    }
 
                     if (!data) {
                         return

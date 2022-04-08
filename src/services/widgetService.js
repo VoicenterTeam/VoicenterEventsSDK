@@ -65,7 +65,7 @@ export function removeDummyWidgets(widgetIds) {
 
 export async function getWidgetData(widget) {
 
-    if (isWidgetModalOpen() || isInEditMode()) {
+    if (isWidgetModalOpen() || isInEditMode() || !widget.EndPoint) {
         return null
     }
 

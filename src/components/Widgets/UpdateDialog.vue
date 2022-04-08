@@ -15,7 +15,7 @@
                 <label>{{ $t('widget.title') }}</label>
                 <el-input v-model="model.Title"/>
             </el-form-item>
-            <el-form-item v-if="'DefaultRefreshInterval' in model">
+            <el-form-item v-if="'DefaultRefreshInterval' in model && !isFunnelChartWidget(widget) && !isSocketsRealTimeTableWidget(widget)">
                 <WidgetRefreshInterval :model="model"/>
             </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
@@ -158,7 +158,7 @@
                     <widget-colors :availableColors="availableColors" :model="model"/>
                 </el-collapse-item>
             </el-collapse>
-            <el-form-item>
+            <el-form-item v-if="!isFunnelChartWidget(widget) && !isSocketsRealTimeTableWidget(widget)">
                 <div v-if="model.WidgetTime.type">
                     <time-frame
                         :model="model"
@@ -242,6 +242,8 @@
         isQueueGauge,
         isQueueTable,
         isRealtimeWidget,
+        isFunnelChartWidget,
+        isSocketsRealTimeTableWidget
     } from '@/helpers/widgetUtils'
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
@@ -375,6 +377,8 @@
             isQueueDashboardWidget,
             isMultiQueuesDashboard,
             isNoteListWidget,
+            isFunnelChartWidget,
+            isSocketsRealTimeTableWidget,
             isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },

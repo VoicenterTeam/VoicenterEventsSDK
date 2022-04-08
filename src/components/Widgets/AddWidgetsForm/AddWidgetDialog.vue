@@ -113,12 +113,15 @@
                 return isEmpty(this.getSummary.summaryText)
             },
             getComponentByStep() {
-                this.$nextTick(() => {
-                    document.getElementById('componentStep').getElementsByClassName('el-dialog__body')[0].scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
+                if (document.getElementById('componentStep') && document.getElementById('componentStep').getElementsByClassName('el-dialog__body')[0]) {
+
+                    this.$nextTick(() => {
+                        document.getElementById('componentStep').getElementsByClassName('el-dialog__body')[0].scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        })
                     })
-                })
+                }
                 return this.$store.getters['widgetCreation/getComponent']
             },
             componentHasSummary() {

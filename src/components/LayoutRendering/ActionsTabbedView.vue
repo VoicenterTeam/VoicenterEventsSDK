@@ -1,35 +1,51 @@
 <template>
-    <div v-if="!editMode && isActiveGroup"
-         class="mt-1 hover:text-primary cursor-pointer"
-         @click.stop="triggerActionMenu"
-         :class="{'text-primary': showMenuActions}">
-        <IconOptions class="w-4 h-4 text-gray-500"/>
-        <fade-transition :duration="350">
-            <div v-if="showMenuActions"
-                 v-click-outside="onMenuClickOutside"
-                 class="sidebar-group_actions absolute w-56 bg-white z-50 mt-4 shadow-base rounded"
-                 :class="$rtl.isRTL ? '-mr-28' : '-ml-28'"
+    <div
+        v-click-outside="onMenuClickOutside"
+        v-if="!editMode && isActiveGroup"
+        class="actions-tabbed-view"
+    >
+        <el-popover
+            trigger="manual"
+            v-model="showMenuActions"
+            :popper-options="
+                { 
+                    boundariesElement: 'body'
+                }
+            "
+            :visible-arrow="false"
+        >
+            <IconOptions
+                class="w-4 h-4 text-gray-500 hover:text-primary dots-icon"
+                @click="triggerActionMenu" slot="reference"
+                :class="{ 'text-primary': showMenuActions}"
+            />
+            <div
+                class="menu-action_item"
+                @click="onEditWidgetGroup()"
             >
-                <div class="menu-action_item"
-                     @click="onEditWidgetGroup()">
-                    <IconPencil class="text-green w-4-5 h-4-5"/>
-                    <span class="mx-2 text-main-sm truncate">
-                        {{ $t('dashboard.editGroup') }}
-                    </span>
-                </div>
-                <div class="menu-action_item border-t border-gray-300"
-                     @click="tryDeleteWidgetGroup()">
-                    <IconDelete class="text-red w-4-5 h-4-5"/>
-                    <span class="mx-2 text-main-sm truncate">
-                        {{ $t('dashboard.deleteGroup') }}
-                    </span>
-                </div>
+                <IconPencil class="text-green w-4-5 h-4-5"/>
+                <span class="mx-2 text-main-sm truncate">
+                    {{ $t('dashboard.editGroup') }}
+                </span>
             </div>
-        </fade-transition>
+            <div
+                class="menu-action_item border-t border-gray-300"
+                @click="tryDeleteWidgetGroup()"
+            >
+                <IconDelete class="text-red w-4-5 h-4-5"/>
+                <span class="mx-2 text-main-sm truncate">
+                    {{ $t('dashboard.deleteGroup') }}
+                </span>
+            </div>
+        </el-popover>
     </div>
 </template>
 <script>
+    import { Popover } from 'element-ui'
     export default {
+        components: {
+            [Popover.name]: Popover
+        },
         props: {
             editMode: {
                 type: Boolean,
@@ -47,7 +63,12 @@
         data() {
             return {
                 showMenuActions: false,
+                sideBarLine: null
             }
+        },
+        created () {
+            this.sideBarLine = document.getElementById('sidebar-line')
+            this.sideBarLine.addEventListener('scroll', this.actionScroll)
         },
         methods: {
             tryDeleteWidgetGroup() {
@@ -66,17 +87,27 @@
             onMenuClickOutside() {
                 this.showMenuActions = false
             },
+            actionScroll (event) {
+                if (event) {
+                    this.showMenuActions = false
+                }
+                console.log(event)
+            }
         },
+        destroyed() {
+            this.sideBarLine.removeEventListener('scroll', this.actionScroll)
+        }
     }
 </script>
 <style lang="scss" scoped>
-.sidebar-group_actions {
-    .menu-action_item {
-        @apply w-full rounded text-gray-700 flex items-center p-3;
-        
-        &:hover {
-            color: var(--primary-color);
-        }
+.menu-action_item {
+    @apply w-full rounded text-gray-700 flex items-center p-2 cursor-pointer;
+    
+    &:hover {
+        color: var(--primary-color);
     }
+}
+.dots-icon:focus-within {
+  outline: none !important;
 }
 </style>
