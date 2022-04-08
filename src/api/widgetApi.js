@@ -6,6 +6,7 @@ const SUCCESS_STATUS = 'OK'
 export const WidgetApi = {
     async find(id) {
         try {
+            console.log(await $axios.get(`/Widgets/Get/${id}`))
             return await $axios.get(`/Widgets/Get/${id}`)
         } catch (e) {
             parseCatch(e, true, 'Find Widget')
