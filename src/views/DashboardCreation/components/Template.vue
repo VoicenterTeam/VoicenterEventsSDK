@@ -1,14 +1,13 @@
 <template>
-    <div class="template-wrapper col-span-3 lg:col-span-1 mb-3 overflow-hidden"
-        :class="{'selected': template.DashboardTemplateID === selectedTemplate.DashboardTemplateID}"
+    <span class="template-wrapper"
+        :class="{ 'selected': template.DashboardTemplateID === selectedTemplate.DashboardTemplateID }"
         @click="onSelectTemplate(template)">
         <div class="template-preview-image overflow-hidden relative border border-gray-550 rounded">
-            <TemplateWrapper :template="template"/>
+            <TemplateWrapper :template="template" />
         </div>
         <div class="divider-horizontal-line" />
         <div
             class="template-footer flex items-center justify-between pt-3"
-            @click.stop="onDetailedView(template)"
         >
             <span class="text-base text-gray-950">{{ template.DashboardTemplateName }}</span>
             <el-popover
@@ -16,10 +15,10 @@
                 trigger="hover"
                 :content="$t(template.DashboardTemplateTitle)"
             >
-                <IconInfo class="cursor-help text-primary" slot="reference"/>
+                <IconInfo @click.stop="onDetailedView(template)" class="cursor-help text-primary" slot="reference"/>
             </el-popover>
         </div>
-    </div>
+    </span>
 </template>
 <script>
     import { Popover } from 'element-ui'
@@ -55,11 +54,7 @@
     @apply border border-primary;
 }
 .divider-horizontal-line {
-    @apply border border-gray-300 -mx-3 mt-3;
-}
-.template-preview-image {
-    width: 280px;
-    height: 180px;
+    @apply border border-gray-300 -mx-3 mt-3 bg-gray-300;
 }
 </style>
 
