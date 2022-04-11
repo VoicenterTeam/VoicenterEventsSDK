@@ -6,7 +6,6 @@
     "serve": "vue-cli-service serve",
     "prebuild": "npm run generate-locale-file",
     "build": "vue-cli-service build --mode production",
-    "build-prod": "vue-cli-service build --mode prod",
     "generate-missing-translations": "node src/translationHelpers/getMissingTranslations.js",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "locale-diff": "node src/translationHelpers/localeDiff.js",
