@@ -20,7 +20,7 @@ const CHART_DATA_TYPE_IDS = [
 ]
 
 const minRefreshInterval = () => {
-    return store.getters['layout/minRefreshInterval'] || MIN_REFRESH_INTERVAL
+    return store.getters['layout/minRefreshInterval']('activeLayout') || MIN_REFRESH_INTERVAL
 }
 
 export function getWidgetRefreshInterval(widget) {
@@ -40,7 +40,7 @@ export function getWidgetRefreshInterval(widget) {
         timeToLoadData = widgetStoreData.duration
     }
 
-    refreshIntervalLocal = timeToLoadData && refreshIntervalLocal < timeToLoadData ? timeToLoadData : widgetRefreshInterval
+    refreshIntervalLocal = timeToLoadData && refreshIntervalLocal < timeToLoadData && widgetRefreshInterval < timeToLoadData ? timeToLoadData : widgetRefreshInterval
 
     return refreshIntervalLocal * 1000
 }

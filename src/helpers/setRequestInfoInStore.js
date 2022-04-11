@@ -2,8 +2,7 @@ import store from '@/store/store'
 
 export default function setRequestInfo (res) {
     const currentTime = new Date().getTime()
-    const startTime = Math.floor(Math.random() * (currentTime - 1000 - currentTime - 4000 + 1) + currentTime - 4000)
-    // res.headers['RequestDuration'] = currentTime - startTime
+    const startTime = res.config.headers.RequestStartTime
     const requestDuration = currentTime - startTime
     const url = res.config.url
     if (url.includes('WidgetsData/') || url.includes('/DashBoards/Get/')) {

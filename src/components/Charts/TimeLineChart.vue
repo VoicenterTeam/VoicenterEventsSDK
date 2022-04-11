@@ -143,13 +143,19 @@
                     this.chartVisibility = true
                 })
             },
+            getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.getWidgetData()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.getWidgetData()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.getWidgetData()
             this.triggerResizeEvent()
             this.reDrawChart()
         },
@@ -157,7 +163,7 @@
             data: {
                 immediate: true,
                 handler: function () {
-                    this.getWidgetData()
+                    this.getWidgetDataWithRefreshInterval()
                 },
             },
         },

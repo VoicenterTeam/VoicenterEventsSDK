@@ -202,20 +202,26 @@
                     this.chartVisibility = true
                 })
             },
+            chartOptionsWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.chartOptions()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.chartOptions()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.chartOptions()
             this.triggerResizeEvent()
         },
         watch: {
             data: {
                 immediate: true,
                 handler: function () {
-                    this.chartOptions()
+                    this.chartOptionsWithRefreshInterval()
                 },
             },
             extensionWithCalls: {

@@ -10,7 +10,7 @@ const $axios = axios.create({
 $axios.interceptors.request.use(
     (config) => {
         config.headers.Authorization = authorizationData()
-        // config.headers['RequestStartTime'] = new Date().getTime();
+        config.headers['RequestStartTime'] = new Date().getTime();
         return config
     }, (e) => {
         return Promise.reject(e)
