@@ -10,6 +10,7 @@ import dashboards from './modules/dashboards'
 import widgetTemplate from './modules/widgetTemplate'
 import widgetCreation from '@/store/modules/widgetCreation'
 import templatesCategory from './modules/templatesCategory'
+import axiosRequestsDuration from './modules/axiosRequestsDuration'
 
 import report from '@/modules/reports/store/report'
 
@@ -30,5 +31,6 @@ export default new Vuex.Store({
         widgetCreation,
         templatesCategory,
         report,
-    },
+        axiosRequestsDuration
+    }
 })

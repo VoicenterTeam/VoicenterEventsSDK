@@ -1,10 +1,11 @@
 import axios from 'axios'
+import setRequestInfo from '@/helpers/setRequestInfoInStore'
 
 const instance = axios.create()
 
 instance.interceptors.request.use(
     (config) => {
-        config.headers['request-startTime'] = new Date().getTime();
+        // config.headers['RequestStartTime'] = new Date().getTime();
         return config
     }, (e) => {
         return Promise.reject(e)
@@ -12,9 +13,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (res) => {
-        const currentTime = new Date().getTime()
-        const startTime = res.config.headers['request-startTime']
-        res.headers['request-duration'] = currentTime - startTime
+        setRequestInfo(res)
 
         return res.data
     }, (e) => {
