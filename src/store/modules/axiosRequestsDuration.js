@@ -1,5 +1,6 @@
 const types = {
-    SET_REQUEST_INFO: 'SET_REQUEST_INFO'
+    SET_REQUEST_INFO: 'SET_REQUEST_INFO',
+    CLEAR_REQUEST_INFO: 'CLEAR_REQUEST_INFO'
 };
 const state = {
     requestsInfo: []
@@ -13,12 +14,18 @@ const mutations = {
         } else {
             state.requestsInfo.push(data)
         }
+    },
+    [types.CLEAR_REQUEST_INFO]: (state) => {
+        state.requestsInfo = []
     }
 };
 
 const actions = {
     async setRequestInfo({ commit }, url) {
         commit(types.SET_REQUEST_INFO, url);
+    },
+    async clearRequestInfo({ commit }) {
+        commit(types.CLEAR_REQUEST_INFO);
     }
 };
 
