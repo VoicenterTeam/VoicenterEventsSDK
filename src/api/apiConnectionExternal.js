@@ -5,7 +5,6 @@ const instance = axios.create()
 
 instance.interceptors.request.use(
     (config) => {
-        // config.headers['RequestStartTime'] = new Date().getTime();
         return config
     }, (e) => {
         return Promise.reject(e)
