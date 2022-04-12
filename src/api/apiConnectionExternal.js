@@ -1,4 +1,5 @@
 import axios from 'axios'
+import setRequestInfo from '@/helpers/setRequestInfoInStore'
 
 const instance = axios.create()
 
@@ -11,6 +12,8 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (res) => {
+        setRequestInfo(res)
+
         return res.data
     }, (e) => {
         return Promise.reject(e)

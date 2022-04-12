@@ -246,30 +246,36 @@
                     this.chartVisibility = true
                 })
             },
+            chartOptionsWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.chartOptions()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         watch: {
             statisticCounts: {
                 deep: true,
                 immediate: true,
                 handler() {
-                    this.chartOptions()
+                    this.chartOptionsWithRefreshInterval()
                 },
             },
             data: {
                 deep: true,
                 handler() {
-                    this.chartOptions()
+                    this.chartOptionsWithRefreshInterval()
                 },
             },
         },
         mounted() {
             this.initWidgetConfig()
             this.triggerResizeEvent()
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.chartOptions()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.chartOptions()
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {

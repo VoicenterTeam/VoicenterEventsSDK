@@ -283,14 +283,20 @@
 
                 this.fetchTableData = this.updatePaginatedData(sortedData)
             },
+            getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.getWidgetData()
+                        this.applyPaginationSettings()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.getWidgetData()
-                }, this.data.DefaultRefreshInterval)
-            }
-
+            this.getWidgetData()
         },
         watch: {
             filter() {
@@ -299,9 +305,8 @@
             data: {
                 immediate: true,
                 deep: true,
-                handler: function () {
-                    this.getWidgetData()
-                    this.applyPaginationSettings()
+                handler () {
+                    this.getWidgetDataWithRefreshInterval()
                 },
             },
             pageSize: {

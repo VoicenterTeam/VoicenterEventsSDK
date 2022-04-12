@@ -201,16 +201,26 @@
                     this.chartVisibility = true
                 })
             },
+            chartOptionsWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.chartOptions()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         watch: {
             data: {
                 immediate: true,
                 handler: function () {
-                    this.chartOptions()
+                    this.chartOptionsWithRefreshInterval()
                 },
             },
             allQueues() {
-                this.chartOptions()
+                this.chartOptionsWithRefreshInterval()
             },
         },
         mounted() {
@@ -218,11 +228,7 @@
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
             this.triggerResizeEvent()
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.chartOptions()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.chartOptions()
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {

@@ -213,13 +213,19 @@
                     [PERCENTAGE_TYPE]: PERCENTAGE_COUNTERS(),
                 }
             },
+            getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.getWidgetData()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted () {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.getWidgetData()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.getWidgetData()
 
             if (!this.data.WidgetLayout.ShowStatistics) {
                 this.$set(this.data.WidgetLayout, 'ShowStatistics', statistics)
@@ -235,7 +241,7 @@
                 immediate: true,
                 handler: function (value) {
                     this.queueStatistics = get(value, 'WidgetLayout.allStatistics')
-                    this.getWidgetData()
+                    this.getWidgetDataWithRefreshInterval()
                 }
             }
         },
