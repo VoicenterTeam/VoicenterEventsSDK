@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import get from "lodash/get";
 
 export default {
     name: "template-preview-info-dialog",
@@ -31,29 +30,20 @@ export default {
         transitionDuration: {
             default: 100
         },
-        templateId: {
-            type: Number
+        templateHelp: {
+            type: [Object, Array]
         },
         widgetTitle: {
             type: String
         }
     },
     data() {
-      return {
-          templateHelp: {}
-      }
+      return {}
     },
     methods: {
         onCloseDialog() {
             this.$emit('on-close')
-        },
-        getHelpByWidgetsTemplateID() {
-            const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](this.templateId)
-            this.templateHelp = get(helpData, 'Help', {})
-        },
-    },
-    mounted() {
-        this.getHelpByWidgetsTemplateID()
+        }
     }
 }
 </script>
