@@ -2,6 +2,7 @@ import { WidgetApi } from '@/api/widgetApi'
 import { DashboardApi } from '@/api/dashboardApi'
 import { types, targets } from '@/enum/operations'
 import { WidgetGroupsApi } from '@/api/widgetGroupApi'
+import { entityStatuses } from '@/enum/entityStatuses'
 import store from '@/store/store'
 import { Notification } from 'element-ui'
 import i18n from '@/i18n'
@@ -43,7 +44,7 @@ export async function runDashboardOperations(operations, dashboard, clonedDashbo
                                 break;
                             case types.MOVED_OUT:
                             case types.REMOVE:
-                                await WidgetApi.destroy(operation.payload.WidgetID)
+                                await WidgetApi.updateStatus(operation.payload.WidgetID, entityStatuses.widget.disabled)
                                 break;
                             default:
                                 break;
