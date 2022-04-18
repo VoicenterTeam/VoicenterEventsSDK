@@ -142,9 +142,13 @@
                     return
                 }
                 const widgetTemplateID = this.reportItemData.ReportItemList.find(el => el.WidgetID === this.condition.WidgetID).WidgetTemplateID
+                const selectedWidgetTemplate = this.$store.getters['reportTrigger/getConfData'].WidgetTemplateList
+                    .find(el => el.WidgetTemplateID === widgetTemplateID)
+                if (!selectedWidgetTemplate || !selectedWidgetTemplate.WidgetTemplateColumnList.length) {
+                    return []
+                }
 
-                return this.$store.getters['reportTrigger/getConfData'].WidgetTemplateList
-                    .find(el => el.WidgetTemplateID === widgetTemplateID).WidgetTemplateColumnList
+                return selectedWidgetTemplate.WidgetTemplateColumnList
             },
             widgetTemplateColumnOperatorList () {
                 if (this.checkIfValueIsEmpty(this.condition.WidgetID) || this.checkIfValueIsEmpty(this.condition.WidgetTemplateColumnID)) {
