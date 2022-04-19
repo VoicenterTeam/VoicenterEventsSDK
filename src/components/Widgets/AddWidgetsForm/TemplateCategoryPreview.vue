@@ -85,7 +85,8 @@
                         />
                     </template>
                     <template v-slot:template-preview>
-                        <el-tooltip :content="$t('widget.templateDictionary')"
+                        <el-tooltip v-if="showHelpButton(template.TemplateID)"
+                                    :content="$t('widget.templateDictionary')"
                                     :open-delay="openDelay"
                                     class="item"
                                     effect="dark"
@@ -144,6 +145,9 @@
         computed: {
             templateCategory() {
                 return this.$store.getters['widgetCreation/getCategoryTemplates']
+            },
+            dictionariesList() {
+                return this.$store.getters['templatesCategory/getDictionariesList']
             },
             templateList() {
                 return this.templateCategory.TemplatesList || []
@@ -238,6 +242,14 @@
                     quantities: this.quantities,
                 }
                 this.$emit('on-update-summary', summaries)
+            },
+            showHelpButton(templateId) {
+                if (!templateId) {
+                    return false
+                }
+
+                const templateHelp = this.dictionariesList.find((el) => el.TemplateID.toString() === templateId.toString())
+                return get(templateHelp, "Help.Items", []).length > 0
             },
         },
         mounted() {

@@ -17,7 +17,7 @@
         </div>
         <div class="absolute card-action_wrapper rounded">
             <div class="flex w-full justify-end pt-1">
-                <span class="px-2" @click="onInfoClick">
+                <span v-if="showInfoButton" class="px-2" @click="onInfoClick">
                     <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
                 </span>
                     <CardAction :editable="editable"
@@ -84,6 +84,7 @@
         data() {
             return {
                 isVertical: false,
+                templateHelp: {}
             }
         },
         computed: {
@@ -102,6 +103,9 @@
                     fontSize: this.styles.valueFontSize,
                 }
             },
+            showInfoButton() {
+                return get(this.templateHelp, "Items", []).length > 0
+            }
         },
         methods: {
             checkIfCardIsVertical(WidgetID) {
@@ -118,10 +122,21 @@
             },
             onInfoClick() {
                 this.$emit('on-show-info')
-            }
+            },
+            getHelpByWidgetsTemplateID() {
+                const templateId = get(this.widget, "TemplateID")
+                if (!templateId) {
+                    this.templateHelp = {}
+                    return
+                }
+
+                const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](templateId)
+                this.templateHelp = get(helpData, 'Help', {})
+            },
         },
         mounted() {
             this.triggerResizeEvent()
+            this.getHelpByWidgetsTemplateID()
         },
         watch: {
             widget: {

@@ -12,7 +12,7 @@
                 <portal-target :name="`widget-header__${widget.WidgetID}`"
                                class="hidden lg:flex w-full items-center justify-between"/>
             </div>
-            <span v-if="showDeleteButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
+            <span v-if="showDeleteButton && showInfoButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
                     <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
             </span>
             <WidgetAction
@@ -60,7 +60,7 @@
         <template-preview-info-dialog
             v-if="showPreviewInfoDialog"
             :visible.sync="showPreviewInfoDialog"
-            :templateId="widget.TemplateID"
+            :templateHelp="templateHelp"
             :widget-title="widget.Title"
             @on-close="showPreviewInfoDialog = false"
         />
@@ -149,6 +149,7 @@
                 TABLE_DATA_TYPE_ID: '4',
                 editMode: false,
                 showPreviewInfoDialog: false,
+                templateHelp: {}
             }
         },
         computed: {
@@ -201,6 +202,9 @@
                 if (DataTypeID.toString() === this.TABLE_DATA_TYPE_ID) {
                     return 'has-margin'
                 }
+            },
+            showInfoButton() {
+                return get(this.templateHelp, "Items", []).length > 0
             }
         },
         methods: {
@@ -255,10 +259,21 @@
             },
             onShowInfo() {
                 this.showPreviewInfoDialog = true
-            }
+            },
+            getHelpByWidgetsTemplateID() {
+                const templateId = get(this.widget, "TemplateID")
+                if (!templateId) {
+                    this.templateHelp = {}
+                    return
+                }
+
+                const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](templateId)
+                this.templateHelp = get(helpData, 'Help', {})
+            },
         },
         mounted() {
             this.checkWidgetTimeConfig()
+            this.getHelpByWidgetsTemplateID()
 
             const { editMode } = this.widget.WidgetLayout || false
             this.editMode = editMode
