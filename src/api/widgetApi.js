@@ -56,6 +56,10 @@ export const WidgetApi = {
         }
     },
 
+    updateStatus(widgetId, widgetStatus) {
+        return $axios.post(`/Widgets/UpdateStatus/${widgetId}/${widgetStatus}`)
+    },
+
     destroy(widgetId) {
         return $axios.post(`/Widgets/Delete/${widgetId}`)
     },
