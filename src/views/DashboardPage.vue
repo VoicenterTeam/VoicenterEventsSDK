@@ -1,8 +1,8 @@
 <template>
     <div>
-        <zoom-center-transition :duration="100">
+        <slide-y-up-transition :duration="100">
             <Dashboard :account-no-data="accountNoData" v-show="!isContentLoading"/>
-        </zoom-center-transition>
+        </slide-y-up-transition>
         <el-skeleton
             :loading="isContentLoading"
             animated
@@ -41,12 +41,14 @@
 </template>
 <script>
 import { Skeleton, SkeletonItem } from 'element-ui'
+import { SlideYUpTransition } from 'vue2-transitions'
     
     export default {
         components: {
             Dashboard: () => import('@/views/Dashboard'),
             [Skeleton.name]: Skeleton,
-            [SkeletonItem.name]: SkeletonItem
+            [SkeletonItem.name]: SkeletonItem,
+            SlideYUpTransition
         },
         computed: {
             accountNoData () {
