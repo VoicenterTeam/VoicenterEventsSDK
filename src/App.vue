@@ -79,7 +79,7 @@ export default {
             return this.$store.getters['dashboards/getAllDashboards']
         },
         isContentLoading() {
-            return this.$store.state.dashboards.contentLoading
+            return this.$store.state.dashboards.contentLoading && window.location.pathname !== '/'
         }
     },
     methods: {

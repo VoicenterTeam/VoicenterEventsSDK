@@ -18,7 +18,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     plugins: [createPersistedState({
-        paths: ['users', 'dashboards.activeDashboard', 'dashboards.editMode', 'layout', 'report'],
+        paths: [
+            'users',
+            'dashboards.activeDashboard.DashboardID',
+            'dashboards.activeDashboard.DashboardLayoutID',
+            'dashboards.activeDashboard.DashboardTitle',
+            'dashboards.activeDashboard.DashBoardsUserPermission',
+            'dashboards.activeDashboard.AccountID',
+            'dashboards.editMode',
+            'layout'
+        ],
     })],
     modules: {
         lang,
