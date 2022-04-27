@@ -1,5 +1,15 @@
 <template>
     <div class="h-full">
-        EMPTY PAGE
+        <widget-table />
     </div>
 </template>
+
+<script>
+import WidgetTable from '@/modules/reports/components/WidgetTable.vue'
+
+export default {
+    components: {
+        WidgetTable
+    }
+}
+</script>
