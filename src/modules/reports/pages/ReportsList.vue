@@ -53,17 +53,15 @@
                         </template>
                     </delimited-list>
                 </template>
-                <template v-else>
-                    <span class="quick-add-button">
+                <template v-else >
+                    <span class="quick-add-button cursor-pointer">
                             <span class="mx-2">
-<!--                                TODO: Implement Add Wizard button and modal-->
-                                <schedule-form
-                                    buttonLabel="Add Widget"
-                                    icon="vc-icon-plus-linear"
-                                    :reportId="row.ReportID"
-                                    @addedSchedule="reloadData"
-                                    :data="row"
-                                />
+                                <div class="flex items-center text-primary-300 hover:text-primary" @click="openAddWidgetModal(row)">
+                                    <i class="icon-base add-schedule-btn-text vc-icon-plus-linear" />
+                                    <span class="text-main-sm leading-4">
+                                        {{ $t('dashboard.addWidget') }}
+                                    </span>
+                                </div>
                             </span>
                         </span>
                 </template>
@@ -139,7 +137,13 @@
             :is-duplicate-widgets.sync="isDuplicateWidgets"
             @on-close="onCancelCopy"
             @on-cancel="onCancelCopy"
-            @on-confirm="copyReport"/>
+            @on-confirm="copyReport"
+        />
+        <add-widgets-dialog
+            v-if="visible"
+            :visible.sync="visible"
+            :reportId="reportId"
+        />
     </div>
 </template>
 
@@ -160,6 +164,7 @@ import DelimitedList from "@/modules/reports/components/DelimitedList";
 import Tag from "@/modules/reports/components/Tag"
 import ScheduleCard from "@/modules/reports/components/ScheduleCard";
 import ScheduleForm from '@/modules/reports/components/schedule/ScheduleForm.vue'
+import AddWidgetsDialog from '@/components/Reports/Widgets/AddWidgetsDialog.vue'
 
 const REPORT_ENABLED_STATUS = 1
 const REPORT_DISABLED_STATUS = 2
@@ -180,7 +185,8 @@ export default {
         ScheduleCard,
         DeleteDialog,
         CopyReportDialog,
-        ScheduleForm
+        ScheduleForm,
+        AddWidgetsDialog
     },
     props: {},
     data() {
@@ -233,6 +239,8 @@ export default {
             reportCopyName: '',
             isDuplicateWidgets: true,
             isDuplicateSchedules: true,
+            visible: false,
+            reportId: null
         }
     },
     methods: {
@@ -403,6 +411,10 @@ export default {
         },
         async reloadData () {
             this.tableData = await this.loadData()
+        },
+        openAddWidgetModal (data) {
+            this.reportId = data.ReportID
+            this.visible = true
         }
     },
     async mounted() {
