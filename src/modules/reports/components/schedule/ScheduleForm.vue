@@ -1,9 +1,11 @@
 <template>
     <div class="schedule-form">
-        <div class="cursor-pointer text-primary-300 hover:text-primary"
-             @click="openModal">
-            <div class="flex items-center">
-                <i class="icon-base text-primary add-schedule-btn-text" :class="icon" />
+        <div
+            class="cursor-pointer"
+            @click="openModal"
+        >
+            <div class="flex items-center text-primary-300 hover:text-primary">
+                <i class="icon-base add-schedule-btn-text" :class="icon" />
                 <span class="text-main-sm leading-4">
                     {{ buttonLabel }}
                 </span>
