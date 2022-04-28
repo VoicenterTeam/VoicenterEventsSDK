@@ -140,9 +140,9 @@
             @on-confirm="copyReport"
         />
         <add-widgets-dialog
-            v-if="visible"
             :visible.sync="visible"
             :reportId="reportId"
+            @added-widgets="reloadData"
         />
     </div>
 </template>

@@ -28,12 +28,14 @@
                     v-on="$listeners"
                     :widgetGroup="widgetGroup"
                     :widgetGroups="widgetGroups"
+                    :dashboardId="dashboardId"
                     :selectedWidgets="selectedWidgets"
                     :summary-actions="getSummaryActions"
                     @select-widget-group="selectWidgetGroup"
                     @select-widget="selectWidget"
                     @go-to-widget-groups="goToWidgetGroups"
                     @add-all-widgets-from-group="addAllWidgetsFromGroup"
+                    @dashboard-selected="selectDashboard"
                 />
             </fade-transition>
             <template v-slot:footer>
@@ -97,18 +99,21 @@
 
 <script>
 import Modal from '@/components/Common/Modal'
-import WidgetGroups from "@/components/Reports/Widgets/AddWitgetsForm/WidgetGroups"
-import WidgetGroupPreview from "@/components/Reports/Widgets/AddWitgetsForm/WidgetGroupPreview";
+import WidgetGroups from "@/components/Reports/Widgets/AddWidgetsForm/WidgetGroups"
+import WidgetGroupPreview from "@/components/Reports/Widgets/AddWidgetsForm/WidgetGroupPreview";
+import DashboardListCard from "@/components/Reports/Widgets/AddWidgetsForm/DashboardListCard";
 import ConfirmDialog from '@/components/Common/ConfirmDialog'
 import cloneDeep from "lodash/cloneDeep";
-import {WidgetGroupsApi} from "@/api/widgetGroupApi";
+import { reportApi } from '@/modules/reports/services/reportService'
+import { DashboardApi } from '@/api/dashboardApi'
 
 export default {
     components: {
         Modal,
         WidgetGroups,
         WidgetGroupPreview,
-        ConfirmDialog
+        ConfirmDialog,
+        DashboardListCard
     },
     props: {
         modalWidth: {
@@ -123,6 +128,9 @@ export default {
         visible: {
             type: Boolean,
             default: false
+        },
+        reportId: {
+            type: Number
         }
     },
     data () {
@@ -134,14 +142,19 @@ export default {
             step: 'step0',
             steps: {
                 'step0': {
-                    component: 'WidgetGroups',
+                    component: 'DashboardListCard',
                     hasSummary: true
                 },
                 'step1': {
+                    component: 'WidgetGroups',
+                    hasSummary: true
+                },
+                'step2': {
                     component: 'WidgetGroupPreview',
                     hasSummary: true
                 }
-            }
+            },
+            dashboardId: null
         }
     },
     computed: {
@@ -152,6 +165,13 @@ export default {
             }
         },
         getComponentByStep() {
+            this.$nextTick(() => {
+                    document.getElementById('componentStep').getElementsByClassName('el-dialog__body')[0].scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    })
+                })
+
             return this.steps[this.step].component
         },
         componentHasSummary() {
@@ -178,9 +198,19 @@ export default {
             this.showConfirmDialog = true
         },
         async onConfirm () {
-            this.$emit('on-submit', this.selectedWidgets)
-            this.selectedWidgets.splice(0, this.selectedWidgets.length)
+            const selectedWidgets = this.selectedWidgets.map(el => {
+                const data = {
+                    ReportID: this.reportId,
+                    WidgetID: el
+                }
+                return reportApi.itemUpsert(data)
+            })
+
+            await Promise.all(selectedWidgets)
+
+            this.$emit('added-widgets')
             this.showConfirmDialog = false
+            this.$emit('update:visible', false)
         },
         onCancel () {
             this.showConfirmDialog = false
@@ -193,17 +223,6 @@ export default {
             const steps = Object.keys(this.steps)
             const currentStepIndex = Object.keys(this.steps).indexOf(this.step)
             this.step = steps[currentStepIndex + 1]
-        },
-        async getWidgetGroups() {
-            try {
-                const currentAccount = this.$store.state.entities.selectedAccountID
-                const {WidgetsGroupsList} = await WidgetGroupsApi.list({
-                    AccountID: [currentAccount]
-                })
-                this.widgetGroups = WidgetsGroupsList
-            } catch (e) {
-                console.error(e)
-            }
         },
         selectWidget (widgetId, newSelectedStatus = null) {
             const isSelected = newSelectedStatus === null ? this.selectedWidgets.includes(widgetId) : !newSelectedStatus
@@ -230,22 +249,31 @@ export default {
             const currentIndex = keys.indexOf(this.step)
             this.step = keys[currentIndex > 0 ? currentIndex - 1 : 0]
             this.widgetGroup = null
+            this.selectedWidgets = []
         },
         submitWidgets () {
             this.showConfirmDialog = true
+        },
+        async selectDashboard (dashboardId) {
+            const widgetGroups = await DashboardApi.find(dashboardId)
+            this.widgetGroups = widgetGroups.WidgetGroupList
+            this.goToNextStep()
         }
     },
     watch: {
         widgets (newV) {
             this.selectedWidgets = cloneDeep(newV)
+        },
+        visible (val) {
+            if (!val) {
+                this.step = 'step0'
+            }
         }
     },
     async beforeDestroy () {
         this.resetDialog()
-    },
-    created() {
-        this.getWidgetGroups()
-    },
+        this.showConfirmDialog = false
+    }
 }
 </script>
 
