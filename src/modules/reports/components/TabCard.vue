@@ -208,6 +208,6 @@
     @apply mt-0 p-8;
 }
 .tab-card-slot {
-    height: 465px;
+    height: 550px;
 }
 </style>

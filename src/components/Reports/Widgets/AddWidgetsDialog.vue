@@ -131,6 +131,10 @@ export default {
         },
         reportId: {
             type: Number
+        },
+        doRequest: {
+            type: Boolean,
+            default: true
         }
     },
     data () {
@@ -166,11 +170,13 @@ export default {
         },
         getComponentByStep() {
             this.$nextTick(() => {
-                    document.getElementById('componentStep').getElementsByClassName('el-dialog__body')[0].scrollTo({
+                if (this.visible) {
+                    document.getElementsByClassName('el-dialog__body')[0].scrollTo({
                         top: 0,
                         behavior: 'smooth'
                     })
-                })
+                }
+            })
 
             return this.steps[this.step].component
         },
@@ -198,17 +204,27 @@ export default {
             this.showConfirmDialog = true
         },
         async onConfirm () {
-            const selectedWidgets = this.selectedWidgets.map(el => {
-                const data = {
-                    ReportID: this.reportId,
-                    WidgetID: el
-                }
-                return reportApi.itemUpsert(data)
+            if (this.doRequest) {
+                const selectedWidgets = this.selectedWidgets.map(el => {
+                    const data = {
+                        ReportID: this.reportId,
+                        WidgetID: el
+                    }
+                    return reportApi.itemUpsert(data)
+                })
+
+                await Promise.all(selectedWidgets)
+            }
+            const activeWidgetItems = this.widgetGroup.WidgetList
+                .filter(el => this.selectedWidgets.includes(el.WidgetID))
+                .map(el => {
+                    delete el.isChecked
+                    return el
+                })
+
+            this.$emit('added-widgets', {
+                activeWidgetItems: activeWidgetItems
             })
-
-            await Promise.all(selectedWidgets)
-
-            this.$emit('added-widgets')
             this.showConfirmDialog = false
             this.$emit('update:visible', false)
         },

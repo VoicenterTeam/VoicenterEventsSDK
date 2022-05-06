@@ -3,7 +3,7 @@
         <div class="flex w-full justify-between">
             <div>
                 {{ $t('general.pages') }}:
-                <el-dropdown class="" placement="top-end" trigger="click" @command="onPageSelect">
+                <el-dropdown class="" placement="top-end" trigger="click" @command="onPageSelect" :disabled="!totalPages.length">
                     <span class="el-dropdown-link mx-2 flex items-center">
                         <span class="mr-1">
                             {{ currentPage }}
@@ -27,7 +27,7 @@
                 <div class="mx-6">
                     <span
                         @click="goToPrevPage"
-                        :class="paginationFrom === 1 ? 'opacity-20 cursor-not-allowed' : 'cursor-pointer'"
+                        :class="paginationFrom === 1 || paginationFrom === 0 ? 'opacity-20 cursor-not-allowed' : 'cursor-pointer'"
                     >
                         <i class="vc-icon-left icon-lg text-primary mr-2" />
                     </span>

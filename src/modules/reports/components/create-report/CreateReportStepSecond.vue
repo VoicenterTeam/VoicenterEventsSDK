@@ -1,15 +1,15 @@
 <template>
-    <div class="h-full">
-        <widget-table />
+    <div class="h-full w-full">
+        <wrapper-widget-table ref="widgetTable" />
     </div>
 </template>
 
 <script>
-import WidgetTable from '@/modules/reports/components/WidgetTable.vue'
+import WrapperWidgetTable from '@/modules/reports/components/WrapperWidgetTable.vue'
 
 export default {
     components: {
-        WidgetTable
+        WrapperWidgetTable
     }
 }
 </script>

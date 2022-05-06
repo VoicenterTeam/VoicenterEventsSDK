@@ -95,6 +95,11 @@
                     })
                 })
             }
+        },
+        mounted () {
+            if (!this.reportTriggerData[0].ReportTriggerConditionFilter.length) {
+               this.onAddCondition(0) 
+            }
         }
     }
 </script>

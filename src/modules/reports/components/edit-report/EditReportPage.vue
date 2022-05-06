@@ -77,7 +77,7 @@
                     :white-bg="true"
                 >
                     <template slot="widgets">
-                        EMPY PAGE
+                        <wrapper-widget-table showReorderButton class="p-8" />
                     </template>
                     <template slot="schedule-list">
                         <schedule-list />
@@ -119,7 +119,8 @@ export default {
         DeleteDialog: () => import('@/components/Dialogs/DeleteDialog'),
         ConfirmDialog: () => import('@/components/Dialogs/ConfirmDialog'),
         ScheduleList: () => import('@/modules/reports/components/ScheduleList.vue'),
-        TabCard: () => import('@/modules/reports/components/TabCard.vue')
+        TabCard: () => import('@/modules/reports/components/TabCard.vue'),
+        WrapperWidgetTable: () => import('@/modules/reports/components/WrapperWidgetTable.vue')
     },
     props: {
         report: {
@@ -216,8 +217,6 @@ export default {
             }
             try {
                 reportApi.update(this.getReportData)
-            } catch (e) {
-                console.log(e, 'eee')
             } finally {
                 this.clickedOnSaveBtn = false
             }

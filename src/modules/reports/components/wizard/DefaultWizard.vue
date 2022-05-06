@@ -57,10 +57,8 @@
                                 @click="onFinish"
                                 :loading="dataLoading"
                                 data-test-name="wizard-finish"
-                                :disabled="true"
                                 type="primary"
                             >
-                                <!-- TODO: need to change :disabled="disableFinishButton" -->
                                 <IconSave class="button-icon"/>
                                 {{ $t('general.finish') }}
                             </base-button>
@@ -132,7 +130,7 @@
     $summary-width-lg: 425px;
     $summary-width-md: 300px;
     $summary-width-sm: 90px;
-    $wizard-max-height: 670px;
+    $wizard-max-height: 700px;
 
     .wizard-step {
         width: calc(100% - #{$summary-width-sm});
@@ -174,7 +172,7 @@
     }
 
     .steps-wrapper {
-        min-height: 480px;
+        min-height: 550px;
         position: relative;
         overflow: hidden;
     }
