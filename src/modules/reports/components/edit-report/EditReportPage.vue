@@ -77,7 +77,7 @@
                     :white-bg="true"
                 >
                     <template slot="widgets">
-                        <wrapper-widget-table showReorderButton class="p-8" />
+                        <wrapper-widget-table showReorderButton :reportId="reportId" class="p-8" />
                     </template>
                     <template slot="schedule-list">
                         <schedule-list />
@@ -126,6 +126,10 @@ export default {
         report: {
             type: Object,
             default: () => ({})
+        },
+        reportId: {
+            type: [Number, String],
+            default: ''
         }
     },
     data () {
@@ -219,6 +223,7 @@ export default {
                 reportApi.update(this.getReportData)
             } finally {
                 this.clickedOnSaveBtn = false
+                this.$emit('update-report-item', this.getReportData)
             }
         },
         checkIfValueIsEmpty (value) {

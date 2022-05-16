@@ -130,7 +130,7 @@
     $summary-width-lg: 425px;
     $summary-width-md: 300px;
     $summary-width-sm: 90px;
-    $wizard-max-height: 700px;
+    $wizard-max-height: 750px;
 
     .wizard-step {
         width: calc(100% - #{$summary-width-sm});
@@ -172,7 +172,7 @@
     }
 
     .steps-wrapper {
-        min-height: 550px;
+        min-height: 600px;
         position: relative;
         overflow: hidden;
     }

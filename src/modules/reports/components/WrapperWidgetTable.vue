@@ -1,6 +1,6 @@
 <template>
     <div class="h-full w-full">
-        <widget-table :showReorderButton="showReorderButton">
+        <widget-table :showReorderButton="showReorderButton" :reportId="reportId">
             <template v-slot:action="{row}">
                 <span>
                     <i class="vc-icon-recycle-bin cursor-pointer text-xl text-red" @click="onReportDelete(row)"></i>
@@ -24,6 +24,10 @@ export default {
         showReorderButton: {
             type: Boolean,
             default: false
+        },
+        reportId: {
+            type: [Number, String],
+            default: ''
         }
     },
     computed: {

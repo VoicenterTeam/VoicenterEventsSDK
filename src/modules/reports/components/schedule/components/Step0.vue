@@ -71,7 +71,8 @@
     export default {
         props: {
             reportId: {
-                type: Number
+                type: [Number, String],
+                default: ''
             }
         },
         components: {

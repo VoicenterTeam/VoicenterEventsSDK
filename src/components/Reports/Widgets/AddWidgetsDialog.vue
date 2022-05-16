@@ -130,7 +130,8 @@ export default {
             default: false
         },
         reportId: {
-            type: Number
+            type: [Number, String],
+            default: ''
         },
         doRequest: {
             type: Boolean,
@@ -219,6 +220,9 @@ export default {
                 .filter(el => this.selectedWidgets.includes(el.WidgetID))
                 .map(el => {
                     delete el.isChecked
+                    if (this.reportId) {
+                        el.ReportID = this.reportId
+                    }
                     return el
                 })
 

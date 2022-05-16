@@ -99,7 +99,8 @@
                 default: false
             },
             reportId: {
-                type: Number
+                type: [Number, String],
+                default: ''
             },
             dataToEdit: {
                 type: Object,

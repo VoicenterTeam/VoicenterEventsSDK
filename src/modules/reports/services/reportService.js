@@ -71,6 +71,13 @@ export const reportApi = {
         } catch (e) {
             parseCatch(e, true, 'Report Conf Data')
         }
+    },
+    async reportItemExportReorder (payload) {
+        try {
+            const { Data } = await $axios.post('/Report/ItemExportReorder/', payload)
+        } catch (e) {
+            parseCatch(e, true, 'Report Item Export Reorder')
+        }
     }
     
 }

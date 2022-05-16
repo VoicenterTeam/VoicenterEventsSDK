@@ -6,7 +6,8 @@
             :tableProps="tableProps"
             @sort-change="onSortChange"
             @on-create-report="addCreateTab"
-            :tableActionProps="tableActionProps">
+            :tableActionProps="tableActionProps"
+        >
             <template v-slot:expand-content="{row}">
                 <div class="border-l-5 p-4 border-primary">
                     <div class="m-2 text-lg font-medium">{{ $t('widget.scheduleList') }}</div>
@@ -107,18 +108,39 @@
             </template>
 
             <template v-slot:format="{row}">
-                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsPDF')" type="default"
-                             @click="onExportAsPdf(row)"/>
-                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsCSV')" type="default"
-                             @click="onExportAsCSV(row)"/>
-                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsHTML')" type="default"
-                             @click="onExportAsHtml(row)"/>
+                <button-icon
+                    icon="vc-icon-confirm-action"
+                    :description="$t('report.tooltip.exportAsPDF')" type="default"
+                    @click="onExportAsPdf(row)"/>
+                <button-icon
+                    icon="vc-icon-confirm-action"
+                    :description="$t('report.tooltip.exportAsCSV')"
+                    type="default"
+                    @click="onExportAsCSV(row)"/>
+                <button-icon
+                    icon="vc-icon-confirm-action"
+                    :description="$t('report.tooltip.exportAsHTML')"
+                    type="default"
+                    @click="onExportAsHtml(row)"
+                />
             </template>
             <template v-slot:action="{row}">
-                <button-icon icon="vc-icon-copy" :description="$t('report.tooltip.copyReport')" @click="onReportCopy(row)"/>
-                <button-icon icon="vc-icon-edit-pencil" :description="$t('report.tooltip.editReport')" @click="onReportEdit(row)"/>
-                <button-icon icon="vc-icon-recycle-bin" :description="$t('report.tooltip.deleteReport')" type="danger"
-                             @click="onReportDelete(row)"/>
+                <button-icon 
+                    icon="vc-icon-copy"
+                    :description="$t('report.tooltip.copyReport')"
+                    @click="onReportCopy(row)"
+                />
+                <button-icon
+                    icon="vc-icon-edit-pencil"
+                    :description="$t('report.tooltip.editReport')"
+                    @click="onReportEdit(row)"
+                />
+                <button-icon
+                    icon="vc-icon-recycle-bin"
+                    :description="$t('report.tooltip.deleteReport')"
+                    type="danger"
+                    @click="onReportDelete(row)"
+                />
             </template>
         </reports-table>
         <delete-dialog
@@ -188,7 +210,12 @@ export default {
         ScheduleForm,
         AddWidgetsDialog
     },
-    props: {},
+    props: {
+        reportItemForEdit: {
+            type: Object,
+            default: () => {}
+        }
+    },
     data() {
         return {
             tableData: [],
@@ -241,6 +268,22 @@ export default {
             isDuplicateSchedules: true,
             visible: false,
             reportId: null
+        }
+    },
+    watch: {
+        reportItemForEdit: {
+            handler (val) {
+                if (Object.keys(val).length) {
+                    this.tableData = this.tableData.map(el => {
+                        if (el.ReportID === val.ReportID) {
+                            el = val
+                        }
+                        return el
+                    })
+                }
+            },
+            deep: true,
+            immediate: true
         }
     },
     methods: {

@@ -6,14 +6,14 @@
         >
             <div class="flex items-center" v-if="showReorderButton">
                 <div>
-                        <el-select
-                            class="w-48 mr-4 py-1"
-                            size="large"
-                            v-model="perPage"
-                        >
-                            <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
-                        </el-select>
-                    </div>
+                    <el-select
+                        class="w-48 mr-4 py-1"
+                        size="large"
+                        v-model="perPage"
+                    >
+                        <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
+                    </el-select>
+                </div>
                 <el-input
                     clearable
                     :placeholder="$t('general.search')"
@@ -23,7 +23,15 @@
                 </el-input>
             </div>
             <div class="flex items-center">
-                <base-button type="primary" size="xs" class="mx-4" link @click="changeWidgetsModal" v-if="showReorderButton">
+                <base-button
+                    v-if="showReorderButton"
+                    :disabled="checkIfWidgetsHaveExport"
+                    type="primary"
+                    size="xs"
+                    class="mx-4"
+                    link
+                    @click="changeWidgetsModal"
+                >
                     <i class="vc-icon-arrow-up icon-md"/>
                     <i class="vc-icon-arrow-down icon-md"/>
                     {{ $t('report.changeWidgetsOrder') }}
@@ -39,9 +47,9 @@
                 :data="paginatedData"
                 :sortable="sortable"
                 @sort-change="onSortChange"
-                :max-height="380"
-                height="380"
-                style="width: 100%">
+                height="460"
+                style="width: 100%;"
+            >
 
                 <template slot="empty">
                     <div v-if="isContentLoading">
@@ -101,10 +109,10 @@
                         <div class="text-center">
                             <div class="py-4 flex items-center justify-center" v-if="column.prop !== 'action'">
                                 <el-checkbox
+                                    v-if="reloadSelect"
                                     :disabled="disablingCheckbox(column, row)"
                                     @change="onChange(column, row)"
-                                    :checked="row.ReportItemExport.some(el => el.ReportExportTypeID === column.ReportExportTypeID)"
-                                
+                                    :checked="!!(row.ReportItemExport.length && row.ReportItemExport.some(el => el.ReportExportTypeID === column.ReportExportTypeID))"
                                 />
                             </div>
                             <div v-else>
@@ -128,6 +136,12 @@
             :visible.sync="visible"
             @added-widgets="addedWidgets"
             :do-request="false"
+            :reportId="reportId"
+        />
+        <reorder-widgets-dialog
+            :visible.sync="visibleReorderModal"
+            :widgets="tableData"
+            @reordered-widgets="reorderedWidgets"
         />
     </div>
 </template>
@@ -149,6 +163,10 @@ export default {
         showReorderButton: {
             type: Boolean,
             default: false
+        },
+        reportId: {
+            type: [Number, String],
+            default: ''
         }
     },
     components: {
@@ -161,7 +179,8 @@ export default {
         AddWidgetsDialog,
         [Checkbox.name]: Checkbox,
         [Select.name]: Select,
-        [Option.name]: Option
+        [Option.name]: Option,
+        ReorderWidgetsDialog: () => import('@/modules/reports/components/widget-reorder/ReorderWidgetsModal.vue')
     },
     data () {
         return {
@@ -189,12 +208,15 @@ export default {
             sortable: false,
             showStatusText: false,
             pageSizes: [5, 10, 25, 50, 100, 500],
-            customPageSize: 10
+            customPageSize: 10,
+            visibleReorderModal: false,
+            reloadSelect: true
         }
     },
     methods: {
         onPageSelect(page) {
             this.currentPage = page
+            this.reInitCheckboxes()
         },
         initFuseSearch() {
 
@@ -231,14 +253,15 @@ export default {
             if (this.currentPage > 1) {
                 this.currentPage--
             }
+            this.reInitCheckboxes()
         },
         goToNextPage() {
             if (this.currentPage < this.totalPages.length) {
                 this.currentPage++
             }
+            this.reInitCheckboxes()
         },
         addWidgetModal (data) {
-            this.reportId = data.ReportID
             this.visible = true
         },
         addedWidgets ({ activeWidgetItems }) {
@@ -263,7 +286,6 @@ export default {
                 const data = {
                     ReportExportOrder: 0,
                     ReportExportTypeID: column.ReportExportTypeID,
-                    ReportItemExportID: 1,
                     ReportExportTypeName: ''
                 }
 
@@ -284,8 +306,16 @@ export default {
             }
         },
         changeWidgetsModal () {
-            // TODO: need to create reorder widgets modal
-            console.log('changeWidgetsModal')
+            this.visibleReorderModal = true
+        },
+        reInitCheckboxes () {
+            this.reloadSelect = false
+            this.$nextTick(() => {
+                this.reloadSelect = true
+            })
+        },
+        reorderedWidgets (data) {
+            console.log(data)
         }
     },
     computed: {
@@ -358,6 +388,9 @@ export default {
                     }
             ]
             return exportTypeList
+        },
+        checkIfWidgetsHaveExport () {
+            return !this.tableData.some(el => el.ReportItemExport.length)
         }
     },
     watch: {
