@@ -72,7 +72,7 @@
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { ADMIN_USER_ID, displayUsersRelatedWithAdmin } from '@/helpers/util'
-    import EXTENSION_ID from '@/enum/parameters'
+    import Parameters from '@/enum/parameters'
 
     const cardWidth = 256;
 
@@ -161,7 +161,7 @@
                 return this.filteredExtensions
             },
             extensionToDisplay() {
-                const extensionParameter = this.data.WidgetConfig.find(param => param.ParameterID === EXTENSION_ID)
+                const extensionParameter = this.data.WidgetConfig.find(param => param.ParameterID === Parameters.EXTENSION_ID)
 
                 return extensionParameter ? get(extensionParameter, 'WidgetParameterValueJson.EntityPositive', []) : []
             },
