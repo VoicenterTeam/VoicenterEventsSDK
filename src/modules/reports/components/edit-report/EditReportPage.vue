@@ -201,7 +201,15 @@ export default {
             this.showDeleteDialog = false
         },
         onModalConfirm () {
-            const reportHasNotChanges = isEqual(this.copyOfReportData, this.getReportData)
+            const copyOfGetReportData = cloneDeep(this.getReportData)
+            if (!this.copyOfReportData.ReportItemList.every(el => 'index' in el)) {
+                copyOfGetReportData.ReportItemList.map(el => {
+                    delete el.index
+                    return el
+                })
+            }
+
+            const reportHasNotChanges = isEqual(this.copyOfReportData, copyOfGetReportData)
             if (reportHasNotChanges) {
                 this.$emit('on-cancel')
             } else {

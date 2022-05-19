@@ -205,7 +205,9 @@ export default {
             this.showConfirmDialog = true
         },
         async onConfirm () {
-            if (this.doRequest) {
+            const location = window.location.pathname.search('/edit/')
+            // console.log(location, 'location')
+            if (this.doRequest || location) {
                 const selectedWidgets = this.selectedWidgets.map(el => {
                     const data = {
                         ReportID: this.reportId,

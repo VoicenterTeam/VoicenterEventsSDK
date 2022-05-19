@@ -1,6 +1,6 @@
 <template>
     <div class="h-full w-full">
-        <widget-table :showReorderButton="showReorderButton" :reportId="reportId">
+        <widget-table :showReorderButton="showReorderButton" :reportId="reportId" ref="widgetTable">
             <template v-slot:action="{row}">
                 <span>
                     <i class="vc-icon-recycle-bin cursor-pointer text-xl text-red" @click="onReportDelete(row)"></i>
@@ -44,6 +44,7 @@ export default {
             }
             const currentIndex = rowData.index - 1
             await this.$store.dispatch('report/deleteReportItemList', currentIndex)
+            this.$refs.widgetTable.reInitCheckboxes()
         },
         validate () {
             return this.getReportData.ReportItemList.length

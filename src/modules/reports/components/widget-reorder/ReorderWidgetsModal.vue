@@ -163,18 +163,7 @@ export default {
         },
         confData () {
             return this.$store.getters['reportTrigger/getConfData']
-        },
-        // dynamicTabs () {
-        //     return this.confData.ReportExportTypeList
-        //         .map(el => {
-        //             el.title = this.$t(el.ReportExportTypeNameContentTag)
-        //             el.name = String(el.ReportExportTypeName).toLowerCase().replaceAll(' ', '_')
-        //             el.icon = 'vc-icon-rd'
-        //             el.disabled = false
-
-        //             return el
-        //         })
-        // }
+        }
     },
     watch: {
         visible (val) {
@@ -267,7 +256,7 @@ export default {
             }  
         },
         checkIfExistReportItemDescription (description) {
-            console.log(typeof description, description)
+            return description && description !== '{}' ? description : ''
         }
     },
     async beforeDestroy () {
