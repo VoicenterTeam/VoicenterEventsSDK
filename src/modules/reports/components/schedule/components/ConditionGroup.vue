@@ -7,16 +7,13 @@
             <div class="flex items-center font-semibold">
                 <div class="text-primary-300 flex text-sm items-center hover:text-primary cursor-pointer mx-2"
                      @click="onAddCondition">
-                    + {{ $t('general.add') }}
+                    <i class="vc-icon-plus-linear hover:text-primary mx-1" /> {{ $t('general.add') }}
                 </div>
                 <div v-if="canDelete"
                      class="flex items-center text-red-300 cursor-pointer hover:text-red"
                      @click="onDeleteGroup">
-                    <i>
-                        <IconClose class="w-2 h-2"/>
-                    </i>
-                    <span class="text-sm"
-                          :class="$rtl.isRTL ? 'ml-auto mr-1': 'mr-auto ml-1'">
+                    <i class="mx-2 vc-icon-close text-xs" />
+                    <span class="text-sm">
                         {{ $t('general.remove') }}
                     </span>
                 </div>
@@ -26,19 +23,23 @@
             <div class="flex items-center"
                  v-if="showGroupedIndicator">
                 <div class="flex flex-col accolade-height mx-6">
-                    <div class="w-1 h-1 w-5 bg-gray-550"></div>
-                    <div class="flex h-full w-1 bg-gray-550 justify-center items-center whitespace-nowrap">
+                    <div class="w-1 h-px w-5 bg-gray-550"></div>
+                    <div class="flex h-full w-px bg-gray-550 justify-center items-center whitespace-nowrap">
                         <span class="uppercase bg-white whitespace-nowrap">{{ $t('general.and') }}</span>
                     </div>
-                    <div class="w-1 h-1 w-5 bg-gray-550"></div>
+                    <div class="w-1 h-px w-5 bg-gray-550"></div>
                 </div>
             </div>
             <div class="flex flex-col w-full">
-                <ConditionCard v-for="(condition, index) in conditions"
-                               :key="`condition-${index}`"
-                               :index="index"
-                               class="my-2"
-                               v-bind="condition">
+                <ConditionCard
+                    v-for="(condition, index) in conditions.ReportTriggerConditionFilter"
+                    :key="`condition-${index}`"
+                    :index="condition"
+                    class="my-2"
+                    :condition="condition"
+                    :reportItemData="reportItemData"
+                    ref="conditionCard"
+                >
                     <template v-if="showGroupedIndicator"
                               v-slot:delete-button>
                         <i class="mx-2 text-gray-550 hover:text-red cursor-pointer"
@@ -49,7 +50,7 @@
                 </ConditionCard>
             </div>
         </div>
-        <div class="h-1 relative bg-gray-550 ml-6 my-6 font-semibold">
+        <div class="h-px relative bg-gray-550 ml-6 my-6 font-semibold" v-if="amountOfReportTriggerDataLength - 1 !== index">
             <div class="absolute uppercase bg-white -mt-4-5 ml-20 p-2">
                 {{ $t('general.or') }}
             </div>
@@ -65,37 +66,42 @@
         },
         props: {
             conditions: {
-                type: Array,
-                default: () => [],
+                type: Object,
+                default: () => ({}),
             },
             canDelete: Boolean,
+            reportItemData: {
+                type: Object,
+                default: () => ({})
+            },
+            index: {
+                type: Number,
+                default: null
+            },
+            amountOfReportTriggerDataLength: {
+                type: Number,
+                default: null
+            },
         },
         computed: {
             showGroupedIndicator() {
-                return this.conditions.length > 1
+                return this.conditions.ReportTriggerConditionFilter.length > 1
             },
         },
         methods: {
             onAddCondition() {
-                this.emitter('on-add-condition')
+                this.$emit('on-add-condition')
             },
             onDeleteCondition(index) {
-                const objToEmit = {
-                    group: this.conditions,
-                    index,
-                }
-                this.emitter('on-delete-condition', objToEmit)
+                this.$emit('on-delete-condition', this.index, index)
             },
             onDeleteGroup() {
-                this.emitter('on-delete-group')
-            },
-            emitter(event, objToEmit = {}) {
-                this.$emit(event, objToEmit)
-            },
+                this.$emit('on-delete-group', this.index)
+            }
         },
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .accolade-height {
     height: calc(100% - 6rem);
 }

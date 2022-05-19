@@ -2,7 +2,7 @@ import $axios from './apiConnection'
 import parseCatch from '../helpers/handleErrors';
 
 export const WidgetGroupsApi = {
-    
+
     async update(data, updateTitle = false) {
         try {
             if (!updateTitle) {
@@ -30,7 +30,7 @@ export const WidgetGroupsApi = {
             parseCatch(e, true, 'Update Widget Groups')
         }
     },
-    
+
     async store(data) {
         try {
             delete data.WidgetGroupID
@@ -40,7 +40,7 @@ export const WidgetGroupsApi = {
             parseCatch(e, true, 'Add Widget Group')
         }
     },
-    
+
     async addWidget(groupID, widgetID, data) {
         try {
             return await $axios.post(`/WidgetsGroups/AddWidget/${groupID}/${widgetID}`, data || {})
@@ -48,7 +48,7 @@ export const WidgetGroupsApi = {
             parseCatch(e, true, 'Add Widget to Widget Group')
         }
     },
-    
+
     async removeWidget(groupID, widgetID) {
         try {
             return await $axios.post(`/WidgetsGroups/RemoveWidget/${groupID}/${widgetID}`)
@@ -66,4 +66,14 @@ export const WidgetGroupsApi = {
             parseCatch(e, true, 'Reorder Widget Groups')
         }
     },
+
+    async list(data) {
+        try {
+            return await $axios.post(`/WidgetsGroups/List/`, data)
+        } catch (e) {
+            parseCatch(e, true, 'Reorder Widget Groups')
+        }
+    },
+
+
 }

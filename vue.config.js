@@ -32,7 +32,7 @@ module.exports = {
         svgRule
             .use('vue-svg-loader')
             .loader('vue-svg-loader');
-        config.resolve.alias.set('@', path.resolve('src/')); 
+        config.resolve.alias.set('@', path.resolve('src/'));
     },
 
     pluginOptions: {

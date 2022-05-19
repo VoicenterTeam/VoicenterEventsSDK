@@ -32,6 +32,7 @@ module.exports = {
                     500: 'var(--cool-grey)',
                     550: 'var(--gray-550)',
                     650: 'var(--gray-650)',
+                    700: 'var(--gray-700)',
                     900: 'var(--gray-900)',
                     950: 'var(--gray-950)',
                     light: 'var(--gray-light)',
@@ -180,12 +181,14 @@ module.exports = {
             },
             borderRadius: {
                 ...defaultTheme.borderRadius,
+                '1xl': '0.5rem',
                 '4xl': '2rem',
             },
             height: {
                 7.5: '2.125rem'
             },
             width: {
+                '4/5': '80%',
                 22.7: '5.75rem',
                 70: '17.5rem',
                 80: '23.75rem',

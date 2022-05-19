@@ -35,10 +35,12 @@ const actions = {
     },
     async setLanguage({ commit }, lang) {
         const dir = get(lang, 'DomainConfig.Direction', 'ltr')
-        const locale = lang.locale
+        const locale = lang.locale ? lang.locale : 'en'
 
         if (dir === 'rtl') {
             Vue.prototype.$rtl.enableRTL()
+        } else {
+            Vue.prototype.$rtl.disableRTL()
         }
         const translations = await ContentsApi.getAll()
         commit(types.SET_TRANSLATIONS, translations);

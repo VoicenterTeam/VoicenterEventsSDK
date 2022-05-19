@@ -24,7 +24,8 @@ export default {
             descriptionDefault: this.$t('dialog.delete.description'),
             configDefault: {
                 confirmIcon: 'IconDelete',
-                confirmText: this.$t('common.delete')
+                confirmText: this.$t('common.delete'),
+                ...this.config
             }
         }
     },
