@@ -14,14 +14,21 @@
     import get from 'lodash/get'
     import { Chart } from 'highcharts-vue'
     import bus from '@/event-bus/EventBus'
+    import Highcharts from 'highcharts'
     import { convertHex } from '@/helpers/convertHex'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import { queueActivities } from '@/enum/queueDashboardStatistics'
     import activityChartConfig from '@/components/Charts/Configs/ActivityGauge'
+    import highchartsMoreInit from 'highcharts/highcharts-more'
+    import solidGaugeInit from 'highcharts/modules/solid-gauge'
+
+    highchartsMoreInit(Highcharts)
+    solidGaugeInit(Highcharts)
 
     export default {
         mixins: [actionMixin],
         components: {
+            Highcharts,
             highcharts: Chart,
         },
         props: {
