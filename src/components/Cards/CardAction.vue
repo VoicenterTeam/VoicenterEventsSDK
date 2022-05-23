@@ -1,5 +1,6 @@
 <template>
     <div class="card-action_container relative cursor-pointer max-h-8">
+        <!-- TODO: need to change tooltip -->
         <i class="vc-icon-menu icon-lg text-gray-500 px-2 py-1-5 rounded hover:bg-primary-100"
            :class="{'bg-primary-100': showActionsMenu}"
            @click.stop="triggerMenu"/>

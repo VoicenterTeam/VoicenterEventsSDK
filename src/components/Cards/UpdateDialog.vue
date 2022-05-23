@@ -32,6 +32,16 @@
                     v-model="layoutConfig.valueFontSize">
                 </el-slider>
             </div>
+            <div class="py-4">
+                <label>{{ $t('widget.config.valueIconMinWidth') }}</label>
+                <el-slider
+                    :marks="valueBestOptions"
+                    :max="valueMinWidth.max"
+                    :min="valueMinWidth.min"
+                    show-input
+                    v-model="layoutConfig.valueIconMinWidth">
+                </el-slider>
+            </div>
             <widget-colors :model="model" :onlyBackground="onlyBackground"/>
         </el-collapse-item>
     </el-collapse>
@@ -108,6 +118,10 @@ export default {
                 96: '96px',
                 112: '112px',
             },
+            valueMinWidth: {
+                min: 24,
+                max: 128
+            }
         }
     },
 }
