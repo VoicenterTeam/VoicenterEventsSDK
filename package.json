@@ -1,13 +1,12 @@
 {
   "name": "voicenter-events-sdk",
-  "version": "0.8.7",
+  "version": "0.8.33",
   "scripts": {
     "serve": "npm run docs",
     "build": "bili",
     "lint": "vue-cli-service lint",
     "docs": "vue-cli-service docs --mode serve",
     "build:docs": "vue-cli-service docs --mode build",
-    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && npm run build",
     "start": "npm run docs"
   },
   "dependencies": {

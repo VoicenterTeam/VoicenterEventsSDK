@@ -27,10 +27,10 @@ const defaultOptions = {
   token: null,
   loginType: 'token',
   forceNew: true,
-  reconnectionDelay: 10000,
-  reconnectionDelayMax: 10000,
-  maxReconnectAttempts: 2,
-  timeout: 10000,
+  reconnectionDelay: 200, //10000
+  reconnectionDelayMax: 200, //10000
+  maxReconnectAttempts: 5,
+  timeout: 200,//10000
   keepAliveTimeout: 60000,
   idleInterval: 60000 * 5, // 5 minutes
   protocol: 'https',
@@ -59,7 +59,7 @@ class EventsSDK {
     if (!this.options.loginType) {
       throw new Error('A login type should be provided');
     }
-    this.Logger = new Logger(this.options);
+    //this.Logger = new Logger(this.options);
     this.servers = [];
     this.server = null;
     this.socket = null;
@@ -138,7 +138,7 @@ class EventsSDK {
   _onConnect() {
     this._initReconnectDelays();
     this.connected = true;
-    this.Logger.log(eventTypes.CONNECT, this.reconnectOptions);
+    console.log(eventTypes.CONNECT, this.reconnectOptions);
   }
 
   _initReconnectDelays() {
@@ -152,21 +152,22 @@ class EventsSDK {
   _onConnectError(data) {
     this._retryConnection('next', true);
     this.connected = false;
-    this.Logger.log(eventTypes.CONNECT_ERROR, data)
+    console.error(eventTypes.CONNECT_ERROR, data)
   }
 
   _onError(err) {
-    this.Logger.log(eventTypes.ERROR, err);
+    console.error(eventTypes.ERROR, err);
   }
 
   _onReconnectFailed() {
     this._retryConnection('next',true);
-    this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
+    console.error(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
   }
 
   _onConnectTimeout() {
+    console.log('_onConnectTimeout RETRY connection with next')
     this._retryConnection('next',true);
-    this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
+    console.error(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
   _onReconnectAttempt() {
@@ -181,13 +182,13 @@ class EventsSDK {
       this.socket.io.reconnectionDelay(newDelay);
       this.socket.io.reconnectionDelayMax(newDelay);
     }
-    this.reconnectOptions.retryCount++;
-    this.Logger.log(eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
+    //this.reconnectOptions.retryCount++; // TODO: Uncomment
+    console.log(eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
   }
 
   _onDisconnect(reason) {
     this.connected = false;
-    this.Logger.log(eventTypes.DISCONNECT, reason);
+    console.log(eventTypes.DISCONNECT, reason);
     this._connect('next', true)
   }
 
@@ -197,7 +198,7 @@ class EventsSDK {
       return
     }
     if (data && this.connected) {
-      this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
+      console.log(eventTypes.KEEP_ALIVE_RESPONSE);
       this._lastEventTimestamp = new Date().getTime()
     } else {
       this._initSocketConnection();
@@ -206,7 +207,9 @@ class EventsSDK {
 
   async _onLoginResponse(data) {
     if (data.Client) {
+      console.log('before loadExternalScript')
       await loadExternalScript(data.Client, this.options.environment, this.options.getSocketIOFunction)
+      console.log('after loadExternalScript')
     }
     if (data.URL) {
       this.server = {
@@ -221,11 +224,14 @@ class EventsSDK {
           Domain: url.replace('https://', '')
         }
       })
+      console.log("_onLoginResponse servers", this.servers)
     }
     if (data.Token) {
       this.options.token = data.Token;
       this.token = data.Token
+      console.log('before _onLoginResponse _connect')
       await this._connect('default', true)
+      console.log('after _onLoginResponse _connect')
     }
     if (data.TokenExpiry) {
       this.options.tokenExpiry = data.TokenExpiry
@@ -270,14 +276,18 @@ class EventsSDK {
     let serverToConnect = null;
     if (server === 'default') {
       serverToConnect = this._findCurrentServer();
+      console.log('SDK current default server', serverToConnect)
     } else if (server === 'next') {
       serverToConnect = this._findNextAvailableServer()
+      console.log('SDK current next server', serverToConnect)
     } else if (server === 'prev') {
       serverToConnect = this._findMaxPriorityServer()
+      console.log('SDK current prev server', serverToConnect)
     } else {
       throw new Error(`Incorrect 'server' parameter passed to connect function ${server}. Should be 'default' or 'next'`)
     }
     if (!serverToConnect) {
+      console.log('!serverToConnect')
       this.server = this._findCurrentServer();
     }
     this._initSocketConnection();
@@ -287,7 +297,9 @@ class EventsSDK {
     if (skipLogin) {
       return
     }
+    console.log('before login')
     await this.login(this.options.loginType)
+    console.log('after login')
   }
 
   _checkInit() {
@@ -297,27 +309,35 @@ class EventsSDK {
   }
 
   _initSocketConnection() {
-    let domain = this.server.Domain;
-    let protocol = this.options.protocol;
-    let url = `${protocol}://${domain}`;
-    this.Logger.log('Connecting to..', url);
-    this.closeAllConnections();
-    const options = {
-      reconnection: false,
-      perMessageDeflate: false,
-      upgrade: false,
-      transports: ['websocket'],
-      debug: false
-    }
-    if (this.token) {
-      options.query = {
-        token: this.token
+    try {
+      let domain = this.server.Domain;
+      let protocol = this.options.protocol;
+      let url = `${protocol}://${domain}`;
+      console.log('Connecting to..', url);
+      //console.log('allConnections', allConnections)
+      this.closeAllConnections();
+      console.log("closed all connections")
+      const options = {
+        reconnection: false,
+        perMessageDeflate: false,
+        upgrade: false,
+        transports: ['websocket'],
+        debug: false
       }
-    }
-    this.socket = self.io(url, options)
+      if (this.token) {
+        options.query = {
+          token: this.token
+        }
+      }
+      console.log('before self.io')
+      this.socket = self.io(url, options)
+      console.log('after self.io')
 
-    allConnections.push(this.socket);
-    this.connectionEstablished = true;
+      allConnections.push(this.socket);
+      this.connectionEstablished = true;
+    } catch (e) {
+      console.error("INIT CONNECTION", e)
+    }
   }
   _initSocketEvents() {
     this.socket
@@ -379,7 +399,7 @@ class EventsSDK {
 
   _findNextAvailableServer() {
     let currentServerPriority = this.server.Priority;
-    this.Logger.log(`Failover -> Trying to find another server`);
+    console.log(`Failover -> Trying to find another server`);
     if (currentServerPriority === this.servers.length - 1) {
       return this._findMaxPriorityServer()
     }
@@ -392,23 +412,29 @@ class EventsSDK {
       }
     }
     if (this.server.Domain !== nextServer.Domain) {
+      console.log('_findNextAvailableServer return new server', nextServer)
       this.server = nextServer;
       return this.server
     }
-    this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server);
+    console.log(`Failover -> Found new server. Connecting to it...`, this.server);
     return null
   }
 
   _findMaxPriorityServer() {
-    this.Logger.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer');
+    //console.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer');
+    //console.log('SDK _findMaxPriorityServer servers', this.servers)
     let maxPriorityServer = getServerWithHighestPriority(this.servers);
+    console.log('_findMaxPriorityServer, maxPriorityServer', maxPriorityServer)
     if (!this.server) {
       this.server = maxPriorityServer;
+      console.log('!this.server this.server = maxPriorityServer')
       return this.server
     }
     if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
+      console.log('_findMaxPriorityServer this.server', this.server)
+      console.log('_findMaxPriorityServer maxPriorityServer.Domain !== this.server.Domain')
       this.server = maxPriorityServer;
-      this.Logger.log(`Fallback -> Trying to find previous server`, this.server);
+      //console.log(`Fallback -> Trying to find previous server`, this.server);
       return this.server
     }
     return null
@@ -418,6 +444,7 @@ class EventsSDK {
     // Ignore server fetch if we have a list of servers passed via options
     if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
       this.servers = this.argumentOptions.servers
+      console.log("SDK _getServers", this.servers)
     }
   }
 
@@ -426,7 +453,7 @@ class EventsSDK {
       return;
     }
     let evt = this._parsePacket(packet);
-    this.Logger.log(`New event -> ${evt.name}`, evt);
+    console.log(`New event -> ${evt.name}`, evt);
     this._lastEventTimestamp = new Date().getTime()
     this._listenersMap.forEach((callback, eventName) => {
       if (eventName === '*') {
@@ -464,7 +491,9 @@ class EventsSDK {
    * @return {Promise<boolean>}
    */
   async init() {
+    console.log('IN INIT')
     if (this.connectionEstablished) {
+      console.log('this.connectionEstablished', this.connectionEstablished, 'return')
       return true;
     }
     if (this.socket) {
@@ -529,7 +558,7 @@ class EventsSDK {
 
   emit(eventName, data = {}) {
     this._checkInit();
-    this.Logger.log(`EMIT -> ${eventName}`, data);
+    console.log(`EMIT -> ${eventName}`, data);
     this.socket.emit(eventName, data);
   }
 
@@ -569,32 +598,107 @@ class EventsSDK {
     }
   }
   _getTabsSession() {
-    if (this.options.environment !== environments.BROWSER) {
-      return Promise.resolve()
-    }
+    console.log('IN _getTabsSession')
+    /*console.log("SDK window", window)
+    console.log("SDK sessionStorage", sessionStorage)*/
 
-    if (!window.sessionStorage.length) {
+    /*if (this.options.environment !== environments.BROWSER) {
+      console.log('this.options.environment return', this.options.environment)
+      return Promise.resolve()
+    } else {
+      console.log('_getTabsSession continue')
+    }*/
+
+    /*if (!window) {
+      return new Promise(resolve => setTimeout((resolve), 200))
+    }*/
+
+    //if (!window.sessionStorage.length) {
+    /*if (!Object.keys(sessionStorageObj).length) {
       // Ask other tabs for session storage
       localStorage.setItem('getSessionStorage', Date.now());
-    }
+    }*/
 
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'getSessionStorage') {
-        // Some tab asked for the sessionStorage -> send it
-        localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
-        localStorage.removeItem('sessionStorage');
-      } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
-        // sessionStorage is empty -> fill it
-        const data = JSON.parse(event.newValue)
+    if (this.options.environment === environments.CHROME_EXTENSION && chrome) {
+      chrome.storage.sync.get(['loginSessionData'], (result) => {
+        //console.log('Value currently is ' + result.key);
+        const loginSessionData = result.loginSessionData || '{}'
+        let sessionStorageObj = JSON.parse(loginSessionData)
 
-        for (let key in data) {
-          if (data.hasOwnProperty(key)) {
-            window.sessionStorage.setItem(key, data[key]);
+        console.log('IN CHROME _getTabsSession')
+        if (!Object.keys(sessionStorageObj).length) {
+          // Ask other tabs for session storage
+          chrome.storage.local.set({'getSessionStorage': Date.now()})
+          //localStorage.setItem('getSessionStorage', Date.now());
+        }
+
+        chrome.storage.onChanged.addListener((changes, namespace) => {
+          let sessionStorage
+          chrome.storage.sync.get(['loginSessionData'], (result) => {
+            //console.log('Value currently is ' + result.key);
+            const loginSessionData = result.loginSessionData || '{}'
+            sessionStorage = JSON.parse(loginSessionData)
+
+            for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+              //console.log('_getTabsSession KEY', key)
+              if (key === 'getSessionStorage') {
+                // Some tab asked for the sessionStorage -> send it
+                //localStorage.setItem('sessionStorage', JSON.stringify(sessionStorageObj));
+                /*chrome.storage.sync.get(['key'], function(result) {
+                  console.log('Value currently is ' + result.key);
+                });*/
+
+                chrome.storage.local.set({'sessionStorage': JSON.stringify(sessionStorage)})
+                //localStorage.removeItem('sessionStorage');
+                chrome.storage.local.remove(["sessionStorage"])
+              } else if (key === 'sessionStorage' && !Object.keys(sessionStorage).length) {
+                // sessionStorage is empty -> fill it
+                const data = JSON.parse(newValue)
+
+                for (let sKey in data) {
+                  if (data.hasOwnProperty(sKey)) {
+                    //window.sessionStorage.setItem(key, data[key]);
+                    //sessionStorageObj[sKey] = data[sKey]
+
+                    const storageObject = {
+                      ...sessionStorage,
+                      [sKey]: data[sKey]
+                    }
+
+                    console.log('SYYYNNCC STORAGE', storageObject)
+                    chrome.storage.sync.set({'loginSessionData': JSON.stringify(storageObject)});
+                  }
+                }
+              }
+            }
+          });
+        })
+      });
+    } else if (this.options.environment === environments.BROWSER && window) {
+      window.addEventListener('storage', (event) => {
+        if (!window.sessionStorage.length) {
+          // Ask other tabs for session storage
+          localStorage.setItem('getSessionStorage', Date.now());
+        }
+
+        if (event.key === 'getSessionStorage') {
+          // Some tab asked for the sessionStorage -> send it
+          localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
+          localStorage.removeItem('sessionStorage');
+        } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
+          // sessionStorage is empty -> fill it
+          const data = JSON.parse(event.newValue)
+
+          for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+              window.sessionStorage.setItem(key, data[key]);
+            }
           }
         }
-      }
-    })
+      })
+    }
 
+    console.log("IN THE END OF _getTabsSession")
     return new Promise(resolve => setTimeout((resolve), 200))
   }
 
@@ -615,37 +719,91 @@ class EventsSDK {
     const delay = 1000;
 
     if (this._lastLoginTimestamp + delay > new Date().getTime()) {
+      console.log('this._lastLoginTimestamp + delay', this._lastLoginTimestamp + delay)
+      console.log('new Date().getTime()', new Date().getTime())
+      console.log('return promise')
       return Promise.resolve()
     }
 
     this._lastLoginTimestamp = new Date().getTime()
+    console.log('this._lastLoginTimestamp', this._lastLoginTimestamp)
 
     return new Promise(async (resolve, reject) => {
       try {
-        let loginSession = window.sessionStorage.getItem(key);
+        let loginSession
+        if (this.options.environment === environments.BROWSER && window) {
+          loginSession = window.sessionStorage.getItem(key);
+          if (loginSession) {
+            loginSession = JSON.parse(loginSession)
+            console.log('got data from session', loginSession);
+            console.log('before _onLoginResponse 1')
+            await this._onLoginResponse(loginSession)
+            console.log('after _onLoginResponse 1')
+            return resolve(loginSession);
+          }
+        } else if (this.options.environment === environments.CHROME_EXTENSION && chrome) {
+          chrome.storage.sync.get(['loginSessionData'], async (result) => {
+            //console.log('Value currently is ' + result.key);
+            const loginSessionData = result.loginSessionData || '{}'
+            let sessionStorageObj = JSON.parse(loginSessionData)
 
-        if (loginSession) {
-          loginSession = JSON.parse(loginSession)
-          this.Logger.log('got data from session', loginSession);
-          await this._onLoginResponse(loginSession)
-          return resolve(loginSession);
+            if (sessionStorageObj) loginSession = sessionStorageObj[key];
+            if (loginSession) {
+              loginSession = JSON.parse(loginSession)
+              console.log('got data from session', loginSession);
+              console.log('before _onLoginResponse 1')
+              await this._onLoginResponse(loginSession)
+              console.log('after _onLoginResponse 1')
+              return resolve(loginSession);
+            }
+          });
         }
+
+
+        /*if (loginSession) {
+          loginSession = JSON.parse(loginSession)
+          console.log('got data from session', loginSession);
+          console.log('before _onLoginResponse 1')
+          await this._onLoginResponse(loginSession)
+          console.log('after _onLoginResponse 1')
+          return resolve(loginSession);
+        }*/
       } catch (err) {
-        this.Logger.log('Error on getting session', err)
+        console.error("Error on getting session", err)
       }
 
       try {
         const url = getExternalLoginUrl(this.options.loginUrl, type)
+        console.log('before externalLogin')
         const res = await externalLogin(url, payload)
+        console.log('after externalLogin')
+        console.log('after _onLoginResponse 2')
         await this._onLoginResponse(res)
+        console.log('before _onLoginResponse 2')
 
         if (this.options.environment === environments.BROWSER) {
           window.sessionStorage.setItem(key, JSON.stringify(res));
-        }
+          resolve(res)
+        } else if (this.options.environment === environments.CHROME_EXTENSION) {
+          chrome.storage.sync.get(['loginSessionData'], (result) => {
+            //console.log('Value currently is ' + result.key);
+            const loginSessionData = result.loginSessionData || '{}'
+            let sessionStorageObj = JSON.parse(loginSessionData)
 
-        resolve(res)
+            const storageObject = {
+              ...sessionStorageObj,
+              [key]: JSON.stringify(res)
+            }
+
+            console.log('SYYYNNCC STORAGE', storageObject)
+            chrome.storage.sync.set({'loginSessionData': JSON.stringify(storageObject)});
+            resolve(res)
+            //sessionStorageObj[key] = JSON.stringify(res)
+          })
+        }
       } catch (err) {
         this.servers = this.argumentOptions.servers || defaultServers;
+        console.log("SDK LOGIN CATCH servers", this.servers)
         reject(err)
       }
     });
