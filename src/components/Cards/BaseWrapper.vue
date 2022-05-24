@@ -139,10 +139,6 @@
     }
 </script>
 <style lang="scss" scoped>
-// .status-icon {
-//     max-width: 100px;
-//     // width: 2.5vw;
-// }
 .card-action_wrapper {
     @apply flex items-center justify-center flex-wrap;
     

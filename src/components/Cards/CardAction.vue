@@ -1,16 +1,37 @@
 <template>
-    <div class="card-action_container relative cursor-pointer max-h-8">
-        <!-- TODO: need to change tooltip -->
-        <i class="vc-icon-menu icon-lg text-gray-500 px-2 py-1-5 rounded hover:bg-primary-100"
-           :class="{'bg-primary-100': showActionsMenu}"
-           @click.stop="triggerMenu"/>
-        <fade-transition :duration="350">
-            <div v-click-outside="onMenuClickOutside"
-                 class="menu-wrapper px-3 py-1 absolute z-50 h-auto mt-3"
-                 :class="$rtl.isRTL ? 'left-0' : 'right-0'"
-                 v-if="showActionsMenu"
+    <div class="" v-click-outside="onMenuClickOutside">
+        <el-popover
+            trigger="manual"
+            v-model="showActionsMenu"
+            :popper-options="
+                { 
+                    boundariesElement: 'body'
+                }
+            "
+            :visible-arrow="false"
+        >
+            <IconOptions
+                class="w-4 h-4 text-gray-500 hover:text-primary dots-icon"
+                slot="reference"
+                @click="triggerMenu"
+            />
+            <!-- <div
+                class="menu-action_item"
             >
-                <div class="menu-action_item"
+                <IconPencil class="text-green w-4-5 h-4-5"/>
+                <span class="mx-2 text-main-sm truncate">
+                    {{ $t('dashboard.editGroup') }}
+                </span>
+            </div>
+            <div
+                class="menu-action_item border-t border-gray-300"
+            >
+                <IconDelete class="text-red w-4-5 h-4-5"/>
+                <span class="mx-2 text-main-sm truncate">
+                    {{ $t('dashboard.deleteGroup') }}
+                </span>
+            </div> -->
+            <div class="menu-action_item"
                      @click="onShowUpdateDialog()">
                     <IconPencil class="text-green w-4 h-4"/>
                     <span class="mx-2 truncate">{{ $t('tooltip.edit.widget') }}</span>
@@ -27,12 +48,11 @@
                         <span class="mx-2 truncate">{{ $t('tooltip.remove.widget') }}</span>
                     </div>
                 </template>
-            </div>
-        </fade-transition>
+        </el-popover>
     </div>
 </template>
 <script>
-    import { Tooltip } from 'element-ui'
+    import { Tooltip, Popover } from 'element-ui'
     import { EditIcon, TrashIcon } from 'vue-feather-icons'
     
     export default {
@@ -40,6 +60,7 @@
             EditIcon,
             TrashIcon,
             [Tooltip.name]: Tooltip,
+            [Popover.name]: Popover
         },
         props: {
             editable: {
@@ -64,12 +85,15 @@
                 this.showActionsMenu = false
             },
             onShowUpdateDialog() {
+                this.onMenuClickOutside()
                 this.emitter('show-modal')
             },
             onDuplicateWidget() {
+                this.onMenuClickOutside()
                 this.emitter('duplicate-widget')
             },
             onRemoveWidget() {
+                this.onMenuClickOutside()
                 this.emitter('remove-item')
             },
             emitter(event) {

@@ -9,8 +9,8 @@ export default {
                 },
                 background: widget.colors.background,
                 titleFontSize: `${this.data.WidgetLayout['titleFontSize'] || '22'}px`,
-                valueFontSize: `${this.data.WidgetLayout['valueFontSize'] || '64'}px`,
-                valueIconMinWidth: `${this.data.WidgetLayout['valueIconMinWidth'] || '50'}px`
+                valueFontSize: `${this.data.WidgetLayout['valueFontSize'] || '48'}px`,
+                valueIconMinWidth: `${this.data.WidgetLayout['valueIconMinWidth'] || '48'}px`
             }
 
             if (this.displayBorder) {
@@ -27,8 +27,8 @@ export default {
     mounted () {
         this.layoutConfig = {
             titleFontSize: this.data.WidgetLayout['titleFontSize'] || 22,
-            valueFontSize: this.data.WidgetLayout['valueFontSize'] || 64,
-            valueIconMinWidth: this.data.WidgetLayout['valueIconMinWidth'] || 30
+            valueFontSize: this.data.WidgetLayout['valueFontSize'] || 48,
+            valueIconMinWidth: this.data.WidgetLayout['valueIconMinWidth'] || 48
         }
     }
 }
