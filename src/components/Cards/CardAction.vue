@@ -9,28 +9,13 @@
                 }
             "
             :visible-arrow="false"
+            :placement="$rtl.isRTL ? 'bottom-start' : 'bottom-end'"
         >
             <IconOptions
-                class="w-4 h-4 text-gray-500 hover:text-primary dots-icon"
+                class="w-4 h-4 text-primary dots-icon cursor-pointer"
                 slot="reference"
                 @click="triggerMenu"
             />
-            <!-- <div
-                class="menu-action_item"
-            >
-                <IconPencil class="text-green w-4-5 h-4-5"/>
-                <span class="mx-2 text-main-sm truncate">
-                    {{ $t('dashboard.editGroup') }}
-                </span>
-            </div>
-            <div
-                class="menu-action_item border-t border-gray-300"
-            >
-                <IconDelete class="text-red w-4-5 h-4-5"/>
-                <span class="mx-2 text-main-sm truncate">
-                    {{ $t('dashboard.deleteGroup') }}
-                </span>
-            </div> -->
             <div class="menu-action_item"
                      @click="onShowUpdateDialog()">
                     <IconPencil class="text-green w-4 h-4"/>
@@ -106,15 +91,13 @@
 .rtl .card-action_container {
     @apply ml-4;
 }
-.menu-wrapper {
-    @apply rounded z-50 bg-white w-48 flex flex-col origin-top-right overflow-auto;
-    box-shadow: 0 0 5px var(--gray-350);
-}
-
 .menu-action_item {
-    @apply w-full rounded text-gray-700 flex items-center px-2 py-2 overflow-auto;
+    @apply w-full rounded text-gray-700 flex items-center px-2 py-2 overflow-auto cursor-pointer;
     &:hover {
         color: var(--primary-color);
     }
+}
+*:focus {
+    outline: none;
 }
 </style>

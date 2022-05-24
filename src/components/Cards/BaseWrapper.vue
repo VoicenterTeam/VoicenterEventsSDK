@@ -10,6 +10,7 @@
                 <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
             </span>
             <CardAction
+                class="rounded text-primary px-2 py-1-5 hover:bg-primary-100"
                 :editable="editable"
                 v-on="$listeners"
                 :main-color="mainColor"
