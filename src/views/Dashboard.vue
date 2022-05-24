@@ -19,7 +19,7 @@
                 <div v-if="layoutType !== 'tabbed'"
                      class="flex items-center">
                     <new-group-button
-                        :disabled="editMode"
+                        v-if="!editMode"
                         @click="addNewGroup"
                     />
                     <IconVerticalLine class="mx-6 h-12"/>
