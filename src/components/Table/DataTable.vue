@@ -6,25 +6,32 @@
                 <slot name="pagination-rows-per-page"/>
             </div>
             <slot name="time-frame"/>
-            <div class="flex items-center table-row__count"
-                 v-if="showManageColumns"
-                 :key="`${widget.WidgetID} - ${activeLanguage}`">
-                <el-dropdown class="px-4" size="mini" trigger="click">
-                    <el-button size="small" type="_primary" plain>
-                        <i class="vc-icon-filter el-icon--left"/>
-                        {{ $t('datatable.manage.columns') }}
-                    </el-button>
+            <slot name="additional-data"/>
+        </portal>
+        <portal :to="`widget-header__${widget.WidgetID}-action`">
+            <div
+                class="flex items-center table-row__count"
+                v-if="showManageColumns"
+                :key="`${widget.WidgetID} - ${activeLanguage}`"
+            >
+                <el-dropdown size="mini" class="px-1-5 hover:bg-primary-100 rounded" trigger="click">
+                    <el-tooltip class="item" effect="dark" :content="$t('datatable.manage.columns')" placement="top">
+                        <span>
+                            <i class="vc-icon-filter el-icon--filter text-primary" />
+                        </span>
+                    </el-tooltip>
                     <el-dropdown-menu slot="dropdown">
-                        <manage-columns :key="`${widget.WidgetID} - ${activeLanguage}`"
-                                        :available-columns="availableColumns"
-                                        :visible-columns="visibleColumns"
-                                        :displayQueueAsRows="displayQueueAsRows"
-                                        @on-change-visibility="updateColumnsVisibility"
-                                        @on-reorder-column="reorderColumn"/>
+                        <manage-columns
+                            :key="`${widget.WidgetID} - ${activeLanguage}`"
+                            :available-columns="availableColumns"
+                            :visible-columns="visibleColumns"
+                            :displayQueueAsRows="displayQueueAsRows"
+                            @on-change-visibility="updateColumnsVisibility"
+                            @on-reorder-column="reorderColumn"
+                        />
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <slot name="additional-data"/>
         </portal>
         <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
             <el-table :data="rowsData"
@@ -455,5 +462,8 @@ th > div.cell > span {
 
 .data-table ::v-deep .el-table td.direction-ltr {
     direction: ltr;
+}
+.el-icon--filter {
+    @apply text-xl;
 }
 </style>
