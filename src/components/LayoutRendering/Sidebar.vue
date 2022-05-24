@@ -43,7 +43,7 @@
                     @click="clickToAddNewWidget"
                 />
                 <new-group-button
-                    :disabled="editMode"
+                    v-if="!editMode"
                     @click="addNewGroup"
                 />
             </div>
