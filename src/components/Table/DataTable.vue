@@ -2,10 +2,10 @@
     <div class="data-table__container h-full">
         <portal :to="`widget-header__${widget.WidgetID}`">
             <div class="flex justify-start">
+                <slot name="time-frame"/>
                 <slot name="search-input"/>
                 <slot name="pagination-rows-per-page"/>
             </div>
-            <slot name="time-frame"/>
             <div class="flex items-center table-row__count"
                  v-if="showManageColumns"
                  :key="`${widget.WidgetID} - ${activeLanguage}`">
@@ -63,7 +63,7 @@
                                         :content="$t(column.prop) || column.label" :open-delay="300"
                                         placement="top"
                                     >
-                                        <span class="font-bold flex w-full justify-center uppercase">
+                                        <span class="font-bold flex w-full justify-center uppercase leading-5">
                                             {{ $t(column.prop) || column.label }}
                                         </span>
                                     </el-tooltip>
