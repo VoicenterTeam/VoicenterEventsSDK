@@ -13,6 +13,7 @@ import templatesCategory from './modules/templatesCategory'
 import axiosRequestsDuration from './modules/axiosRequestsDuration'
 
 import report from '@/modules/reports/store/report'
+import reportTrigger from '@/modules/reports/store/reportTrigger'
 
 Vue.use(Vuex)
 
@@ -40,6 +41,7 @@ export default new Vuex.Store({
         widgetCreation,
         templatesCategory,
         report,
+        reportTrigger,
         axiosRequestsDuration
     }
 })

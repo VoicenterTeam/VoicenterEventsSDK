@@ -1,29 +1,37 @@
 <template>
-    <div>
-        <WizardWrapper :steps="wizardData.steps"
-                       v-on="$listeners"/>
-    </div>
+    <default-wizard v-bind="$attrs" v-on="$listeners" ref="wizard" :data-test-name="dataTestName" @on-cancel="onCancel">
+        <slot></slot>
+        <template slot="extra-actions">
+            <slot name="extra-actions"></slot>
+        </template>
+    </default-wizard>
 </template>
+
 <script>
-   
+    import DefaultWizard from "@/modules/reports/components/wizard/DefaultWizard";
+
     export default {
-        components: {
-            WizardWrapper: () => import('@/modules/reports/components/wizard/components/WizardWrapper')
-        },
+        name: 'Wizard',
         props: {
-            currentStep: {
-                type: Number,
-                default: 0,
+            name: {
+                type: String,
+                default: ''
             },
-            wizardData: {
-                type: Object,
-                default: () => ({}),
-            },
+            dataTestName: {
+                type: String,
+                default: ''
+            }
         },
-        watch: {
-            currentStep(value) {
-                this.wizardData.updateStep(value)
-            },
+        components: {
+            DefaultWizard
         },
+        methods:{
+            goToStep(value){
+                this.$refs.wizard.goToStep(value, 'right')
+            },
+            onCancel () {
+                this.$emit('on-cancel')
+            }
+        }
     }
 </script>

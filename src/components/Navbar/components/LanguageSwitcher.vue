@@ -19,10 +19,10 @@
                 </div>
             </template>
             <el-option
-                v-for="language in languages"
+                v-for="(language, index) in languages"
                 class="flex items-center justify-between"
                 :value="language"
-                :key="language.locale"
+                :key="`${language.locale}-${index}`"
             >
                 <div class="flex items-center">
                     <img :src="language.icon"

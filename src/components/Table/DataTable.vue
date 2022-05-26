@@ -6,37 +6,46 @@
                 <slot name="pagination-rows-per-page"/>
             </div>
             <slot name="time-frame"/>
-            <div class="flex items-center table-row__count"
-                 v-if="showManageColumns"
-                 :key="`${widget.WidgetID} - ${activeLanguage}`">
-                <el-dropdown class="px-4" size="mini" trigger="click">
-                    <el-button size="small" type="_primary" plain>
-                        <i class="vc-icon-filter el-icon--left"/>
-                        {{ $t('datatable.manage.columns') }}
-                    </el-button>
+            <slot name="additional-data"/>
+        </portal>
+        <portal :to="`widget-header__${widget.WidgetID}-action`">
+            <div
+                class="flex items-center table-row__count"
+                v-if="showManageColumns"
+                :key="`${widget.WidgetID} - ${activeLanguage}`"
+            >
+                <el-dropdown size="mini" class="px-1-5 hover:bg-primary-100 rounded" trigger="click">
+                    <el-tooltip class="item" effect="dark" :content="$t('datatable.manage.columns')" placement="top">
+                        <span>
+                            <i class="vc-icon-filter el-icon--filter text-primary" />
+                        </span>
+                    </el-tooltip>
                     <el-dropdown-menu slot="dropdown">
-                        <manage-columns :key="`${widget.WidgetID} - ${activeLanguage}`"
-                                        :available-columns="availableColumns"
-                                        :visible-columns="visibleColumns"
-                                        :displayQueueAsRows="displayQueueAsRows"
-                                        @on-change-visibility="updateColumnsVisibility"
-                                        @on-reorder-column="reorderColumn"/>
+                        <manage-columns
+                            :key="`${widget.WidgetID} - ${activeLanguage}`"
+                            :available-columns="availableColumns"
+                            :visible-columns="visibleColumns"
+                            :displayQueueAsRows="displayQueueAsRows"
+                            @on-change-visibility="updateColumnsVisibility"
+                            @on-reorder-column="reorderColumn"
+                        />
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <slot name="additional-data"/>
         </portal>
         <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
-            <el-table :data="rowsData"
-                      :fit="fitWidth"
-                      :id="tableId"
-                      :key="tableId"
-                      class="rounded-lg h-full bg-transparent ltr-direction"
-                      ref="table"
-                      row-key="id"
-                      v-bind="$attrs"
-                      v-if="drawTable"
-                      v-on="listeners">
+            <el-table
+                :data="rowsData"
+                :fit="fitWidth"
+                :id="tableId"
+                :key="tableId"
+                class="rounded-lg h-full bg-transparent ltr-direction"
+                ref="table"
+                row-key="id"
+                v-bind="$attrs"
+                v-if="drawTable"
+                v-on="listeners"
+            >
                 <slot name="">
                     <el-table-column
                         class="truncate"
@@ -50,29 +59,35 @@
                         :sortable="canSortRows"
                         :type="column.type"
                         v-bind="column"
-                        v-for="column in renderedColumns">
+                        v-for="column in renderedColumns"
+                    >
                         <template slot="header">
                             <div class="flex flex-1 w-full break-normal">
                                 <slot :column="column" name="header_title">
-                                    <el-tooltip :content="$t(column.prop) || column.label" :open-delay="300"
-                                                placement="top">
-                                    <span class="font-bold flex w-full justify-center uppercase">
-                                        {{ $t(column.prop) || column.label }}
-                                    </span>
+                                    <el-tooltip
+                                        :content="$t(column.prop) || column.label" :open-delay="300"
+                                        placement="top"
+                                    >
+                                        <span class="font-bold flex w-full justify-center uppercase">
+                                            {{ $t(column.prop) || column.label }}
+                                        </span>
                                     </el-tooltip>
                                 </slot>
                             </div>
                         </template>
                         <template slot-scope="{row, $index}">
-                            <slot :index="$index"
-                                  :name="column.prop || column.type || column.label"
-                                  :row="row">
+                            <slot
+                                :index="$index"
+                                :name="column.prop || column.type || column.label"
+                                :row="row"
+                            >
                                 {{ formatCell(row, column) }}
                             </slot>
-                            <slot :column="column"
-                                  :index="$index"
-                                  :row="row"
-                                  name="realTimeCell">
+                            <slot
+                                :column="column"
+                                :index="$index"
+                                :row="row"
+                                name="realTimeCell">
                             </slot>
                         </template>
                     </el-table-column>
@@ -81,19 +96,23 @@
         </div>
         <portal :to="`widget-footer__${widget.WidgetID}`">
             <div class="flex items-center justify-between -mx-1 widget-footer h-12" v-if="tableData.length">
-                <export-data :tableId="tableId"
-                             :widget="widget"
-                             @on-update-layout="updateLayout"
-                             v-bind="$attrs"
-                             :columns-to-export="columnsToExport">
+                <export-data
+                    :tableId="tableId"
+                    :widget="widget"
+                    @on-update-layout="updateLayout"
+                    v-bind="$attrs"
+                    :columns-to-export="columnsToExport"
+                >
                     <template v-slot="{onManageExport}">
-                        <manage-columns :show-header-container="!onManageExport"
-                                        :available-columns="availableColumns"
-                                        v-if="showManageColumns"
-                                        :visible-columns="visibleColumns"
-                                        :displayQueueAsRows="displayQueueAsRows"
-                                        @on-change-visibility="(data) => updateColumnsVisibility(data, onManageExport)"
-                                        @on-reorder-column="(data) => reorderColumn(data, onManageExport)"/>
+                        <manage-columns
+                            :show-header-container="!onManageExport"
+                            :available-columns="availableColumns"
+                            v-if="showManageColumns"
+                            :visible-columns="visibleColumns"
+                            :displayQueueAsRows="displayQueueAsRows"
+                            @on-change-visibility="(data) => updateColumnsVisibility(data, onManageExport)"
+                            @on-reorder-column="(data) => reorderColumn(data, onManageExport)"
+                        />
                     </template>
                 </export-data>
                 <div class="flex">
@@ -104,7 +123,6 @@
     </div>
 </template>
 <script>
-    import Sortable from 'sortablejs'
     import cloneDeep from 'lodash/cloneDeep'
     import ExportDataDialog from './ExportData'
     import { makeRandomID } from '@/helpers/util'
@@ -250,60 +268,6 @@
                     return row[column].replace(/\//g, '-')
                 }
             },
-            tryInitSortableRows() {
-                const table = this.$el.querySelector('.el-table__body-wrapper tbody')
-                if (!table) {
-                    return
-                }
-                const self = this
-                Sortable.create(table, {
-                    group: 'rows',
-                    fallbackOnBody: true,
-                    animation: 150,
-                    ghostClass: 'sortable-ghost',
-                    onEnd({ newIndex, oldIndex }) {
-                        self.tableKey = self.availableColumns.map(c => c.prop).join('_')
-                        self.composePayloadToReorderRows(newIndex, oldIndex)
-                    },
-                })
-            },
-            composePayloadToReorderRows(newIndex, oldIndex) {
-                this.$emit('on-reorder-rows', {
-                    newIndex,
-                    oldIndex,
-                })
-            },
-            tryInitSortable() {
-                const table = this.$el.querySelector('.el-table__header-wrapper thead tr')
-                if (!table) {
-                    return
-                }
-                const self = this
-                Sortable.create(table, {
-                    group: 'sortable-ghost',
-                    fallbackOnBody: true,
-                    animation: 150,
-                    onEnd({ newIndex, oldIndex }) {
-                        self.tableKey = self.availableColumns.map(c => c.prop).join('_')
-                        self.composePayloadToUpdateLayout(newIndex, oldIndex)
-                    },
-                })
-                if (!this.canSortRows) {
-                    return
-                }
-                this.tryInitSortableRows()
-            },
-            composePayloadToUpdateLayout(newIndex, oldIndex) {
-                const targetRow = this.renderedColumns[oldIndex]
-                const targetRowIndex = this.availableColumns.findIndex(column => column.prop.toString() === targetRow.prop.toString())
-                
-                if (targetRowIndex !== -1) {
-                    this.availableColumns.splice(targetRowIndex, 1)
-                    this.availableColumns.splice(newIndex, 0, targetRow)
-                    
-                    this.updateLayout()
-                }
-            },
             updateColumnsVisibility(columns, onManageExport) {
                 if (onManageExport) {
                     this.columnsToExport = columns
@@ -409,16 +373,12 @@
                 deep: true,
                 handler() {
                     this.toggleManageColumns()
-                    this.tryInitSortable()
-                },
-            },
-        },
-        mounted() {
-            this.tryInitSortable()
-        },
+                }
+            }
+        }
     }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 colgroup {
     display: none !important;
 }
@@ -455,5 +415,8 @@ th > div.cell > span {
 
 .data-table ::v-deep .el-table td.direction-ltr {
     direction: ltr;
+}
+.el-icon--filter {
+    @apply text-xl;
 }
 </style>

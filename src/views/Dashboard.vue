@@ -19,7 +19,7 @@
                 <div v-if="layoutType !== 'tabbed'"
                      class="flex items-center">
                     <new-group-button
-                        :disabled="editMode"
+                        v-if="!editMode"
                         @click="addNewGroup"
                     />
                     <IconVerticalLine class="mx-6 h-12"/>
@@ -108,6 +108,7 @@
         />
     </div>
 </template>
+
 <script>
     import get from 'lodash/get'
     import orderBy from 'lodash/orderBy'
@@ -134,7 +135,7 @@
             Sidebar: () => import('@/components/LayoutRendering/Sidebar'),
             SocketStatusButton: () => import('@/components/Common/SocketStatusButton'),
             SocketStatusAlert: () => import('@/components/Common/SocketStatusAlert'),
-            DeleteDialog: () => import('@/components/Dialogs/DeleteDialog')
+            DeleteDialog: () => import('@/components/Dialogs/DeleteDialog'),
         },
         mixins: [removeEntitiesMixin, addEntitiesMixin, updateEntitiesMixin],
         props: {
