@@ -1,16 +1,22 @@
 <template>
-    <div class="relative px-2 py-1-5 rounded cursor-pointer"
-         @click.stop="triggerMenu"
-         :class="{
-             'bg-primary-100': showActionsMenu && !tryManageNote,
-             'hover:bg-primary-100': !tryManageNote,
-             'cursor-not-allowed': tryManageNote && isHtmlEditor(widget)}">
-        <i class="vc-icon-menu icon-lg text-gray-500" />
-        <fade-transition :duration="350">
-            <div v-click-outside="onMenuClickOutside"
-                 class="menu-wrapper px-3 py-1 absolute z-50 mt-2"
-                 :class="$rtl.isRTL ? 'left-0' : 'right-0'"
-                 v-if="showActionsMenu"
+    <div v-click-outside="onMenuClickOutside">
+        <el-popover
+            trigger="manual"
+            v-model="showActionsMenu"
+            :popper-options="
+                { 
+                    boundariesElement: 'body'
+                }
+            "
+            :visible-arrow="false"
+            :placement="$rtl.isRTL ? 'bottom-start' : 'bottom-end'"
+        >
+            <IconOptions
+                class="w-4 h-4 dots-icon text-primary cursor-pointer"
+                @click="triggerMenu" slot="reference"
+            />
+            <div
+                class="menu-wrapper"
             >
                 <div class="menu-action_item"
                      @click="onShowUpdateDialog()">
@@ -81,12 +87,12 @@
                     </div>
                 </template>
             </div>
-        </fade-transition>
+        </el-popover>
     </div>
 </template>
 <script>
     import bus from '@/event-bus/EventBus'
-    import { Switch, Tooltip, Select, Option } from 'element-ui'
+    import { Switch, Tooltip, Select, Option, Popover } from 'element-ui'
     import { PrinterIcon, DownloadIcon } from 'vue-feather-icons'
     import { isHtmlEditor, isNoteListWidget, isChartWidget } from '@/helpers/widgetUtils'
 
@@ -122,6 +128,7 @@
             ElSelect: Select,
             ElOption: Option,
             [Tooltip.name]: Tooltip,
+            [Popover.name]: Popover
         },
         props: {
             editable: {
@@ -176,6 +183,7 @@
                 this.emitter('on-add-note')
             },
             emitter(event) {
+                this.onMenuClickOutside()
                 this.$emit(event)
             },
             printChart(WidgetID) {
@@ -196,13 +204,8 @@
     }
 </script>
 <style lang="scss" scoped>
-.menu-wrapper {
-    @apply rounded z-50 bg-white w-56 flex flex-col origin-top-right max-h-screen overflow-auto;
-    box-shadow: 0 0 5px var(--gray-350);
-}
-
 .menu-action_item {
-    @apply w-full rounded text-gray-700 flex items-center px-2 py-3;
+    @apply w-full rounded text-gray-700 flex items-center p-2 cursor-pointer;
     &:hover {
         color: var(--primary-color);
     }

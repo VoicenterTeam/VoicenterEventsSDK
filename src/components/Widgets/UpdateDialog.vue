@@ -155,6 +155,11 @@
                     <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
+                    <el-form-item v-if="isChartWidget(widget)">
+                        <el-checkbox v-model="model.WidgetLayout.displayLegend">
+                            {{ $t('widget.displayLegend') }}
+                        </el-checkbox>
+                    </el-form-item>
                     <widget-colors :availableColors="availableColors" :model="model"/>
                 </el-collapse-item>
             </el-collapse>
@@ -230,6 +235,7 @@
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import { defaultAreaChartColors, defaultColors, realTimeSettings } from '@/enum/defaultWidgetSettings'
+    import { isChartWidget } from '@/helpers/widgetUtils'
     import {
         isAreaChartWidget,
         isHtmlEditor,
@@ -248,8 +254,6 @@
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -379,6 +383,7 @@
             isNoteListWidget,
             isFunnelChartWidget,
             isSocketsRealTimeTableWidget,
+            isChartWidget,
             isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
