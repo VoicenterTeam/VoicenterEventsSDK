@@ -1,5 +1,5 @@
 <template>
-<modal :width="setWidth" v-bind="$attrs" v-on="$listeners">
+<modal :width="setWidth" v-bind="$attrs" v-on="$listeners" :append-to-body="true">
     <template v-slot:title>
         <div class="flex flex-row items-center">
             <h5 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('extensionCard.update') }}</h5>
