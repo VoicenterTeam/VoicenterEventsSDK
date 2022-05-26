@@ -5,18 +5,19 @@ export default {
 
             let styles = {
                 color: {
-                    'color': widget.colors.fonts
+                    color: widget.colors.fonts
                 },
-                'background': widget.colors.background,
-                'titleFontSize': `${this.data.WidgetLayout['titleFontSize'] || '22'}px`,
-                'valueFontSize': `${this.data.WidgetLayout['valueFontSize'] || '64'}px`,
+                background: widget.colors.background,
+                titleFontSize: `${this.data.WidgetLayout['titleFontSize'] || '22'}px`,
+                valueFontSize: `${this.data.WidgetLayout['valueFontSize'] || '48'}px`,
+                valueIconMinWidth: `${this.data.WidgetLayout['valueIconMinWidth'] || '48'}px`
             }
 
             if (this.displayBorder) {
                 styles = {
                     ...styles,
                     ...{
-                        'border': `2px solid ${widget.colors.frames}`,
+                        border: `2px solid ${widget.colors.frames}`,
                     }
                 }
             }
@@ -26,7 +27,8 @@ export default {
     mounted () {
         this.layoutConfig = {
             titleFontSize: this.data.WidgetLayout['titleFontSize'] || 22,
-            valueFontSize: this.data.WidgetLayout['valueFontSize'] || 64,
+            valueFontSize: this.data.WidgetLayout['valueFontSize'] || 48,
+            valueIconMinWidth: this.data.WidgetLayout['valueIconMinWidth'] || 48
         }
     }
 }

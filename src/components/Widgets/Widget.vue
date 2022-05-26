@@ -1,8 +1,10 @@
 <template>
-    <div :class="getClass"
-         class="grid-stack-item-content relative rounded-lg flex flex-col"
-         :key="widget.WidgetID"
-         :style="getStyles">
+    <div
+        :class="getClass"
+        class="grid-stack-item-content relative rounded-lg flex flex-col h-full w-full"
+        :key="widget.WidgetID"
+        :style="getStyles"
+    >
         <div class="flex relative items-center">
             <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header py-2"
                  v-if="showDeleteButton"
