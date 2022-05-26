@@ -12,6 +12,7 @@
       :group-name="radioGroupName"
       :radio-label-class="radioLabelClass"
       :data-test="`radio-group-${dataTestName}`"
+      class="vc-radio-item"
     />
   </div>
 </template>
@@ -133,6 +134,12 @@ export default {
 
 <style lang="scss" scoped>
 .vc-radio-group-wrapper {
-  @apply w-full;
+  @apply w-full flex;
+}
+[dir="ltr"] .vc-radio-item:not(:last-child) {
+  @apply mr-2;
+}
+[dir="rtl"] .vc-radio-item:not(:last-child) {
+  @apply ml-2;
 }
 </style>

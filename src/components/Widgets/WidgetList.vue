@@ -1,35 +1,43 @@
 <template>
-    <div :key="widgetGroup.WidgetGroupID"
-         class="flex flex-col h-full w-full pb-2"
-         :class="{'grid-container': editable}">
-        <div :class="getClass"
-             :id="gridId"
-             :key="gridId"
-             ref="widgetListContainer"
+    <div
+        :key="widgetGroup.WidgetGroupID"
+        class="flex flex-col h-full w-full pb-2"
+        :class="{'grid-container': editable}"
+    >
+        <div
+            :class="getClass"
+            :id="gridId"
+            :key="gridId"
+            ref="widgetListContainer"
         >
-            <div v-loading="widget.onLoading"
-                 :data-id="widget.WidgetID"
-                 @mousedown="onMousedown"
-                 class="grid-stack-item overflow-hidden"
-                 :id="widget.WidgetID"
-                 v-bind="gridStackAttributes(widget)"
-                 v-for="widget in widgets"
-                 :key="widget.WidgetID">
+            <div
+                v-loading="widget.onLoading"
+                :data-id="widget.WidgetID"
+                @mousedown="onMousedown"
+                class="grid-stack-item overflow-hidden"
+                :id="widget.WidgetID"
+                v-bind="gridStackAttributes(widget)"
+                v-for="widget in widgets"
+                :key="widget.WidgetID"
+            >
                 <WidgetErrorBoundary>
-                    <Widget :editable="editable"
-                            :inViewById="inViewById"
-                            :key="widget.WidgetID"
-                            :widget="widget"
-                            @remove-item="removeWidget"
-                            @update-item="(data) => updateWidget(data)"
-                            v-on="$listeners">
-                    </Widget>
+                    <Widget
+                        :editable="editable"
+                        :inViewById="inViewById"
+                        :key="widget.WidgetID"
+                        :widget="widget"
+                        @remove-item="removeWidget"
+                        @update-item="(data) => updateWidget(data)"
+                        v-on="$listeners"
+                    />
                 </WidgetErrorBoundary>
             </div>
         </div>
-        <div :key="`no-data-${widgetGroup.WidgetGroupID}`"
-             class="w-full flex flex-col items-center mt-20"
-             v-if="widgets.length === 0">
+        <div
+            :key="`no-data-${widgetGroup.WidgetGroupID}`"
+            class="w-full flex flex-col items-center mt-20"
+            v-if="widgets.length === 0"
+        >
             <div class="flex flex-col items-center">
                 <IconNoData class="h-56 w-56"/>
                 <p class="text-gray-600 max-w-lg text-center">
@@ -89,7 +97,9 @@
                     'data-gs-x': get(widget, 'WidgetLayout.GridLayout.x', 0),
                     'data-gs-y': get(widget, 'WidgetLayout.GridLayout.y', 2),
                     'data-gs-width': get(widget, 'WidgetLayout.GridLayout.width', 12),
-                    'data-gs-height': get(widget, 'WidgetLayout.GridLayout.height', 2),
+                    'data-gs-height': get(widget, 'WidgetLayout.GridLayout.height', 2)
+                    // 'data-gs-min-width': 2,
+                    // 'data-gs-min-height': 4,
                 }
             },
             addWidgetsToGroup(widget) {

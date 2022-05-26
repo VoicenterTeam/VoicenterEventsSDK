@@ -1,5 +1,5 @@
 <template>
-<modal :width="setWidth" v-bind="$attrs" v-on="$listeners">
+<modal :width="setWidth" v-bind="$attrs" v-on="$listeners" :append-to-body="true">
     <template v-slot:title>
         <div class="flex flex-row items-center">
             <h5 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('extensionCard.update') }}</h5>
@@ -30,6 +30,16 @@
                     :min="valueFontSizes.min"
                     show-input
                     v-model="layoutConfig.valueFontSize">
+                </el-slider>
+            </div>
+            <div class="py-4">
+                <label>{{ $t('widget.config.valueIconMinWidth') }}</label>
+                <el-slider
+                    :marks="valueBestOptions"
+                    :max="valueMinWidth.max"
+                    :min="valueMinWidth.min"
+                    show-input
+                    v-model="layoutConfig.valueIconMinWidth">
                 </el-slider>
             </div>
             <widget-colors :model="model" :onlyBackground="onlyBackground"/>
@@ -108,6 +118,10 @@ export default {
                 96: '96px',
                 112: '112px',
             },
+            valueMinWidth: {
+                min: 24,
+                max: 128
+            }
         }
     },
 }
