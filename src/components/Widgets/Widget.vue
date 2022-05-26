@@ -6,7 +6,7 @@
         :style="getStyles"
     >
         <div class="flex relative items-center">
-            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header"
+            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header h-10"
                  v-if="showDeleteButton"
             >
                 <i class="icon-lg text-gray-500 mx-2" :class="widget.WidgetTemplateIcon"/>
