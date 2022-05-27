@@ -169,15 +169,18 @@
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
                     const toUpdatePromises = this.currentDashboard.WidgetGroupList.map((group, index) => {
-                        return WidgetGroupsApi.update({
+                        return {
                             ...group,
                             Order: index,
-                        })
+                        }
                     })
 
-                    await DashboardApi.update(this.model)
+                    const newModel = cloneDeep(this.model)
+                    delete newModel.WidgetGroupList
+                    
+                    await WidgetGroupsApi.reorder(this.currentDashboard.WidgetGroupList)
+                    await DashboardApi.update(newModel)
                     await LayoutApi.update(this.activeLayout)
-                    await Promise.all(toUpdatePromises)
 
                     const { DashboardID } = this.model
                     const dashboard = await DashboardApi.find(DashboardID)
