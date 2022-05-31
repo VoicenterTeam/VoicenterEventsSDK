@@ -1,14 +1,15 @@
 <template>
-    <div class="bg-transparent pt-4 rounded-lg"
+    <div class="bg-transparent pt-4 rounded-lg chart-content_wrapper"
          v-if="chartVisibility">
-        <highcharts
-            ref="gauge-chart"
-            class="chart-content_wrapper"
-            :options="chartData"
-            :callback="onInitChartCallback"
-            :updateArgs="[true, true]"
-        />
-        <div class="mb-4">
+        <div class="chart-content_wrapper" ref="gauge-chart-container">
+            <highcharts
+                ref="gauge-chart"
+                :options="chartData"
+                :callback="onInitChartCallback"
+                :updateArgs="[true, true]"
+            />
+        </div>
+        <div class="mb-4" v-if="!!data.WidgetLayout.showWaitingTimeTable">
             <data-table
                 :border="tableBorder"
                 :columns="availableColumns"
@@ -136,6 +137,7 @@
                 }
 
                 this.reDrawChart()
+                this.$refs['gauge-chart'].chart.redraw()
             },
             getAgentsData() {
                 let queuesCount = this.getMaximumRange || this.allQueues.length
@@ -192,7 +194,6 @@
                     if (this.data.WidgetID.toString() !== widgetID.toString()) {
                         return;
                     }
-                    this.reDrawChart()
                 });
             },
             reDrawChart() {
@@ -238,7 +239,45 @@
     }
 </script>
 <style lang="scss">
-.gouge-wrapper {
-    max-height: 300px;
+.chart-content_wrapper .highcharts-container {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.chart-content_wrapper .highcharts-root {
+    width: 100% !important;
+    height: 100% !important;
+}
+.chart-content_wrapper .highcharts-data-labels {
+    width: 100% !important;
+    height: 100% !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+.chart-content_wrapper .highcharts-label {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: calc(80% - 0px) !important;
+}
+.chart-content_wrapper .highcharts-label > span {
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+.chart-content_wrapper .highcharts-container::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    max-height: 100%;
+}
+.chart-content_wrapper .highcharts-container > svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 </style>

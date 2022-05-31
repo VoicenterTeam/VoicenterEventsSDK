@@ -2,12 +2,11 @@ export default {
     chart: {
         type: 'solidgauge',
         backgroundColor: 'transparent',
-        height: '180px',
         marginTop: 10
     },
     pane: {
         center: ['50%', '95%'],
-        size: '180%',
+        size: '150%',
         startAngle: -90,
         endAngle: 90,
         background: {
@@ -47,10 +46,21 @@ export default {
                 borderWidth: 0,
                 useHTML: true
             }
+        },
+        item: {
+            minSize: 100
         }
     },
     credits: {
         enabled: false
+    },
+    responsive: {
+        rules: [{
+            condition: {
+                minWidth: 150,
+                maxWidth: 750,
+            }
+        }]
     },
     series: [{
         dataLabels: {
