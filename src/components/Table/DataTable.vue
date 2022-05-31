@@ -420,7 +420,6 @@ th > div.cell > span {
     @apply text-xl;
 }
 ::v-deep .cell div > a {
-    text-decoration: underline;
-    @apply text-primary;
+    @apply text-primary underline;
 }
 </style>
