@@ -81,7 +81,7 @@
                                 :name="column.prop || column.type || column.label"
                                 :row="row"
                             >
-                                {{ formatCell(row, column) }}
+                                <div v-html="formatCell(row, column)" />
                             </slot>
                             <slot
                                 :column="column"
@@ -418,5 +418,9 @@ th > div.cell > span {
 }
 .el-icon--filter {
     @apply text-xl;
+}
+::v-deep .cell div > a {
+    text-decoration: underline;
+    @apply text-primary;
 }
 </style>
