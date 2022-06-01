@@ -15,23 +15,26 @@
             </el-dropdown-menu>
         </el-dropdown>
         <div class="flex items-center">
-            <div class="flex item-center text-sm font-medium text-gray mr-5 leading-5">
-                <div> {{ from }} - {{ to }}</div>
-                <div class="text-xs font-normal text-gray-700 mx-2 mt-0-5">{{ $t('general.of') }}</div>
-                <div> {{ total }}</div>
+            <div class="flex items-center text-base text-black mr-5 leading-5">
+                <div class="flex items-center font-medium"> {{ from }} - {{ to }}</div>
+                <div class="font-normal text-black mx-2 mt-0-5">{{ $t('general.of') }}</div>
+                <div class="flex items-center font-medium"> {{ total }}</div>
             </div>
             <div class="w-6 md:w-12 flex items-center justify-between">
-                <div :class="value === 1 ? 'disabled':  ''"
-                     role="button"
-                     @click="prevPage()"
-                     class="p-1 hover:bg-primary-50 rounded hover:text-primary">
-                    <IconSimpleArrowLeft class="w-4 h-4 text-gray-550 hover:text-primary"/>
+                <div
+                    :class="value === 1 ? 'disabled text-gray-700':  'text-primary hover:bg-primary-50'"
+                    role="button"
+                    @click="prevPage()"
+                    class="p-1 rounded"
+                >
+                    <IconSimpleArrowLeft class="w-4 h-4" />
                 </div>
                 <div role="button"
-                     :class="value === totalPages ? 'disabled':  ''"
-                     @click="nextPage()"
-                     class="p-1 hover:bg-primary-50 rounded hover:text-primary">
-                    <IconSimpleArrowRight class="w-4 h-4 text-gray-550 hover:text-primary"/>
+                    :class="value === totalPages ? 'disabled text-gray-700' : 'text-primary hover:bg-primary-50'"
+                    @click="nextPage()"
+                    class="p-1 rounded"
+                >
+                    <IconSimpleArrowRight class="w-4 h-4"/>
                 </div>
             </div>
         </div>
