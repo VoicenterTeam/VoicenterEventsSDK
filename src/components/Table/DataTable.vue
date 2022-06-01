@@ -398,12 +398,12 @@
                        const widgetElementHeight = widgetElement.clientHeight
 
                         if (dataHeight >= widgetElementHeight) {
-                            this.height = `${widgetElement.clientHeight - 59 - 48}px`
-                            widgetElement.setAttribute('data-height', widgetElementHeight)
+                            this.height = `${widgetElementHeight - 59 - 48}px`
                         } else {
                             this.height = `${widgetElementHeight - 48}px`
-                            widgetElement.setAttribute('data-height', widgetElementHeight)
                         }
+
+                        widgetElement.setAttribute('data-height', widgetElementHeight)
                     })
                 }
             })
