@@ -1,7 +1,6 @@
 <template>
     <div class="min-h-8 flex items-center">
-        <p v-if="title && showWidgetTitle" class="text-gray-700 font-semibold truncate"
-           :style="widgetTitleStyles">
+        <p v-if="title && showWidgetTitle" class="text-gray-500 font-semibold truncate widget-title">
             <slot>
                 {{$t(title)}}
             </slot>
@@ -21,10 +20,13 @@
             },
             showWidgetTitle() {
                 return this.$store.getters['layout/showWidgetTitles'](this.getTypeOfLayout)
-            },
-            widgetTitleStyles() {
-                return this.$store.getters['layout/widgetTitleStyles'](this.getTypeOfLayout)
             }
         }
     }
 </script>
+
+<style lang="scss" scoped>
+.widget-title {
+    @apply text-lg;
+}
+</style>
