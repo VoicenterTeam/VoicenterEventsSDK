@@ -2,10 +2,10 @@
     <div class="data-table__container h-full">
         <portal :to="`widget-header__${widget.WidgetID}`">
             <div class="flex justify-start">
+                <slot name="time-frame"/>
                 <slot name="search-input"/>
                 <slot name="pagination-rows-per-page"/>
             </div>
-            <slot name="time-frame"/>
             <slot name="additional-data"/>
         </portal>
         <portal :to="`widget-header__${widget.WidgetID}-action`">
@@ -68,7 +68,7 @@
                                         :content="$t(column.prop) || column.label" :open-delay="300"
                                         placement="top"
                                     >
-                                        <span class="font-bold flex w-full justify-center uppercase">
+                                        <span class="font-bold flex w-full justify-center uppercase leading-5">
                                             {{ $t(column.prop) || column.label }}
                                         </span>
                                     </el-tooltip>
@@ -81,7 +81,7 @@
                                 :name="column.prop || column.type || column.label"
                                 :row="row"
                             >
-                                {{ formatCell(row, column) }}
+                                <div v-html="formatCell(row, column)" />
                             </slot>
                             <slot
                                 :column="column"
@@ -418,5 +418,8 @@ th > div.cell > span {
 }
 .el-icon--filter {
     @apply text-xl;
+}
+::v-deep .cell div > a {
+    @apply text-primary underline;
 }
 </style>
