@@ -52,18 +52,20 @@ export const DashboardApi = {
     
     async update(data) {
         try {
-            data.WidgetGroupList.forEach(group => {
-                group.WidgetList.forEach(widget => {
-                    if (!widget.WidgetConfig) {
-                        widget.WidgetConfig = []
-                    }
-                    widget.WidgetConfig.forEach(config => {
-                        if (config.WidgetParameterValue === '{}') {
-                            config.WidgetParameterValue = ''
+            if (data.WidgetGroupList && data.WidgetGroupList.length) {
+                data.WidgetGroupList.forEach(group => {
+                    group.WidgetList.forEach(widget => {
+                        if (!widget.WidgetConfig) {
+                            widget.WidgetConfig = []
                         }
+                        widget.WidgetConfig.forEach(config => {
+                            if (config.WidgetParameterValue === '{}') {
+                                config.WidgetParameterValue = ''
+                            }
+                        })
                     })
                 })
-            })
+            }
             
             return await $axios.post(`/DashBoards/Update/`, data)
         } catch (e) {

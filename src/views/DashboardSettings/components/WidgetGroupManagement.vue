@@ -6,12 +6,17 @@
                 {{ $t('widget.widgetGroupManagement') }}
             </span>
         </div>
-        <DraggableList :value="widgetGroups"
-                       @change="(ev) => onGroupListChange(ev)"
-                       group="widgets">
-            <div :key="widgetGroup.WidgetGroupID"
-                 class="flex w-full items-center py-6 border-b border-gray-300 md:px-2"
-                 v-for="widgetGroup in widgetGroups">
+        <DraggableList
+            :value="widgetGroups"
+            @change="(ev) => onGroupListChange(ev)"
+            group="widgets"
+            class="cursor-pointer"
+        >
+            <div
+                :key="widgetGroup.WidgetGroupID"
+                class="flex w-full items-center py-6 border-b border-gray-300 md:px-2"
+                v-for="widgetGroup in widgetGroups"
+            >
                 <div class="flex items-center justify-between w-full hover:text-primary">
                     <div class="flex items-center">
                         <IconMoveUp class="text-gray-500"/>
