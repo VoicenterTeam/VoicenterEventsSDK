@@ -349,6 +349,14 @@
                 if (this.$refs['table']) {
                     this.$refs['table'].clearSort()
                 }
+            },
+            updateDataTableHeight () {
+                this.$nextTick(() => {
+                    const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
+                    if (widgetElement && widgetElement.clientHeight) {
+                        this.height = widgetElement.clientHeight - 48
+                    }
+                })
             }
         },
         watch: {
@@ -377,34 +385,24 @@
                 handler(val) {
                     this.toggleManageColumns()
                     if (val) {
-                        this.$nextTick(() => {
-                            const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
-                            if (widgetElement && widgetElement.clientHeight) {
-                                this.height = widgetElement.clientHeight - 48
-                                widgetElement.setAttribute('data-height', widgetElement.clientHeight)
-                            }
-                        })
+                        this.updateDataTableHeight()
                     }
                 },
                 immediate: true
+            },
+            tableData: {
+                deep: true,
+                handler(val) {
+                    if (val) {
+                        this.updateDataTableHeight()
+                    }
+                }
             }
         },
         mounted () {
             bus.$on('widget-resized', (widgetID) => {
                 if (this.widget.WidgetID === +widgetID) {
-                    this.$nextTick(() => {
-                       const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
-                       const dataHeight = widgetElement.getAttribute('data-height')
-                       const widgetElementHeight = widgetElement.clientHeight
-
-                        if (dataHeight >= widgetElementHeight) {
-                            this.height = `${widgetElementHeight - 59 - 48}px`
-                        } else {
-                            this.height = `${widgetElementHeight - 48}px`
-                        }
-
-                        widgetElement.setAttribute('data-height', widgetElementHeight)
-                    })
+                    this.updateDataTableHeight()
                 }
             })
         }
