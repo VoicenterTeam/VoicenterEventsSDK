@@ -2,7 +2,7 @@
     <div
         :key="widgetGroup.WidgetGroupID"
         class="flex flex-col h-full w-full pb-2"
-        :class="{'grid-container': editable}"
+        :style="gridLayoutStyle"
     >
         <div
             :class="getClass"
@@ -61,6 +61,7 @@
                 grid: null,
                 inViewById: {},
                 loading: false,
+                gridLayoutStyle: {}
             }
         },
         props: {
@@ -98,8 +99,6 @@
                     'data-gs-y': get(widget, 'WidgetLayout.GridLayout.y', 2),
                     'data-gs-width': get(widget, 'WidgetLayout.GridLayout.width', 12),
                     'data-gs-height': get(widget, 'WidgetLayout.GridLayout.height', 2)
-                    // 'data-gs-min-width': 2,
-                    // 'data-gs-min-height': 4,
                 }
             },
             addWidgetsToGroup(widget) {
@@ -149,10 +148,9 @@
                 })
             },
             async initWindowGrid() {
-                // await this.nextTick()
-
                 const gridOptions = {
                     acceptWidgets: true,
+                    column: 64
                 }
 
                 this.grid = window.GridStack.init(gridOptions, this.$refs.widgetListContainer)
@@ -243,6 +241,25 @@
 
                 this.observer = observer
             },
+            makeGridLayout () {
+                if (!this.editable || !this.$el) {
+                    return
+                }
+                const clientWidth = this.$el.clientWidth
+                const gridGap = (clientWidth * 1.5625) / 100
+                const rounded = Math.round((gridGap + Number.EPSILON) * 100) / 100
+                return {
+                    'background-image': 'radial-gradient(circle, var(--primary-color) 1px, transparent 0)',
+                    'background-size': `${rounded}px 40px`,
+                    'background-position': `${(rounded / 2) - 9}px 0`
+                }
+            },
+            resizeWindowListener () {
+                window.addEventListener('resize', this.setGridLayoutStyle)
+            },
+            setGridLayoutStyle () {
+                this.gridLayoutStyle = this.makeGridLayout()
+            }
 
         },
         async mounted() {
@@ -251,12 +268,14 @@
             bus.$on('added-widgets', async (widgets) => {
                 await this.addWidgetsToGrid(widgets)
             })
+            this.resizeWindowListener()
         },
         watch: {
             editable: {
                 handler(state) {
                     this.grid.movable('.grid-stack-item', state)
                     this.grid.resizable('.grid-stack-item', state)
+                    this.setGridLayoutStyle()
                 },
             },
             enabledRTL: {
@@ -270,13 +289,7 @@
             if (this.observer) {
                 this.observer.disconnect()
             }
-        },
+            window.removeEventListener('resize', this.setGridLayoutStyle)
+        }
     }
 </script>
-<style lang="scss">
-.grid-container {
-    background-image: radial-gradient(var(--primary-color) 1px, transparent 0);
-    background-size: 40px 40px;
-    background-position: -9px -5px;
-}
-</style>
