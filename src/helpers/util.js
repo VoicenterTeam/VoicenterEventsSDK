@@ -55,7 +55,7 @@ export function getDefaultGridLayout() {
         x: 0,
         y: Number(rowCount),
         width: 64,
-        height: 6,
+        height: 4,
     }
 }
 
