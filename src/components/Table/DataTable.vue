@@ -45,6 +45,7 @@
                 v-bind="$attrs"
                 v-if="drawTable"
                 v-on="listeners"
+                :max-height="height"
             >
                 <slot name="">
                     <el-table-column
@@ -129,6 +130,7 @@
     import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import { format } from 'date-fns'
     import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
+    import bus from '@/event-bus/EventBus'
     
     const QUEUE_STATISTICS_TEMPLATE = 45
     
@@ -200,6 +202,7 @@
                 showManageColumns: true,
                 columnMinWidthData: this.columnMinWidth,
                 templateHelp: {},
+                height: 200
             }
         },
         computed: {
@@ -346,6 +349,14 @@
                 if (this.$refs['table']) {
                     this.$refs['table'].clearSort()
                 }
+            },
+            updateDataTableHeight () {
+                this.$nextTick(() => {
+                    const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
+                    if (widgetElement && widgetElement.clientHeight) {
+                        this.height = widgetElement.clientHeight - 48
+                    }
+                })
             }
         },
         watch: {
@@ -371,10 +382,29 @@
             },
             widget: {
                 deep: true,
-                handler() {
+                handler(val) {
                     this.toggleManageColumns()
+                    if (val) {
+                        this.updateDataTableHeight()
+                    }
+                },
+                immediate: true
+            },
+            tableData: {
+                deep: true,
+                handler(val) {
+                    if (val) {
+                        this.updateDataTableHeight()
+                    }
                 }
             }
+        },
+        mounted () {
+            bus.$on('widget-resized', (widgetID) => {
+                if (this.widget.WidgetID === +widgetID) {
+                    this.updateDataTableHeight()
+                }
+            })
         }
     }
 </script>

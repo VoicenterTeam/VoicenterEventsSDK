@@ -38,7 +38,8 @@
                 />
             </div>
         </div>
-        <div class="flex w-full flex-col widget-container h-full contents"
+        <div class="flex w-full flex-col widget-container h-full"
+            :id="`widgetId-${widget.WidgetID}`"
              v-if="inView">
             <component
                 :data="widget"
