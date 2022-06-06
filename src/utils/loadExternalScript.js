@@ -1,4 +1,5 @@
 import environments from './environments'
+import s1_3_7 from "../helpers/socketLibrary/s1_3_7";
 
 function loadBrowserScript(url) {
   return new Promise((resolve, reject) => {
@@ -25,8 +26,25 @@ async function loadExtensionScript(url) {
   }
 }
 
-export async function loadExternalScript(url, environment, getSocketIOFunction) {
-  if (typeof getSocketIOFunction === 'function') {
+const getSocketIOFunction = (url) => {
+
+  const socketLibrary = {
+    s1_3_7: s1_3_7.call(self)
+  };
+
+  const parsedArray = url.split("v=");
+  const version = "s"
+    .concat(parsedArray[parsedArray.length - 1])
+    .replaceAll(".", "_");
+  if (!socketLibrary[version]) {
+    throw new Error(`Cannot find socket version ${version}`);
+  }
+  return socketLibrary[version];
+}
+
+export async function loadExternalScript(url, environment, useHelperVersion = false) {
+  if (useHelperVersion) {
+    self.io = undefined
     self.io = getSocketIOFunction(url)
 
     return
