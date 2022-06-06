@@ -400,9 +400,18 @@
             }
         },
         mounted () {
+            this.$nextTick(() => {
+                const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
+                widgetElement.setAttribute('data-width', widgetElement.clientWidth)
+            })
             bus.$on('widget-resized', (widgetID) => {
                 if (this.widget.WidgetID === +widgetID) {
-                    this.updateDataTableHeight()
+                    const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
+                    const defaultWidth = Number(widgetElement.getAttribute('data-width'))
+                    console.log(defaultWidth, widgetElement.clientWidth)
+                    if (defaultWidth === widgetElement.clientWidth) {
+                        this.updateDataTableHeight()
+                    }
                 }
             })
         }
