@@ -408,7 +408,6 @@
                 if (this.widget.WidgetID === +widgetID) {
                     const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
                     const defaultWidth = Number(widgetElement.getAttribute('data-width'))
-                    console.log(defaultWidth, widgetElement.clientWidth)
                     if (defaultWidth === widgetElement.clientWidth) {
                         this.updateDataTableHeight()
                     }
