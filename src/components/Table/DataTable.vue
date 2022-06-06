@@ -402,7 +402,9 @@
         mounted () {
             this.$nextTick(() => {
                 const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
-                widgetElement.setAttribute('data-width', widgetElement.clientWidth)
+                if (widgetElement) {
+                    widgetElement.setAttribute('data-width', widgetElement.clientWidth)
+                }
             })
             bus.$on('widget-resized', (widgetID) => {
                 if (this.widget.WidgetID === +widgetID) {
