@@ -77,7 +77,7 @@
             :widget-group-list="activeDashboardData.WidgetGroupList"
             :visible.sync="showReorderLayoutDialog"
             @on-cancel="showReorderLayoutDialog = false"
-            @on-submit="showReorderLayoutDialog = false"
+            @on-submit="onSubmit"
             @reorder-widgets-in-modal="reorderWidgetsInModal"
         />
     </div>
@@ -180,6 +180,10 @@
             },
             reorderWidgetsInModal () {
                 this.onMove('move')
+            },
+            onSubmit (data) {
+                this.showReorderLayoutDialog = false
+                this.$set(this.activeDashboardData, 'WidgetGroupList', data)
             }
         }
     }
