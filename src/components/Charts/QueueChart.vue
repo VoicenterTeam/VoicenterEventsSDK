@@ -4,7 +4,7 @@
         <highcharts
             ref="queue-chart"
             class="chart-content_wrapper"
-            :options="chartOptions"
+            :options="chartData"
             :callback="onInitChartCallback"
             :updateArgs="[true, true]"
         />
@@ -73,12 +73,12 @@
                             name: 'Queue Calls',
                             data: [],
                             yAxis: 0,
-                            color: colors.OTHER_COLOR,
+                            color: colors.QUEUE_OTHER_COLOR,
                         },
                         {
                             name: 'Agents available',
                             type: 'column',
-                            color: colors.LOGIN_COLOR,
+                            color: colors.QUEUE_LOGIN_COLOR,
                             pointWidth: 20,
                             stack: 0,
                             yAxis: 1,
@@ -87,7 +87,7 @@
                         {
                             name: 'Agents in Call',
                             type: 'column',
-                            color: colors.LIGHT_GREEN,
+                            color: colors.QUEUE_LIGHT_GREEN,
                             yAxis: 1,
                             pointWidth: 20,
                             stack: 0,
@@ -96,7 +96,7 @@
                         {
                             name: 'Agents in administrative break',
                             type: 'column',
-                            color: colors.ADMINISTRATIVE_COLOR,
+                            color: colors.QUEUE_ADMINISTRATIVE_COLOR,
                             pointWidth: 20,
                             stack: 0,
                             yAxis: 1,
@@ -105,7 +105,7 @@
                         {
                             name: 'Agents in Break',
                             type: 'column',
-                            color: colors.PRIVATE_COLOR,
+                            color: colors.QUEUE_PRIVATE_COLOR,
                             pointWidth: 20,
                             stack: 0,
                             yAxis: 1,
@@ -114,7 +114,7 @@
                         {
                             name: 'Agent with calls in Hold',
                             type: 'column',
-                            color: colors.TEAM_MEETING_COLOR,
+                            color: colors.QUEUE_TEAM_MEETING_COLOR,
                             yAxis: 1,
                             pointWidth: 20,
                             stack: 0,
@@ -134,16 +134,6 @@
         computed: {
             agentsOnline() {
                 return this.$store.state.extensions.extensions.filter((e) => e.representativeStatus !== LOGOUT_STATUS)
-            },
-            chartOptions() {
-                if (this.fetchDataInterval) {
-                    clearInterval(this.fetchDataInterval)
-                }
-                this.fetchDataInterval = setInterval(() => {
-                    this.updateChartData()
-                }, this.timeout)
-
-                return this.chartData
             },
             responsiveClass() {
                 if (this.editable && this.$rtl.isRTL) {
@@ -187,7 +177,7 @@
                     type: type,
                 })
             },
-            updateChartData() {
+            async updateChartData() {
                 const newTime = new Date()
                 let queues = this.filteredQueues
 
@@ -207,7 +197,7 @@
                 let agentsOnline = this.agentsOnline
                 let maxWaitingTime = queueCalls > 0 ? (Math.floor(newTime.getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
 
-                let currentTime = newTime.getTime() + getServerTimeOffset();
+                let currentTime = newTime.getTime();
 
                 const columns = Math.floor(this.showTime / this.timeout)
 
@@ -285,6 +275,16 @@
                     this.chartVisibility = true
                 })
             },
+            getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.updateChartData()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {
@@ -297,12 +297,13 @@
             }
             this.$nextTick(this.updateChartData)
             this.triggerResizeEvent()
-        },
+    },
         watch: {
             data() {
                 this.reDrawChart()
-            },
-        },
+                this.getWidgetDataWithRefreshInterval()
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
