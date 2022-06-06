@@ -97,8 +97,8 @@
                     'data-gs-id': get(widget, 'WidgetID', '999'),
                     'data-gs-x': get(widget, 'WidgetLayout.GridLayout.x', 0),
                     'data-gs-y': get(widget, 'WidgetLayout.GridLayout.y', 2),
-                    'data-gs-width': get(widget, 'WidgetLayout.GridLayout.width', 12),
-                    'data-gs-height': get(widget, 'WidgetLayout.GridLayout.height', 2)
+                    'data-gs-width': get(widget, 'WidgetLayout.GridLayout.width', 64),
+                    'data-gs-height': get(widget, 'WidgetLayout.GridLayout.height', 4)
                 }
             },
             addWidgetsToGroup(widget) {
