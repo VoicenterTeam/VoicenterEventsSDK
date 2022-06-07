@@ -82,7 +82,6 @@ Highcharts.setOptions({
                 let valueToDisplay = timeFormatter(this.point.y)
                 return `<p style="font-size: config.fonts.base; color: ${this.point.color};">${this.series.name}: ${valueToDisplay}</p>`
             }
-            console.log(this.point, 'this.point')
 
             if (this.point.start && this.point.start) {
                 return `<p style="font-size: config.fonts.base; color: ${this.point.color};">${this.point.name}<br> ${this.series.name} (${this.point.y})</p>`
@@ -141,11 +140,7 @@ Highcharts.setOptions({
             style: {
                 color: config.colors.warm_grey,
                 fontSize: config.fonts.base,
-            },
-            // formatter: function() {
-            //     return Highcharts.dateFormat('%H:%M',
-            //                                     this.value);
-            //     } //TODO: need to check
+            }
         },
     },
     legend: {
