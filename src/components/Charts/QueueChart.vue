@@ -197,7 +197,7 @@
                 let agentsOnline = this.agentsOnline
                 let maxWaitingTime = queueCalls > 0 ? (Math.floor(newTime.getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
 
-                let currentTime = newTime.getTime();
+                let currentTime = newTime.getTime() + getServerTimeOffset();
 
                 const columns = Math.floor(this.showTime / this.timeout)
 
