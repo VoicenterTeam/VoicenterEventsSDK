@@ -1,39 +1,41 @@
 <template>
     <div>
         <portal :to="`widget-header__${data.WidgetID}`">
-            <div class="flex w-full justify-end overflow-x-hidden">
-                <div class="cursor-pointer hidden lg:block">
-                    <template v-if="showDropDown">
-                        <el-dropdown trigger="click">
-                            <span class="el-dropdown-link">
-                                <IconCardsGrid />
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>
-                                    <div class="bg-white rounded mt-1 flex flex-col border-2">
-                                        <div class="bg-gray-200 rounded-t border-b-2">
-                                            <p class="p-2 text-main-sm font-medium">{{ layoutColumns }}
-                                                {{ $t('columns.layout') }}
-                                            </p>
-                                        </div>
-                                        <div class="w-full flex p-2 justify-between">
-                                            <i
-                                                v-for="index in maxLayoutColumns"
-                                                :key="index"
-                                                :class="{'bg-primary-100': index <= layoutColumns}"
-                                                @click="updateGrid(index)"
-                                                class="icon-square mx-margin--1"
-                                            />
-                                        </div>
-                                    </div>
-                                </el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </template>
-                </div>
-                <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" class="mt-1">
+            <div class="flex w-full justify-end overflow-hidden items-center">
+                <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" size="small" class="select-type">
                     <el-option :key="option.label" v-bind="option" v-for="option in sortByOptions"/>
                 </el-select>
+            </div>
+        </portal>
+        <portal :to="`widget-header__${data.WidgetID}-action`">
+            <div class="cursor-pointer hidden lg:block">
+                <template v-if="showDropDown">
+                    <el-dropdown size="mini" class="px-2 py-1-5 hover:bg-primary-100 rounded" trigger="click">
+                        <span class="flex items-center">
+                            <i class="vc-icon-filter text-xl text-primary" />
+                        </span>
+                        <el-dropdown-menu slot="dropdown" >
+                            <el-dropdown-item>
+                                <div class="bg-white rounded mt-1 flex flex-col border-2">
+                                    <div class="bg-gray-200 rounded-t border-b-2">
+                                        <p class="p-2 text-main-sm font-medium">{{ layoutColumns }}
+                                            {{ $t('columns.layout') }}
+                                        </p>
+                                    </div>
+                                    <div class="w-full flex p-2 justify-between">
+                                        <i
+                                            v-for="index in maxLayoutColumns"
+                                            :key="index"
+                                            :class="{'bg-primary-100': index <= layoutColumns}"
+                                            @click="updateGrid(index)"
+                                            class="icon-square mx-margin--1"
+                                        />
+                                    </div>
+                                </div>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </template>
             </div>
         </portal>
         <div>
@@ -243,5 +245,11 @@
     &:last-child {
         margin-bottom: 0;
     }
+}
+[dir="ltr"] .select-type {
+    @apply mr-2;
+}
+[dir="rtl"] .select-type {
+    @apply ml-2;
 }
 </style>

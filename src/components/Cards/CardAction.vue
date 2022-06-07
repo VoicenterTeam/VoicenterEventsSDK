@@ -1,15 +1,22 @@
 <template>
-    <div class="card-action_container relative cursor-pointer max-h-8">
-        <i class="vc-icon-menu icon-lg text-gray-500 px-2 py-1-5 rounded hover:bg-primary-100"
-           :class="{'bg-primary-100': showActionsMenu}"
-           @click.stop="triggerMenu"/>
-        <fade-transition :duration="350">
-            <div v-click-outside="onMenuClickOutside"
-                 class="menu-wrapper px-3 py-1 absolute z-50 h-auto mt-3"
-                 :class="$rtl.isRTL ? 'left-0' : 'right-0'"
-                 v-if="showActionsMenu"
-            >
-                <div class="menu-action_item"
+    <div class="" v-click-outside="onMenuClickOutside">
+        <el-popover
+            trigger="manual"
+            v-model="showActionsMenu"
+            :popper-options="
+                { 
+                    boundariesElement: 'body'
+                }
+            "
+            :visible-arrow="false"
+            :placement="$rtl.isRTL ? 'bottom-start' : 'bottom-end'"
+        >
+            <IconOptions
+                class="w-4 h-4 text-primary dots-icon cursor-pointer"
+                slot="reference"
+                @click="triggerMenu"
+            />
+            <div class="menu-action_item"
                      @click="onShowUpdateDialog()">
                     <IconPencil class="text-green w-4 h-4"/>
                     <span class="mx-2 truncate">{{ $t('tooltip.edit.widget') }}</span>
@@ -26,12 +33,11 @@
                         <span class="mx-2 truncate">{{ $t('tooltip.remove.widget') }}</span>
                     </div>
                 </template>
-            </div>
-        </fade-transition>
+        </el-popover>
     </div>
 </template>
 <script>
-    import { Tooltip } from 'element-ui'
+    import { Tooltip, Popover } from 'element-ui'
     import { EditIcon, TrashIcon } from 'vue-feather-icons'
     
     export default {
@@ -39,6 +45,7 @@
             EditIcon,
             TrashIcon,
             [Tooltip.name]: Tooltip,
+            [Popover.name]: Popover
         },
         props: {
             editable: {
@@ -63,12 +70,15 @@
                 this.showActionsMenu = false
             },
             onShowUpdateDialog() {
+                this.onMenuClickOutside()
                 this.emitter('show-modal')
             },
             onDuplicateWidget() {
+                this.onMenuClickOutside()
                 this.emitter('duplicate-widget')
             },
             onRemoveWidget() {
+                this.onMenuClickOutside()
                 this.emitter('remove-item')
             },
             emitter(event) {
@@ -81,15 +91,13 @@
 .rtl .card-action_container {
     @apply ml-4;
 }
-.menu-wrapper {
-    @apply rounded z-50 bg-white w-48 flex flex-col origin-top-right overflow-auto;
-    box-shadow: 0 0 5px var(--gray-350);
-}
-
 .menu-action_item {
-    @apply w-full rounded text-gray-700 flex items-center px-2 py-2 overflow-auto;
+    @apply w-full rounded text-gray-700 flex items-center px-2 py-2 overflow-auto cursor-pointer;
     &:hover {
         color: var(--primary-color);
     }
+}
+*:focus {
+    outline: none;
 }
 </style>

@@ -2,18 +2,24 @@
     <div class="data-table__container h-full">
         <portal :to="`widget-header__${widget.WidgetID}`">
             <div class="flex justify-start">
+                <slot name="time-frame"/>
                 <slot name="search-input"/>
                 <slot name="pagination-rows-per-page"/>
             </div>
-            <slot name="time-frame"/>
-            <div class="flex items-center table-row__count"
-                 v-if="showManageColumns"
-                 :key="`${widget.WidgetID} - ${activeLanguage}`">
-                <el-dropdown class="px-4" size="mini" trigger="click">
-                    <el-button size="small" type="_primary" plain>
-                        <i class="vc-icon-filter el-icon--left"/>
-                        {{ $t('datatable.manage.columns') }}
-                    </el-button>
+            <slot name="additional-data"/>
+        </portal>
+        <portal :to="`widget-header__${widget.WidgetID}-action`">
+            <div
+                class="flex items-center table-row__count"
+                v-if="showManageColumns"
+                :key="`${widget.WidgetID} - ${activeLanguage}`"
+            >
+                <el-dropdown size="mini" class="px-1-5 hover:bg-primary-100 rounded" trigger="click">
+                    <el-tooltip class="item" effect="dark" :content="$t('datatable.manage.columns')" placement="top">
+                        <span>
+                            <i class="vc-icon-filter el-icon--filter text-primary" />
+                        </span>
+                    </el-tooltip>
                     <el-dropdown-menu slot="dropdown">
                         <manage-columns
                             :key="`${widget.WidgetID} - ${activeLanguage}`"
@@ -26,7 +32,6 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <slot name="additional-data"/>
         </portal>
         <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
             <el-table
@@ -40,6 +45,7 @@
                 v-bind="$attrs"
                 v-if="drawTable"
                 v-on="listeners"
+                :max-height="height"
             >
                 <slot name="">
                     <el-table-column
@@ -63,7 +69,7 @@
                                         :content="$t(column.prop) || column.label" :open-delay="300"
                                         placement="top"
                                     >
-                                        <span class="font-bold flex w-full justify-center uppercase">
+                                        <span class="font-bold flex w-full justify-center uppercase leading-5">
                                             {{ $t(column.prop) || column.label }}
                                         </span>
                                     </el-tooltip>
@@ -76,7 +82,7 @@
                                 :name="column.prop || column.type || column.label"
                                 :row="row"
                             >
-                                {{ formatCell(row, column) }}
+                                <div v-html="formatCell(row, column)" />
                             </slot>
                             <slot
                                 :column="column"
@@ -124,6 +130,7 @@
     import { Dropdown, DropdownMenu, Table, TableColumn, Tooltip } from 'element-ui'
     import { format } from 'date-fns'
     import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
+    import bus from '@/event-bus/EventBus'
     
     const QUEUE_STATISTICS_TEMPLATE = 45
     
@@ -195,6 +202,7 @@
                 showManageColumns: true,
                 columnMinWidthData: this.columnMinWidth,
                 templateHelp: {},
+                height: 200
             }
         },
         computed: {
@@ -341,6 +349,14 @@
                 if (this.$refs['table']) {
                     this.$refs['table'].clearSort()
                 }
+            },
+            updateDataTableHeight () {
+                this.$nextTick(() => {
+                    const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
+                    if (widgetElement && widgetElement.clientHeight) {
+                        this.height = widgetElement.clientHeight - 48
+                    }
+                })
             }
         },
         watch: {
@@ -366,10 +382,29 @@
             },
             widget: {
                 deep: true,
-                handler() {
+                handler(val) {
                     this.toggleManageColumns()
+                    if (val) {
+                        this.updateDataTableHeight()
+                    }
+                },
+                immediate: true
+            },
+            tableData: {
+                deep: true,
+                handler(val) {
+                    if (val) {
+                        this.updateDataTableHeight()
+                    }
                 }
             }
+        },
+        mounted () {
+            bus.$on('widget-resized', (widgetID) => {
+                if (this.widget.WidgetID === +widgetID) {
+                    this.updateDataTableHeight()
+                }
+            })
         }
     }
 </script>
@@ -410,5 +445,11 @@ th > div.cell > span {
 
 .data-table ::v-deep .el-table td.direction-ltr {
     direction: ltr;
+}
+.el-icon--filter {
+    @apply text-xl;
+}
+::v-deep .cell div > a {
+    @apply text-primary underline;
 }
 </style>

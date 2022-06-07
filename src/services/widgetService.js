@@ -19,8 +19,8 @@ export async function createNewWidgets(templates, widgetGroup, Order = false) {
 
         let widgetLayout = template.WidgetLayout
 
-        widgetLayout['GridLayout']['width'] = Math.min(Math.ceil(12 * Number(templateWidth) / 100), 12)
-        widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 80)
+        widgetLayout['GridLayout']['width'] = Math.min(Math.ceil(64 * Number(templateWidth) / 100), 64)
+        widgetLayout['GridLayout']['height'] = Math.floor(Number(templateHeight) / 80) * 2
 
         let newWidget = widgetModel(template.TemplateID, template.TemplateName, widgetGroup.WidgetGroupID, widgetGroup.DashboardID, {
             Order: Order ? Order : widgetGroup.WidgetList.length + index++,

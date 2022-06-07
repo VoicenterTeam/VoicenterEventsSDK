@@ -66,7 +66,6 @@
                 </div>
                 <div
                     class="p-1"
-                    :class="{'px-2 md:p-6': !onFullScreen}"
                     :key="activeDashboardData.DashboardID"
                 >
                     <div
