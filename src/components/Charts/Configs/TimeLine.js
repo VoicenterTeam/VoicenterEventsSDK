@@ -140,7 +140,7 @@ Highcharts.setOptions({
             style: {
                 color: config.colors.warm_grey,
                 fontSize: config.fonts.base,
-            },
+            }
         },
     },
     legend: {
