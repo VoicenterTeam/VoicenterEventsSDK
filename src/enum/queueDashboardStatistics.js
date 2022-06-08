@@ -23,8 +23,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LIGHT_GREEN,
-            fonts: colors.LIGHT_GREEN
+            frames: colors.QUEUE_LIGHT_GREEN,
+            fonts: colors.QUEUE_LIGHT_GREEN
         }
     },
     2: {
@@ -40,8 +40,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.PRIVATE_COLOR,
-            fonts: colors.PRIVATE_COLOR
+            frames: colors.QUEUE_PRIVATE_COLOR,
+            fonts: colors.QUEUE_PRIVATE_COLOR
         }
     },
     3: {
@@ -57,8 +57,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.PRIVATE_COLOR,
-            fonts: colors.PRIVATE_COLOR
+            frames: colors.QUEUE_PRIVATE_COLOR,
+            fonts: colors.QUEUE_PRIVATE_COLOR
         }
     },
     4: {
@@ -74,8 +74,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LOGIN_COLOR,
-            fonts: colors.LOGIN_COLOR
+            frames: colors.QUEUE_LOGIN_COLOR,
+            fonts: colors.QUEUE_LOGIN_COLOR
         }
     },
     5: {
@@ -91,8 +91,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.ADMINISTRATIVE_COLOR,
-            fonts: colors.ADMINISTRATIVE_COLOR
+            frames: colors.QUEUE_ADMINISTRATIVE_COLOR,
+            fonts: colors.QUEUE_ADMINISTRATIVE_COLOR
         }
     },
     6: {
@@ -108,8 +108,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LUNCH_COLOR,
-            fonts: colors.LUNCH_COLOR
+            frames: colors.QUEUE_LUNCH_COLOR,
+            fonts: colors.QUEUE_LUNCH_COLOR
         }
     },
     7: {
@@ -125,8 +125,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.PRIVATE_COLOR,
-            fonts: colors.PRIVATE_COLOR
+            frames: colors.QUEUE_PRIVATE_COLOR,
+            fonts: colors.QUEUE_PRIVATE_COLOR
         }
     },
     8: {
@@ -142,8 +142,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LOGOUT_COLOR,
-            fonts: colors.LOGOUT_COLOR
+            frames: colors.QUEUE_LOGOUT_COLOR,
+            fonts: colors.QUEUE_LOGOUT_COLOR
         }
     },
     9: {
@@ -159,8 +159,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.PRIVATE_COLOR,
-            fonts: colors.PRIVATE_COLOR
+            frames: colors.QUEUE_PRIVATE_COLOR,
+            fonts: colors.QUEUE_PRIVATE_COLOR
         }
     },
     10: {
@@ -176,8 +176,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.OTHER_COLOR,
-            fonts: colors.OTHER_COLOR
+            frames: colors.QUEUE_OTHER_COLOR,
+            fonts: colors.QUEUE_OTHER_COLOR
         }
     },
     11: {
@@ -193,8 +193,8 @@ export const PERCENTAGE_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LOGOUT_COLOR,
-            fonts: colors.LOGOUT_COLOR
+            frames: colors.QUEUE_LOGOUT_COLOR,
+            fonts: colors.QUEUE_LOGOUT_COLOR
         }
     },
 })
@@ -213,8 +213,8 @@ export const PRIMARY_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LIGHT_GREEN,
-            fonts: colors.LIGHT_GREEN,
+            frames: colors.QUEUE_LIGHT_GREEN,
+            fonts: colors.QUEUE_LIGHT_GREEN,
         }
     },
     [MAX_RING_TIME_KEY]: {
@@ -230,8 +230,8 @@ export const PRIMARY_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.PRIVATE_COLOR,
-            fonts: colors.PRIVATE_COLOR,
+            frames: colors.QUEUE_PRIVATE_COLOR,
+            fonts: colors.QUEUE_PRIVATE_COLOR,
         }
     },
     NotInSLACount: {
@@ -247,8 +247,8 @@ export const PRIMARY_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LOGOUT_COLOR,
-            fonts: colors.LOGOUT_COLOR,
+            frames: colors.QUEUE_LOGOUT_COLOR,
+            fonts: colors.QUEUE_LOGOUT_COLOR,
         }
     },
     InSLACount: {
@@ -264,8 +264,8 @@ export const PRIMARY_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.LUNCH_COLOR,
-            fonts: colors.LUNCH_COLOR,
+            frames: colors.QUEUE_LUNCH_COLOR,
+            fonts: colors.QUEUE_LUNCH_COLOR,
         }
     },
     [AVG_RING_TIME_KEY]: {
@@ -281,8 +281,8 @@ export const PRIMARY_COUNTERS = () => ({
         },
         colors: {
             background: "#ffffff",
-            frames: colors.ADMINISTRATIVE_COLOR,
-            fonts: colors.ADMINISTRATIVE_COLOR,
+            frames: colors.QUEUE_ADMINISTRATIVE_COLOR,
+            fonts: colors.QUEUE_ADMINISTRATIVE_COLOR,
         }
     },
 })

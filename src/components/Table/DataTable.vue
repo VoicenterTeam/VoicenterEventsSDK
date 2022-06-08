@@ -400,9 +400,19 @@
             }
         },
         mounted () {
+            this.$nextTick(() => {
+                const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
+                if (widgetElement) {
+                    widgetElement.setAttribute('data-width', widgetElement.clientWidth)
+                }
+            })
             bus.$on('widget-resized', (widgetID) => {
                 if (this.widget.WidgetID === +widgetID) {
-                    this.updateDataTableHeight()
+                    const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
+                    const defaultWidth = Number(widgetElement.getAttribute('data-width'))
+                    if (defaultWidth === widgetElement.clientWidth) {
+                        this.updateDataTableHeight()
+                    }
                 }
             })
         }
