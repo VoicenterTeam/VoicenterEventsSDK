@@ -676,6 +676,7 @@ class EventsSDK {
           loginSession = window.sessionStorage.getItem(key);
           if (loginSession) {
             loginSession = JSON.parse(loginSession)
+            console.log('got data from session', loginSession);
             await this._onLoginResponse(loginSession)
             return resolve(loginSession);
           }
@@ -684,6 +685,7 @@ class EventsSDK {
             if (result) loginSession = result[key];
             if (loginSession) {
               loginSession = JSON.parse(loginSession)
+              console.log('got data from session', loginSession);
               await this._onLoginResponse(loginSession)
               return resolve(loginSession);
             }
