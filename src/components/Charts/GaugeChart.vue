@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-transparent pt-4 rounded-lg chart-content_wrapper"
+    <div class="bg-transparent rounded-lg chart-content_wrapper"
          v-if="chartVisibility">
         <div class="chart-content_wrapper" ref="gauge-chart-container">
             <highcharts
@@ -27,7 +27,6 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import Highcharts from 'highcharts'
     import { Tooltip } from 'element-ui'
     import { Chart } from 'highcharts-vue'
     import bus from '@/event-bus/EventBus'
@@ -35,20 +34,24 @@
     import { TrashIcon } from 'vue-feather-icons'
     import gaugeChartConfig from './Configs/Gauge'
     import { WidgetDataApi } from '@/api/widgetDataApi'
-    import highchartsMoreInit from 'highcharts/highcharts-more'
-    import solidGaugeInit from 'highcharts/modules/solid-gauge'
     import { isExternalDataWidget } from '@/helpers/widgetUtils'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import {activeGaugeCallColumns} from "@/enum/queueConfigs";
     import orderBy from "lodash/orderBy";
 
+    import Highcharts from 'highcharts/highcharts'
+    import highchartsMoreInit from 'highcharts/highcharts-more'
+    import solidGaugeInit from 'highcharts/modules/solid-gauge'
+
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
+
 
     export default {
         mixins: [queueMixin, actionMixin],
         components: {
             TrashIcon,
+            Highcharts,
             highcharts: Chart,
             [Tooltip.name]: Tooltip,
             DataTable: () => import('@/components/Table/DataTable'),
@@ -191,7 +194,8 @@
             },
             triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
-                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                    if (this.data.WidgetID.toString() === widgetID.toString()) {
+                        this.$refs['gauge-chart'].chart.reflow()
                         return;
                     }
                 });
@@ -223,6 +227,12 @@
             allQueues() {
                 this.chartOptionsWithRefreshInterval()
             },
+            'data.WidgetLayout.showWaitingTimeTable': {
+                immediate: true,
+                handler (val) {
+                    gaugeChartConfig.chart.height = val ? '39%' : '59%'
+                }
+            }
         },
         mounted() {
             if (!this.data.WidgetLayout.showQueues) {
@@ -238,46 +248,3 @@
         },
     }
 </script>
-<style lang="scss">
-.chart-content_wrapper .highcharts-container {
-    width: 100% !important;
-    height: auto !important;
-}
-
-.chart-content_wrapper .highcharts-root {
-    width: 100% !important;
-    height: 100% !important;
-}
-.chart-content_wrapper .highcharts-data-labels {
-    width: 100% !important;
-    height: 100% !important;
-    left: 0 !important;
-    top: 0 !important;
-}
-.chart-content_wrapper .highcharts-label {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    top: calc(80% - 0px) !important;
-}
-.chart-content_wrapper .highcharts-label > span {
-    position: relative !important;
-    left: 0 !important;
-    top: 0 !important;
-}
-
-.chart-content_wrapper .highcharts-container::before {
-    content: '';
-    display: block;
-    width: 100%;
-    height: 0;
-    padding-bottom: 100%;
-    max-height: 100%;
-}
-.chart-content_wrapper .highcharts-container > svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-</style>

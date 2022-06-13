@@ -2,11 +2,12 @@ export default {
     chart: {
         type: 'solidgauge',
         backgroundColor: 'transparent',
-        marginTop: 10
+        marginTop: 0,
+        height: '29%'
     },
     pane: {
-        center: ['50%', '95%'],
-        size: '150%',
+        center: ['50%', '90%'],
+        size: '170%',
         startAngle: -90,
         endAngle: 90,
         background: {
