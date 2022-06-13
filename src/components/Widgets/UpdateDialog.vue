@@ -52,6 +52,11 @@
                     :valueKey="'QueueID'"
                     v-model="model.WidgetLayout.showQueues"/>
             </el-form-item>
+            <el-form-item v-if="isQueueGauge(widget)">
+                <el-checkbox v-model="model.WidgetLayout.showWaitingTimeTable">
+                    {{ $t('widget.showWaitingTimeTable') }}
+                </el-checkbox>
+            </el-form-item>
             <el-form-item v-if="isQueueChart(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
                     <div class="flex lg:w-1/2">
