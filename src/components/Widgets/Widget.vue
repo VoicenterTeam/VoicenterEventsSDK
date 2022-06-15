@@ -1,34 +1,45 @@
 <template>
-    <div :class="getClass"
-         class="grid-stack-item-content relative rounded-lg flex flex-col"
-         :key="widget.WidgetID"
-         :style="getStyles">
+    <div
+        :class="getClass"
+        class="grid-stack-item-content relative rounded-lg flex flex-col h-full w-full"
+        :key="widget.WidgetID"
+        :style="getStyles"
+    >
         <div class="flex relative items-center">
-            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header py-2"
+            <div class="flex relative overflow-x-auto overflow-y-hidden w-full flex-row items-center justify-between widget-header h-10"
                  v-if="showDeleteButton"
             >
-                <i class="icon-lg text-primary mx-2" :class="widget.WidgetTemplateIcon"/>
+                <i class="icon-lg text-gray-500 mx-2" :class="widget.WidgetTemplateIcon"/>
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
-                <portal-target :name="`widget-header__${widget.WidgetID}`"
-                               class="hidden lg:flex w-full items-center justify-between"/>
+                <portal-target
+                    :name="`widget-header__${widget.WidgetID}`"
+                    class="hidden lg:flex w-full items-center justify-between"
+                />
             </div>
-            <span v-if="showDeleteButton && showInfoButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
-                    <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
-            </span>
-            <WidgetAction
-                :key="widget.WidgetID"
-                :editable="editable"
-                :edit-mode="editMode"
-                :widget="widget"
-                @on-manage-notes="tryManageNotes"
-                @on-add-note="onAddNote"
-                v-if="showDeleteButton"
-                @on-duplicate="duplicateWidget"
-                @on-remove="removeWidget"
-                @on-show-update-dialog="showUpdateDialog = true"
-            />
+            <div class="flex items-center flex-row">
+                <span v-if="showDeleteButton && showInfoButton" class="flex items-center px-2 py-1-5 hover:bg-primary-100 rounded" @click="showPreviewInfoDialog = true">
+                    <i class="vc-icon-info icon-lg text-primary cursor-help"/>
+                </span>
+                <portal-target
+                    :name="`widget-header__${widget.WidgetID}-action`"
+                />
+                <WidgetAction
+                    :key="widget.WidgetID"
+                    :editable="editable"
+                    :edit-mode="editMode"
+                    :widget="widget"
+                    @on-manage-notes="tryManageNotes"
+                    @on-add-note="onAddNote"
+                    v-if="showDeleteButton"
+                    @on-duplicate="duplicateWidget"
+                    @on-remove="removeWidget"
+                    @on-show-update-dialog="showUpdateDialog = true"
+                    class="flex items-center widget-action hover:bg-primary-100 rounded text-primary px-2 py-1-5"
+                />
+            </div>
         </div>
-        <div class="flex w-full flex-col widget-container h-full contents"
+        <div class="flex w-full flex-col widget-container h-full"
+            :id="`widgetId-${widget.WidgetID}`"
              v-if="inView">
             <component
                 :data="widget"
@@ -283,6 +294,12 @@
 <style lang="scss" scoped>
 .widget {
     @apply rounded-lg h-full;
+}
+[dir="ltr"] .widget-action {
+    @apply mr-2;
+}
+[dir="rtl"] .widget-action {
+    @apply ml-2;
 }
 </style>
 <style lang="scss">

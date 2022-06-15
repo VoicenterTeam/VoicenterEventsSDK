@@ -72,14 +72,16 @@
                 <base-widget-title :title="data.Title"/>
             </template>
             <template v-slot:time-frame>
-                <time-frame :widget="data"/>
+                <span class="px-4 flex items-center">
+                    <time-frame :widget="data"/>
+                </span>
             </template>
             <template v-slot:search-input>
-                <div class="flex items-center w-64 px-1">
+                <div class="flex items-center w-48 px-1">
                     <el-input
                         clearable
                         :placeholder="$t('general.search')"
-                        size="large"
+                        size="small"
                         v-model="filter">
                         <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
                     </el-input>
@@ -306,5 +308,26 @@
 <style lang="scss">
 td.text-white > .cell {
     color: white;
+}
+</style>
+
+<style lang="scss" scoped>
+::v-deep .el-input__inner::placeholder {
+    @apply text-gray-500 font-medium text-base pl-1;
+}
+::v-deep .el-input__inner {
+    @apply text-black font-medium text-base;
+}
+::v-deep .el-table .el-table__cell {
+    padding: 6px 0px;
+}
+::v-deep .el-table thead th .cell {
+    line-height: 15px;
+    color: #6e6d6d;
+    @apply flex;
+}
+::v-deep .el-table td > .cell {
+    @apply text-black font-medium text-sm;
+    font-size: 16px;
 }
 </style>

@@ -42,6 +42,7 @@
 </template>
 <script>
     import draggableEvents from '@/enum/draggableEvents'
+    import cloneDeep from 'lodash/cloneDeep'
 
     export default {
         components: {
@@ -83,8 +84,6 @@
                 let { newIndex: newIndex, oldIndex: oldIndex } = eventData
 
                 this.widgetGroups.splice(newIndex, 0, this.widgetGroups.splice(oldIndex, 1)[0])
-
-                this.$emit('reorder-widgets-in-modal')
             },
             onCancel () {
                 this.$emit('on-cancel')
@@ -95,7 +94,7 @@
                 deep: true,
                 immediate: true,
                 handler(value) {
-                    this.widgetGroups = value
+                    this.widgetGroups = cloneDeep(value)
                 },
             },
         },

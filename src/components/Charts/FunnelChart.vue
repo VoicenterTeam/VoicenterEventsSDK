@@ -74,8 +74,11 @@
                 })
             },
             async getWidgetData() {
-                const campaigns = this.data.WidgetConfig.find(el => el.ParameterName === '{|campaign_ivr_list|}')
-                    .WidgetParameterValueJson.EntityPositive
+                const campaignsList = this.data.WidgetConfig.find(el => el.ParameterName === '{|campaign_ivr_list|}')
+                if (!campaignsList) {
+                    return
+                }
+                const campaigns = campaignsList.WidgetParameterValueJson.EntityPositive
                 let allDialersWithData = this.getAllDialersToDisplay
                     .filter(el => el.data && Object.keys(el.data).length && campaigns.includes(el.campaignID))
 

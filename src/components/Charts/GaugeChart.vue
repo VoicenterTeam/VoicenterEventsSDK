@@ -1,14 +1,15 @@
 <template>
-    <div class="bg-transparent pt-4 rounded-lg"
+    <div class="bg-transparent rounded-lg chart-content_wrapper"
          v-if="chartVisibility">
-        <highcharts
-            ref="gauge-chart"
-            class="chart-content_wrapper"
-            :options="chartData"
-            :callback="onInitChartCallback"
-            :updateArgs="[true, true]"
-        />
-        <div class="mb-4">
+        <div class="chart-content_wrapper" ref="gauge-chart-container">
+            <highcharts
+                ref="gauge-chart"
+                :options="chartData"
+                :callback="onInitChartCallback"
+                :updateArgs="[true, true]"
+            />
+        </div>
+        <div class="mb-4" v-if="!!data.WidgetLayout.showWaitingTimeTable">
             <data-table
                 :border="tableBorder"
                 :columns="availableColumns"
@@ -26,7 +27,6 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import Highcharts from 'highcharts'
     import { Tooltip } from 'element-ui'
     import { Chart } from 'highcharts-vue'
     import bus from '@/event-bus/EventBus'
@@ -34,20 +34,24 @@
     import { TrashIcon } from 'vue-feather-icons'
     import gaugeChartConfig from './Configs/Gauge'
     import { WidgetDataApi } from '@/api/widgetDataApi'
-    import highchartsMoreInit from 'highcharts/highcharts-more'
-    import solidGaugeInit from 'highcharts/modules/solid-gauge'
     import { isExternalDataWidget } from '@/helpers/widgetUtils'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import {activeGaugeCallColumns} from "@/enum/queueConfigs";
     import orderBy from "lodash/orderBy";
 
+    import Highcharts from 'highcharts/highcharts'
+    import highchartsMoreInit from 'highcharts/highcharts-more'
+    import solidGaugeInit from 'highcharts/modules/solid-gauge'
+
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
+
 
     export default {
         mixins: [queueMixin, actionMixin],
         components: {
             TrashIcon,
+            Highcharts,
             highcharts: Chart,
             [Tooltip.name]: Tooltip,
             DataTable: () => import('@/components/Table/DataTable'),
@@ -136,6 +140,7 @@
                 }
 
                 this.reDrawChart()
+                this.$refs['gauge-chart'].chart.redraw()
             },
             getAgentsData() {
                 let queuesCount = this.getMaximumRange || this.allQueues.length
@@ -189,10 +194,10 @@
             },
             triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
-                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                    if (this.data.WidgetID.toString() === widgetID.toString()) {
+                        this.$refs['gauge-chart'].chart.reflow()
                         return;
                     }
-                    this.reDrawChart()
                 });
             },
             reDrawChart() {
@@ -222,6 +227,12 @@
             allQueues() {
                 this.chartOptionsWithRefreshInterval()
             },
+            'data.WidgetLayout.showWaitingTimeTable': {
+                immediate: true,
+                handler (val) {
+                    gaugeChartConfig.chart.height = val ? '39%' : '59%'
+                }
+            }
         },
         mounted() {
             if (!this.data.WidgetLayout.showQueues) {
@@ -237,8 +248,3 @@
         },
     }
 </script>
-<style lang="scss">
-.gouge-wrapper {
-    max-height: 300px;
-}
-</style>
