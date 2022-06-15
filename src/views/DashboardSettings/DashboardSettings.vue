@@ -178,7 +178,7 @@
                     const newModel = cloneDeep(this.model)
                     delete newModel.WidgetGroupList
                     
-                    await WidgetGroupsApi.reorder(this.currentDashboard.WidgetGroupList)
+                    await WidgetGroupsApi.reorder(toUpdatePromises)
                     await DashboardApi.update(newModel)
                     await LayoutApi.update(this.activeLayout)
 
