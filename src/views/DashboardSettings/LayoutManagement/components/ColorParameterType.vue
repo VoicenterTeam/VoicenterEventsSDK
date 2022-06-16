@@ -1,15 +1,15 @@
 <template>
-    <div class="grid grid-cols-2 gap-20 w-full py-2 items-center color-picker">
+    <div class="grid grid-cols-2 gap-1 w-full py-2 items-center color-picker">
         <div class="col-span-1"
              v-if="displayLabel">
-            <span class="text-main-sm">
-                {{ $t(LayoutParameterName) }}:
+            <span class="text-main-sm whitespace-nowrap">
+                {{ makePrefixForTranslation(LayoutParameterName) }}:
             </span>
         </div>
         <div class="flex items-center"
              :class="displayLabel ? 'col-span-1 justify-end': 'col-span-2'">
             <slot>
-                <IconColorPicker class="w-8 h-8"
+                <IconColorPicker class="w-5 h-5"
                                  :style="getIndicatorStyles"/>
             </slot>
             <el-color-picker class="mx-2"
@@ -53,6 +53,12 @@
                 }
             },
         },
+        methods: {
+            makePrefixForTranslation (string) {
+                const makeFirstLetterInLowerCase = (string) => string.charAt(0).toLowerCase() + string.slice(1)
+                return this.$t(`layout.config.${makeFirstLetterInLowerCase(string)}`)
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>

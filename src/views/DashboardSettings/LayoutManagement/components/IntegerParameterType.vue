@@ -1,7 +1,6 @@
 <template>
 <div class="pt-3 pb-5 border-b slider">
-    <!-- <label>{{ $t(LayoutParameterName) }}</label> -->
-    <label>{{ LayoutParameterName }}</label> <!-- TODO: need to add translation -->
+    <label>{{ makePrefixForTranslation(LayoutParameterName) }}</label>
     <el-slider
         v-bind="sliderConfig"
         v-on="listeners"
@@ -58,8 +57,12 @@ export default {
         tooltipValue(value) {
             const marks = this.sliderConfig.marks || []
             return marks[value]
+        },
+        makePrefixForTranslation (string) {
+            const makeFirstLetterInLowerCase = (string) => string.charAt(0).toLowerCase() + string.slice(1)
+            return this.$t(`layout.config.${makeFirstLetterInLowerCase(string)}`)
         }
-    },
+    }
 }
 </script>
 
