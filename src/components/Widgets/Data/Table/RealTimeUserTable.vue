@@ -326,8 +326,4 @@ td.text-white > .cell {
     color: #6e6d6d;
     @apply flex;
 }
-::v-deep .el-table td > .cell {
-    @apply text-black font-medium text-sm;
-    font-size: 16px;
-}
 </style>
