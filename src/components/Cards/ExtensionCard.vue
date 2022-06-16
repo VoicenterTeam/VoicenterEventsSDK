@@ -1,27 +1,35 @@
 <template>
-    <div class="bg-white px-6 p-4 mb-2 rounded-lg shadow w-64 flex flex-col extension-card" :style="cardStyles">
+    <div class="bg-white p-3 mb-2 rounded-lg shadow w-75 flex flex-col extension-card" :style="cardStyles">
         <div class="flex items-center mb-2">
             <fade-transition mode="out-in">
-                <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top"
-                            :open-delay="300">
-                    <component :is="statusIcon"
-                               :key="extension.representativeStatus"
-                               :class="{'is-calling': isCalling, 'is-talking': isTalking}"
-                               class="extension-card-icon">
-                    </component>
+                <el-tooltip
+                    :key="extension.representativeStatus" :content="statusText" placement="top"
+                    :open-delay="300"
+                >
+                    <i class="vc-icon-account-list text-3xl text-primary" />
+                    <!-- <component
+                        :is="statusIcon"
+                        :key="extension.representativeStatus"
+                        :class="{'is-calling': isCalling, 'is-talking': isTalking}"
+                        class="extension-card-icon" /> -->
                 </el-tooltip>
             </fade-transition>
             <span
-                class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal">
-                {{ getRepresentativeSummery }}</span>
+                class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal cut-text"
+            >
+                {{ getRepresentativeSummery }}
+            </span>
         </div>
         <div class="flex flex-col flex-1">
-            <div class="flex items-center justify-center">
-                <span class="text-center text-main-3xl ml-2 mt-3 font-mono">{{ timer.displayTime }}</span>
-                <IconThreshold v-if="threshold.show"
-                               v-bind="threshold.styles"
-                               class="w-6 mt-2 mx-2"
-                />
+            <div class="flex items-center">
+                <div class="flex items-center justify-center">
+                    <span class="text-center text-main-3xl font-bold time">{{ timer.displayTime }}</span>
+                    <IconThreshold
+                        v-if="threshold.show"
+                        v-bind="threshold.styles"
+                        class="w-6 mt-2 mx-2"
+                    />
+                </div>
             </div>
             <call-info
                 v-for="call in extension.calls"
@@ -31,9 +39,11 @@
                 :settings="settings"
             >
                 <template v-slot:threshold="{statusThreshold}">
-                    <IconThreshold v-if="statusThreshold.show"
-                                   v-bind="statusThreshold.styles"
-                                   class="w-6 mb-1 mx-2"/>
+                    <IconThreshold
+                        v-if="statusThreshold.show"
+                        v-bind="statusThreshold.styles"
+                        class="w-6 mb-1 mx-2"
+                    />
                 </template>
             </call-info>
         </div>
@@ -199,6 +209,17 @@
 .extension-card-icon {
     max-width: 48px;
     min-width: 48px;
+}
+.cut-text { 
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: 200px; 
+    white-space: nowrap;
+}
+.time {
+    font-size: 40px;
+    line-height: 49px;
+    color: var(--dark-gray);
 }
 </style>
 <style lang="scss">

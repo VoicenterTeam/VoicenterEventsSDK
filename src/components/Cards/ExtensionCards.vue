@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="p-3">
         <portal :to="`widget-header__${data.WidgetID}`">
             <div class="flex w-full justify-end overflow-hidden items-center">
                 <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" size="small" class="select-type">
