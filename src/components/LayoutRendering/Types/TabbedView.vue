@@ -61,7 +61,7 @@
         computed: {
             circularTimeout() {
                 const reportSwitching = this.$store.getters['layout/switchReport']('activeLayout')
-                if (reportSwitching) {
+                if (reportSwitching && !this.editMode) {
                     return this.$store.getters['layout/switchInterval']('activeLayout')
                 } else {
                     return null

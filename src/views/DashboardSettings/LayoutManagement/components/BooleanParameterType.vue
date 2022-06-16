@@ -1,7 +1,7 @@
 <template>
     <div class="py-4 border-b checkbox">
         <el-checkbox :checked="valueToBool" @change="onChange">
-            {{$t(LayoutParameterName)}}
+            {{ makePrefixForTranslation(LayoutParameterName) }}
         </el-checkbox>
     </div>
 </template>
@@ -30,7 +30,11 @@
                 const valToEmit = Number(value).toString()
                 this.$emit('input', valToEmit);
             },
-        },
+            makePrefixForTranslation (string) {
+                const makeFirstLetterInLowerCase = (string) => string.charAt(0).toLowerCase() + string.slice(1)
+                return this.$t(`layout.config.${makeFirstLetterInLowerCase(string)}`)
+            }
+        }
     }
 </script>
 
