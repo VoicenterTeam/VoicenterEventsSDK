@@ -1,6 +1,7 @@
 <template>
     <div class="flex items-center justify-center">
         <span class="font-mono">{{timer.displayTime}}</span>
+        <!-- TODO: dynamic icon by status as in src/components/Cards/ExtensionCard.vue -->
         <IconThreshold v-if="threshold.show"
                        v-bind="threshold.styles"
                        class="w-6 mb-1 mx-2"/>
@@ -33,7 +34,7 @@
             threshold() {
                 let show = true
                 let thresholdColor = this.thresholdConfig.HoldTimeWarningColor
-                
+
                 let seconds = this.timer.state.seconds
                 const { HoldTimeWarning, HoldTimeLimit } = this.thresholdConfig
 
@@ -79,7 +80,7 @@
                     if (newVal !== oldVal) {
                         return;
                     }
-                    
+
                     if (!this.settings.resetIdleTime || !oldVal.length) {
                         this.timer.reset()
                         return;
