@@ -1,17 +1,23 @@
 <template>
-    <div class="bg-white p-3 mb-2 rounded-lg shadow w-75 flex flex-col extension-card" :style="cardStyles">
-        <div class="flex items-center mb-2">
+    <div
+        class="bg-white p-3 mb-2 rounded-lg shadow w-75 flex flex-col extension-card"
+        :style="{
+            ...cardStyles,
+            ...withMoreInfo
+        }"
+    >
+        <div class="flex items-center mb-4">
             <fade-transition mode="out-in">
                 <el-tooltip
                     :key="extension.representativeStatus" :content="statusText" placement="top"
                     :open-delay="300"
                 >
-                    <i class="vc-icon-account-list text-3xl text-primary" />
-                    <!-- <component
+                    <component
                         :is="statusIcon"
                         :key="extension.representativeStatus"
                         :class="{'is-calling': isCalling, 'is-talking': isTalking}"
-                        class="extension-card-icon" /> -->
+                        class="extension-card-icon"
+                    />
                 </el-tooltip>
             </fade-transition>
             <span
@@ -24,11 +30,11 @@
             <div class="flex items-center">
                 <div class="flex items-center justify-center">
                     <span class="text-center text-main-3xl font-bold time">{{ timer.displayTime }}</span>
-                    <IconThreshold
+                    <!-- <IconThreshold
                         v-if="threshold.show"
                         v-bind="threshold.styles"
                         class="w-6 mt-2 mx-2"
-                    />
+                    /> -->
                 </div>
             </div>
             <call-info
@@ -46,6 +52,15 @@
                     />
                 </template>
             </call-info>
+        </div>
+        <span
+            class="divide-y h-px w-full divide-horizontal mb-1"
+        />
+        <div @click="showMoreInfo" class="cursor-pointer text-center -mb-4">
+            <i
+                class="vc-icon-down text-xl text-primary"
+                :class="{ 'arrow-transition': additionalBlock, 'arrow-transitionq':  !additionalBlock }"
+            />
         </div>
     </div>
 </template>
@@ -84,6 +99,8 @@
                     initialTimeInSeconds,
                 }),
                 statusMappings: statusTypes,
+                withMoreInfo: {},
+                additionalBlock: false
             }
         },
         computed: {
@@ -158,6 +175,15 @@
                 const timerValue = getInitialExtensionTime(this.extension, this.settings)
                 this.timer.setValue(timerValue)
             },
+            showMoreInfo () {
+                console.log(this.$el, '$el')
+                this.additionalBlock = !this.additionalBlock
+                this.withMoreInfo = {
+                    'position': 'absolute',
+                    'bottom': '0',
+                    'left': '0'
+                }
+            }
         },
         watch: {
             'extension.representativeStatus'(newStatus, oldStatus) {
@@ -205,10 +231,16 @@
     min-height: 200px;
     transition: all .2s;
 }
+/* .extension-card::after {
+    content: ' ';
+    position: relative;
+    min-height: 200px;
+    @apply w-75;
+} */
 
 .extension-card-icon {
-    max-width: 48px;
-    min-width: 48px;
+    max-width: 25px;
+    min-width: 25px;
 }
 .cut-text { 
     text-overflow: ellipsis;
@@ -220,6 +252,19 @@
     font-size: 40px;
     line-height: 49px;
     color: var(--dark-gray);
+}
+.arrow-transition {
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
+    transform: rotate(180deg);
+}
+.arrow-transitionq {
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
+    transform: rotate(0);
+}
+.divide-horizontal {
+    background: var(--gray-350);
 }
 </style>
 <style lang="scss">

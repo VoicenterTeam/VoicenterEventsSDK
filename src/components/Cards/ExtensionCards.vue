@@ -46,7 +46,7 @@
                     class="flex flex-wrap"
                     group>
                     <div :key="index"
-                         class="px-1"
+                         class="px-1 relative"
                          v-for="(extension, index) in sortedExtensions">
                         <extension-card :key="extension.number"
                                         :extension="extension"
