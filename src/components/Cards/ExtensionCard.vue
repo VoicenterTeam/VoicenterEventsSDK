@@ -4,10 +4,11 @@
             <fade-transition mode="out-in">
                 <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top"
                             :open-delay="300">
-                    <component :is="statusIcon"
-                               :key="extension.representativeStatus"
-                               :class="{'is-calling': isCalling, 'is-talking': isTalking}"
-                               class="extension-card-icon">
+                    <component
+                        :is="statusIcon"
+                        :key="extension.representativeStatus"
+                        :class="{'is-calling': isCalling, 'is-talking': isTalking}"
+                        class="extension-card-icon">
                     </component>
                 </el-tooltip>
             </fade-transition>
@@ -122,7 +123,16 @@
                 }
             },
             cardStyles() {
-                let color = extensionColor(this.extension)
+                let color = 'white'
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+
+                if (this.timer.state.seconds >= statusAlerts.warn) {
+                    color = '#FAB11E'
+                }
+
+                if (this.timer.state.seconds >= statusAlerts.alert) {
+                    color = '#FF3636'
+                }
                 return {
                     border: `2px solid ${color}`,
                 }

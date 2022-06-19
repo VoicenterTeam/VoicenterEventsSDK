@@ -279,7 +279,7 @@
                     color = extensionColor(extension)
                 }
 
-                return { 'color': color, 'font-weight': '900' }
+                return { 'color': color, 'font-weight': '900', 'line-height': '1' }
             },
             getCellClassName(row) {
                 let className = ''
