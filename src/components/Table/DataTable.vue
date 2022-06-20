@@ -359,7 +359,9 @@
                 })
             },
             makeTableHeaderTranslations (columnProp, prefix) {
-                return this.$t(`widget.table.header.title.${prefix}.${columnProp}`)
+                const translate = `widget.table.header.title.${prefix}.${columnProp}`
+
+                return this.$te(translate) ? this.$t(translate) : columnProp
             }
         },
         watch: {
