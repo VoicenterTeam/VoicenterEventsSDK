@@ -359,7 +359,7 @@
                 })
             },
             makeTableHeaderTranslations (columnProp, prefix) {
-                return $t(`widget.table.header.title.${prefix}.${columnProp}`)
+                return this.$t(`widget.table.header.title.${prefix}.${columnProp}`)
             }
         },
         watch: {
