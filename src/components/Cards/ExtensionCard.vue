@@ -1,10 +1,7 @@
 <template>
     <div
         class="bg-white p-3 mb-2 rounded-lg shadow w-75 flex flex-col extension-card"
-        :style="{
-            ...cardStyles,
-            ...withMoreInfo
-        }"
+        :style="cardStyles"
     >
         <div class="flex items-center mb-4">
             <fade-transition mode="out-in">
@@ -21,21 +18,18 @@
                 </el-tooltip>
             </fade-transition>
             <span
-                class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal cut-text"
+                class="text-main-xl text-steel font-bold leading-tight mx-2 break-normal cut-header"
             >
                 {{ getRepresentativeSummery }}
             </span>
         </div>
-        <div class="flex flex-col flex-1">
-            <div class="flex items-center">
-                <div class="flex items-center justify-center">
-                    <span class="text-center text-main-3xl font-bold time">{{ timer.displayTime }}</span>
-                    <!-- <IconThreshold
-                        v-if="threshold.show"
-                        v-bind="threshold.styles"
-                        class="w-6 mt-2 mx-2"
-                    /> -->
-                </div>
+        <div
+            class="flex flex-col flex-1"
+            :style="withMoreInfo"
+        >
+            <div class="flex items-center justify-between">
+                <span class="text-main-3xl font-bold time cut-timer" :style="getTimerStyle">{{ timer.displayTime }}</span>
+                <span class="text-main-3xl font-bold time">Q</span>
             </div>
             <call-info
                 v-for="call in extension.calls"
@@ -53,14 +47,16 @@
                 </template>
             </call-info>
         </div>
-        <span
-            class="divide-y h-px w-full divide-horizontal mb-1"
-        />
-        <div @click="showMoreInfo" class="cursor-pointer text-center -mb-4">
-            <i
-                class="vc-icon-down text-xl text-primary"
-                :class="{ 'arrow-transition': additionalBlock, 'arrow-transitionq':  !additionalBlock }"
+        <div class="absolute bottom-3 left-0 w-full">
+            <span
+                class="divide-y h-px w-full divide-horizontal mb-1"
             />
+            <div @click="showMoreInfo" class="cursor-pointer text-center -mb-4">
+                <i
+                    class="vc-icon-down text-xl text-primary"
+                    :class="{ 'arrow-transition': additionalBlock, 'arrow-transitionq':  !additionalBlock }"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -71,7 +67,7 @@
     import statusTypes from '@/enum/statusTypes'
     import { extensionColor } from '@/util/extensionStyles'
     import { getInitialExtensionTime } from '@/util/timeUtils'
-    
+
     export default {
         components: {
             CallInfo: () => import('./CallInfo'),
@@ -93,7 +89,7 @@
         },
         data() {
             let initialTimeInSeconds = getInitialExtensionTime(this.extension, this.settings)
-            
+
             return {
                 timer: new Timer({
                     initialTimeInSeconds,
@@ -104,6 +100,20 @@
             }
         },
         computed: {
+            getTimerStyle() {
+                let color = 'black'
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+
+                if (this.timer.state.seconds >= statusAlerts.warn) {
+                    color = '#FAB11E'
+                }
+
+                if (this.timer.state.seconds >= statusAlerts.alert) {
+                    color = '#FF3636'
+                }
+
+                return {color}
+            },
             getRepresentativeSummery() {
                 return get(this.extension, 'summery.representative', 'userName')
             },
@@ -111,9 +121,9 @@
                 let show = true
                 let seconds = this.timer.state.seconds
                 let thresholdColor = this.thresholdConfig.HoldTimeWarningColor
-                
+
                 const { HoldTimeWarning, HoldTimeLimit } = this.thresholdConfig
-                
+
                 if (!HoldTimeWarning && !HoldTimeLimit || (this.extension.calls.length && this.settings.callThreshold)) {
                     return {
                         show: false,
@@ -135,9 +145,18 @@
                 }
             },
             cardStyles() {
-                let color = extensionColor(this.extension)
+                let color = 'white'
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+
+                if (this.timer.state.seconds >= statusAlerts.warn) {
+                    color = '#FAB11E'
+                }
+
+                if (this.timer.state.seconds >= statusAlerts.alert) {
+                    color = '#FF3636'
+                }
                 return {
-                    border: `2px solid ${color}`,
+                    border: `1px solid ${color}`,
                 }
             },
             statusText() {
@@ -197,14 +216,14 @@
                     if (newVal !== oldVal) {
                         return;
                     }
-                    
+
                     if (!this.settings.resetIdleTime || !oldVal.length) {
                         this.timer.reset()
                         return;
                     }
-                    
+
                     let oldCall = oldVal.find((call) => call.answered)
-                    
+
                     if (oldCall && this.settings.resetIdleTime) {
                         this.timer.reset()
                     } else {
@@ -226,27 +245,28 @@
         },
     }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+@mixin cutText($maxWidth) {
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    width: $maxWidth; 
+    white-space: nowrap;
+}
 .extension-card {
     min-height: 200px;
     transition: all .2s;
-}
-/* .extension-card::after {
-    content: ' ';
     position: relative;
-    min-height: 200px;
-    @apply w-75;
-} */
+}
 
 .extension-card-icon {
     max-width: 25px;
     min-width: 25px;
 }
-.cut-text { 
-    text-overflow: ellipsis;
-    overflow: hidden; 
-    width: 200px; 
-    white-space: nowrap;
+.cut-header { 
+    @include cutText(200px);
+}
+.cut-timer { 
+    @include cutText(185px);
 }
 .time {
     font-size: 40px;
@@ -281,7 +301,7 @@
     path:first-child {
         animation: fade 1s;
     }
-    
+
     path:last-child {
         opacity: 0;
         animation: fade 1s infinite;

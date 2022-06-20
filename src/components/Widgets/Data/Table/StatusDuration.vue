@@ -1,14 +1,18 @@
 <template>
     <div class="flex items-center justify-center">
-        <span class="font-mono">{{timer.displayTime}}</span>
-        <IconThreshold v-if="threshold.show"
-                       v-bind="threshold.styles"
-                       class="w-6 mb-1 mx-2"/>
+        <span class="font-mono">{{ timer.displayTime }}</span>
+        <component
+            :is="statusIcon"
+            :key="extension.representativeStatus"
+            :class="{'is-calling': isCalling, 'is-talking': isTalking}"
+            class="extension-card-icon w-7 mx-2"
+        />
     </div>
 </template>
 <script>
     import Timer from '@/util/Timer'
     import {getInitialExtensionTime} from '@/util/timeUtils'
+    import statusTypes from '@/enum/statusTypes'
 
     export default {
         props: {
@@ -26,14 +30,15 @@
             return {
                 timer: new Timer({
                     initialTimeInSeconds
-                })
+                }),
+                statusMappings: statusTypes
             }
         },
         computed: {
             threshold() {
                 let show = true
                 let thresholdColor = this.thresholdConfig.HoldTimeWarningColor
-                
+
                 let seconds = this.timer.state.seconds
                 const { HoldTimeWarning, HoldTimeLimit } = this.thresholdConfig
 
@@ -60,6 +65,26 @@
             thresholdConfig() {
                 return this.$store.getters['layout/getThresholdConfig']('activeLayout')
             },
+            statusIcon() {
+                let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }
+                if (this.extension.calls.length > 0) {
+                    return 'IconIncomingCall'
+                }
+                return data.icon
+            },
+            isCalling() {
+                if (this.extension.calls.length === 0) {
+                    return false
+                }
+                return this.extension.calls.every(c => c.callAnswered === 0)
+            },
+            isTalking() {
+                if (this.extension.calls.length === 0) {
+                    return false
+                }
+                return this.extension.calls.every(c => c.callAnswered !== 0)
+            }
+            
         },
         methods: {
           setTimerValue() {
@@ -79,7 +104,7 @@
                     if (newVal !== oldVal) {
                         return;
                     }
-                    
+
                     if (!this.settings.resetIdleTime || !oldVal.length) {
                         this.timer.reset()
                         return;

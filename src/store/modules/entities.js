@@ -81,7 +81,22 @@ const getters = {
     },
     getCurrentAccount: (state, getters) => {
         return getters.accountsList.find(a => a.ID === state.selectedAccountID) || {name: '--'}
-    }
+    },
+    getAccountBreaksLimits: (state, getters) => {
+        let breaks = {}
+
+        getters.accountStatuses.forEach(({StatusID, AlertSecLimit, WarningSecLimit}) => {
+            breaks[StatusID] = {
+                alert: AlertSecLimit,
+                warn: WarningSecLimit
+            }
+        })
+
+        return breaks
+    },
+    getAccountBreakLimit: (state, getters) => id => {
+        return getters.getAccountBreaksLimits[id]
+    },
 }
 
 export default {

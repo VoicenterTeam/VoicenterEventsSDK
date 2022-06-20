@@ -1,5 +1,3 @@
-export const dynamicRows = ['status', 'status_duration']
-
 // Real Time Table suggestive word/key
 export const realTimeTableKey = 'GetDataByUser'
 
