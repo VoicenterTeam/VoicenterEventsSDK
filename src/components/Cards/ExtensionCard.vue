@@ -1,9 +1,15 @@
 <template>
     <div
         class="bg-white p-3 mb-2 rounded-lg shadow w-75 flex flex-col extension-card"
-        :style="cardStyles"
+        :style="{
+            ...cardStyles,
+            ...withMoreInfo
+        }"
     >
-        <div class="flex items-center mb-4">
+        <div
+            class="flex items-center"
+            :class="extensionCalls.length >= minActiveCallsNumber  ? 'mb-2' : 'mb-4'"
+        >
             <fade-transition mode="out-in">
                 <el-tooltip
                     :key="extension.representativeStatus" :content="statusText" placement="top"
@@ -12,7 +18,7 @@
                     <component
                         :is="statusIcon"
                         :key="extension.representativeStatus"
-                        :class="{'is-calling': isCalling, 'is-talking': isTalking}"
+                        :class="{ 'is-calling': isCalling, 'is-talking': isTalking }"
                         class="extension-card-icon"
                     />
                 </el-tooltip>
@@ -25,33 +31,49 @@
         </div>
         <div
             class="flex flex-col flex-1"
-            :style="withMoreInfo"
         >
             <div class="flex items-center justify-between">
-                <span class="text-main-3xl font-bold time cut-timer" :style="getTimerStyle">{{ timer.displayTime }}</span>
-                <span class="text-main-3xl font-bold time">Q</span>
-            </div>
-            <call-info
-                v-for="call in extension.calls"
-                :key="call.ivrid"
-                :status-threshold="threshold"
-                :call="call"
-                :settings="settings"
-            >
-                <template v-slot:threshold="{statusThreshold}">
-                    <IconThreshold
-                        v-if="statusThreshold.show"
-                        v-bind="statusThreshold.styles"
-                        class="w-6 mb-1 mx-2"
+                <span
+                    class="font-bold time cut-timer"
+                    :style="getTimerStyle"
+                    :class="extensionCalls.length >= minActiveCallsNumber ? 'small-text' : 'big-text'"
+                >
+                    {{ timer.displayTime }}
+                </span>
+                <span
+                    class="font-bold time"
+                    :class="extensionCalls.length >= minActiveCallsNumber ? 'small-text' : 'big-text'"
+                >
+                    <i
+                        :style="{ 'color': iconColor.color }"
+                        :class="`vc-icon-${iconColor.type}`"
                     />
-                </template>
-            </call-info>
+                </span>
+            </div>
+            <div>
+                <call-info
+                    v-for="call in extensionCalls"
+                    :key="call.ivrid"
+                    :status-threshold="threshold"
+                    :call="call"
+                    :settings="settings"
+                    
+                >
+                    <template v-slot:threshold="{statusThreshold}">
+                        <IconThreshold
+                            v-if="statusThreshold.show"
+                            v-bind="statusThreshold.styles"
+                            class="w-6 mb-1 mx-2"
+                        />
+                    </template>
+                </call-info>
+            </div>
         </div>
-        <div class="absolute bottom-3 left-0 w-full">
+        <div class="w-full" v-if="extensionCalls.length > minActiveCallsNumber">
             <span
                 class="divide-y h-px w-full divide-horizontal mb-1"
             />
-            <div @click="showMoreInfo" class="cursor-pointer text-center -mb-4">
+            <div @click="showMoreInfo" class="cursor-pointer text-center -mb-4 -ml-4">
                 <i
                     class="vc-icon-down text-xl text-primary"
                     :class="{ 'arrow-transition': additionalBlock, 'arrow-transitionq':  !additionalBlock }"
@@ -65,8 +87,9 @@
     import Timer from '@/util/Timer'
     import { Tooltip } from 'element-ui'
     import statusTypes from '@/enum/statusTypes'
-    import { extensionColor } from '@/util/extensionStyles'
     import { getInitialExtensionTime } from '@/util/timeUtils'
+    import cloneDeep from 'lodash/cloneDeep'
+    const MIN_ACTIVE_CALLS_NUMBER = 2
 
     export default {
         components: {
@@ -96,23 +119,15 @@
                 }),
                 statusMappings: statusTypes,
                 withMoreInfo: {},
-                additionalBlock: false
+                additionalBlock: false,
+                minActiveCallsNumber: MIN_ACTIVE_CALLS_NUMBER
             }
         },
         computed: {
             getTimerStyle() {
-                let color = 'black'
-                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+                let { color } = this.getColorByStatusAlerts('#445162')
 
-                if (this.timer.state.seconds >= statusAlerts.warn) {
-                    color = '#FAB11E'
-                }
-
-                if (this.timer.state.seconds >= statusAlerts.alert) {
-                    color = '#FF3636'
-                }
-
-                return {color}
+                return { color }
             },
             getRepresentativeSummery() {
                 return get(this.extension, 'summery.representative', 'userName')
@@ -144,19 +159,27 @@
                     },
                 }
             },
-            cardStyles() {
-                let color = 'white'
-                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+            getColorByAccountBreakLimit () {
+                let { color, type } = this.getColorByStatusAlerts('white', true)
 
-                if (this.timer.state.seconds >= statusAlerts.warn) {
-                    color = '#FAB11E'
+                return {
+                    color,
+                    type
                 }
+            },
+            cardStyles () {
+                const {color} = this.getColorByAccountBreakLimit
 
-                if (this.timer.state.seconds >= statusAlerts.alert) {
-                    color = '#FF3636'
-                }
                 return {
                     border: `1px solid ${color}`,
+                }
+            },
+            iconColor () {
+                const {color, type} = this.getColorByAccountBreakLimit
+
+                return {
+                    color,
+                    type
                 }
             },
             statusText() {
@@ -188,6 +211,13 @@
                 }
                 return this.extension.calls.every(c => c.callAnswered !== 0)
             },
+            extensionCalls () {
+                const extensionCalls = cloneDeep(this.extension.calls)
+                if (this.additionalBlock) {
+                    return extensionCalls.slice(0, 2)
+                }
+                return extensionCalls
+            }
         },
         methods: {
             setTimerValue() {
@@ -195,12 +225,35 @@
                 this.timer.setValue(timerValue)
             },
             showMoreInfo () {
-                console.log(this.$el, '$el')
                 this.additionalBlock = !this.additionalBlock
                 this.withMoreInfo = {
-                    'position': 'absolute',
-                    'bottom': '0',
-                    'left': '0'
+                    'position': this.additionalBlock ? 'absolute' : 'relative',
+                    ...(this.additionalBlock && ({
+                        'top': '0px',
+                        'left': '4px',
+                        'z-index': '1',
+                        'box-shadow': '0px 0px 5px rgba(38, 117, 255, 0.5)'
+                    })),
+                }
+            },
+            getColorByStatusAlerts (defaultColor, addTypeForData = false) {
+                let color = defaultColor
+                let type = ''
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+
+                if (statusAlerts && 'warn' in statusAlerts && (this.timer.state.seconds >= statusAlerts.warn)) {
+                    color = '#FAB11E'
+                    type = 'info'
+                }
+
+                if (statusAlerts && 'alert' in statusAlerts && (this.timer.state.seconds >= statusAlerts.alert)) {
+                    color = '#FF3636'
+                    type = 'alert'
+                }
+
+                return {
+                    color,
+                    ...(addTypeForData && {type})
                 }
             }
         },
@@ -269,9 +322,15 @@
     @include cutText(185px);
 }
 .time {
+    color: var(--dark-gray);
+}
+.small-text {
+    font-size: 24px;
+    line-height: 29px;
+}
+.big-text {
     font-size: 40px;
     line-height: 49px;
-    color: var(--dark-gray);
 }
 .arrow-transition {
     display: inline-block;
@@ -284,6 +343,9 @@
     transform: rotate(0);
 }
 .divide-horizontal {
+    display: block;
+    width: 298px;
+    margin-left: -12px;
     background: var(--gray-350);
 }
 </style>
