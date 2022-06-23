@@ -80,7 +80,7 @@
         methods: {
             composeColumnName(column) {
                 if (!this.displayQueueAsRows) {
-                    return this.$t(column.label)
+                    return this.makeTableHeaderTranslations(column)
                 }
 
                 return this.getQueueName(column.prop)
@@ -105,7 +105,13 @@
             onChange(evt) {
                 this.$emit('onChange', evt)
             },
-        },
+            makeTableHeaderTranslations (column) {
+                const columnProp = column.prop
+                const translate = `widget.table.header.title.full.${columnProp}`
+
+                return this.$te(translate) ? this.$t(translate) : column.label
+            }
+        }
     }
 </script>
 <style scoped lang="scss">

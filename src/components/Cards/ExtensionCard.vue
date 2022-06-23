@@ -4,10 +4,11 @@
             <fade-transition mode="out-in">
                 <el-tooltip :key="extension.representativeStatus" :content="statusText" placement="top"
                             :open-delay="300">
-                    <component :is="statusIcon"
-                               :key="extension.representativeStatus"
-                               :class="{'is-calling': isCalling, 'is-talking': isTalking}"
-                               class="extension-card-icon">
+                    <component
+                        :is="statusIcon"
+                        :key="extension.representativeStatus"
+                        :class="{'is-calling': isCalling, 'is-talking': isTalking}"
+                        class="extension-card-icon">
                     </component>
                 </el-tooltip>
             </fade-transition>
@@ -17,7 +18,7 @@
         </div>
         <div class="flex flex-col flex-1">
             <div class="flex items-center justify-center">
-                <span class="text-center text-main-3xl ml-2 mt-3 font-mono">{{ timer.displayTime }}</span>
+                <span class="text-center text-main-3xl ml-2 mt-3 font-mono" :style="getTimerStyle">{{ timer.displayTime }}</span>
                 <IconThreshold v-if="threshold.show"
                                v-bind="threshold.styles"
                                class="w-6 mt-2 mx-2"
@@ -46,7 +47,7 @@
     import statusTypes from '@/enum/statusTypes'
     import { extensionColor } from '@/util/extensionStyles'
     import { getInitialExtensionTime } from '@/util/timeUtils'
-    
+
     export default {
         components: {
             CallInfo: () => import('./CallInfo'),
@@ -68,7 +69,7 @@
         },
         data() {
             let initialTimeInSeconds = getInitialExtensionTime(this.extension, this.settings)
-            
+
             return {
                 timer: new Timer({
                     initialTimeInSeconds,
@@ -77,6 +78,20 @@
             }
         },
         computed: {
+            getTimerStyle() {
+                let color = 'black'
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+
+                if (this.timer.state.seconds >= statusAlerts.warn) {
+                    color = '#FAB11E'
+                }
+
+                if (this.timer.state.seconds >= statusAlerts.alert) {
+                    color = '#FF3636'
+                }
+
+                return {color}
+            },
             getRepresentativeSummery() {
                 return get(this.extension, 'summery.representative', 'userName')
             },
@@ -84,9 +99,9 @@
                 let show = true
                 let seconds = this.timer.state.seconds
                 let thresholdColor = this.thresholdConfig.HoldTimeWarningColor
-                
+
                 const { HoldTimeWarning, HoldTimeLimit } = this.thresholdConfig
-                
+
                 if (!HoldTimeWarning && !HoldTimeLimit || (this.extension.calls.length && this.settings.callThreshold)) {
                     return {
                         show: false,
@@ -108,7 +123,16 @@
                 }
             },
             cardStyles() {
-                let color = extensionColor(this.extension)
+                let color = 'white'
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+
+                if (this.timer.state.seconds >= statusAlerts.warn) {
+                    color = '#FAB11E'
+                }
+
+                if (this.timer.state.seconds >= statusAlerts.alert) {
+                    color = '#FF3636'
+                }
                 return {
                     border: `2px solid ${color}`,
                 }
@@ -161,14 +185,14 @@
                     if (newVal !== oldVal) {
                         return;
                     }
-                    
+
                     if (!this.settings.resetIdleTime || !oldVal.length) {
                         this.timer.reset()
                         return;
                     }
-                    
+
                     let oldCall = oldVal.find((call) => call.answered)
-                    
+
                     if (oldCall && this.settings.resetIdleTime) {
                         this.timer.reset()
                     } else {
@@ -215,7 +239,7 @@
     path:first-child {
         animation: fade 1s;
     }
-    
+
     path:last-child {
         opacity: 0;
         animation: fade 1s infinite;

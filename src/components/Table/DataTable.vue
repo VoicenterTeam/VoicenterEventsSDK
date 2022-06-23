@@ -55,7 +55,7 @@
                         :column-key="column.prop"
                         :fixed="column.fixed || false"
                         :key="column.prop"
-                        :label="$t(column.prop) || column.label"
+                        :label="makeTableHeaderTranslations(column, 'initials')"
                         :min-width="column.minWidth || columnMinWidthData"
                         :sortable="canSortRows"
                         :type="column.type"
@@ -66,11 +66,12 @@
                             <div class="flex flex-1 w-full break-normal">
                                 <slot :column="column" name="header_title">
                                     <el-tooltip
-                                        :content="$t(column.prop) || column.label" :open-delay="300"
+                                        :open-delay="300"
                                         placement="top"
+                                        :content="makeTableHeaderTranslations(column, 'full')"
                                     >
                                         <span class="font-bold flex w-full justify-center uppercase leading-5">
-                                            {{ $t(column.prop) || column.label }}
+                                            {{ makeTableHeaderTranslations(column, 'initials') }}
                                         </span>
                                     </el-tooltip>
                                 </slot>
@@ -357,6 +358,12 @@
                         this.height = widgetElement.clientHeight - 48
                     }
                 })
+            },
+            makeTableHeaderTranslations (column, prefix) {
+                const columnProp = column.prop
+                const translate = `widget.table.header.title.${prefix}.${columnProp}`
+
+                return this.$te(translate) ? this.$t(translate) : column.label
             }
         },
         watch: {

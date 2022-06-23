@@ -189,7 +189,7 @@ export default {
             tableProps: [
                 {
                     prop: 'ReportID',
-                    label: this.$t('general.l.№'),
+                    label: this.$t('general.number.symbol'),
                     icon: '',
                     minWidth: '50'
                 },
