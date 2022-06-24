@@ -345,8 +345,13 @@
 .divide-horizontal {
     display: block;
     width: 298px;
-    margin-left: -12px;
     background: var(--gray-350);
+}
+[dir="ltr"] .divide-horizontal {
+   margin-left: -12px;
+}
+[dir="rtl"] .divide-horizontal {
+    margin-right: -12px;
 }
 </style>
 <style lang="scss">
