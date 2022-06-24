@@ -9,7 +9,7 @@
             </span>
             <span class="text-main-xs text-gray-500">+{{ call.callerphone }}</span>
         </div>
-        <div v-if="!hideCallInfo" class="flex items-center justify-between">
+        <div v-if="!hideCallInfo" class="flex items-center justify-between direction-icon">
             <component :is="directionMappings[call.direction]" class="mx-2"/>
             <el-tooltip
                 v-if="call.callstatus === 'Hold'"
