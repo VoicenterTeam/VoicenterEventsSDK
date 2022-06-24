@@ -8,7 +8,7 @@
     >
         <div
             class="flex items-center"
-            :class="extensionCalls.length >= minActiveCallsNumber  ? 'mb-2' : 'mb-4'"
+            :class="extension.calls.length >= minActiveCallsNumber  ? 'mb-2' : 'mb-4'"
         >
             <fade-transition mode="out-in">
                 <el-tooltip
@@ -69,14 +69,14 @@
                 </call-info>
             </div>
         </div>
-        <div class="w-full" v-if="extensionCalls.length > minActiveCallsNumber">
+        <div class="w-full" v-if="extension.calls.length > minActiveCallsNumber">
             <span
                 class="divide-y h-px w-full divide-horizontal mb-1"
             />
             <div @click="showMoreInfo" class="cursor-pointer text-center -mb-4 -ml-4">
                 <i
                     class="vc-icon-down text-xl text-primary"
-                    :class="{ 'arrow-transition': additionalBlock, 'arrow-transitionq':  !additionalBlock }"
+                    :class="{ 'arrow-transition-down': additionalBlock, 'arrow-transition-up':  !additionalBlock }"
                 />
             </div>
         </div>
@@ -213,7 +213,7 @@
             },
             extensionCalls () {
                 const extensionCalls = cloneDeep(this.extension.calls)
-                if (this.additionalBlock) {
+                if (!this.additionalBlock) {
                     return extensionCalls.slice(0, 2)
                 }
                 return extensionCalls
@@ -306,7 +306,7 @@
     white-space: nowrap;
 }
 .extension-card {
-    min-height: 200px;
+    height: 190px;
     transition: all .2s;
     position: relative;
 }
@@ -332,12 +332,12 @@
     font-size: 40px;
     line-height: 49px;
 }
-.arrow-transition {
+.arrow-transition-down {
     display: inline-block;
     transition: transform 0.5s ease-in-out;
     transform: rotate(180deg);
 }
-.arrow-transitionq {
+.arrow-transition-up {
     display: inline-block;
     transition: transform 0.5s ease-in-out;
     transform: rotate(0);

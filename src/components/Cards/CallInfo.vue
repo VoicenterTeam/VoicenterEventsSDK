@@ -1,12 +1,16 @@
 <template>
     <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col" v-if="!hideCallerInfo" :class="{'w-full': hideCallInfo}">
-            <span class="text-main-xs mr-2 text-gray-500">+{{ call.callerphone }}</span>
-            <span v-if="call.callerphone !== call.callername"
-                  class="text-main-xs font-medium">{{ call.callername }}</span>
+            <span
+                v-if="call.callerphone !== call.callername"
+                class="text-main-xs font-medium mb-1"
+            >
+                {{ call.callername }}
+            </span>
+            <span class="text-main-xs text-gray-500">+{{ call.callerphone }}</span>
         </div>
-        <template v-if="!hideCallInfo">
-            <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
+        <div v-if="!hideCallInfo" class="flex items-center justify-between">
+            <component :is="directionMappings[call.direction]" class="mx-2"/>
             <el-tooltip
                 v-if="call.callstatus === 'Hold'"
                 placement="top"
@@ -16,12 +20,14 @@
                 <icon-hold class="w-4 h-4"></icon-hold>
             </el-tooltip>
             <slot name="threshold" :statusThreshold="threshold">
-                <IconThreshold v-if="threshold.show"
-                               v-bind="threshold.styles"
-                               class="mx-1"/>
+                <IconThreshold
+                    v-if="threshold.show"
+                    v-bind="threshold.styles"
+                    class="mx-2"
+                />
             </slot>
-            <span class="font-medium tracking-wide call-time font-mono">{{ timer.displayTime }}</span>
-        </template>
+            <span class="font-semibold call-time">{{ timer.displayTime }}</span>
+        </div>
     </div>
 </template>
 <script>
@@ -118,6 +124,9 @@
 <style scoped lang="scss">
 .call-time {
     min-width: 48px;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
 }
 
 .rtl .direction-icon {
