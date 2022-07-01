@@ -112,6 +112,8 @@
                             v-if="showManageColumns"
                             :visible-columns="visibleColumns"
                             :displayQueueAsRows="displayQueueAsRows"
+                            @on-change-visibility="updateColumnsVisibility"
+                            @on-reorder-column="reorderColumn"
                         />
                     </template>
                 </export-data>
