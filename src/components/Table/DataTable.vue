@@ -96,8 +96,8 @@
                 </slot>
             </el-table>
         </div>
-        <portal :to="`widget-footer__${widget.WidgetID}`">
-            <div class="flex items-center justify-between -mx-1 widget-footer h-12" v-if="tableData.length">
+        <portal :to="`widget-actions__${widget.WidgetID}`">
+            <div class="flex items-center justify-between widget-footer" v-if="tableData.length">
                 <export-data
                     :tableId="tableId"
                     :widget="widget"
@@ -112,11 +112,15 @@
                             v-if="showManageColumns"
                             :visible-columns="visibleColumns"
                             :displayQueueAsRows="displayQueueAsRows"
-                            @on-change-visibility="(data) => updateColumnsVisibility(data, onManageExport)"
-                            @on-reorder-column="(data) => reorderColumn(data, onManageExport)"
+                            @on-change-visibility="updateColumnsVisibility"
+                            @on-reorder-column="reorderColumn"
                         />
                     </template>
                 </export-data>
+            </div>
+        </portal>
+        <portal :to="`widget-footer__${widget.WidgetID}`">
+            <div class="flex items-center justify-end widget-footer -mx-1 h-12" v-if="tableData.length && !!this.$slots.pagination">
                 <div class="flex">
                     <slot name="pagination"/>
                 </div>
@@ -355,7 +359,7 @@
                 this.$nextTick(() => {
                     const widgetElement = document.getElementById(`widgetId-${this.widget.WidgetID}`)
                     if (widgetElement && widgetElement.clientHeight) {
-                        this.height = widgetElement.clientHeight - 48
+                        this.height = !!this.$slots.pagination ? widgetElement.clientHeight - 48 : widgetElement.clientHeight
                     }
                 })
             },

@@ -255,6 +255,8 @@
             storePaginationSettings(pageSize) {
                 this.data.WidgetLayout['paginationSize'] = Number(pageSize)
                 this.$emit('on-update', this.data)
+                this.applyPaginationSettings()
+                this.fetchTableData = this.updatePaginatedData(this.tableData)
             },
             applyPaginationSettings() {
                 this.pageSize = get(this.data.WidgetLayout, 'paginationSize', 10)
