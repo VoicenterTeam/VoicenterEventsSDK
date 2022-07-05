@@ -1,9 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 14">
-    <g fill="none" fill-rule="evenodd">
-        <path fill="green" d="M23.8 5.1H7v3.4h16.8v2.686a1 1 0 0 0 1.707.707l4.386-4.386a1 1 0 0 0 0-1.414l-4.386-4.386a1 1 0 0 0-1.707.707V5.1z"/>
-        <g>
-            <circle cx="7" cy="7" r="7" fill="#CEEAAE"/>
-            <circle cx="7" cy="7" r="4" fill="green" stroke="#FFF"/>
-        </g>
-    </g>
+
+<svg width="50" height="15" viewBox="0 0 50 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse opacity="0.2" rx="7.10711" ry="7.10711" transform="matrix(-1 0 0 1 7.35774 7.10711)" fill="#7ED321"/>
+<path d="M50.0004 7.10718L43.8099 10.6813V3.5331L50.0004 7.10718ZM44.4289 7.72623H7.35772V6.48813H44.4289V7.72623Z" fill="#7ED321"/>
+<circle r="4.11902" transform="matrix(-1 0 0 1 7.35763 7.10697)" fill="#7ED321" stroke="#7ED321" stroke-width="1.2381"/>
 </svg>
