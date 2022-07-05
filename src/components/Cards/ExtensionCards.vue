@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mt-1">
         <portal :to="`widget-header__${data.WidgetID}`">
             <div class="flex w-full justify-end overflow-hidden items-center">
                 <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" size="small" class="select-type">
@@ -39,23 +39,30 @@
             </div>
         </portal>
         <div>
-            <div class="flex pt-1 extension-cards justify-center">
+            <div class="flex pb-6 extension-cards justify-center">
                 <fade-transition
                     :class="{'grid-container overflow-x-auto': sortedExtensions.length, 'w-full': sortedExtensions.length === 0}"
                     :style="renderColumns"
-                    class="flex flex-wrap"
-                    group>
-                    <div :key="index"
-                         class="px-1"
-                         v-for="(extension, index) in sortedExtensions">
-                        <extension-card :key="extension.number"
-                                        :extension="extension"
-                                        :threshold-config="getThresholdConfig"
-                                        :settings="getSettings"/>
+                    class="flex flex-wrap mb-1"
+                    group
+                >
+                    <div
+                        :key="index"
+                        class="px-1 relative extension-cards-container"
+                        v-for="(extension, index) in sortedExtensions"
+                    >
+                        <extension-card
+                            :key="extension.number"
+                            :extension="extension"
+                            :threshold-config="getThresholdConfig"
+                            :settings="getSettings"
+                        />
                     </div>
-                    <div class="flex flex-col w-full items-center"
-                         key="no-data"
-                         v-if="sortedExtensions.length === 0">
+                    <div
+                        class="flex flex-col w-full items-center"
+                        key="no-data"
+                        v-if="sortedExtensions.length === 0"
+                    >
                         <h3 class="text-main-xl">{{ $t('general.noData') }}</h3>
                         <icon-no-data class="w-64"/>
                     </div>
@@ -76,7 +83,7 @@
     import { ADMIN_USER_ID, displayUsersRelatedWithAdmin } from '@/helpers/util'
     import Parameters from '@/enum/parameters'
 
-    const cardWidth = 256;
+    const cardWidth = 300;
 
     export default {
         components: {
@@ -232,6 +239,9 @@
 ::v-deep .el-dropdown-menu__item:focus, ::v-deep .el-dropdown-menu__item:not(.is-disabled):hover {
     background-color: inherit;
     color: inherit;
+}
+.extension-cards-container {
+   width: 310px;
 }
 </style>
 <style lang="scss">

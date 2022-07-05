@@ -5,7 +5,6 @@
             :border="border"
             :can-sort-rows="canSortRows"
             :cell-class-name="getCellClassName"
-            :cell-style="getCellStyle"
             :is-multi-queue-table="true"
             :columns="getAvailableColumns"
             :editable="editable"
@@ -70,9 +69,15 @@
                     </el-input>
                 </div>
             </template>
+            <template v-for="slot in Object.keys(queueDashboardColumnStyles)" v-slot:[slot]="{row}">
+                <div :key="slot" :style="queueDashboardColumnStyles[slot]">
+                    {{ row[slot] }}
+                </div>
+            </template>
         </data-table>
     </div>
 </template>
+
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
@@ -143,6 +148,7 @@
                     'Full',
                     'NextDestination',
                 ],
+                queueDashboardColumnStyles
             }
         },
         computed: {
@@ -244,13 +250,9 @@
                 let queue = this.allEntityQueues.filter((queue) => queue.queue_id === Number(queueID))
                 return get(queue, '[0].q_name', '--')
             },
-            getCellStyle({ row, column }) {
-                let color = get(queueDashboardColumnStyles[column.property], 'color', 'transparent')
-                return { 'background-color': color }
-            },
             getRowStyle({ row }) {
                 let color = get(queueDashboardColumnStyles[row['Stat type']], 'color')
-                return { 'background-color': color }
+                return { '--text-col-color': color }
             },
             getCellClassName({ column, row }) {
                 let className = ''
@@ -456,8 +458,14 @@ td.text-white > .cell {
     color: #6e6d6d;
     @apply flex;
 }
-::v-deep .el-table td > .cell {
-    @apply text-black font-medium text-sm;
-    font-size: 16px;
+
+::v-deep .el-table thead th .cell {
+    line-height: 15px;
+    color: #6e6d6d;
+    @apply flex;
+}
+
+::v-deep .el-table .cell div {
+    color: var(--text-col-color);
 }
 </style>

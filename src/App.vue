@@ -32,7 +32,7 @@ export default {
             if (activeLanguage && process.env.NODE_ENV === 'production') {
                 const locale = activeLanguage.locale
                 this.$i18n.locale = locale
-                this.$i18n.setLocaleMessage(locale, this.$store.state.lang.translations)
+                this.$i18n.mergeLocaleMessage(locale, this.$store.state.lang.translations)
             }
 
             await this.$store.dispatch('entities/getEntitiesList')

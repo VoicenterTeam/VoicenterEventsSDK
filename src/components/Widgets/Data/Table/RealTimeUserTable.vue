@@ -3,8 +3,6 @@
         <data-table
             :widget="data"
             :border="border"
-            :cell-class-name="getCellClassName"
-            :cell-style="getCellStyle"
             :columns="availableColumns"
             :editable="editable"
             :showColumns="visibleColumns"
@@ -39,18 +37,29 @@
                 <span v-else>---</span>
             </template>
             <template v-slot:status_duration="{row}">
-                <status-duration :extension="userExtension(row.user_id)"
-                                 :key="row.user_id"
-                                 :settings="getSettings"
-                                 v-if="userExtension(row.user_id) && drawRow">
-                </status-duration>
+                <div v-if="userExtension(row.user_id) && drawRow"
+                     :style="getCellStyle(row)"
+                     :class="getCellClassName(row)"
+                >
+                    <status-duration
+                        :extension="userExtension(row.user_id)"
+                        :key="row.user_id"
+                        :settings="getSettings"
+                    />
+                </div>
                 <span v-else>---</span>
             </template>
             <template v-slot:status="{row}">
-                <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
-                             :userId="row.user_id"
-                             :ref="`user-status-${row.user_id}`"
-                             v-if="userExtension(row.user_id) && drawRow"/>
+                <div v-if="userExtension(row.user_id) && drawRow"
+                     :style="getCellStyle(row)"
+                     :class="getCellClassName(row)"
+                >
+                    <user-status
+                        :extension="userExtension(row.user_id)" :key="row.user_id"
+                        :userId="row.user_id"
+                        :ref="`user-status-${row.user_id}`"
+                    />
+                </div>
                 <span v-else>---</span>
             </template>
             <template v-slot:call_info="{row}">
@@ -96,11 +105,10 @@
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { extensionColor } from '@/util/extensionStyles'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
-    import { dynamicRows } from '@/enum/realTimeTableConfigs'
     import { getInitialExtensionTime } from '@/util/timeUtils'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { displayUsersRelatedWithAdmin, ADMIN_USER_ID } from '@/helpers/util'
-    
+
     export default {
         mixins: [dataTableMixin],
         components: {
@@ -226,7 +234,7 @@
                 if (!ref) {
                     return '--'
                 }
-                
+
                 return ref.statusText
             },
             getExtensionName(userId) {
@@ -263,25 +271,24 @@
                 }
                 return get(extension, 'onlineUserID', userId)
             },
-            getCellStyle({ row, column }) {
-                let color = 'transparent'
-                
-                if (dynamicRows.includes(column.property)) {
-                    let extension = this.userExtension(row.user_id)
-                    if (extension) {
-                        color = extensionColor(extension)
-                    }
+            getCellStyle(row) {
+                let color = 'black'
+
+                let extension = this.userExtension(row.user_id)
+                if (extension) {
+                    color = extensionColor(extension)
                 }
-                return { 'background-color': color }
+
+                return { 'color': color, 'font-weight': '900', 'line-height': '1' }
             },
-            getCellClassName({ column, row }) {
+            getCellClassName(row) {
                 let className = ''
                 let extension = this.userExtension(row.user_id)
-                
-                if (dynamicRows.includes(column.property) && extension) {
+
+                if (extension) {
                     className = 'text-white'
                 }
-                
+
                 return className
             },
             sortChange() {
@@ -325,9 +332,5 @@ td.text-white > .cell {
     line-height: 15px;
     color: #6e6d6d;
     @apply flex;
-}
-::v-deep .el-table td > .cell {
-    @apply text-black font-medium text-sm;
-    font-size: 16px;
 }
 </style>

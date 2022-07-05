@@ -35,7 +35,15 @@
                     @on-remove="removeWidget"
                     @on-show-update-dialog="showUpdateDialog = true"
                     class="flex items-center widget-action hover:bg-primary-100 rounded text-primary px-2 py-1-5"
-                />
+                >
+                    <template #default>
+                        <portal-target
+                            v-if="haveFooterPortal"
+                            :name="`widget-actions__${widget.WidgetID}`"
+                            class="hidden lg:flex w-full items-center justify-between"
+                    />
+                    </template>
+                </WidgetAction>
             </div>
         </div>
         <div class="flex w-full flex-col widget-container h-full"

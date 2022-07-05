@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="cssVars">
         <div v-if="isMultiQueuesDashboard(data)">
             <queues-table
                 :data="data"
@@ -106,6 +106,7 @@
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
     import { defaultDialerTableColumns } from '@/enum/dialerRealTimeTableConfigs'
+    import { defaultFontSize } from '@/enum/defaultDashboardSettings'
 
     export default {
         mixins: [dataTableMixin],
@@ -149,19 +150,34 @@
                 stripe: false,
                 queuesTableData: [],
                 columnsWithPercentage: [],
-                fetchTableData: [],
+                fetchTableData: []
             }
         },
         computed: {
-            getStyles() {
-                return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
-            },
             isSimpleTable() {
                 return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data) && !this.isSocketsRealTimeTableWidget(this.data)
             },
             columnsAreManaged() {
                 return !!get(this.data.WidgetLayout, 'Columns.visibleColumns')
             },
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
+            dynamicFontSize () {
+                return get(this.$store.getters['layout/widgetTitleStyles'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
+            },
+            cssVars () {
+                const replacePxInString = (string) => {
+                    return string.replace('px', '')
+                }
+                const defaultFontSizeNumber = replacePxInString(defaultFontSize)
+                const dynamicFontSizeNumber = replacePxInString(this.dynamicFontSize)
+                const fontSize = dynamicFontSizeNumber >= defaultFontSizeNumber ? dynamicFontSizeNumber : defaultFontSizeNumber
+
+                return {
+                    '--dynamic-font-size': fontSize + 'px'
+                }
+            }
         },
         methods: {
             isMultiQueuesDashboard,
@@ -239,6 +255,8 @@
             storePaginationSettings(pageSize) {
                 this.data.WidgetLayout['paginationSize'] = Number(pageSize)
                 this.$emit('on-update', this.data)
+                this.applyPaginationSettings()
+                this.fetchTableData = this.updatePaginatedData(this.tableData)
             },
             applyPaginationSettings() {
                 this.pageSize = get(this.data.WidgetLayout, 'paginationSize', 10)
@@ -354,6 +372,6 @@
 }
 ::v-deep .el-table td > .cell {
     @apply text-black font-medium text-sm;
-    font-size: 16px;
+    font-size: var(--dynamic-font-size);
 }
 </style>

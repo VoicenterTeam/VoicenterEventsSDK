@@ -86,6 +86,9 @@
                         <span class="mx-1">{{ $t('widget.action.addNewNote') }}</span>
                     </div>
                 </template>
+                <div @click="onMenuClickOutside">
+                    <slot name="default" />
+                </div>
             </div>
         </el-popover>
     </div>

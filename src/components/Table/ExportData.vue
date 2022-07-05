@@ -1,18 +1,18 @@
 <template>
-    <div class="flex">
-        <div @click="triggerExportDialog(exportTo.XLSX)" class="mx-2 cursor-pointer export-button">
+    <div>
+        <div @click="triggerExportDialog(exportTo.XLSX)" class="menu-action_item">
             <div class="flex items-center">
-                <p class="text-md">{{ $t('general.export.excel') }}</p>
-                <i class="vc-icon-download icon-lg mx-2 text-primary"/>
+                <i class="vc-icon-download icon-md text-primary"/>
+                <p class="text-md mx-1">{{ $t('general.export.excel') }}</p>
             </div>
         </div>
-        <div @click="triggerExportDialog(exportTo.CSV)" class="mx-2 cursor-pointer export-button">
+        <div @click="triggerExportDialog(exportTo.CSV)" class="menu-action_item">
             <div class="flex items-center">
-                <p class="text-md">{{ $t('general.export.csv') }}</p>
-                <i class="vc-icon-download icon-lg mx-2 text-primary"/>
+                <i class="vc-icon-download icon-md text-primary"/>
+                <p class="text-md mx-1">{{ $t('general.export.csv') }}</p>
             </div>
         </div>
-        <modal :visible.sync="showExportDialog" v-if="showExportDialog">
+        <modal :visible.sync="showExportDialog" v-if="showExportDialog" :append-to-body="true">
             <div class="flex flex-row items-center pb-4">
                 <h3 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('general.exportData') }}</h3>
                 <static-widget-info :widget="widget" class="px-2"/>
@@ -28,7 +28,7 @@
                 :closable="false"
                 show-icon
             />
-            <div class="py-6 border-b">
+            <div class="py-6 border-b flex">
                 <el-radio v-model="exportFormat" :label="exportTo.CSV">{{ $t('general.export.csv') }}</el-radio>
                 <el-radio v-model="exportFormat" :label="exportTo.XLSX">{{ $t('general.export.excel') }}</el-radio>
             </div>
@@ -139,6 +139,8 @@
 
                     XLSX.writeFile(excelWorkBook, fileName)
 
+                    this.closeModal()
+
                     return
                 }
 
@@ -160,8 +162,7 @@
                 XLSX.writeFile(excelWorkBook, fileName)
 
                 this.$emit('on-update-layout', true)
-                this.loading = false
-                this.showExportDialog = false
+                this.closeModal()
             },
             tryFormatCellTypeDate(record, key) {
                 if (!record[key]) {
@@ -187,6 +188,19 @@
                 }
                 return record[key]
             },
+            closeModal () {
+                this.loading = false
+                this.showExportDialog = false
+            }
         },
     }
 </script>
+
+<style lang="scss" scoped>
+.menu-action_item {
+    @apply w-full rounded text-gray-700 flex items-center p-2 cursor-pointer;
+    &:hover {
+        color: var(--primary-color);
+    }
+}
+</style>
