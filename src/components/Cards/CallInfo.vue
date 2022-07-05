@@ -17,7 +17,7 @@
                 :open-delay="300"
                 :content="$t('status.hold')"
             >
-                <icon-hold class="w-4 h-4"></icon-hold>
+                <icon-hold class="w-4 h-4 mx-1"></icon-hold>
             </el-tooltip>
             <slot name="threshold" :statusThreshold="threshold">
                 <IconThreshold

@@ -48,7 +48,7 @@
                 >
                     <div
                         :key="index"
-                        class="px-1 relative"
+                        class="px-1 relative extension-cards-container"
                         v-for="(extension, index) in sortedExtensions"
                     >
                         <extension-card
@@ -239,6 +239,9 @@
 ::v-deep .el-dropdown-menu__item:focus, ::v-deep .el-dropdown-menu__item:not(.is-disabled):hover {
     background-color: inherit;
     color: inherit;
+}
+.extension-cards-container {
+   width: 310px;
 }
 </style>
 <style lang="scss">
