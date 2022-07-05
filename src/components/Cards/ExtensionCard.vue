@@ -8,16 +8,16 @@
     >
         <div
             class="flex items-center"
-            :class="qwert.calls.length >= minActiveCallsNumber  ? 'mb-2' : 'mb-4'"
+            :class="extension.calls.length >= minActiveCallsNumber  ? 'mb-2' : 'mb-4'"
         >
             <fade-transition mode="out-in">
                 <el-tooltip
-                    :key="qwert.representativeStatus" :content="statusText" placement="top"
+                    :key="extension.representativeStatus" :content="statusText" placement="top"
                     :open-delay="300"
                 >
                     <component
                         :is="statusIcon"
-                        :key="qwert.representativeStatus"
+                        :key="extension.representativeStatus"
                         :class="{ 'is-calling': isCalling, 'is-talking': isTalking }"
                         class="extension-card-icon"
                     />
@@ -69,7 +69,7 @@
                 </call-info>
             </div>
         </div>
-        <div class="w-full" v-if="qwert.calls.length > minActiveCallsNumber">
+        <div class="w-full" v-if="extension.calls.length > minActiveCallsNumber">
             <span
                 class="divide-y h-px w-full divide-horizontal mb-1"
             />
@@ -120,10 +120,7 @@
                 statusMappings: statusTypes,
                 withMoreInfo: {},
                 additionalBlock: false,
-                minActiveCallsNumber: MIN_ACTIVE_CALLS_NUMBER,
-                qwert: {
-                    calls: [{"callStarted":1657026956,"calldurationinterval":1657026956,"callAnswered":1657026977,"answered":1,"callername":"VC Grand","callerphone":18,"callstatus":"Hold","customdata":{},"direction":"Incoming","ivrid":"2022070513155601023c3e426d6eb6c1","recording":{"Filename":"20220705131715010219d71443d79160-aws-e0VuxD01-380683319838.mp3","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-00002868","channel2":"SIP/MGW_BRIDGE_235-00002867"},{"callStarted":1657026960,"calldurationinterval":1657026960,"callAnswered":1657026980,"answered":1,"callername":"Yealink T41","callerphone":20,"callstatus":"Hold","customdata":{},"direction":"Incoming","ivrid":"202207051316000102fcea5b3336629f","recording":{"Filename":"","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-0000286c","channel2":"SIP/MGW_BRIDGE_235-0000286b"},{"callStarted":1657027036,"calldurationinterval":1657027036,"callAnswered":0,"answered":0,"callername":"380683319838","callerphone":"380683319838","callstatus":"Hold","customdata":{},"direction":"Outgoing","ivrid":"20220705131715010219d71443d79160","recording":{"Filename":"20220705131715010219d71443d79160-aws-e0VuxD01-380683319838.mp3","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-0000288a","channel2":"SIP/ProviderProxy05-0000288c"},{"callStarted":1657027118,"calldurationinterval":1657027118,"callAnswered":0,"answered":0,"callername":"380631847763","callerphone":"380631847763","callstatus":"Dialing","customdata":{},"direction":"Outgoing","ivrid":"202207051318370102374e0ab1b0e59e","recording":{"Filename":"202207051318370102374e0ab1b0e59e-aws-e0VuxD01-380631847763.mp3","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-000028a6","channel2":"SIP/ProviderProxy05-000028a7"}]
-                }
+                minActiveCallsNumber: MIN_ACTIVE_CALLS_NUMBER
             }
         },
         computed: {
@@ -196,27 +193,26 @@
                 return this.$t(text)
             },
             statusIcon() {
-                let data = this.statusMappings[this.qwert.representativeStatus] || { icon: 'IconOther' }
-                if (this.qwert.calls.length > 0) {
+                let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }
+                if (this.extension.calls.length > 0) {
                     return 'IconIncomingCall'
                 }
                 return data.icon
             },
             isCalling() {
-                if (this.qwert.calls.length === 0) {
+                if (this.extension.calls.length === 0) {
                     return false
                 }
-                return this.qwert.calls.every(c => c.callAnswered === 0)
+                return this.extension.calls.every(c => c.callAnswered === 0)
             },
             isTalking() {
-                if (this.qwert.calls.length === 0) {
+                if (this.extension.calls.length === 0) {
                     return false
                 }
-                return this.qwert.calls.every(c => c.callAnswered !== 0)
+                return this.extension.calls.every(c => c.callAnswered !== 0)
             },
             extensionCalls () {
-                const extensionCalls = cloneDeep(this.qwert.calls)
-                // const extensionCalls = [{"callStarted":1657026956,"calldurationinterval":1657026956,"callAnswered":1657026977,"answered":1,"callername":"VC Grand","callerphone":18,"callstatus":"Hold","customdata":{},"direction":"Incoming","ivrid":"2022070513155601023c3e426d6eb6c1","recording":{"Filename":"20220705131715010219d71443d79160-aws-e0VuxD01-380683319838.mp3","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-00002868","channel2":"SIP/MGW_BRIDGE_235-00002867"},{"callStarted":1657026960,"calldurationinterval":1657026960,"callAnswered":1657026980,"answered":1,"callername":"Yealink T41","callerphone":20,"callstatus":"Hold","customdata":{},"direction":"Incoming","ivrid":"202207051316000102fcea5b3336629f","recording":{"Filename":"","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-0000286c","channel2":"SIP/MGW_BRIDGE_235-0000286b"},{"callStarted":1657027036,"calldurationinterval":1657027036,"callAnswered":0,"answered":0,"callername":"380683319838","callerphone":"380683319838","callstatus":"Hold","customdata":{},"direction":"Outgoing","ivrid":"20220705131715010219d71443d79160","recording":{"Filename":"20220705131715010219d71443d79160-aws-e0VuxD01-380683319838.mp3","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-0000288a","channel2":"SIP/ProviderProxy05-0000288c"},{"callStarted":1657027118,"calldurationinterval":1657027118,"callAnswered":0,"answered":0,"callername":"380631847763","callerphone":"380631847763","callstatus":"Dialing","customdata":{},"direction":"Outgoing","ivrid":"202207051318370102374e0ab1b0e59e","recording":{"Filename":"202207051318370102374e0ab1b0e59e-aws-e0VuxD01-380631847763.mp3","Options":"","ApproximateURL":"","IsMuted":0},"did":"","ip":"185.138.169.34","blcServerID":102,"isOpensips":false,"channel":"SIP/e0VuxD01-000028a6","channel2":"SIP/ProviderProxy05-000028a7"}]
+                const extensionCalls = cloneDeep(this.extension.calls)
                 if (!this.additionalBlock) {
                     return extensionCalls.slice(0, 2)
                 }
@@ -225,7 +221,7 @@
         },
         methods: {
             setTimerValue() {
-                const timerValue = getInitialExtensionTime(this.qwert, this.settings)
+                const timerValue = getInitialExtensionTime(this.extension, this.settings)
                 this.timer.setValue(timerValue)
             },
             showMoreInfo () {
@@ -243,7 +239,7 @@
             getColorByStatusAlerts (defaultColor, addTypeForData = false) {
                 let color = defaultColor
                 let type = ''
-                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.qwert.representativeStatus)
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
 
                 if (statusAlerts && 'warn' in statusAlerts && (this.timer.state.seconds >= statusAlerts.warn)) {
                     color = '#FAB11E'
@@ -262,12 +258,12 @@
             }
         },
         watch: {
-            'qwert.representativeStatus'(newStatus, oldStatus) {
+            'extension.representativeStatus'(newStatus, oldStatus) {
                 if (newStatus !== oldStatus) {
                     this.timer.reset()
                 }
             },
-            'qwert.calls': {
+            'extension.calls': {
                 deep: true,
                 handler(newVal, oldVal) {
                     if (newVal !== oldVal) {
@@ -288,7 +284,7 @@
                     }
                 },
             },
-            'qwert.userID'(newVal, oldVal) {
+            'extension.userID'(newVal, oldVal) {
                 if (newVal !== oldVal) {
                     this.setTimerValue()
                 }
