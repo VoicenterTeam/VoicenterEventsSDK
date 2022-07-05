@@ -306,6 +306,7 @@
     white-space: nowrap;
 }
 .extension-card {
+    min-height: 190px;
     transition: all .2s;
     position: relative;
 }
