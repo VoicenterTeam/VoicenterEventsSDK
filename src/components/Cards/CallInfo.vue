@@ -10,20 +10,21 @@
             <span class="text-main-xs text-gray-500">+{{ call.callerphone }}</span>
         </div>
         <div v-if="!hideCallInfo" class="flex items-center justify-between direction-icon">
-            <component :is="directionMappings[call.direction]" class="mx-2"/>
+            <component :is="directionMappings[call.direction]" class="mx-1"/>
             <el-tooltip
                 v-if="call.callstatus === 'Hold'"
                 placement="top"
                 :open-delay="300"
                 :content="$t('status.hold')"
             >
-                <icon-hold class="w-4 h-4 mx-1"></icon-hold>
+                <icon-hold class="w-4 h-4"></icon-hold>
             </el-tooltip>
+            <div v-else class="w-4 h-4" />
             <slot name="threshold" :statusThreshold="threshold">
                 <IconThreshold
                     v-if="threshold.show"
                     v-bind="threshold.styles"
-                    class="mx-2"
+                    class="mx-1"
                 />
             </slot>
             <span class="font-semibold call-time">{{ timer.displayTime }}</span>
