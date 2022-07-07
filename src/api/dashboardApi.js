@@ -34,11 +34,14 @@ export const DashboardApi = {
                 await timeout(2000)
                 return await this.getAll()
             }
-            
-            parseCatch(e, true)
-            setTimeout(() => {
-                window.location.href = process.env.VUE_APP_FALLBACK_URL
-            }, 1000)
+
+            try {
+                parseCatch(e, true)
+            } catch (e) {
+                setTimeout(() => {
+                    window.location.href = process.env.VUE_APP_FALLBACK_URL
+                }, 1000)
+            }
         }
     },
     
