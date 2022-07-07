@@ -7,7 +7,7 @@
             >
                 {{ call.callername }}
             </span>
-            <span class="text-main-xs text-gray-500">+{{ call.callerphone }}</span>
+            <span class="text-main-xs text-gray-500"><bdi>+{{ call.callerphone }}</bdi></span>
         </div>
         <div v-if="!hideCallInfo" class="flex items-center justify-between direction-icon">
             <component :is="directionMappings[call.direction]" class="mx-1"/>
@@ -131,6 +131,7 @@
 }
 
 .rtl .direction-icon {
-    transform: rotate(180deg);
+    display: flex;
+    flex-direction: row-reverse;
 }
 </style>
