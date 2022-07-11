@@ -4,8 +4,8 @@ import { types, targets } from '@/enum/operations'
 import { WidgetGroupsApi } from '@/api/widgetGroupApi'
 import { entityStatuses } from '@/enum/entityStatuses'
 import store from '@/store/store'
-import { Notification } from 'element-ui'
 import i18n from '@/i18n'
+import notification from '@/mixins/simpleNotification'
 
 export async function runDashboardOperations(operations, dashboard, clonedDashboard) {
     if (operations.all().length) {
@@ -67,9 +67,10 @@ export async function runDashboardOperations(operations, dashboard, clonedDashbo
 
             return getDashboard(dashboardID)
         } catch (e) {
-            Notification.error({
+            notification.call({
+                type: 'error',
                 title: i18n.t('dashboard.somethingWentWrong'),
-                message: i18n.t('dashboard.pleaseRefreshPageAndTryAgain'),
+                message: i18n.t('dashboard.pleaseRefreshPageAndTryAgain')
             })
             store.dispatch('dashboards/setLoadingData', false)
         }

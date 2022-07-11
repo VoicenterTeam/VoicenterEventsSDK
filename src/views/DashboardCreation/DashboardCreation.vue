@@ -134,7 +134,6 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import { Notification } from 'element-ui'
     import { WidgetApi } from '@/api/widgetApi'
     import { templateApi } from '@/api/templateApi'
     import { DashboardApi } from '@/api/dashboardApi'
@@ -142,6 +141,8 @@
     import { widgetGroupModel } from '@/models/instances'
     import { WidgetGroupsApi } from '@/api/widgetGroupApi'
     import { getLayoutsWithPrimaryColor } from '@/helpers/layoutUtil'
+    import notification from '@/mixins/simpleNotification'
+
 
     export default {
         components: {
@@ -285,11 +286,17 @@
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
                     await this.$store.dispatch('layout/resetPreviewLayout')
 
-                    Notification.success(this.$t('dashboard.dashboardAddedWithSuccess'))
+                    notification.call({
+                        type: 'success',
+                        message: this.$t('dashboard.dashboardAddedWithSuccess')
+                    })
                     this.$router.push('/')
                 } catch (e) {
                     console.warn(e)
-                    Notification.error(this.$t('dashboard.somethingWentWrongPleaseTryAgain'))
+                    notification.call({
+                        type: 'error',
+                        message: this.$t('dashboard.somethingWentWrongPleaseTryAgain')
+                    })
                 } finally {
                     this.loading = false
                 }

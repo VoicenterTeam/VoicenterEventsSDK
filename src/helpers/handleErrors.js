@@ -41,7 +41,6 @@ const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '')
     }
     
     if (showAxiosErrorMessage && message && shouldDisplayNotification(apiError)) {
-        console.log(get(apiError.response, 'data'), 'apiError')
         const messageConfig = {
             title,
             message: `${messagePrefix} ${message}`,
