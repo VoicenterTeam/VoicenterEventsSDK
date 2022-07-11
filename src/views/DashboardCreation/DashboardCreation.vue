@@ -285,11 +285,11 @@
                     await this.$store.dispatch('dashboards/selectDashboard', dashboard)
                     await this.$store.dispatch('layout/resetPreviewLayout')
 
-                    Notification.success('Dashboard added with success.')
+                    Notification.success(this.$t('dashboard.dashboardAddedWithSuccess'))
                     this.$router.push('/')
                 } catch (e) {
                     console.warn(e)
-                    Notification.error('Something went wrong please try again.')
+                    Notification.error(this.$t('dashboard.somethingWentWrongPleaseTryAgain'))
                 } finally {
                     this.loading = false
                 }
