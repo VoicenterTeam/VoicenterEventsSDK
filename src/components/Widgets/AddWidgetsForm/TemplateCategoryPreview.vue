@@ -157,8 +157,8 @@
                     return
                 }
                 return this.templateList.filter((template) => {
-                    const templateName = this.translateTemplateName(template.TemplateName)
-                    return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
+                    const templateNameContentTag = this.translateTemplateNameContentTag(template.TemplateNameContentTag)
+                    return template.TemplateID.toString() === this.search.toString() || templateNameContentTag.toLowerCase().includes(this.search.toLowerCase())
                 })
             },
             groupWidgetsCount() {
@@ -181,8 +181,8 @@
             },
         },
         methods: {
-            translateTemplateName(tName) {
-                return this.$t(tName) || tName
+            translateTemplateNameContentTag(tNameContentTag) {
+                return this.$t(tNameContentTag) || tNameContentTag
             },
             manageWidgets(value, template) {
                 this.quantities[template.TemplateID] = value
