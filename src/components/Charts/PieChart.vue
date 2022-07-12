@@ -121,6 +121,10 @@
                 
                 const labelFontSize = this.getLabelFontSize
                 const dataLabelsColor = this.getDataLabelsColor
+
+                if (this.data.WidgetLayout.hideLoggedOff) {
+                    data = data.filter(el => el.name !== 'Log out')
+                }
                 
                 const series = [{
                     name: this.$t('widget.agents'),
@@ -221,6 +225,7 @@
             data: {
                 immediate: true,
                 handler: function () {
+                    this.chartOptions()
                     this.chartOptionsWithRefreshInterval()
                 },
             },
