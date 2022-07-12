@@ -1,7 +1,7 @@
 import i18n from '@/i18n'
 import $axios from './apiConnection'
-import { Notification } from 'element-ui'
 import parseCatch from '@/helpers/handleErrors'
+import notification from '@/mixins/simpleNotification'
 
 export const LayoutApi = {
     async get(data) {
@@ -16,9 +16,15 @@ export const LayoutApi = {
         try {
             const result = await $axios.post('/Layout/Upsert/', data)
             if (data.LayoutID) {
-                Notification.success(i18n.t('layout.layoutUpdatedWithSuccess'))
+                notification.call({
+                    type: 'success',
+                    message: i18n.t('layout.layoutUpdatedWithSuccess')
+                })
             } else {
-                Notification.success(i18n.t('layout.layoutAddedWithSuccess'))
+                notification.call({
+                    type: 'success',
+                    message: i18n.t('layout.layoutAddedWithSuccess')
+                })
             }
             return result
         } catch (e) {

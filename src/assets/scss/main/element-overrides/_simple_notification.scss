@@ -1,0 +1,13 @@
+
+.el-notification__content {
+    text-align: left;
+}
+.simple-notification-container {
+    @apply flex items-center;
+    &--icon {
+        @apply text-3xl;
+    }
+    &--message {
+        @apply font-bold text-base;
+    }
+}
