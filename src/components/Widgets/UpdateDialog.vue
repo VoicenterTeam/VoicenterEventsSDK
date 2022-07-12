@@ -348,8 +348,7 @@
                     80: '80px',
                     96: '96px',
                     112: '112px',
-                },
-                hideLoggedOff: false
+                }
             }
         },
         computed: {
