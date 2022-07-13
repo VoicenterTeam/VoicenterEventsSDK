@@ -4,7 +4,6 @@
         v-on="$listeners"
         :title="dialogTitle"
         :description="dialogDescription"
-        :config="configDefault"
     >
         <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
     </Dialog>
