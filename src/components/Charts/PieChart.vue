@@ -17,7 +17,7 @@
     import { Tooltip } from 'element-ui'
     import bus from '@/event-bus/EventBus'
     import { Chart } from 'highcharts-vue'
-    import statusTypes from '@/enum/statusTypes'
+    import statusTypes, { statusNameLogOut } from '@/enum/statusTypes'
     import { TrashIcon } from 'vue-feather-icons'
     import { WidgetDataApi } from '@/api/widgetDataApi'
     import extensionMixin from '@/mixins/extensionMixin'
@@ -123,7 +123,7 @@
                 const dataLabelsColor = this.getDataLabelsColor
 
                 if (this.data.WidgetLayout.hideLoggedOff) {
-                    data = data.filter(el => el.name !== 'Log out')
+                    data = data.filter(el => el.name !== statusNameLogOut)
                 }
                 
                 const series = [{

@@ -9,6 +9,8 @@ export const otherStatuses = {
     AT_WORK: 102,
 }
 
+export const statusNameLogOut = 'Log out'
+
 export default {
     1: {
         icon: "IconLogin",
