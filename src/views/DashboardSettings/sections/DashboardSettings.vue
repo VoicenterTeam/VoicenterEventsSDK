@@ -205,7 +205,6 @@
         methods: {
             getGroupedParameters(group) {
                 const activeLayoutLayoutParametersList = uniqBy(this.activeLayout.LayoutParametersList, 'JPath')
-                // this.layoutSettings.LayoutParametersList = uniqBy(this.layoutSettings.LayoutParametersList, 'JPath')
                 return activeLayoutLayoutParametersList.filter((el) => group.includes(el.LayoutParameterName))
             },
             getIndicatorStyles(config) {
