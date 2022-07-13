@@ -140,7 +140,6 @@
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
     import { DEFAULT_GROUP_KEYS, PRIMARY_COLOR_KEY } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    import uniqBy from 'lodash/uniqBy'
 
     export default {
         components: {
@@ -204,8 +203,7 @@
         },
         methods: {
             getGroupedParameters(group) {
-                const activeLayoutLayoutParametersList = uniqBy(this.activeLayout.LayoutParametersList, 'JPath')
-                return activeLayoutLayoutParametersList.filter((el) => group.includes(el.LayoutParameterName))
+                return this.activeLayout.LayoutParametersList.filter((el) => group.includes(el.LayoutParameterName))
             },
             getIndicatorStyles(config) {
                 return {
