@@ -1,4 +1,4 @@
-export function timeFormatter (time) {
+export function timeFormatter (time, realTime = false) {
     
     let days = Math.floor(time / 86400);
     time -= days * 86400;
@@ -12,8 +12,8 @@ export function timeFormatter (time) {
     let seconds = time % 60;
 
     let data = {
-        days: days ? `${days}d:` : '',
-        hours: hours ? `${addPrefix(hours)}:` : '',
+        days: days ? `${days}d:` : realTime ? '00:' : '',
+        hours: hours ? `${addPrefix(hours)}:` : realTime ? '00:' : '',
         minutes: `${addPrefix(minutes)}:`,
         seconds: addPrefix(seconds)
     }
