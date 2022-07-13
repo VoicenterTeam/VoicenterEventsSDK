@@ -178,6 +178,7 @@
     import { LayoutApi } from '@/api/layoutApi'
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
+    import uniqBy from 'lodash/uniqBy'
 
     export default {
         components: {
@@ -293,6 +294,7 @@
                 if (this.isDefaultLayout) {
                     delete this.layoutSettings.LayoutID
                 }
+                this.layoutSettings.LayoutParametersList = uniqBy(this.layoutSettings.LayoutParametersList, 'JPath')
                 return {
                     ...this.layoutSettings,
                     LayoutStatusID: 1,

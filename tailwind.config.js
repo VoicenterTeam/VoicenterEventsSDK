@@ -77,7 +77,10 @@ module.exports = {
                 base: '0px 0px 5px #E0E2E5',
                 light: '0px 1px 6px #D1D5DF',
                 lighter: '0px 0px 5px #D8D8D8',
-                radio: '0px 0px 5px var(--primary)'
+                radio: '0px 0px 5px var(--primary)',
+                'focus-outer': '0 0 3px var(--primary-color)',
+                'focus-outer-off': '0 0 3px var(--primary-color)',
+                'focus-outer-primary': '0 0 3px var(--primary-color)'
             },
             minWidth: {
                 ...defaultTheme.spacing,
