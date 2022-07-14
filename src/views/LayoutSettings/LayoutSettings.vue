@@ -194,8 +194,8 @@
         },
         data() {
             let validationThemeName = (rule, value, callback) => {
-                const validationThemeName = this.layoutNames.includes(value)
-                if (validationThemeName) {
+                const validationThemeName = this.layoutNames.indexOf(value) === -1
+                if (!validationThemeName) {
                     callback(new Error(''))
                 } else {
                     callback()
@@ -408,8 +408,9 @@
                 this.$nextTick(() => {
                     setTimeout(() => {
                         this.$refs.layoutForm.resetFields()
+                        this.layoutForm.layoutName = `${this.layoutSettings.LayoutName}${this.$t('suffix_copy')}`
                         this.layoutForm.typeOfTheme = 'newTheme'
-                        this.disabledForm = true
+                        this.validateForm()
                     }, 150)
                 })
             },
