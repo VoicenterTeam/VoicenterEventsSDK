@@ -118,6 +118,10 @@ The SDK constructor accepts multiple options when initializing which can be used
 | store | object | Vuex store to use in order to register an extensions module. This should simplify the end usage of the SDK | |
 | extensionsModuleName | string | Vuex store extension module name. Defaults to `sdkExtensions` | |
 | queuesModuleName | string | Vuex store queue module name. Defaults to `sdkQueues` | |
+| useLogger | boolean | `false` | Determines if the SDK will use logger
+| loggerServer | string | `http://127.0.0.1:3000/` | Server url which logger uses to send logs to
+| loggerConfig | object | `{ logToConsole: true, overloadGlobalConsole: false, namespace: "events-sdk",socketEmitInterval: 10000}` | Logger options
+| loggerConnectOptions | object | `{ reconnection: true, reconnectionDelay: 5000, reconnectionAttempts: 10, perMessageDeflate: false, upgrade: false, transports: ['websocket'], debug: false}` | Logger's socket connect options
 
 Servers array format
 ```js

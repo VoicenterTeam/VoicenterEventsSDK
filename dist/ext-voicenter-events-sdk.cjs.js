@@ -1,6 +1,10 @@
-import debounce from 'lodash/debounce';
-import md5 from 'js-md5';
-import { StorageLogger } from '@voicenter-team/socketio-storage-logger/build/StorageLogger';
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var debounce = _interopDefault(require('lodash/debounce'));
+var md5 = _interopDefault(require('js-md5'));
+var AsyncStorageLogger = require('@voicenter-team/socketio-storage-logger/build/AsyncStorageLogger');
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -4318,10 +4322,33 @@ var EventsSDK = /*#__PURE__*/function () {
 }();
 
 EventsSDK.prototype['initLogger'] = function () {
-  this.Logger = new StorageLogger(Object.assign({
-    socketUrl: this.options.loggerServer,
-    connectOptions: this.options.loggerConnectOptions
-  }, this.options.loggerConfig));
+  console.log('SDK2 initLogger this.options.loggerServer', this.options.loggerServer);
+  console.log('SDK2 initLogger this.options.loggerConnectOptions', this.options.loggerConnectOptions); //const loggerSocket = getSocketIOFunction()(this.options.loggerServer, this.options.loggerConnectOptions)
+
+  var loggerSocket = s1_3_7.call(self)(this.options.loggerServer, this.options.loggerConnectOptions);
+  console.log('loggerSocket', loggerSocket);
+  loggerSocket.on("connect", function () {
+    console.log("ON SDK2 CONNECT loggerSocket");
+  });
+  loggerSocket.on("connect_error", function (error) {
+    console.log("ON SDK2 connect_error loggerSocket", error);
+  });
+  loggerSocket.on("error", function (error) {
+    console.log("ON SDK2 error loggerSocket", error);
+  });
+  /*async function getItem(storageId) {
+    const results = await chrome.storage.local.get(storageId)
+    return results[storageId]
+    // return store.get(storageId)
+  }
+   async function setItem(storageId, logs) {
+    await chrome.storage.local.set({[storageId]: logs})
+    //store.put(storageId, logs);
+  }*/
+
+  this.Logger = new AsyncStorageLogger.AsyncStorageLogger(Object.assign({
+    socketConnection: loggerSocket
+  }, this.options.loggerConfig)); //this.Logger = sdkLogger
 };
 
-export default EventsSDK;
+module.exports = EventsSDK;

@@ -1,7 +1,6 @@
 import eventTypes from './eventTypes';
 import environments from './utils/environments'
 import { defaultServers } from './config';
-//import Logger from './Logger';
 import debounce from 'lodash/debounce'
 import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
@@ -40,7 +39,24 @@ const defaultOptions = {
   queuesModuleName: 'sdkQueues',
   dialersModuleName: 'sdkDialers',
   serverFetchStrategy: 'remote', // get servers from external url options: remote | static
-  serverType: null, // can be 1 or 2. 2 is used for chrome extension
+  serverType: null, // can be 1 or 2. 2 is used for chrome extension,
+  useLogger: false,
+  loggerServer: 'http://127.0.0.1:3000/',
+  loggerConfig: {
+    logToConsole: true,
+    overloadGlobalConsole: false,
+    namespace: "events-sdk",
+    socketEmitInterval: 10000,
+  },
+  loggerConnectOptions: {
+    reconnection: true,
+    reconnectionDelay: 5000,
+    reconnectionAttempts: 10,
+    perMessageDeflate: false,
+    upgrade: false,
+    transports: ['websocket'],
+    debug: false
+  },
 };
 
 let allConnections = [];
@@ -58,7 +74,11 @@ class EventsSDK {
     if (!this.options.loginType) {
       throw new Error('A login type should be provided');
     }
-    //this.Logger = new Logger(this.options);
+
+    if (this.options.useLogger) {
+      this.initLogger()
+    }
+
     this.servers = [];
     this.server = null;
     this.socket = null;
@@ -138,7 +158,8 @@ class EventsSDK {
   _onConnect() {
     this._initReconnectDelays();
     this.connected = true;
-    console.log(eventTypes.CONNECT, this.reconnectOptions);
+    //log(eventTypes.CONNECT, this.reconnectOptions);
+    this.log('INFO', eventTypes.CONNECT, this.reconnectOptions);
   }
 
   _initReconnectDelays() {
@@ -152,21 +173,21 @@ class EventsSDK {
   _onConnectError(data) {
     this._retryConnection('next', true);
     this.connected = false;
-    console.error(eventTypes.CONNECT_ERROR, data)
+    this.log('ERROR', eventTypes.CONNECT_ERROR, data)
   }
 
   _onError(err) {
-    console.error(eventTypes.ERROR, err);
+    this.log('ERROR', eventTypes.ERROR, err);
   }
 
   _onReconnectFailed() {
     this._retryConnection('next',true);
-    console.error(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
+    this.log('ERROR', eventTypes.RECONNECT_FAILED, this.reconnectOptions);
   }
 
   _onConnectTimeout() {
     this._retryConnection('next',true);
-    console.error(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
+    this.log('ERROR', eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
   _onReconnectAttempt() {
@@ -182,12 +203,13 @@ class EventsSDK {
       this.socket.io.reconnectionDelayMax(newDelay);
     }
     this.reconnectOptions.retryCount++;
-    console.log(eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
+    this.log('INFO', eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
   }
 
   _onDisconnect(reason) {
     this.connected = false;
-    console.log(eventTypes.DISCONNECT, reason);
+    //this.Logger.log(eventTypes.DISCONNECT, reason);
+    this.log('INFO', eventTypes.DISCONNECT, reason);
 
     if (this.doConnectOnDisconnect) {
       this._connect('next', true);
@@ -200,7 +222,8 @@ class EventsSDK {
       return
     }
     if (data && this.connected) {
-      console.log(eventTypes.KEEP_ALIVE_RESPONSE);
+      //this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
+      this.log('INFO', eventTypes.KEEP_ALIVE_RESPONSE);
       this._lastEventTimestamp = new Date().getTime()
     } else {
       this._initSocketConnection();
@@ -300,12 +323,28 @@ class EventsSDK {
     }
   }
 
+  log(type, ...args) {
+    if (this.Logger) {
+      if (type === 'INFO') {
+        this.Logger.log(...args);
+      } else if (type === 'ERROR') {
+        this.Logger.error(...args);
+      }
+    } else {
+      if (type === 'INFO') {
+        console.log(...args)
+      } else if (type === 'ERROR') {
+        console.error(...args)
+      }
+    }
+  }
+
   _initSocketConnection() {
     try {
       let domain = this.server.Domain;
       let protocol = this.options.protocol;
       let url = `${protocol}://${domain}`;
-      console.log('Connecting to..', url);
+      this.log('INFO', 'Connecting to..', url);
       this.closeAllConnections();
       const options = {
         reconnection: false,
@@ -324,7 +363,7 @@ class EventsSDK {
       allConnections.push(this.socket);
       this.connectionEstablished = true;
     } catch (e) {
-      console.error(e)
+      this.log('ERROR', e)
     }
   }
   _initSocketEvents() {
@@ -391,7 +430,7 @@ class EventsSDK {
 
   _findNextAvailableServer() {
     let currentServerPriority = this.server.Priority;
-    console.log(`Failover -> Trying to find another server`);
+    this.log('INFO', `Failover -> Trying to find another server`);
     if (currentServerPriority === this.servers.length - 1) {
       return this._findMaxPriorityServer()
     }
@@ -407,12 +446,12 @@ class EventsSDK {
       this.server = nextServer;
       return this.server
     }
-    console.log(`Failover -> Found new server. Connecting to it...`, this.server);
+    this.log('INFO', `Failover -> Found new server. Connecting to it...`, this.server);
     return null
   }
 
   _findMaxPriorityServer() {
-    console.log(`Fallback -> Trying to find previous server`);
+    this.log('INFO', `Fallback -> Trying to find previous server`);
     let maxPriorityServer = getServerWithHighestPriority(this.servers);
     if (!this.server) {
       this.server = maxPriorityServer;
@@ -420,7 +459,7 @@ class EventsSDK {
     }
     if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
       this.server = maxPriorityServer;
-      console.log(`Fallback -> Trying to find previous server`);
+      this.log('INFO', `Fallback -> Trying to find previous server`);
       return this.server
     }
     return null
@@ -527,6 +566,9 @@ class EventsSDK {
     this.doConnectOnDisconnect = false
     this._listenersMap = new Map();
     this.closeAllConnections()
+    if (this.Logger) {
+      this.Logger.disconnectSocket()
+    }
   }
 
   /**
@@ -547,7 +589,7 @@ class EventsSDK {
 
   emit(eventName, data = {}) {
     this._checkInit();
-    console.log(`EMIT -> ${eventName}`, data);
+    this.log('INFO', `EMIT -> ${eventName}`, data);
     this.socket.emit(eventName, data);
   }
 
@@ -676,7 +718,7 @@ class EventsSDK {
           loginSession = window.sessionStorage.getItem(key);
           if (loginSession) {
             loginSession = JSON.parse(loginSession)
-            console.log('got data from session', loginSession);
+            this.log('INFO', 'got data from session', loginSession);
             await this._onLoginResponse(loginSession)
             return resolve(loginSession);
           }
@@ -685,13 +727,13 @@ class EventsSDK {
             if (result) loginSession = result[key];
             if (loginSession) {
               loginSession = JSON.parse(loginSession)
-              console.log('got data from session', loginSession);
+              this.log('INFO', 'got data from session', loginSession);
               await this._onLoginResponse(loginSession)
               return resolve(loginSession);
             }
         }
       } catch (err) {
-        console.error("Error on getting session", err)
+        this.log('ERROR', "Error on getting session", err)
       }
 
       try {

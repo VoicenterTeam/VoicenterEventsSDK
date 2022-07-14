@@ -4,6 +4,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var debounce = _interopDefault(require('lodash/debounce'));
 var md5 = _interopDefault(require('js-md5'));
+var StorageLogger = require('@voicenter-team/socketio-storage-logger/build/StorageLogger');
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -3373,7 +3374,6 @@ var getSocketIOFunction = function getSocketIOFunction(url) {
 
   return socketLibrary[version];
 };
-
 async function loadExternalScript(url, environment) {
   var useHelperVersion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -3422,8 +3422,25 @@ var defaultOptions = {
   dialersModuleName: 'sdkDialers',
   serverFetchStrategy: 'remote',
   // get servers from external url options: remote | static
-  serverType: null // can be 1 or 2. 2 is used for chrome extension
-
+  serverType: null,
+  // can be 1 or 2. 2 is used for chrome extension,
+  useLogger: false,
+  loggerServer: 'http://127.0.0.1:3000/',
+  loggerConfig: {
+    logToConsole: true,
+    overloadGlobalConsole: false,
+    namespace: "events-sdk",
+    socketEmitInterval: 10000
+  },
+  loggerConnectOptions: {
+    reconnection: true,
+    reconnectionDelay: 5000,
+    reconnectionAttempts: 10,
+    perMessageDeflate: false,
+    upgrade: false,
+    transports: ['websocket'],
+    debug: false
+  }
 };
 var allConnections = [];
 var listenersMap = new Map();
@@ -3439,8 +3456,11 @@ var EventsSDK = /*#__PURE__*/function () {
 
     if (!this.options.loginType) {
       throw new Error('A login type should be provided');
-    } //this.Logger = new Logger(this.options);
+    }
 
+    if (this.options.useLogger) {
+      this.initLogger();
+    }
 
     this.servers = [];
     this.server = null;
@@ -3549,8 +3569,9 @@ var EventsSDK = /*#__PURE__*/function () {
     value: function _onConnect() {
       this._initReconnectDelays();
 
-      this.connected = true;
-      console.log(eventTypes.CONNECT, this.reconnectOptions);
+      this.connected = true; //log(eventTypes.CONNECT, this.reconnectOptions);
+
+      this.log('INFO', eventTypes.CONNECT, this.reconnectOptions);
     }
   }, {
     key: "_initReconnectDelays",
@@ -3567,26 +3588,26 @@ var EventsSDK = /*#__PURE__*/function () {
       this._retryConnection('next', true);
 
       this.connected = false;
-      console.error(eventTypes.CONNECT_ERROR, data);
+      this.log('ERROR', eventTypes.CONNECT_ERROR, data);
     }
   }, {
     key: "_onError",
     value: function _onError(err) {
-      console.error(eventTypes.ERROR, err);
+      this.log('ERROR', eventTypes.ERROR, err);
     }
   }, {
     key: "_onReconnectFailed",
     value: function _onReconnectFailed() {
       this._retryConnection('next', true);
 
-      console.error(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
+      this.log('ERROR', eventTypes.RECONNECT_FAILED, this.reconnectOptions);
     }
   }, {
     key: "_onConnectTimeout",
     value: function _onConnectTimeout() {
       this._retryConnection('next', true);
 
-      console.error(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions);
+      this.log('ERROR', eventTypes.CONNECT_TIMEOUT, this.reconnectOptions);
     }
   }, {
     key: "_onReconnectAttempt",
@@ -3607,13 +3628,14 @@ var EventsSDK = /*#__PURE__*/function () {
       }
 
       this.reconnectOptions.retryCount++;
-      console.log(eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions);
+      this.log('INFO', eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions);
     }
   }, {
     key: "_onDisconnect",
     value: function _onDisconnect(reason) {
-      this.connected = false;
-      console.log(eventTypes.DISCONNECT, reason);
+      this.connected = false; //this.Logger.log(eventTypes.DISCONNECT, reason);
+
+      this.log('INFO', eventTypes.DISCONNECT, reason);
 
       if (this.doConnectOnDisconnect) {
         this._connect('next', true);
@@ -3629,7 +3651,8 @@ var EventsSDK = /*#__PURE__*/function () {
       }
 
       if (data && this.connected) {
-        console.log(eventTypes.KEEP_ALIVE_RESPONSE);
+        //this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
+        this.log('INFO', eventTypes.KEEP_ALIVE_RESPONSE);
         this._lastEventTimestamp = new Date().getTime();
       } else {
         this._initSocketConnection();
@@ -3757,13 +3780,42 @@ var EventsSDK = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "log",
+    value: function log(type) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      if (this.Logger) {
+        if (type === 'INFO') {
+          var _this$Logger;
+
+          (_this$Logger = this.Logger).log.apply(_this$Logger, args);
+        } else if (type === 'ERROR') {
+          var _this$Logger2;
+
+          (_this$Logger2 = this.Logger).error.apply(_this$Logger2, args);
+        }
+      } else {
+        if (type === 'INFO') {
+          var _console;
+
+          (_console = console).log.apply(_console, args);
+        } else if (type === 'ERROR') {
+          var _console2;
+
+          (_console2 = console).error.apply(_console2, args);
+        }
+      }
+    }
+  }, {
     key: "_initSocketConnection",
     value: function _initSocketConnection() {
       try {
         var domain = this.server.Domain;
         var protocol = this.options.protocol;
         var url = "".concat(protocol, "://").concat(domain);
-        console.log('Connecting to..', url);
+        this.log('INFO', 'Connecting to..', url);
         this.closeAllConnections();
         var options = {
           reconnection: false,
@@ -3783,7 +3835,7 @@ var EventsSDK = /*#__PURE__*/function () {
         allConnections.push(this.socket);
         this.connectionEstablished = true;
       } catch (e) {
-        console.error(e);
+        this.log('ERROR', e);
       }
     }
   }, {
@@ -3874,7 +3926,7 @@ var EventsSDK = /*#__PURE__*/function () {
     key: "_findNextAvailableServer",
     value: function _findNextAvailableServer() {
       var currentServerPriority = this.server.Priority;
-      console.log("Failover -> Trying to find another server");
+      this.log('INFO', "Failover -> Trying to find another server");
 
       if (currentServerPriority === this.servers.length - 1) {
         return this._findMaxPriorityServer();
@@ -3898,13 +3950,13 @@ var EventsSDK = /*#__PURE__*/function () {
         return this.server;
       }
 
-      console.log("Failover -> Found new server. Connecting to it...", this.server);
+      this.log('INFO', "Failover -> Found new server. Connecting to it...", this.server);
       return null;
     }
   }, {
     key: "_findMaxPriorityServer",
     value: function _findMaxPriorityServer() {
-      console.log("Fallback -> Trying to find previous server");
+      this.log('INFO', "Fallback -> Trying to find previous server");
       var maxPriorityServer = getServerWithHighestPriority(this.servers);
 
       if (!this.server) {
@@ -3914,7 +3966,7 @@ var EventsSDK = /*#__PURE__*/function () {
 
       if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
         this.server = maxPriorityServer;
-        console.log("Fallback -> Trying to find previous server");
+        this.log('INFO', "Fallback -> Trying to find previous server");
         return this.server;
       }
 
@@ -4036,6 +4088,10 @@ var EventsSDK = /*#__PURE__*/function () {
       this.doConnectOnDisconnect = false;
       this._listenersMap = new Map();
       this.closeAllConnections();
+
+      if (this.Logger) {
+        this.Logger.disconnectSocket();
+      }
     }
     /**
      * Listens for new events
@@ -4063,7 +4119,7 @@ var EventsSDK = /*#__PURE__*/function () {
 
       this._checkInit();
 
-      console.log("EMIT -> ".concat(eventName), data);
+      this.log('INFO', "EMIT -> ".concat(eventName), data);
       this.socket.emit(eventName, data);
     }
     /**
@@ -4219,6 +4275,9 @@ var EventsSDK = /*#__PURE__*/function () {
 
             if (loginSession) {
               loginSession = JSON.parse(loginSession);
+
+              _this5.log('INFO', 'got data from session', loginSession);
+
               await _this5._onLoginResponse(loginSession);
               return resolve(loginSession);
             }
@@ -4228,12 +4287,15 @@ var EventsSDK = /*#__PURE__*/function () {
 
             if (loginSession) {
               loginSession = JSON.parse(loginSession);
+
+              _this5.log('INFO', 'got data from session', loginSession);
+
               await _this5._onLoginResponse(loginSession);
               return resolve(loginSession);
             }
           }
         } catch (err) {
-          console.error("Error on getting session", err);
+          _this5.log('ERROR', "Error on getting session", err);
         }
 
         try {
@@ -4259,9 +4321,11 @@ var EventsSDK = /*#__PURE__*/function () {
   return EventsSDK;
 }();
 
-if (typeof window !== 'undefined') {
-  // Make it available on window
-  window.EventsSDK = EventsSDK;
-}
+EventsSDK.prototype['initLogger'] = function () {
+  this.Logger = new StorageLogger.StorageLogger(Object.assign({
+    socketUrl: this.options.loggerServer,
+    connectOptions: this.options.loggerConnectOptions
+  }, this.options.loggerConfig));
+};
 
 module.exports = EventsSDK;
