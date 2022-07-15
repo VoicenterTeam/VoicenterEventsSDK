@@ -25,7 +25,10 @@ export default {
             await this.$store.dispatch('dashboards/setContentLoading', true)
             await this.$store.dispatch('entities/getEntitiesList')
 
-            await this.$store.dispatch('lang/getLanguages')
+            try {
+                await this.$store.dispatch('lang/getLanguages')
+            } finally {}
+
             const activeLanguage = this.$store.getters['lang/getActiveLanguage'] || 'en'
 
             await this.$store.dispatch('lang/setLanguage', activeLanguage)
