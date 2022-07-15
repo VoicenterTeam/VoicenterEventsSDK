@@ -9,6 +9,7 @@ import dialersModule from './store/dialers'
 import { getServerWithHighestPriority, isValidDate } from './utils';
 import { externalLogin, refreshToken, getExternalLoginUrl } from './utils/externalLogin';
 import { loadExternalScript } from './utils/loadExternalScript'
+import { INFO, ERROR } from './utils/logTypes'
 import md5 from "js-md5";
 
 
@@ -158,8 +159,7 @@ class EventsSDK {
   _onConnect() {
     this._initReconnectDelays();
     this.connected = true;
-    //log(eventTypes.CONNECT, this.reconnectOptions);
-    this.log('INFO', eventTypes.CONNECT, this.reconnectOptions);
+    this.log(INFO, eventTypes.CONNECT, this.reconnectOptions);
   }
 
   _initReconnectDelays() {
@@ -173,21 +173,21 @@ class EventsSDK {
   _onConnectError(data) {
     this._retryConnection('next', true);
     this.connected = false;
-    this.log('ERROR', eventTypes.CONNECT_ERROR, data)
+    this.log(ERROR, eventTypes.CONNECT_ERROR, data)
   }
 
   _onError(err) {
-    this.log('ERROR', eventTypes.ERROR, err);
+    this.log(ERROR, eventTypes.ERROR, err);
   }
 
   _onReconnectFailed() {
     this._retryConnection('next',true);
-    this.log('ERROR', eventTypes.RECONNECT_FAILED, this.reconnectOptions);
+    this.log(ERROR, eventTypes.RECONNECT_FAILED, this.reconnectOptions);
   }
 
   _onConnectTimeout() {
     this._retryConnection('next',true);
-    this.log('ERROR', eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
+    this.log(ERROR, eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
   _onReconnectAttempt() {
@@ -203,13 +203,12 @@ class EventsSDK {
       this.socket.io.reconnectionDelayMax(newDelay);
     }
     this.reconnectOptions.retryCount++;
-    this.log('INFO', eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
+    this.log(INFO, eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
   }
 
   _onDisconnect(reason) {
     this.connected = false;
-    //this.Logger.log(eventTypes.DISCONNECT, reason);
-    this.log('INFO', eventTypes.DISCONNECT, reason);
+    this.log(INFO, eventTypes.DISCONNECT, reason);
 
     if (this.doConnectOnDisconnect) {
       this._connect('next', true);
@@ -222,8 +221,7 @@ class EventsSDK {
       return
     }
     if (data && this.connected) {
-      //this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
-      this.log('INFO', eventTypes.KEEP_ALIVE_RESPONSE);
+      this.log(INFO, eventTypes.KEEP_ALIVE_RESPONSE);
       this._lastEventTimestamp = new Date().getTime()
     } else {
       this._initSocketConnection();
@@ -325,15 +323,15 @@ class EventsSDK {
 
   log(type, ...args) {
     if (this.Logger) {
-      if (type === 'INFO') {
+      if (type === INFO) {
         this.Logger.log(...args);
-      } else if (type === 'ERROR') {
+      } else if (type === ERROR) {
         this.Logger.error(...args);
       }
     } else {
-      if (type === 'INFO') {
+      if (type === INFO) {
         console.log(...args)
-      } else if (type === 'ERROR') {
+      } else if (type === ERROR) {
         console.error(...args)
       }
     }
@@ -344,7 +342,7 @@ class EventsSDK {
       let domain = this.server.Domain;
       let protocol = this.options.protocol;
       let url = `${protocol}://${domain}`;
-      this.log('INFO', 'Connecting to..', url);
+      this.log(INFO, 'Connecting to..', url);
       this.closeAllConnections();
       const options = {
         reconnection: false,
@@ -363,7 +361,7 @@ class EventsSDK {
       allConnections.push(this.socket);
       this.connectionEstablished = true;
     } catch (e) {
-      this.log('ERROR', e)
+      this.log(ERROR, e)
     }
   }
   _initSocketEvents() {
@@ -430,7 +428,7 @@ class EventsSDK {
 
   _findNextAvailableServer() {
     let currentServerPriority = this.server.Priority;
-    this.log('INFO', `Failover -> Trying to find another server`);
+    this.log(INFO, `Failover -> Trying to find another server`);
     if (currentServerPriority === this.servers.length - 1) {
       return this._findMaxPriorityServer()
     }
@@ -446,12 +444,12 @@ class EventsSDK {
       this.server = nextServer;
       return this.server
     }
-    this.log('INFO', `Failover -> Found new server. Connecting to it...`, this.server);
+    this.log(INFO, `Failover -> Found new server. Connecting to it...`, this.server);
     return null
   }
 
   _findMaxPriorityServer() {
-    this.log('INFO', `Fallback -> Trying to find previous server`);
+    this.log(INFO, `Fallback -> Trying to find previous server`);
     let maxPriorityServer = getServerWithHighestPriority(this.servers);
     if (!this.server) {
       this.server = maxPriorityServer;
@@ -459,7 +457,7 @@ class EventsSDK {
     }
     if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
       this.server = maxPriorityServer;
-      this.log('INFO', `Fallback -> Trying to find previous server`);
+      this.log(INFO, `Fallback -> Trying to find previous server`);
       return this.server
     }
     return null
@@ -589,7 +587,7 @@ class EventsSDK {
 
   emit(eventName, data = {}) {
     this._checkInit();
-    this.log('INFO', `EMIT -> ${eventName}`, data);
+    this.log(INFO, `EMIT -> ${eventName}`, data);
     this.socket.emit(eventName, data);
   }
 
@@ -718,7 +716,7 @@ class EventsSDK {
           loginSession = window.sessionStorage.getItem(key);
           if (loginSession) {
             loginSession = JSON.parse(loginSession)
-            this.log('INFO', 'got data from session', loginSession);
+            this.log(INFO, 'got data from session', loginSession);
             await this._onLoginResponse(loginSession)
             return resolve(loginSession);
           }
@@ -727,13 +725,13 @@ class EventsSDK {
             if (result) loginSession = result[key];
             if (loginSession) {
               loginSession = JSON.parse(loginSession)
-              this.log('INFO', 'got data from session', loginSession);
+              this.log(INFO, 'got data from session', loginSession);
               await this._onLoginResponse(loginSession)
               return resolve(loginSession);
             }
         }
       } catch (err) {
-        this.log('ERROR', "Error on getting session", err)
+        this.log(ERROR, "Error on getting session", err)
       }
 
       try {

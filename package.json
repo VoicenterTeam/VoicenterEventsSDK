@@ -10,7 +10,7 @@
     "start": "npm run docs"
   },
   "dependencies": {
-    "@voicenter-team/socketio-storage-logger": "^0.2.43",
+    "@voicenter-team/socketio-storage-logger": "^0.2.44",
     "core-js": "^2.6.5",
     "js-md5": "^0.7.3"
   },

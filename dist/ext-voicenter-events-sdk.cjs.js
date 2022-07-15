@@ -3374,6 +3374,7 @@ var getSocketIOFunction = function getSocketIOFunction(url) {
 
   return socketLibrary[version];
 };
+
 async function loadExternalScript(url, environment) {
   var useHelperVersion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -3392,6 +3393,9 @@ async function loadExternalScript(url, environment) {
       await loadExtensionScript(url);
   }
 }
+
+var INFO = 'INFO';
+var ERROR = 'ERROR';
 
 var defaultOptions = {
   url: "https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls",
@@ -3569,9 +3573,8 @@ var EventsSDK = /*#__PURE__*/function () {
     value: function _onConnect() {
       this._initReconnectDelays();
 
-      this.connected = true; //log(eventTypes.CONNECT, this.reconnectOptions);
-
-      this.log('INFO', eventTypes.CONNECT, this.reconnectOptions);
+      this.connected = true;
+      this.log(INFO, eventTypes.CONNECT, this.reconnectOptions);
     }
   }, {
     key: "_initReconnectDelays",
@@ -3588,26 +3591,26 @@ var EventsSDK = /*#__PURE__*/function () {
       this._retryConnection('next', true);
 
       this.connected = false;
-      this.log('ERROR', eventTypes.CONNECT_ERROR, data);
+      this.log(ERROR, eventTypes.CONNECT_ERROR, data);
     }
   }, {
     key: "_onError",
     value: function _onError(err) {
-      this.log('ERROR', eventTypes.ERROR, err);
+      this.log(ERROR, eventTypes.ERROR, err);
     }
   }, {
     key: "_onReconnectFailed",
     value: function _onReconnectFailed() {
       this._retryConnection('next', true);
 
-      this.log('ERROR', eventTypes.RECONNECT_FAILED, this.reconnectOptions);
+      this.log(ERROR, eventTypes.RECONNECT_FAILED, this.reconnectOptions);
     }
   }, {
     key: "_onConnectTimeout",
     value: function _onConnectTimeout() {
       this._retryConnection('next', true);
 
-      this.log('ERROR', eventTypes.CONNECT_TIMEOUT, this.reconnectOptions);
+      this.log(ERROR, eventTypes.CONNECT_TIMEOUT, this.reconnectOptions);
     }
   }, {
     key: "_onReconnectAttempt",
@@ -3628,14 +3631,13 @@ var EventsSDK = /*#__PURE__*/function () {
       }
 
       this.reconnectOptions.retryCount++;
-      this.log('INFO', eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions);
+      this.log(INFO, eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions);
     }
   }, {
     key: "_onDisconnect",
     value: function _onDisconnect(reason) {
-      this.connected = false; //this.Logger.log(eventTypes.DISCONNECT, reason);
-
-      this.log('INFO', eventTypes.DISCONNECT, reason);
+      this.connected = false;
+      this.log(INFO, eventTypes.DISCONNECT, reason);
 
       if (this.doConnectOnDisconnect) {
         this._connect('next', true);
@@ -3651,8 +3653,7 @@ var EventsSDK = /*#__PURE__*/function () {
       }
 
       if (data && this.connected) {
-        //this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
-        this.log('INFO', eventTypes.KEEP_ALIVE_RESPONSE);
+        this.log(INFO, eventTypes.KEEP_ALIVE_RESPONSE);
         this._lastEventTimestamp = new Date().getTime();
       } else {
         this._initSocketConnection();
@@ -3787,21 +3788,21 @@ var EventsSDK = /*#__PURE__*/function () {
       }
 
       if (this.Logger) {
-        if (type === 'INFO') {
+        if (type === INFO) {
           var _this$Logger;
 
           (_this$Logger = this.Logger).log.apply(_this$Logger, args);
-        } else if (type === 'ERROR') {
+        } else if (type === ERROR) {
           var _this$Logger2;
 
           (_this$Logger2 = this.Logger).error.apply(_this$Logger2, args);
         }
       } else {
-        if (type === 'INFO') {
+        if (type === INFO) {
           var _console;
 
           (_console = console).log.apply(_console, args);
-        } else if (type === 'ERROR') {
+        } else if (type === ERROR) {
           var _console2;
 
           (_console2 = console).error.apply(_console2, args);
@@ -3815,7 +3816,7 @@ var EventsSDK = /*#__PURE__*/function () {
         var domain = this.server.Domain;
         var protocol = this.options.protocol;
         var url = "".concat(protocol, "://").concat(domain);
-        this.log('INFO', 'Connecting to..', url);
+        this.log(INFO, 'Connecting to..', url);
         this.closeAllConnections();
         var options = {
           reconnection: false,
@@ -3835,7 +3836,7 @@ var EventsSDK = /*#__PURE__*/function () {
         allConnections.push(this.socket);
         this.connectionEstablished = true;
       } catch (e) {
-        this.log('ERROR', e);
+        this.log(ERROR, e);
       }
     }
   }, {
@@ -3926,7 +3927,7 @@ var EventsSDK = /*#__PURE__*/function () {
     key: "_findNextAvailableServer",
     value: function _findNextAvailableServer() {
       var currentServerPriority = this.server.Priority;
-      this.log('INFO', "Failover -> Trying to find another server");
+      this.log(INFO, "Failover -> Trying to find another server");
 
       if (currentServerPriority === this.servers.length - 1) {
         return this._findMaxPriorityServer();
@@ -3950,13 +3951,13 @@ var EventsSDK = /*#__PURE__*/function () {
         return this.server;
       }
 
-      this.log('INFO', "Failover -> Found new server. Connecting to it...", this.server);
+      this.log(INFO, "Failover -> Found new server. Connecting to it...", this.server);
       return null;
     }
   }, {
     key: "_findMaxPriorityServer",
     value: function _findMaxPriorityServer() {
-      this.log('INFO', "Fallback -> Trying to find previous server");
+      this.log(INFO, "Fallback -> Trying to find previous server");
       var maxPriorityServer = getServerWithHighestPriority(this.servers);
 
       if (!this.server) {
@@ -3966,7 +3967,7 @@ var EventsSDK = /*#__PURE__*/function () {
 
       if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
         this.server = maxPriorityServer;
-        this.log('INFO', "Fallback -> Trying to find previous server");
+        this.log(INFO, "Fallback -> Trying to find previous server");
         return this.server;
       }
 
@@ -4119,7 +4120,7 @@ var EventsSDK = /*#__PURE__*/function () {
 
       this._checkInit();
 
-      this.log('INFO', "EMIT -> ".concat(eventName), data);
+      this.log(INFO, "EMIT -> ".concat(eventName), data);
       this.socket.emit(eventName, data);
     }
     /**
@@ -4276,7 +4277,7 @@ var EventsSDK = /*#__PURE__*/function () {
             if (loginSession) {
               loginSession = JSON.parse(loginSession);
 
-              _this5.log('INFO', 'got data from session', loginSession);
+              _this5.log(INFO, 'got data from session', loginSession);
 
               await _this5._onLoginResponse(loginSession);
               return resolve(loginSession);
@@ -4288,14 +4289,14 @@ var EventsSDK = /*#__PURE__*/function () {
             if (loginSession) {
               loginSession = JSON.parse(loginSession);
 
-              _this5.log('INFO', 'got data from session', loginSession);
+              _this5.log(INFO, 'got data from session', loginSession);
 
               await _this5._onLoginResponse(loginSession);
               return resolve(loginSession);
             }
           }
         } catch (err) {
-          _this5.log('ERROR', "Error on getting session", err);
+          _this5.log(ERROR, "Error on getting session", err);
         }
 
         try {
@@ -4322,33 +4323,10 @@ var EventsSDK = /*#__PURE__*/function () {
 }();
 
 EventsSDK.prototype['initLogger'] = function () {
-  console.log('SDK2 initLogger this.options.loggerServer', this.options.loggerServer);
-  console.log('SDK2 initLogger this.options.loggerConnectOptions', this.options.loggerConnectOptions); //const loggerSocket = getSocketIOFunction()(this.options.loggerServer, this.options.loggerConnectOptions)
-
   var loggerSocket = s1_3_7.call(self)(this.options.loggerServer, this.options.loggerConnectOptions);
-  console.log('loggerSocket', loggerSocket);
-  loggerSocket.on("connect", function () {
-    console.log("ON SDK2 CONNECT loggerSocket");
-  });
-  loggerSocket.on("connect_error", function (error) {
-    console.log("ON SDK2 connect_error loggerSocket", error);
-  });
-  loggerSocket.on("error", function (error) {
-    console.log("ON SDK2 error loggerSocket", error);
-  });
-  /*async function getItem(storageId) {
-    const results = await chrome.storage.local.get(storageId)
-    return results[storageId]
-    // return store.get(storageId)
-  }
-   async function setItem(storageId, logs) {
-    await chrome.storage.local.set({[storageId]: logs})
-    //store.put(storageId, logs);
-  }*/
-
   this.Logger = new AsyncStorageLogger.AsyncStorageLogger(Object.assign({
     socketConnection: loggerSocket
-  }, this.options.loggerConfig)); //this.Logger = sdkLogger
+  }, this.options.loggerConfig));
 };
 
 module.exports = EventsSDK;
