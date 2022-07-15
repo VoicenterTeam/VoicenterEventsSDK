@@ -219,12 +219,14 @@
         },
         watch: {
             data: {
-                immediate: true,
+                deep: true,
                 handler: function () {
+                    this.chartOptions()
                     this.chartOptionsWithRefreshInterval()
                 },
             },
             allQueues() {
+                this.chartOptions()
                 this.chartOptionsWithRefreshInterval()
             },
             'data.WidgetLayout.showWaitingTimeTable': {
