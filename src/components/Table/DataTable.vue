@@ -55,7 +55,7 @@
                         :column-key="column.prop"
                         :fixed="column.fixed || false"
                         :key="column.prop"
-                        :label="makeTableHeaderTranslations(column, 'initials')"
+                        :label="makeTableHeaderTranslations(column)"
                         :min-width="column.minWidth || columnMinWidthData"
                         :sortable="canSortRows"
                         :type="column.type"
@@ -68,10 +68,10 @@
                                     <el-tooltip
                                         :open-delay="300"
                                         placement="top"
-                                        :content="makeTableHeaderTranslations(column, 'full')"
+                                        :content="makeTableHeaderTranslations(column)"
                                     >
                                         <span class="font-bold flex w-full justify-center uppercase leading-5">
-                                            {{ makeTableHeaderTranslations(column, 'initials') }}
+                                            {{ makeTableHeaderTranslations(column) }}
                                         </span>
                                     </el-tooltip>
                                 </slot>
@@ -363,11 +363,14 @@
                     }
                 })
             },
-            makeTableHeaderTranslations (column, prefix) {
+            makeTableHeaderTranslations (column) {
                 const columnProp = column.prop
-                const translate = `widget.table.header.title.${prefix}.${columnProp}`
+                const translateOfHeaderTitleInitials = `widget.table.header.title.initials.${columnProp}`
+                const translateOfHeaderTitleFull = `widget.table.header.title.full.${columnProp}`
 
-                return this.$te(translate) ? this.$t(translate) : column.label
+                return this.$te(translateOfHeaderTitleInitials) ?
+                    this.$t(translateOfHeaderTitleInitials) : this.$te(translateOfHeaderTitleFull) ?
+                    this.$t(translateOfHeaderTitleFull) : column.label
             }
         },
         watch: {

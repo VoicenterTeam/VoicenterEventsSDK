@@ -101,6 +101,7 @@
         </div>
         <delete-dialog
             :visible.sync="showConfirmDialog"
+            :title="$t('general.deleteConfirmation')"
             :description="$t('dashboard.deleteWidgetGroupConfirmation')"
             @on-cancel="showConfirmDialog = false"
             @on-confirm="removeWidgetGroup"

@@ -26,7 +26,7 @@ export default {
     },
     computed: {
         buttonLabel () {
-            return this.label || this.$t('common.confirm')
+            return this.$t('common.confirm') || this.label
         }
     }
 }

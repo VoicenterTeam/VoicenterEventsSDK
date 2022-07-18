@@ -24,7 +24,7 @@
                                     </div>
                                     <div class="w-full flex p-2 justify-between">
                                         <i
-                                            v-for="index in maxLayoutColumns"
+                                            v-for="index in 15"
                                             :key="index"
                                             :class="{'bg-primary-100': index <= layoutColumns}"
                                             @click="updateGrid(index)"
@@ -73,6 +73,7 @@
 </template>
 <script>
     import get from 'lodash/get'
+    import set from 'lodash/set'
     import times from 'lodash/times'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
@@ -135,8 +136,8 @@
                     },
                 ],
                 showGridMenu: false,
-                maxLayoutColumns: 0,
-                layoutColumns: 0,
+                // maxLayoutColumns: 15,
+                // layoutColumns: 0,
                 showDropDown: false
             }
         },
@@ -146,6 +147,17 @@
             })
         },
         computed: {
+            layoutColumns: {
+                get() {
+                    return get(this.data.WidgetLayout, 'layoutColumns') || this.maxCardsToDisplay
+                },
+                set(val) {
+                    set(this.data.WidgetLayout, 'layoutColumns', val)
+                }
+            },
+            maxCardsToDisplay() {
+                return parseInt(this.pageWidth / cardWidth - 1)
+            },
             getThresholdConfig() {
                 return this.$store.getters['layout/getThresholdConfig']('activeLayout')
             },
@@ -201,18 +213,19 @@
             },
             updateGrid(val) {
                 this.layoutColumns = val
+                this.$emit('on-update', this.data)
             },
         },
-        watch: {
-            pageWidth: {
-                immediate: true,
-                handler: function (val) {
-                    let numCardsWhichFit = parseInt(val / cardWidth - 1)
-                    this.layoutColumns = numCardsWhichFit
-                    this.maxLayoutColumns = numCardsWhichFit
-                },
-            },
-        },
+        // watch: {
+        //     pageWidth: {
+        //         immediate: true,
+        //         handler: function (val) {
+        //             let numCardsWhichFit = parseInt(val / cardWidth - 1)
+        //             this.layoutColumns = numCardsWhichFit
+        //             this.maxLayoutColumns = numCardsWhichFit
+        //         },
+        //     },
+        // },
     }
 </script>
 <style lang="scss" scoped>

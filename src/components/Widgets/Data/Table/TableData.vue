@@ -326,6 +326,7 @@
                 immediate: true,
                 deep: true,
                 handler () {
+                    this.getWidgetData()
                     this.getWidgetDataWithRefreshInterval()
                 },
             },

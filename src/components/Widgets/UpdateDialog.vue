@@ -217,6 +217,14 @@
                         :model="model.WidgetConfig[index]"
                         v-for="(filter, index) in model.WidgetConfig"
                         v-if="isAutoComplete(filter)"/>
+                        <el-checkbox
+                            v-model="model.WidgetLayout.hideLoggedOff"
+                            v-if="Number(model.TemplateID) === 75"
+                        >
+                            <span class="text-gray-950">
+                                {{ $t('widget.hideLoggedOff') }}
+                            </span>
+                        </el-checkbox>
                 </el-collapse-item>
             </el-collapse>
             <el-collapse class="pt-6" v-if="otherFilters.length" v-model="activeCollapse">
@@ -352,7 +360,7 @@
                     80: '80px',
                     96: '96px',
                     112: '112px',
-                },
+                }
             }
         },
         computed: {
