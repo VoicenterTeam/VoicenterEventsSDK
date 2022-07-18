@@ -6,6 +6,7 @@ import { createNewWidgets } from '@/services/widgetService'
 import { dashboardOperation, widgetGroupModel } from '@/models/instances'
 import { DashboardApi } from '@/api/dashboardApi'
 import { WidgetGroupsApi } from '@/api/widgetGroupApi'
+import store from '@/store/store'
 
 export default {
     data() {
@@ -80,6 +81,8 @@ export default {
             this.editMode = false
 
             this.$nextTick(async () => {
+                const currentAccountId = store.state.entities.selectedAccountID
+                group.AccountID = currentAccountId
                 const widgetGroup = await WidgetGroupsApi.store(group)
                 const { DashboardID } = await this.$store.getters['dashboards/getActiveDashboard']
                 await DashboardApi.addWidgetGroup(DashboardID, widgetGroup.WidgetGroupID)
