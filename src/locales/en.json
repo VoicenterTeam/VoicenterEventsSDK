@@ -960,11 +960,7 @@
 	"device.settings.mute.microphone": "Mute my microphone when joining a meeting",
 	"device.settings.recording.start": "Start recording",
 	"device.settings.test.microphone": "Test Microphone",
-<<<<<<< HEAD
-	"general.l.l.l.l.l.l.l.l.l.l.№": "#",
-=======
 	"general.l.l.l.l.l.l.l.l.l.l.№": "№",
->>>>>>> RTD-270
 	"layout.config.activeCallWarning": "Active Call Warning",
 	"layout.enableLayoutConfirmation": "Are you sure you want enable layout?",
 	"layout.layoutAppliedWithSuccess": "Layout applied with success",
@@ -1120,11 +1116,7 @@
 	"layout.logoSizeShouldBeLessThan100kb": "Logo size should be less than 100kb",
 	"layout.thisLayoutConfigIsAlreadyUsed": "This layout config is already used",
 	"queue.agents.on.administrative.break": " Current count of agents on administrative break",
-<<<<<<< HEAD
-	"report.t.t.t.t.t.t.t.t.t.t.report№": "Report Number",
-=======
 	"report.t.t.t.t.t.t.t.t.t.t.report№": "Report №",
->>>>>>> RTD-270
 	"settings.applyFontInsideWidgets.info": "Apply font size inside tables (headers, cells..), charts (labels, legends...)...",
 	"widget.avg.incoming.ringing.duration": "Avg Incoming Ringing Duration",
 	"widget.config.ColorWidgetGroupTitles": "Widget Group Titles",
