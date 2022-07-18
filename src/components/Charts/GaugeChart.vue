@@ -190,7 +190,11 @@
                     },
                 }]
 
-                return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig } }
+                const title = {
+                    text: null
+                }
+
+                return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig }, title: title }
             },
             triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
