@@ -218,6 +218,20 @@ const getters = {
             }
         }
     },
+    widgetTableContentFontSize: (state) => (layoutType) => {
+        try {
+            const result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTableContentFontSize')
+            const fontSize = Number(result[0]['Value'])
+            return {
+                fontSize: `${fontSize}px`,
+            }
+        } catch (e) {
+            console.warn(e)
+            return {
+                fontSize: '16px',
+            }
+        }
+    },
     showWidgetTitles: (state) => (layoutType) => {
         try {
             let result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'ShowWidgetTitles')

@@ -293,6 +293,7 @@
                 if (this.isDefaultLayout) {
                     delete this.layoutSettings.LayoutID
                 }
+
                 return {
                     ...this.layoutSettings,
                     LayoutStatusID: 1,

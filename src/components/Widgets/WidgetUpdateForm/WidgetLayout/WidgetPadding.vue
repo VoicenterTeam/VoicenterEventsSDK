@@ -1,20 +1,23 @@
 <template>
     <div>
-        <label>{{ $t('widget.widgetPadding') }}</label>
-        <el-slider
-            class="px-1"
-            :step="step"
+        <div>
+            <label>{{ $t('widget.widgetPadding') }}</label>
+        </div>
+        <el-input-number
             v-model="model.WidgetLayout.padding"
-            show-input>
-        </el-slider>
+            :step="step" 
+            type="number"
+            size="small"
+            :min="0"
+        />
     </div>
 </template>
 <script>
-    import { Slider } from 'element-ui'
+    import { InputNumber } from 'element-ui'
     
     export default {
         components: {
-            [Slider.name]: Slider,
+            [InputNumber.name]: InputNumber,
         },
         props: {
             model: {
@@ -23,7 +26,7 @@
             },
             step: {
                 type: Number,
-                default: 2,
+                default: 1,
             },
         },
     }
