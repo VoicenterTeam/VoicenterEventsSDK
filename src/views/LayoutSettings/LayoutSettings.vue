@@ -194,8 +194,8 @@
         },
         data() {
             let validationThemeName = (rule, value, callback) => {
-                const validationThemeName = this.layoutNames.includes(value)
-                if (validationThemeName) {
+                const validationThemeName = this.layoutNames.indexOf(value) === -1
+                if (!validationThemeName) {
                     callback(new Error(''))
                 } else {
                     callback()
@@ -404,20 +404,25 @@
                     this.triggerLayoutChanges()
                 },
             },
-            showConfirmDialog () {
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.$refs.layoutForm.resetFields()
-                        this.layoutForm.typeOfTheme = 'newTheme'
-                        this.disabledForm = true
-                    }, 150)
-                })
+            async showConfirmDialog () {
+                await this.$nextTick()
+                this.$refs.layoutForm.resetFields()
+
+                if (this.layoutSettings.LayoutName === this.selectedLayout.LayoutName) {
+                    this.layoutForm.layoutName = `${this.layoutSettings.LayoutName}${this.$t('suffix_copy')}`
+                } else {
+                    this.layoutForm.layoutName = this.layoutSettings.LayoutName
+                }
+
+                this.layoutForm.typeOfTheme = 'newTheme'
+                this.validateForm()
             },
             layoutForm: {
-                handler (val) {
+                async handler (val) {
                     if (!this.showConfirmDialog) {
                         return
                     }
+                    await this.$nextTick()
 
                     if (val.typeOfTheme !== 'existingTheme') {
                         this.validateForm()
