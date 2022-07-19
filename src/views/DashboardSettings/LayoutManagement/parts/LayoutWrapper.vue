@@ -15,9 +15,11 @@
                     :is="group.ParameterTypeName"
                     v-model="group.Value"
                 />
-                <logo v-else
-                      v-bind="group"
-                      v-model="group.ValueText"/>
+                <logo
+                    v-else
+                    v-bind="group"
+                    v-model="group.ValueText"
+                />
             </div>
         </CollapseWrapper>
     </div>
@@ -26,8 +28,9 @@
     import { mapOrder } from '@/helpers/util'
     import ColorParameterType from '../components/ColorParameterType'
     import ImageParameterType from '../components/ImageParameterType'
-    import IntegerParameterType from '../components/IntegerParameterType'
+    import NumberParameterType from '../components/NumberParameterType'
     import BooleanParameterType from '../components/BooleanParameterType'
+    import IntervalParameterType from '../components/IntervalParameterType'
     import { DEFAULT_GROUP_KEYS } from '../layout-management'
 
     export default {
@@ -37,7 +40,8 @@
             [ColorParameterType.name]: ColorParameterType,
             [ImageParameterType.name]: ImageParameterType,
             [BooleanParameterType.name]: BooleanParameterType,
-            [IntegerParameterType.name]: IntegerParameterType,
+            [NumberParameterType.name]: NumberParameterType,
+            [IntervalParameterType.name]: IntervalParameterType
         },
         props: {
             value: {

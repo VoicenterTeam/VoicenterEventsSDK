@@ -29,7 +29,8 @@
             let initialTimeInSeconds = getInitialExtensionTime(this.extension, this.settings)
             return {
                 timer: new Timer({
-                    initialTimeInSeconds
+                    initialTimeInSeconds,
+                    realtime: true
                 }),
                 statusMappings: statusTypes
             }

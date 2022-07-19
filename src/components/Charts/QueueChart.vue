@@ -50,6 +50,7 @@
                     },
                     xAxis: {
                         type: 'datetime',
+                        tickPixelInterval: 150
                     },
                     ...chartConfig.queueChartYAxisConfig,
                     plotOptions: {
@@ -276,14 +277,9 @@
                 })
             },
             getWidgetDataWithRefreshInterval () {
-                if (this.fetchDataInterval) {
-                    clearInterval(this.fetchDataInterval)
-                }
-                if (this.data.DefaultRefreshInterval) {
-                    this.fetchDataInterval = setInterval(async() => {
-                        await this.updateChartData()
-                    }, this.data.DefaultRefreshInterval)
-                }
+                this.fetchDataInterval = setInterval(async() => {
+                    await this.updateChartData()
+                }, this.timeout)
             }
         },
         beforeDestroy() {
@@ -296,11 +292,13 @@
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
             this.$nextTick(this.updateChartData)
+            this.getWidgetDataWithRefreshInterval()
             this.triggerResizeEvent()
     },
         watch: {
             data() {
                 this.reDrawChart()
+                this.updateChartData()
                 this.getWidgetDataWithRefreshInterval()
             }
         }
