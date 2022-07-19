@@ -58,9 +58,17 @@ const getters = {
             process.env.VUE_APP_DEFAULT_DOMAIN_NAME:
             window.location.hostname
 
-        return getters.getLanguageList.find(language => {
+        const languageByDomain = getters.getLanguageList.find(language => {
             return language.Domain === currentDomain
         })
+
+        if (languageByDomain !== undefined) {
+            return languageByDomain
+        } else {
+            return getters.getLanguageList.find(language => language.LanguageCode.match(/en|us|US|EN/gm))
+                || getters.getLanguageList[0]
+                || {}
+        }
     },
     getLanguageList: state => {
         return state.languages.map(language => {
