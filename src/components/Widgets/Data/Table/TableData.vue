@@ -164,7 +164,7 @@
                 return this.$store.getters['layout/getTypeOfLayout']
             },
             dynamicFontSize () {
-                return get(this.$store.getters['layout/widgetTitleStyles'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
+                return get(this.$store.getters['layout/widgetTableContentFontSize'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
             },
             cssVars () {
                 const replacePxInString = (string) => {
@@ -374,5 +374,6 @@
 ::v-deep .el-table td > .cell {
     @apply text-black font-medium text-sm;
     font-size: var(--dynamic-font-size);
+    line-height: 1.1;
 }
 </style>

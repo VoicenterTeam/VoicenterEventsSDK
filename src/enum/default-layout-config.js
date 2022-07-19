@@ -55,6 +55,16 @@ export const defaultLayout = (LayoutAccountID) => ({
             'LayoutParameterValueID': 606,
         },
         {
+            'JPath': '$WidgetTableContentFontSize',
+            'Value': '16',
+            'IsText': 0,
+            'ValueText': '',
+            'LayoutParameterID': 41,
+            'ParameterTypeName': 'Number',
+            'LayoutParameterName': 'WidgetTableContentFontSize',
+            'LayoutParameterValueID': 1115015,
+        },
+        {
             'JPath': '$MinRefreshInterval',
             'Value': '10',
             'IsText': 0,

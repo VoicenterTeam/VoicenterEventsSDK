@@ -1,24 +1,29 @@
 <template>
-<div class="pt-3 pb-5 border-b slider">
-    <label>{{ makePrefixForTranslation(LayoutParameterName) }}</label>
-    <el-slider
-        v-bind="sliderConfig"
+<div class="py-2 border-b slider">
+    <div class="mb-2">
+        <label>{{ makePrefixForTranslation(LayoutParameterName) }}</label>
+    </div>
+    <el-input-number
         v-on="listeners"
+        :max="numberConfig.max"
+        :min="numberConfig.min"
+        :step="numberConfig.step"
+        size="mini"
+        placeholder="0"
+        class="input-number"
         :value="valueToInt"
-        :show-input="showInput"
-        :format-tooltip="tooltipValue"
     />
 </div>
 </template>
 <script>
-import { Slider } from 'element-ui'
-import { sliderOptionConfigs } from '../layout-management'
+import { InputNumber } from 'element-ui'
+import { optionConfigs } from '../layout-management'
 
 export default {
     inheritAttrs: false,
-    name: 'Integer',
+    name: 'Number',
     components: {
-        [Slider.name]: Slider,
+        [InputNumber.name]: InputNumber
     },
     props: {
         LayoutParameterName: {
@@ -32,7 +37,7 @@ export default {
     },
     data() {
         return {
-            sliderOptionConfigs,
+            optionConfigs,
         }
     },
     computed: {
@@ -45,18 +50,14 @@ export default {
         valueToInt() {
             return Number(this.$attrs.Value)
         },
-        sliderConfig() {
-            return this.sliderOptionConfigs[this.LayoutParameterName]
+        numberConfig() {
+            return this.optionConfigs[this.LayoutParameterName]
         }
     },
     methods: {
         onInput(value) {
             const valToEmit = value.toString()
             this.$emit('input', valToEmit);
-        },
-        tooltipValue(value) {
-            const marks = this.sliderConfig.marks || []
-            return marks[value]
         },
         makePrefixForTranslation (string) {
             const makeFirstLetterInLowerCase = (string) => string.charAt(0).toLowerCase() + string.slice(1)
@@ -65,17 +66,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.slider::v-deep {
-    .el-slider__marks-text {
-        font-size: 12px;
-        margin-top: 10px;
-    }
-    .el-slider__button {
-        width: 10px;
-        height: 10px;
-        border-width: 1px;
-    }
-}
-</style>
