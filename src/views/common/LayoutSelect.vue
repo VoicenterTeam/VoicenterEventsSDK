@@ -125,7 +125,6 @@
                 immediate: true,
                 deep: true,
                 handler(layout) {
-                    console.log('here')
                     this.selectedLayout = layout.LayoutID
                 }
             },
