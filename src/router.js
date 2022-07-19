@@ -3,27 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const routes = [
-    {
-        path: '/',
-        name: 'home',
-        component: () => import(/* webpackChunkName: "home" */ './views/DashboardPage.vue'),
-    },
-    {
-        path: '/dashboard-settings',
-        name: 'dashboard-settings',
-        component: () => import(/* webpackChunkName: "dashboard-settings" */ './views/DashboardSettings/DashboardSettings.vue'),
-    },
-    {
-        path: '/layout-settings',
-        name: 'layout-settings',
-        component: () => import(/* webpackChunkName: "layout-settings" */ './views/LayoutSettings/LayoutSettings.vue'),
-    },
-    {
-        path: '/dashboard-creation',
-        name: 'dashboard-creation',
-        component: () => import(/* webpackChunkName: "dashboard-creation" */ './views/DashboardCreation/DashboardCreation.vue'),
-    },
+const reportsRoutes = [
     {
         path: '/reports',
         name: 'reports',
@@ -47,6 +27,29 @@ const routes = [
             },
         ],
     },
+]
+
+const routes = [
+    {
+        path: '/',
+        name: 'home',
+        component: () => import(/* webpackChunkName: "home" */ './views/DashboardPage.vue'),
+    },
+    {
+        path: '/dashboard-settings',
+        name: 'dashboard-settings',
+        component: () => import(/* webpackChunkName: "dashboard-settings" */ './views/DashboardSettings/DashboardSettings.vue'),
+    },
+    {
+        path: '/layout-settings',
+        name: 'layout-settings',
+        component: () => import(/* webpackChunkName: "layout-settings" */ './views/LayoutSettings/LayoutSettings.vue'),
+    },
+    {
+        path: '/dashboard-creation',
+        name: 'dashboard-creation',
+        component: () => import(/* webpackChunkName: "dashboard-creation" */ './views/DashboardCreation/DashboardCreation.vue'),
+    },
     /*{
         path: '/generate-pdf',
         name: 'generate-pdf',
@@ -62,6 +65,10 @@ const routes = [
         component: () => import(/* webpackChunkName: "modules" */ '@/modules/404.vue'),
     },
 ]
+
+if (!Number.isNaN(parseInt(process.env.VUE_APP_SHOW_REPORTS)) && parseInt(process.env.VUE_APP_SHOW_REPORTS)) {
+    routes.push(...reportsRoutes)
+}
 
 const router = new Router({
     mode: 'history',
