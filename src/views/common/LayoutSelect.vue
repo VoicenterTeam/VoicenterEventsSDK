@@ -33,9 +33,9 @@
                                 {{ layout.LayoutName }}
                             </p>
                             <div class="flex w-full flex-row pb-2 items-center">
-                                <div v-for="group in getColorParameters(layout)"
+                                <div v-for="(group, index) in getColorParameters(layout)"
                                      class="w-1/3 h-2"
-                                     :key="group.JPath">
+                                     :key="`${layout.LayoutID}_${index}_${group.JPath}`">
                                     <div class="w-full h-2 rounded border"
                                          :style="getIndicatorStyles(group)"/>
                                 </div>
@@ -52,7 +52,7 @@
     import { DEFAULT_LAYOUT_ID } from '@/enum/generic'
     import { AlertTriangleIcon } from 'vue-feather-icons'
     import { DEFAULT_GROUP_KEYS } from '@/views/DashboardSettings/LayoutManagement/layout-management'
-    
+
     export default {
         components: {
             AlertTriangleIcon,
@@ -121,8 +121,12 @@
             },
         },
         watch: {
-            activeLayout(layout) {
-                this.selectedLayout = layout.LayoutID
+            activeLayout: {
+                immediate: true,
+                deep: true,
+                handler(layout) {
+                    this.selectedLayout = layout.LayoutID
+                }
             },
         },
     }
@@ -133,14 +137,14 @@
         width: 0;
         height: 0;
     }
-    
+
     .el-select-dropdown__item {
         @apply h-14 my-2;
         &.hover {
             @apply bg-white;
         }
     }
-    
+
     overflow: hidden;
 }
 </style>
