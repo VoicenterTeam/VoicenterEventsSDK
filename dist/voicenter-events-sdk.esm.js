@@ -3370,7 +3370,6 @@ var getSocketIOFunction = function getSocketIOFunction(url) {
 
   return socketLibrary[version];
 };
-
 async function loadExternalScript(url, environment) {
   var useHelperVersion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -3425,6 +3424,7 @@ var defaultOptions = {
   serverType: null,
   // can be 1 or 2. 2 is used for chrome extension,
   useLogger: false,
+  loggerSocketConnection: null,
   loggerServer: 'http://127.0.0.1:3000/',
   loggerConfig: {
     logToConsole: true,
@@ -3456,10 +3456,6 @@ var EventsSDK = /*#__PURE__*/function () {
 
     if (!this.options.loginType) {
       throw new Error('A login type should be provided');
-    }
-
-    if (this.options.useLogger) {
-      this.initLogger();
     }
 
     this.servers = [];
@@ -3660,6 +3656,7 @@ var EventsSDK = /*#__PURE__*/function () {
     value: async function _onLoginResponse(data) {
       if (data.Client) {
         await loadExternalScript(data.Client, this.options.environment, true);
+        this.establishLoggerConnection(data.Client);
       }
 
       if (data.URL) {
@@ -4039,6 +4036,24 @@ var EventsSDK = /*#__PURE__*/function () {
       return true;
     }
     /**
+     * Establishes logger socket connection
+     * @param url
+     */
+
+  }, {
+    key: "establishLoggerConnection",
+    value: function establishLoggerConnection(url) {
+      if (!this.options.useLogger) {
+        return;
+      }
+
+      if (this.options.environment === environments.CHROME_EXTENSION) {
+        this.initLogger(url);
+      } else {
+        this.initLogger();
+      }
+    }
+    /**
      * Sets the monitor code token
      * @param token
      */
@@ -4319,10 +4334,16 @@ var EventsSDK = /*#__PURE__*/function () {
 }();
 
 EventsSDK.prototype['initLogger'] = function () {
-  this.Logger = new StorageLogger(Object.assign({
-    socketUrl: this.options.loggerServer,
-    connectOptions: this.options.loggerConnectOptions
-  }, this.options.loggerConfig));
+  var loggerInitOptions = Object.assign({}, this.options.loggerConfig);
+
+  if (this.options.loggerSocketConnection) {
+    loggerInitOptions["socketConnection"] = this.options.loggerSocketConnection;
+  } else {
+    loggerInitOptions["socketUrl"] = this.options.loggerServer;
+    loggerInitOptions["connectOptions"] = this.options.loggerConnectOptions;
+  }
+
+  this.Logger = new StorageLogger(loggerInitOptions);
 };
 
 export default EventsSDK;

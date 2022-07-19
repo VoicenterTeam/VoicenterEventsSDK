@@ -26,7 +26,7 @@ async function loadExtensionScript(url) {
   }
 }
 
-const getSocketIOFunction = (url) => {
+export const getSocketIOFunction = (url) => {
 
   const socketLibrary = {
     s1_3_7: s1_3_7.call(self)

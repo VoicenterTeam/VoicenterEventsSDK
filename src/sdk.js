@@ -42,6 +42,7 @@ const defaultOptions = {
   serverFetchStrategy: 'remote', // get servers from external url options: remote | static
   serverType: null, // can be 1 or 2. 2 is used for chrome extension,
   useLogger: false,
+  loggerSocketConnection: null,
   loggerServer: 'http://127.0.0.1:3000/',
   loggerConfig: {
     logToConsole: true,
@@ -74,10 +75,6 @@ class EventsSDK {
     }
     if (!this.options.loginType) {
       throw new Error('A login type should be provided');
-    }
-
-    if (this.options.useLogger) {
-      this.initLogger()
     }
 
     this.servers = [];
@@ -231,6 +228,7 @@ class EventsSDK {
   async _onLoginResponse(data) {
     if (data.Client) {
       await loadExternalScript(data.Client, this.options.environment, true)
+      this.establishLoggerConnection(data.Client)
     }
     if (data.URL) {
       this.server = {
@@ -523,6 +521,22 @@ class EventsSDK {
     await this.login(this.options.loginType)
     await this._getServers();
     return true;
+  }
+
+  /**
+   * Establishes logger socket connection
+   * @param url
+   */
+  establishLoggerConnection(url) {
+    if (!this.options.useLogger) {
+      return
+    }
+
+    if (this.options.environment === environments.CHROME_EXTENSION) {
+      this.initLogger(url)
+    } else {
+      this.initLogger()
+    }
   }
 
   /**
