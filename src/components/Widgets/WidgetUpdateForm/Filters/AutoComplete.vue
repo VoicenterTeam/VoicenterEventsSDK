@@ -115,6 +115,8 @@
             onAutocompleteChange(value) {
                 if (this.model.WidgetParameterJson === 1) {
                     this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
+                    const anotherNonActiveType = this.SELECTIONS.find(el => this.entityType !== el.value).value
+                    this.model.WidgetParameterValueJson[anotherNonActiveType] = []
                 } else {
                     const currentValue = JSON.parse(this.model.WidgetParameterValue)
                     currentValue[this.entityType] = cloneDeep(value)
