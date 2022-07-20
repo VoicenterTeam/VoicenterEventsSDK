@@ -22,6 +22,7 @@ Vue.use(VueRouter)
 Vue.use(dashboardPlugin)
 
 Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$showReports = !Number.isNaN(parseInt(process.env.VUE_APP_SHOW_REPORTS)) && parseInt(process.env.VUE_APP_SHOW_REPORTS)
 
 new Vue({
     router,
