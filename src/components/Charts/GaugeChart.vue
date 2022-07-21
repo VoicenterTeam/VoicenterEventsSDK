@@ -54,7 +54,7 @@
             Highcharts,
             highcharts: Chart,
             [Tooltip.name]: Tooltip,
-            DataTable: () => import('@/components/Table/DataTable'),
+            DataTable: () => import('@/components/Table/DataTableWithoutResizeColumn'),
             WaitingTime: () => import('@/components/Widgets/Data/Queue/WaitingTime')
         },
         props: {

@@ -107,6 +107,7 @@
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
     import { defaultDialerTableColumns } from '@/enum/dialerRealTimeTableConfigs'
     import { defaultFontSize } from '@/enum/defaultDashboardSettings'
+    import isEqual from 'lodash/isEqual'
 
     export default {
         mixins: [dataTableMixin],
@@ -315,9 +316,6 @@
                 }
             }
         },
-        mounted() {
-            this.getWidgetData()
-        },
         watch: {
             filter() {
                 this.currentPage = 1
@@ -325,9 +323,11 @@
             data: {
                 immediate: true,
                 deep: true,
-                handler () {
-                    this.getWidgetData()
-                    this.getWidgetDataWithRefreshInterval()
+                handler (oldVal, newVal) {
+                    if (!newVal || !isEqual(oldVal, newVal)) {
+                        this.getWidgetData()
+                        this.getWidgetDataWithRefreshInterval()
+                    }
                 },
             },
             pageSize: {

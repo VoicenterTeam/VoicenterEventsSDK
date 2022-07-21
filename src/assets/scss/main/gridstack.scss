@@ -22,18 +22,18 @@ $widgetColumns: 64;
     direction: rtl
 }
 
-.grid-stack .grid-stack-placeholder > .placeholder-content {
-    border: 1px dashed #d3d3d3;
-    margin: 0;
-    position: absolute;
-    top: 0;
-    left: 10px;
-    right: 10px;
-    bottom: 0;
-    width: auto;
-    z-index: 0 !important;
-    text-align: center
-}
+// .grid-stack .grid-stack-placeholder > .placeholder-content {
+//     border: 1px dashed #d3d3d3;
+//     margin: 0;
+//     position: absolute;
+//     top: 0;
+//     left: 10px;
+//     right: 10px;
+//     bottom: 0;
+//     width: auto;
+//     z-index: 0 !important;
+//     text-align: center
+// }
 
 .grid-stack > .grid-stack-item {
     min-width: 1.5625%;
