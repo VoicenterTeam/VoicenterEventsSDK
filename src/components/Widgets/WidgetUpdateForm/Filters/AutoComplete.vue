@@ -124,9 +124,21 @@
                     this.model.WidgetParameterValue = JSON.stringify(value)
                 }
             },
+            setActiveEntityTypeByData () {
+                const checkIfIsEntityType = (entity) => {
+                    const selections = this.SELECTIONS.map(el => el.value)
+                    return selections.includes(entity)
+                }
+                Object.keys(this.model.WidgetParameterValueJson).forEach(key => {
+                    if (checkIfIsEntityType(key) && this.model.WidgetParameterValueJson[key].length) {
+                        this.entityType = key
+                    }
+                })
+            }
         },
         mounted() {
             this.getData()
+            this.setActiveEntityTypeByData()
         },
     }
 </script>
