@@ -17,6 +17,9 @@
                 />
             </div>
             <div class="flex items-center flex-row">
+                <portal-target
+                    :name="`widget-header__${widget.WidgetID}-table-action`"
+                />
                 <span v-if="showDeleteButton && showInfoButton" class="flex items-center px-2 py-1-5 hover:bg-primary-100 rounded" @click="showPreviewInfoDialog = true">
                     <i class="vc-icon-info icon-lg text-primary cursor-help"/>
                 </span>
