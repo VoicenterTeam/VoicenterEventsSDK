@@ -371,12 +371,6 @@
                 
                 this.updateLayout()
             },
-            toggleManageColumns() {
-                this.showManageColumns = false
-                this.$nextTick(() => {
-                    this.showManageColumns = true
-                })
-            },
             updateLayout(afterExport = false) {
                 let objToEmit = {}
                 
@@ -480,7 +474,6 @@
             widget: {
                 deep: true,
                 handler(val) {
-                    this.toggleManageColumns()
                     if (val) {
                         this.updateDataTableHeight()
                     }
