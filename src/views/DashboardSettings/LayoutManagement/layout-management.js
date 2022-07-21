@@ -122,12 +122,14 @@ export const DEFAULT_GROUP_KEYS = {
         'ColorWidgetGroupBackground',
         'ColorWidgetGroupFrames',
         'ColorWidgetGroupTitles',
-        
+
         'ActiveCallWarningColor',
         'ActiveCallLimitColor',
         'HoldTimeWarningColor',
         'HoldTimeLimitColor',
-        
+        'LoginStatusWarningColor',
+        'LoginStatusLimitColor',
+
         'DashboardLogo',
     ],
     'Fonts': [
@@ -143,7 +145,7 @@ export const DEFAULT_GROUP_KEYS = {
         'ReportInterval',
         'ReportSwitching',
         'ReportRefresh',
-        
+
         'ActiveCallWarning',
         'ActiveCallLimit',
         'HoldTimeWarning',
