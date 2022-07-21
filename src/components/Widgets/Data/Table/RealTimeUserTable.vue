@@ -9,6 +9,7 @@
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
+            :row-class-name="tableRowClassName"
             can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
@@ -222,6 +223,20 @@
             },
         },
         methods: {
+            tableRowClassName({row, rowIndex}) {
+                const {status_duration, status} = row
+
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](status)
+                // const { loginStatusLimit, loginStatusWarning } = this.$store.getters['layout/colors']('activeLayout')
+
+                if (statusAlerts && 'warn' in statusAlerts && (status_duration >= statusAlerts.warn)) {
+                    return 'real-time-table-row-login-status-warning'
+                }
+
+                if (statusAlerts && 'alert' in statusAlerts && (status_duration >= statusAlerts.alert)) {
+                    return 'real-time-table-row-login-status-limit'
+                }
+            },
             getCallerInfo(userExtension) {
                 let callerInfo = ''
                 userExtension.calls.forEach((call) => {
@@ -316,6 +331,23 @@
 td.text-white > .cell {
     color: white;
 }
+
+.el-table {
+    .real-time-table-row-login-status-warning {
+        td {
+            border-top: 2px solid var(--loginStatusLimit-color) !important;
+            border-bottom: 2px solid var(--loginStatusLimit-color) !important;
+        }
+    }
+
+    .real-time-table-row-login-status-limit {
+        td {
+            border-top: 2px solid var(--loginStatusWarning-color) !important;
+            border-bottom: 2px solid var(--loginStatusWarning-color) !important;
+        }
+    }
+}
+
 </style>
 
 <style lang="scss" scoped>
