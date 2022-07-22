@@ -275,7 +275,7 @@
                     .filter(c => this.visibleColumns.includes(c.prop))
                     .map(column => {
                         if (columnsProperty && columnsProperty.length) {
-                            column.width = findTheSameColumn(column).width
+                            column.width = findTheSameColumn(column) && 'width' in findTheSameColumn(column) ? findTheSameColumn(column).width : column.minWidth
                         }
                         return column
                     })
@@ -287,7 +287,7 @@
                 this.columnsToDisplay
                     .map(column => {
                         if (columnsProperty && columnsProperty.length) {
-                            column.width = findTheSameColumn(column).width
+                            column.width = findTheSameColumn(column) && 'width' in findTheSameColumn(column) ? findTheSameColumn(column).width : column.minWidth
                         }
                         return column
                     })
