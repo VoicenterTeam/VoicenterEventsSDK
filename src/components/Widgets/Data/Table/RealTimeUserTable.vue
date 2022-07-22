@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="getTableWrapperStyling">
         <data-table
             :widget="data"
             :border="border"
@@ -221,21 +221,42 @@
             getSettings() {
                 return this.data.WidgetLayout.settings || realTimeSettings
             },
+            getTableWrapperStyling() {
+                const addAlpha = (color, opacity) => {
+                    const _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255)
+
+                    return color + _opacity.toString(16).toUpperCase()
+                }
+
+                const { loginStatusLimit, loginStatusWarning } = this.$store.getters['layout/colors']('activeLayout')
+
+                return {
+                    '--login-status-warn-color': addAlpha(loginStatusWarning, 1),
+                    '--login-status-limit-color': addAlpha(loginStatusLimit, 1)
+                }
+            }
         },
         methods: {
-            tableRowClassName({row, rowIndex}) {
-                const {status_duration, status} = row
+            tableRowClassName({ row }) {
+                const { status_duration, user_id } = row
 
-                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](status)
-                // const { loginStatusLimit, loginStatusWarning } = this.$store.getters['layout/colors']('activeLayout')
+                let statusClassName = ''
+
+                const { representativeStatus } = this.userExtension(user_id) || {}
+
+                if (!representativeStatus) return
+
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](representativeStatus)
 
                 if (statusAlerts && 'warn' in statusAlerts && (status_duration >= statusAlerts.warn)) {
-                    return 'real-time-table-row-login-status-warning'
+                    statusClassName = 'real-time-table-row-login-status-warning'
                 }
 
                 if (statusAlerts && 'alert' in statusAlerts && (status_duration >= statusAlerts.alert)) {
-                    return 'real-time-table-row-login-status-limit'
+                    statusClassName = 'real-time-table-row-login-status-limit'
                 }
+
+                return statusClassName
             },
             getCallerInfo(userExtension) {
                 let callerInfo = ''
@@ -335,15 +356,13 @@ td.text-white > .cell {
 .el-table {
     .real-time-table-row-login-status-warning {
         td {
-            border-top: 2px solid var(--loginStatusLimit-color) !important;
-            border-bottom: 2px solid var(--loginStatusLimit-color) !important;
+            box-shadow: inset 0 -1px 0 var(--login-status-warn-color), inset 0 1px 0 var(--login-status-warn-color);
         }
     }
 
     .real-time-table-row-login-status-limit {
         td {
-            border-top: 2px solid var(--loginStatusWarning-color) !important;
-            border-bottom: 2px solid var(--loginStatusWarning-color) !important;
+            box-shadow: inset 0 -1px 0 var(--login-status-limit-color), inset 0 1px 0 var(--login-status-limit-color);
         }
     }
 }
