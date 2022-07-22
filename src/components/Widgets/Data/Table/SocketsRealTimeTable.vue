@@ -95,13 +95,17 @@
                         if (row.data.DialerStrategy && Object.keys(row.data.DialerStrategy).length) {
                             const dialerStrategy = row.data.DialerStrategy
                             for (const key in dialerStrategy) {
-                                additionalDialerStrategyColumns[key] = dialerStrategy[key] || '--'
+                                if (this.visibleColumns.includes(key)) {
+                                    additionalDialerStrategyColumns[key] = dialerStrategy[key] || '--'
+                                }
                             }
                         }
                         if (row.data.CallStatistics && Object.keys(row.data.CallStatistics).length) {
                             const callStatistics = row.data.CallStatistics
                             for (const key in callStatistics) {
-                                additionalCallStatisticsColumns[key] = callStatistics[key]
+                                if (this.visibleColumns.includes(key)) {
+                                    additionalCallStatisticsColumns[key] = callStatistics[key]
+                                }
                             }
                         }
 
