@@ -1,30 +1,44 @@
 <template>
     <div class="manage-columns-section">
         <div class="flex justify-between items-center manage-columns-section-header">
-            <el-tooltip class="item" effect="dark"
-                        v-if="availableColumns.length"
-                        :content="allChecked ? $t('datatable.manage.uncheck.all') : $t('datatable.manage.check.all')"
-                        placement="top">
-                <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange"
-                             v-model="allChecked"/>
+            <el-tooltip
+                class="item" effect="dark"
+                v-if="availableColumns.length"
+                :content="allChecked ? $t('datatable.manage.uncheck.all') : $t('datatable.manage.check.all')"
+                placement="top"
+            >
+                <el-checkbox
+                    :indeterminate="isIndeterminate"
+                    @change="handleCheckAllChange"
+                    v-model="allChecked"
+                />
             </el-tooltip>
             <slot name="search"/>
-            <slot name="button"
-                  :allChecked="allChecked"
-                  :columns="checkedColumns"/>
+            <slot
+                name="button"
+                :allChecked="allChecked"
+                :columns="checkedColumns"
+            />
         </div>
         <div class="manage-columns-section-content">
-            <el-checkbox-group class="flex flex-col column-checkbox" v-model="checkedColumns"
-                               @change="handleCheckedColumnsChange">
+            <el-checkbox-group
+                class="flex flex-col column-checkbox"
+                v-model="checkedColumns"
+                @change="handleCheckedColumnsChange"
+            >
                 <draggable
                     v-bind="dragOptions"
                     class="flex flex-col columns-section-container"
                     :list="availableColumns"
                     group="columns"
-                    @change="onChange">
-                    <el-checkbox class="py-2 px-4" v-for="column in availableColumns" :label="column.prop"
-                                 :key="column.label"><i class="el-icon-rank text-primary font-bold"/>
-                        {{composeColumnName(column)}}
+                    @change="onChange"
+                >
+                    <el-checkbox
+                        class="py-2 px-4" v-for="column in availableColumns"
+                        :label="column.prop"
+                        :key="column.label"><i class="el-icon-rank text-primary font-bold"
+                    />
+                        {{ composeColumnName(column) }}
                     </el-checkbox>
                 </draggable>
             </el-checkbox-group>
@@ -107,9 +121,12 @@
             },
             makeTableHeaderTranslations (column) {
                 const columnProp = column.prop
-                const translate = `widget.table.header.title.full.${columnProp}`
+                const translateOfHeaderTitleInitials = `widget.table.header.title.initials.${columnProp}`
+                const translateOfHeaderTitleFull = `widget.table.header.title.full.${columnProp}`
 
-                return this.$te(translate) ? this.$t(translate) : column.label
+                return this.$te(translateOfHeaderTitleInitials) ?
+                    this.$t(translateOfHeaderTitleInitials) : this.$te(translateOfHeaderTitleFull) ?
+                    this.$t(translateOfHeaderTitleFull) : column.label
             }
         }
     }
