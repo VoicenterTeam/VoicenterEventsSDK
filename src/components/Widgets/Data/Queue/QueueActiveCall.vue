@@ -32,7 +32,7 @@
     export default {
         mixins: [queueMixin],
         components: {
-            DataTable: () => import('@/components/Table/DataTable'),
+            DataTable: () => import('@/components/Table/DataTableWithoutResizeColumn'),
             WaitingTime: () => import('./WaitingTime')
         },
         props: {

@@ -39,13 +39,17 @@
             </el-form-item>
             <el-form-item v-if="isQueueGauge(widget)">
                 <div class="flex justify-between">
-                    <label>{{ $t('widget.config.maximumRangeValue') }}</label>
+                    <div>
+                        <label>{{ $t('widget.config.maximumRangeValue') }}</label>
+                    </div>
                     <el-input-number :max="1000" :min="1" :step="2" type="number"
                                      v-model="model.WidgetLayout.maximumRange"/>
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueTable(widget) || isQueueGauge(widget)">
-                <label>{{ $t('queues.to.display') }}</label>
+                <div>
+                    <label>{{ $t('queues.to.display') }}</label>
+                </div>
                 <base-select
                     :data="allQueues"
                     :labelKey="'QueueName'"
@@ -120,37 +124,45 @@
                     </el-form-item>
                     <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
                         <div class="py-4">
-                            <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
-                            <el-slider
-                                :marks="cardTitleBestOptions"
+                            <div>
+                                <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
+                            </div>
+                            <el-input-number
                                 :max="cardTitleFontSizes.max"
                                 :min="cardTitleFontSizes.min"
-                                show-input
+                                :step="1"
+                                size="small"
                                 v-model="model.WidgetLayout.titleFontSize">
-                            </el-slider>
+                            </el-input-number>
                         </div>
                         <div class="py-4">
-                            <label>{{ $t('widget.config.cardValueFontSize') }}</label>
-                            <el-slider
-                                :marks="cardValueBestOptions"
+                            <div>
+                                <label>{{ $t('widget.config.cardValueFontSize') }}</label>
+                            </div>
+                            <el-input-number
                                 :max="cardValueFontSizes.max"
                                 :min="cardValueFontSizes.min"
-                                show-input
+                                :step="1"
+                                size="small"
                                 v-model="model.WidgetLayout.valueFontSize">
-                            </el-slider>
+                            </el-input-number>
                         </div>
                     </el-form-item>
                     <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
-                        <label>{{ $t('widget.statusLabelFontSize') }}</label>
-                        <el-slider
-                            :marks="textSizeBestOptions"
+                        <div>
+                            <label>{{ $t('widget.statusLabelFontSize') }}</label>
+                        </div>
+                        <el-input-number
                             :max="textFontSizes.max"
                             :min="textFontSizes.min"
-                            show-input
+                            :step="1"
+                            size="small"
                             v-model="model.WidgetLayout.labelFontSize">
-                        </el-slider>
+                        </el-input-number>
                         <div class="flex flex-row items-center pt-10">
-                            <label>{{ $t('widget.dataLabelsColor') }}</label>
+                            <div>
+                                <label>{{ $t('widget.dataLabelsColor') }}</label>
+                            </div>
                             <el-color-picker
                                 :predefine="predefinedColors"
                                 class="mx-4"
@@ -282,7 +294,7 @@
             [Checkbox.name]: Checkbox,
             [Checkbox.name]: Checkbox,
             [InputNumber.name]: InputNumber,
-            [Slider.name]: Slider,
+            // [Slider.name]: Slider,
             [ColorPicker.name]: ColorPicker,
             AutoComplete: () => import('./WidgetUpdateForm/Filters/AutoComplete'),
             OtherFilters: () => import('./WidgetUpdateForm/Filters/OtherFilters'),

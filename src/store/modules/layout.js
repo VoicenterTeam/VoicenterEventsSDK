@@ -37,7 +37,10 @@ const mutations = {
         state.activeLayout = layout;
     },
     [types.SET_GLOBAL_LAYOUT]: (state, value) => {
-        state.data.splice(0, 0, value)
+        if (!state.data.find(layout => layout.LayoutID === value.LayoutID)) {
+            state.data.splice(0, 0, value)
+        }
+
         state.globalLayout = value
     },
     [types.SET_PREVIEW_LAYOUT]: (state, value) => {
@@ -110,43 +113,53 @@ const getters = {
             widgetGroupBackground: '#edf2f7',
             widgetGroupFrames: '#edf2f7',
             widgetGroupTitles: '#000000',
+            loginStatusLimit: '#FF3636',
+            loginStatusWarning: '#FAB11E'
         }
-        
+
         result['primary_rgba'] = convertHex(result.primary);
-        
+
         if (!get(state, `${layoutType}.LayoutParametersList.length`, false)) {
             return result
         }
-        
+
         state[layoutType].LayoutParametersList.forEach((el) => {
-            
+
             if (el.LayoutParameterName === 'ColorPrimary') {
                 result.primary = el.Value
             }
-            
+
             if (el.LayoutParameterName === 'ColorBackground') {
                 result.background = el.Value
             }
-            
+
             if (el.LayoutParameterName === 'ColorFrames') {
                 result.frames = el.Value
             }
-            
+
             if (el.LayoutParameterName === 'ColorWidgetGroupBackground') {
                 result.widgetGroupBackground = el.Value
             }
-            
+
             if (el.LayoutParameterName === 'ColorWidgetGroupFrames') {
                 result.widgetGroupFrames = el.Value
             }
-            
+
             if (el.LayoutParameterName === 'ColorWidgetGroupTitles') {
                 result.widgetGroupTitles = el.Value
             }
+
+            if (el.LayoutParameterName === 'LoginStatusLimitColor') {
+                result.loginStatusLimit = el.Value
+            }
+
+            if (el.LayoutParameterName === 'LoginStatusWarningColor') {
+                result.loginStatusWarning = el.Value
+            }
         });
-        
+
         result['primary_rgba'] = convertHex(result.primary);
-        
+
         return result
     },
     baseFontSize: (state) => (layoutType) => {
@@ -191,7 +204,7 @@ const getters = {
             const _fontSize = Number(fontSize[0]['Value'])
             const color = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'ColorWidgetGroupTitles')
             const _color = color[0]['Value']
-            
+
             return {
                 color: _color,
                 fontSize: `${_fontSize}px`,
@@ -215,6 +228,20 @@ const getters = {
             console.warn(e)
             return {
                 fontSize: '22px',
+            }
+        }
+    },
+    widgetTableContentFontSize: (state) => (layoutType) => {
+        try {
+            const result = state[layoutType].LayoutParametersList.filter((el) => el.LayoutParameterName === 'WidgetTableContentFontSize')
+            const fontSize = Number(result[0]['Value'])
+            return {
+                fontSize: `${fontSize}px`,
+            }
+        } catch (e) {
+            console.warn(e)
+            return {
+                fontSize: '16px',
             }
         }
     },
@@ -245,7 +272,7 @@ const getters = {
             return DEFAULT_LOGO
         }
     },
-    
+
     getActiveLayout: state => {
         return state.activeLayout || defaultLayout
     },
@@ -258,11 +285,11 @@ const getters = {
     },
     getThresholdConfig: (state) => (layoutType) => {
         const { LayoutParametersList } = state[layoutType] || {}
-        
+
         if (!LayoutParametersList) {
             return defaultExtensionThresholdConfig
         }
-        
+
         let config = {}
         LayoutParametersList.forEach(el => {
             if (extensionThresholdKeys.includes(el.LayoutParameterName)) {

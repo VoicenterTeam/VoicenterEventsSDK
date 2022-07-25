@@ -107,6 +107,7 @@
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
     import { defaultDialerTableColumns } from '@/enum/dialerRealTimeTableConfigs'
     import { defaultFontSize } from '@/enum/defaultDashboardSettings'
+    import isEqual from 'lodash/isEqual'
 
     export default {
         mixins: [dataTableMixin],
@@ -164,7 +165,7 @@
                 return this.$store.getters['layout/getTypeOfLayout']
             },
             dynamicFontSize () {
-                return get(this.$store.getters['layout/widgetTitleStyles'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
+                return get(this.$store.getters['layout/widgetTableContentFontSize'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
             },
             cssVars () {
                 const replacePxInString = (string) => {
@@ -315,9 +316,6 @@
                 }
             }
         },
-        mounted() {
-            this.getWidgetData()
-        },
         watch: {
             filter() {
                 this.currentPage = 1
@@ -325,8 +323,11 @@
             data: {
                 immediate: true,
                 deep: true,
-                handler () {
-                    this.getWidgetDataWithRefreshInterval()
+                handler (oldVal, newVal) {
+                    if (!newVal || !isEqual(oldVal, newVal)) {
+                        this.getWidgetData()
+                        this.getWidgetDataWithRefreshInterval()
+                    }
                 },
             },
             pageSize: {
@@ -373,5 +374,6 @@
 ::v-deep .el-table td > .cell {
     @apply text-black font-medium text-sm;
     font-size: var(--dynamic-font-size);
+    line-height: 1.1;
 }
 </style>

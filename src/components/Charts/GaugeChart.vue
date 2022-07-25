@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-transparent rounded-lg chart-content_wrapper"
+    <div class="bg-transparent rounded-lg chart-content_wrapper pb-12"
          v-if="chartVisibility">
         <div class="chart-content_wrapper" ref="gauge-chart-container">
             <highcharts
@@ -54,7 +54,7 @@
             Highcharts,
             highcharts: Chart,
             [Tooltip.name]: Tooltip,
-            DataTable: () => import('@/components/Table/DataTable'),
+            DataTable: () => import('@/components/Table/DataTableWithoutResizeColumn'),
             WaitingTime: () => import('@/components/Widgets/Data/Queue/WaitingTime')
         },
         props: {
@@ -85,7 +85,14 @@
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
             },
             availableColumns () {
-                return get(this.data.WidgetLayout, 'Columns.availableColumns') || activeGaugeCallColumns
+                const columns = get(this.data.WidgetLayout, 'Columns.availableColumns') || activeGaugeCallColumns
+
+                return columns.map((column, index) => {
+                    return {
+                        ...column,
+                        width: index === 0 ? '110px' : 'auto'
+                    }
+                })
             },
             visibleColumns () {
                 return get(this.data.WidgetLayout, 'Columns.visibleColumns') || activeGaugeCallColumns.map(c => c.prop)
@@ -190,7 +197,11 @@
                     },
                 }]
 
-                return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig } }
+                const title = {
+                    text: null
+                }
+
+                return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig }, title: title }
             },
             triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
@@ -219,12 +230,14 @@
         },
         watch: {
             data: {
-                immediate: true,
+                deep: true,
                 handler: function () {
+                    this.chartOptions()
                     this.chartOptionsWithRefreshInterval()
                 },
             },
             allQueues() {
+                this.chartOptions()
                 this.chartOptionsWithRefreshInterval()
             },
             'data.WidgetLayout.showWaitingTimeTable': {
@@ -248,3 +261,11 @@
         },
     }
 </script>
+
+<style lang="scss" scoped>
+::v-deep .el-table td > .cell {
+    @apply text-black font-medium text-sm;
+    font-size: var(--dynamic-font-size);
+    line-height: 1.1;
+}
+</style>

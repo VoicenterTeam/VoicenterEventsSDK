@@ -8,15 +8,6 @@
             </div>
             <slot name="additional-data"/>
         </portal>
-        <portal :to="`widget-header__${widget.WidgetID}-table-action`">
-            <div v-if="showBtnSaveChanges">
-                <el-tooltip class="item" manual v-model="showBtnSaveChanges" effect="dark" :open-delay="50" :content="$t('datatable.resize.columns.btn')" placement="top">
-                    <span class="flex items-center px-2 py-1 hover:bg-primary-100 rounded cursor-pointer" @click="showConfirmDialog = true">
-                        <i class="vc-icon-table el-icon--filter text-primary" />
-                    </span>
-                </el-tooltip>
-            </div>
-        </portal>
         <portal :to="`widget-header__${widget.WidgetID}-action`">
             <div
                 class="flex items-center table-row__count"
@@ -42,7 +33,7 @@
                 </el-dropdown>
             </div>
         </portal>
-        <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
+        <div class="bg-transparent rounded-lg data-table w-full" :style="cssVars" :id="tableId">
             <el-table
                 :data="rowsData"
                 :fit="fitWidth"
@@ -55,7 +46,6 @@
                 v-if="drawTable"
                 v-on="listeners"
                 :max-height="height"
-                @header-dragend="showBtnSaveChanges = true"
             >
                 <slot name="">
                     <el-table-column
@@ -70,6 +60,7 @@
                         :sortable="canSortRows"
                         :type="column.type"
                         v-bind="column"
+                        :resizable="false"
                         v-for="column in renderedColumns"
                     >
                         <template slot="header">
@@ -136,33 +127,6 @@
                 </div>
             </div>
         </portal>
-        <ConfirmDialog
-            v-if="showConfirmDialog"
-            :visible.sync="showConfirmDialog"
-            @on-cancel="onCancel"
-            @on-confirm="saveChanges"
-        >
-            <template v-slot:title>
-                <h3 class="text-main-2xl font-semibold text-gray-700">
-                    {{ $t('general.saveChanges') }}
-                </h3>
-            </template>
-            <div class="flex justify-center w-full">
-                <div class="text-center text-gray-900 text-main-sm leading-21 my-6 max-w-65-p">
-                    {{ $t('common.changes.save') }}
-                </div>
-            </div>
-            <template v-slot:footer-actions>
-                <slot name="footer-actions">
-                    <cancel-button
-                        @on-click="onCancel"
-                    />
-                    <confirm-button
-                        @on-click="saveChanges"
-                    />
-                </slot>
-            </template>
-        </ConfirmDialog>
     </div>
 </template>
 <script>
@@ -173,8 +137,8 @@
     import { format } from 'date-fns'
     import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
     import bus from '@/event-bus/EventBus'
-    import { WidgetApi } from '@/api/widgetApi'
-    import notification from '@/mixins/simpleNotification'
+    import { defaultFontSize } from '@/enum/defaultDashboardSettings'
+    import get from "lodash/get";
 
     const QUEUE_STATISTICS_TEMPLATE = 45
 
@@ -189,10 +153,7 @@
             [DropdownMenu.name]: DropdownMenu,
             [ExportDataDialog.name]: ExportDataDialog,
             [Popover.name]: Popover,
-            [Button.name]: Button,
-            ConfirmDialog: () => import('@/components/Common/ConfirmDialog'),
-            CancelButton: () => import("@/components/Common/Buttons/CancelButton"),
-            ConfirmButton: () => import("@/components/Common/Buttons/ConfirmButton")
+            [Button.name]: Button
         },
         props: {
             columnsToDisplay: {
@@ -251,10 +212,7 @@
                 showManageColumns: true,
                 columnMinWidthData: this.columnMinWidth,
                 templateHelp: {},
-                height: 200,
-                columnsProperty: [],
-                showBtnSaveChanges: false,
-                showConfirmDialog: false
+                height: 200
             }
         },
         computed: {
@@ -267,30 +225,12 @@
                 }
             },
             renderedColumns() {
-                const columnsProperty = this.columnsProperty
-                const findTheSameColumn = (column) => {
-                    return columnsProperty.find(el => el.columnKey === column.prop)
-                }
                 const columns = this.availableColumns
                     .filter(c => this.visibleColumns.includes(c.prop))
-                    .map(column => {
-                        if (columnsProperty && columnsProperty.length) {
-                            column.width = findTheSameColumn(column) && 'width' in findTheSameColumn(column) ? findTheSameColumn(column).width : column.minWidth
-                        }
-                        return column
-                    })
 
                 if (!this.columnsToDisplay) {
                     return columns
                 }
-
-                this.columnsToDisplay
-                    .map(column => {
-                        if (columnsProperty && columnsProperty.length) {
-                            column.width = findTheSameColumn(column) && 'width' in findTheSameColumn(column) ? findTheSameColumn(column).width : column.minWidth
-                        }
-                        return column
-                    })
 
                 return columns.slice(0, this.columnsToDisplay)
             },
@@ -303,6 +243,24 @@
             pageWidth() {
                 return this.$store.state.utils.page.width
             },
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
+            dynamicFontSize () {
+                return get(this.$store.getters['layout/widgetTableContentFontSize'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
+            },
+            cssVars () {
+                const replacePxInString = (string) => {
+                    return string.replace('px', '')
+                }
+                const defaultFontSizeNumber = replacePxInString(defaultFontSize)
+                const dynamicFontSizeNumber = replacePxInString(this.dynamicFontSize)
+                const fontSize = dynamicFontSizeNumber >= defaultFontSizeNumber ? dynamicFontSizeNumber : defaultFontSizeNumber
+
+                return {
+                    '--dynamic-font-size': fontSize + 'px'
+                }
+            }
         },
         methods: {
             formatCell(row, column) {
@@ -371,6 +329,12 @@
 
                 this.updateLayout()
             },
+            toggleManageColumns() {
+                this.showManageColumns = false
+                this.$nextTick(() => {
+                    this.showManageColumns = true
+                })
+            },
             updateLayout(afterExport = false) {
                 let objToEmit = {}
 
@@ -433,21 +397,6 @@
                 return this.$te(translateOfHeaderTitleInitials) ?
                     this.$t(translateOfHeaderTitleInitials) : this.$te(translateOfHeaderTitleFull) ?
                     this.$t(translateOfHeaderTitleFull) : column.label
-            },
-            async saveChanges () {
-                try {
-                    await WidgetApi.update(this.widget)
-                    notification.call({
-                        type: 'success',
-                        message: this.$t('general.notify.copy.success')
-                    })
-                } catch {}
-                this.showBtnSaveChanges = false
-                this.showConfirmDialog = false
-            },
-            onCancel () {
-                this.showConfirmDialog = false
-                this.showBtnSaveChanges = false
             }
         },
         watch: {
@@ -474,6 +423,7 @@
             widget: {
                 deep: true,
                 handler(val) {
+                    this.toggleManageColumns()
                     if (val) {
                         this.updateDataTableHeight()
                     }
@@ -505,40 +455,6 @@
                     }
                 }
             })
-
-            if (this.widget.WidgetLayout.columnsProperty) {
-                this.columnsProperty = this.widget.WidgetLayout.columnsProperty
-            }
-
-            const targetNode = this.$refs.table.$el
-
-            const config = { attributes: true, childList: true, subtree: true };
-
-            const callback = (mutationList) => {
-                for(const mutation of mutationList) {
-                    if (mutation.type === 'attributes') {
-                        if (mutation.attributeName === 'width') {
-                            this.widget.WidgetLayout.columnsProperty = this.$refs.table.columns.map(el => {
-                                const columnData = {}
-                                columnData.columnKey = el.columnKey
-                                columnData.width = 'width' in el ? el.width : el.realWidth
-
-                                return columnData
-                            })
-                        }
-                    }
-                }
-            }
-
-            const observer = new MutationObserver(callback)
-            observer.observe(targetNode, config)
-
-            this.observer = observer
-        },
-        beforeDestroy () {
-            if (this.observer) {
-                this.observer.disconnect()
-            }
         }
     }
 </script>

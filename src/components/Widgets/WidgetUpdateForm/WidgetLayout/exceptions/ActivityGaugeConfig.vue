@@ -16,7 +16,7 @@
                     <InfoIcon class="mx-3 text-primary cursor-help w-5" slot="reference"></InfoIcon>
                 </el-popover>
             </div>
-            <el-radio-group v-model="model.WidgetLayout['mainActivity']">
+            <el-radio-group v-model="model.WidgetLayout['mainActivity']" class="flex">
                 <el-radio :label="option.key"
                           :key="option.key"
                           v-bind="option"
@@ -29,20 +29,25 @@
             <div class="pb-3">{{$t('answer.activity.styles')}}</div>
             <div class="flex flex-row">
                 <div class="flex-col">
-                    <span class="text-main-sm">{{$t('settings.color')}}</span>
+                    <div>
+                        <span class="text-main-sm">{{$t('settings.color')}}</span>
+                    </div>
                     <el-color-picker
                         :predefine="predefinedColors"
                         v-model="model.WidgetLayout['AnswerCount']['color']"/>
                 </div>
-                <div class="w-full px-1">
+                <div class="w-full px-4">
                     <div class="flex-col">
-                        <span class="text-main-sm">{{$t('settings.fonSize')}}</span>
-                        <el-slider
-                            :marks="bestOptions"
+                        <div>
+                            <span class="text-main-sm">{{$t('settings.fonSize')}}</span>
+                        </div>
+                        <el-input-number
                             :max="max"
+                            :step="1"
                             :min="min"
+                            size="small"
                             v-model="model.WidgetLayout['AnswerCount']['fontSize']">
-                        </el-slider>
+                        </el-input-number>
                     </div>
                 </div>
             </div>
@@ -51,20 +56,25 @@
             <div class="pb-3">{{$t('inSLA.activity.styles')}}</div>
             <div class="flex flex-row">
                 <div class="flex-col">
-                    <span class="text-main-sm">{{$t('settings.color')}}</span>
+                    <div>
+                        <span class="text-main-sm">{{$t('settings.color')}}</span>
+                    </div>
                     <el-color-picker
                         :predefine="predefinedColors"
                         v-model="model.WidgetLayout['InSLACount']['color']"/>
                 </div>
-                <div class="w-full px-1">
+                <div class="w-full px-4">
                     <div class="flex-col">
-                        <span class="text-main-sm">{{$t('settings.fonSize')}}</span>
-                        <el-slider
-                            :marks="bestOptions"
+                        <div>
+                            <span class="text-main-sm">{{$t('settings.fonSize')}}</span>
+                        </div>
+                        <el-input-number
                             :max="max"
                             :min="min"
+                            :step="1"
+                            size="small"
                             v-model="model.WidgetLayout['InSLACount']['fontSize']">
-                        </el-slider>
+                        </el-input-number>
                     </div>
                 </div>
             </div>
@@ -76,14 +86,14 @@
     import uniq from "lodash/uniq";
     import values from "lodash/values";
     import {InfoIcon} from 'vue-feather-icons'
-    import {ColorPicker, Popover, Radio, RadioGroup, Slider} from 'element-ui'
+    import {ColorPicker, Popover, Radio, RadioGroup, InputNumber} from 'element-ui'
     import {activitiesToDisplay} from '@/enum/queueDashboardStatistics'
 
     export default {
         components: {
             InfoIcon,
             [Radio.name]: Radio,
-            [Slider.name]: Slider,
+            [InputNumber.name]: InputNumber,
             [Popover.name]: Popover,
             [RadioGroup.name]: RadioGroup,
             [ColorPicker.name]: ColorPicker,
@@ -118,3 +128,9 @@
         },
     }
 </script>
+
+<style lang="scss" scoped>
+::v-deep .el-radio-group {
+    @apply flex;
+}
+</style>
