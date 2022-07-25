@@ -354,16 +354,23 @@ td.text-white > .cell {
 }
 
 .el-table {
+
+    .real-time-table-row-login-status-warning > td.el-table__cell, .real-time-table-row-login-status-limit > td.el-table__cell {
+        background: none !important;
+    }
+
     .real-time-table-row-login-status-warning {
-        td {
-            box-shadow: inset 0 -1px 0 var(--login-status-warn-color), inset 0 1px 0 var(--login-status-warn-color);
-        }
+        box-shadow: inset 0 -3px 0 var(--login-status-warn-color),
+        inset 0 1px 0 var(--login-status-warn-color),
+        inset 3px 0 0px -2px var(--login-status-warn-color),
+        inset -3px 0px 0px 0px var(--login-status-warn-color);
     }
 
     .real-time-table-row-login-status-limit {
-        td {
-            box-shadow: inset 0 -1px 0 var(--login-status-limit-color), inset 0 1px 0 var(--login-status-limit-color);
-        }
+        box-shadow: inset 0 -3px 0 var(--login-status-limit-color),
+        inset 0 1px 0 var(--login-status-limit-color),
+        inset 3px 0 0px -2px var(--login-status-limit-color),
+        inset -3px 0px 0px 0px var(--login-status-limit-color);
     }
 }
 
