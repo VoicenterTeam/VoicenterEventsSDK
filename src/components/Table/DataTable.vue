@@ -10,7 +10,7 @@
         </portal>
         <portal :to="`widget-header__${widget.WidgetID}-table-action`">
             <div v-if="showBtnSaveChanges">
-                <el-tooltip class="item" v-model="showBtnSaveChanges" effect="dark" :open-delay="50" :content="$t('datatable.resize.columns.btn')" placement="top">
+                <el-tooltip class="item" manual v-model="showBtnSaveChanges" effect="dark" :open-delay="50" :content="$t('datatable.resize.columns.btn')" placement="top">
                     <span class="flex items-center px-2 py-1 hover:bg-primary-100 rounded cursor-pointer" @click="showConfirmDialog = true">
                         <i class="vc-icon-table el-icon--filter text-primary" />
                     </span>
@@ -175,9 +175,9 @@
     import bus from '@/event-bus/EventBus'
     import { WidgetApi } from '@/api/widgetApi'
     import notification from '@/mixins/simpleNotification'
-    
+
     const QUEUE_STATISTICS_TEMPLATE = 45
-    
+
     export default {
         inheritAttrs: false,
         components: {
@@ -310,7 +310,7 @@
                     row[column.prop] = parseFloat(row[column.prop])
                     return `${row[column.prop]} %`
                 }
-                
+
                 if (DATE_TIME_COLUMNS.includes(column.prop.toLowerCase())) {
                     if (!row[column.prop]) {
                         return '--'
@@ -318,7 +318,7 @@
                     column['containsDate'] = true
                     return this.formatDateColumn(row, column.prop, DATE_TIME_FORMAT)
                 }
-                
+
                 if (DATE_COLUMNS.includes(column.prop.toLowerCase())) {
                     if (!row[column.prop]) {
                         return '--'
@@ -335,7 +335,7 @@
                 if (this.widget.TemplateID.toString() === QUEUE_STATISTICS_TEMPLATE.toString()) {
                     return row[column].replace(/\//g, '-')
                 }
-                
+
                 try {
                     // To prevent date-fns errors like: Invalid time value
                     row[column] = row[column].replace('Z', '')
@@ -354,26 +354,26 @@
             },
             reorderColumn(data, onManageExport) {
                 let { element: column, newIndex: newIndex, oldIndex: oldIndex } = data
-                
+
                 oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
-                
+
                 this.availableColumns.splice(oldIndex, 1)
                 this.availableColumns.splice(newIndex, 0, column)
-                
+
                 if (onManageExport) {
                     oldIndex = this.columnsToExport.findIndex((el) => el.prop === column.prop)
-                    
+
                     this.columnsToExport.splice(oldIndex, 1)
                     this.columnsToExport.splice(newIndex, 0, column.prop)
-                    
+
                     return
                 }
-                
+
                 this.updateLayout()
             },
             updateLayout(afterExport = false) {
                 let objToEmit = {}
-                
+
                 if (!this.displayQueueAsRows) {
                     objToEmit = {
                         visibleColumns: afterExport ? this.columnsToExport : this.visibleColumns,
@@ -385,12 +385,12 @@
                         availableQueuesColumns: this.availableColumns,
                     }
                 }
-                
+
                 this.drawTable = false
                 this.$nextTick(() => {
                     this.drawTable = true
                 })
-                
+
                 this.$emit('on-update-layout', objToEmit)
             },
             adaptColumnWidth(scale, pageWidth) {
@@ -549,7 +549,7 @@ colgroup {
 
 .el-dropdown-menu--mini {
     padding: 0;
-    
+
     .popper__arrow {
         display: none !important;
     }
