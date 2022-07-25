@@ -83,7 +83,6 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { LayoutApi } from '@/api/layoutApi'
     import { DashboardApi } from '@/api/dashboardApi'
-    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
     import map from "lodash/map";
     import {removeDummyWidgets} from "@/services/widgetService";
     import {dashboardOperation} from "@/models/instances";
@@ -168,17 +167,10 @@
                 try {
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
-                    const toUpdatePromises = this.currentDashboard.WidgetGroupList.map((group, index) => {
-                        return {
-                            ...group,
-                            Order: index,
-                        }
-                    })
 
                     const newModel = cloneDeep(this.model)
                     delete newModel.WidgetGroupList
-                    
-                    await WidgetGroupsApi.reorder(toUpdatePromises)
+
                     await DashboardApi.update(newModel)
                     await LayoutApi.update(this.activeLayout)
 

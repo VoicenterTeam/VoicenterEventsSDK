@@ -37,6 +37,7 @@
 </template>
 <script>
     import draggableEvents from '@/enum/draggableEvents'
+    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
 
     export default {
         components: {
@@ -66,7 +67,10 @@
                 this.widgetGroups.forEach((group, index) => {
                     this.$set(group, 'Order', index)
                 })
+
                 this.$emit('on-update-groups', this.widgetGroups)
+
+                WidgetGroupsApi.reorder(this.widgetGroups)
             }
         },
         watch: {
