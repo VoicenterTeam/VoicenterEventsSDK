@@ -37,7 +37,7 @@
     import { getInitialTime } from '@/util/timeUtils'
     import { defaultFontSize } from '@/enum/defaultDashboardSettings'
     import get from 'lodash/get'
-    
+
     export default {
         components: {
             [Tooltip.name]: Tooltip,
@@ -62,7 +62,7 @@
         },
         data() {
             let initialTimeInSeconds = getInitialTime(this.call.callStarted)
-            
+
             return {
                 timer: new Timer({
                     initialTimeInSeconds,
@@ -92,7 +92,7 @@
                 let seconds = this.timer.state.seconds
                 let minThreshold = this.settings.callThresholdLowValue
                 let maxThreshold = this.settings.callThresholdHeightValue
-                
+
                 if (minThreshold > seconds) {
                     show = false
                 } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
@@ -149,7 +149,7 @@
 <style scoped lang="scss">
 .call-time {
     min-width: 48px;
-    line-height: 17px;
+    line-height: 1;
     text-align: center;
 }
 
