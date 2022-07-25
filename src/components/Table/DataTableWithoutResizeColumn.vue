@@ -33,7 +33,7 @@
                 </el-dropdown>
             </div>
         </portal>
-        <div class="bg-transparent rounded-lg data-table w-full" :id="tableId">
+        <div class="bg-transparent rounded-lg data-table w-full" :style="cssVars" :id="tableId">
             <el-table
                 :data="rowsData"
                 :fit="fitWidth"
@@ -137,9 +137,11 @@
     import { format } from 'date-fns'
     import { DATE_COLUMNS, DATE_TIME_COLUMNS, DATE_FORMAT, DATE_TIME_FORMAT } from '@/helpers/table'
     import bus from '@/event-bus/EventBus'
-    
+    import { defaultFontSize } from '@/enum/defaultDashboardSettings'
+    import get from "lodash/get";
+
     const QUEUE_STATISTICS_TEMPLATE = 45
-    
+
     export default {
         inheritAttrs: false,
         components: {
@@ -241,6 +243,24 @@
             pageWidth() {
                 return this.$store.state.utils.page.width
             },
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
+            dynamicFontSize () {
+                return get(this.$store.getters['layout/widgetTableContentFontSize'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
+            },
+            cssVars () {
+                const replacePxInString = (string) => {
+                    return string.replace('px', '')
+                }
+                const defaultFontSizeNumber = replacePxInString(defaultFontSize)
+                const dynamicFontSizeNumber = replacePxInString(this.dynamicFontSize)
+                const fontSize = dynamicFontSizeNumber >= defaultFontSizeNumber ? dynamicFontSizeNumber : defaultFontSizeNumber
+
+                return {
+                    '--dynamic-font-size': fontSize + 'px'
+                }
+            }
         },
         methods: {
             formatCell(row, column) {
@@ -248,7 +268,7 @@
                     row[column.prop] = parseFloat(row[column.prop])
                     return `${row[column.prop]} %`
                 }
-                
+
                 if (DATE_TIME_COLUMNS.includes(column.prop.toLowerCase())) {
                     if (!row[column.prop]) {
                         return '--'
@@ -256,7 +276,7 @@
                     column['containsDate'] = true
                     return this.formatDateColumn(row, column.prop, DATE_TIME_FORMAT)
                 }
-                
+
                 if (DATE_COLUMNS.includes(column.prop.toLowerCase())) {
                     if (!row[column.prop]) {
                         return '--'
@@ -273,7 +293,7 @@
                 if (this.widget.TemplateID.toString() === QUEUE_STATISTICS_TEMPLATE.toString()) {
                     return row[column].replace(/\//g, '-')
                 }
-                
+
                 try {
                     // To prevent date-fns errors like: Invalid time value
                     row[column] = row[column].replace('Z', '')
@@ -292,21 +312,21 @@
             },
             reorderColumn(data, onManageExport) {
                 let { element: column, newIndex: newIndex, oldIndex: oldIndex } = data
-                
+
                 oldIndex = this.availableColumns.findIndex((el) => el.prop === column.prop)
-                
+
                 this.availableColumns.splice(oldIndex, 1)
                 this.availableColumns.splice(newIndex, 0, column)
-                
+
                 if (onManageExport) {
                     oldIndex = this.columnsToExport.findIndex((el) => el.prop === column.prop)
-                    
+
                     this.columnsToExport.splice(oldIndex, 1)
                     this.columnsToExport.splice(newIndex, 0, column.prop)
-                    
+
                     return
                 }
-                
+
                 this.updateLayout()
             },
             toggleManageColumns() {
@@ -317,7 +337,7 @@
             },
             updateLayout(afterExport = false) {
                 let objToEmit = {}
-                
+
                 if (!this.displayQueueAsRows) {
                     objToEmit = {
                         visibleColumns: afterExport ? this.columnsToExport : this.visibleColumns,
@@ -329,12 +349,12 @@
                         availableQueuesColumns: this.availableColumns,
                     }
                 }
-                
+
                 this.drawTable = false
                 this.$nextTick(() => {
                     this.drawTable = true
                 })
-                
+
                 this.$emit('on-update-layout', objToEmit)
             },
             adaptColumnWidth(scale, pageWidth) {
@@ -445,7 +465,7 @@ colgroup {
 
 .el-dropdown-menu--mini {
     padding: 0;
-    
+
     .popper__arrow {
         display: none !important;
     }

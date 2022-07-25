@@ -2,12 +2,13 @@
     <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col" v-if="!hideCallerInfo" :class="{'w-full': hideCallInfo}">
             <span
+                v-if="!isMobilePhoneNumber"
                 class="font-medium mb-1"
                 :style="fontSize"
             >
                 {{ call.callername }}
             </span>
-            <span v-if="isMobilePhoneNumber" class="text-gray-500" :style="fontSize"><bdi>+{{ call.callerphone }}</bdi></span>
+            <span v-else class="text-gray-500" :style="fontSize"><bdi>+{{ call.callerphone }}</bdi></span>
         </div>
         <div v-if="!hideCallInfo" class="flex items-center justify-between direction-icon">
             <component :is="directionMappings[call.direction]" class="mx-1"/>

@@ -5,7 +5,7 @@
             :is="statusIcon"
             :key="extension.representativeStatus"
             :class="{'is-calling': isCalling, 'is-talking': isTalking}"
-            class="extension-card-icon w-7 mx-2"
+            class="extension-card-icon mx-2"
         />
     </div>
 </template>
@@ -85,7 +85,7 @@
                 }
                 return this.extension.calls.every(c => c.callAnswered !== 0)
             }
-            
+
         },
         methods: {
           setTimerValue() {

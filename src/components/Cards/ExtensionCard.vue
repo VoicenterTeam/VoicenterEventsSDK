@@ -366,6 +366,10 @@
     }
 }
 
+.extension-card-icon {
+    width: var(--dynamic-font-size);
+}
+
 .extension-card-icon.is-calling {
     path:first-child {
         animation: fade 1s;
