@@ -9,6 +9,7 @@
         <div
             class="flex items-center"
             :class="extension.calls.length >= minActiveCallsNumber  ? 'mb-2' : 'mb-4'"
+            :style="styleForStatusIconColor"
         >
             <fade-transition mode="out-in">
                 <el-tooltip
@@ -218,6 +219,18 @@
                     return extensionCalls.slice(0, 2)
                 }
                 return extensionCalls
+            },
+            getAccountStatuses () {
+                return this.$store.getters['entities/accountStatuses']
+            },
+            styleForStatusIconColor () {
+                let data = this.statusMappings[this.extension.representativeStatus] || { icon: 'IconOther' }
+                const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(data.value))
+                const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode : data.color
+
+                return {
+                    '--status-svg-color': color
+                }
             }
         },
         methods: {
