@@ -420,7 +420,8 @@ export default {
         },
         async getReportsList() {
             const payload = {
-                ReportStatusID: [REPORT_ENABLED_STATUS]
+                ReportStatusID: [REPORT_ENABLED_STATUS, REPORT_DISABLED_STATUS],
+                AccountID: [this.$store.state.entities.selectedAccountID]
             }
             const reportsList = await reportApi.list(payload)
             return reportsList

@@ -206,8 +206,7 @@ export default {
         },
         async onConfirm () {
             const location = window.location.pathname.search('/edit/')
-            // console.log(location, 'location')
-            if (this.doRequest || location) {
+            if (this.doRequest || location !== -1) {
                 const selectedWidgets = this.selectedWidgets.map(el => {
                     const data = {
                         ReportID: this.reportId,
