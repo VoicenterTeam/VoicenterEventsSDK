@@ -99,6 +99,7 @@
             },
             chooseDashboard(dashboard) {
                 this.$store.dispatch('dashboards/selectDashboard', dashboard)
+                this.$store.dispatch('axiosRequestsDuration/clearRequestInfo')
                 this.showMenu = false
             }
         },

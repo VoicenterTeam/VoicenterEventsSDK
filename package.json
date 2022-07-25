@@ -1,12 +1,11 @@
 {
   "name": "real-time-dashboard",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "prebuild": "npm run generate-locale-file",
     "build": "vue-cli-service build --mode production",
-    "build-prod": "vue-cli-service build --mode prod",
     "generate-missing-translations": "node src/translationHelpers/getMissingTranslations.js",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "locale-diff": "node src/translationHelpers/localeDiff.js",
@@ -36,7 +35,7 @@
     "register-service-worker": "^1.6.2",
     "sortablejs": "^1.13.0",
     "vee-validate": "^3.4.7",
-    "voicenter-events-sdk": "^0.8.0",
+    "voicenter-events-sdk": "github:voicenterTeam/VoicenterEventsSDK#compatibility_mode",
     "vue": "^2.6.10",
     "vue-audio": "^0.0.12",
     "vue-color": "^2.7.1",

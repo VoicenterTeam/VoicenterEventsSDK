@@ -10,6 +10,8 @@ import dashboards from './modules/dashboards'
 import widgetTemplate from './modules/widgetTemplate'
 import widgetCreation from '@/store/modules/widgetCreation'
 import templatesCategory from './modules/templatesCategory'
+import axiosRequestsDuration from './modules/axiosRequestsDuration'
+
 import report from '@/modules/reports/store/report'
 import reportTrigger from '@/modules/reports/store/reportTrigger'
 
@@ -17,7 +19,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     plugins: [createPersistedState({
-        paths: ['users', 'dashboards.activeDashboard', 'dashboards.editMode', 'layout'],
+        paths: [
+            'users',
+            'dashboards.activeDashboard.DashboardID',
+            'dashboards.activeDashboard.DashboardLayoutID',
+            'dashboards.activeDashboard.DashboardTitle',
+            'dashboards.activeDashboard.DashBoardsUserPermission',
+            'dashboards.activeDashboard.AccountID',
+            'dashboards.editMode',
+            'layout'
+        ],
     })],
     modules: {
         lang,
@@ -30,6 +41,7 @@ export default new Vuex.Store({
         widgetCreation,
         templatesCategory,
         report,
-        reportTrigger
+        reportTrigger,
+        axiosRequestsDuration
     }
 })

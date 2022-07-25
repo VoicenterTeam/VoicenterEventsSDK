@@ -8,6 +8,7 @@ import { realTimeTableKey } from '@/enum/realTimeTableConfigs'
 // minimum refresh interval for real-time widgets - 10 seconds
 const MIN_REFRESH_INTERVAL = 10
 const MULTI_QUEUES_DASHBOARD_KEY = 'GetMultiQueuesDashboard'
+let refreshIntervalLocal = 0
 
 const CHART_DATA_TYPE_IDS = [
     widgetDataTypes.LINES_TYPE_ID,
@@ -19,20 +20,29 @@ const CHART_DATA_TYPE_IDS = [
 ]
 
 const minRefreshInterval = () => {
-    return store.getters['layout/minRefreshInterval'] || MIN_REFRESH_INTERVAL
+    return store.getters['layout/minRefreshInterval']('activeLayout') || MIN_REFRESH_INTERVAL
 }
 
 export function getWidgetRefreshInterval(widget) {
-    let refreshInterval = get(widget, 'WidgetLayout.DefaultRefreshInterval')
-    if (!refreshInterval) {
+    let widgetRefreshInterval = get(widget, 'WidgetLayout.DefaultRefreshInterval')
+    let timeToLoadData = 0
+    if (!widgetRefreshInterval) {
         let widgetTemplate = getWidgetTemplate(widget)
-        refreshInterval = get(widgetTemplate, 'DefaultRefreshInterval', '')
+        widgetRefreshInterval = get(widgetTemplate, 'DefaultRefreshInterval', '')
     }
     
     let minInterval = minRefreshInterval()
-    refreshInterval = Number(refreshInterval) <= minInterval ? minInterval : Number(refreshInterval)
-    
-    return Number(refreshInterval) * 1000
+    widgetRefreshInterval = Number(widgetRefreshInterval) <= minInterval ? minInterval : Number(widgetRefreshInterval)
+
+    const widgetsStoreData = store.getters['axiosRequestsDuration/getRequestsInfo']
+    const widgetStoreData = widgetsStoreData.find(el => el.widgetId === widget.WidgetID)
+    if (widgetStoreData) {
+        timeToLoadData = widgetStoreData.duration
+    }
+
+    refreshIntervalLocal = timeToLoadData && refreshIntervalLocal < timeToLoadData && widgetRefreshInterval < timeToLoadData ? timeToLoadData : widgetRefreshInterval
+
+    return refreshIntervalLocal * 1000
 }
 
 export function getWidgetEndpoint(widget) {
@@ -148,10 +158,18 @@ export function timeFilterToHuman(widget, toFormat = 'dd/MM/yyyy') {
 }
 
 export function isChartWidget(widget) {
-    return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget)
+    return CHART_DATA_TYPE_IDS.includes(widget.DataTypeID) || isQueueActivityGauge(widget) || isPieWidget(widget) || isQueueGauge(widget) || isFunnelChartWidget(widget)
 }
 
 export function isCounterAgentsInStatus(widget) {
     return widget.DataTypeID === widgetDataTypes.COUNTER_TYPE_ID
+}
+
+export function isFunnelChartWidget(widget) {
+    return widget.DataTypeID === widgetDataTypes.INFO_TYPE_ID
+}
+
+export function isSocketsRealTimeTableWidget (widget) {
+    return widget.DataTypeID === widgetDataTypes.DIALERS_TYPE_ID
 }
 

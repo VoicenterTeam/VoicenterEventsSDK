@@ -33,6 +33,7 @@ const getters = {
     getHelpByWidgetsTemplateID: state => TemplateID => {
         return state.dictionaries.find(t => t.TemplateID.toString() === TemplateID.toString())
     },
+    getDictionariesList: state => state.dictionaries,
 }
 
 export default {

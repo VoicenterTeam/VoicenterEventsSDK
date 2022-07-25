@@ -1,16 +1,15 @@
 <template>
-    <div>
+    <div :style="getTableWrapperStyling">
         <data-table
             :widget="data"
             :border="border"
-            :cell-class-name="getCellClassName"
-            :cell-style="getCellStyle"
             :columns="availableColumns"
             :editable="editable"
             :showColumns="visibleColumns"
             :stripe="stripe"
             :tableData="fetchTableData"
             :widgetTitle="data.Title"
+            :row-class-name="tableRowClassName"
             can-sort-rows="custom"
             @on-update-layout="onUpdateLayout"
             @sort-change="sortChange">
@@ -39,18 +38,29 @@
                 <span v-else>---</span>
             </template>
             <template v-slot:status_duration="{row}">
-                <status-duration :extension="userExtension(row.user_id)"
-                                 :key="row.user_id"
-                                 :settings="getSettings"
-                                 v-if="userExtension(row.user_id) && drawRow">
-                </status-duration>
+                <div v-if="userExtension(row.user_id) && drawRow"
+                     :style="getCellStyle(row)"
+                     :class="getCellClassName(row)"
+                >
+                    <status-duration
+                        :extension="userExtension(row.user_id)"
+                        :key="row.user_id"
+                        :settings="getSettings"
+                    />
+                </div>
                 <span v-else>---</span>
             </template>
             <template v-slot:status="{row}">
-                <user-status :extension="userExtension(row.user_id)" :key="row.user_id"
-                             :userId="row.user_id"
-                             :ref="`user-status-${row.user_id}`"
-                             v-if="userExtension(row.user_id) && drawRow"/>
+                <div v-if="userExtension(row.user_id) && drawRow"
+                     :style="getCellStyle(row)"
+                     :class="getCellClassName(row)"
+                >
+                    <user-status
+                        :extension="userExtension(row.user_id)" :key="row.user_id"
+                        :userId="row.user_id"
+                        :ref="`user-status-${row.user_id}`"
+                    />
+                </div>
                 <span v-else>---</span>
             </template>
             <template v-slot:call_info="{row}">
@@ -72,14 +82,16 @@
                 <base-widget-title :title="data.Title"/>
             </template>
             <template v-slot:time-frame>
-                <time-frame :widget="data"/>
+                <span class="px-4 flex items-center">
+                    <time-frame :widget="data"/>
+                </span>
             </template>
             <template v-slot:search-input>
-                <div class="flex items-center w-64 px-1">
+                <div class="flex items-center w-48 px-1">
                     <el-input
                         clearable
                         :placeholder="$t('general.search')"
-                        size="large"
+                        size="small"
                         v-model="filter">
                         <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
                     </el-input>
@@ -94,11 +106,10 @@
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { extensionColor } from '@/util/extensionStyles'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
-    import { dynamicRows } from '@/enum/realTimeTableConfigs'
     import { getInitialExtensionTime } from '@/util/timeUtils'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { displayUsersRelatedWithAdmin, ADMIN_USER_ID } from '@/helpers/util'
-    
+
     export default {
         mixins: [dataTableMixin],
         components: {
@@ -210,8 +221,43 @@
             getSettings() {
                 return this.data.WidgetLayout.settings || realTimeSettings
             },
+            getTableWrapperStyling() {
+                const addAlpha = (color, opacity) => {
+                    const _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255)
+
+                    return color + _opacity.toString(16).toUpperCase()
+                }
+
+                const { loginStatusLimit, loginStatusWarning } = this.$store.getters['layout/colors']('activeLayout')
+
+                return {
+                    '--login-status-warn-color': addAlpha(loginStatusWarning, 1),
+                    '--login-status-limit-color': addAlpha(loginStatusLimit, 1)
+                }
+            }
         },
         methods: {
+            tableRowClassName({ row }) {
+                const { status_duration, user_id } = row
+
+                let statusClassName = ''
+
+                const { representativeStatus } = this.userExtension(user_id) || {}
+
+                if (!representativeStatus) return
+
+                const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](representativeStatus)
+
+                if (statusAlerts && 'warn' in statusAlerts && (status_duration >= statusAlerts.warn)) {
+                    statusClassName = 'real-time-table-row-login-status-warning'
+                }
+
+                if (statusAlerts && 'alert' in statusAlerts && (status_duration >= statusAlerts.alert)) {
+                    statusClassName = 'real-time-table-row-login-status-limit'
+                }
+
+                return statusClassName
+            },
             getCallerInfo(userExtension) {
                 let callerInfo = ''
                 userExtension.calls.forEach((call) => {
@@ -224,7 +270,7 @@
                 if (!ref) {
                     return '--'
                 }
-                
+
                 return ref.statusText
             },
             getExtensionName(userId) {
@@ -261,25 +307,24 @@
                 }
                 return get(extension, 'onlineUserID', userId)
             },
-            getCellStyle({ row, column }) {
-                let color = 'transparent'
-                
-                if (dynamicRows.includes(column.property)) {
-                    let extension = this.userExtension(row.user_id)
-                    if (extension) {
-                        color = extensionColor(extension)
-                    }
+            getCellStyle(row) {
+                let color = 'black'
+
+                let extension = this.userExtension(row.user_id)
+                if (extension) {
+                    color = extensionColor(extension)
                 }
-                return { 'background-color': color }
+
+                return { 'color': color, 'font-weight': '900', 'line-height': '1' }
             },
-            getCellClassName({ column, row }) {
+            getCellClassName(row) {
                 let className = ''
                 let extension = this.userExtension(row.user_id)
-                
-                if (dynamicRows.includes(column.property) && extension) {
+
+                if (extension) {
                     className = 'text-white'
                 }
-                
+
                 return className
             },
             sortChange() {
@@ -306,5 +351,44 @@
 <style lang="scss">
 td.text-white > .cell {
     color: white;
+}
+
+.el-table {
+
+    .real-time-table-row-login-status-warning > td.el-table__cell, .real-time-table-row-login-status-limit > td.el-table__cell {
+        background: none !important;
+    }
+
+    .real-time-table-row-login-status-warning {
+        box-shadow: inset 0 -3px 0 var(--login-status-warn-color),
+        inset 0 1px 0 var(--login-status-warn-color),
+        inset 3px 0 0px -2px var(--login-status-warn-color),
+        inset -3px 0px 0px 0px var(--login-status-warn-color);
+    }
+
+    .real-time-table-row-login-status-limit {
+        box-shadow: inset 0 -3px 0 var(--login-status-limit-color),
+        inset 0 1px 0 var(--login-status-limit-color),
+        inset 3px 0 0px -2px var(--login-status-limit-color),
+        inset -3px 0px 0px 0px var(--login-status-limit-color);
+    }
+}
+
+</style>
+
+<style lang="scss" scoped>
+::v-deep .el-input__inner::placeholder {
+    @apply text-gray-500 font-medium text-base pl-1;
+}
+::v-deep .el-input__inner {
+    @apply text-black font-medium text-base;
+}
+::v-deep .el-table .el-table__cell {
+    padding: 6px 0px;
+}
+::v-deep .el-table thead th .cell {
+    line-height: 15px;
+    color: #6e6d6d;
+    @apply flex;
 }
 </style>

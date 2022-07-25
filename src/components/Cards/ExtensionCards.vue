@@ -1,59 +1,68 @@
 <template>
-    <div>
+    <div class="mt-1">
         <portal :to="`widget-header__${data.WidgetID}`">
-            <div class="flex w-full justify-end overflow-x-hidden">
-                <div class="cursor-pointer hidden lg:block">
-                    <template v-if="showDropDown">
-                        <el-dropdown trigger="click">
-                            <span class="el-dropdown-link">
-                                <IconCardsGrid />
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>
-                                    <div class="bg-white rounded mt-1 flex flex-col border-2">
-                                        <div class="bg-gray-200 rounded-t border-b-2">
-                                            <p class="p-2 text-main-sm font-medium">{{ layoutColumns }}
-                                                {{ $t('columns.layout') }}
-                                            </p>
-                                        </div>
-                                        <div class="w-full flex p-2 justify-between">
-                                            <i
-                                                v-for="index in maxLayoutColumns"
-                                                :key="index"
-                                                :class="{'bg-primary-100': index <= layoutColumns}"
-                                                @click="updateGrid(index)"
-                                                class="icon-square mx-margin--1"
-                                            />
-                                        </div>
-                                    </div>
-                                </el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </template>
-                </div>
-                <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" class="mt-1">
+            <div class="flex w-full justify-end overflow-hidden items-center">
+                <el-select :placeholder="$t('general.sortBy')" v-model="sortBy" size="small" class="select-type">
                     <el-option :key="option.label" v-bind="option" v-for="option in sortByOptions"/>
                 </el-select>
             </div>
         </portal>
+        <portal :to="`widget-header__${data.WidgetID}-action`">
+            <div class="cursor-pointer hidden lg:block">
+                <template v-if="showDropDown">
+                    <el-dropdown size="mini" class="px-2 py-1-5 hover:bg-primary-100 rounded" trigger="click">
+                        <span class="flex items-center">
+                            <i class="vc-icon-filter text-xl text-primary" />
+                        </span>
+                        <el-dropdown-menu slot="dropdown" >
+                            <el-dropdown-item>
+                                <div class="bg-white rounded mt-1 flex flex-col border-2">
+                                    <div class="bg-gray-200 rounded-t border-b-2">
+                                        <p class="p-2 text-main-sm font-medium">{{ layoutColumns }}
+                                            {{ $t('columns.layout') }}
+                                        </p>
+                                    </div>
+                                    <div class="w-full flex p-2 justify-between">
+                                        <i
+                                            v-for="index in 15"
+                                            :key="index"
+                                            :class="{'bg-primary-100': index <= layoutColumns}"
+                                            @click="updateGrid(index)"
+                                            class="icon-square mx-margin--1"
+                                        />
+                                    </div>
+                                </div>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </template>
+            </div>
+        </portal>
         <div>
-            <div class="flex pt-1 extension-cards justify-center">
+            <div class="flex pb-6 extension-cards justify-center">
                 <fade-transition
                     :class="{'grid-container overflow-x-auto': sortedExtensions.length, 'w-full': sortedExtensions.length === 0}"
                     :style="renderColumns"
-                    class="flex flex-wrap"
-                    group>
-                    <div :key="index"
-                         class="px-1"
-                         v-for="(extension, index) in sortedExtensions">
-                        <extension-card :key="extension.number"
-                                        :extension="extension"
-                                        :threshold-config="getThresholdConfig"
-                                        :settings="getSettings"/>
+                    class="flex flex-wrap mb-1"
+                    group
+                >
+                    <div
+                        :key="index"
+                        class="px-1 relative extension-cards-container"
+                        v-for="(extension, index) in sortedExtensions"
+                    >
+                        <extension-card
+                            :key="extension.number"
+                            :extension="extension"
+                            :threshold-config="getThresholdConfig"
+                            :settings="getSettings"
+                        />
                     </div>
-                    <div class="flex flex-col w-full items-center"
-                         key="no-data"
-                         v-if="sortedExtensions.length === 0">
+                    <div
+                        class="flex flex-col w-full items-center"
+                        key="no-data"
+                        v-if="sortedExtensions.length === 0"
+                    >
                         <h3 class="text-main-xl">{{ $t('general.noData') }}</h3>
                         <icon-no-data class="w-64"/>
                     </div>
@@ -64,6 +73,7 @@
 </template>
 <script>
     import get from 'lodash/get'
+    import set from 'lodash/set'
     import times from 'lodash/times'
     import uniqBy from 'lodash/uniqBy'
     import orderBy from 'lodash/orderBy'
@@ -72,9 +82,9 @@
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { ADMIN_USER_ID, displayUsersRelatedWithAdmin } from '@/helpers/util'
-    import EXTENSION_ID from '@/enum/parameters'
+    import Parameters from '@/enum/parameters'
 
-    const cardWidth = 256;
+    const cardWidth = 300;
 
     export default {
         components: {
@@ -126,8 +136,8 @@
                     },
                 ],
                 showGridMenu: false,
-                maxLayoutColumns: 0,
-                layoutColumns: 0,
+                // maxLayoutColumns: 15,
+                // layoutColumns: 0,
                 showDropDown: false
             }
         },
@@ -137,6 +147,17 @@
             })
         },
         computed: {
+            layoutColumns: {
+                get() {
+                    return get(this.data.WidgetLayout, 'layoutColumns') || this.maxCardsToDisplay
+                },
+                set(val) {
+                    set(this.data.WidgetLayout, 'layoutColumns', val)
+                }
+            },
+            maxCardsToDisplay() {
+                return parseInt(this.pageWidth / cardWidth - 1)
+            },
             getThresholdConfig() {
                 return this.$store.getters['layout/getThresholdConfig']('activeLayout')
             },
@@ -161,7 +182,7 @@
                 return this.filteredExtensions
             },
             extensionToDisplay() {
-                const extensionParameter = this.data.WidgetConfig.find(param => param.ParameterID === EXTENSION_ID)
+                const extensionParameter = this.data.WidgetConfig.find(param => param.ParameterID === Parameters.EXTENSION_ID)
 
                 return extensionParameter ? get(extensionParameter, 'WidgetParameterValueJson.EntityPositive', []) : []
             },
@@ -192,18 +213,19 @@
             },
             updateGrid(val) {
                 this.layoutColumns = val
+                this.$emit('on-update', this.data)
             },
         },
-        watch: {
-            pageWidth: {
-                immediate: true,
-                handler: function (val) {
-                    let numCardsWhichFit = parseInt(val / cardWidth - 1)
-                    this.layoutColumns = numCardsWhichFit
-                    this.maxLayoutColumns = numCardsWhichFit
-                },
-            },
-        },
+        // watch: {
+        //     pageWidth: {
+        //         immediate: true,
+        //         handler: function (val) {
+        //             let numCardsWhichFit = parseInt(val / cardWidth - 1)
+        //             this.layoutColumns = numCardsWhichFit
+        //             this.maxLayoutColumns = numCardsWhichFit
+        //         },
+        //     },
+        // },
     }
 </script>
 <style lang="scss" scoped>
@@ -231,6 +253,9 @@
     background-color: inherit;
     color: inherit;
 }
+.extension-cards-container {
+   width: 310px;
+}
 </style>
 <style lang="scss">
 .flip-list-move {
@@ -243,5 +268,11 @@
     &:last-child {
         margin-bottom: 0;
     }
+}
+[dir="ltr"] .select-type {
+    @apply mr-2;
+}
+[dir="rtl"] .select-type {
+    @apply ml-2;
 }
 </style>

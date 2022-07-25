@@ -8,7 +8,7 @@ export const LanguageApi = {
 
             return Data
         } catch (e) {
-            parseCatch(e, true, 'Get Layouts')
+            parseCatch(e, false)
         }
     }
 }
@@ -19,7 +19,7 @@ export const ContentsApi = {
             const { Data } = await $axios.post('/Contents/TagsList/', {})
             return Data
         } catch (e) {
-            parseCatch(e, true, 'Get Layouts')
+            parseCatch(e, false)
         }
     }
 }

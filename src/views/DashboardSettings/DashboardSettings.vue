@@ -35,7 +35,7 @@
                                                    :dashboard="activeDashboard"/>
                                     <confirm-button
                                         :loading="loading"
-                                        :label="$t('Save')"
+                                        :label="$t('common.save')"
                                         icon="IconSave"
                                         @on-click="onSubmit"
                                     />
@@ -56,7 +56,7 @@
                                            :dashboard="activeDashboard"/>
                             <confirm-button
                                 :loading="loading"
-                                :label="$t('Save')"
+                                :label="$t('common.save')"
                                 icon="IconSave"
                                 @on-click="onSubmit"
                             />
@@ -83,7 +83,6 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { LayoutApi } from '@/api/layoutApi'
     import { DashboardApi } from '@/api/dashboardApi'
-    import { WidgetGroupsApi } from '@/api/widgetGroupApi'
     import map from "lodash/map";
     import {removeDummyWidgets} from "@/services/widgetService";
     import {dashboardOperation} from "@/models/instances";
@@ -168,16 +167,12 @@
                 try {
                     this.loading = true
                     this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
-                    const toUpdatePromises = this.currentDashboard.WidgetGroupList.map((group, index) => {
-                        return WidgetGroupsApi.update({
-                            ...group,
-                            Order: index,
-                        })
-                    })
 
-                    await DashboardApi.update(this.model)
+                    const newModel = cloneDeep(this.model)
+                    delete newModel.WidgetGroupList
+
+                    await DashboardApi.update(newModel)
                     await LayoutApi.update(this.activeLayout)
-                    await Promise.all(toUpdatePromises)
 
                     const { DashboardID } = this.model
                     const dashboard = await DashboardApi.find(DashboardID)

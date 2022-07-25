@@ -1,8 +1,8 @@
 <template>
-    <div class="rounded-lg pt-2" v-if="chartVisibility">
+    <div class="rounded-lg pt-2 h-full" v-if="chartVisibility">
         <highcharts
             ref="time-line-chart"
-            class="chart-content_wrapper"
+            class="h-full"
             :options="chartOptions"
             :callback="onInitChartCallback"
             :updateArgs="[true, true]"
@@ -68,8 +68,15 @@
                     if (!Data) {
                         return
                     }
+                    const defaultDisplayLegend = this.data.WidgetLayout.displayLegend
+
+                    this.data.WidgetLayout.displayLegend = !!defaultDisplayLegend
                     
                     let chartData = get(Data, '0', { series: [] })
+                    chartData.series.map(el => {
+                        el.showInLegend = defaultDisplayLegend
+                        return el
+                    })
                     
                     if (widgetDataType === widgetDataTypes.EXTERNAL_DATA_TYPE_ID) {
                         chartData = { series: Data }
@@ -143,13 +150,19 @@
                     this.chartVisibility = true
                 })
             },
+            getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.getWidgetData()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.getWidgetData()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.getWidgetData()
             this.triggerResizeEvent()
             this.reDrawChart()
         },
@@ -157,7 +170,12 @@
             data: {
                 immediate: true,
                 handler: function () {
-                    this.getWidgetData()
+                    this.getWidgetDataWithRefreshInterval()
+                    if (this.chartOptions) {
+                        this.getWidgetData()
+                        this.getWidgetDataWithRefreshInterval()
+                        this.reDrawChart()
+                    }
                 },
             },
         },
@@ -168,8 +186,3 @@
         },
     }
 </script>
-<style lang="scss" scoped>
-.chart-content_wrapper {
-    max-height: 400px;
-}
-</style>

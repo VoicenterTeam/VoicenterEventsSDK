@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="cssVars">
         <div v-if="isMultiQueuesDashboard(data)">
             <queues-table
                 :data="data"
@@ -12,6 +12,14 @@
                 :searchableFields="searchableFields"
                 :tableData="tableData">
             </RealTimeUserTable>
+        </div>
+        <div v-if="isSocketsRealTimeTableWidget(data)">
+            <SocketsRealTimeTable
+                :columns="columns"
+                :data="data"
+                :searchableFields="searchableFields"
+                :tableData="tableData">
+            </SocketsRealTimeTable>
         </div>
         <div v-if="isSimpleTable">
             <data-table
@@ -39,9 +47,9 @@
                         <el-select
                             @change="handlePageChange(1)"
                             class="w-48 mx-4 py-1"
-                            size="large"
+                            size="small"
                             v-model="pageSize">
-                            <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('per page')}`" v-for="option in pageSizes"/>
+                            <el-option :key="option" :value="parseInt(option)" :label="`${option} ${$t('general.perpage')}`" v-for="option in pageSizes"/>
                             <slot>
                                 <div class="w-40 mx-2">
                                     <span class="text-xs flex justify-center pb-2">{{$t('widget.table.customValue')}}</span>
@@ -67,14 +75,16 @@
                     </div>
                 </template>
                 <template v-slot:time-frame>
-                    <time-frame :widget="data"/>
+                    <span class="px-4 flex items-center">
+                        <time-frame :widget="data"/>
+                    </span>
                 </template>
                 <template v-slot:search-input>
-                    <div class="flex items-center w-64 px-1 lg:ml-8">
+                    <div class="flex items-center w-48 px-2">
                         <el-input
                             clearable
                             :placeholder="$t('general.search')"
-                            size="large"
+                            size="small"
                             v-model="filter">
                             <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
                         </el-input>
@@ -89,12 +99,15 @@
     import cloneDeep from 'lodash/cloneDeep'
     import startCase from 'lodash/startCase'
     import { Option, Select } from 'element-ui'
-    import { isMultiQueuesDashboard, isRealtimeWidget } from '@/helpers/widgetUtils'
+    import { isMultiQueuesDashboard, isRealtimeWidget, isSocketsRealTimeTableWidget } from '@/helpers/widgetUtils'
     import { getDefaultTimeDelay } from '@/enum/generic'
     import { getWidgetData } from '@/services/widgetService'
     import MultiQueuesDashboard from '@/components/Widgets/Data/Queue/MultiQueuesDashboard'
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { dynamicColumns } from '@/enum/realTimeTableConfigs'
+    import { defaultDialerTableColumns } from '@/enum/dialerRealTimeTableConfigs'
+    import { defaultFontSize } from '@/enum/defaultDashboardSettings'
+    import isEqual from 'lodash/isEqual'
 
     export default {
         mixins: [dataTableMixin],
@@ -106,7 +119,8 @@
             Pagination: () => import('@/modules/common/components/Pagination'),
             [Select.name]: Select,
             [Option.name]: Option,
-            [MultiQueuesDashboard.name]: MultiQueuesDashboard
+            [MultiQueuesDashboard.name]: MultiQueuesDashboard,
+            SocketsRealTimeTable: () => import('./SocketsRealTimeTable')
         },
         props: {
             data: {
@@ -137,26 +151,48 @@
                 stripe: false,
                 queuesTableData: [],
                 columnsWithPercentage: [],
-                fetchTableData: [],
+                fetchTableData: []
             }
         },
         computed: {
-            getStyles() {
-                return this.$store.getters['layout/widgetTitleStyles']('activeLayout')
-            },
             isSimpleTable() {
-                return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data)
+                return !this.isMultiQueuesDashboard(this.data) && !this.isRealtimeWidget(this.data) && !this.isSocketsRealTimeTableWidget(this.data)
             },
             columnsAreManaged() {
                 return !!get(this.data.WidgetLayout, 'Columns.visibleColumns')
             },
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
+            dynamicFontSize () {
+                return get(this.$store.getters['layout/widgetTableContentFontSize'](this.getTypeOfLayout), 'fontSize', defaultFontSize)
+            },
+            cssVars () {
+                const replacePxInString = (string) => {
+                    return string.replace('px', '')
+                }
+                const defaultFontSizeNumber = replacePxInString(defaultFontSize)
+                const dynamicFontSizeNumber = replacePxInString(this.dynamicFontSize)
+                const fontSize = dynamicFontSizeNumber >= defaultFontSizeNumber ? dynamicFontSizeNumber : defaultFontSizeNumber
+
+                return {
+                    '--dynamic-font-size': fontSize + 'px'
+                }
+            }
         },
         methods: {
             isMultiQueuesDashboard,
             isRealtimeWidget,
+            isSocketsRealTimeTableWidget,
             async getWidgetData() {
                 try {
                     let data = await getWidgetData(this.widget)
+
+                    if (this.isSocketsRealTimeTableWidget(this.widget)) {
+                        this.tableData = defaultDialerTableColumns
+                        this.columns = defaultDialerTableColumns
+                        this.searchableFields = defaultDialerTableColumns.map(el => el.prop)
+                    }
 
                     if (!data) {
                         return
@@ -220,6 +256,8 @@
             storePaginationSettings(pageSize) {
                 this.data.WidgetLayout['paginationSize'] = Number(pageSize)
                 this.$emit('on-update', this.data)
+                this.applyPaginationSettings()
+                this.fetchTableData = this.updatePaginatedData(this.tableData)
             },
             applyPaginationSettings() {
                 this.pageSize = get(this.data.WidgetLayout, 'paginationSize', 10)
@@ -266,14 +304,17 @@
 
                 this.fetchTableData = this.updatePaginatedData(sortedData)
             },
-        },
-        mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.getWidgetData()
-                }, this.data.DefaultRefreshInterval)
+            getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.getWidgetData()
+                        this.applyPaginationSettings()
+                    }, this.data.DefaultRefreshInterval)
+                }
             }
-
         },
         watch: {
             filter() {
@@ -282,9 +323,11 @@
             data: {
                 immediate: true,
                 deep: true,
-                handler: function () {
-                    this.getWidgetData()
-                    this.applyPaginationSettings()
+                handler (oldVal, newVal) {
+                    if (!newVal || !isEqual(oldVal, newVal)) {
+                        this.getWidgetData()
+                        this.getWidgetDataWithRefreshInterval()
+                    }
                 },
             },
             pageSize: {
@@ -312,3 +355,25 @@
         },
     }
 </script>
+
+<style lang="scss" scoped>
+::v-deep .el-input__inner::placeholder {
+    @apply text-gray-500 font-medium text-base pl-1;
+}
+::v-deep .el-input__inner {
+    @apply text-black font-medium text-base;
+}
+::v-deep .el-table .el-table__cell {
+    padding: 6px 0px;
+}
+::v-deep .el-table thead th .cell {
+    line-height: 15px;
+    color: #6e6d6d;
+    @apply flex;
+}
+::v-deep .el-table td > .cell {
+    @apply text-black font-medium text-sm;
+    font-size: var(--dynamic-font-size);
+    line-height: 1.1;
+}
+</style>

@@ -1,12 +1,17 @@
 <template>
     <div class="flex items-center justify-between mt-2">
         <div class="flex flex-col" v-if="!hideCallerInfo" :class="{'w-full': hideCallInfo}">
-            <span class="text-main-xs mr-2 text-gray-500">+{{ call.callerphone }}</span>
-            <span v-if="call.callerphone !== call.callername"
-                  class="text-main-xs font-medium">{{ call.callername }}</span>
+            <span
+                v-if="!isMobilePhoneNumber"
+                class="font-medium mb-1"
+                :style="fontSize"
+            >
+                {{ call.callername }}
+            </span>
+            <span v-else class="text-gray-500" :style="fontSize"><bdi>+{{ call.callerphone }}</bdi></span>
         </div>
-        <template v-if="!hideCallInfo">
-            <component :is="directionMappings[call.direction]" class="w-6 direction-icon"/>
+        <div v-if="!hideCallInfo" class="flex items-center justify-between direction-icon">
+            <component :is="directionMappings[call.direction]" class="mx-1"/>
             <el-tooltip
                 v-if="call.callstatus === 'Hold'"
                 placement="top"
@@ -15,20 +20,25 @@
             >
                 <icon-hold class="w-4 h-4"></icon-hold>
             </el-tooltip>
+            <div v-else class="w-4 h-4" />
             <slot name="threshold" :statusThreshold="threshold">
-                <IconThreshold v-if="threshold.show"
-                               v-bind="threshold.styles"
-                               class="mx-1"/>
+                <IconThreshold
+                    v-if="threshold.show"
+                    v-bind="threshold.styles"
+                    class="mx-1"
+                />
             </slot>
-            <span class="font-medium tracking-wide call-time font-mono">{{ timer.displayTime }}</span>
-        </template>
+            <span class="font-semibold call-time" :style="fontSize">{{ timer.displayTime }}</span>
+        </div>
     </div>
 </template>
 <script>
     import Timer from '@/util/Timer'
     import { Tooltip } from 'element-ui'
     import { getInitialTime } from '@/util/timeUtils'
-    
+    import { defaultFontSize } from '@/enum/defaultDashboardSettings'
+    import get from 'lodash/get'
+
     export default {
         components: {
             [Tooltip.name]: Tooltip,
@@ -53,7 +63,7 @@
         },
         data() {
             let initialTimeInSeconds = getInitialTime(this.call.callStarted)
-            
+
             return {
                 timer: new Timer({
                     initialTimeInSeconds,
@@ -63,6 +73,7 @@
                     'Incoming': 'IconDirectionIncoming',
                     'Click2Call': 'IconDirectionOutgoing',
                 },
+                fontSize: defaultFontSize
             }
         },
         computed: {
@@ -82,7 +93,7 @@
                 let seconds = this.timer.state.seconds
                 let minThreshold = this.settings.callThresholdLowValue
                 let maxThreshold = this.settings.callThresholdHeightValue
-                
+
                 if (minThreshold > seconds) {
                     show = false
                 } else if (seconds > maxThreshold && minThreshold < maxThreshold) {
@@ -98,6 +109,20 @@
             thresholdConfig() {
                 return this.$store.getters['layout/getThresholdConfig']('activeLayout')
             },
+            getTypeOfLayout () {
+                return this.$store.getters['layout/getTypeOfLayout']
+            },
+            dynamicFontSize () {
+                const widgetTableContentFontSize = get(this.$store.getters['layout/widgetTableContentFontSize'](this.getTypeOfLayout), 'fontSize')
+                const fontSize = widgetTableContentFontSize === '0px' ? defaultFontSize : widgetTableContentFontSize
+                return {
+                    'fontSize': fontSize
+                }
+            },
+            isMobilePhoneNumber () {
+                const regRule = /^[0-9+]+$/gm
+                return regRule.test(this.call.callerphone)
+            }
         },
         watch: {
             'call.ivrid'(newId, oldId) {
@@ -109,6 +134,13 @@
         },
         mounted() {
             this.timer.start()
+            if (this.$el.parentNode.hasAttribute('userid')) {
+                this.fontSize = this.dynamicFontSize
+            } else {
+                this.fontSize = {
+                    'fontSize': defaultFontSize
+                }
+            }
         },
         beforeDestroy() {
             this.timer.destroy()
@@ -118,9 +150,12 @@
 <style scoped lang="scss">
 .call-time {
     min-width: 48px;
+    line-height: 1;
+    text-align: center;
 }
 
 .rtl .direction-icon {
-    transform: rotate(180deg);
+    display: flex;
+    flex-direction: row-reverse;
 }
 </style>

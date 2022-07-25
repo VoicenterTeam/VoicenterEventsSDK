@@ -40,13 +40,19 @@
                     console.warn(e)
                 }
             },
+            getDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.getData()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.getData()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.getData()
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {
@@ -57,7 +63,7 @@
             data: {
                 immediate: true,
                 handler: function () {
-                    this.getData()
+                    this.getDataWithRefreshInterval()
                 },
             },
         },

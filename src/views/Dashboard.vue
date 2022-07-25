@@ -19,7 +19,7 @@
                 <div v-if="layoutType !== 'tabbed'"
                      class="flex items-center">
                     <new-group-button
-                        :disabled="editMode"
+                        v-if="!editMode"
                         @click="addNewGroup"
                     />
                     <IconVerticalLine class="mx-6 h-12"/>
@@ -66,7 +66,6 @@
                 </div>
                 <div
                     class="p-1"
-                    :class="{'px-2 md:p-6': !onFullScreen}"
                     :key="activeDashboardData.DashboardID"
                 >
                     <div
@@ -102,6 +101,7 @@
         </div>
         <delete-dialog
             :visible.sync="showConfirmDialog"
+            :title="$t('general.deleteConfirmation')"
             :description="$t('dashboard.deleteWidgetGroupConfirmation')"
             @on-cancel="showConfirmDialog = false"
             @on-confirm="removeWidgetGroup"
@@ -205,7 +205,7 @@
             },
             showActiveWidgetGroupName () {
                 const activeWidgetGroup = this.activeDashboardData.WidgetGroupList.find(el => Number(el.WidgetGroupID) === Number(this.activeWidgetGroupID))
-                return activeWidgetGroup.WidgetGroupTitle || this.$t('Group ID') +': '+ activeWidgetGroup.WidgetGroupID
+                return activeWidgetGroup.WidgetGroupTitle || this.$t('dashboard.groupID') +': '+ activeWidgetGroup.WidgetGroupID
             }
         },
         methods: {

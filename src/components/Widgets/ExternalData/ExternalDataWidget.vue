@@ -25,7 +25,8 @@
             GaugeChart: () => import('@/components/Charts/GaugeChart'),
             TableData: () => import('../Data/Table/TableData'),
             TimeLineChart: () => import('@/components/Charts/TimeLineChart'),
-            PieChart: () => import('@/components/Charts/PieChart')
+            PieChart: () => import('@/components/Charts/PieChart'),
+            SocketsRealTimeFunnel: () => import('@/components/Charts/FunnelChart.vue')
         },
         props: {
             data: {

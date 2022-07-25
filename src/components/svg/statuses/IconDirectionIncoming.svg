@@ -1,10 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 14">
-<g fill="none" fill-rule="evenodd">
-    <path fill="#FF4D4D" d="M7.2 5.1H24v3.4H7.2v2.686a1 1 0 0 1-1.707.707L1.107 7.507a1 1 0 0 1 0-1.414l4.386-4.386a1 1 0 0 1 1.707.707V5.1z"/>
-    <g transform="matrix(-1 0 0 1 31 0)">
-        <circle cx="7" cy="7" r="7" fill="#FFDFDF"/>
-        <circle cx="7" cy="7" r="4" fill="#FF4D4D" stroke="#FFF"/>
-    </g>
-</g>
-</svg>
 
+<svg width="50" height="14" viewBox="0 0 50 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle opacity="0.2" cx="42.1334" cy="6.99998" r="6.93333" fill="#FF3636"/>
+<path d="M0.533203 7L6.72368 10.5741V3.42593L0.533203 7ZM6.10463 7.61905H42.1332V6.38095H6.10463V7.61905Z" fill="#FF3636"/>
+<circle cx="42.1333" cy="6.99966" r="4.00317" fill="#FF3636" stroke="#FF3636" stroke-width="1.2381"/>
+</svg>

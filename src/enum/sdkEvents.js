@@ -16,7 +16,9 @@ export const sdkEventTypes = {
     KEEP_ALIVE_RESPONSE: 'keepaliveResponse',
     SERVER_FETCH_ERROR: 'server_fetch_error',
     CLOSE: 'closeme',
-    ERROR: 'error'
+    ERROR: 'error',
+    ALL_DIALERS_STATUS: 'AllDialersStatus',
+    DIALER_EVENT: 'DialerEvent'
 }
 
 export const sdkEventReasons = {

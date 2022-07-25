@@ -5,6 +5,7 @@ const axios = require('axios').default;
 const apiUrl = process.env.VUE_APP_API_URL
 const defaultDomain = process.env.VUE_APP_DEFAULT_DOMAIN_NAME || 'dashboarddev.voicenter.co'
 const localeDir = path.join(__dirname, '../', 'src', 'locales')
+const languages = ['en', 'he']
 
 const operationsWithLocaleJsonFIle = async () => {
   try {
@@ -15,12 +16,14 @@ const operationsWithLocaleJsonFIle = async () => {
 
     const data = JSON.stringify(response.data.Data, null, "\t");
 
-    if (fs.existsSync(path.join(localeDir, 'en.json'))) {
-      fs.unlinkSync(path.join(localeDir, 'en.json'))
-      fs.writeFileSync(path.join(localeDir, 'en.json'), data)
-    } else {
-      fs.writeFileSync(path.join(localeDir, 'en.json'), data)
-    }
+    languages.forEach(language => {
+      if (fs.existsSync(path.join(localeDir, `${language}.json`))) {
+        fs.unlinkSync(path.join(localeDir, `${language}.json`))
+        fs.writeFileSync(path.join(localeDir, `${language}.json`), data)
+      } else {
+        fs.writeFileSync(path.join(localeDir, `${language}.json`), data)
+      }
+    })
   } catch (errors) {
     console.error(errors);
   }

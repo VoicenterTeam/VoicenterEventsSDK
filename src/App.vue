@@ -23,8 +23,12 @@ export default {
     async created() {
         try {
             await this.$store.dispatch('dashboards/setContentLoading', true)
+            await this.$store.dispatch('entities/getEntitiesList')
 
-            await this.$store.dispatch('lang/getLanguages')
+            try {
+                await this.$store.dispatch('lang/getLanguages')
+            } finally {}
+
             const activeLanguage = this.$store.getters['lang/getActiveLanguage'] || 'en'
 
             await this.$store.dispatch('lang/setLanguage', activeLanguage)
@@ -32,10 +36,9 @@ export default {
             if (activeLanguage && process.env.NODE_ENV === 'production') {
                 const locale = activeLanguage.locale
                 this.$i18n.locale = locale
-                this.$i18n.setLocaleMessage(locale, this.$store.state.lang.translations)
+                this.$i18n.mergeLocaleMessage(locale, this.$store.state.lang.translations)
             }
 
-            await this.$store.dispatch('entities/getEntitiesList')
             await this.$store.dispatch('dashboards/getDashboards')
             await this.$store.dispatch('templatesCategory/getAllTemplatesCategory')
 
@@ -79,7 +82,7 @@ export default {
             return this.$store.getters['dashboards/getAllDashboards']
         },
         isContentLoading() {
-            return this.$store.state.dashboards.contentLoading
+            return this.$store.state.dashboards.contentLoading && window.location.pathname !== '/'
         }
     },
     methods: {
@@ -119,10 +122,18 @@ export default {
         activeDashboard: {
             immediate: true,
             deep: true,
-            handler: async function () {
-                await this.$store.dispatch('layout/setupActiveLayout')
-            },
-        },
-    },
+            handler: async function (oldVal, newVal) {
+                if (oldVal && newVal && oldVal.DashboardID !== newVal.DashboardID) {
+                    await this.$store.dispatch('layout/setupActiveLayout')
+                }
+            }
+        }
+    }
 }
 </script>
+
+<style lang="scss">
+[dir="rtl"] .popper__arrow::after {
+    display: none !important;
+}
+</style>

@@ -1,14 +1,15 @@
 <template>
-    <div class="bg-transparent pt-4 rounded-lg"
+    <div class="bg-transparent rounded-lg chart-content_wrapper pb-12"
          v-if="chartVisibility">
-        <highcharts
-            ref="gauge-chart"
-            class="chart-content_wrapper"
-            :options="chartData"
-            :callback="onInitChartCallback"
-            :updateArgs="[true, true]"
-        />
-        <div class="mb-4">
+        <div class="chart-content_wrapper" ref="gauge-chart-container">
+            <highcharts
+                ref="gauge-chart"
+                :options="chartData"
+                :callback="onInitChartCallback"
+                :updateArgs="[true, true]"
+            />
+        </div>
+        <div class="mb-4" v-if="!!data.WidgetLayout.showWaitingTimeTable">
             <data-table
                 :border="tableBorder"
                 :columns="availableColumns"
@@ -26,7 +27,6 @@
 </template>
 <script>
     import get from 'lodash/get'
-    import Highcharts from 'highcharts'
     import { Tooltip } from 'element-ui'
     import { Chart } from 'highcharts-vue'
     import bus from '@/event-bus/EventBus'
@@ -34,23 +34,27 @@
     import { TrashIcon } from 'vue-feather-icons'
     import gaugeChartConfig from './Configs/Gauge'
     import { WidgetDataApi } from '@/api/widgetDataApi'
-    import highchartsMoreInit from 'highcharts/highcharts-more'
-    import solidGaugeInit from 'highcharts/modules/solid-gauge'
     import { isExternalDataWidget } from '@/helpers/widgetUtils'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import {activeGaugeCallColumns} from "@/enum/queueConfigs";
     import orderBy from "lodash/orderBy";
-    
+
+    import Highcharts from 'highcharts/highcharts'
+    import highchartsMoreInit from 'highcharts/highcharts-more'
+    import solidGaugeInit from 'highcharts/modules/solid-gauge'
+
     highchartsMoreInit(Highcharts)
     solidGaugeInit(Highcharts)
-    
+
+
     export default {
         mixins: [queueMixin, actionMixin],
         components: {
             TrashIcon,
+            Highcharts,
             highcharts: Chart,
             [Tooltip.name]: Tooltip,
-            DataTable: () => import('@/components/Table/DataTable'),
+            DataTable: () => import('@/components/Table/DataTableWithoutResizeColumn'),
             WaitingTime: () => import('@/components/Widgets/Data/Queue/WaitingTime')
         },
         props: {
@@ -81,7 +85,14 @@
                 return get(this.data, 'WidgetLayout.labelFontSize', 16)
             },
             availableColumns () {
-                return get(this.data.WidgetLayout, 'Columns.availableColumns') || activeGaugeCallColumns
+                const columns = get(this.data.WidgetLayout, 'Columns.availableColumns') || activeGaugeCallColumns
+
+                return columns.map((column, index) => {
+                    return {
+                        ...column,
+                        width: index === 0 ? '110px' : 'auto'
+                    }
+                })
             },
             visibleColumns () {
                 return get(this.data.WidgetLayout, 'Columns.visibleColumns') || activeGaugeCallColumns.map(c => c.prop)
@@ -134,25 +145,26 @@
                 } else {
                     this.chartData = this.getAgentsData()
                 }
-                
+
                 this.reDrawChart()
+                this.$refs['gauge-chart'].chart.redraw()
             },
             getAgentsData() {
                 let queuesCount = this.getMaximumRange || this.allQueues.length
-                
+
                 let range = {
                     min: 0,
                     max: queuesCount,
                 }
-                
+
                 let stops = [
                     [0, '#55BF3B'],
                     [queuesCount / 2 + 0.1, '#DDDF0D'],
                     [queuesCount, '#DF5353'],
                 ]
-                
+
                 const labelFontSize = this.getLabelFontSize
-                
+
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
@@ -165,11 +177,11 @@
                         },
                     },
                 }
-                
+
                 const allQueueCalls = this.allQueueCalls.length
-                
+
                 const labelStyle = `style="font-size:${labelFontSize}px"`
-                
+
                 this.data.series = [{
                     data: [allQueueCalls],
                     dataLabels: {
@@ -180,19 +192,23 @@
                         format:
                             '<div style="text-align:center">' +
                             `<span ${labelStyle}>{y}</span>&nbsp;` +
-                            `<span>${this.$t("calls")}</span>` +
+                            `<span>${this.$t("general.calls")}</span>` +
                             '</div>',
                     },
                 }]
-                
-                return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig } }
+
+                const title = {
+                    text: null
+                }
+
+                return { ...gaugeChartConfig, ...this.data, ...{ yAxis: yAxisConfig }, title: title }
             },
             triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
-                    if (this.data.WidgetID.toString() !== widgetID.toString()) {
+                    if (this.data.WidgetID.toString() === widgetID.toString()) {
+                        this.$refs['gauge-chart'].chart.reflow()
                         return;
                     }
-                    this.reDrawChart()
                 });
             },
             reDrawChart() {
@@ -201,28 +217,42 @@
                     this.chartVisibility = true
                 })
             },
+            chartOptionsWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.chartOptions()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         watch: {
             data: {
-                immediate: true,
+                deep: true,
                 handler: function () {
                     this.chartOptions()
+                    this.chartOptionsWithRefreshInterval()
                 },
             },
             allQueues() {
                 this.chartOptions()
+                this.chartOptionsWithRefreshInterval()
             },
+            'data.WidgetLayout.showWaitingTimeTable': {
+                immediate: true,
+                handler (val) {
+                    gaugeChartConfig.chart.height = val ? '39%' : '59%'
+                }
+            }
         },
         mounted() {
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
             this.triggerResizeEvent()
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.chartOptions()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.chartOptions()
         },
         beforeDestroy() {
             if (this.fetchDataInterval) {
@@ -231,8 +261,11 @@
         },
     }
 </script>
-<style lang="scss">
-.gouge-wrapper {
-    max-height: 300px;
+
+<style lang="scss" scoped>
+::v-deep .el-table td > .cell {
+    @apply text-black font-medium text-sm;
+    font-size: var(--dynamic-font-size);
+    line-height: 1.1;
 }
 </style>

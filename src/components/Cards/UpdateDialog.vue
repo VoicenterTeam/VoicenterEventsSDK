@@ -1,5 +1,5 @@
 <template>
-<modal :width="setWidth" v-bind="$attrs" v-on="$listeners">
+<modal :width="setWidth" v-bind="$attrs" v-on="$listeners" :append-to-body="true">
     <template v-slot:title>
         <div class="flex flex-row items-center">
             <h5 class="text-main-2xl font-semibold text-gray-700" slot="title">{{ $t('extensionCard.update') }}</h5>
@@ -13,24 +13,40 @@
     <el-collapse class="pt-2" v-model="activeCollapse">
         <el-collapse-item :title="$t('widget.layout')" name="layout">
             <div class="py-4">
-                <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
-                <el-slider
-                    :marks="titleBestOptions"
+                <div>
+                    <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
+                </div>
+                <el-input-number
                     :max="titleFontSizes.max"
                     :min="titleFontSizes.min"
-                    show-input
+                    :step="1"
+                    size="small"
                     v-model="layoutConfig.titleFontSize">
-                </el-slider>
+                </el-input-number>
             </div>
             <div class="py-4">
-                <label>{{ $t('widget.config.cardValueFontSize') }}</label>
-                <el-slider
-                    :marks="valueBestOptions"
+                <div>
+                    <label>{{ $t('widget.config.cardValueFontSize') }}</label>
+                </div>
+                <el-input-number
                     :max="valueFontSizes.max"
                     :min="valueFontSizes.min"
-                    show-input
+                    :step="1"
+                    size="small"
                     v-model="layoutConfig.valueFontSize">
-                </el-slider>
+                </el-input-number>
+            </div>
+            <div class="py-4">
+                <div>
+                    <label>{{ $t('widget.config.valueIconMinWidth') }}</label>
+                </div>
+                <el-input-number
+                    :step="1"
+                    :max="valueMinWidth.max"
+                    :min="valueMinWidth.min"
+                    size="small"
+                    v-model="layoutConfig.valueIconMinWidth">
+                </el-input-number>
             </div>
             <widget-colors :model="model" :onlyBackground="onlyBackground"/>
         </el-collapse-item>
@@ -43,7 +59,7 @@
 </template>
 <script>
 import { InfoIcon } from 'vue-feather-icons'
-import { Collapse, CollapseItem, Popover, Slider } from 'element-ui'
+import { Collapse, CollapseItem, Popover, InputNumber } from 'element-ui'
 
 export default {
     inheritAttrs: false,
@@ -52,7 +68,7 @@ export default {
         InfoIcon,
         WidgetColors: () => import('../Widgets/WidgetUpdateForm/WidgetLayout/WidgetColors'),
         StaticWidgetInfo: () => import('../Widgets/WidgetUpdateForm/StaticWidgetInfo'),
-        [Slider.name]: Slider,
+        [InputNumber.name]: InputNumber,
         [Popover.name]: Popover,
         [Collapse.name]: Collapse,
         [CollapseItem.name]: CollapseItem,
@@ -108,6 +124,10 @@ export default {
                 96: '96px',
                 112: '112px',
             },
+            valueMinWidth: {
+                min: 24,
+                max: 128
+            }
         }
     },
 }

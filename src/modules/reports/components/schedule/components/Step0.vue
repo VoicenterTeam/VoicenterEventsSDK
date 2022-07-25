@@ -69,131 +69,131 @@
 <script>
 
     export default {
-        props: {
-            reportId: {
-                type: [Number, String],
-                default: ''
+    props: {
+        reportId: {
+            type: [Number, String],
+            default: ''
+        }
+    },
+    components: {
+        TimeRange: () => import('@/modules/common/components/form/TimeRange'),
+        Interval: () => import('@/modules/common/components/form/Interval'),
+        Conditions: () => import('@/modules/reports/components/schedule/components/Conditions'),
+        Date: () => import('@/components/Widgets/BaseDate'),
+        DayOfTheWeek: () => import('@/modules/common/components/form/DayOfTheWeek'),
+        InputText: () => import('@/modules/common/components/form/InputText'),
+        InputNumber: () => import('@/modules/common/components/form/InputNumber'),
+        UserSelect: () => import('@/modules/common/components/form/UserSelect'),
+        AccountSelect: () => import('@/modules/common/components/form/AccountSelect'),
+        DayOfMonth: () => import('@/modules/common/components/form/DayOfMonth')
+    },
+    data () {
+        return {
+            model: {
+                ReportTriggerTypeID: null,
+                ReportTriggerName: null
+            },
+            showTriggerComponents: true,
+            clickedOnNextBtn: false
+        }
+    },
+    computed: {
+        reportTriggerTypeList() {
+            return this.$store.getters['reportTrigger/getConfData'].ReportTriggerTypeList
+        },
+        activeTrigger () {
+            if (!this.model.ReportTriggerTypeID) {
+                return
             }
+            const reportTriggerParameters = this.reportTriggerTypeList.find(el => el.ReportTriggerTypeID === this.model.ReportTriggerTypeID).ReportTriggerParameters
+            return reportTriggerParameters.sort((a, b) => a.ParameterOrder - b.ParameterOrder)
         },
-        components: {
-            TimeRange: () => import('@/modules/common/components/form/TimeRange'),
-            Interval: () => import('@/modules/common/components/form/Interval'),
-            Conditions: () => import('@/modules/reports/components/schedule/components/Conditions'),
-            Date: () => import('@/components/Widgets/BaseDate'),
-            DayOfTheWeek: () => import('@/modules/common/components/form/DayOfTheWeek'),
-            InputText: () => import('@/modules/common/components/form/InputText'),
-            InputNumber: () => import('@/modules/common/components/form/InputNumber'),
-            UserSelect: () => import('@/modules/common/components/form/UserSelect'),
-            AccountSelect: () => import('@/modules/common/components/form/AccountSelect'),
-            DayOfMonth: () => import('@/modules/common/components/form/DayOfMonth')
+        getReportTriggerData () {
+            return this.$store.getters['reportTrigger/getReportTriggerData']
         },
-        data () {
-            return {
-                model: {
-                    ReportTriggerTypeID: null,
-                    ReportTriggerName: null
-                },
-                showTriggerComponents: true,
-                clickedOnNextBtn: false
-            }
-        },
-        computed: {
-            reportTriggerTypeList() {
-                return this.$store.getters['reportTrigger/getConfData'].ReportTriggerTypeList
-            },
-            activeTrigger () {
-                if (!this.model.ReportTriggerTypeID) {
-                    return
-                }
-                const reportTriggerParameters = this.reportTriggerTypeList.find(el => el.ReportTriggerTypeID === this.model.ReportTriggerTypeID).ReportTriggerParameters
-                return reportTriggerParameters.sort((a, b) => a.ParameterOrder - b.ParameterOrder)
-            },
-            getReportTriggerData () {
-                return this.$store.getters['reportTrigger/getReportTriggerData']
-            },
-            getReportData () {
-                return this.$store.getters['report/getReportData']
-            }
-        },
-        methods: {
-            async onChangeFrequency (val) {
-                const copyOfModel = JSON.parse(JSON.stringify(this.model))
-                await this.$store.dispatch('reportTrigger/updateReportTriggerDataScheduleSettings', {})
-                this.model = {
-                    ReportTriggerTypeID: null,
-                    ReportTriggerName: null
-                }
-                this.model.ReportTriggerTypeID = val
-                this.model.ReportTriggerName = copyOfModel.ReportTriggerName
-                this.showTriggerComponents = false
-                this.$nextTick(() => {
-                    this.showTriggerComponents = true
-                })
-
-                this.clickedOnNextBtn = false
-            },
-            goNext() {
-                this.clickedOnNextBtn = true
-                const isScheduleFieldsNotEmpty = () => {
-                    const haveTriggerComponent = Object.keys(this.model).filter(field => !field.includes('ReportTrigger'))
-                    const allFieldsValid = Object.entries(this.model)
-                        .filter(field => !field[0].includes('ReportTrigger'))
-                        .every(field => field[1])
-
-                    return haveTriggerComponent.length === this.activeTrigger.length && allFieldsValid
-                }
-
-                if (!isScheduleFieldsNotEmpty()) {
-                    return
-                }
-
-                const objToEmit = {
-                    nextStep: true
-                }
-                const data = {
-                    ReportTriggerTypeID: this.model.ReportTriggerTypeID,
-                    ReportTriggerName: this.model.ReportTriggerName,
-                    ReportID: Number(this.$route.params.id) || this.reportId
-                }
-
-                this.$store.dispatch('reportTrigger/updateReportTriggerData', data)
-                delete this.model.ReportTriggerName
-                delete this.model.ReportTriggerTypeID
-
-                this.$store.dispatch('reportTrigger/updateReportTriggerDataScheduleSettings', this.model)
-                this.$emit('on-update', objToEmit)
-            },
-            getComponentName (component) {
-                const componentTag = component.ComponentTag
-
-                if (componentTag === 'Time') {
-                    return 'Interval'
-                } else if (componentTag === 'Text') {
-                    return 'InputText'
-                } else if (componentTag === 'Number') {
-                    return 'InputNumber'
-                } else {
-                    return componentTag
-                }
-            },
-            onChange (item) {
-                this.model[item.component.ParameterTag] = item.value
-            }
-        },
-        mounted () {
+        getReportData () {
+            return this.$store.getters['report/getReportData']
+        }
+    },
+    methods: {
+        async onChangeFrequency (val) {
+            const copyOfModel = JSON.parse(JSON.stringify(this.model))
+            await this.$store.dispatch('reportTrigger/updateReportTriggerDataScheduleSettings', {})
             this.model = {
-                ReportTriggerTypeID: this.getReportTriggerData.ReportTriggerTypeID,
-                ReportTriggerName: this.getReportTriggerData.ReportTriggerName ? this.getReportTriggerData.ReportTriggerName : this.$t('report.schedule.name')
+                ReportTriggerTypeID: null,
+                ReportTriggerName: null
+            }
+            this.model.ReportTriggerTypeID = val
+            this.model.ReportTriggerName = copyOfModel.ReportTriggerName
+            this.showTriggerComponents = false
+            this.$nextTick(() => {
+                this.showTriggerComponents = true
+            })
+
+            this.clickedOnNextBtn = false
+        },
+        goNext() {
+            this.clickedOnNextBtn = true
+            const isScheduleFieldsNotEmpty = () => {
+                const haveTriggerComponent = Object.keys(this.model).filter(field => !field.includes('ReportTrigger'))
+                const allFieldsValid = Object.entries(this.model)
+                    .filter(field => !field[0].includes('ReportTrigger'))
+                    .every(field => field[1])
+
+                return haveTriggerComponent.length === this.activeTrigger.length && allFieldsValid
             }
 
-            if (this.getReportTriggerData.ScheduleData && Object.keys(this.getReportTriggerData.ScheduleData).length) {
-                Object.assign(this.model, this.getReportTriggerData.ScheduleData)
+            if (!isScheduleFieldsNotEmpty()) {
+                return
             }
-            if (this.reportTriggerTypeList && !Object.keys(this.getReportTriggerData.ScheduleData).length) {
-                this.model.ReportTriggerTypeID = this.reportTriggerTypeList[0].ReportTriggerTypeID
+
+            const objToEmit = {
+                nextStep: true
             }
+            const data = {
+                ReportTriggerTypeID: this.model.ReportTriggerTypeID,
+                ReportTriggerName: this.model.ReportTriggerName,
+                ReportID: Number(this.$route.params.id) || this.reportId
+            }
+
+            this.$store.dispatch('reportTrigger/updateReportTriggerData', data)
+            delete this.model.ReportTriggerName
+            delete this.model.ReportTriggerTypeID
+
+            this.$store.dispatch('reportTrigger/updateReportTriggerDataScheduleSettings', this.model)
+            this.$emit('on-update', objToEmit)
+        },
+        getComponentName (component) {
+            const componentTag = component.ComponentTag
+
+            if (componentTag === 'Time') {
+                return 'Interval'
+            } else if (componentTag === 'Text') {
+                return 'InputText'
+            } else if (componentTag === 'Number') {
+                return 'InputNumber'
+            } else {
+                return componentTag
+            }
+        },
+        onChange (item) {
+            this.model[item.component.ParameterTag] = item.value
+        }
+    },
+    mounted () {
+        this.model = {
+            ReportTriggerTypeID: this.getReportTriggerData.ReportTriggerTypeID,
+            ReportTriggerName: this.getReportTriggerData.ReportTriggerName ? this.getReportTriggerData.ReportTriggerName : this.$t('report.schedule.name')
+        }
+
+        if (this.getReportTriggerData.ScheduleData && Object.keys(this.getReportTriggerData.ScheduleData).length) {
+            Object.assign(this.model, this.getReportTriggerData.ScheduleData)
+        }
+        if (this.reportTriggerTypeList && !Object.keys(this.getReportTriggerData.ScheduleData).length) {
+            this.model.ReportTriggerTypeID = this.reportTriggerTypeList[0].ReportTriggerTypeID
         }
     }
+}
 </script>
 <style lang="scss" scoped>
 .menu-wrapper {

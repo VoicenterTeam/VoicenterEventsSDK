@@ -30,123 +30,61 @@ export const statusDictionary = {
     2: 'move layout to bin',
 }
 
-export const sliderOptionConfigs = {
+export const optionConfigs = {
     FontSize: {
         min: 8,
         max: 24,
-        step: 1,
-        marks: {
-            9: '9px',
-            16: '16px',
-            20: '20px',
-        },
+        step: 1
     },
     WidgetTitlesFontSize: {
         min: 12,
         max: 48,
-        step: 1,
-        marks: {
-            16: '16px',
-            24: '24px',
-            40: '40px',
-        },
+        step: 1
     },
     WidgetGroupTitlesFontSize: {
         min: 12,
         max: 48,
-        step: 1,
-        marks: {
-            16: '16px',
-            24: '24px',
-            32: '32px',
-        },
+        step: 1
+    },
+    WidgetTableContentFontSize: {
+        min: 12,
+        max: 48,
+        step: 1
     },
     MinRefreshInterval: {
         min: 10,
         max: 1000,
-        step: 10,
-        marks: {
-            100: '100s',
-            200: '200s',
-            400: '400s',
-            600: '600s',
-            800: '800s',
-        },
+        step: 15
     },
     RefreshRealTimeDataDelay: {
         min: 3,
         max: 90,
-        step: 1,
-        marks: {
-            5: '5min',
-            15: '15min',
-            30: '30min',
-            45: '45min',
-            75: '75min',
-        },
+        step: 15
     },
     ReportInterval: {
         min: 10,
         max: 1000,
-        step: 10,
-        marks: {
-            100: '120s',
-            360: '360s',
-            600: '600s',
-            800: '800s',
-        },
+        step: 15
     },
     ActiveCallWarning: {
         min: 1,
         max: 7200,
-        step: 5,
-        marks: {
-            900: '15min',
-            1800: '30min',
-            2700: '45min',
-            3600: '1h',
-            4700: '1:30h',
-            6300: '1:45h',
-        },
+        step: 15
     },
     ActiveCallLimit: {
         min: 1,
         max: 7200,
-        step: 5,
-        marks: {
-            900: '15min',
-            1800: '30min',
-            2700: '45min',
-            3600: '1h',
-            4700: '1:30h',
-            6300: '1:45h',
-        },
+        step: 15
     },
     HoldTimeWarning: {
         min: 1,
         max: 7200,
-        step: 5,
-        marks: {
-            900: '15min',
-            1800: '30min',
-            2700: '45min',
-            3600: '1h',
-            4700: '1:30h',
-            6300: '1:45h',
-        },
+        step: 15
     },
     HoldTimeLimit: {
         min: 1,
         max: 7200,
-        step: 5,
-        marks: {
-            900: '15min',
-            1800: '30min',
-            2700: '45min',
-            3600: '1h',
-            4700: '1:30h',
-            6300: '1:45h',
-        },
+        step: 15
     },
 }
 
@@ -184,12 +122,14 @@ export const DEFAULT_GROUP_KEYS = {
         'ColorWidgetGroupBackground',
         'ColorWidgetGroupFrames',
         'ColorWidgetGroupTitles',
-        
+
         'ActiveCallWarningColor',
         'ActiveCallLimitColor',
         'HoldTimeWarningColor',
         'HoldTimeLimitColor',
-        
+        'LoginStatusWarningColor',
+        'LoginStatusLimitColor',
+
         'DashboardLogo',
     ],
     'Fonts': [
@@ -197,6 +137,7 @@ export const DEFAULT_GROUP_KEYS = {
         'FontSize',
         'WidgetTitlesFontSize',
         'WidgetGroupTitlesFontSize',
+        'WidgetTableContentFontSize'
     ],
     'Timers': [
         'MinRefreshInterval',
@@ -204,7 +145,7 @@ export const DEFAULT_GROUP_KEYS = {
         'ReportInterval',
         'ReportSwitching',
         'ReportRefresh',
-        
+
         'ActiveCallWarning',
         'ActiveCallLimit',
         'HoldTimeWarning',

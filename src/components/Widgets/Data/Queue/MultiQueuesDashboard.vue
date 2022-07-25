@@ -5,7 +5,6 @@
             :border="border"
             :can-sort-rows="canSortRows"
             :cell-class-name="getCellClassName"
-            :cell-style="getCellStyle"
             :is-multi-queue-table="true"
             :columns="getAvailableColumns"
             :editable="editable"
@@ -55,22 +54,30 @@
                 <base-widget-title :title="data.Title"/>
             </template>
             <template v-slot:time-frame>
-                <time-frame :widget="data"/>
+                <span class="px-4 flex items-center">
+                    <time-frame :widget="data"/>
+                </span>
             </template>
             <template v-slot:search-input>
-                <div class="flex items-center w-64 px-1">
+                <div class="flex items-center w-48 px-1">
                     <el-input
                         clearable
                         :placeholder="$t('general.search')"
-                        size="large"
+                        size="small"
                         v-model="filter">
                         <i slot="prefix" class="el-input__icon vc-icon-search icon-md text-primary ml-1" />
                     </el-input>
                 </div>
             </template>
+            <template v-for="slot in Object.keys(queueDashboardColumnStyles)" v-slot:[slot]="{row}">
+                <div :key="slot" :style="queueDashboardColumnStyles[slot]">
+                    {{ row[slot] }}
+                </div>
+            </template>
         </data-table>
     </div>
 </template>
+
 <script>
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
@@ -141,6 +148,7 @@
                     'Full',
                     'NextDestination',
                 ],
+                queueDashboardColumnStyles
             }
         },
         computed: {
@@ -242,13 +250,9 @@
                 let queue = this.allEntityQueues.filter((queue) => queue.queue_id === Number(queueID))
                 return get(queue, '[0].q_name', '--')
             },
-            getCellStyle({ row, column }) {
-                let color = get(queueDashboardColumnStyles[column.property], 'color', 'transparent')
-                return { 'background-color': color }
-            },
             getRowStyle({ row }) {
                 let color = get(queueDashboardColumnStyles[row['Stat type']], 'color')
-                return { 'background-color': color }
+                return { '--text-col-color': color }
             },
             getCellClassName({ column, row }) {
                 let className = ''
@@ -437,5 +441,31 @@
 <style lang="scss">
 td.text-white > .cell {
     color: white;
+}
+</style>
+<style lang="scss" scoped>
+::v-deep .el-input__inner::placeholder {
+    @apply text-gray-500 font-medium text-base pl-1;
+}
+::v-deep .el-input__inner {
+    @apply text-black font-medium text-base;
+}
+::v-deep .el-table .el-table__cell {
+    padding: 6px 0px;
+}
+::v-deep .el-table thead th .cell {
+    line-height: 15px;
+    color: #6e6d6d;
+    @apply flex;
+}
+
+::v-deep .el-table thead th .cell {
+    line-height: 15px;
+    color: #6e6d6d;
+    @apply flex;
+}
+
+::v-deep .el-table .cell div {
+    color: var(--text-col-color);
 }
 </style>

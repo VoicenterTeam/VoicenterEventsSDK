@@ -1,6 +1,7 @@
 import $axios from './apiConnection'
 import store from '@/store/store'
 import parseCatch from '@/helpers/handleErrors'
+import cloneDeep from 'lodash/cloneDeep'
 
 function currentAccountId() {
     return store.state.entities.selectedAccountID
@@ -33,11 +34,14 @@ export const DashboardApi = {
                 await timeout(2000)
                 return await this.getAll()
             }
-            
-            parseCatch(e, true)
-            setTimeout(() => {
-                window.location.href = process.env.VUE_APP_FALLBACK_URL
-            }, 1000)
+
+            try {
+                parseCatch(e, true)
+            } catch (e) {
+                setTimeout(() => {
+                    window.location.href = process.env.VUE_APP_FALLBACK_URL
+                }, 1000)
+            }
         }
     },
     
@@ -52,20 +56,17 @@ export const DashboardApi = {
     
     async update(data) {
         try {
-            data.WidgetGroupList.forEach(group => {
-                group.WidgetList.forEach(widget => {
-                    if (!widget.WidgetConfig) {
-                        widget.WidgetConfig = []
-                    }
-                    widget.WidgetConfig.forEach(config => {
-                        if (config.WidgetParameterValue === '{}') {
-                            config.WidgetParameterValue = ''
-                        }
-                    })
-                })
-            })
+            const copyOfData = cloneDeep(data)
+            const widgetGroupList = copyOfData.WidgetGroupList
+
+            if (copyOfData.WidgetGroupList && copyOfData.WidgetGroupList.length) {
+                delete copyOfData.WidgetGroupList
+            }
+
+            const dashboardData = await $axios.post(`/DashBoards/Update/`, copyOfData)
+            dashboardData.WidgetGroupList = widgetGroupList
             
-            return await $axios.post(`/DashBoards/Update/`, data)
+            return dashboardData
         } catch (e) {
             parseCatch(e, true, 'Update Dashboard')
         }

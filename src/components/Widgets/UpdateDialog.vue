@@ -15,7 +15,7 @@
                 <label>{{ $t('widget.title') }}</label>
                 <el-input v-model="model.Title"/>
             </el-form-item>
-            <el-form-item v-if="'DefaultRefreshInterval' in model">
+            <el-form-item v-if="'DefaultRefreshInterval' in model && !isFunnelChartWidget(widget) && !isSocketsRealTimeTableWidget(widget)">
                 <WidgetRefreshInterval :model="model"/>
             </el-form-item>
             <el-form-item v-if="isMultiQueuesDashboard(widget)">
@@ -39,18 +39,27 @@
             </el-form-item>
             <el-form-item v-if="isQueueGauge(widget)">
                 <div class="flex justify-between">
-                    <label>{{ $t('widget.config.maximumRangeValue') }}</label>
+                    <div>
+                        <label>{{ $t('widget.config.maximumRangeValue') }}</label>
+                    </div>
                     <el-input-number :max="1000" :min="1" :step="2" type="number"
                                      v-model="model.WidgetLayout.maximumRange"/>
                 </div>
             </el-form-item>
             <el-form-item v-if="isQueueTable(widget) || isQueueGauge(widget)">
-                <label>{{ $t('queues.to.display') }}</label>
+                <div>
+                    <label>{{ $t('queues.to.display') }}</label>
+                </div>
                 <base-select
                     :data="allQueues"
                     :labelKey="'QueueName'"
                     :valueKey="'QueueID'"
                     v-model="model.WidgetLayout.showQueues"/>
+            </el-form-item>
+            <el-form-item v-if="isQueueGauge(widget)">
+                <el-checkbox v-model="model.WidgetLayout.showWaitingTimeTable">
+                    {{ $t('widget.showWaitingTimeTable') }}
+                </el-checkbox>
             </el-form-item>
             <el-form-item v-if="isQueueChart(widget)">
                 <div class="flex w-full flex-col lg:flex-row">
@@ -115,37 +124,45 @@
                     </el-form-item>
                     <el-form-item class="pb-8" v-if="isQueueDashboardWidget(widget)">
                         <div class="py-4">
-                            <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
-                            <el-slider
-                                :marks="cardTitleBestOptions"
+                            <div>
+                                <label>{{ $t('widget.config.cardTitleFontSize') }}</label>
+                            </div>
+                            <el-input-number
                                 :max="cardTitleFontSizes.max"
                                 :min="cardTitleFontSizes.min"
-                                show-input
+                                :step="1"
+                                size="small"
                                 v-model="model.WidgetLayout.titleFontSize">
-                            </el-slider>
+                            </el-input-number>
                         </div>
                         <div class="py-4">
-                            <label>{{ $t('widget.config.cardValueFontSize') }}</label>
-                            <el-slider
-                                :marks="cardValueBestOptions"
+                            <div>
+                                <label>{{ $t('widget.config.cardValueFontSize') }}</label>
+                            </div>
+                            <el-input-number
                                 :max="cardValueFontSizes.max"
                                 :min="cardValueFontSizes.min"
-                                show-input
+                                :step="1"
+                                size="small"
                                 v-model="model.WidgetLayout.valueFontSize">
-                            </el-slider>
+                            </el-input-number>
                         </div>
                     </el-form-item>
                     <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
-                        <label>{{ $t('widget.statusLabelFontSize') }}</label>
-                        <el-slider
-                            :marks="textSizeBestOptions"
+                        <div>
+                            <label>{{ $t('widget.statusLabelFontSize') }}</label>
+                        </div>
+                        <el-input-number
                             :max="textFontSizes.max"
                             :min="textFontSizes.min"
-                            show-input
+                            :step="1"
+                            size="small"
                             v-model="model.WidgetLayout.labelFontSize">
-                        </el-slider>
+                        </el-input-number>
                         <div class="flex flex-row items-center pt-10">
-                            <label>{{ $t('widget.dataLabelsColor') }}</label>
+                            <div>
+                                <label>{{ $t('widget.dataLabelsColor') }}</label>
+                            </div>
                             <el-color-picker
                                 :predefine="predefinedColors"
                                 class="mx-4"
@@ -155,10 +172,15 @@
                     <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
+                    <el-form-item v-if="isChartWidget(widget)">
+                        <el-checkbox v-model="model.WidgetLayout.displayLegend">
+                            {{ $t('widget.displayLegend') }}
+                        </el-checkbox>
+                    </el-form-item>
                     <widget-colors :availableColors="availableColors" :model="model"/>
                 </el-collapse-item>
             </el-collapse>
-            <el-form-item>
+            <el-form-item v-if="!isFunnelChartWidget(widget) && !isSocketsRealTimeTableWidget(widget)">
                 <div v-if="model.WidgetTime.type">
                     <time-frame
                         :model="model"
@@ -195,6 +217,14 @@
                         :model="model.WidgetConfig[index]"
                         v-for="(filter, index) in model.WidgetConfig"
                         v-if="isAutoComplete(filter)"/>
+                        <el-checkbox
+                            v-model="model.WidgetLayout.hideLoggedOff"
+                            v-if="Number(model.TemplateID) === 75"
+                        >
+                            <span class="text-gray-950">
+                                {{ $t('widget.hideLoggedOff') }}
+                            </span>
+                        </el-checkbox>
                 </el-collapse-item>
             </el-collapse>
             <el-collapse class="pt-6" v-if="otherFilters.length" v-model="activeCollapse">
@@ -230,6 +260,7 @@
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
     import { defaultAreaChartColors, defaultColors, realTimeSettings } from '@/enum/defaultWidgetSettings'
+    import { isChartWidget } from '@/helpers/widgetUtils'
     import {
         isAreaChartWidget,
         isHtmlEditor,
@@ -242,12 +273,12 @@
         isQueueGauge,
         isQueueTable,
         isRealtimeWidget,
+        isFunnelChartWidget,
+        isSocketsRealTimeTableWidget
     } from '@/helpers/widgetUtils'
     import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
-    import CancelButton from "@/components/Common/Buttons/CancelButton"
-    import ConfirmButton from "@/components/Common/Buttons/ConfirmButton"
 
     const AUTO_COMPLETE_PARAMETER_TYPE = 6
 
@@ -263,7 +294,7 @@
             [Checkbox.name]: Checkbox,
             [Checkbox.name]: Checkbox,
             [InputNumber.name]: InputNumber,
-            [Slider.name]: Slider,
+            // [Slider.name]: Slider,
             [ColorPicker.name]: ColorPicker,
             AutoComplete: () => import('./WidgetUpdateForm/Filters/AutoComplete'),
             OtherFilters: () => import('./WidgetUpdateForm/Filters/OtherFilters'),
@@ -329,7 +360,7 @@
                     80: '80px',
                     96: '96px',
                     112: '112px',
-                },
+                }
             }
         },
         computed: {
@@ -375,6 +406,9 @@
             isQueueDashboardWidget,
             isMultiQueuesDashboard,
             isNoteListWidget,
+            isFunnelChartWidget,
+            isSocketsRealTimeTableWidget,
+            isChartWidget,
             isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },

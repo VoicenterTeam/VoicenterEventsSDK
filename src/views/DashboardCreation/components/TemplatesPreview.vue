@@ -1,14 +1,13 @@
 <template>
     <div class="flex-1 relative bg-gray-150 px-3 pb-3 pt-4 rounded">
-        <div class="overflow-auto wrapper-style">
-            <div class="template grid grid-cols-3 gap-5">
-                <WidgetTemplate v-for="(template, index) in dashboardCategory.DashboardTemplateList"
-                    :key="`template-${index}`"
-                    v-on="$listeners"
-                    v-bind="$attrs"
-                    :template="template"
-                />
-            </div>
+        <div class="overflow-auto wrapper-style flex flex-wrap">
+            <WidgetTemplate v-for="(template, index) in dashboardCategory.DashboardTemplateList"
+                :key="`template-${index}`"
+                v-on="$listeners"
+                v-bind="$attrs"
+                :template="template"
+                class="template-item m-2"
+            />
         </div>
     </div>
 </template>
@@ -34,5 +33,10 @@ button[disabled] {
 }
 button:not([disabled]):hover {
     @apply text-primary-200;
+}
+.template-item {
+    width: 350px;
+    min-height: 200px;
+    height: 100%;
 }
 </style>

@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import EventBus from '@/event-bus/EventBus';
 import { sdkEventTypes } from '@/enum/sdkEvents';
 import NotificationsPlugin from '@/components/NotificationPlugin';
+import i18n from '@/i18n'
 
 Vue.use(NotificationsPlugin)
 const app = new Vue({})
@@ -31,13 +32,14 @@ const parseCatch = (apiError, showAxiosErrorMessage = false, messagePrefix = '')
     let status = get(apiError, 'response.status')
     let title
     if (status === 401) {
-        message = 'invalid.token'
-        title = 'invalid.token.title'
+        message = i18n.t('invalid.token.message')
+        title = i18n.t('invalid.token.title')
     }
     if (message === sdkMessages.serverConnectionError) {
-        title = 'errors.realtime.connection.title'
-        message = 'errors.realtime.connection.message'
+        title = i18n.t('errors.realtime.connection.title')
+        message = i18n.t('errors.realtime.connection.message')
     }
+    
     if (showAxiosErrorMessage && message && shouldDisplayNotification(apiError)) {
         const messageConfig = {
             title,

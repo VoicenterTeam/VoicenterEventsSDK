@@ -85,7 +85,8 @@
                         />
                     </template>
                     <template v-slot:template-preview>
-                        <el-tooltip :content="$t('widget.templateDictionary')"
+                        <el-tooltip v-if="showHelpButton(template.TemplateID)"
+                                    :content="$t('widget.templateDictionary')"
                                     :open-delay="openDelay"
                                     class="item"
                                     effect="dark"
@@ -145,6 +146,9 @@
             templateCategory() {
                 return this.$store.getters['widgetCreation/getCategoryTemplates']
             },
+            dictionariesList() {
+                return this.$store.getters['templatesCategory/getDictionariesList']
+            },
             templateList() {
                 return this.templateCategory.TemplatesList || []
             },
@@ -153,8 +157,8 @@
                     return
                 }
                 return this.templateList.filter((template) => {
-                    const templateName = this.translateTemplateName(template.TemplateName)
-                    return template.TemplateID.toString() === this.search.toString() || templateName.toLowerCase().includes(this.search.toLowerCase())
+                    const templateNameContentTag = this.translateTemplateNameContentTag(template.TemplateNameContentTag)
+                    return template.TemplateID.toString() === this.search.toString() || templateNameContentTag.toLowerCase().includes(this.search.toLowerCase())
                 })
             },
             groupWidgetsCount() {
@@ -177,8 +181,8 @@
             },
         },
         methods: {
-            translateTemplateName(tName) {
-                return this.$t(tName) || tName
+            translateTemplateNameContentTag(tNameContentTag) {
+                return this.$t(tNameContentTag) || tNameContentTag
             },
             manageWidgets(value, template) {
                 this.quantities[template.TemplateID] = value
@@ -238,6 +242,14 @@
                     quantities: this.quantities,
                 }
                 this.$emit('on-update-summary', summaries)
+            },
+            showHelpButton(templateId) {
+                if (!templateId) {
+                    return false
+                }
+
+                const templateHelp = this.dictionariesList.find((el) => el.TemplateID.toString() === templateId.toString())
+                return get(templateHelp, "Help.Items", []).length > 0
             },
         },
         mounted() {

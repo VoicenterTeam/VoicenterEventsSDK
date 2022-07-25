@@ -17,7 +17,7 @@
     import { Tooltip } from 'element-ui'
     import bus from '@/event-bus/EventBus'
     import { Chart } from 'highcharts-vue'
-    import statusTypes from '@/enum/statusTypes'
+    import statusTypes, { statusNameLogOut } from '@/enum/statusTypes'
     import { TrashIcon } from 'vue-feather-icons'
     import { WidgetDataApi } from '@/api/widgetDataApi'
     import extensionMixin from '@/mixins/extensionMixin'
@@ -121,6 +121,10 @@
                 
                 const labelFontSize = this.getLabelFontSize
                 const dataLabelsColor = this.getDataLabelsColor
+
+                if (this.data.WidgetLayout.hideLoggedOff) {
+                    data = data.filter(el => el.name !== statusNameLogOut)
+                }
                 
                 const series = [{
                     name: this.$t('widget.agents'),
@@ -202,13 +206,19 @@
                     this.chartVisibility = true
                 })
             },
+            chartOptionsWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.chartOptions()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.chartOptions()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.chartOptions()
             this.triggerResizeEvent()
         },
         watch: {
@@ -216,6 +226,7 @@
                 immediate: true,
                 handler: function () {
                     this.chartOptions()
+                    this.chartOptionsWithRefreshInterval()
                 },
             },
             extensionWithCalls: {

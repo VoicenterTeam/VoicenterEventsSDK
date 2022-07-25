@@ -1,7 +1,7 @@
 import {timeFormatter} from "@/helpers/timeFormatter";
 
 export default class Timer {
-    constructor (options = {interval: 1000, initialTimeInSeconds: 0}) {
+    constructor (options = {interval: 1000, initialTimeInSeconds: 0, realtime: false}) {
         this.state = {
             seconds: options.initialTimeInSeconds || 0
         }
@@ -10,7 +10,7 @@ export default class Timer {
     }
 
     get displayTime () {
-        return timeFormatter(this.state.seconds)
+        return timeFormatter(this.state.seconds, this.options.realtime)
     }
 
     reset () {

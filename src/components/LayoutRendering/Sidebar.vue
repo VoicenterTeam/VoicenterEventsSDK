@@ -1,6 +1,6 @@
 <template>
     <div class="flex sidebar-tabs__container justify-between w-full">
-        <div class="w-full flex items-center overflow-x-auto">
+        <div class="w-full flex items-center overflow-x-auto" id="sidebar-line">
             <template v-if="showTabs">
                 <div
                     class="tab-wrapper cursor-pointer"
@@ -43,7 +43,7 @@
                     @click="clickToAddNewWidget"
                 />
                 <new-group-button
-                    :disabled="editMode"
+                    v-if="!editMode"
                     @click="addNewGroup"
                 />
             </div>

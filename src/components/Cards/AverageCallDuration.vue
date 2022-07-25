@@ -254,20 +254,26 @@
                     this.$set(this.model.WidgetLayout, 'showCounter', 'Average duration of all calls')
                 }
             },
+            getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+                if (this.data.DefaultRefreshInterval) {
+                    this.fetchDataInterval = setInterval(async() => {
+                        await this.getWidgetData()
+                    }, this.data.DefaultRefreshInterval)
+                }
+            }
         },
         mounted() {
-            if (this.data.DefaultRefreshInterval) {
-                this.fetchDataInterval = setInterval(() => {
-                    this.getWidgetData()
-                }, this.data.DefaultRefreshInterval)
-            }
+            this.getWidgetData()
             this.setDefaultCounterType()
         },
         watch: {
             data: {
                 immediate: true,
                 handler: function (widget) {
-                    this.getWidgetData()
+                    this.getWidgetDataWithRefreshInterval()
                     this.model = cloneDeep(widget)
                     this.model.colors = cloneDeep(widget.WidgetLayout.colors || defaultCardColors)
                     this.setDefaultCounterType()

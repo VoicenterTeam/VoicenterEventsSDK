@@ -1,7 +1,9 @@
 <template>
-        <img src="/img/IconDashboardTemplate.png"
-             class="h-56"
-             alt="template">
+    <img
+        src="/img/IconDashboardTemplate.png"
+        class="w-full h-full"
+        alt="template"
+    />
 </template>
 <script>
     export default {}

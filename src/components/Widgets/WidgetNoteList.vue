@@ -173,6 +173,11 @@
                 return this.editMode && (!this.noteToUpdate || this.noteToUpdate !== note.date)
             },
         },
+        mounted () {
+            if (!('Notes' in this.data.WidgetLayout)) {
+                this.$set(this.data.WidgetLayout, 'Notes', [])
+            }
+        },
         watch: {
             onEditMode: {
                 immediate: true,

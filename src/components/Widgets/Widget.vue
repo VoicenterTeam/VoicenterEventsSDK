@@ -1,32 +1,56 @@
 <template>
-    <div :class="getClass"
-         class="grid-stack-item-content relative rounded-lg flex flex-col"
-         :key="widget.WidgetID"
-         :style="getStyles">
+    <div
+        :class="getClass"
+        class="grid-stack-item-content relative rounded-lg flex flex-col h-full w-full"
+        :key="widget.WidgetID"
+        :style="getStyles"
+    >
         <div class="flex relative items-center">
-            <div class="flex relative overflow-auto w-full flex-row items-center justify-between widget-header py-2"
+            <div class="flex relative overflow-x-auto overflow-y-hidden w-full flex-row items-center justify-between widget-header h-10"
                  v-if="showDeleteButton"
             >
-                <i class="icon-lg text-primary mx-2" :class="widget.WidgetTemplateIcon"/>
+                <i class="icon-lg text-gray-500 mx-2" :class="widget.WidgetTemplateIcon"/>
                 <base-widget-title :title="widget.Title" v-if="showWidgetTitle"/>
-                <portal-target :name="`widget-header__${widget.WidgetID}`"
-                               class="hidden lg:flex w-full items-center justify-between"/>
+                <portal-target
+                    :name="`widget-header__${widget.WidgetID}`"
+                    class="hidden lg:flex w-full items-center justify-between"
+                />
             </div>
-            <span v-if="showDeleteButton" class="px-2 py-1-5" @click="showPreviewInfoDialog = true">
-                    <i class="vc-icon-info icon-lg text-gray-700 cursor-help hover:text-primary"/>
-            </span>
-            <WidgetAction :key="widget.WidgetID"
-                          :editable="editable"
-                          :edit-mode="editMode"
-                          :widget="widget"
-                          @on-manage-notes="tryManageNotes"
-                          @on-add-note="onAddNote"
-                          v-if="showDeleteButton"
-                          @on-duplicate="duplicateWidget"
-                          @on-remove="removeWidget"
-                          @on-show-update-dialog="showUpdateDialog = true"/>
+            <div class="flex items-center flex-row">
+                <portal-target
+                    :name="`widget-header__${widget.WidgetID}-table-action`"
+                />
+                <span v-if="showDeleteButton && showInfoButton" class="flex items-center px-2 py-1-5 hover:bg-primary-100 rounded" @click="showPreviewInfoDialog = true">
+                    <i class="vc-icon-info icon-lg text-primary cursor-help"/>
+                </span>
+                <portal-target
+                    :name="`widget-header__${widget.WidgetID}-action`"
+                />
+                <WidgetAction
+                    :key="widget.WidgetID"
+                    :editable="editable"
+                    :edit-mode="editMode"
+                    :widget="widget"
+                    @on-manage-notes="tryManageNotes"
+                    @on-add-note="onAddNote"
+                    v-if="showDeleteButton"
+                    @on-duplicate="duplicateWidget"
+                    @on-remove="removeWidget"
+                    @on-show-update-dialog="showUpdateDialog = true"
+                    class="flex items-center widget-action hover:bg-primary-100 rounded text-primary px-2 py-1-5"
+                >
+                    <template #default>
+                        <portal-target
+                            v-if="haveFooterPortal"
+                            :name="`widget-actions__${widget.WidgetID}`"
+                            class="hidden lg:flex w-full items-center justify-between"
+                    />
+                    </template>
+                </WidgetAction>
+            </div>
         </div>
-        <div class="flex w-full flex-col widget-container h-full contents"
+        <div class="flex w-full flex-col widget-container h-full"
+            :id="`widgetId-${widget.WidgetID}`"
              v-if="inView">
             <component
                 :data="widget"
@@ -41,8 +65,9 @@
                 class="widget"
                 v-bind="widget.WidgetLayout">
             </component>
-            <portal-target v-if="haveFooterPortal"
-                           :name="`widget-footer__${widget.WidgetID}`"
+            <portal-target
+                v-if="haveFooterPortal"
+                :name="`widget-footer__${widget.WidgetID}`"
             />
         </div>
         <component
@@ -57,7 +82,7 @@
         <template-preview-info-dialog
             v-if="showPreviewInfoDialog"
             :visible.sync="showPreviewInfoDialog"
-            :templateId="widget.TemplateID"
+            :templateHelp="templateHelp"
             :widget-title="widget.Title"
             @on-close="showPreviewInfoDialog = false"
         />
@@ -68,7 +93,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { Switch, Tooltip } from 'element-ui'
     import widgetDataTypes from '@/enum/widgetDataTypes'
-    import { TABLE_TYPE_ID } from '@/enum/widgetDataTypes'
+    import { TABLE_TYPE_ID, INFO_TYPE_ID } from '@/enum/widgetDataTypes'
     import { defaultColors } from '@/enum/defaultWidgetSettings'
     import widgetComponentTypes from '@/enum/widgetComponentTypes'
     import {
@@ -89,7 +114,6 @@
     const EXCEPTIONS = [
         widgetDataTypes.COUNTER_TYPE_ID,
         widgetDataTypes.HISTORY_COUNTERS,
-        widgetDataTypes.INFO_TYPE_ID,
         widgetDataTypes.QUEUE_COUNTER_TYPE_ID,
         widgetDataTypes.TOTAL_OUTGOING_CALLS,
         widgetDataTypes.AVERAGE_CALLS_DURATION,
@@ -120,7 +144,8 @@
             AverageCallDuration: () => import('@/components/Cards/AverageCallDuration'),
             [Switch.name]: Switch,
             [Tooltip.name]: Tooltip,
-            TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog")
+            TemplatePreviewInfoDialog: () => import("@/components/Widgets/AddWidgetsForm/TemplatePreviewInfoDialog"),
+            SocketsRealTimeFunnel: () => import('@/components/Charts/FunnelChart.vue')
         },
         props: {
             editable: {
@@ -146,11 +171,12 @@
                 TABLE_DATA_TYPE_ID: '4',
                 editMode: false,
                 showPreviewInfoDialog: false,
+                templateHelp: {}
             }
         },
         computed: {
             haveFooterPortal() {
-                return get(this.widget, 'DataTypeID', -1) === TABLE_TYPE_ID
+                return get(this.widget, 'DataTypeID', -1) === TABLE_TYPE_ID || INFO_TYPE_ID
             },
             showWidgetTitle() {
                 return get(this.widget.WidgetLayout, 'displayWidgetTitle', true)
@@ -198,6 +224,9 @@
                 if (DataTypeID.toString() === this.TABLE_DATA_TYPE_ID) {
                     return 'has-margin'
                 }
+            },
+            showInfoButton() {
+                return get(this.templateHelp, "Items", []).length > 0
             }
         },
         methods: {
@@ -221,6 +250,9 @@
                 let refreshInterval = getWidgetRefreshInterval(widget)
                 let componentType = widgetComponentTypes[dataTypeId]
                 let endPoint = this.setComponentEndPoint(widget)
+                if (componentType === 'SocketsRealTimeTable') {
+                    componentType = 'TableData'
+                }
 
                 this.$set(widget, 'ComponentType', componentType)
                 this.$set(widget, 'DataTypeID', dataTypeId)
@@ -249,11 +281,21 @@
             },
             onShowInfo() {
                 this.showPreviewInfoDialog = true
-            }
+            },
+            getHelpByWidgetsTemplateID() {
+                const templateId = get(this.widget, "TemplateID")
+                if (!templateId) {
+                    this.templateHelp = {}
+                    return
+                }
+
+                const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](templateId)
+                this.templateHelp = get(helpData, 'Help', {})
+            },
         },
         mounted() {
-            this.getComponentTypeAndSetData(this.widget)
             this.checkWidgetTimeConfig()
+            this.getHelpByWidgetsTemplateID()
 
             const { editMode } = this.widget.WidgetLayout || false
             this.editMode = editMode
@@ -263,6 +305,12 @@
 <style lang="scss" scoped>
 .widget {
     @apply rounded-lg h-full;
+}
+[dir="ltr"] .widget-action {
+    @apply mr-2;
+}
+[dir="rtl"] .widget-action {
+    @apply ml-2;
 }
 </style>
 <style lang="scss">

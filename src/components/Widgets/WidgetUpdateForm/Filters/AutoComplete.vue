@@ -104,13 +104,19 @@
         methods: {
             get,
             getData() {
-                this.options = getOptionsList(this.model.ParameterName)
+                if (this.model.ParameterName === '{|campaign_ivr_list|}') {
+                    this.options = getOptionsList(this.model.ParameterName).filter(el => el.camp_type === 3)
+                } else {
+                    this.options = getOptionsList(this.model.ParameterName)
+                }
 
                 this.loading = false
             },
             onAutocompleteChange(value) {
                 if (this.model.WidgetParameterJson === 1) {
                     this.model.WidgetParameterValueJson[this.entityType] = cloneDeep(value)
+                    const anotherNonActiveType = this.SELECTIONS.find(el => this.entityType !== el.value).value
+                    this.model.WidgetParameterValueJson[anotherNonActiveType] = []
                 } else {
                     const currentValue = JSON.parse(this.model.WidgetParameterValue)
                     currentValue[this.entityType] = cloneDeep(value)
@@ -118,9 +124,21 @@
                     this.model.WidgetParameterValue = JSON.stringify(value)
                 }
             },
+            setActiveEntityTypeByData () {
+                const checkIfIsEntityType = (entity) => {
+                    const selections = this.SELECTIONS.map(el => el.value)
+                    return selections.includes(entity)
+                }
+                Object.keys(this.model.WidgetParameterValueJson).forEach(key => {
+                    if (checkIfIsEntityType(key) && this.model.WidgetParameterValueJson[key].length) {
+                        this.entityType = key
+                    }
+                })
+            }
         },
         mounted() {
             this.getData()
+            this.setActiveEntityTypeByData()
         },
     }
 </script>
