@@ -177,11 +177,14 @@
                 }
                 
                 for (let status in statusData) {
+                    let statusType = statusTypes[status]
                     const statusText = this.$store.getters['entities/getStatusTextById'](status)
-                    const currentStatus = this.getAccountStatuses.find(el => el.Name === statusText)
+                    const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(status))
+
+                    const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode : statusType.color
 
                     let sliceObject = {
-                        color: currentStatus.ColorCode,
+                        color: color,
                         name: this.$t(statusText),
                         y: statusData[status].length,
                     }
