@@ -57,7 +57,7 @@
                     :status-threshold="threshold"
                     :call="call"
                     :settings="settings"
-                    
+
                 >
                     <template v-slot:threshold="{statusThreshold}">
                         <IconThreshold
@@ -89,6 +89,7 @@
     import statusTypes from '@/enum/statusTypes'
     import { getInitialExtensionTime } from '@/util/timeUtils'
     import cloneDeep from 'lodash/cloneDeep'
+    import values from "lodash/values";
     const MIN_ACTIVE_CALLS_NUMBER = 2
 
     export default {
@@ -240,14 +241,15 @@
                 let color = defaultColor
                 let type = ''
                 const statusAlerts = this.$store.getters['entities/getAccountBreakLimit'](this.extension.representativeStatus)
+                const { loginStatusLimit, loginStatusWarning } = this.$store.getters['layout/colors']('activeLayout')
 
                 if (statusAlerts && 'warn' in statusAlerts && (this.timer.state.seconds >= statusAlerts.warn)) {
-                    color = '#FAB11E'
+                    color = loginStatusWarning
                     type = 'info'
                 }
 
                 if (statusAlerts && 'alert' in statusAlerts && (this.timer.state.seconds >= statusAlerts.alert)) {
-                    color = '#FF3636'
+                    color = loginStatusLimit
                     type = 'alert'
                 }
 
@@ -301,8 +303,8 @@
 <style lang="scss" scoped>
 @mixin cutText($maxWidth) {
     text-overflow: ellipsis;
-    overflow: hidden; 
-    width: $maxWidth; 
+    overflow: hidden;
+    width: $maxWidth;
     white-space: nowrap;
 }
 .extension-card {
@@ -315,10 +317,10 @@
     max-width: 25px;
     min-width: 25px;
 }
-.cut-header { 
+.cut-header {
     @include cutText(200px);
 }
-.cut-timer { 
+.cut-timer {
     @include cutText(185px);
 }
 .time {

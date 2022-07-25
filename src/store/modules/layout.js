@@ -113,6 +113,8 @@ const getters = {
             widgetGroupBackground: '#edf2f7',
             widgetGroupFrames: '#edf2f7',
             widgetGroupTitles: '#000000',
+            loginStatusLimit: '#FF3636',
+            loginStatusWarning: '#FAB11E'
         }
 
         result['primary_rgba'] = convertHex(result.primary);
@@ -145,6 +147,14 @@ const getters = {
 
             if (el.LayoutParameterName === 'ColorWidgetGroupTitles') {
                 result.widgetGroupTitles = el.Value
+            }
+
+            if (el.LayoutParameterName === 'LoginStatusLimitColor') {
+                result.loginStatusLimit = el.Value
+            }
+
+            if (el.LayoutParameterName === 'LoginStatusWarningColor') {
+                result.loginStatusWarning = el.Value
             }
         });
 
