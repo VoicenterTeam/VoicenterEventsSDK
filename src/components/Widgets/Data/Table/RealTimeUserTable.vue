@@ -106,6 +106,7 @@
     import { getInitialExtensionTime } from '@/util/timeUtils'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { displayUsersRelatedWithAdmin, ADMIN_USER_ID } from '@/helpers/util'
+    import statusTypes from '@/enum/statusTypes'
 
     export default {
         mixins: [dataTableMixin],
@@ -338,9 +339,11 @@
                 if (!ref) {
                     return '--status-svg-color: black'
                 }
-                let representativeStatus = ref.extension.representativeStatus
+
+                const representativeStatus = ref.extension.representativeStatus
+                const statusType = statusTypes[representativeStatus]
                 const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(representativeStatus))
-                const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode : data.color
+                const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode : statusType.color
 
                 return {
                     '--status-svg-color': color
