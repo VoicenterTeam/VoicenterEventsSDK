@@ -33,12 +33,6 @@
                                     </base-button>
                                     <CopyDashboard class="mx-4"
                                                    :dashboard="activeDashboard"/>
-                                    <confirm-button
-                                        :loading="loading"
-                                        :label="$t('common.save')"
-                                        icon="IconSave"
-                                        @on-click="onSubmit"
-                                    />
                                 </div>
                             </div>
                         </div>
@@ -54,12 +48,6 @@
                             </base-button>
                             <CopyDashboard class="mx-4"
                                            :dashboard="activeDashboard"/>
-                            <confirm-button
-                                :loading="loading"
-                                :label="$t('common.save')"
-                                icon="IconSave"
-                                @on-click="onSubmit"
-                            />
                         </div>
                     </div>
                 </slot>
@@ -83,10 +71,6 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { LayoutApi } from '@/api/layoutApi'
     import { DashboardApi } from '@/api/dashboardApi'
-    import map from "lodash/map";
-    import {removeDummyWidgets} from "@/services/widgetService";
-    import {dashboardOperation} from "@/models/instances";
-    import {targets, types} from "@/enum/operations";
 
     export default {
         components: {
@@ -163,41 +147,12 @@
             async onDelete() {
                 this.showConfirmDialog = true
             },
-            async onSubmit(goBack = true) {
-                try {
-                    this.loading = true
-                    this.model['DashboardLayoutID'] = this.activeLayout.LayoutID
-
-                    const newModel = cloneDeep(this.model)
-                    delete newModel.WidgetGroupList
-
-                    await DashboardApi.update(newModel)
-                    await LayoutApi.update(this.activeLayout)
-
-                    const { DashboardID } = this.model
-                    const dashboard = await DashboardApi.find(DashboardID)
-                    await this.updateState(dashboard)
-                    if (goBack) {
-                        await this.$store.dispatch('dashboards/getDashboards')
-                        await this.$router.push('/')
-                    }
-                } catch (e) {
-                    console.warn(e)
-                } finally {
-                    this.loading = false
-
-                }
-            },
             async onChangeLayout(layout) {
                 this.model['DashboardLayoutID'] = layout.LayoutID
                 await this.$store.dispatch('dashboards/updateDashboard', this.model)
             },
             keepInitialLayout() {
                 this.initialLayout = cloneDeep(this.activeLayout)
-            },
-            async updateState(dashboard) {
-                this.$store.commit('layout/SET_ACTIVE_LAYOUT', this.activeLayout)
-                await this.$store.dispatch('dashboards/updateCurrentDashboard', dashboard)
             },
             onUpdateGroups(groups) {
                 this.currentDashboard.WidgetGroupList = groups

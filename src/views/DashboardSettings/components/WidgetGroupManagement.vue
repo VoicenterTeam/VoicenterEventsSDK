@@ -38,6 +38,7 @@
 <script>
     import draggableEvents from '@/enum/draggableEvents'
     import { WidgetGroupsApi } from '@/api/widgetGroupApi'
+    import notification from '@/mixins/simpleNotification'
 
     export default {
         components: {
@@ -71,6 +72,10 @@
                 this.$emit('on-update-groups', this.widgetGroups)
 
                 WidgetGroupsApi.reorder(this.widgetGroups)
+                notification.call({
+                    type: 'success',
+                    message: this.$t('common.changesSaved')
+                })
             }
         },
         watch: {

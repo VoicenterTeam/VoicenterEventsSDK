@@ -1427,6 +1427,7 @@
 	"suffix_copy": "_copy",
 	"datatable.resize.columns.btn": "Click to apply changes",
 	"queue.queueName": "Queue name",
-	"queue.callerNumber": "Caller number"
+	"queue.callerNumber": "Caller number",
+	"common.changesSaved": "Changes saved"
 
 }
