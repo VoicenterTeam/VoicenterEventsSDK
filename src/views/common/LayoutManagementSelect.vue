@@ -9,11 +9,11 @@
                         {{ $t('layout.layoutSelection') }}
                     </span>
                 </div>
-                <el-tooltip :content="$t('layout.activeOrInactiveLayouts')"
+                <!-- <el-tooltip :content="$t('layout.activeOrInactiveLayouts')"
                             placement="top">
                     <el-switch :value="activeLayouts"
                                @change="onChangeLayoutType"/>
-                </el-tooltip>
+                </el-tooltip> -->
             </div>
             <span class="select-button"
                   @click.stop="triggerMenu"
