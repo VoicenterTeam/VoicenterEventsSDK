@@ -38,9 +38,9 @@
                 <span v-else>---</span>
             </template>
             <template v-slot:status_duration="{row}">
-                <div v-if="userExtension(row.user_id) && drawRow"
-                     :style="getCellStyle(row)"
-                     :class="getCellClassName(row)"
+                <div
+                    v-if="userExtension(row.user_id) && drawRow"
+                    :style="styleForStatusIconColor(row.user_id)"
                 >
                     <status-duration
                         :extension="userExtension(row.user_id)"
@@ -52,8 +52,6 @@
             </template>
             <template v-slot:status="{row}">
                 <div v-if="userExtension(row.user_id) && drawRow"
-                     :style="getCellStyle(row)"
-                     :class="getCellClassName(row)"
                 >
                     <user-status
                         :extension="userExtension(row.user_id)" :key="row.user_id"
@@ -104,11 +102,11 @@
     import get from 'lodash/get'
     import cloneDeep from 'lodash/cloneDeep'
     import dataTableMixin from '@/mixins/dataTableMixin'
-    import { extensionColor } from '@/util/extensionStyles'
     import { LOGOUT_STATUS } from '@/enum/extensionStatuses'
     import { getInitialExtensionTime } from '@/util/timeUtils'
     import { realTimeSettings } from '@/enum/defaultWidgetSettings'
     import { displayUsersRelatedWithAdmin, ADMIN_USER_ID } from '@/helpers/util'
+    import statusTypes from '@/enum/statusTypes'
 
     export default {
         mixins: [dataTableMixin],
@@ -234,6 +232,9 @@
                     '--login-status-warn-color': addAlpha(loginStatusWarning, 1),
                     '--login-status-limit-color': addAlpha(loginStatusLimit, 1)
                 }
+            },
+            getAccountStatuses () {
+                return this.$store.getters['entities/accountStatuses']
             }
         },
         methods: {
@@ -307,32 +308,47 @@
                 }
                 return get(extension, 'onlineUserID', userId)
             },
-            getCellStyle(row) {
-                let color = 'black'
+            // getCellStyle(row) {
+            //     let color = 'black'
 
-                let extension = this.userExtension(row.user_id)
-                if (extension) {
-                    color = extensionColor(extension)
-                }
+            //     let extension = this.userExtension(row.user_id)
+            //     if (extension) {
+            //         color = extensionColor(extension)
+            //     }
 
-                return { 'color': color, 'font-weight': '900', 'line-height': '1' }
-            },
-            getCellClassName(row) {
-                let className = ''
-                let extension = this.userExtension(row.user_id)
+            //     return { 'color': color, 'font-weight': '900', 'line-height': '1' }
+            // },
+            // getCellClassName(row) {
+            //     let className = ''
+            //     let extension = this.userExtension(row.user_id)
 
-                if (extension) {
-                    className = 'text-white'
-                }
+            //     if (extension) {
+            //         className = 'text-white'
+            //     }
 
-                return className
-            },
+            //     return className
+            // },
             sortChange() {
                 this.drawRow = false
                 this.$nextTick(() => {
                     this.drawRow = true
                 })
             },
+            styleForStatusIconColor (userID) {
+                const ref = this.$refs[`user-status-${userID}`]
+                if (!ref) {
+                    return '--status-svg-color: black'
+                }
+
+                const representativeStatus = ref.extension.representativeStatus
+                const statusType = statusTypes[representativeStatus]
+                const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(representativeStatus))
+                const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode : statusType.color
+
+                return {
+                    '--status-svg-color': color
+                }
+            }
             /* TODO: Use this method in sort-change event handler if previous doesn't work */
             /*onSortChange({column, prop, order}) {
                 if (prop === null) {

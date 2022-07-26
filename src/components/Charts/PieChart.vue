@@ -57,6 +57,9 @@
             getDataLabelsColor() {
                 return get(this.data, 'WidgetLayout.dataLabelsColor', '#000000')
             },
+            getAccountStatuses () {
+                return this.$store.getters['entities/accountStatuses']
+            }
         },
         methods: {
             onInitChartCallback(chart) {
@@ -176,8 +179,12 @@
                 for (let status in statusData) {
                     let statusType = statusTypes[status]
                     const statusText = this.$store.getters['entities/getStatusTextById'](status)
+                    const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(status))
+
+                    const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode : statusType.color
+
                     let sliceObject = {
-                        color: statusType.color,
+                        color: color,
                         name: this.$t(statusText),
                         y: statusData[status].length,
                     }
