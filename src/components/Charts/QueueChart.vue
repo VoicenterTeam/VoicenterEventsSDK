@@ -20,6 +20,14 @@
     import { getServerTimeOffset } from '@/enum/generic'
     import actionMixin from '@/components/Charts/Configs/actionMixin'
     import { administrativeStatuses, breakStatuses, LOGIN_STATUS, LOGOUT_STATUS } from '@/enum/extensionStatuses'
+    import get from 'lodash/get'
+
+    const DEFAULT_CHART_SERIES_LINES_KEYS = {
+        MAX_WAITING_TIME: 'MAX_WAITING_TIME',
+        QUEUE_CALLS: 'QUEUE_CALLS',
+        AGENTS_ON_HOLD: 'AGENTS_ON_HOLD',
+        AGENTS_IN_CALL: 'AGENTS_IN_CALL'
+    }
 
     export default {
         mixins: [queueMixin, actionMixin],
@@ -64,68 +72,13 @@
                             }
                         }
                     },
-                    series: [
-                        {
-                            name: 'Max Waiting time',
-                            data: [],
-                            yAxis: 0,
-                        },
-                        {
-                            name: 'Queue Calls',
-                            data: [],
-                            yAxis: 0,
-                            color: colors.QUEUE_OTHER_COLOR,
-                        },
-                        {
-                            name: 'Agents available',
-                            type: 'column',
-                            color: colors.QUEUE_LOGIN_COLOR,
-                            pointWidth: 20,
-                            stack: 0,
-                            yAxis: 1,
-                            data: [],
-                        },
-                        {
-                            name: 'Agents in Call',
-                            type: 'column',
-                            color: colors.QUEUE_LIGHT_GREEN,
-                            yAxis: 1,
-                            pointWidth: 20,
-                            stack: 0,
-                            data: [],
-                        },
-                        {
-                            name: 'Agents in administrative break',
-                            type: 'column',
-                            color: colors.QUEUE_ADMINISTRATIVE_COLOR,
-                            pointWidth: 20,
-                            stack: 0,
-                            yAxis: 1,
-                            data: [],
-                        },
-                        {
-                            name: 'Agents in Break',
-                            type: 'column',
-                            color: colors.QUEUE_PRIVATE_COLOR,
-                            pointWidth: 20,
-                            stack: 0,
-                            yAxis: 1,
-                            data: [],
-                        },
-                        {
-                            name: 'Agent with calls in Hold',
-                            type: 'column',
-                            color: colors.QUEUE_TEAM_MEETING_COLOR,
-                            yAxis: 1,
-                            pointWidth: 20,
-                            stack: 0,
-                            data: [],
-                        },
-                    ],
+                    series: [],
                     legend: {
                         enabled: true,
                     },
                 },
+                chartDataLogs: {},
+                accountStatuses: [],
                 showManageQueuesDialog: false,
                 width: '50%',
                 timeout: 5000,
@@ -178,6 +131,94 @@
                     type: type,
                 })
             },
+            updateChartData2() {
+                this.chartVisibility = false
+
+                const newTime = new Date()
+                const queues = this.filteredQueues
+
+                let minJoinTimeStamp = newTime.getTime() + getServerTimeOffset() / 1000
+                let queueCalls = 0
+
+                queues.forEach((queue) => {
+                    queue.Calls.forEach((call) => {
+                        if (call.JoinTimeStamp < minJoinTimeStamp) {
+                            minJoinTimeStamp = call.JoinTimeStamp
+                            queueCalls++
+                        }
+                    })
+                })
+
+                let maxWaitingTime = queueCalls > 0 ? (Math.floor(newTime.getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
+
+                const currentTime = newTime.getTime() + getServerTimeOffset();
+
+                const columns = Math.floor(this.showTime / this.timeout)
+
+                if (this.chartData.series[0].data.length >= columns) {
+                    this.chartData.xAxis = {
+                        ...this.chartData.xAxis,
+                        ...{
+                            min: (new Date()).setMinutes(newTime.getMinutes() - 1) + getServerTimeOffset(),
+                            max: newTime.getTime() + getServerTimeOffset(),
+                        },
+                    }
+                }
+
+                this.chartDataLogs[DEFAULT_CHART_SERIES_LINES_KEYS.QUEUE_CALLS].data.push({
+                    x: currentTime,
+                    y: queueCalls
+                })
+
+                this.chartDataLogs[DEFAULT_CHART_SERIES_LINES_KEYS.MAX_WAITING_TIME].data.push({
+                    x: currentTime,
+                    y: maxWaitingTime,
+                    toTime: maxWaitingTime,
+                })
+
+                const agentsInCall = []
+                const agentsWithACallInHold = []
+                const agentsInStatuses = Object.fromEntries(this.accountStatuses.map(({StatusID}) => [StatusID, {data: []}]))
+
+                this.agentsOnline.forEach(agent => {
+                    if (agent.calls.length > 0) {
+                        if (agent.calls.filter((call) => call.answered && call.callstatus !== this.HOLD_STATUS).length) {
+                            agentsInCall.push(agent)
+                        }
+                        if (agent.calls.filter((call) => call.answered && call.callstatus === this.HOLD_STATUS).length) {
+                            agentsWithACallInHold.push(agent)
+                        }
+                    }
+
+                    agentsInStatuses[agent.representativeStatus].data.push(agent)
+                })
+
+                Object.entries(agentsInStatuses).forEach(([StatusID, {data}]) => {
+                    this.chartDataLogs[StatusID].data.push({
+                        x: currentTime,
+                        y: data.length,
+                        agents: data,
+                    });
+                })
+
+                this.chartDataLogs[DEFAULT_CHART_SERIES_LINES_KEYS.AGENTS_IN_CALL].data.push({
+                    x: currentTime,
+                    y: agentsInCall.length,
+                    agents: agentsInCall,
+                })
+
+                this.chartDataLogs[DEFAULT_CHART_SERIES_LINES_KEYS.AGENTS_ON_HOLD].data.push({
+                    x: currentTime,
+                    y: agentsWithACallInHold.length,
+                    agents: agentsWithACallInHold,
+                })
+
+                this.updateChartSeriesSeries()
+
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
+            },
             async updateChartData() {
                 this.chartVisibility = false
 
@@ -222,7 +263,6 @@
                 let agentsInBreak = []
 
                 agentsOnline.forEach((agent) => {
-
                     if (agent.calls.length > 0) {
                         if (agent.calls.filter((call) => call.answered && call.callstatus !== this.HOLD_STATUS).length) {
                             agentsInCall.push(agent)
@@ -268,16 +308,73 @@
                     this.chartVisibility = true
                 })
             },
+            setDefaultChartData() {
+                this.chartDataLogs = {
+                    ...Object.fromEntries(this.accountStatuses.map(accountStatus => {
+                        return [
+                            accountStatus.StatusID,
+                            {
+                                name: accountStatus.Name,
+                                type: 'column',
+                                color: accountStatus.ColorCode,
+                                pointWidth: 20,
+                                stack: 0,
+                                yAxis: 1,
+                                data: [],
+                            }
+                        ]
+                    })),
+                    [DEFAULT_CHART_SERIES_LINES_KEYS.MAX_WAITING_TIME]: {
+                        name: this.$t('call.maxWaitingTime'),
+                        type: 'line',
+                        color: get(this.data, 'WidgetLayout.colors.maxWaitingTime', '#61B5FF'),
+                        data: [],
+                        yAxis: 0,
+                    },
+                    [DEFAULT_CHART_SERIES_LINES_KEYS.QUEUE_CALLS]: {
+                        name: this.$t('call.queueCalls'),
+                        type: 'line',
+                        data: [],
+                        yAxis: 0,
+                        color: get(this.data, 'WidgetLayout.colors.queueCalls', '#ED64A6'),
+                    },
+                    [DEFAULT_CHART_SERIES_LINES_KEYS.AGENTS_ON_HOLD]: {
+                        name: this.$t('status.hold'),
+                        type: 'column',
+                        color: get(this.data, 'WidgetLayout.colors.onHold', '#E53E3E'),
+                        pointWidth: 20,
+                        stack: 0,
+                        yAxis: 1,
+                        data: [],
+                    },
+                    [DEFAULT_CHART_SERIES_LINES_KEYS.AGENTS_IN_CALL]: {
+                        name: this.$t('status.incall'),
+                        type: 'column',
+                        color: get(this.data, 'WidgetLayout.colors.inCall', '#5EB300'),
+                        pointWidth: 20,
+                        stack: 0,
+                        yAxis: 1,
+                        data: [],
+                    }
+                }
+
+                this.updateChartSeriesSeries()
+            },
+            updateChartSeriesSeries() {
+                this.chartData.series = Object.values(this.chartDataLogs)
+            },
             triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
                     if (this.data.WidgetID.toString() !== widgetID.toString()) {
                         return;
                     }
+
                     this.reDrawChart()
                 });
             },
             reDrawChart() {
                 this.chartVisibility = false
+
                 this.$nextTick(() => {
                     this.chartVisibility = true
                 })
@@ -288,7 +385,7 @@
                 }
 
                 this.fetchDataInterval = setInterval(async() => {
-                    await this.updateChartData()
+                    await this.updateChartData2()
                 }, this.timeout)
             }
         },
@@ -297,18 +394,24 @@
                 clearInterval(this.fetchDataInterval)
             }
         },
+        created() {
+            this.accountStatuses = this.$store.getters['entities/accountStatuses']
+            this.setDefaultChartData()
+        },
         mounted() {
             if (!this.data.WidgetLayout.showQueues) {
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
-            this.$nextTick(this.updateChartData)
+
+            this.$nextTick(this.updateChartData2)
             this.getWidgetDataWithRefreshInterval()
             this.triggerResizeEvent()
-    },
+        },
         watch: {
             data() {
+                this.setDefaultChartData()
                 this.reDrawChart()
-                this.updateChartData()
+                this.updateChartData2()
                 this.getWidgetDataWithRefreshInterval()
             }
         }

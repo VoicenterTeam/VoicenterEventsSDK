@@ -26,6 +26,14 @@ export const defaultWidgetColors = [
      "incoming"
  ];
 
+ export const queueChartWidgetColors = [
+     ...defaultWidgetColors,
+     "maxWaitingTime",
+     "queueCalls",
+     "onHold",
+     "inCall"
+ ]
+
 export const predefinedColors = [
     '#F7FAFC',
     '#EDF2F6',

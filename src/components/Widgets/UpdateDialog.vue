@@ -276,7 +276,7 @@
         isFunnelChartWidget,
         isSocketsRealTimeTableWidget
     } from '@/helpers/widgetUtils'
-    import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
+    import { areaChartWidgetColors, defaultWidgetColors, queueChartWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
 
@@ -365,10 +365,14 @@
         },
         computed: {
             availableColors() {
-                if (!isAreaChartWidget(this.widget)) {
-                    return defaultWidgetColors
+                switch (true) {
+                    case isAreaChartWidget(this.widget):
+                        return areaChartWidgetColors
+                    case isQueueChart(this.widget):
+                        return queueChartWidgetColors
+                    default:
+                        return defaultWidgetColors
                 }
-                return areaChartWidgetColors
             },
             predefinedColors() {
                 let options = values(this.$store.getters['layout/colors']('activeLayout'))
