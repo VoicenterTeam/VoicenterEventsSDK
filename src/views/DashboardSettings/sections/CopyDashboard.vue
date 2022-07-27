@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="dashboard && Object.keys(dashboard).length">
         <el-tooltip effect="dark"
                     :content="$t('dashboard.copyDashboard')"
                     :open-delay="openDelay"
