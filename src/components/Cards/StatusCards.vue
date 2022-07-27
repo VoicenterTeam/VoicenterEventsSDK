@@ -11,6 +11,8 @@
             @show-modal="onShowModal"
             v-bind="$attrs"
             v-on="$listeners"
+            usedDynamicStatuses
+            :status="status"
         />
         <update-dialog
             :layoutConfig="layoutConfig"
@@ -19,7 +21,7 @@
             @on-change="onChange"
             v-if="showModal">
             <template v-slot:header>
-                <div class="flex items-center pt-4">
+                <div class="flex items-center pt-4" :style="styleForStatusIconColor(selectedStatus)">
                     <component :is="selectedIcon" class="w-8 mx-1"/>
                     <p class="text-main-lg font-semibold text-gray-700" slot="title">{{ $t(selectedOption.text) }}</p>
                 </div>
@@ -36,7 +38,7 @@
                         :label="$t(option.text)"
                         v-bind="option"
                         v-for="option in statuses">
-                        <div class="flex">
+                        <div class="flex" :style="styleForStatusIconColor(option)">
                             <component :is="option.icon" class="w-5 mx-1 text-primary"/>
                             <span class="w-16 mx-1">{{ $t(option.text) }}</span>
                         </div>
@@ -131,7 +133,7 @@
                 layoutConfig: {},
                 activeCollapse: ['filters'],
                 AUTO_COMPLETE_PARAMETER_TYPE: 6,
-                USER_ID_LIST_KEY: '{|User_ID_id_list|}',
+                USER_ID_LIST_KEY: '{|User_ID_id_list|}'
             }
         },
         computed: {
@@ -185,6 +187,9 @@
                     color: `${color}`,
                 }
             },
+            getAccountStatuses () {
+                return this.$store.getters['entities/accountStatuses']
+            }
         },
         methods: {
             getStoreStatuses() {
@@ -246,6 +251,15 @@
             isAutoComplete(WidgetConfig) {
                 return WidgetConfig.ParameterType === this.AUTO_COMPLETE_PARAMETER_TYPE
             },
+            styleForStatusIconColor (status) {
+                const statusACtive = typeof status === 'object' ? 'StatusID' in  status ? status.StatusID : status.value : status
+                const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(statusACtive))
+                const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode :  statusTypes[statusACtive].color
+
+                return {
+                    '--status-svg-color': color
+                }
+            }
         },
         mounted() {
             this.selectedStatus = this.status;
