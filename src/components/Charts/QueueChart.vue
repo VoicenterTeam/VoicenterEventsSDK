@@ -179,6 +179,8 @@
                 })
             },
             async updateChartData() {
+                this.chartVisibility = false
+
                 const newTime = new Date()
                 let queues = this.filteredQueues
 
@@ -261,6 +263,10 @@
                         agents: agents,
                     });
                 })
+
+                this.$nextTick(() => {
+                    this.chartVisibility = true
+                })
             },
             triggerResizeEvent() {
                 bus.$on('widget-resized', (widgetID) => {
@@ -277,6 +283,10 @@
                 })
             },
             getWidgetDataWithRefreshInterval () {
+                if (this.fetchDataInterval) {
+                    clearInterval(this.fetchDataInterval)
+                }
+
                 this.fetchDataInterval = setInterval(async() => {
                     await this.updateChartData()
                 }, this.timeout)
