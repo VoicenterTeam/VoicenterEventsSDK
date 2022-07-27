@@ -8,7 +8,7 @@
             >
                 {{ call.callername }}
             </span>
-            <span v-else class="text-gray-500" :style="fontSize"><bdi>+{{ call.callerphone }}</bdi></span>
+            <span v-else class="text-gray-500" :style="fontSize"><bdi>{{ call.callerphone }}</bdi></span>
         </div>
         <div v-if="!hideCallInfo" class="flex items-center justify-between direction-icon">
             <component :is="directionMappings[call.direction]" class="mx-1"/>
