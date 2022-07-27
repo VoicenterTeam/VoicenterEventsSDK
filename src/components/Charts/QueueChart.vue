@@ -131,7 +131,7 @@
                     type: type,
                 })
             },
-            updateChartData2() {
+            updateChartData() {
                 this.chartVisibility = false
 
                 const newTime = new Date()
@@ -219,95 +219,6 @@
                     this.chartVisibility = true
                 })
             },
-            async updateChartData() {
-                this.chartVisibility = false
-
-                const newTime = new Date()
-                let queues = this.filteredQueues
-
-                let minJoinTimeStamp = newTime.getTime() + getServerTimeOffset() / 1000
-                let queueCalls = 0
-
-                queues.forEach((queue) => {
-                    queue.Calls.forEach((call) => {
-                        if (call.JoinTimeStamp < minJoinTimeStamp) {
-                            minJoinTimeStamp = call.JoinTimeStamp
-                            queueCalls++
-                        }
-                    })
-                })
-
-
-                let agentsOnline = this.agentsOnline
-                let maxWaitingTime = queueCalls > 0 ? (Math.floor(newTime.getTime() / 1000) + getServerTimeOffset() / 1000 - minJoinTimeStamp) : 0
-
-                let currentTime = newTime.getTime() + getServerTimeOffset();
-
-                const columns = Math.floor(this.showTime / this.timeout)
-
-                if (this.chartData.series[0].data.length >= columns) {
-                    this.chartData.xAxis = {
-                        ...this.chartData.xAxis,
-                        ...{
-                            min: (new Date()).setMinutes(newTime.getMinutes() - 1) + getServerTimeOffset(),
-                            max: newTime.getTime() + getServerTimeOffset(),
-                        },
-                    }
-                }
-
-                let agentsInCall = []
-                let agentsWithACallInHold = []
-
-                let agentsAvailable = []
-                let agentsInAdministrativeBreak = []
-                let agentsInBreak = []
-
-                agentsOnline.forEach((agent) => {
-                    if (agent.calls.length > 0) {
-                        if (agent.calls.filter((call) => call.answered && call.callstatus !== this.HOLD_STATUS).length) {
-                            agentsInCall.push(agent)
-                        }
-                        if (agent.calls.filter((call) => call.answered && call.callstatus === this.HOLD_STATUS).length) {
-                            agentsWithACallInHold.push(agent)
-                        }
-                    } else {
-                        if (agent.representativeStatus === LOGIN_STATUS) {
-                            agentsAvailable.push(agent)
-                        }
-                        if (administrativeStatuses.includes(agent.representativeStatus)) {
-                            agentsInAdministrativeBreak.push(agent)
-                        }
-                        if (breakStatuses.includes(agent.representativeStatus)) {
-                            breakStatuses.push(agent)
-                        }
-                    }
-                });
-
-                this.chartData.series[0].data.push({
-                    x: currentTime,
-                    y: maxWaitingTime,
-                    toTime: maxWaitingTime,
-                });
-
-                [
-                    queueCalls,
-                    agentsAvailable,
-                    agentsInCall,
-                    agentsInAdministrativeBreak,
-                    agentsInBreak,
-                    agentsWithACallInHold,
-                ].forEach((agents, index) => {
-                    this.chartData.series[index + 1].data.push({
-                        x: currentTime,
-                        y: agents.length,
-                        agents: agents,
-                    });
-                })
-
-                this.$nextTick(() => {
-                    this.chartVisibility = true
-                })
-            },
             setDefaultChartData() {
                 this.chartDataLogs = {
                     ...Object.fromEntries(this.accountStatuses.map(accountStatus => {
@@ -385,7 +296,7 @@
                 }
 
                 this.fetchDataInterval = setInterval(async() => {
-                    await this.updateChartData2()
+                    await this.updateChartData()
                 }, this.timeout)
             }
         },
@@ -403,7 +314,7 @@
                 this.$set(this.data.WidgetLayout, 'showQueues', this.allQueues.map((el) => el.QueueID))
             }
 
-            this.$nextTick(this.updateChartData2)
+            this.$nextTick(this.updateChartData)
             this.getWidgetDataWithRefreshInterval()
             this.triggerResizeEvent()
         },
@@ -411,7 +322,7 @@
             data() {
                 this.setDefaultChartData()
                 this.reDrawChart()
-                this.updateChartData2()
+                this.updateChartData()
                 this.getWidgetDataWithRefreshInterval()
             }
         }
