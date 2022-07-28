@@ -3,7 +3,7 @@
         <label class="text-main-sm">
             {{ $t('widget.colors') }}
         </label>
-        <div class="flex pt-2 items-center">
+        <div class="pt-2">
             <widget-color
                 v-for="(option, index) of getWidgetColors"
                 :key="index"

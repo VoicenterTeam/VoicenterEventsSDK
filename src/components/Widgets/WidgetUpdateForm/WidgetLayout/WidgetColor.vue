@@ -1,5 +1,10 @@
 <template>
     <div class="flex items-center">
+        <color-picker
+            class="mx-2 mt-1-5"
+            color-format="hex"
+            v-model="value"
+            :predefine="predefinedColors"/>
         <slot>
             <IconColorPicker class="w-6 h-6"
                              :style="getIndicatorStyles(value)"/>
@@ -7,11 +12,6 @@
         <span class="px-1 text-main-sm">
             {{ $t('widget.settings.color.' + option) }}
         </span>
-        <color-picker
-            class="mx-2 mt-1-5"
-            color-format="hex"
-            v-model="value"
-            :predefine="predefinedColors"/>
     </div>
 </template>
 

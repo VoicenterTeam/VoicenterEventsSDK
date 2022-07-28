@@ -152,15 +152,10 @@
             getAgentsData() {
                 let queuesCount = this.getMaximumRange || this.allQueues.length
 
-                let range = {
-                    min: 0,
-                    max: queuesCount,
-                }
-
                 let stops = [
-                    [0, '#55BF3B'],
-                    [queuesCount / 2 + 0.1, '#DDDF0D'],
-                    [queuesCount, '#DF5353'],
+                    [0.1, get(this.data, 'WidgetLayout.colors.minimumRangeColor', '#55BF3B')],
+                    [0.5, get(this.data, 'WidgetLayout.colors.middleRangeColor', '#DDDF0D')],
+                    [0.9, get(this.data, 'WidgetLayout.colors.maximumRangeColor', '#DF5353')],
                 ]
 
                 const labelFontSize = this.getLabelFontSize
@@ -168,7 +163,8 @@
                 let yAxisConfig = {
                     ...gaugeChartConfig.yAxis,
                     ...this.data.yAxis,
-                    ...range,
+                    min: 0,
+                    max: queuesCount,
                     stops,
                     labels: {
                         y: labelFontSize * 1.2,

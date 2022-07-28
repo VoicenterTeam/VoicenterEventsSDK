@@ -255,7 +255,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Slider } from 'element-ui'
     import queueMixin from '@/mixins/queueMixin'
-    import { allSeries } from '@/enum/queueConfigs'
+    import { getAllSeries } from '@/enum/queueConfigs'
     import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
@@ -276,7 +276,7 @@
         isFunnelChartWidget,
         isSocketsRealTimeTableWidget
     } from '@/helpers/widgetUtils'
-    import { areaChartWidgetColors, defaultWidgetColors } from '@/enum/layout'
+    import { areaChartWidgetColors, defaultWidgetColors, queueChartWidgetColors, queueGaugeWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
 
@@ -324,7 +324,6 @@
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
                 statistics,
-                allSeries,
                 AUTO_COMPLETE_PARAMETER_TYPE,
                 textFontSizes: {
                     min: 12,
@@ -364,11 +363,20 @@
             }
         },
         computed: {
+            allSeries() {
+                return getAllSeries(this.$store.getters['entities/accountStatuses'])
+            },
             availableColors() {
-                if (!isAreaChartWidget(this.widget)) {
-                    return defaultWidgetColors
+                switch (true) {
+                    case isAreaChartWidget(this.widget):
+                        return areaChartWidgetColors
+                    case isQueueChart(this.widget):
+                        return queueChartWidgetColors
+                    case isQueueGauge(this.widget):
+                        return queueGaugeWidgetColors
+                    default:
+                        return defaultWidgetColors
                 }
-                return areaChartWidgetColors
             },
             predefinedColors() {
                 let options = values(this.$store.getters['layout/colors']('activeLayout'))

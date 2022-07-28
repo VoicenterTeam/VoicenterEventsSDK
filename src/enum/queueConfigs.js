@@ -51,33 +51,50 @@ export const activeGaugeCallColumns = [{
     sortable: false
 }]
 
-export const allSeries = [
-    {
-        label: i18n.t('queue.maximum.waiting.time'),
-        value: 0
+export const DEFAULT_CHART_SERIES_LINES_KEYS = {
+    MAX_WAITING_TIME: {
+        key: 'MAX_WAITING_TIME',
+        serieType: 'line',
+        name: i18n.t('call.maxWaitingTime'),
+        colorVar: 'maxWaitingTime',
+        colorDefault: '#61B5FF'
     },
-    {
-        label: i18n.t('queue.amount.callers.waiting'),
-        value: 1
+    QUEUE_CALLS: {
+        key: 'QUEUE_CALLS',
+        serieType: 'line',
+        name: i18n.t('call.queueCalls'),
+        colorVar: 'queueCalls',
+        colorDefault: '#ED64A6'
     },
-    {
-        label: i18n.t('queue.agents.available'),
-        value: 2
+    AGENTS_ON_HOLD: {
+        key: 'AGENTS_ON_HOLD',
+        serieType: 'column',
+        name: i18n.t('status.hold'),
+        colorVar: 'onHold',
+        colorDefault: '#E53E3E'
     },
-    {
-        label: i18n.t('queue.agents.on.a.call'),
-        value: 3
-    },
-    {
-        label: i18n.t('queue.agents.on.administrative.break'),
-        value: 4
-    },
-    {
-        label: i18n.t('queue.agents.on.break'),
-        value: 5
-    },
-    {
-        label: i18n.t('queue.agents.calls.on.hold'),
-        value: 6
+    AGENTS_IN_CALL: {
+        key: 'AGENTS_IN_CALL',
+        serieType: 'column',
+        name: i18n.t('status.incall'),
+        colorVar: 'inCall',
+        colorDefault: '#5EB300'
     }
-]
+}
+
+export const getAllSeries = (accountStatuses) => {
+    return [
+        ...Object.values(DEFAULT_CHART_SERIES_LINES_KEYS).map(DEFAULT_CHART_SERIE => {
+            return {
+                value: DEFAULT_CHART_SERIE.key,
+                label: DEFAULT_CHART_SERIE.name
+            }
+        }),
+        ...accountStatuses.map(accountStatus => {
+                return {
+                    value: accountStatus.StatusID,
+                    label: accountStatus.Name
+                }
+            })
+        ]
+}
