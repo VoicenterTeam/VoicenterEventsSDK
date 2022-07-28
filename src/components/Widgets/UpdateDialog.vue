@@ -255,7 +255,7 @@
     import cloneDeep from 'lodash/cloneDeep'
     import { Checkbox, Collapse, CollapseItem, ColorPicker, InputNumber, Slider } from 'element-ui'
     import queueMixin from '@/mixins/queueMixin'
-    import { allSeries } from '@/enum/queueConfigs'
+    import { getAllSeries } from '@/enum/queueConfigs'
     import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
@@ -324,7 +324,6 @@
                 activeCollapse: ['filters'],
                 loadEntitiesList: false,
                 statistics,
-                allSeries,
                 AUTO_COMPLETE_PARAMETER_TYPE,
                 textFontSizes: {
                     min: 12,
@@ -364,6 +363,9 @@
             }
         },
         computed: {
+            allSeries() {
+                return getAllSeries(this.$store.getters['entities/accountStatuses'])
+            },
             availableColors() {
                 switch (true) {
                     case isAreaChartWidget(this.widget):
