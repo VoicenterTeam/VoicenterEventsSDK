@@ -276,7 +276,7 @@
         isFunnelChartWidget,
         isSocketsRealTimeTableWidget
     } from '@/helpers/widgetUtils'
-    import { areaChartWidgetColors, defaultWidgetColors, queueChartWidgetColors } from '@/enum/layout'
+    import { areaChartWidgetColors, defaultWidgetColors, queueChartWidgetColors, queueGaugeWidgetColors } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
 
@@ -372,6 +372,8 @@
                         return areaChartWidgetColors
                     case isQueueChart(this.widget):
                         return queueChartWidgetColors
+                    case isQueueGauge(this.widget):
+                        return queueGaugeWidgetColors
                     default:
                         return defaultWidgetColors
                 }
