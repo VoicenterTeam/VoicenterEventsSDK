@@ -26,6 +26,21 @@ export const defaultWidgetColors = [
      "incoming"
  ];
 
+ export const queueChartWidgetColors = [
+     ...defaultWidgetColors,
+     "maxWaitingTime",
+     "queueCalls",
+     "onHold",
+     "inCall"
+ ]
+
+export const queueGaugeWidgetColors = [
+    ...defaultWidgetColors,
+    "minimumRangeColor",
+    "middleRangeColor",
+    "maximumRangeColor",
+]
+
 export const predefinedColors = [
     '#F7FAFC',
     '#EDF2F6',

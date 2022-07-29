@@ -134,3 +134,9 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+.extension-card-icon {
+    width: var(--dynamic-font-size);
+}
+</style>
