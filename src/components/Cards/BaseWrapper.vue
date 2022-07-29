@@ -19,7 +19,7 @@
         <div class="card-action_wrapper rounded min-h-full">
             <div class="p-2">
                 <slot name="icon">
-                    <component :is="cardIcon" class="status-icon text-primary" :style="cardValueIconStyles"/>
+                    <component :is="cardIcon" class="status-icon text-primary" :style="cardValueIconStyles" />
                 </slot>
             </div>
             <div class="p-2">
@@ -48,6 +48,8 @@
 </template>
 <script>
     import get from 'lodash/get'
+    import statusTypes from '@/enum/statusTypes'
+    import { types } from '@/enum/queueCounters'
     
     export default {
         components: {
@@ -85,6 +87,17 @@
             widget: {
                 type: Object,
                 default: () => ({})
+            },
+            usedDynamicStatuses: {
+                type: Boolean,
+                default: false
+            },
+            status: {
+                type: [Number, String]
+            },
+            queue: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -113,10 +126,14 @@
                 return get(this.templateHelp, "Items", []).length > 0
             },
             cardValueIconStyles() {
+                const color = this.usedDynamicStatuses && this.status !== '' ? this.styleForStatusIconColor(this.status, this.queue) : this.mainColor
                 return {
-                    ...this.mainColor,
+                    ...color,
                     minWidth: this.styles.valueIconMinWidth
                 }
+            },
+            getAccountStatuses () {
+                return this.$store.getters['entities/accountStatuses']
             }
         },
         methods: {
@@ -133,6 +150,15 @@
                 const helpData = this.$store.getters['templatesCategory/getHelpByWidgetsTemplateID'](templateId)
                 this.templateHelp = get(helpData, 'Help', {})
             },
+            styleForStatusIconColor (status, queue) {
+                const statusACtive = typeof status === 'object' ? 'StatusID' in  status ? status.StatusID : status.value : status
+                const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(statusACtive))
+                const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode : queue ? Object.values(types)[statusACtive].color : statusTypes[statusACtive].color
+
+                return {
+                    '--status-svg-color': color
+                }
+            }
         },
         mounted() {
             this.getHelpByWidgetsTemplateID()

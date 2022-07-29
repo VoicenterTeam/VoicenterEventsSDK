@@ -93,13 +93,13 @@
                             :label="$t(option.text)"
                             v-bind="option"
                         >
-                            <div class="flex">
+                            <div class="flex" :style="styleForStatusIconColor(option)">
                                 <component :is="option.icon" class="w-5 mx-1 text-primary" />
                                 <span class="w-16 mx-1">{{ $t(option.text) }}</span>
                             </div>
                         </el-option>
                         <template #prefix>
-                            <component :is="selectedIcon" class="w-5 mx-1 pt-2 text-primary" />
+                            <component :is="selectedIcon" class="w-5 mx-1 pt-2 text-primary" :style="styleForStatusIconColor(selectedStatus)" />
                         </template>
                     </el-select>
                 </div>
@@ -211,6 +211,9 @@
                 finalStatuses.push(statusTypes[otherStatuses.AT_WORK])
                 
                 return finalStatuses
+            },
+            getAccountStatuses () {
+                return this.$store.getters['entities/accountStatuses']
             }
         },
         async mounted () {
@@ -303,6 +306,15 @@
                         ...otherData,
                     }
                 })
+            },
+            styleForStatusIconColor (status) {
+                const statusACtive = typeof status === 'object' ? 'StatusID' in  status ? status.StatusID : status.value : status
+                const dynamicColor = this.getAccountStatuses.find(el => Number(el.StatusID) === Number(statusACtive))
+                const color = dynamicColor && dynamicColor.ColorCode ? dynamicColor.ColorCode :  statusTypes[statusACtive].color
+
+                return {
+                    '--status-svg-color': color
+                }
             }
         }
     }

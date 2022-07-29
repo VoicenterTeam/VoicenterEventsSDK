@@ -12,6 +12,9 @@
             class="queue-card"
             v-bind="$attrs"
             v-on="$listeners"
+            usedDynamicStatuses
+            :status="queueType"
+            queue
         />
         <update-dialog
             :layoutConfig="layoutConfig"
