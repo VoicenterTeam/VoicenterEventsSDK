@@ -33,11 +33,14 @@
 
         </wizard-step>
 
-        <wizard-step icon="vc-icon-id"
-                    v-loading="loading"
-                    :name="$t('report.wizard.idStep')"
-                    :title="$t('report.wizard.idStep')"
-                    class="flex items-center">
+        <wizard-step
+            icon="vc-icon-id"
+            v-loading="loading"
+            :name="$t('report.wizard.idStep')"
+            :title="$t('report.wizard.idStep')"
+            class="flex items-center"
+            :before-leave="validateIdStep"
+        >
 
             <template v-slot:summary>
                 <wizard-summary-row
@@ -46,7 +49,7 @@
                 />
             </template>
 
-            <create-report-step-second /> <!-- TODO: need to add ref (idStep) -->
+            <create-report-step-second ref="stepTwo" />
         </wizard-step>
 
         <wizard-step
@@ -58,7 +61,7 @@
 
             <template v-slot:summary>
                 <wizard-summary-row
-                    :label="`${$t('report.scheduleList.length')}:`"
+                    :label="`${$t('report.wizard.finalStep')}:`"
                     :value="getReportData.ReportTriggerList.length"
                 />
             </template>
@@ -70,6 +73,9 @@
 </template>
 
 <script>
+    import { reportApi } from '@/modules/reports/services/reportService'
+    import { Notification } from 'element-ui'
+
     export default {
         props: {
             loading: {
@@ -93,32 +99,48 @@
         computed: {
             getReportData () {
                 return this.$store.getters['report/getReportData']
-            }
+            },
+            currentAccountId () {
+                return this.$store.state.entities.selectedAccountID
+            },
+            selectedLayout() {
+                return this.$store.state.layout.activeLayout.LayoutID
+            },
         },
         methods: {
             validateGeneralStep() {
                 return this.$refs['generalStep'].validate()
             },
             validateIdStep() {
-                return this.$refs['idStep'].validate()
-            },
-            validateFinalStep() {
-                return this.$refs['finalStep'].validate()
+                const isValid = this.$refs['stepTwo'].$refs.widgetTable.validate()
+                if (!isValid) {
+                    Notification.warning(this.$t('report.schedule.needAddAtLeastOneWidget'))
+                    return
+                }
+                return isValid
             },
             async onFinish() {
-                this.validationLoading = true
-                const isValid = await this.validateFinalStep();
-
+                const isValid = this.$refs['finalStep'].validate()
                 if (!isValid) {
-                    this.validationLoading = false
+                    Notification.warning(this.$t('report.schedule.needAddAtLeastOneSchedule'))
                     return
+                }
+
+                const data = await this.getReportData
+                data.AccountID = this.currentAccountId
+                data.LayoutID = this.selectedLayout
+                try {
+                    await reportApi.store(data)
+                    this.$emit('go-back');
+                } catch (errors) {
+                    console.error(errors);
                 }
             },
             async onCancel() {
-                this.$emit('on-cancel');
+                this.$emit('go-back');
             }
         },
-        created() {
+        created () {
             this.$store.dispatch('reportTrigger/updateValueOfCreateLocalReportTrigger', true)
         },
         beforeDestroy () {

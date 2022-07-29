@@ -76,7 +76,7 @@
 <script>
 import get from 'lodash/get'
 import {InputNumber, Tooltip} from 'element-ui'
-import WidgetCard from "@/components/Reports/Widgets/AddWitgetsForm/WidgetCard";
+import WidgetCard from "@/components/Reports/Widgets/AddWidgetsForm/WidgetCard";
 
 export default {
     components: {

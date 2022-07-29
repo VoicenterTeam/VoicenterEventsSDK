@@ -6,7 +6,8 @@
             :tableProps="tableProps"
             @sort-change="onSortChange"
             @on-create-report="addCreateTab"
-            :tableActionProps="tableActionProps">
+            :tableActionProps="tableActionProps"
+        >
             <template v-slot:expand-content="{row}">
                 <div class="border-l-5 p-4 border-primary">
                     <div class="m-2 text-lg font-medium">{{ $t('widget.scheduleList') }}</div>
@@ -53,17 +54,15 @@
                         </template>
                     </delimited-list>
                 </template>
-                <template v-else>
-                    <span class="quick-add-button">
+                <template v-else >
+                    <span class="quick-add-button cursor-pointer">
                             <span class="mx-2">
-<!--                                TODO: Implement Add Wizard button and modal-->
-                                <schedule-form
-                                    buttonLabel="Add Widget"
-                                    icon="vc-icon-plus-linear"
-                                    :reportId="row.ReportID"
-                                    @addedSchedule="reloadData"
-                                    :data="row"
-                                />
+                                <div class="flex items-center text-primary-300 hover:text-primary" @click="openAddWidgetModal(row)">
+                                    <i class="icon-base add-schedule-btn-text vc-icon-plus-linear" />
+                                    <span class="text-main-sm leading-4">
+                                        {{ $t('dashboard.addWidget') }}
+                                    </span>
+                                </div>
                             </span>
                         </span>
                 </template>
@@ -109,18 +108,39 @@
             </template>
 
             <template v-slot:format="{row}">
-                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsPDF')" type="default"
-                             @click="onExportAsPdf(row)"/>
-                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsCSV')" type="default"
-                             @click="onExportAsCSV(row)"/>
-                <button-icon icon="vc-icon-confirm-action" :description="$t('report.tooltip.exportAsHTML')" type="default"
-                             @click="onExportAsHtml(row)"/>
+                <button-icon
+                    icon="vc-icon-confirm-action"
+                    :description="$t('report.tooltip.exportAsPDF')" type="default"
+                    @click="onExportAsPdf(row)"/>
+                <button-icon
+                    icon="vc-icon-confirm-action"
+                    :description="$t('report.tooltip.exportAsCSV')"
+                    type="default"
+                    @click="onExportAsCSV(row)"/>
+                <button-icon
+                    icon="vc-icon-confirm-action"
+                    :description="$t('report.tooltip.exportAsHTML')"
+                    type="default"
+                    @click="onExportAsHtml(row)"
+                />
             </template>
             <template v-slot:action="{row}">
-                <button-icon icon="vc-icon-copy" :description="$t('report.tooltip.copyReport')" @click="onReportCopy(row)"/>
-                <button-icon icon="vc-icon-edit-pencil" :description="$t('report.tooltip.editReport')" @click="onReportEdit(row)"/>
-                <button-icon icon="vc-icon-recycle-bin" :description="$t('report.tooltip.deleteReport')" type="danger"
-                             @click="onReportDelete(row)"/>
+                <button-icon 
+                    icon="vc-icon-copy"
+                    :description="$t('report.tooltip.copyReport')"
+                    @click="onReportCopy(row)"
+                />
+                <button-icon
+                    icon="vc-icon-edit-pencil"
+                    :description="$t('report.tooltip.editReport')"
+                    @click="onReportEdit(row)"
+                />
+                <button-icon
+                    icon="vc-icon-recycle-bin"
+                    :description="$t('report.tooltip.deleteReport')"
+                    type="danger"
+                    @click="onReportDelete(row)"
+                />
             </template>
         </reports-table>
         <delete-dialog
@@ -139,7 +159,13 @@
             :is-duplicate-widgets.sync="isDuplicateWidgets"
             @on-close="onCancelCopy"
             @on-cancel="onCancelCopy"
-            @on-confirm="copyReport"/>
+            @on-confirm="copyReport"
+        />
+        <add-widgets-dialog
+            :visible.sync="visible"
+            :reportId="reportId"
+            @added-widgets="reloadData"
+        />
     </div>
 </template>
 
@@ -160,6 +186,7 @@ import DelimitedList from "@/modules/reports/components/DelimitedList";
 import Tag from "@/modules/reports/components/Tag"
 import ScheduleCard from "@/modules/reports/components/ScheduleCard";
 import ScheduleForm from '@/modules/reports/components/schedule/ScheduleForm.vue'
+import AddWidgetsDialog from '@/components/Reports/Widgets/AddWidgetsDialog.vue'
 
 const REPORT_ENABLED_STATUS = 1
 const REPORT_DISABLED_STATUS = 2
@@ -180,9 +207,15 @@ export default {
         ScheduleCard,
         DeleteDialog,
         CopyReportDialog,
-        ScheduleForm
+        ScheduleForm,
+        AddWidgetsDialog
     },
-    props: {},
+    props: {
+        reportItemForEdit: {
+            type: Object,
+            default: () => {}
+        }
+    },
     data() {
         return {
             tableData: [],
@@ -233,6 +266,24 @@ export default {
             reportCopyName: '',
             isDuplicateWidgets: true,
             isDuplicateSchedules: true,
+            visible: false,
+            reportId: null
+        }
+    },
+    watch: {
+        reportItemForEdit: {
+            handler (val) {
+                if (Object.keys(val).length) {
+                    this.tableData = this.tableData.map(el => {
+                        if (el.ReportID === val.ReportID) {
+                            el = val
+                        }
+                        return el
+                    })
+                }
+            },
+            deep: true,
+            immediate: true
         }
     },
     methods: {
@@ -369,7 +420,8 @@ export default {
         },
         async getReportsList() {
             const payload = {
-                ReportStatusID: [REPORT_ENABLED_STATUS]
+                ReportStatusID: [REPORT_ENABLED_STATUS, REPORT_DISABLED_STATUS],
+                AccountID: [this.$store.state.entities.selectedAccountID]
             }
             const reportsList = await reportApi.list(payload)
             return reportsList
@@ -403,6 +455,10 @@ export default {
         },
         async reloadData () {
             this.tableData = await this.loadData()
+        },
+        openAddWidgetModal (data) {
+            this.reportId = data.ReportID
+            this.visible = true
         }
     },
     async mounted() {
