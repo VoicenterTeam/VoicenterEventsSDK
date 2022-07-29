@@ -1143,6 +1143,8 @@
 	"dashboard.dashboardDeleteConfirmation": "Are you sure you want to delete this dashboard",
 	"general.l.l.l.l.l.l.l.l.l.l.l.l.l.№": "№",
 	"layout.config.loginStatusWarningColor": "Login Status Warning Color",
+    "layout.config.inCallColor": "In Call Color",
+    "layout.config.onHoldColor": "On Hold Color",
 	"layout.defaultLayoutWarningCreateCopy": "This is a default layout, you will not be able to update, just create a copy",
 	"report.condition.field.selectOperator": "Select Operator",
 	"report.deleteWidgetReportConfirmation": "Are you sure you want to delete this widget from report",

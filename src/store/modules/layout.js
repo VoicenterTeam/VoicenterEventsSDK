@@ -114,7 +114,9 @@ const getters = {
             widgetGroupFrames: '#edf2f7',
             widgetGroupTitles: '#000000',
             loginStatusLimit: '#FF3636',
-            loginStatusWarning: '#FAB11E'
+            loginStatusWarning: '#FAB11E',
+            inCall: '#5EB300',
+            onHold: '#E53E3E'
         }
 
         result['primary_rgba'] = convertHex(result.primary);
@@ -155,6 +157,14 @@ const getters = {
 
             if (el.LayoutParameterName === 'LoginStatusWarningColor') {
                 result.loginStatusWarning = el.Value
+            }
+
+            if (el.LayoutParameterName === 'InCallColor') {
+                result.inCall = el.Value
+            }
+
+            if (el.LayoutParameterName === 'OnHoldColor') {
+                result.onHold = el.Value
             }
         });
 
