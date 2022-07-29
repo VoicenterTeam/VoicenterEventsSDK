@@ -70,7 +70,7 @@
                 </div>
             </template>
             <template v-for="slot in Object.keys(queueDashboardColumnStyles)" v-slot:[slot]="{row}">
-                <div :key="slot" :style="queueDashboardColumnStyles[slot]">
+                <div :key="slot" :style="getDynamicColorForColumn(slot)">
                     {{ row[slot] }}
                 </div>
             </template>
@@ -407,6 +407,13 @@
                     this.fetchTableData = this.fetchTableData.sort((a, b) => (a[prop] < b[prop]) ? 1 : -1)
                 }
             },
+            getDynamicColorForColumn(slot) {
+                const nameOfSlot = slot.charAt(0).toLowerCase() + slot.slice(1)
+                const color = this.data.WidgetLayout.colors && nameOfSlot in this.data.WidgetLayout.colors && this.data.WidgetLayout.colors[nameOfSlot] ? this.data.WidgetLayout.colors[nameOfSlot] : queueDashboardColumnStyles[slot].color
+                return {
+                    color: color
+                }
+            }
         },
         mounted() {
             if (!this.data.WidgetLayout.hasOwnProperty('displayQueuesAsRow')) {
