@@ -18,13 +18,13 @@
                     </el-checkbox>
                     <el-form-item prop="settings.callThresholdLowValue" class="my-2">
                         {{$t('settings.set.threshold.call.low')}}
-                        <el-input-number class="mx-2 w-36" size="small" :min="0"
+                        <el-input-number class="mx-2 w-36" size="small" :min="0" placeholder="0"
                                          :disabled="!model.settings.callThreshold"
                                          v-model="model.settings.callThresholdLowValue"/>
                     </el-form-item>
                     <el-form-item prop="settings.callThresholdHeightValue" class="my-2">
                         {{$t('settings.set.threshold.call.height')}}
-                        <el-input-number class="mx-2 w-36" size="small" :min="0"
+                        <el-input-number class="mx-2 w-36" size="small" :min="0" placeholder="0"
                                          :disabled="!model.settings.callThreshold"
                                          v-model.number="model.settings.callThresholdHeightValue"/>
                     </el-form-item>

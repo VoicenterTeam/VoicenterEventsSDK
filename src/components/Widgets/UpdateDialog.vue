@@ -132,7 +132,9 @@
                                 :min="cardTitleFontSizes.min"
                                 :step="1"
                                 size="small"
-                                v-model="model.WidgetLayout.titleFontSize">
+                                v-model="model.WidgetLayout.titleFontSize"
+                                placeholder="0"
+                            >
                             </el-input-number>
                         </div>
                         <div class="py-4">
@@ -144,7 +146,9 @@
                                 :min="cardValueFontSizes.min"
                                 :step="1"
                                 size="small"
-                                v-model="model.WidgetLayout.valueFontSize">
+                                v-model="model.WidgetLayout.valueFontSize"
+                                placeholder="0"
+                            >
                             </el-input-number>
                         </div>
                     </el-form-item>
@@ -157,7 +161,9 @@
                             :min="textFontSizes.min"
                             :step="1"
                             size="small"
-                            v-model="model.WidgetLayout.labelFontSize">
+                            v-model="model.WidgetLayout.labelFontSize"
+                            placeholder="0"
+                        >
                         </el-input-number>
                     </el-form-item>
                     <el-form-item class="pb-4" v-if="isPieWidget(widget)">
@@ -169,7 +175,9 @@
                             :min="textFontSizes.min"
                             :step="1"
                             size="small"
-                            v-model="model.WidgetLayout.labelFontSize">
+                            v-model="model.WidgetLayout.labelFontSize"
+                            placeholder="0"
+                        >
                         </el-input-number>
                         <div class="flex flex-row items-center pt-10">
                             <div>
@@ -271,7 +279,14 @@
     import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
-    import { defaultAreaChartColors, defaultColors, realTimeSettings, defaultQueueChartColors } from '@/enum/defaultWidgetSettings'
+    import {
+        defaultAreaChartColors,
+        defaultColors,
+        realTimeSettings,
+        defaultQueueChartColors,
+        defaultQueueDashboardColors,
+        defaultMultiQueuesDashboardColors
+    } from '@/enum/defaultWidgetSettings'
     import { isChartWidget } from '@/helpers/widgetUtils'
     import {
         isAreaChartWidget,
@@ -288,7 +303,7 @@
         isFunnelChartWidget,
         isSocketsRealTimeTableWidget
     } from '@/helpers/widgetUtils'
-    import { areaChartWidgetColors, defaultWidgetColors, queueChartWidgetColors, queueGaugeWidgetColors, multiQueueTableWidgetColors } from '@/enum/layout'
+    import { areaChartWidgetColors, defaultWidgetColors, queueChartWidgetColors, queueGaugeWidgetColors, multiQueueTableWidgetColors, queueDashboard } from '@/enum/layout'
     import values from 'lodash/values'
     import uniq from 'lodash/uniq'
 
@@ -386,7 +401,9 @@
                         return queueChartWidgetColors
                     case isQueueGauge(this.widget):
                         return queueGaugeWidgetColors
-                    case isMultiQueuesDashboard(this.widget) || isQueueDashboardWidget(this.widget):
+                    case isQueueDashboardWidget(this.widget):
+                        return queueDashboard
+                    case isMultiQueuesDashboard(this.widget):
                         return multiQueueTableWidgetColors
                     default:
                         return defaultWidgetColors
@@ -504,6 +521,14 @@
 
             if (isQueueGauge(this.widget)) {
                 this.model.colors = { ...defaultQueueChartColors, ...this.model.WidgetLayout.colors }
+            }
+
+            if (isQueueDashboardWidget(this.widget)) {
+                this.model.colors = { ...defaultQueueDashboardColors, ...this.model.WidgetLayout.colors }
+            }
+
+            if (isMultiQueuesDashboard(this.widget)) {
+                this.model.colors = { ...defaultMultiQueuesDashboardColors, ...this.model.WidgetLayout.colors }
             }
 
             if (isAreaChartWidget(this.widget)) {

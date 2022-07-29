@@ -50,6 +50,11 @@ export const queueGaugeWidgetColors = [
 
 export const multiQueueTableWidgetColors = [
     ...defaultWidgetColors,
+    ...Object.keys(queueDashboardColumnStyles).map(el => el.charAt(0).toLowerCase() + el.slice(1))
+]
+
+export const queueDashboard = [
+    ...defaultWidgetColors,
     ...Object.keys(PRIMARY_COUNTERS()).map(el => el.charAt(0).toLowerCase() + el.slice(1)),
     ...Object.keys(queueDashboardColumnStyles).map(el => el.charAt(0).toLowerCase() + el.slice(1))
 ]
