@@ -148,7 +148,19 @@
                             </el-input-number>
                         </div>
                     </el-form-item>
-                    <el-form-item class="pb-4" v-if="isPieWidget(widget) || isQueueGauge(widget)">
+                    <el-form-item class="pb-4" v-if="isQueueGauge(widget)">
+                        <div>
+                            <label>{{ $t('widget.statusLabelFontSize') }}</label>
+                        </div>
+                        <el-input-number
+                            :max="textFontSizes.max"
+                            :min="textFontSizes.min"
+                            :step="1"
+                            size="small"
+                            v-model="model.WidgetLayout.labelFontSize">
+                        </el-input-number>
+                    </el-form-item>
+                    <el-form-item class="pb-4" v-if="isPieWidget(widget)">
                         <div>
                             <label>{{ $t('widget.statusLabelFontSize') }}</label>
                         </div>
@@ -172,7 +184,7 @@
                     <el-form-item>
                         <widget-padding :model="model"/>
                     </el-form-item>
-                    <el-form-item v-if="isChartWidget(widget)">
+                    <el-form-item v-if="isChartWidget(widget) && !isQueueGauge(widget)">
                         <el-checkbox v-model="model.WidgetLayout.displayLegend">
                             {{ $t('widget.displayLegend') }}
                         </el-checkbox>
@@ -259,7 +271,7 @@
     import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
-    import { defaultAreaChartColors, defaultColors, realTimeSettings } from '@/enum/defaultWidgetSettings'
+    import { defaultAreaChartColors, defaultColors, realTimeSettings, defaultQueueChartColors } from '@/enum/defaultWidgetSettings'
     import { isChartWidget } from '@/helpers/widgetUtils'
     import {
         isAreaChartWidget,
@@ -489,6 +501,10 @@
             this.model = cloneDeep(this.widget)
 
             this.model.colors = this.model.WidgetLayout.colors || cloneDeep(defaultColors)
+
+            if (isQueueGauge(this.widget)) {
+                this.model.colors = { ...defaultQueueChartColors, ...this.model.WidgetLayout.colors }
+            }
 
             if (isAreaChartWidget(this.widget)) {
                 this.model.colors = { ...defaultAreaChartColors, ...this.model.WidgetLayout.colors }
