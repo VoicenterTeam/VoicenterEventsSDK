@@ -25,3 +25,10 @@ export const defaultCardColors = {
     frames: "#000000",
     fonts: '#000000'
 }
+
+export const defaultQueueChartColors = {
+    ...defaultColors,
+    minimumRangeColor: '#55BF3B',
+    middleRangeColor: '#DDDF0D',
+    maximumRangeColor: '#DF5353'
+}
