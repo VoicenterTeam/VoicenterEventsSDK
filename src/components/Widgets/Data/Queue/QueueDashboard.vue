@@ -168,7 +168,6 @@
 
                 data.forEach((queue) => {
                     delete queue.queue_id;
-
                     this.queueStatistics[TOTAL_CALLS_KEY] += queue[TOTAL_CALLS_KEY]
                     Object.keys(queue).forEach((key) => {
 
@@ -214,10 +213,13 @@
                     [PERCENTAGE_TYPE]: PERCENTAGE_COUNTERS(),
                 }
             },
-            getWidgetDataWithRefreshInterval () {
+            async getWidgetDataWithRefreshInterval () {
+                await this.getWidgetData()
+
                 if (this.fetchDataInterval) {
                     clearInterval(this.fetchDataInterval)
                 }
+
                 if (this.data.DefaultRefreshInterval) {
                     this.fetchDataInterval = setInterval(async() => {
                         await this.getWidgetData()
