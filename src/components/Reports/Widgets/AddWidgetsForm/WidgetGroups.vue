@@ -3,6 +3,13 @@
         <portal to="form-title">
             {{ $t('widget.widgetAdd') }}
         </portal>
+        <portal to="redirect-action">
+          <span class="text-primary redirect-action"
+                @click="goToWidgetGroups">
+                <IconDirLeft class="mx-2"/>
+                {{ $t('general.back') }}
+            </span>
+        </portal>
         <div class="search">
             <div class="w-full flex justify-center py-4">
                 <div class="w-full max-w-md">
@@ -20,7 +27,6 @@
         </div>
         <WidgetGroupCard
             v-for="widgetGroup in searchedWidgetGroups"
-            v-bind="widgetGroup"
             :key="widgetGroup.WidgetGroupID"
             :widget-group="widgetGroup"
             @widget-group-select="selectWidgetGroup"
@@ -29,7 +35,7 @@
 </template>
 
 <script>
-import WidgetGroupCard from "@/components/Reports/Widgets/AddWitgetsForm/WidgetGroupCard";
+import WidgetGroupCard from "@/components/Reports/Widgets/AddWidgetsForm/WidgetGroupCard"
 
 export default {
     components: {
@@ -38,35 +44,37 @@ export default {
     props: {
         widgetGroups: {
             type: Array,
-            default: []
+            default: () => []
         }
     },
     data() {
         return {
-            search: ''
+            search: '',
+            widgetGroupsLocal: []
         }
     },
     computed: {
         searchedWidgetGroups () {
             if (!this.search) {
-                return this.widgetGroups
+                return this.widgetGroupsLocal
             }
-            return this.widgetGroups.filter(widgetGroup => {
-                return widgetGroup.WidgetGroupTitle && widgetGroup.WidgetGroupTitle.toLowerCase().includes(this.search.toLowerCase())
+            return this.widgetGroupsLocal.filter(widgetGroup => {
+                const widgetGroupID = String(widgetGroup.WidgetGroupID)
+                return (widgetGroup.WidgetGroupTitle && widgetGroup.WidgetGroupTitle.toLowerCase().includes(this.search.toLowerCase()))
+                || (widgetGroupID && widgetGroupID.includes(this.search))
             })
-        }
-    },
-    watch: {
-        search() {
-            // run search functionality
         }
     },
     methods: {
         selectWidgetGroup(group) {
             this.$emit('select-widget-group', group)
         },
+        async goToWidgetGroups() {
+            await this.$emit('go-to-widget-groups')
+        }
     },
-    mounted () {
+    async mounted () {
+        this.widgetGroupsLocal = this.widgetGroups
         this.search = ''
     }
 }

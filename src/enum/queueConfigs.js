@@ -1,5 +1,7 @@
 import i18n from '@/i18n'
 
+import { defaultQueueChartColors } from './defaultWidgetSettings';
+
 export const activeCallColumns = [{
     prop: 'QueueName',
     fixed: false,
@@ -57,27 +59,27 @@ export const DEFAULT_CHART_SERIES_LINES_KEYS = {
         serieType: 'line',
         name: i18n.t('call.maxWaitingTime'),
         colorVar: 'maxWaitingTime',
-        colorDefault: '#61B5FF'
+        colorDefault: defaultQueueChartColors.maxWaitingTime
     },
     QUEUE_CALLS: {
         key: 'QUEUE_CALLS',
         serieType: 'line',
         name: i18n.t('call.queueCalls'),
         colorVar: 'queueCalls',
-        colorDefault: '#ED64A6'
+        colorDefault: defaultQueueChartColors.queueCalls
     },
     AGENTS_ON_HOLD: {
         key: 'AGENTS_ON_HOLD',
         serieType: 'column',
         name: i18n.t('status.hold'),
-        colorVar: 'onHold',
+        layoutColorVar: 'onHold',
         colorDefault: '#E53E3E'
     },
     AGENTS_IN_CALL: {
         key: 'AGENTS_IN_CALL',
         serieType: 'column',
         name: i18n.t('status.incall'),
-        colorVar: 'inCall',
+        layoutColorVar: 'inCall',
         colorDefault: '#5EB300'
     }
 }

@@ -4,12 +4,11 @@
             <div>
                 <el-checkbox v-model="isChecked" />
             </div>
-            <div v-if="$scopedSlots.icon || widgetIcon"
-                 class="widget-icon">
+            <div class="widget-icon">
                 <slot name="icon">
                     <component
-                        :is="widgetIcon"
-                        class="mx-6 text-primary"
+                        class="ml-9 mr-5 text-primary"
+                        :is="getTemplateIcon(widget.WidgetLayout.DataTypeID)"
                     />
                 </slot>
             </div>
@@ -40,6 +39,7 @@
 <script>
 import get from 'lodash/get'
 import { Checkbox } from 'element-ui'
+import { templateIcons } from '@/enum/widgetDataTypes'
 
 export default {
     props: {
@@ -70,11 +70,11 @@ export default {
             this.$emit('select-widget', this.widget.WidgetID )
         }
     },
-    computed: {
-        widgetIcon () {
-            return get(this.widget, 'icon', this.defaultIcon)
+    methods: {
+        getTemplateIcon(templateDataTypeID) {
+            return templateIcons[templateDataTypeID]
         }
-    },
+    }
 }
 </script>
 

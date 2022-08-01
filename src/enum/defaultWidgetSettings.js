@@ -42,11 +42,17 @@ export const defaultCardColors = {
     fonts: '#000000'
 }
 
-export const defaultQueueChartColors = {
+export const defaultQueueGaugeChartColors = {
     ...defaultColors,
     minimumRangeColor: '#55BF3B',
     middleRangeColor: '#DDDF0D',
     maximumRangeColor: '#DF5353'
+}
+
+export const defaultQueueChartColors = {
+    ...defaultColors,
+    queueCalls: '#ED64A6',
+    maxWaitingTime: '#61B5FF'
 }
 
 export const defaultQueueDashboardColors = {

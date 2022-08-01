@@ -1,7 +1,10 @@
 <template>
     <div>
-        <div class="py-2 bg-white flex items-center cursor-pointer border-b"
-             @click="onSelectCategory">
+        <div
+            class="py-2 bg-white flex items-center border-b"
+            @click="onSelectCategory"
+            :class="{ 'opacity-25 cursor-not-allowed': !getWidgetsListLength, 'cursor-pointer': getWidgetsListLength }"
+        >
             <div class="flex items-center justify-between w-full py-4 px-2.5 text-steel">
                 <div class="flex items-center flex-1">
                     <div>
@@ -51,13 +54,15 @@ export default {
     methods: {
         get,
         async onSelectCategory() {
-            // await this.$store.dispatch('widgetCreation/onSelectCategory', this.templatesCategory)
+            if (!this.getWidgetsListLength) {
+                return
+            }
             await this.$emit('widget-group-select', this.widgetGroup)
-        },
+        }
     },
     computed: {
         widgetGroupTitle() {
-            return this.widgetGroup.WidgetGroupTitle || '-'
+            return this.widgetGroup.WidgetGroupTitle || this.$t('dashboard.groupID') + `: ${this.widgetGroup.WidgetGroupID}`
         },
         getWidgetsListLength () {
             return get(this.widgetGroup, 'WidgetList.length', 0)
@@ -65,6 +70,6 @@ export default {
         setWidgetTranslation () {
             return this.getWidgetsListLength === 1 ? this.$t('widget.widget') : this.$t('widget.widgets')
         }
-    },
+    }
 }
 </script>

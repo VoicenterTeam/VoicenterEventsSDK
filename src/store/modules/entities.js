@@ -1,6 +1,5 @@
 import get from 'lodash/get'
 import {entitiesApi} from '@/api/entitiesApi'
-import statusTypes from "@/enum/statusTypes";
 
 const types = {
     SET_ENTITIES_LIST: 'SET_ENTITIES_LIST',
@@ -77,7 +76,20 @@ const getters = {
         return getters.accountStatuses.find(a => a.StatusID.toString() === id.toString()) || {Name: ''}
     },
     getStatusTextById: (state, getters) => id => {
-        return getters.getStatusById(id).Name || statusTypes[id].text || 'other'
+        // Before was: `import statusTypes from "@/enum/statusTypes"; ... getters.getStatusById(id).Name || statusTypes[id].text || 'other'`. Cannot use import of statusTypes because in statusTypes store is imported
+        const dynamicStatuses = {
+            100: {
+                text: 'status.incall',
+            },
+            101: {
+                text: 'status.hold',
+            },
+            102: {
+                text: 'status.atWork',
+            }
+        }
+
+        return getters.getStatusById(id).Name || dynamicStatuses[id].text || 'other'
     },
     getCurrentAccount: (state, getters) => {
         return getters.accountsList.find(a => a.ID === state.selectedAccountID) || {name: '--'}

@@ -233,6 +233,8 @@
                 })
             },
             setDefaultChartData() {
+                const layoutColors = this.$store.getters['layout/colors']('activeLayout')
+
                 const showSerie = (serieKey) => {
                     if (this.data.WidgetLayout.showSeries) {
                         return this.data.WidgetLayout.showSeries.includes(serieKey);
@@ -241,15 +243,23 @@
 
                 this.chartDataLogs = {
                     ...Object.fromEntries(Object.values(DEFAULT_CHART_SERIES_LINES_KEYS).map((DEFAULT_CHART_SERIE) => {
+                        const color = DEFAULT_CHART_SERIE.layoutColorVar && layoutColors[DEFAULT_CHART_SERIE.layoutColorVar]
+                            ? layoutColors[DEFAULT_CHART_SERIE.layoutColorVar]
+                            : get(this.data, `WidgetLayout.colors.${DEFAULT_CHART_SERIE.colorVar}`, DEFAULT_CHART_SERIE.colorDefault)
+
+                        const common = {
+                            visible: showSerie(DEFAULT_CHART_SERIE.key),
+                            name: DEFAULT_CHART_SERIE.name,
+                            type: DEFAULT_CHART_SERIE.serieType,
+                            color,
+                            data: [],
+                        }
+
                         if (DEFAULT_CHART_SERIE.serieType === 'column') {
                             return [
                                 DEFAULT_CHART_SERIE.key,
                                 {
-                                    visible: showSerie(DEFAULT_CHART_SERIE.key),
-                                    name: DEFAULT_CHART_SERIE.name,
-                                    type: DEFAULT_CHART_SERIE.serieType,
-                                    color: get(this.data, `WidgetLayout.colors.${DEFAULT_CHART_SERIE.colorVar}`, DEFAULT_CHART_SERIE.colorDefault),
-                                    data: [],
+                                    ...common,
                                     pointWidth: 20,
                                     stack: 0,
                                     yAxis: 1,
@@ -259,10 +269,7 @@
                             return [
                                 DEFAULT_CHART_SERIE.key,
                                 {
-                                    visible: showSerie(DEFAULT_CHART_SERIE.key),
-                                    name: DEFAULT_CHART_SERIE.name,
-                                    type: DEFAULT_CHART_SERIE.serieType,
-                                    color: get(this.data, `WidgetLayout.colors.${DEFAULT_CHART_SERIE.colorVar}`, DEFAULT_CHART_SERIE.colorDefault),
+                                    ...common,
                                     data: [],
                                     yAxis: 0,
                                 }

@@ -36,9 +36,7 @@ export const defaultWidgetColors = [
  export const queueChartWidgetColors = [
      ...defaultWidgetColors,
      "maxWaitingTime",
-     "queueCalls",
-     "onHold",
-     "inCall"
+     "queueCalls"
  ]
 
 export const queueGaugeWidgetColors = [

@@ -1,6 +1,6 @@
 <template>
     <div class="report-create">
-        <create-report-wizard @on-cancel="onCancel" />
+        <create-report-wizard @go-back="goBack" />
     </div>
 </template>
 
@@ -12,32 +12,9 @@ export default {
         CreateReportWizard: () => import('@/modules/reports/components/create-report/CreateReportWizard.vue'),
     },
     methods: {
-        onCancel() {
+        goBack() {
             this.$emit('on-close-create-report-tab')
         }
-        // onNext() {
-        //     if (this.currentStep === 2) {
-        //         return
-        //     }
-
-        //     this.currentStep++
-        // },
-        // onBack() {
-        //     if (this.currentStep === 0) {
-        //         return
-        //     }
-        //     this.currentStep--
-        // },
-        // onUpdateStepData(data = {}) {
-        //     const { nextStep: nextStep = false } = data
-
-        //     if (nextStep) {
-        //         this.onNext()
-        //     }
-        // },
-        // onEditStep(stepIndex) {
-        //     this.currentStep = stepIndex
-        // }
     },
     async beforeDestroy() {
         await this.$store.dispatch('report/resetReportData')
