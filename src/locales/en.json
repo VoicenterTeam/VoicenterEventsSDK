@@ -1438,6 +1438,22 @@
 	"datatable.resize.columns.btn": "Click to apply changes",
 	"queue.queueName": "Queue name",
 	"queue.callerNumber": "Caller number",
-	"common.changesSaved": "Changes saved"
+	"common.changesSaved": "Changes saved",
+	"widget.settings.color.answer": "Color of answer",
+	"widget.settings.color.abandoned": "Color of abandoned",
+	"widget.settings.color.iVRExit": "Color of iVR exit",
+	"widget.settings.color.pickUp": "Color of pick up",
+	"widget.settings.color.timeOutExit": "Color of time out exit",
+	"widget.settings.color.joinEmpty": "Color of join empty",
+	"widget.settings.color.leaveEmpty": "Color of leave empty",
+	"widget.settings.color.joinUnavail": "Color of join unavail",
+	"widget.settings.color.leaveUnavail": "Color of leave unavail",
+	"widget.settings.color.full": "Color of full",
+	"widget.settings.color.nextDestination": "Color of destination",
+	"widget.settings.color.callCount": "Color of call count",
+	"widget.settings.color.maxRingTime": "Color of max ring time",
+	"widget.settings.color.notInSLACount": "Color of not in SLA count",
+	"widget.settings.color.inSLACount": "Color of in SLA count",
+	"widget.settings.color.avgRingTime": "Color of avg ring time"
 
 }

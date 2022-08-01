@@ -203,6 +203,7 @@ export const PRIMARY_COUNTERS = () => ({
     [TOTAL_CALLS_KEY]: {
         label: 'CallCount',
         key: TOTAL_CALLS_KEY,
+        columnKey: 'callCount',
         value: 0,
         icon: 'IconIncoming',
         layout: {
@@ -220,6 +221,7 @@ export const PRIMARY_COUNTERS = () => ({
     [MAX_RING_TIME_KEY]: {
         label: 'MaxRingTime',
         key: 'MaxRingTime',
+        columnKey: "maxRingTime",
         value: 0,
         icon: '',
         layout: {
@@ -237,6 +239,7 @@ export const PRIMARY_COUNTERS = () => ({
     NotInSLACount: {
         label: 'NotInSLACount',
         key: 'NotInSLACount',
+        columnKey: 'notInSLACount',
         value: 0,
         icon: '',
         layout: {
@@ -254,6 +257,7 @@ export const PRIMARY_COUNTERS = () => ({
     InSLACount: {
         label: 'InSLACount',
         key: 'InSLACount',
+        columnKey: 'inSLACount',
         value: 0,
         icon: '',
         layout: {
@@ -271,6 +275,7 @@ export const PRIMARY_COUNTERS = () => ({
     [AVG_RING_TIME_KEY]: {
         label: 'AvgRingTime',
         key: 'AvgRingTime',
+        columnKey: 'avgRingTime',
         value: 0,
         icon: '',
         layout: {

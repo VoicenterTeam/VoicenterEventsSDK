@@ -9,6 +9,7 @@
             type="number"
             size="small"
             :min="0"
+            placeholder="0"
         />
     </div>
 </template>

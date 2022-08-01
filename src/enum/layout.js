@@ -1,3 +1,10 @@
+import {
+    queueDashboardColumnStyles
+} from '@/helpers/multiQueueDashboard'
+import {
+    PRIMARY_COUNTERS
+} from '@/enum/queueDashboardStatistics'
+
 export const layoutTypes = {
     LIST: 'list',
     TABBED: 'tabbed',
@@ -37,6 +44,17 @@ export const queueGaugeWidgetColors = [
     "minimumRangeColor",
     "middleRangeColor",
     "maximumRangeColor",
+]
+
+export const multiQueueTableWidgetColors = [
+    ...defaultWidgetColors,
+    ...Object.keys(queueDashboardColumnStyles).map(el => el.charAt(0).toLowerCase() + el.slice(1))
+]
+
+export const queueDashboard = [
+    ...defaultWidgetColors,
+    ...Object.keys(PRIMARY_COUNTERS()).map(el => el.charAt(0).toLowerCase() + el.slice(1)),
+    ...Object.keys(queueDashboardColumnStyles).map(el => el.charAt(0).toLowerCase() + el.slice(1))
 ]
 
 export const predefinedColors = [

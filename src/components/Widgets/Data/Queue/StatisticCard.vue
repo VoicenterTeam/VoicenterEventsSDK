@@ -61,19 +61,20 @@
             },
             getCardStyles () {
                 let item = this.item
-
+                const color = this.widget.WidgetLayout.colors && item.columnKey in this.widget.WidgetLayout.colors && this.widget.WidgetLayout.colors[item.columnKey] ? this.widget.WidgetLayout.colors[item.columnKey] : item.colors.fonts
+                
                 let styles = {
-                    'color': item.colors.fonts,
+                    'color': color,
                     'background': item.colors.background,
                     'min-width': `${item.layout.minWidth}px`,
-                    'max-width': `${item.layout.maxWidth}px`,
+                    'max-width': `${item.layout.maxWidth}px`
                 }
 
                 if (item.layout.showBorder) {
                     styles = {
                         ...styles,
                         ...{
-                            'border': `2px solid ${item.colors.frames}`,
+                            'border': `2px solid ${color}`
                         }
                     }
                 }

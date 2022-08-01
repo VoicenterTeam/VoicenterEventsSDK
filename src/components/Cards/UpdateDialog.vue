@@ -21,7 +21,9 @@
                     :min="titleFontSizes.min"
                     :step="1"
                     size="small"
-                    v-model="layoutConfig.titleFontSize">
+                    v-model="layoutConfig.titleFontSize"
+                    placeholder="0"
+                >
                 </el-input-number>
             </div>
             <div class="py-4">
@@ -33,7 +35,9 @@
                     :min="valueFontSizes.min"
                     :step="1"
                     size="small"
-                    v-model="layoutConfig.valueFontSize">
+                    v-model="layoutConfig.valueFontSize"
+                    placeholder="0"
+                >
                 </el-input-number>
             </div>
             <div class="py-4">
@@ -45,7 +49,9 @@
                     :max="valueMinWidth.max"
                     :min="valueMinWidth.min"
                     size="small"
-                    v-model="layoutConfig.valueIconMinWidth">
+                    v-model="layoutConfig.valueIconMinWidth"
+                    placeholder="0"
+                >
                 </el-input-number>
             </div>
             <widget-colors :model="model" :onlyBackground="onlyBackground"/>

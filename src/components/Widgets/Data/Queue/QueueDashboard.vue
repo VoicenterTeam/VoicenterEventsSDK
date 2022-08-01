@@ -142,6 +142,7 @@
                     label: `${this.$t(item.label)} %`,
                     value: percentage,
                     showAbsoluteNumbers: this.showAbsoluteNumbers,
+                    columnKey: item.label.charAt(0).toLowerCase() + item.label.slice(1),
                     count
                 }
             },
