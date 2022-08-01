@@ -15,8 +15,16 @@
                 :key="item.name"
                 :label="item.title"
                 :name="item.name"
+                :disabled="item.disabled"
             >
-                <span slot="label" class="flex items-center" :data-test="`${item.name}-tab`">
+                <span
+                    slot="label"
+                    class="flex items-center"
+                    :data-test="`${item.name}-tab`"
+                    :class="{
+                        'opacity-40': item.disabled
+                    }"    
+                >
                   <slot name="label" :item="item">
                       <slot name="label-icon" :item="item" v-if="!item.hideIcon">
                         <i :class="item.icon || defaultIcon" class="text-active-elements icon-lg"></i>
@@ -34,7 +42,7 @@
                             :data="item.data"
                             :add-tab="addTab"
                         >
-                            {{item.content}}
+                            {{ item.content }}
                         </slot>
                     </div>
                 </template>
@@ -208,6 +216,6 @@
     @apply mt-0 p-8;
 }
 .tab-card-slot {
-    height: 465px;
+    height: 650px;
 }
 </style>

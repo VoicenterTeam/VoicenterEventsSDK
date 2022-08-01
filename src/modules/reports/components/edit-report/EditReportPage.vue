@@ -77,7 +77,7 @@
                     :white-bg="true"
                 >
                     <template slot="widgets">
-                        EMPY PAGE
+                        <wrapper-widget-table showReorderButton :reportId="reportId" class="p-8" />
                     </template>
                     <template slot="schedule-list">
                         <schedule-list />
@@ -119,12 +119,17 @@ export default {
         DeleteDialog: () => import('@/components/Dialogs/DeleteDialog'),
         ConfirmDialog: () => import('@/components/Dialogs/ConfirmDialog'),
         ScheduleList: () => import('@/modules/reports/components/ScheduleList.vue'),
-        TabCard: () => import('@/modules/reports/components/TabCard.vue')
+        TabCard: () => import('@/modules/reports/components/TabCard.vue'),
+        WrapperWidgetTable: () => import('@/modules/reports/components/WrapperWidgetTable.vue')
     },
     props: {
         report: {
             type: Object,
             default: () => ({})
+        },
+        reportId: {
+            type: [Number, String],
+            default: ''
         }
     },
     data () {
@@ -196,7 +201,15 @@ export default {
             this.showDeleteDialog = false
         },
         onModalConfirm () {
-            const reportHasNotChanges = isEqual(this.copyOfReportData, this.getReportData)
+            const copyOfGetReportData = cloneDeep(this.getReportData)
+            if (!this.copyOfReportData.ReportItemList.every(el => 'index' in el)) {
+                copyOfGetReportData.ReportItemList.map(el => {
+                    delete el.index
+                    return el
+                })
+            }
+
+            const reportHasNotChanges = isEqual(this.copyOfReportData, copyOfGetReportData)
             if (reportHasNotChanges) {
                 this.$emit('on-cancel')
             } else {
@@ -216,10 +229,9 @@ export default {
             }
             try {
                 reportApi.update(this.getReportData)
-            } catch (e) {
-                console.log(e, 'eee')
             } finally {
                 this.clickedOnSaveBtn = false
+                this.$emit('update-report-item', this.getReportData)
             }
         },
         checkIfValueIsEmpty (value) {

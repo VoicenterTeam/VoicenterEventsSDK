@@ -41,7 +41,7 @@
                     :min-width="column.minWidth"
                     sortable>
                     <template slot="header">
-                        <div class="text-primary">
+                        <div class="text-primary flex items-center">
                             <i v-if="column.icon" :class="column.icon" class="icon-md mx-1"/>
                             {{ column.label }}
                         </div>

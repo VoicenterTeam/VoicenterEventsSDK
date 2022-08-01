@@ -5,11 +5,13 @@
             :dataTabs="dataTabs"
             :active-tab="activeTab"
             @update-active-tab="updateActiveTab"
-            @on-remove-tab="removeTab">
+            @on-remove-tab="removeTab"
+        >
             <template v-slot:list>
                 <reports-list
                     ref="reports-list"
                     v-show="listTabName === activeTab"
+                    :reportItemForEdit="reportItemForEdit"
                     @on-create-report="openCreateReportTab"
                     @on-edit-row="onEditRow"
                 />
@@ -26,6 +28,7 @@
                     @update-title="onUpdateTitle"
                     @on-close-create-report-tab="onCloseCreateReportTab"
                     @on-reload-data-reports-list="onReloadDataReportsList"
+                    @update-report-item="updateReportItem"
                 />
             </template>
             <template v-slot:create>
@@ -74,6 +77,7 @@ export default {
             ],
             createTabName: CREATE_TAB_NAME,
             listTabName: LIST_TAB_NAME,
+            reportItemForEdit: {}
         }
     },
     computed: {
@@ -147,6 +151,9 @@ export default {
             this.removeTab(this.activeTab)
             this.$refs['reports-list'].reloadData()
         },
+        updateReportItem (data) {
+            this.reportItemForEdit = data
+        }
     },
     watch: {
         '$route': {

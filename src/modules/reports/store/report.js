@@ -3,7 +3,11 @@ const types = {
     RESET_REPORT_DATA: 'RESET_REPORT_DATA',
     PUSH_REPORT_TRIGGER_DATA: 'PUSH_REPORT_TRIGGER_DATA',
     DELETE_REPORT_TRIGGER_ITEM: 'DELETE_REPORT_TRIGGER_ITEM',
-    UPDATE_REPORT_TRIGGER_ITEM: 'UPDATE_REPORT_TRIGGER_ITEM'
+    UPDATE_REPORT_TRIGGER_ITEM: 'UPDATE_REPORT_TRIGGER_ITEM',
+    DELETE_REPORT_ITEM_LIST: 'DELETE_REPORT_ITEM_LIST',
+    PUSH_REPORT_ITEM_LIST: 'PUSH_REPORT_ITEM_LIST',
+    PUSH_REPORT_ITEM_EXPORT: 'PUSH_REPORT_ITEM_EXPORT',
+    DELETE_REPORT_ITEM_EXPORT: 'DELETE_REPORT_ITEM_EXPORT'
 }
 
 const defaultReportData = {
@@ -11,129 +15,8 @@ const defaultReportData = {
     AccountID: null,
     ReportName: null,
     ReportTypeID: 1,
-    ReportItemList: [
-        {
-           "ReportID":10,
-           "WidgetID":37678,
-           "WidgetTitle":"Table - User Performance",
-           "ReportItemID":97,
-           "ReportItemData":{
-              
-           },
-           "ReportItemName":"item1",
-           "ReportItemOrder":1,
-           "ReportItemExport":[
-              {
-                 "ReportItem":97,
-                 "ReportExportOrder":1,
-                 "ReportExportTypeID":2,
-                 "ReportItemExportID":3,
-                 "ReportExportTypeName":"PDF"
-              }
-           ],
-           "WidgetTemplateID":1,
-           "ReportItemStatusID":2,
-           "ReportItemStatusName":"disable",
-           "ReportItemDescription":"zzz"
-        },
-        {
-           "ReportID":10,
-           "WidgetID":37704,
-           "WidgetTitle":"Total leads today ",
-           "ReportItemID":99,
-           "ReportItemData":{
-              
-           },
-           "ReportItemName":"xxx",
-           "ReportItemOrder":2,
-           "ReportItemExport":[
-              {
-                 "ReportItem":99,
-                 "ReportExportOrder":1,
-                 "ReportExportTypeID":2,
-                 "ReportItemExportID":100,
-                 "ReportExportTypeName":"PDF"
-              }
-           ],
-           "WidgetTemplateID":105,
-           "ReportItemStatusID":1,
-           "ReportItemStatusName":"enable",
-           "ReportItemDescription":"xxx"
-        },
-        {
-           "ReportID":10,
-           "WidgetID":37702,
-           "WidgetTitle":"Total leads sold today",
-           "ReportItemID":102,
-           "ReportItemData":{
-              
-           },
-           "ReportItemName":"yyy",
-           "ReportItemOrder":3,
-           "ReportItemExport":[
-              {
-                 "ReportItem":102,
-                 "ReportExportOrder":1,
-                 "ReportExportTypeID":2,
-                 "ReportItemExportID":103,
-                 "ReportExportTypeName":"PDF"
-              }
-           ],
-           "WidgetTemplateID":102,
-           "ReportItemStatusID":1,
-           "ReportItemStatusName":"enable",
-           "ReportItemDescription":"yyy"
-        },
-        {
-           "ReportID":10,
-           "WidgetID":392,
-           "WidgetTitle":"Realtime call cards",
-           "ReportItemID":145,
-           "ReportItemData":{
-              
-           },
-           "ReportItemName":"NewItem2",
-           "ReportItemOrder":1,
-           "ReportItemExport":[
-              {
-                 "ReportItem":145,
-                 "ReportExportOrder":10,
-                 "ReportExportTypeID":2,
-                 "ReportItemExportID":145,
-                 "ReportExportTypeName":"PDF"
-              }
-           ],
-           "WidgetTemplateID":5,
-           "ReportItemStatusID":1,
-           "ReportItemStatusName":"enable",
-           "ReportItemDescription":"This item report..."
-        },
-        {
-           "ReportID":10,
-           "WidgetID":37678,
-           "WidgetTitle":"Table - User Performance",
-           "ReportItemID":160,
-           "ReportItemData":{
-              
-           },
-           "ReportItemName":"Zupa",
-           "ReportItemOrder":1,
-           "ReportItemExport":[
-              {
-                 "ReportItem":160,
-                 "ReportExportOrder":10,
-                 "ReportExportTypeID":2,
-                 "ReportItemExportID":220,
-                 "ReportExportTypeName":"PDF"
-              }
-           ],
-           "WidgetTemplateID":1,
-           "ReportItemStatusID":1,
-           "ReportItemStatusName":"enable",
-           "ReportItemDescription":"This item report..."
-        }
-    ],
-    ReportStatusID: false,
+    ReportItemList: [],
+    ReportStatusID: 2,
     ReportTriggerList: []
 }
 
@@ -165,6 +48,18 @@ const mutations = {
         Object.keys(state.reportData.ReportTriggerList[data.indexToEdit]).forEach(el => {
             state.reportData.ReportTriggerList[data.indexToEdit][el] = data.value[el]
         })
+    },
+    [types.DELETE_REPORT_ITEM_LIST]: (state, index) => {
+        state.reportData.ReportItemList.splice(index, 1)
+    },
+    [types.PUSH_REPORT_ITEM_LIST]: (state, data) => {
+        state.reportData.ReportItemList.push(data)
+    },
+    [types.PUSH_REPORT_ITEM_EXPORT]: (state, data) => {
+        state.reportData.ReportItemList[data.index].ReportItemExport.push(data.data)
+    },
+    [types.DELETE_REPORT_ITEM_EXPORT]: (state, data) => {
+        state.reportData.ReportItemList[data.index].ReportItemExport.splice(data.indexColumn, 1)
     }
 }
 
@@ -183,6 +78,18 @@ const actions = {
     },
     async updateReportTriggerItem({ commit }, data) {
         commit(types.UPDATE_REPORT_TRIGGER_ITEM, data)
+    },
+    async deleteReportItemList({ commit }, index) {
+        commit(types.DELETE_REPORT_ITEM_LIST, index)
+    },
+    async pushReportItemList({ commit }, data) {
+        commit(types.PUSH_REPORT_ITEM_LIST, data)
+    },
+    async pushReportItemExport({ commit }, data) {
+        commit(types.PUSH_REPORT_ITEM_EXPORT, data)
+    },
+    async deleteReportItemExport({ commit }, data) {
+        commit(types.DELETE_REPORT_ITEM_EXPORT, data)
     }
 }
 

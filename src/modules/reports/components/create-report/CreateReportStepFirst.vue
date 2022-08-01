@@ -46,7 +46,8 @@ export default {
     async mounted () {
         this.report = {
             ReportName: this.getReportData.ReportName || this.$t('report.name'),
-            ReportStatusID: this.getReportData.ReportStatusID
+            ReportStatusID: this.getReportData.ReportStatusID,
+            AccountID: [this.$store.state.entities.selectedAccountID]
         }
         await this.$store.dispatch('report/updateReportData', this.report)
     },

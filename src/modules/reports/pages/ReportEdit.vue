@@ -3,8 +3,11 @@
         <edit-report-page
             v-if="report && Object.keys(report).length"
             :report="report"
+            :reportId="reportId"
             @on-cancel="onCancel"
-            @on-reload-data-reports-list="onReloadDataReportsList" />
+            @on-reload-data-reports-list="onReloadDataReportsList"
+            @update-report-item="updateReportItem"
+        />
     </div>
 </template>
 
@@ -40,6 +43,9 @@ export default {
         },
         onReloadDataReportsList () {
             this.$emit('on-reload-data-reports-list')
+        },
+        updateReportItem (data) {
+            this.$emit('update-report-item', data)
         }
     },
     async mounted() {
