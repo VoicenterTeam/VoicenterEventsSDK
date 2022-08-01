@@ -92,7 +92,7 @@
     import dataTableMixin from '@/mixins/dataTableMixin'
     import { getOptionsList } from '@/helpers/entitiesList'
     import { mapOrder } from '@/helpers/util'
-    
+
     export default {
         name: 'queues-table',
         mixins: [dataTableMixin],
@@ -195,14 +195,14 @@
                 if (this.displayQueueAsRows) {
                     return get(this.widget.WidgetLayout, 'Columns.availableQueuesColumns') || this.columns
                 }
-                
+
                 return this.availableColumns
             },
             getVisibleColumns() {
                 if (!this.displayQueueAsRows) {
                     return this.columnsAreManaged ? this.visibleColumns : defaultVisibleColumns
                 }
-                
+
                 return get(this.widget.WidgetLayout, 'Columns.visibleQueuesColumns') || this.columns.map(c => c.prop)
             },
             allQueueCalls() {
@@ -246,7 +246,7 @@
                 if (queueID === 'All' || queueID === 'Stat type') {
                     return queueID
                 }
-                
+
                 let queue = this.allEntityQueues.filter((queue) => queue.queue_id === Number(queueID))
                 return get(queue, '[0].q_name', '--')
             },
@@ -256,34 +256,34 @@
             },
             getCellClassName({ column, row }) {
                 let className = ''
-                
+
                 if (queueDashboardColumnStyles[column.property] || queueDashboardColumnStyles[row['Stat type']]) {
                     className = 'text-white'
                 }
-                
+
                 return className
             },
             async getWidgetData() {
                 try {
-                    
+
                     const selectedEntityQueues = this.selectedQueues
-                    
+
                     if (!selectedEntityQueues.length) {
                         return
                     }
-                    
+
                     let availableColumns = this.queuesData[0]
-                    
+
                     let data = [...this.queuesData]
                     let columns = []
-                    
+
                     let displayRowWithTotals = get(this.data.WidgetLayout, 'displayRowWithTotals', true)
                     let displayQueueAsRows = this.displayQueueAsRows
-                    
+
                     const showStatsInPercentage = this.showStatsInPercentage
-                    
+
                     let queueIDsFromSocket = data.map((queue) => queue.queue_id)
-                    
+
                     selectedEntityQueues.forEach((queueID) => {
                         if (queueIDsFromSocket.includes(queueID)) {
                             return
@@ -300,12 +300,12 @@
                         }
                         data.push(objectToAppend)
                     })
-                    
+
                     let result = formatQueueDashboardsData(data, displayRowWithTotals, displayQueueAsRows, showStatsInPercentage)
 
                     availableColumns = result.columns
                     data = result.data
-                    
+
                     for (let column in availableColumns) {
                         const columnData = {
                             prop: column,
@@ -314,15 +314,15 @@
                             minWidth: 130,
                             label: this.$t(column) || startCase(column),
                         }
-                        
+
                         columns.push(columnData)
                         this.searchableFields.push(column)
                     }
                     this.searchableFields.push('q_name')
-                    
+
                     this.columns = columns
                     this.tableData = data
-                    
+
                 } catch (e) {
                     console.warn(e)
                 }
@@ -360,7 +360,7 @@
                     const queueIdIndex = visibleColumns.findIndex(el => el === 'queue_id')
                     const targetIndex = visibleColumns[oldIndex]
                     const targetPayload = availableColumns.find(el => el.prop === targetIndex)
-                    
+
                     if (targetPayload) {
                         availableColumns.splice(oldIndex, 1)
                         availableColumns.splice(newIndex, 0, targetPayload)
@@ -378,9 +378,9 @@
                     const statTypeIndex = visibleQueuesColumns.findIndex(el => el === 'Stat type')
                     visibleQueuesColumns.splice(statTypeIndex, 1)
                     const targetIndex = visibleQueuesColumns[oldIndex]
-                    
+
                     const targetPayload = availableQueuesColumns.find(el => el.prop === targetIndex)
-                    
+
                     if (targetPayload) {
                         availableQueuesColumns.splice(oldIndex, 1)
                         availableQueuesColumns.splice(newIndex, 0, targetPayload)
@@ -388,7 +388,7 @@
                     visibleQueuesColumns.splice(oldIndex, 1)
                     visibleQueuesColumns.splice(newIndex, 0, targetIndex)
                     visibleQueuesColumns.splice(statTypeIndex, 0, 'Stat type')
-                    
+
                     payload = {
                         availableQueuesColumns,
                         visibleQueuesColumns,

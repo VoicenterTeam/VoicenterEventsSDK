@@ -7,7 +7,7 @@
             :editable="editable"
             :showColumns="visibleColumns"
             :stripe="stripe"
-            :tableData="fetchTableData"
+            :tableData="searchedTableData"
             :widgetTitle="data.Title"
             :row-class-name="tableRowClassName"
             can-sort-rows="custom"
@@ -155,51 +155,49 @@
             showLoggedOutUsers() {
                 return get(this.data.WidgetLayout, 'settings.showLoggedOutUsers')
             },
-            fetchTableData: {
-                get: function () {
-                    let tableData = this.tableData
-                    if (!this.showLoggedOutUsers) {
-                        let userIds = this.onlineUserIds
-                        tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
+            mappedTableData() {
+                return this.tableData.map((row) => {
+                    const extension = this.userExtension(row.user_id)
+
+                    if (!extension) {
+                        return row
                     }
 
-                    if (this.filter && this.searchableFields.length > 0) {
-                        tableData = tableData.filter(c => {
-                            return this.searchableFields.some(field => {
-                                if (c[field]) {
-                                    return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
-                                }
-                                return false
-                            })
-                        })
+                    return {
+                        ...row,
+                        online_user_id: extension.onlineUserID || '--',
+                        representant: `${extension.userID} - ${get(extension, 'summery.representative', '-')}`,
+                        extension_id: extension.number || '--',
+                        user_name: extension.userName || '--',
+                        extension_name: this.getExtensionName(row.user_id) || '--',
+                        status: this.getExtensionStatusText(row.user_id),
+                        status_duration: getInitialExtensionTime(extension, this.getSettings),
+                        caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
+                        call_info: extension.calls.length ? this.getCallInfo(extension) : '',
                     }
+                })
+            },
+            searchedTableData() {
+                let tableData = cloneDeep(this.mappedTableData)
 
-                    tableData = tableData.map((row) => {
-                        const extension = this.userExtension(row.user_id)
+                if (!this.showLoggedOutUsers) {
+                    let userIds = this.onlineUserIds
 
-                        if (!extension) {
-                            return row
-                        }
-
-                        return {
-                            ...row,
-                            online_user_id: extension.onlineUserID || '--',
-                            representant: `${extension.userID} - ${get(extension, 'summery.representative', '-')}`,
-                            extension_id: extension.number || '--',
-                            user_name: extension.userName || '--',
-                            extension_name: this.getExtensionName(row.user_id) || '--',
-                            status: this.getExtensionStatusText(row.user_id),
-                            status_duration: getInitialExtensionTime(extension, this.getSettings),
-                            caller_info: extension.calls.length ? this.getCallerInfo(extension) : '',
-                            call_info: extension.calls.length ? this.getCallInfo(extension) : '',
-                        }
-                    })
-
-                    return tableData
-                },
-                set: function (newValue) {
-                    return newValue
+                    tableData = tableData.filter((user) => user.user_id !== undefined && userIds.includes(user.user_id))
                 }
+
+                if (this.filter) {
+                    tableData = tableData.filter(c => {
+                        return Object.keys(c).some(field => {
+                            if (c[field]) {
+                                return c[field].toString().toLowerCase().includes(this.filter.toLowerCase())
+                            }
+                            return false
+                        })
+                    })
+                }
+
+                return tableData
             },
             extensions() {
                 return this.$store.state.extensions.extensions

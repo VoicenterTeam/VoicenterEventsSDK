@@ -19,13 +19,13 @@ export const WidgetApi = {
             if (data.Order === null) {
                 data.Order = 0
             }
-            
+
             if (!data.WidgetConfig) {
                 data.WidgetConfig = []
             } else {
                 data.WidgetConfig = data.WidgetConfig.filter(config => config.ParameterID)
             }
-            
+
             let result = await $axios.post(`/Widgets/Update/`, data)
             return parseCustomErrorMessage(result, 'Update Widget')
         } catch (e) {
@@ -33,10 +33,10 @@ export const WidgetApi = {
         }
     },
     async updatePosition(data) {
-        try {         
+        try {
             const widgetList = {
                 WidgetList: data
-            }   
+            }
             let result = await $axios.post(`/Widgets/UpdatePosition/`, widgetList)
             return parseCustomErrorMessage(result, 'Update Widget Position')
         } catch (e) {
@@ -61,7 +61,7 @@ export const WidgetApi = {
     },
 
     destroy(widgetId) {
-        return $axios.post(`/Widgets/Delete/${widgetId}`)
+        return $axios.get(`/Widgets/Delete/${widgetId}`)
     },
 }
 

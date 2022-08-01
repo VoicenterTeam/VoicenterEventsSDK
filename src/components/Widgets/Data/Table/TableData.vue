@@ -273,7 +273,7 @@
             updatePaginatedData(data) {
                 let tableData = data
 
-                if (this.filter && this.searchableFields.length > 0) {
+                if (this.filter) {
                     tableData = tableData.filter(c => {
                         return this.searchableFields.some(field => {
                             if (c[field]) {
@@ -318,6 +318,10 @@
         },
         watch: {
             filter() {
+                if (this.currentPage === 1) {
+                    this.fetchTableData = this.updatePaginatedData(this.tableData)
+                }
+
                 this.currentPage = 1
             },
             data: {
