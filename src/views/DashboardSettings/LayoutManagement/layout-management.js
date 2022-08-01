@@ -130,6 +130,9 @@ export const DEFAULT_GROUP_KEYS = {
         'LoginStatusWarningColor',
         'LoginStatusLimitColor',
 
+        'InCallColor',
+        'OnHoldColor',
+
         'DashboardLogo',
     ],
     'Fonts': [

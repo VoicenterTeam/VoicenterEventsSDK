@@ -271,7 +271,7 @@
     import { statistics } from '@/enum/queueDashboardStatistics'
     import { realTimeWidgetRules } from '@/enum/widgetUpdateRules'
     import { widgetTimeOptions, widgetTimeTypes } from '@/enum/widgetTimeOptions'
-    import { defaultAreaChartColors, defaultColors, realTimeSettings, defaultQueueChartColors } from '@/enum/defaultWidgetSettings'
+    import { defaultAreaChartColors, defaultColors, realTimeSettings, defaultQueueGaugeChartColors, defaultQueueChartColors } from '@/enum/defaultWidgetSettings'
     import { isChartWidget } from '@/helpers/widgetUtils'
     import {
         isAreaChartWidget,
@@ -501,7 +501,7 @@
             this.model.colors = this.model.WidgetLayout.colors || cloneDeep(defaultColors)
 
             if (isQueueGauge(this.widget)) {
-                this.model.colors = { ...defaultQueueChartColors, ...this.model.WidgetLayout.colors }
+                this.model.colors = { ...defaultQueueGaugeChartColors, ...this.model.WidgetLayout.colors }
             }
 
             if (isAreaChartWidget(this.widget)) {
@@ -512,9 +512,13 @@
                 this.model.settings = this.widget.WidgetLayout.settings || realTimeSettings
             }
 
-            if (isQueueChart(this.widget) && !this.widget.WidgetLayout.showQueues) {
-                this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
-                this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]
+            if (isQueueChart(this.widget)) {
+                this.model.colors = { ...defaultQueueChartColors, ...this.model.WidgetLayout.colors }
+
+                if (!this.widget.WidgetLayout.showQueues) {
+                    this.model.WidgetLayout.showQueues = this.queueWithActiveCalls.map((el) => el.QueueID)
+                    this.model.WidgetLayout.showSeries = [0, 1, 2, 3, 4, 5, 6]
+                }
             }
             this.model.Title = this.$t(this.widget.Title)
         },

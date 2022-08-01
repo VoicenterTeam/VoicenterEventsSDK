@@ -1,4 +1,7 @@
 import colors from "@/enum/colors";
+import store from '@/store/store'
+
+const { inCall, onHold } = store.getters['layout/colors']('activeLayout')
 
 export const callStatuses = {
     CALLING: 100,
@@ -68,13 +71,13 @@ export default {
     },
     100: {
         icon: 'IconIncomingCall',
-        color: colors.LIGHT_GREEN,
+        color: inCall,
         text: 'status.incall',
         value: 100
     },
     101: {
         icon: 'IconHold',
-        color: colors.HOLD_COLOR,
+        color: onHold,
         text: 'status.hold',
         value: 101
     },
@@ -83,6 +86,5 @@ export default {
         color: colors.LIGHT_GREEN,
         text: 'status.atWork',
         value: 102
-
     }
 }

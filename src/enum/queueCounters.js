@@ -5,10 +5,14 @@ export const typeKeys = {
     MAXIMUM_WAITING_ID: 1,
 }
 //TODO: update icons if will be necessary
+import store from '@/store/store'
+
+const { inCall } = store.getters['layout/colors']('activeLayout')
+
 export const types = {
     [`${typeKeys.CALLERS_ID}`]: {
         icon: 'IconIncomingCall',
-        color: config.colors.light_green,
+        color: inCall,
         text: 'queue.counter.callers',
     },
     [`${typeKeys.MAXIMUM_WAITING_ID}`]: {
