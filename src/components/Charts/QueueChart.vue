@@ -116,7 +116,8 @@
             updateChartData() {
                 if (!this.agents.length) return
 
-                if (!this.chartData.series.length) {
+                // Force rerender the chart before 2 logs is present, otherwise the highchart is broken
+                if (this.chartDataLogs[DEFAULT_CHART_SERIES_LINES_KEYS.MAX_WAITING_TIME.key].data.length < 2) {
                     this.chartVisibility = false
                 }
 
