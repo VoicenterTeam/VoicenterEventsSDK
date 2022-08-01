@@ -330,6 +330,7 @@
                 handler (oldVal, newVal) {
                     if (!newVal || !isEqual(oldVal, newVal)) {
                         this.getWidgetData()
+                        this.applyPaginationSettings()
                         this.getWidgetDataWithRefreshInterval()
                     }
                 },
