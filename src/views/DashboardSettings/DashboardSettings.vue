@@ -53,10 +53,12 @@
                 </slot>
             </div>
             <div class="w-full px-4 mt-6 lg:px-16 2xl:px-40 3xl:px-64">
-                <DashboardSettings v-model="model"
-                                   @on-update-groups="onUpdateGroups"
-                                   @on-change-layout="onChangeLayout"
-                                   :current-dashboard="currentDashboard"/>
+                <DashboardSettings
+                    v-model="model"
+                    @on-update-groups="onUpdateGroups"
+                    @on-change-layout="onChangeLayout"
+                    :current-dashboard="currentDashboard"
+                />
             </div>
         </div>
         <ConfirmDialog :visible.sync="showConfirmDialog"
@@ -69,9 +71,6 @@
     import get from 'lodash/get'
     import { Popover } from 'element-ui'
     import cloneDeep from 'lodash/cloneDeep'
-    import { LayoutApi } from '@/api/layoutApi'
-    import { DashboardApi } from '@/api/dashboardApi'
-
     export default {
         components: {
             NavBar: () => import('@/views/common/NavBar'),

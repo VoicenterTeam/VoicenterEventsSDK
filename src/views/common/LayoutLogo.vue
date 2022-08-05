@@ -8,13 +8,16 @@
             :auto-upload="false"
             :on-change="onFileChange"
         >
-            <base-button class="mx-1"
-                         v-if="!disabled"
-                         type="primary"
-                         outline
-                         size="sml"
-                         fixed-width="w-20">
-                {{ $t('general.change') }}
+            <base-button
+                class="mx-1"
+                v-if="!disabled"
+                type="primary"
+                outline
+                size="sml"
+                fixed-width="w-20"
+            >
+                <IconPencil class="w-4 h-4"/>
+                <span class="text-sm mx-1">{{ $t('common.edit') }}</span>
             </base-button>
         </el-upload>
     </div>

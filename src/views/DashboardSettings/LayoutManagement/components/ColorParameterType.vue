@@ -57,7 +57,21 @@
             makePrefixForTranslation (string) {
                 const makeFirstLetterInLowerCase = (string) => string.charAt(0).toLowerCase() + string.slice(1)
                 return this.$t(`layout.config.${makeFirstLetterInLowerCase(string)}`)
+            },
+            setCustomHtmlToColorPickerBtn () {
+                const pickerIconContainer = document.querySelector('.el-color-picker__icon')
+                pickerIconContainer.innerHTML = `
+                    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M16.4724 0.808741C15.394 -0.26958 13.6456 -0.26958 12.5672 0.808741L1.61952 11.7554C1.5445 11.8304 1.49032 11.9234 1.46204 12.0255L0.0223921 17.2225C-0.0368141 17.4356 0.0233509 17.6638 0.179636 17.8203C0.336161 17.9766 0.564357 18.0367 0.777452 17.9777L5.9749 16.538C6.07701 16.5097 6.17002 16.4555 6.24504 16.3805L17.1924 5.43361C18.2692 4.35457 18.2692 2.60778 17.1924 1.52874L16.4724 0.808741ZM2.95658 12.1542L11.9164 3.195L14.806 6.08434L5.84594 15.0436L2.95658 12.1542ZM2.37938 13.3124L4.68794 15.621L1.49464 16.5056L2.37938 13.3124ZM16.3247 4.56597L15.6739 5.2167L12.7841 2.32711L13.4351 1.67638C14.0341 1.07742 15.0054 1.07742 15.6044 1.67638L16.3247 2.39638C16.9228 2.99606 16.9228 3.96653 16.3247 4.56597V4.56597Z"
+                            fill="currentColor"/>
+                    </svg>
+                    <span class="text-sm mx-1">${this.$t('common.edit')}</span>
+                `
             }
+        },
+        mounted () {
+            this.setCustomHtmlToColorPickerBtn()
         }
     }
 </script>
@@ -73,11 +87,7 @@
 
         .el-icon-arrow-down:before,
         .el-icon-close:before {
-            @apply text-sm;
-            font-family: Montserrat, sans-serif;
-            font-weight: 500;
-            content: "Change";
-            color: var(--primary-color);
+            @apply hidden;
         }
 
         .el-color-picker__color-inner {
@@ -103,5 +113,16 @@
     .el-color-dropdown__link-btn {
         padding: 0 !important;
     }
+}
+::v-deep .el-color-picker__icon {
+    font-family: Montserrat, sans-serif !important;
+    @apply text-primary font-medium flex;
+    align-items: center;
+    left: 71%;
+}
+::v-deep .el-color-picker__icon svg {
+    height: 16px;
+    width: 16px;
+    margin-top: 2px;
 }
 </style>

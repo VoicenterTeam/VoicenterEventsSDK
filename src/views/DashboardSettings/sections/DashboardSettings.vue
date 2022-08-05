@@ -1,23 +1,27 @@
 <template>
     <div class="text-gray-900">
-        <div class="grid grid-cols-4 gap-6 lg:gap-12 dashboard-settings">
-            <div class="col-span-4 border-b pb-3 md:pb-0 md:border-none md:col-span-1">
-                <div class="flex items-center mb-3">
-                    <div class="flex">
-                        <IconDashboardName class="text-primary mb-1"/>
+        <div class="mt-6 sm:mt-12 dashboard-global-settings">
+            <div class="title">
+                {{ $t('dashboard.global.settings.title')}}
+            </div>
+            <div class="divide-line"></div>
+            <div class="flex items-center mb-8 mt-7">
+                <div class="border-b w-60">
+                    <div class="flex items-center mb-3">
+                        <div class="flex">
+                            <IconDashboardName class="text-primary mb-1"/>
+                        </div>
+                        <div class="flex px-1 label-input">
+                            {{ $t('dashboard.dashboardName') }}
+                        </div>
                     </div>
-                    <div class="flex px-1 label-input">
-                        {{ $t('dashboard.dashboardName') }}
-                    </div>
+                    <base-input v-model="value.DashboardTitle" />
                 </div>
-                <base-input v-model="value.DashboardTitle" />
+                <div class="ml-5 w-60">
+                    <LayoutManagementSelect v-on="$listeners"/>
+                </div>
             </div>
-        </div>
-        <div class="grid grid-cols-4 gap-6 lg:gap-12 mt-6 sm:mt-12">
-            <div class="col-span-4 md:col-span-1 mb-4 md:mb-0">
-                <LayoutManagementSelect v-on="$listeners"/>
-            </div>
-            <div class="col-span-4 md:col-span-3">
+            <div class="">
                 <div class="shadow-base w-full px-5 py-4 rounded-lg"
                      v-if="activeLayout">
                     <div class="flex justify-between">
@@ -84,66 +88,71 @@
                     </div>
                 </div>
             </div>
+            <div class="flex justify-end mt-5">
+                <save-button
+                    icon="IconSave"
+                    @on-click="saveDashboardChanges"
+                />
+            </div>
         </div>
-        <div class="flex justify-end my-4 pb-3 border-b border-gray-300">
-            <save-button
-                icon="IconSave"
-                @on-click="saveDashboardChanges"
-            />
-        </div>
-        <div class="divide-line"></div>
-       <div class="flex items-center justify-between">
-            <div class="flex">
-                <div class="pt-4 pb-3">
-                    <div class="flex items-center mb-4">
-                        <div class="flex">
-                            <IconDashboardColor class="text-primary"/>
+       <div class="dashboard-global-settings mt-10">
+            <div class="title">
+                {{ $t('dashboard.header.settings.title')}}
+            </div>
+            <div class="divide-line"></div>
+            <div class="flex justify-between items-end">
+                <div class="flex">
+                    <div class="pt-4 pb-3">
+                        <div class="flex items-center mb-4">
+                            <div class="flex">
+                                <IconDashboardColor class="text-primary"/>
+                            </div>
+                            <div class="flex mx-1 label-input">{{ $t('dashboard.dashboardColor') }}</div>
                         </div>
-                        <div class="flex mx-1 label-input">{{ $t('dashboard.dashboardColor') }}</div>
+                        <div class="flex flex-row items-center -mt-3">
+                            <ColorParameterType v-bind="primaryColorSettings"
+                                                v-if="!defaultLayout"
+                                                :display-label="false"
+                                                v-model="primaryColorSettings.Value">
+                                <IconColorPickerSimple class="w-6 h-6 text-primary"/>
+                            </ColorParameterType>
+                            <div v-else
+                                class="mt-4 flex items-center">
+                                <IconColorPicker class="w-6 h-6 text-primary"/>
+                                <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
+                                            placement="top">
+                                    <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5 mx-2"/>
+                                </el-tooltip>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex flex-row items-center -mt-3">
-                        <ColorParameterType v-bind="primaryColorSettings"
-                                            v-if="!defaultLayout"
-                                            :display-label="false"
-                                            v-model="primaryColorSettings.Value">
-                            <IconColorPickerSimple class="w-6 h-6 text-primary"/>
-                        </ColorParameterType>
-                        <div v-else
-                            class="mt-4 flex items-center">
-                            <IconColorPicker class="w-6 h-6 text-primary"/>
+                    <div class="pt-4 pb-3 mx-8">
+                        <div class="flex items-center mb-4">
+                            <div class="flex">
+                                <IconDashboardLogo class="text-primary mb-0-5"/>
+                            </div>
+                            <div class="flex mx-1 label-input">{{ $t('dashboard.dashboardLogo') }}</div>
+                        </div>
+                        <div class="flex flex-row items-center">
+                            <img :src="getLogo" alt="Logo"
+                                class="h-6 object-cover">
+                            <LayoutLogo class="mx-2"
+                                        :disabled="defaultLayout"/>
                             <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
+                                        v-if="defaultLayout"
                                         placement="top">
-                                <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5 mx-2"/>
+                                <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
                             </el-tooltip>
                         </div>
                     </div>
                 </div>
-                <div class="pt-4 pb-3 mx-8">
-                    <div class="flex items-center mb-4">
-                        <div class="flex">
-                            <IconDashboardLogo class="text-primary mb-0-5"/>
-                        </div>
-                        <div class="flex mx-1 label-input">{{ $t('dashboard.dashboardLogo') }}</div>
-                    </div>
-                    <div class="flex flex-row items-center">
-                        <img :src="getLogo" alt="Logo"
-                            class="h-6 object-cover">
-                        <LayoutLogo class="mx-2"
-                                    :disabled="defaultLayout"/>
-                        <el-tooltip :content="$t('dashboard.defaultConfigConfirmation')"
-                                    v-if="defaultLayout"
-                                    placement="top">
-                            <AlertTriangleIcon class="text-orange-500 cursor-help w-4-5 h-4-5"/>
-                        </el-tooltip>
-                    </div>
+                <div>
+                    <save-button
+                        v-if="!defaultLayout"
+                        icon="IconSave"
+                        @on-click="saveLayoutChanges"
+                    />
                 </div>
-            </div>
-            <div>
-                <save-button
-                    v-if="!defaultLayout"
-                    icon="IconSave"
-                    @on-click="saveLayoutChanges"
-                />
             </div>
         </div>
         <WidgetGroupManagement
@@ -277,5 +286,14 @@
 <style lang="scss" scoped>
 .label-input {
     @apply flex w-full text-gray-900 text-main-sm font-medium truncate;
+}
+.dashboard-global-settings {
+    @apply border rounded-xl border-gray-500 p-5;
+}
+.divide-line {
+    @apply border-b-4 my-3 border-primary;
+}
+.title {
+    @apply text-primary text-2xl;
 }
 </style>
