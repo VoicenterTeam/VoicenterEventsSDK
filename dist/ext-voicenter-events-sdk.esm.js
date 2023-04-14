@@ -4334,7 +4334,14 @@ var EventsSDK = /*#__PURE__*/function () {
 }();
 
 EventsSDK.prototype['initLogger'] = function (url) {
-  var loggerSocket = getSocketIOFunction(url)(this.options.loggerServer, this.options.loggerConnectOptions);
+  var loggerSocket;
+
+  if (this.options.loggerSocketConnection) {
+    loggerSocket = this.options.loggerSocketConnection;
+  } else {
+    loggerSocket = getSocketIOFunction(url)(this.options.loggerServer, this.options.loggerConnectOptions);
+  }
+
   this.Logger = new AsyncStorageLogger(Object.assign({
     socketConnection: loggerSocket
   }, this.options.loggerConfig));

@@ -1,6 +1,6 @@
 {
   "name": "voicenter-events-sdk",
-  "version": "0.9.11",
+  "version": "0.9.12",
   "scripts": {
     "serve": "npm run docs",
     "build": "bili",
@@ -10,7 +10,7 @@
     "start": "npm run docs"
   },
   "dependencies": {
-    "@voicenter-team/socketio-storage-logger": "^1.0.0",
+    "@voicenter-team/socketio-storage-logger": "^1.0.1",
     "core-js": "^2.6.5",
     "js-md5": "^0.7.3"
   },

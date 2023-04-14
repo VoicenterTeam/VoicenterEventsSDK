@@ -3,7 +3,12 @@ import {getSocketIOFunction} from "../utils/loadExternalScript"
 import {AsyncStorageLogger} from "@voicenter-team/socketio-storage-logger/build/AsyncStorageLogger"
 
 EventsSDK.prototype['initLogger'] = function (url) {
-  const loggerSocket = getSocketIOFunction(url)(this.options.loggerServer, this.options.loggerConnectOptions)
+  let loggerSocket
+  if (this.options.loggerSocketConnection) {
+    loggerSocket = this.options.loggerSocketConnection
+  } else {
+    loggerSocket = getSocketIOFunction(url)(this.options.loggerServer, this.options.loggerConnectOptions)
+  }
 
   this.Logger = new AsyncStorageLogger({
     socketConnection: loggerSocket,
