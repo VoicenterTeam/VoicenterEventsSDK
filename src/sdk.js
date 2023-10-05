@@ -261,19 +261,27 @@ class EventsSDK {
 
   _handleTokenExpiry() {
     const date = new Date(this.options.tokenExpiry)
+
     if (!isValidDate(date)) {
       return
     }
+
     const timeout = date.getTime() - new Date().getTime() - 5000 // 5 seconds before expire
-    setTimeout(async () => {
-      let Socket = null
-      const res = await refreshToken(this.options.refreshTokenUrl, this.options.refreshToken)
-      if(res.Data){
-        Socket = res.Data.Socket;
-        return await this._onLoginResponse(Socket)
-      }
-      throw new Error(`Error on refreshToken`)
-    }, timeout)
+    const maxAllowedTimeout = Math.min(timeout, 0x7FFFFFFF)
+
+    setTimeout(
+      async () => {
+        let Socket = null
+        const res = await refreshToken(this.options.refreshTokenUrl, this.options.refreshToken)
+
+        if (res.Data) {
+          Socket = res.Data.Socket;
+          return await this._onLoginResponse(Socket)
+        }
+
+        throw new Error(`Error on refreshToken`)
+      },
+      maxAllowedTimeout)
   }
 
   _parsePacket(packet) {
