@@ -21,7 +21,7 @@ function isSocketOffline(event) {
   return offlineEvents.includes(name)
 }
 
-export default function onNewEvent({ eventData, store, extensionsModuleName, queuesModuleName }) {
+export default function onNewEvent({ eventData, store, extensionsModuleName, queuesModuleName, dialersModuleName }) {
   let { name, data } = eventData
   store.commit(`${extensionsModuleName}/SET_IS_SOCKET_OFFLINE`, isSocketOffline(eventData))
   switch (name) {
@@ -56,6 +56,20 @@ export default function onNewEvent({ eventData, store, extensionsModuleName, que
         store.dispatch(`${queuesModuleName}/updateQueue`, {
           index: queueIndex,
           queue
+        })
+      }
+      break;
+    case eventTypes.ALL_DIALERS_STATUS:
+      store.dispatch(`${dialersModuleName}/setDialers`, data.dialers)
+      break;
+    case eventTypes.DIALER_EVENT:
+      const dialer = data.data;
+      const allDialers = store.state[dialersModuleName].all || []
+      let dialerIndex = allDialers.findIndex(e => e.campaignID === dialer.campaignID)
+      if (dialerIndex !== -1) {
+        store.dispatch(`${dialersModuleName}/updateDialers`, {
+          index: dialerIndex,
+          dialer
         })
       }
       break;

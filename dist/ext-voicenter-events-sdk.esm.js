@@ -1,6 +1,6 @@
 import debounce from 'lodash/debounce';
 import md5 from 'js-md5';
-import { StorageLogger } from '@voicenter-team/socketio-storage-logger/build/StorageLogger';
+import { AsyncStorageLogger } from '@voicenter-team/socketio-storage-logger/build/AsyncStorageLogger';
 
 function _typeof(o) {
   "@babel/helpers - typeof";
@@ -3676,15 +3676,16 @@ var EventsSDK = /*#__PURE__*/function () {
   return EventsSDK;
 }();
 
-EventsSDK.prototype['initLogger'] = function () {
-  var loggerInitOptions = Object.assign({}, this.options.loggerConfig);
+EventsSDK.prototype['initLogger'] = function (url) {
+  var loggerSocket;
   if (this.options.loggerSocketConnection) {
-    loggerInitOptions["socketConnection"] = this.options.loggerSocketConnection;
+    loggerSocket = this.options.loggerSocketConnection;
   } else {
-    loggerInitOptions["socketUrl"] = this.options.loggerServer;
-    loggerInitOptions["connectOptions"] = this.options.loggerConnectOptions;
+    loggerSocket = getSocketIOFunction(url)(this.options.loggerServer, this.options.loggerConnectOptions);
   }
-  this.Logger = new StorageLogger(loggerInitOptions);
+  this.Logger = new AsyncStorageLogger(Object.assign({
+    socketConnection: loggerSocket
+  }, this.options.loggerConfig));
 };
 
 export default EventsSDK;

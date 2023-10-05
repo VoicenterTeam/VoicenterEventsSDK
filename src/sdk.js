@@ -1,18 +1,21 @@
 import eventTypes from './eventTypes';
+import environments from './utils/environments'
 import { defaultServers } from './config';
-import Logger from './Logger';
 import debounce from 'lodash/debounce'
 import handleStoreEvents from './store/handleStoreEvents'
 import extensionsModule from './store/extensions'
 import queuesModule from './store/queues'
+import dialersModule from './store/dialers'
 import { getServerWithHighestPriority, isValidDate } from './utils';
 import { externalLogin, refreshToken, getExternalLoginUrl } from './utils/externalLogin';
 import { loadExternalScript } from './utils/loadExternalScript'
+import { INFO, ERROR } from './utils/logTypes'
 import md5 from "js-md5";
 
 
 const defaultOptions = {
   url: `https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls`,
+  environment: environments.BROWSER,
   fallbackServer: {
     Domain: 'monitor5.voicenter.co.il',
     Priority: 0,
@@ -25,7 +28,7 @@ const defaultOptions = {
   forceNew: true,
   reconnectionDelay: 10000,
   reconnectionDelayMax: 10000,
-  maxReconnectAttempts: 2,
+  maxReconnectAttempts: 5,
   timeout: 10000,
   keepAliveTimeout: 60000,
   idleInterval: 60000 * 5, // 5 minutes
@@ -35,8 +38,27 @@ const defaultOptions = {
   store: null,
   extensionsModuleName: 'sdkExtensions',
   queuesModuleName: 'sdkQueues',
+  dialersModuleName: 'sdkDialers',
   serverFetchStrategy: 'remote', // get servers from external url options: remote | static
-  serverType: null, // can be 1 or 2. 2 is used for chrome extension
+  serverType: null, // can be 1 or 2. 2 is used for chrome extension,
+  useLogger: false,
+  loggerSocketConnection: null,
+  loggerServer: 'http://127.0.0.1:3000/',
+  loggerConfig: {
+    logToConsole: true,
+    overloadGlobalConsole: false,
+    namespace: "events-sdk",
+    socketEmitInterval: 10000,
+  },
+  loggerConnectOptions: {
+    reconnection: true,
+    reconnectionDelay: 5000,
+    reconnectionAttempts: 10,
+    perMessageDeflate: false,
+    upgrade: false,
+    transports: ['websocket'],
+    debug: false
+  },
 };
 
 let allConnections = [];
@@ -54,12 +76,13 @@ class EventsSDK {
     if (!this.options.loginType) {
       throw new Error('A login type should be provided');
     }
-    this.Logger = new Logger(this.options);
+
     this.servers = [];
     this.server = null;
     this.socket = null;
     this.connected = false;
     this.connectionEstablished = false;
+    this.doConnectOnDisconnect = true;
     this._lastEventTimestamp = new Date().getTime();
     this._initReconnectOptions();
     this._listenersMap = listenersMap;
@@ -71,6 +94,7 @@ class EventsSDK {
     this._handleLocalEvents = false;
     this._registerExtensionsModule();
     this._registerQueueModule();
+    this._registerDialerModule();
   }
 
   getLastEventTimestamp() {
@@ -99,6 +123,15 @@ class EventsSDK {
     this._handleLocalEvents = true
   }
 
+  _registerDialerModule() {
+    const moduleName = this.options.dialersModuleName || 'sdkDialers'
+    if (!this._validateStoreModule(moduleName)) {
+      return
+    }
+    this.options.store.registerModule(moduleName, dialersModule)
+    this._handleLocalEvents = true
+  }
+
   _validateStoreModule(moduleName) {
     const { store } = this.options
     if (!store) {
@@ -123,7 +156,7 @@ class EventsSDK {
   _onConnect() {
     this._initReconnectDelays();
     this.connected = true;
-    this.Logger.log(eventTypes.CONNECT, this.reconnectOptions);
+    this.log(INFO, eventTypes.CONNECT, this.reconnectOptions);
   }
 
   _initReconnectDelays() {
@@ -137,21 +170,21 @@ class EventsSDK {
   _onConnectError(data) {
     this._retryConnection('next', true);
     this.connected = false;
-    this.Logger.log(eventTypes.CONNECT_ERROR, data)
+    this.log(ERROR, eventTypes.CONNECT_ERROR, data)
   }
 
   _onError(err) {
-    this.Logger.log(eventTypes.ERROR, err);
+    this.log(ERROR, eventTypes.ERROR, err);
   }
 
   _onReconnectFailed() {
     this._retryConnection('next',true);
-    this.Logger.log(eventTypes.RECONNECT_FAILED, this.reconnectOptions);
+    this.log(ERROR, eventTypes.RECONNECT_FAILED, this.reconnectOptions);
   }
 
   _onConnectTimeout() {
     this._retryConnection('next',true);
-    this.Logger.log(eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
+    this.log(ERROR, eventTypes.CONNECT_TIMEOUT, this.reconnectOptions)
   }
 
   _onReconnectAttempt() {
@@ -167,13 +200,16 @@ class EventsSDK {
       this.socket.io.reconnectionDelayMax(newDelay);
     }
     this.reconnectOptions.retryCount++;
-    this.Logger.log(eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
+    this.log(INFO, eventTypes.RECONNECT_ATTEMPT, this.reconnectOptions)
   }
 
   _onDisconnect(reason) {
     this.connected = false;
-    this.Logger.log(eventTypes.DISCONNECT, reason);
-    this._connect('next', true)
+    this.log(INFO, eventTypes.DISCONNECT, reason);
+
+    if (this.doConnectOnDisconnect) {
+      this._connect('next', true);
+    }
   }
 
   _onKeepAlive(data) {
@@ -182,7 +218,7 @@ class EventsSDK {
       return
     }
     if (data && this.connected) {
-      this.Logger.log(eventTypes.KEEP_ALIVE_RESPONSE);
+      this.log(INFO, eventTypes.KEEP_ALIVE_RESPONSE);
       this._lastEventTimestamp = new Date().getTime()
     } else {
       this._initSocketConnection();
@@ -191,7 +227,8 @@ class EventsSDK {
 
   async _onLoginResponse(data) {
     if (data.Client) {
-      await loadExternalScript('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=2.4.0')
+      await loadExternalScript(data.Client, this.options.environment, true)
+      this.establishLoggerConnection(data.Client)
     }
     if (data.URL) {
       this.server = {
@@ -224,19 +261,27 @@ class EventsSDK {
 
   _handleTokenExpiry() {
     const date = new Date(this.options.tokenExpiry)
+
     if (!isValidDate(date)) {
       return
     }
+
     const timeout = date.getTime() - new Date().getTime() - 5000 // 5 seconds before expire
-    setTimeout(async () => {
-      let Socket = null
-      const res = await refreshToken(this.options.refreshTokenUrl, this.options.refreshToken)
-      if(res.Data){
-        Socket = res.Data.Socket;
-        return await this._onLoginResponse(Socket)
-      }
-      throw new Error(`Error on refreshToken`)
-    }, timeout)
+    const maxAllowedTimeout = Math.min(timeout, 0x7FFFFFFF)
+
+    setTimeout(
+      async () => {
+        let Socket = null
+        const res = await refreshToken(this.options.refreshTokenUrl, this.options.refreshToken)
+
+        if (res.Data) {
+          Socket = res.Data.Socket;
+          return await this._onLoginResponse(Socket)
+        }
+
+        throw new Error(`Error on refreshToken`)
+      },
+      maxAllowedTimeout)
   }
 
   _parsePacket(packet) {
@@ -252,6 +297,7 @@ class EventsSDK {
   }
 
   async _connect(server = 'default', skipLogin = false) {
+    this.doConnectOnDisconnect = true
     let serverToConnect = null;
     if (server === 'default') {
       serverToConnect = this._findCurrentServer();
@@ -281,30 +327,48 @@ class EventsSDK {
     }
   }
 
-  _initSocketConnection() {
-    let domain = this.server.Domain;
-    let protocol = this.options.protocol;
-    let url = `${protocol}://${domain}`;
-    this.Logger.log('Connecting to..', url);
-    this.closeAllConnections();
-    const options = {
-      reconnection: false,
-      perMessageDeflate: false,
-      upgrade: false,
-      transports: ['websocket'],
-      debug: false
-    }
-    if (this.token) {
-      options.query = {
-        token: this.token
+  log(type, ...args) {
+    if (this.Logger) {
+      if (type === INFO) {
+        this.Logger.log(...args);
+      } else if (type === ERROR) {
+        this.Logger.error(...args);
+      }
+    } else {
+      if (type === INFO) {
+        console.log(...args)
+      } else if (type === ERROR) {
+        console.error(...args)
       }
     }
-    this.socket = window.io(url, options)
+  }
 
+  _initSocketConnection() {
+    try {
+      let domain = this.server.Domain;
+      let protocol = this.options.protocol;
+      let url = `${protocol}://${domain}`;
+      this.log(INFO, 'Connecting to..', url);
+      this.closeAllConnections();
+      const options = {
+        reconnection: false,
+        perMessageDeflate: false,
+        upgrade: false,
+        transports: ['websocket'],
+        debug: false
+      }
+      if (this.token) {
+        options.query = {
+          token: this.token
+        }
+      }
+      this.socket = self.io(url, options)
 
-
-    allConnections.push(this.socket);
-    this.connectionEstablished = true;
+      allConnections.push(this.socket);
+      this.connectionEstablished = true;
+    } catch (e) {
+      this.log(ERROR, e)
+    }
   }
   _initSocketEvents() {
     this.socket
@@ -320,10 +384,14 @@ class EventsSDK {
     this.socket.onevent = this._onEvent.bind(this)
   }
 
-  _initKeepAlive() {
+  clearKeepAliveInterval() {
     if (this.keepAliveInterval) {
       clearInterval(this.keepAliveInterval)
     }
+  }
+
+  _initKeepAlive() {
+    this.clearKeepAliveInterval()
 
     if (this.idleInterval) {
       clearInterval((this.idleInterval))
@@ -366,7 +434,7 @@ class EventsSDK {
 
   _findNextAvailableServer() {
     let currentServerPriority = this.server.Priority;
-    this.Logger.log(`Failover -> Trying to find another server`);
+    this.log(INFO, `Failover -> Trying to find another server`);
     if (currentServerPriority === this.servers.length - 1) {
       return this._findMaxPriorityServer()
     }
@@ -382,12 +450,12 @@ class EventsSDK {
       this.server = nextServer;
       return this.server
     }
-    this.Logger.log(`Failover -> Found new server. Connecting to it...`, this.server);
+    this.log(INFO, `Failover -> Found new server. Connecting to it...`, this.server);
     return null
   }
 
   _findMaxPriorityServer() {
-    this.Logger.log(`Fallback -> Trying to find previous server`, '_findMaxPriorityServer');
+    this.log(INFO, `Fallback -> Trying to find previous server`);
     let maxPriorityServer = getServerWithHighestPriority(this.servers);
     if (!this.server) {
       this.server = maxPriorityServer;
@@ -395,7 +463,7 @@ class EventsSDK {
     }
     if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
       this.server = maxPriorityServer;
-      this.Logger.log(`Fallback -> Trying to find previous server`, this.server);
+      this.log(INFO, `Fallback -> Trying to find previous server`);
       return this.server
     }
     return null
@@ -409,11 +477,10 @@ class EventsSDK {
   }
 
   _onEvent(packet) {
-    if (!packet.data) { 
+    if (!packet.data) {
       return;
     }
     let evt = this._parsePacket(packet);
-    this.Logger.log(`New event -> ${evt.name}`, evt);
     this._lastEventTimestamp = new Date().getTime()
     this._listenersMap.forEach((callback, eventName) => {
       if (eventName === '*') {
@@ -465,6 +532,22 @@ class EventsSDK {
   }
 
   /**
+   * Establishes logger socket connection
+   * @param url
+   */
+  establishLoggerConnection(url) {
+    if (!this.options.useLogger) {
+      return
+    }
+
+    if (this.options.environment === environments.CHROME_EXTENSION) {
+      this.initLogger(url)
+    } else {
+      this.initLogger()
+    }
+  }
+
+  /**
    * Sets the monitor code token
    * @param token
    */
@@ -488,14 +571,24 @@ class EventsSDK {
       this.socket.close()
       this.socket = null
     }
+
+    if (this.options.environment === environments.CHROME_EXTENSION && chrome) {
+      chrome.storage.session.clear()
+    } else if (this.options.environment === environments.BROWSER && window) {
+      window.sessionStorage.clear();
+    }
   }
 
   /**
    * Disconnects the socket instance from the servers
    */
   disconnect() {
+    this.doConnectOnDisconnect = false
     this._listenersMap = new Map();
     this.closeAllConnections()
+    if (this.Logger) {
+      this.Logger.disconnectSocket()
+    }
   }
 
   /**
@@ -516,7 +609,7 @@ class EventsSDK {
 
   emit(eventName, data = {}) {
     this._checkInit();
-    this.Logger.log(`EMIT -> ${eventName}`, data);
+    this.log(INFO, `EMIT -> ${eventName}`, data);
     this.socket.emit(eventName, data);
   }
 
@@ -555,27 +648,65 @@ class EventsSDK {
       }
     }
   }
-  _getTabsSession(){
-      if (!window.sessionStorage.length) {
-        // Ask other tabs for session storage
-        localStorage.setItem('getSessionStorage', Date.now());
-      };
+  async _getTabsSession() {
+    if (this.options.environment === environments.CHROME_EXTENSION && chrome) {
+        const sessions = await chrome.storage.session.get(null)
+        if (!Object.keys(sessions).length) {
+          // Ask other tabs for session storage
+          await chrome.storage.local.set({'getSessionStorage': Date.now()})
+        }
+
+        chrome.storage.onChanged.addListener(async (changes, namespace) => {
+          const key = Object.keys(changes)[0]
+          const result = await chrome.storage.session.get(null)
+            if (key === 'getSessionStorage') {
+              // Some tab asked for the sessionStorage -> send it
+              await chrome.storage.local.set({'sessionStorage': JSON.stringify(result)})
+              await chrome.storage.local.remove(["sessionStorage"])
+            } else if (key === 'sessionStorage' && !Object.keys(result).length) {
+              // sessionStorage is empty -> fill it
+              let newValue
+
+              if (!changes[key] || !changes[key].newValue) {
+                newValue = '{}'
+              } else {
+                newValue = changes[key].newValue
+              }
+
+              const data = JSON.parse(newValue)
+
+              for (let sKey in data) {
+                if (data.hasOwnProperty(sKey)) {
+                  await chrome.storage.session.set({[sKey]: data[sKey]});
+                }
+              }
+            }
+        })
+    } else if (this.options.environment === environments.BROWSER && window) {
       window.addEventListener('storage', (event) => {
-        //console.log('storage event', event);
-        if (event.key == 'getSessionStorage') {
+        if (!window.sessionStorage.length) {
+          // Ask other tabs for session storage
+          localStorage.setItem('getSessionStorage', Date.now());
+        }
+
+        if (event.key === 'getSessionStorage') {
           // Some tab asked for the sessionStorage -> send it
           localStorage.setItem('sessionStorage', JSON.stringify(window.sessionStorage));
           localStorage.removeItem('sessionStorage');
-        } else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+        } else if (event.key === 'sessionStorage' && !sessionStorage.length) {
           // sessionStorage is empty -> fill it
-          var data = JSON.parse(event.newValue),
-                value;
+          const data = JSON.parse(event.newValue)
+
           for (let key in data) {
-            window.sessionStorage.setItem(key, data[key]);
+            if (data.hasOwnProperty(key)) {
+              window.sessionStorage.setItem(key, data[key]);
+            }
           }
         }
       })
-      return new Promise(resolve => setTimeout((resolve), 200))
+    }
+
+    return new Promise(resolve => setTimeout((resolve), 200))
   }
 
   /**
@@ -593,37 +724,56 @@ class EventsSDK {
     }
     let key = md5(JSON.stringify(payload))
     const delay = 1000;
+
     if (this._lastLoginTimestamp + delay > new Date().getTime()) {
       return Promise.resolve()
     }
+
     this._lastLoginTimestamp = new Date().getTime()
+
     return new Promise(async (resolve, reject) => {
-      try{
-        let loginSession = window.sessionStorage.getItem(key);
-        if(loginSession){
-          loginSession = JSON.parse(loginSession)
-          this.Logger.log('got data from session', loginSession);
-          await this._onLoginResponse(loginSession)
-          return resolve(loginSession);
-        }
-      }catch(err){
-        this.Logger.log('Error on getting session',err)
-      }
       try {
-        let url = getExternalLoginUrl(this.options.loginUrl, type)
-        const res = await externalLogin(url,payload)
+        let loginSession
+        if (this.options.environment === environments.BROWSER && window) {
+          loginSession = window.sessionStorage.getItem(key);
+          if (loginSession) {
+            loginSession = JSON.parse(loginSession)
+            this.log(INFO, 'got data from session', loginSession);
+            await this._onLoginResponse(loginSession)
+            return resolve(loginSession);
+          }
+        } else if (this.options.environment === environments.CHROME_EXTENSION && chrome) {
+          const result = await chrome.storage.session.get(null)
+            if (result) loginSession = result[key];
+            if (loginSession) {
+              loginSession = JSON.parse(loginSession)
+              this.log(INFO, 'got data from session', loginSession);
+              await this._onLoginResponse(loginSession)
+              return resolve(loginSession);
+            }
+        }
+      } catch (err) {
+        this.log(ERROR, "Error on getting session", err)
+      }
+
+      try {
+        const url = getExternalLoginUrl(this.options.loginUrl, type)
+        const res = await externalLogin(url, payload)
         await this._onLoginResponse(res)
 
-        window.sessionStorage.setItem(key, JSON.stringify(res));
-
-        resolve(res)
+        if (this.options.environment === environments.BROWSER) {
+          window.sessionStorage.setItem(key, JSON.stringify(res));
+          resolve(res)
+        } else if (this.options.environment === environments.CHROME_EXTENSION) {
+          await chrome.storage.session.set({[key]: JSON.stringify(res)});
+          resolve(res)
+        }
       } catch (err) {
         this.servers = this.argumentOptions.servers || defaultServers;
         reject(err)
       }
     });
   }
-
 }
 
 export default EventsSDK;

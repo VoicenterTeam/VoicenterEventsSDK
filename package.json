@@ -1,16 +1,16 @@
 {
   "name": "voicenter-events-sdk",
-  "version": "0.8.5",
+  "version": "0.9.12",
   "scripts": {
     "serve": "npm run docs",
     "build": "bili",
     "lint": "vue-cli-service lint",
     "docs": "vue-cli-service docs --mode serve",
     "build:docs": "vue-cli-service docs --mode build",
-    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && npm run build",
     "start": "npm run docs"
   },
   "dependencies": {
+    "@voicenter-team/socketio-storage-logger": "^1.0.1",
     "core-js": "^2.6.5",
     "js-md5": "^0.7.3"
   },
@@ -33,6 +33,9 @@
     "dist/voicenter-events-sdk.common.js",
     "dist/voicenter-events-sdk.umd.js",
     "dist/voicenter-events-sdk.esm.js",
+    "dist/ext-voicenter-events-sdk.cjs.js",
+    "dist/ext-voicenter-events-sdk.umd.js",
+    "dist/ext-voicenter-events-sdk.esm.js",
     "src"
   ],
   "engines": {
