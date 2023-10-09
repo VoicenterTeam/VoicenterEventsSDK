@@ -362,11 +362,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.8.3.tgz#c4ae2bb1cfab2999ed441a95c122bbbe1567a66d"
   integrity sha512-jxiZQFpb+NlH5kjW49vXxvxTjeeqlbsnTAdBTKpzEdPs9itay7MscYXz3Fo9VYFEsfQ6LJFitHad3faerLAjCw==
 
-"@types/prismjs@^1.26.0":
-  version "1.26.1"
-  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.26.1.tgz#aae6739d8f0d14a3bc9e6dd83e6d791ad75d4d76"
-  integrity sha512-Q7jDsRbzcNHIQje15CS/piKhu6lMLb9jwjxSfEIi4KcFKXW23GoJMkwQiJ8VObyfx+VmUaDcJxXaWN+cTCjVog==
-
 "@types/web-bluetooth@^0.0.18":
   version "0.0.18"
   resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.18.tgz#74bd1c8fd3a2058cb6fc76b188fcded50a83d866"

@@ -32,11 +32,11 @@ export default defineUserConfig({
                 link: '/',
                 collapsible: false,
                 children: [
-                    'demo',
+                    '/demo',
                     {
                         text: 'API',
-                        link: 'api',
-                        rel: 'api'
+                        link: '/api/modules',
+                        rel: '/api/modules'
                     }
                 ]
             }
@@ -48,7 +48,7 @@ export default defineUserConfig({
             componentsDir: path.resolve(__dirname, './components')
         }),
         typedocPlugin({
-            entryPoints: ['../src/types'],
+            entryPoints: ['../src/types/public-api.d.ts'],
             tsconfig: '../tsconfig.json'
         })
     ],

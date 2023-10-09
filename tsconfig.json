@@ -1,18 +1,27 @@
 {
+  "include": [
+    "src/**/*",
+    "src/**/*.d.ts"
+  ],
   "compilerOptions": {
     "target": "es2017" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */,
     "module": "ESNext" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "lib": [
-      "dom"
+      "dom",
+      "ESNext"
     ],
     "types": [
       "vite/client"
     ],
+    "declaration": true, /* Generates corresponding '.d.ts' file. */
     "esModuleInterop": true,
     "paths": {
       "voicenterEventsSDK/*": [
+        "./src/*"
+      ],
+      "@/*": [
         "./src/*"
       ]
     }

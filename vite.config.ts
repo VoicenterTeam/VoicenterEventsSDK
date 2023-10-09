@@ -26,11 +26,13 @@ export default ({ mode }) => {
         },
         plugins: [
             dts({
-                rollupTypes: true
+                rollupTypes: true,
+                copyDtsFiles: true
             })
         ],
         resolve: {
             alias: {
+                '@': resolve(__dirname, './src'),
                 voicenterEventsSDK: resolve(__dirname, './src'),
             }
         }

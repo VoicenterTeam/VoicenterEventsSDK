@@ -1,4 +1,4 @@
-# OpenSIPS widget!
+# Voicenter Events SDK
 
 - [Demo](demo.md)
-- [API](api/README.md)
+- [API](api/modules.md)
