@@ -275,7 +275,6 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,node,yarn
 
-dist
 docs/node_modules
 docs/src/.vuepress/.cache
 docs/src/.vuepress/.temp
