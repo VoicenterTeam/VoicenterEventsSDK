@@ -1,49 +1,40 @@
 {
   "name": "voicenter-events-sdk",
-  "version": "0.9.12",
-  "scripts": {
-    "serve": "npm run docs",
-    "build": "bili",
-    "lint": "vue-cli-service lint",
-    "docs": "vue-cli-service docs --mode serve",
-    "build:docs": "vue-cli-service docs --mode build",
-    "start": "npm run docs"
-  },
-  "dependencies": {
-    "@voicenter-team/socketio-storage-logger": "^1.0.1",
-    "core-js": "^2.6.5",
-    "js-md5": "^0.7.3"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.8.0",
-    "@vue/cli-plugin-eslint": "^3.8.0",
-    "@vue/cli-service": "^4.2.3",
-    "babel-eslint": "^10.0.1",
-    "bili": "^4.8.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "lodash": "^4.17.19",
-    "vue": "^2.6.10",
-    "vue-cli-plugin-p11n": "^0.3.0",
-    "vue-json-tree-view": "^2.1.4",
-    "vue-template-compiler": "^2.6.10",
-    "vuex": "^3.1.3"
-  },
-  "files": [
-    "dist/voicenter-events-sdk.common.js",
-    "dist/voicenter-events-sdk.umd.js",
-    "dist/voicenter-events-sdk.esm.js",
-    "dist/ext-voicenter-events-sdk.cjs.js",
-    "dist/ext-voicenter-events-sdk.umd.js",
-    "dist/ext-voicenter-events-sdk.esm.js",
-    "src"
-  ],
-  "engines": {
-    "node": ">=8.9"
-  },
-  "jsdelivr": "dist/voicenter-events-sdk.umd.js",
+  "version": "1.0.0",
+  "description": "",
   "main": "dist/voicenter-events-sdk.cjs.js",
-  "module": "dist/voicenter-events-sdk.esm.js",
-  "sideeffects": false,
-  "unpkg": "dist/voicenter-events-sdk.umd.js"
+  "jsdelivr": "dist/voicenter-events-sdk.umd.js",
+  "module": "dist/voicenter-events-sdk.es.js",
+  "unpkg": "dist/voicenter-events-sdk.umd.js",
+  "types": "dist/voicenter-events-sdk.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "dev": "cd docs && yarn && yarn run dev",
+    "docs-build": "cd docs && yarn && yarn run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts-check": "tsc --noEmit",
+    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts --fix --ignore-path .gitignore"
+  },
+  "engines": {
+    "node": ">= 16",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.22.4"
+  },
+  "precommit": "ts-check, lint",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.14.2",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.35.0",
+    "pre-commit": "^1.2.2",
+    "tsc-alias": "^1.8.6",
+    "typescript": "^4.9.5",
+    "vite": "4.3.9",
+    "vite-plugin-dts": "^3.6.0"
+  },
+  "dependencies": {}
 }
