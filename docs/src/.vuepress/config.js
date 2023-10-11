@@ -32,11 +32,11 @@ export default defineUserConfig({
                 link: '/',
                 collapsible: false,
                 children: [
-                    '/demo',
+                    'demo',
                     {
                         text: 'API',
-                        link: '/api/modules',
-                        rel: '/api/modules'
+                        link: 'api',
+                        rel: 'api'
                     }
                 ]
             }
