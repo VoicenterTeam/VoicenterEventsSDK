@@ -10,14 +10,14 @@
   "scripts": {
     "build": "vite build",
     "dev": "cd docs && yarn && yarn run dev",
-    "docs-build": "cd docs && yarn && yarn run build",
+    "build:documentation": "cd docs && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-check": "tsc --noEmit",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts --fix --ignore-path .gitignore"
   },
   "engines": {
     "node": ">= 16",
-    "npm": "please-use-yarn",
+    "npm": ">= 9.6.7",
     "yarn": ">= 1.22.4"
   },
   "precommit": "ts-check, lint",
