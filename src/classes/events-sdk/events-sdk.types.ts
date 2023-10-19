@@ -59,3 +59,9 @@ export interface ReconnectOptions {
     minReconnectionDelay: number,
     maxReconnectionDelay: number
 }
+
+export enum ServerParameter {
+    DEFAULT = 'default',
+    NEXT = 'next',
+    PREVIOUS = 'previous'
+}
