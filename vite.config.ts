@@ -1,12 +1,12 @@
-import { resolve } from 'path'
-import { defineConfig, loadEnv } from 'vite'
-import dts from 'vite-plugin-dts'
+import { resolve } from 'path';
+import { defineConfig, loadEnv } from 'vite';
+import dts from 'vite-plugin-dts';
 
 export default ({ mode }) => {
     process.env = {
         ...process.env,
         ...loadEnv(mode, process.cwd(), '')
-    }
+    };
 
     return defineConfig({
         build: {
@@ -20,7 +20,7 @@ export default ({ mode }) => {
                 formats: [ 'es', 'cjs', 'umd', 'iife' ],
                 name: 'VoicenterEventsSDK',
                 fileName: (format) => {
-                    return `voicenter-events-sdk.${format}.js`
+                    return `voicenter-events-sdk.${format}.js`;
                 },
             }
         },
@@ -36,5 +36,5 @@ export default ({ mode }) => {
                 voicenterEventsSDK: resolve(__dirname, './src'),
             }
         }
-    })
-}
+    });
+};
