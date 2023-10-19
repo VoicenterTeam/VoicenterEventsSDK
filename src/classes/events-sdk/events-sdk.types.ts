@@ -32,14 +32,14 @@ export interface EventsSdkOptions {
 
 export interface Server {
     Priority?: number,
-    Domain?: string,
+    Domain?: string
 }
 
 export interface LoggerConfig {
     logToConsole?: boolean,
     overloadGlobalConsole?: boolean,
     namespace?: string,
-    socketEmitInterval?: number,
+    socketEmitInterval?: number
 }
 
 export interface LoggerConnectOptions {
@@ -50,4 +50,12 @@ export interface LoggerConnectOptions {
     upgrade?: boolean,
     transports?: string[],
     debug?: boolean
+}
+
+export interface ReconnectOptions {
+    retryCount: number,
+    maxReconnectAttempts: number,
+    reconnectionDelay: number,
+    minReconnectionDelay: number,
+    maxReconnectionDelay: number
 }
