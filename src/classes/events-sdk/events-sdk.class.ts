@@ -32,6 +32,7 @@ class EventsSdkClass {
     private reconnectOptions: ReconnectOptions;
     private listenerMap = new Map();
     private retryConnection;
+    private token: string;
 
     private initReconnectOptions () {
         this.reconnectOptions = {
@@ -64,7 +65,7 @@ class EventsSdkClass {
             this.server = this.findCurrentServer();
         }
 
-        // this._initSocketConnection();
+        this.initSocketConnection();
 
         // this._initSocketEvents();
 
@@ -147,6 +148,43 @@ class EventsSdkClass {
         });
 
         return chosenServer;
+    }
+
+    private initSocketConnection () {
+        try {
+            // const domain = this.server.Domain;
+
+            // const protocol = this.options.protocol;
+
+            // const url = `${protocol}://${domain}`;
+
+            // this.log(INFO, 'Connecting to..', url);
+
+            // this.closeAllConnections();
+
+            const options = {
+                reconnection: false,
+                perMessageDeflate: false,
+                upgrade: false,
+                transports: [ 'websocket' ],
+                debug: false,
+                query: null
+            };
+
+            if (this.token) {
+                options.query = {
+                    token: this.token
+                };
+            }
+
+            // this.socket = self.io(url, options);
+
+            // allConnections.push(this.socket);
+            
+            this.connectionEstablished = true;
+        } catch (e) {
+            // this.log(ERROR, e);
+        }
     }
 }
 
