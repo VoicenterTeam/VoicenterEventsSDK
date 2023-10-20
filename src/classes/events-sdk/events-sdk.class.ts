@@ -61,7 +61,7 @@ class EventsSdkClass {
         }
 
         if (!serverToConnect) {
-        // this.server = this._findCurrentServer();
+            this.server = this.findCurrentServer();
         }
 
         // this._initSocketConnection();
