@@ -57,7 +57,7 @@ class EventsSdkClass {
         }
 
         if (server === ServerParameter.PREVIOUS) {
-            // serverToConnect = this._findMaxPriorityServer();
+            serverToConnect = this.findMaxPriorityServer();
         }
 
         if (!serverToConnect) {
