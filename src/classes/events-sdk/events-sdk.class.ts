@@ -2,6 +2,7 @@ import debounce from 'lodash/debounce';
 
 import { eventsSdkDefaultOptions } from './events-sdk-default-options';
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from './events-sdk.types';
+import { WsOptions } from '../ws/ws.types';
 
 class EventsSdkClass {
     constructor (private readonly options: EventsSdkOptions = {}) {
@@ -162,7 +163,7 @@ class EventsSdkClass {
 
             // this.closeAllConnections();
 
-            const options = {
+            const options: WsOptions = {
                 reconnection: false,
                 perMessageDeflate: false,
                 upgrade: false,
@@ -177,7 +178,7 @@ class EventsSdkClass {
                 };
             }
 
-            // this.socket = self.io(url, options);
+            // const wsClass = new WsClass(url, options);
 
             // allConnections.push(this.socket);
             
