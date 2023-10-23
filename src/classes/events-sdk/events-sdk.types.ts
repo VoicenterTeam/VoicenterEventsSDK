@@ -30,6 +30,11 @@ export interface EventsSdkOptions {
     loggerConnectOptions?: LoggerConnectOptions
 }
 
+export enum Environment {
+    BROWSER = 'browser',
+    CHROME_EXTENSION = 'chrome-extension'
+}
+
 export interface Server {
     Priority?: number,
     Domain?: string

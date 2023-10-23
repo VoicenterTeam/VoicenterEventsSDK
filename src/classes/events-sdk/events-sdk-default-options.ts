@@ -1,8 +1,8 @@
-import { EventsSdkOptions } from './events-sdk.types';
+import { Environment, EventsSdkOptions } from './events-sdk.types';
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
     url: 'https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls',
-    // environment: environments.BROWSER, // commented temporary
+    environment: Environment.BROWSER,
     fallbackServer: {
         Domain: 'monitor5.voicenter.co.il',
         Priority: 0,
