@@ -18,6 +18,8 @@ class EventsSdkClass {
 
         this.initReconnectOptions();
 
+        this.connect(); // for test
+
         this.initSocketConnection(); // for test
 
         this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
