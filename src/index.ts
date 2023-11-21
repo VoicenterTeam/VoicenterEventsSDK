@@ -1,12 +1,3 @@
-import type { ObjectUnknown } from './types/generic';
-import { SomeInterface } from './types/generic';
+import EventsSdkClass from './classes/events-sdk/events-sdk.class';
 
-const data: ObjectUnknown = {
-    name: 'Petro',
-};
-
-export const data2: SomeInterface = {
-    name: 'Petro',
-};
-
-export default data;
+export default EventsSdkClass;
