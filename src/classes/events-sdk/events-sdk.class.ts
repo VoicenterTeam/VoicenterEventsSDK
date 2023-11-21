@@ -2,7 +2,8 @@ import debounce from 'lodash/debounce';
 
 import { eventsSdkDefaultOptions } from './events-sdk-default-options';
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from './events-sdk.types';
-import { WsOptions } from '../ws/ws.types';
+import { SocketIoOptions } from '../socket-io/socket-io.types';
+import { SocketIoClass } from '../socket-io/socket-io.class';
 
 class EventsSdkClass {
     constructor (private readonly options: EventsSdkOptions = {}) {
@@ -17,6 +18,8 @@ class EventsSdkClass {
 
         this.initReconnectOptions();
 
+        this.initSocketConnection(); // for test
+
         this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
             leading: true,
             trailing: false
@@ -26,6 +29,7 @@ class EventsSdkClass {
     private argumentOptions: EventsSdkOptions;
     private servers: Server[] = [];
     private server: Server;
+    private socketIoClass: any; // for test
     private connected = false;
     private connectionEstablished = false;
     private doConnectOnDisconnect = true;
@@ -153,17 +157,17 @@ class EventsSdkClass {
 
     private initSocketConnection () {
         try {
-            // const domain = this.server.Domain;
+            const domain = this.server.Domain;
 
-            // const protocol = this.options.protocol;
+            const protocol = this.options.protocol;
 
-            // const url = `${protocol}://${domain}`;
+            const url = `${protocol}://${domain}`;
 
             // this.log(INFO, 'Connecting to..', url);
 
             // this.closeAllConnections();
 
-            const options: WsOptions = {
+            const options: SocketIoOptions = {
                 reconnection: false,
                 perMessageDeflate: false,
                 upgrade: false,
@@ -178,7 +182,7 @@ class EventsSdkClass {
                 };
             }
 
-            // const wsClass = new WsClass(url, options);
+            this.socketIoClass = new SocketIoClass(url, options);
 
             // allConnections.push(this.socket);
             

@@ -1,18 +1,18 @@
-import { WsOptions } from './ws.types';
+import { SocketIoOptions } from './socket-io.types';
 import { Environment } from '../events-sdk/events-sdk.types';
 
-export class WsClass {
-    constructor (private readonly url: string, private readonly options: WsOptions) {
+export class SocketIoClass {
+    constructor (private readonly url: string, private readonly options: SocketIoOptions) {
         this.url = url;
 
         this.options = options;
     }
 
-    private socket = null;
+    private socketIo = null;
 
     private async loadExternalScript (url: string, environment: Environment, useHelperVersion = false) {
         if (useHelperVersion) {
-            // this.socket = this.getWsFunction(url);
+            // this.socketIo = this.getWsFunction(url);
 
             return;
         }

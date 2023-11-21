@@ -1,4 +1,4 @@
-export interface WsOptions {
+export interface SocketIoOptions {
     reconnection: boolean,
     perMessageDeflate: boolean,
     upgrade: boolean,
