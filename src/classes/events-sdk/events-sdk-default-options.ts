@@ -1,4 +1,4 @@
-import { Environment, EventsSdkOptions } from './events-sdk.types';
+import { Environment, EventsSdkOptions } from './events-sdk.types'
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
     url: 'https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls',
@@ -46,4 +46,4 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         transports: [ 'websocket' ],
         debug: false
     },
-};
+}
