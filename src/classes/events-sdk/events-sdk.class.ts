@@ -136,6 +136,10 @@ class EventsSdkClass {
         return null
     }
 
+    public test () {
+        return true
+    }
+
     public getServerWithHighestPriority (servers: Server[]): Server {
         // Highest priority server is the one with lowest Priority value
 

@@ -6,6 +6,7 @@ module.exports = {
     ],
     extends: [
         'plugin:@typescript-eslint/recommended',
+        'plugin:jest/recommended',
         'eslint:recommended'
     ],
     rules: {
