@@ -3,7 +3,6 @@ import debounce from 'lodash/debounce';
 import { eventsSdkDefaultOptions } from './events-sdk-default-options';
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from './events-sdk.types';
 import { SocketIoOptions } from '../socket-io/socket-io.types';
-import { SocketIoClass } from '../socket-io/socket-io.class';
 
 class EventsSdkClass {
     constructor (private readonly options: EventsSdkOptions = {}) {
@@ -20,8 +19,6 @@ class EventsSdkClass {
 
         this.connect(); // for test
 
-        this.initSocketConnection(); // for test
-
         this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
             leading: true,
             trailing: false
@@ -31,7 +28,7 @@ class EventsSdkClass {
     private argumentOptions: EventsSdkOptions;
     private servers: Server[] = [];
     private server: Server;
-    private socketIoClass: any; // for test
+    public socket = null;
     private connected = false;
     private connectionEstablished = false;
     private doConnectOnDisconnect = true;
@@ -159,11 +156,11 @@ class EventsSdkClass {
 
     private initSocketConnection () {
         try {
-            const domain = this.server.Domain;
-
-            const protocol = this.options.protocol;
-
-            const url = `${protocol}://${domain}`;
+            // const domain = this.server.Domain;
+            //
+            // const protocol = this.options.protocol;
+            //
+            // const url = `${protocol}://${domain}`;
 
             // this.log(INFO, 'Connecting to..', url);
 
@@ -183,8 +180,6 @@ class EventsSdkClass {
                     token: this.token
                 };
             }
-
-            this.socketIoClass = new SocketIoClass(url, options);
 
             // allConnections.push(this.socket);
             

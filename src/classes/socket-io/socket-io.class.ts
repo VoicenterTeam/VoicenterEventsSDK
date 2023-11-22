@@ -1,5 +1,6 @@
 import { SocketIoOptions } from './socket-io.types';
 import { Environment } from '../events-sdk/events-sdk.types';
+import s137 from './socket-io.1.3.7.js';
 
 export class SocketIoClass {
     constructor (private readonly url: string, private readonly options: SocketIoOptions) {
@@ -8,11 +9,11 @@ export class SocketIoClass {
         this.options = options;
     }
 
-    private socketIo = null;
+    public socketIoFunction;
 
-    private async loadExternalScript (url: string, environment: Environment, useHelperVersion = false) {
+    public async loadExternalScript (url: string, environment: Environment, useHelperVersion = true) {
         if (useHelperVersion) {
-            // this.socketIo = this.getWsFunction(url);
+            this.socketIoFunction = this.getSocketIoFunction();
 
             return;
         }
@@ -24,5 +25,9 @@ export class SocketIoClass {
             case Environment.CHROME_EXTENSION:
                 // await loadExtensionScript(url);
         }
+    }
+
+    private getSocketIoFunction () {
+        return s137;
     }
 }
