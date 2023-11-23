@@ -1,5 +1,6 @@
 import debounce from 'lodash/debounce'
 
+import AuthClass from '../auth/auth.class'
 import { eventsSdkDefaultOptions } from './events-sdk-default-options'
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from './events-sdk.types'
 import { SocketIoOptions } from '../socket-io/socket-io.types'
@@ -12,8 +13,6 @@ class EventsSdkClass {
         }
 
         this.argumentOptions = this.options
-
-        this.lastEventTimestamp = new Date().getTime()
 
         this.initReconnectOptions()
 
@@ -32,7 +31,6 @@ class EventsSdkClass {
     private connected = false
     private connectionEstablished = false
     private doConnectOnDisconnect = true
-    private lastEventTimestamp: number
     private reconnectOptions: ReconnectOptions
     private listenerMap = new Map()
     private retryConnection
@@ -136,7 +134,23 @@ class EventsSdkClass {
         return null
     }
 
-    public test () {
+    public init () {
+        if (this.connectionEstablished) {
+            return true
+        }
+
+        if (this.socket) {
+            // this.emit(eventTypes.CLOSE);
+        }
+
+        // await this._getToken();
+
+        // await this._getTabsSession();
+
+        AuthClass.login(this.options)
+
+        // await this._getServers();
+
         return true
     }
 

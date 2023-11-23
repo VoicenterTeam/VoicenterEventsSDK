@@ -27,7 +27,10 @@ export interface EventsSdkOptions {
     loggerSocketConnection?: string,
     loggerServer?: string,
     loggerConfig?: LoggerConfig,
-    loggerConnectOptions?: LoggerConnectOptions
+    loggerConnectOptions?: LoggerConnectOptions,
+    email?: string,
+    password?: string,
+    username?: string
 }
 
 export enum Environment {
