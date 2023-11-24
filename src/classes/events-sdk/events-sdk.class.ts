@@ -149,9 +149,15 @@ class EventsSdkClass {
 
         AuthClass.login(this.options)
 
-        // await this._getServers();
+        this.getServers()
 
         return true
+    }
+
+    private getServers () {
+        if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
+            this.servers = this.argumentOptions.servers
+        }
     }
 
     public getServerWithHighestPriority (servers: Server[]): Server {

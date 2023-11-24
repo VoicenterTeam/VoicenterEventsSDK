@@ -26,7 +26,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
     extensionsModuleName: 'sdkExtensions',
     queuesModuleName: 'sdkQueues',
     dialersModuleName: 'sdkDialers',
-    serverFetchStrategy: 'remote',
+    serverFetchStrategy: 'static',
     serverType: null,
     useLogger: false,
     loggerSocketConnection: null,
