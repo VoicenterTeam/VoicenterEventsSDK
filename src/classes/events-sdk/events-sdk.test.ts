@@ -1,5 +1,5 @@
-import EventsSdkClass from './events-sdk.class'
-import { eventsSdkDefaultOptions } from './events-sdk-default-options'
+import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
+import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 
 describe('EventsSdkClass', () => {
     it('should be true', () => {

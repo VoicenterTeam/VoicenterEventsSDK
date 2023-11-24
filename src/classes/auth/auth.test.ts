@@ -1,5 +1,5 @@
-import AuthClass from './auth.class'
-import { eventsSdkDefaultOptions } from '../events-sdk/events-sdk-default-options'
+import AuthClass from '@/classes/auth/auth.class'
+import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 
 describe('AuthClass', () => {
     it('should be cypher', () => {

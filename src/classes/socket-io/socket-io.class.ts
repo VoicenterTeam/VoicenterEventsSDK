@@ -1,6 +1,6 @@
-import { SocketIoOptions } from './socket-io.types'
-import { Environment } from '../events-sdk/events-sdk.types'
-import s137 from './socket-io.1.3.7.js'
+import s137 from '@/classes/socket-io/socket-io.1.3.7.js'
+import { SocketIoOptions } from '@/classes/socket-io/socket-io'
+import { Environment } from '@/classes/events-sdk/events-sdk'
 
 export class SocketIoClass {
     constructor (private readonly url: string, private readonly options: SocketIoOptions) {

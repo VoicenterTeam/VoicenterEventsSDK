@@ -1,5 +1,5 @@
-import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
 import { md5 } from 'js-md5'
+import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk'
 
 class AuthClass {
     private static delay = 1000

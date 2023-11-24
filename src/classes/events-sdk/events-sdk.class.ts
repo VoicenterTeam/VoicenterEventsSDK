@@ -1,9 +1,9 @@
 import debounce from 'lodash/debounce'
 
-import AuthClass from '../auth/auth.class'
-import { eventsSdkDefaultOptions } from './events-sdk-default-options'
-import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from './events-sdk.types'
-import { SocketIoOptions } from '../socket-io/socket-io.types'
+import AuthClass from '@/classes/auth/auth.class'
+import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
+import { SocketIoOptions } from '@/classes/socket-io/socket-io'
+import { ServerParameter, EventsSdkOptions, ReconnectOptions, Server } from '@/classes/events-sdk/events-sdk'
 
 class EventsSdkClass {
     constructor (private readonly options: EventsSdkOptions = {}) {
@@ -12,11 +12,11 @@ class EventsSdkClass {
             ...options
         }
 
-        this.argumentOptions = this.options
+        this.argumentOptions = {
+            ...options
+        }
 
         this.initReconnectOptions()
-
-        this.connect() // for test
 
         this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
             leading: true,
