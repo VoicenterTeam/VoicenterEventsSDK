@@ -1,17 +1,12 @@
-import s137 from '@/classes/socket-io/socket-io.1.3.7.js'
-import { SocketIoOptions } from '@/classes/socket-io/socket-io'
+// import s137 from '@/classes/socket-io/socket-io.1.3.7.js'
 import { Environment } from '@/classes/events-sdk/events-sdk'
 
 export class SocketIoClass {
-    constructor (private readonly url: string, private readonly options: SocketIoOptions) {
-        this.url = url
+    constructor (private readonly url: string) {}
 
-        this.options = options
-    }
+    public socketIoFunction = null
 
-    public socketIoFunction
-
-    public async loadExternalScript (url: string, environment: Environment, useHelperVersion = true) {
+    public async loadExternalScript (environment: Environment, useHelperVersion = true) {
         if (useHelperVersion) {
             this.socketIoFunction = this.getSocketIoFunction()
 
@@ -20,14 +15,22 @@ export class SocketIoClass {
 
         switch (environment) {
             case Environment.BROWSER:
-                // await loadBrowserScript(url);
+                this.loadBrowserScript(this.url)
                 break
             case Environment.CHROME_EXTENSION:
-                // await loadExtensionScript(url);
+                this.loadExtensionScript(this.url)
         }
     }
 
+    private loadBrowserScript (url: string) {
+        console.log(url)
+    }
+
+    private loadExtensionScript (url: string) {
+        console.log(url)
+    }
+
     private getSocketIoFunction () {
-        return s137
+        return null
     }
 }

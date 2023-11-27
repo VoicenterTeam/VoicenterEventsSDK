@@ -1,7 +1,7 @@
 export interface EventsSdkOptions {
     url?: string,
     environment?: string,
-    fallbackServer?: Server,
+    fallbackServer: Server,
     loginUrl?: string,
     refreshTokenUrl?: string,
     servers?: string,
@@ -39,8 +39,8 @@ export enum Environment {
 }
 
 export interface Server {
-    Priority?: number,
-    Domain?: string
+    Priority: number,
+    Domain: string
 }
 
 export interface LoggerConfig {

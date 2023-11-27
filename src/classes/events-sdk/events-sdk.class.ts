@@ -1,55 +1,54 @@
-import debounce from 'lodash/debounce'
-
 import AuthClass from '@/classes/auth/auth.class'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoOptions } from '@/classes/socket-io/socket-io'
-import { ServerParameter, EventsSdkOptions, ReconnectOptions, Server } from '@/classes/events-sdk/events-sdk'
+import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk'
 
 class EventsSdkClass {
-    constructor (private readonly options: EventsSdkOptions = {}) {
+    constructor (private readonly options: EventsSdkOptions) {
         this.options = {
             ...eventsSdkDefaultOptions,
             ...options
         }
 
+        this.server = this.options.fallbackServer
+
         this.argumentOptions = {
             ...options
         }
 
-        this.initReconnectOptions()
+        this.connect()
 
-        this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
-            leading: true,
-            trailing: false
-        })
+        // this.reconnectOptions = this.initReconnectOptions()
+
+        // this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
+        //     leading: true,
+        //     trailing: false
+        // })
     }
 
     private argumentOptions: EventsSdkOptions
     private servers: Server[] = []
     private server: Server
     public socket = null
-    private connected = false
+    // private connected = false
     private connectionEstablished = false
-    private doConnectOnDisconnect = true
-    private reconnectOptions: ReconnectOptions
-    private listenerMap = new Map()
-    private retryConnection
-    private token: string
+    // private reconnectOptions: ReconnectOptions
+    // private listenerMap = new Map()
+    // private retryConnection
+    private token = ''
 
-    private initReconnectOptions () {
-        this.reconnectOptions = {
-            retryCount: 1,
-            maxReconnectAttempts: this.options.maxReconnectAttempts,
-            reconnectionDelay: this.options.reconnectionDelay,
-            minReconnectionDelay: this.options.reconnectionDelay,
-            maxReconnectionDelay: 60000 * 5
-        }
-    }
+    // private initReconnectOptions (): ReconnectOptions {
+    //     return {
+    //         retryCount: 1,
+    //         maxReconnectAttempts: this.options.maxReconnectAttempts,
+    //         reconnectionDelay: this.options.reconnectionDelay,
+    //         minReconnectionDelay: this.options.reconnectionDelay,
+    //         maxReconnectionDelay: 60000 * 5
+    //     }
+    // }
 
     private async connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false): Promise<void> {
-        this.doConnectOnDisconnect = true
-
-        let serverToConnect: Server = null
+        let serverToConnect: Server | undefined
 
         if (server === ServerParameter.DEFAULT) {
             serverToConnect = this.findCurrentServer()
@@ -92,7 +91,7 @@ class EventsSdkClass {
         return this.server
     }
 
-    private findNextAvailableServer (): Server | null {
+    private findNextAvailableServer (): Server {
         // this.log(INFO, 'Failover -> Trying to find another server');
 
         const currentServerPriority = this.server.Priority
@@ -101,15 +100,11 @@ class EventsSdkClass {
 
         const nextServer = this.servers.find(server => server.Priority === nextServerPriority) || this.findMaxPriorityServer()
 
-        if (this.server.Domain !== nextServer.Domain) {
-            this.server = { ...nextServer }
+        this.server = { ...nextServer }
 
-            // this.log(INFO, 'Failover -> Found new server. Connecting to it...', this.server);
+        // this.log(INFO, 'Failover -> Found new server. Connecting to it...', this.server);
 
-            return this.server
-        }
-
-        return null
+        return this.server
     }
 
     private findMaxPriorityServer () {
@@ -130,8 +125,8 @@ class EventsSdkClass {
 
             return this.server
         }
-        
-        return null
+
+        return this.server
     }
 
     public init () {
@@ -161,13 +156,11 @@ class EventsSdkClass {
     }
 
     public getServerWithHighestPriority (servers: Server[]): Server {
-        // Highest priority server is the one with lowest Priority value
-
-        let chosenServer: Server
+        let chosenServer: Server | undefined
 
         let maxPriority = Number.MAX_SAFE_INTEGER
 
-        servers.forEach(server => {
+        chosenServer = servers.find(server => {
             if (server.Priority < maxPriority) {
                 maxPriority = server.Priority
 
@@ -175,7 +168,7 @@ class EventsSdkClass {
             }
         })
 
-        return chosenServer
+        return chosenServer ? chosenServer : this.server
     }
 
     private initSocketConnection () {
@@ -196,7 +189,9 @@ class EventsSdkClass {
                 upgrade: false,
                 transports: [ 'websocket' ],
                 debug: false,
-                query: null
+                query: {
+                    token: ''
+                }
             }
 
             if (this.token) {

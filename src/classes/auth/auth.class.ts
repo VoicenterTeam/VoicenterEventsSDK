@@ -2,7 +2,7 @@ import md5 from 'js-md5'
 import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk'
 
 class AuthClass {
-    private static delay = 1000
+    // private static delay = 1000
     public static lastLoginTimestamp: number
 
     public static login (options: EventsSdkOptions) {
