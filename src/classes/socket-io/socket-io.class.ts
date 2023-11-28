@@ -1,5 +1,5 @@
 // import s137 from '@/classes/socket-io/socket-io.1.3.7.js'
-import { Environment } from '@/classes/events-sdk/events-sdk'
+import { Environment } from '@/classes/events-sdk/events-sdk.types'
 
 export class SocketIoClass {
     constructor (private readonly url: string) {}

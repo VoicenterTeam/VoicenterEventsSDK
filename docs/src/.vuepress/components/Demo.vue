@@ -12,4 +12,24 @@
 
 <script lang="ts" setup>
 import VoicenterEventsSDK from '@/index'
+
+const io = VoicenterEventsSDK.sockets.makeSocketVersion(
+    'v1_3_7',
+    'https://monitor4.voicenter.co/',
+    {
+        transports: ['websocket'],
+        query: {
+            token: ''
+        },
+        reconnection: false,
+        upgrade: false,
+    }
+)
+
+io.on(
+    'AllDialersStatus',
+    (data) => {
+        console.log('basicEmit', data.dialers)
+    }
+)
 </script>

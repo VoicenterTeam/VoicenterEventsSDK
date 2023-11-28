@@ -1,4 +1,4 @@
-import { EventsSdkOptions, Environment } from '@/classes/events-sdk/events-sdk.d.ts'
+import { EventsSdkOptions, Environment } from '@/classes/events-sdk/events-sdk.types'
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
     url: 'https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls',

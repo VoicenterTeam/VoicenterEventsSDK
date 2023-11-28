@@ -1,8 +1,8 @@
 import { resolve } from 'path'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, ConfigEnv } from 'vite'
 import dts from 'vite-plugin-dts'
 
-export default ({ mode }) => {
+export default ({ mode }: ConfigEnv) => {
     process.env = {
         ...process.env,
         ...loadEnv(mode, process.cwd(), '')
@@ -33,6 +33,7 @@ export default ({ mode }) => {
         resolve: {
             alias: {
                 '@': resolve(__dirname, './src'),
+                enum: resolve(__dirname, './src/enum'),
                 voicenterEventsSDK: resolve(__dirname, './src'),
             }
         }

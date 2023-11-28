@@ -1,7 +1,7 @@
 import AuthClass from '@/classes/auth/auth.class'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoOptions } from '@/classes/socket-io/socket-io'
-import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk.d.ts'
+import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk.types'
 
 class EventsSdkClass {
     constructor (private readonly options: EventsSdkOptions) {
@@ -201,7 +201,7 @@ class EventsSdkClass {
             }
 
             // allConnections.push(this.socket);
-            
+
             this.connectionEstablished = true
         } catch (e) {
             // this.log(ERROR, e);
