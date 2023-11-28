@@ -1,7 +1,7 @@
 import AuthClass from '@/classes/auth/auth.class'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoOptions } from '@/classes/socket-io/socket-io'
-import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk'
+import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk.d.ts'
 
 class EventsSdkClass {
     constructor (private readonly options: EventsSdkOptions) {
