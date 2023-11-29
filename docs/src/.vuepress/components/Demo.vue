@@ -5,31 +5,16 @@
         </h2>
 
         <code>
-            {{ JSON.stringify(VoicenterEventsSDK, null, 2) }}
+            {{ JSON.stringify(EventsSdkClass, null, 2) }}
         </code>
     </div>
 </template>
 
 <script lang="ts" setup>
-import VoicenterEventsSDK from '@/index'
+import EventsSdkClass from '@/index'
+import {eventsSdkDefaultOptions} from "@/classes/events-sdk/events-sdk-default-options";
 
-const io = VoicenterEventsSDK.sockets.makeSocketVersion(
-    'v1_3_7',
-    'https://monitor4.voicenter.co/',
-    {
-        transports: ['websocket'],
-        query: {
-            token: ''
-        },
-        reconnection: false,
-        upgrade: false,
-    }
-)
+const sdk = new EventsSdkClass(eventsSdkDefaultOptions)
 
-io.on(
-    'AllDialersStatus',
-    (data) => {
-        console.log('basicEmit', data.dialers)
-    }
-)
+console.log(sdk)
 </script>
