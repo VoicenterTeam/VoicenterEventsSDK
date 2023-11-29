@@ -46,4 +46,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         transports: [ 'websocket' ],
         debug: false
     },
+    username: 'username',
+    password: 'password',
+    email: 'email',
 }

@@ -5,7 +5,7 @@ export interface EventsSdkOptions {
     loginUrl?: string,
     refreshTokenUrl?: string,
     servers?: string,
-    token?: string,
+    token: string,
     loginType?: string,
     forceNew?: boolean,
     reconnectionDelay?: number,
@@ -28,9 +28,9 @@ export interface EventsSdkOptions {
     loggerServer?: string,
     loggerConfig?: LoggerConfig,
     loggerConnectOptions?: LoggerConnectOptions,
-    email?: string,
-    password?: string,
-    username?: string
+    email: string,
+    password: string,
+    username: string
 }
 
 export enum Environment {

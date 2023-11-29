@@ -30,7 +30,7 @@ class EventsSdkClass {
     private argumentOptions: EventsSdkOptions
     private servers: Server[] = []
     private server: Server
-    public socket: Socket | null = null
+    public socket: Socket | undefined
     // private connected = false
     // private reconnectOptions: ReconnectOptions
     // private listenerMap = new Map()
@@ -129,7 +129,7 @@ class EventsSdkClass {
         return this.server
     }
 
-    public init () {
+    public async init () {
         if (this.socket) {
             // this.emit(eventTypes.CLOSE);
         }
@@ -138,7 +138,7 @@ class EventsSdkClass {
 
         // await this._getTabsSession();
 
-        this.socket = AuthClass.login()
+        this.socket = AuthClass.login(this.options)
 
         this.getServers()
 
