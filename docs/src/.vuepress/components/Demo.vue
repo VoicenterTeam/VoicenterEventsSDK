@@ -5,7 +5,7 @@
         </h2>
 
         <code>
-            {{ JSON.stringify(EventsSdkClass, null, 2) }}
+            {{ JSON.stringify(new EventsSdkClass(eventsSdkDefaultOptions), null, 2) }}
         </code>
     </div>
 </template>
@@ -16,5 +16,26 @@ import {eventsSdkDefaultOptions} from "@/classes/events-sdk/events-sdk-default-o
 
 const sdk = new EventsSdkClass(eventsSdkDefaultOptions)
 
-console.log(sdk)
+const events = []
+
+sdk.init();
+
+sdk.socket.on(
+    'QueueEvent',
+    (data) => {
+      console.log('QueueEvent', data)
+    }
+)
+sdk.socket.on(
+    'ExtensionEvent',
+    (data) => {
+      console.log('ExtensionEvent', data)
+    }
+)
+sdk.socket.on(
+    'AllDialersStatus',
+    (data) => {
+      console.log('AllDialersStatus', data)
+    }
+)
 </script>

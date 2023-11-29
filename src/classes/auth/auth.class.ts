@@ -1,27 +1,24 @@
-import md5 from 'js-md5'
-import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
+import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 
 class AuthClass {
-    // private static delay = 1000
+    private static delay = 1000
     public static lastLoginTimestamp: number
 
-    public static login (options: EventsSdkOptions) {
-        const payload = {
-            token: options.token,
-            email: options.email,
-            username: options.username,
-            password: options.password
+    public static login () {
+        if (this.lastLoginTimestamp + this.delay > new Date().getTime()) {
         }
-
-        const key = md5(JSON.stringify(payload))
 
         this.updateLastLoginTimestamp()
 
-        return key
+        return this.onLoginResponse()
     }
 
     public static updateLastLoginTimestamp () {
         this.lastLoginTimestamp = new Date().getTime()
+    }
+
+    private static onLoginResponse () {
+        return new SocketIoClass('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=1.3.7').io
     }
 }
 

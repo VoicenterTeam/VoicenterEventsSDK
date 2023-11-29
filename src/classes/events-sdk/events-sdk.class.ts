@@ -2,6 +2,7 @@ import AuthClass from '@/classes/auth/auth.class'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoOptions } from '@/classes/socket-io/socket-io'
 import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk.types'
+import { Socket } from 'socket.io-client'
 
 class EventsSdkClass {
     constructor (private readonly options: EventsSdkOptions) {
@@ -29,9 +30,8 @@ class EventsSdkClass {
     private argumentOptions: EventsSdkOptions
     private servers: Server[] = []
     private server: Server
-    public socket = null
+    public socket: Socket | null = null
     // private connected = false
-    private connectionEstablished = false
     // private reconnectOptions: ReconnectOptions
     // private listenerMap = new Map()
     // private retryConnection
@@ -130,10 +130,6 @@ class EventsSdkClass {
     }
 
     public init () {
-        if (this.connectionEstablished) {
-            return true
-        }
-
         if (this.socket) {
             // this.emit(eventTypes.CLOSE);
         }
@@ -142,7 +138,7 @@ class EventsSdkClass {
 
         // await this._getTabsSession();
 
-        AuthClass.login(this.options)
+        this.socket = AuthClass.login()
 
         this.getServers()
 
@@ -201,8 +197,6 @@ class EventsSdkClass {
             }
 
             // allConnections.push(this.socket);
-
-            this.connectionEstablished = true
         } catch (e) {
             // this.log(ERROR, e);
         }
