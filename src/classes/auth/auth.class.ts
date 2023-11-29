@@ -35,8 +35,10 @@ class AuthClass {
 
     private static checkLoginStatus (options: EventsSdkOptions, key: string) {
         if (options.environment === Environment.BROWSER && window) {
+            console.log('browser', key)
         }
         if (options.environment === Environment.CHROME_EXTENSION && chrome) {
+            console.log('extension', key)
         }
     }
 

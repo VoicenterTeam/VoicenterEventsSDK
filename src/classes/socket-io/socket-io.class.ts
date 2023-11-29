@@ -1,14 +1,14 @@
 // import s137 from '@/classes/socket-io/socket-io.1.3.7.js'
 import { Environment } from '@/classes/events-sdk/events-sdk.types'
 import sockets from '@/classes/socket-io/versions'
-import { Socket } from 'socket.io-client'
+import { SocketTyped } from '@/types/socket'
 
 export class SocketIoClass {
     constructor (private readonly url: string) {
         this.io = this.getSocketIoFunction()
     }
 
-    public io: Socket
+    public io: SocketTyped
 
     public loadExternalScript (environment: Environment, useHelperVersion = false) {
         if (useHelperVersion) {

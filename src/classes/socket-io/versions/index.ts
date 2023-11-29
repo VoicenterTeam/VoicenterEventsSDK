@@ -1,5 +1,5 @@
-import { io, Socket } from 'socket.io-client'
-import { EventMap } from '@/types/events'
+import { io } from 'socket.io-client'
+import { SocketTyped } from '@/types/socket'
 
 const importModules: Record<string, { default?: unknown }> = import.meta.glob(
     './v*.js',
@@ -8,7 +8,7 @@ const importModules: Record<string, { default?: unknown }> = import.meta.glob(
 
 const SOCKET_NAME_REGEX = /v\d+_\d+_\d+/
 
-type TypedSocketIo = (...args: Parameters<typeof io>) => Socket<EventMap, Record<string, unknown>>
+type TypedSocketIo = (...args: Parameters<typeof io>) => SocketTyped
 
 type SocketIoFn = () => TypedSocketIo
 
