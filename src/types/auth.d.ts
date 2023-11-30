@@ -12,6 +12,6 @@ export interface LoginSessionData {
     RefreshTokenExpiry: Date,
     Token: string,
     URLList: string[],
-    URL: string,
+    Url: string,
     Version: string
 }

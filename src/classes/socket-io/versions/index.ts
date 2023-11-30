@@ -8,7 +8,7 @@ const importModules: Record<string, { default?: unknown }> = import.meta.glob(
 
 const SOCKET_NAME_REGEX = /v\d+_\d+_\d+/
 
-type TypedSocketIo = (...args: Parameters<typeof io>) => SocketTyped
+export type TypedSocketIo = (...args: Parameters<typeof io>) => SocketTyped
 
 type SocketIoFn = () => TypedSocketIo
 
