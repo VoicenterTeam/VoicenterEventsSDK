@@ -1,41 +1,11 @@
-// import s137 from '@/classes/socket-io/socket-io.1.3.7.js'
-import { Environment } from '@/classes/events-sdk/events-sdk.types'
 import sockets from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 
 export class SocketIoClass {
-    constructor (private readonly url: string) {
-        this.io = this.getSocketIoFunction()
-    }
+    public static io: SocketTyped | undefined
 
-    public io: SocketTyped
-
-    public loadExternalScript (environment: Environment, useHelperVersion = false) {
-        if (useHelperVersion) {
-            this.io = this.getSocketIoFunction()
-
-            return
-        }
-
-        switch (environment) {
-            case Environment.BROWSER:
-                this.loadBrowserScript(this.url)
-                break
-            case Environment.CHROME_EXTENSION:
-                this.loadExtensionScript(this.url)
-        }
-    }
-
-    private loadBrowserScript (url: string) {
-        console.log(url)
-    }
-
-    private loadExtensionScript (url: string) {
-        console.log(url)
-    }
-
-    private getSocketIoFunction () {
-        return sockets.makeSocketVersion(
+    public static getSocketIo () {
+        this.io = sockets.makeSocketVersion(
             'v1_3_7',
             'https://monitor4.voicenter.co/',
             {

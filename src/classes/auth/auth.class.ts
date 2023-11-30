@@ -2,7 +2,7 @@ import md5 from 'js-md5'
 
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { Environment, EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
-import { LoginSessionPayload } from '@/types/auth'
+import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
 
 class AuthClass {
     private static delay = 1000
@@ -25,8 +25,6 @@ class AuthClass {
         this.updateLastLoginTimestamp()
 
         this.checkLoginStatus(options, key)
-
-        return this.onLoginResponse()
     }
 
     public static updateLastLoginTimestamp () {
@@ -34,16 +32,25 @@ class AuthClass {
     }
 
     private static checkLoginStatus (options: EventsSdkOptions, key: string) {
+        let loginSessionData: LoginSessionData
         if (options.environment === Environment.BROWSER && window) {
-            console.log('browser', key)
+            const loginSessionKey = window.sessionStorage.getItem(key)
+            if (loginSessionKey) {
+                loginSessionData = JSON.parse(loginSessionKey)
+                this.onLoginResponse(loginSessionData)
+            }
         }
-        if (options.environment === Environment.CHROME_EXTENSION && chrome) {
-            console.log('extension', key)
-        }
+        // if (options.environment === Environment.CHROME_EXTENSION && chrome) {
+        //     console.log('extension', key)
+        // }
     }
 
-    private static onLoginResponse () {
-        return new SocketIoClass('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=1.3.7').io
+    private static onLoginResponse (loginSessionData: LoginSessionData) {
+        console.log(loginSessionData)
+        if (loginSessionData.Client) {
+            SocketIoClass.getSocketIo()
+            console.log(SocketIoClass.io)
+        }
     }
 }
 

@@ -4,3 +4,14 @@ export interface LoginSessionPayload {
     username: string,
     password: string
 }
+
+export interface LoginSessionData {
+    Client: string,
+    PersonId: number,
+    RefreshToken: string,
+    RefreshTokenExpiry: Date,
+    Token: string,
+    URLList: string[],
+    URL: string,
+    Version: string
+}
