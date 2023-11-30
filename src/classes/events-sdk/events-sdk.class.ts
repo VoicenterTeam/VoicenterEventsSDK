@@ -138,7 +138,7 @@ class EventsSdkClass {
 
         // await this._getTabsSession();
 
-        this.socket = AuthClass.login(this.options)
+        AuthClass.login(this.options)
 
         this.getServers()
 

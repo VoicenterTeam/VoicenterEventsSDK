@@ -4,9 +4,15 @@ import { SocketTyped } from '@/types/socket'
 export class SocketIoClass {
     public static io: SocketTyped | undefined
 
-    public static getSocketIo () {
+    public static getSocketIo (clientUrl: string) {
+        const parsedArray = clientUrl.split('v=')
+
+        const version = 'v'
+            .concat(parsedArray[parsedArray.length - 1])
+            .replaceAll('.', '_')
+
         this.io = sockets.makeSocketVersion(
-            'v1_3_7',
+            version,
             'https://monitor4.voicenter.co/',
             {
                 transports: [ 'websocket' ],

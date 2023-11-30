@@ -46,10 +46,8 @@ class AuthClass {
     }
 
     private static onLoginResponse (loginSessionData: LoginSessionData) {
-        console.log(loginSessionData)
         if (loginSessionData.Client) {
-            SocketIoClass.getSocketIo()
-            console.log(SocketIoClass.io)
+            SocketIoClass.getSocketIo(loginSessionData.Client)
         }
     }
 }
