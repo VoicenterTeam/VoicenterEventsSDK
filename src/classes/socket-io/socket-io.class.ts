@@ -3,12 +3,12 @@ import { SocketTyped } from '@/types/socket'
 import { Server } from '@/classes/events-sdk/events-sdk.types'
 
 export class SocketIoClass {
-    public static io: SocketTyped | undefined
-    public static ioFunction: TypedSocketIo | undefined
-    public static server: Server
-    public static servers: Server[]
+    public io: SocketTyped | undefined
+    public ioFunction: TypedSocketIo | undefined
+    public server: Server | undefined
+    public servers: Server[] | undefined
 
-    public static getSocketIoFunction (Client: string) {
+    public getSocketIoFunction (Client: string) {
         const parsedArray = Client.split('v=')
 
         const version = 'v'
@@ -18,11 +18,11 @@ export class SocketIoClass {
         this.ioFunction = sockets.getSocketVersion(version)
     }
 
-    public static setServer (server: Server) {
+    public setServer (server: Server) {
         this.server = server
     }
 
-    public static setServersByURLList (URLList: string[]) {
+    public setServersByURLList (URLList: string[]) {
         this.servers = URLList.map((url, index) => {
             return {
                 Priority: index,

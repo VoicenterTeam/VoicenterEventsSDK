@@ -36,6 +36,7 @@ class EventsSdkClass {
     // private listenerMap = new Map()
     // private retryConnection
     private token = ''
+    private authClass = new AuthClass()
 
     // private initReconnectOptions (): ReconnectOptions {
     //     return {
@@ -138,7 +139,7 @@ class EventsSdkClass {
 
         // await this._getTabsSession();
 
-        AuthClass.login(this.options)
+        this.authClass.login(this.options)
 
         this.getServers()
 

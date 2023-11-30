@@ -5,11 +5,12 @@ import { Environment, EventsSdkOptions } from '@/classes/events-sdk/events-sdk.t
 import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
 
 class AuthClass {
-    private static delay = 1000
-    public static lastLoginTimestamp: number
-    public static token: string
+    private delay = 1000
+    public lastLoginTimestamp: number | undefined
+    public token: string | undefined
+    private socketIoClass = new SocketIoClass()
 
-    public static login (options: EventsSdkOptions) {
+    public login (options: EventsSdkOptions) {
         const payload: LoginSessionPayload = {
             token: options.token,
             email: options.email,
@@ -19,7 +20,7 @@ class AuthClass {
 
         const key = md5(JSON.stringify(payload))
 
-        if (this.lastLoginTimestamp + this.delay > new Date().getTime()) {
+        if (this.lastLoginTimestamp && this.lastLoginTimestamp + this.delay > new Date().getTime()) {
             return
         }
 
@@ -28,11 +29,11 @@ class AuthClass {
         this.checkLoginStatus(options, key)
     }
 
-    public static updateLastLoginTimestamp () {
+    public updateLastLoginTimestamp () {
         this.lastLoginTimestamp = new Date().getTime()
     }
 
-    private static checkLoginStatus (options: EventsSdkOptions, key: string) {
+    private checkLoginStatus (options: EventsSdkOptions, key: string) {
         let loginSessionData: LoginSessionData
         if (options.environment === Environment.BROWSER && window) {
             const loginSessionKey = window.sessionStorage.getItem(key)
@@ -46,18 +47,18 @@ class AuthClass {
         // }
     }
 
-    private static onLoginResponse (loginSessionData: LoginSessionData) {
+    private onLoginResponse (loginSessionData: LoginSessionData) {
         if (loginSessionData.Client) {
-            SocketIoClass.getSocketIoFunction(loginSessionData.Client)
+            this.socketIoClass.getSocketIoFunction(loginSessionData.Client)
         }
         if (loginSessionData.Url) {
-            SocketIoClass.setServer({
+            this.socketIoClass.setServer({
                 Priority: 0,
                 Domain: loginSessionData.Url.replace('https://', '')
             })
         }
         if (loginSessionData.URLList) {
-            SocketIoClass.setServersByURLList(loginSessionData.URLList)
+            this.socketIoClass.setServersByURLList(loginSessionData.URLList)
         }
         if (loginSessionData.Token) {
             // this.options.token = loginSessionData.Token
