@@ -7,6 +7,7 @@ import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
 class AuthClass {
     private static delay = 1000
     public static lastLoginTimestamp: number
+    public static token: string
 
     public static login (options: EventsSdkOptions) {
         const payload: LoginSessionPayload = {
@@ -48,6 +49,27 @@ class AuthClass {
     private static onLoginResponse (loginSessionData: LoginSessionData) {
         if (loginSessionData.Client) {
             SocketIoClass.getSocketIoFunction(loginSessionData.Client)
+        }
+        if (loginSessionData.Url) {
+            SocketIoClass.setServer({
+                Priority: 0,
+                Domain: loginSessionData.Url.replace('https://', '')
+            })
+        }
+        if (loginSessionData.URLList) {
+            SocketIoClass.setServersByURLList(loginSessionData.URLList)
+        }
+        if (loginSessionData.Token) {
+            // this.options.token = loginSessionData.Token
+            this.token = loginSessionData.Token
+            // await this.connect('default', true)
+        }
+        if (loginSessionData.TokenExpiry) {
+            // this.options.tokenExpiry = loginSessionData.TokenExpiry
+        }
+        if (loginSessionData.RefreshToken) {
+            // this.options.refreshToken = loginSessionData.RefreshToken
+            // this.handleTokenExpiry()
         }
     }
 }
