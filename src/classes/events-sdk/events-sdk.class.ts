@@ -17,8 +17,6 @@ class EventsSdkClass {
             ...options
         }
 
-        this.connect()
-
         // this.reconnectOptions = this.initReconnectOptions()
 
         // this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
@@ -36,7 +34,7 @@ class EventsSdkClass {
     // private listenerMap = new Map()
     // private retryConnection
     private token = ''
-    private authClass = new AuthClass()
+    private authClass = new AuthClass(this)
 
     // private initReconnectOptions (): ReconnectOptions {
     //     return {
@@ -48,7 +46,7 @@ class EventsSdkClass {
     //     }
     // }
 
-    private async connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false): Promise<void> {
+    public connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false) {
         let serverToConnect: Server | undefined
 
         if (server === ServerParameter.DEFAULT) {

@@ -1,10 +1,15 @@
 import md5 from 'js-md5'
 
+import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
-import { Environment, EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
+import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
 
 class AuthClass {
+    constructor (private readonly eventsSdkClass: EventsSdkClass) {
+        this.eventsSdkClass = eventsSdkClass
+    }
+    
     private delay = 1000
     public lastLoginTimestamp: number | undefined
     public token: string | undefined
@@ -63,7 +68,7 @@ class AuthClass {
         if (loginSessionData.Token) {
             // this.options.token = loginSessionData.Token
             this.token = loginSessionData.Token
-            // await this.connect('default', true)
+            this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
         }
         if (loginSessionData.TokenExpiry) {
             // this.options.tokenExpiry = loginSessionData.TokenExpiry
