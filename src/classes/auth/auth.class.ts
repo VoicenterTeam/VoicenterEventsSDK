@@ -46,8 +46,8 @@ class AuthClass {
     }
 
     private static onLoginResponse (loginSessionData: LoginSessionData) {
-        if (loginSessionData) {
-            SocketIoClass.getSocketIoFunction(loginSessionData)
+        if (loginSessionData.Client) {
+            SocketIoClass.getSocketIoFunction(loginSessionData.Client)
         }
     }
 }
