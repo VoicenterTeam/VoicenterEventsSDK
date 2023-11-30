@@ -1,6 +1,6 @@
 import AuthClass from '@/classes/auth/auth.class'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
-import { SocketIoOptions } from '@/classes/socket-io/socket-io'
+import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
 
@@ -35,6 +35,7 @@ class EventsSdkClass {
     // private retryConnection
     private token = ''
     private authClass = new AuthClass(this)
+    private socketIoClass = new SocketIoClass()
 
     // private initReconnectOptions (): ReconnectOptions {
     //     return {
@@ -65,7 +66,7 @@ class EventsSdkClass {
             this.server = this.findCurrentServer()
         }
 
-        this.initSocketConnection()
+        this.socketIoClass.initSocketConnection(this.token)
 
         // this._initSocketEvents();
 
@@ -164,41 +165,6 @@ class EventsSdkClass {
         })
 
         return chosenServer ? chosenServer : this.server
-    }
-
-    private initSocketConnection () {
-        try {
-            // const domain = this.server.Domain;
-            //
-            // const protocol = this.options.protocol;
-            //
-            // const url = `${protocol}://${domain}`;
-
-            // this.log(INFO, 'Connecting to..', url);
-
-            // this.closeAllConnections();
-
-            const options: SocketIoOptions = {
-                reconnection: false,
-                perMessageDeflate: false,
-                upgrade: false,
-                transports: [ 'websocket' ],
-                debug: false,
-                query: {
-                    token: ''
-                }
-            }
-
-            if (this.token) {
-                options.query = {
-                    token: this.token
-                }
-            }
-
-            // allConnections.push(this.socket);
-        } catch (e) {
-            // this.log(ERROR, e);
-        }
     }
 }
 
