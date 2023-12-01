@@ -1,7 +1,7 @@
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { Server } from '@/classes/events-sdk/events-sdk.types'
-import { SocketIoOptions } from '@/classes/socket-io/socket-io'
+import { ManagerOptions, SocketOptions } from 'socket.io-client'
 
 export class SocketIoClass {
     public io: SocketTyped | undefined
@@ -9,26 +9,22 @@ export class SocketIoClass {
     public server: Server | undefined
     public servers: Server[] | undefined
 
-    public initSocketConnection (token: string) {
+    public initSocketConnection (token: string, protocol: string) {
         try {
-            // const domain = this.server.Domain;
-            //
-            // const protocol = this.options.protocol;
-            //
-            // const url = `${protocol}://${domain}`;
+            const domain = this.server?.Domain
+
+            const url = `${protocol}://${domain}`
 
             // this.log(INFO, 'Connecting to..', url);
 
-            // this.closeAllConnections();
+            // this.closeAllConnections()
 
-            const options: SocketIoOptions = {
+            const options: Partial<ManagerOptions & SocketOptions> = {
                 reconnection: false,
-                perMessageDeflate: false,
                 upgrade: false,
                 transports: [ 'websocket' ],
-                debug: false,
                 query: {
-                    token: ''
+                    token
                 }
             }
 
@@ -36,6 +32,10 @@ export class SocketIoClass {
                 options.query = {
                     token
                 }
+            }
+
+            if (this.ioFunction) {
+                this.io = this.ioFunction(url, options)
             }
 
             // allConnections.push(this.socket);

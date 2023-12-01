@@ -66,7 +66,7 @@ class EventsSdkClass {
             this.server = this.findCurrentServer()
         }
 
-        this.socketIoClass.initSocketConnection(this.token)
+        this.socketIoClass.initSocketConnection(this.token, this.options.protocol)
 
         // this._initSocketEvents();
 

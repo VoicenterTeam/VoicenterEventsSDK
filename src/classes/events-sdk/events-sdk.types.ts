@@ -14,7 +14,7 @@ export interface EventsSdkOptions {
     timeout?: number,
     keepAliveTimeout?: number,
     idleInterval?: number,
-    protocol?: string,
+    protocol: string,
     transports?: string[],
     upgrade?: boolean,
     store?: string,
