@@ -32,7 +32,7 @@ class AuthClass {
         const isLoggedIn = this.checkLoginStatus(options, key)
 
         if (!isLoggedIn) {
-            await this.userLoginFunction(payload)
+            await this.userLoginFunction(payload, key)
         }
     }
 
@@ -88,12 +88,16 @@ class AuthClass {
         }
     }
 
-    private async userLoginFunction (payload: LoginSessionPayload) {
+    private async userLoginFunction (payload: LoginSessionPayload, key: string) {
         const externalLoginUrl = this.getExternalLoginUrl(this.eventsSdkClass.options.loginUrl, this.eventsSdkClass.options.loginType)
 
         const externalLoginResponse = await this.externalLogin(externalLoginUrl, payload)
 
         this.onLoginResponse(externalLoginResponse)
+
+        if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
+            window.sessionStorage.setItem(key, JSON.stringify(externalLoginResponse))
+        }
     }
 
     private getExternalLoginUrl (baseUrl: string, loginType: string) {
