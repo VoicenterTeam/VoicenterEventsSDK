@@ -34,7 +34,7 @@ const loggedId = ref(false)
 const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
 
 /* Methods */
-function login() {
+async function login() {
     if (!token.value) {
         return alert('Token is required')
     }
@@ -46,7 +46,7 @@ function login() {
         token: token.value,
     })
 
-    sdk.init()
+    await sdk.init()
 
     sdk.socket?.on(
         EventsEnum.QUEUE_EVENT,

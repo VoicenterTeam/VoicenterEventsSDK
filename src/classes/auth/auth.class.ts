@@ -1,7 +1,6 @@
 import md5 from 'js-md5'
 
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
 
@@ -13,7 +12,6 @@ class AuthClass {
     private delay = 1000
     public lastLoginTimestamp: number | undefined
     public token: string | undefined
-    private socketIoClass = new SocketIoClass()
 
     public async login (options: EventsSdkOptions) {
         const payload: LoginSessionPayload = {
@@ -60,17 +58,21 @@ class AuthClass {
 
     private onLoginResponse (loginSessionData: LoginSessionData) {
         if (loginSessionData.Client) {
-            console.log('getSocketIoFunction...')
             this.eventsSdkClass.getSocketIoFunction(loginSessionData.Client)
         }
         if (loginSessionData.Url) {
-            this.socketIoClass.setServer({
+            this.eventsSdkClass.server = {
                 Priority: 0,
                 Domain: loginSessionData.Url.replace('https://', '')
-            })
+            }
         }
         if (loginSessionData.URLList) {
-            this.socketIoClass.setServersByURLList(loginSessionData.URLList)
+            this.eventsSdkClass.servers = loginSessionData.URLList.map((url, index) => {
+                return {
+                    Priority: index,
+                    Domain: url.replace('https://', '')
+                }
+            })
         }
         if (loginSessionData.Token) {
             // this.options.token = loginSessionData.Token

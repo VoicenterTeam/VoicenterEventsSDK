@@ -20,9 +20,10 @@ class EventsSdkClass {
     }
 
     private argumentOptions: EventsSdkOptions
-    private servers: Server[] = []
-    private server: Server
+    public servers: Server[] = []
+    public server: Server
     public socket: SocketTyped | undefined
+
     private authClass = new AuthClass(this)
     private socketIoClass = new SocketIoClass()
 
@@ -45,9 +46,8 @@ class EventsSdkClass {
             this.server = this.findCurrentServer()
         }
 
-        if (this.authClass.token && this.options.protocol) {
-            console.log('initSocketConnection...')
-            this.socketIoClass.initSocketConnection(this.authClass.token, this.options.protocol)
+        if (this.authClass.token && this.options.protocol && this.server) {
+            this.socketIoClass.initSocketConnection(this.authClass.token, this.options.protocol, this.server)
         }
 
         if (skipLogin) {

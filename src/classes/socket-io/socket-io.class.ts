@@ -6,12 +6,10 @@ import { ManagerOptions, SocketOptions } from 'socket.io-client'
 export class SocketIoClass {
     public io: SocketTyped | undefined
     public ioFunction: TypedSocketIo | undefined
-    public server: Server | undefined
-    public servers: Server[] | undefined
 
-    public initSocketConnection (token: string, protocol: string) {
+    public initSocketConnection (token: string, protocol: string, server: Server) {
         try {
-            const domain = this.server?.Domain
+            const domain = server.Domain
 
             const url = `${protocol}://${domain}`
 
@@ -35,8 +33,6 @@ export class SocketIoClass {
             }
 
             if (this.ioFunction) {
-                console.log('init io function...')
-                console.log(url, options)
                 this.io = this.ioFunction(url, options)
             }
 
@@ -44,18 +40,5 @@ export class SocketIoClass {
         } catch (e) {
             // this.log(ERROR, e);
         }
-    }
-
-    public setServer (server: Server) {
-        this.server = server
-    }
-
-    public setServersByURLList (URLList: string[]) {
-        this.servers = URLList.map((url, index) => {
-            return {
-                Priority: index,
-                Domain: url.replace('https://', '')
-            }
-        })
     }
 }
