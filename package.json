@@ -7,9 +7,11 @@
   "module": "dist/voicenter-events-sdk.es.js",
   "unpkg": "dist/voicenter-events-sdk.umd.js",
   "types": "dist/voicenter-events-sdk.d.ts",
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "dev": "cd docs && yarn && yarn run dev",
+    "generate": "node ./scripts/swaggerCodegen.js",
     "build:documentation": "cd docs && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-check": "tsc --noEmit",
