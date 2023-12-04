@@ -1,11 +1,12 @@
 import AuthClass from '@/classes/auth/auth.class'
+import sockets from '@/classes/socket-io/versions'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
 
 class EventsSdkClass {
-    constructor (private readonly options: EventsSdkOptions) {
+    constructor (public readonly options: EventsSdkOptions) {
         this.options = {
             ...eventsSdkDefaultOptions,
             ...options
@@ -16,36 +17,14 @@ class EventsSdkClass {
         this.argumentOptions = {
             ...options
         }
-
-        // this.reconnectOptions = this.initReconnectOptions()
-
-        // this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
-        //     leading: true,
-        //     trailing: false
-        // })
     }
 
     private argumentOptions: EventsSdkOptions
     private servers: Server[] = []
     private server: Server
     public socket: SocketTyped | undefined
-    // private connected = false
-    // private reconnectOptions: ReconnectOptions
-    // private listenerMap = new Map()
-    // private retryConnection
-    private token = ''
     private authClass = new AuthClass(this)
     private socketIoClass = new SocketIoClass()
-
-    // private initReconnectOptions (): ReconnectOptions {
-    //     return {
-    //         retryCount: 1,
-    //         maxReconnectAttempts: this.options.maxReconnectAttempts,
-    //         reconnectionDelay: this.options.reconnectionDelay,
-    //         minReconnectionDelay: this.options.reconnectionDelay,
-    //         maxReconnectionDelay: 60000 * 5
-    //     }
-    // }
 
     public connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false) {
         let serverToConnect: Server | undefined
@@ -66,19 +45,14 @@ class EventsSdkClass {
             this.server = this.findCurrentServer()
         }
 
-        this.socketIoClass.initSocketConnection(this.token, this.options.protocol)
-
-        // this._initSocketEvents();
-
-        // this._initKeepAlive();
-
-        // this._initReconnectDelays();
+        if (this.authClass.token && this.options.protocol) {
+            console.log('initSocketConnection...')
+            this.socketIoClass.initSocketConnection(this.authClass.token, this.options.protocol)
+        }
 
         if (skipLogin) {
             return
         }
-
-        // await this.login(this.options.loginType);
     }
 
     private findCurrentServer () {
@@ -134,11 +108,7 @@ class EventsSdkClass {
             // this.emit(eventTypes.CLOSE);
         }
 
-        // await this._getToken();
-
-        // await this._getTabsSession();
-
-        this.authClass.login(this.options)
+        await this.authClass.login(this.options)
 
         this.getServers()
 
@@ -165,6 +135,16 @@ class EventsSdkClass {
         })
 
         return chosenServer ? chosenServer : this.server
+    }
+
+    public getSocketIoFunction (Client: string) {
+        const parsedArray = Client.split('v=')
+
+        const version = 'v'
+            .concat(parsedArray[parsedArray.length - 1])
+            .replaceAll('.', '_')
+
+        this.socketIoClass.ioFunction = sockets.getSocketVersion(version)
     }
 }
 

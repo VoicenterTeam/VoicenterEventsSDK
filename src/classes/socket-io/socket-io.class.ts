@@ -1,4 +1,4 @@
-import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
+import { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { Server } from '@/classes/events-sdk/events-sdk.types'
 import { ManagerOptions, SocketOptions } from 'socket.io-client'
@@ -35,6 +35,8 @@ export class SocketIoClass {
             }
 
             if (this.ioFunction) {
+                console.log('init io function...')
+                console.log(url, options)
                 this.io = this.ioFunction(url, options)
             }
 
@@ -42,16 +44,6 @@ export class SocketIoClass {
         } catch (e) {
             // this.log(ERROR, e);
         }
-    }
-
-    public getSocketIoFunction (Client: string) {
-        const parsedArray = Client.split('v=')
-
-        const version = 'v'
-            .concat(parsedArray[parsedArray.length - 1])
-            .replaceAll('.', '_')
-
-        this.ioFunction = sockets.getSocketVersion(version)
     }
 
     public setServer (server: Server) {

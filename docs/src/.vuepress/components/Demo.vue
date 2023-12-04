@@ -28,7 +28,7 @@ import {EventsEnum} from '@/enum/events.enum'
 import {EventTypeData} from '@/types/events'
 
 /* Data */
-const token = ref('')
+const token = ref('QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e')
 const loading = ref(false)
 const loggedId = ref(false)
 const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
