@@ -48,7 +48,7 @@ async function login() {
 
     await sdk.init()
 
-    sdk.socket?.on(
+    sdk.on(
         EventsEnum.QUEUE_EVENT,
         (data) => {
             console.log(EventsEnum.QUEUE_EVENT, data)
@@ -60,7 +60,8 @@ async function login() {
             events[EventsEnum.QUEUE_EVENT]?.push(data)
         }
     )
-    sdk.socket?.on(
+
+    sdk.on(
         EventsEnum.EXTENSION_EVENT,
         (data) => {
             console.log(EventsEnum.EXTENSION_EVENT, data)
@@ -72,7 +73,7 @@ async function login() {
             events[EventsEnum.EXTENSION_EVENT]?.push(data)
         }
     )
-    sdk.socket?.on(
+    sdk.on(
         EventsEnum.ALL_DIALER_STATUS,
         (data) => {
             console.log(EventsEnum.ALL_DIALER_STATUS, data)
@@ -85,7 +86,7 @@ async function login() {
         }
     )
 
-    sdk.socket?.on(
+    sdk.on(
         EventsEnum.LOGIN_SUCCESS,
         (data) => {
             console.log(EventsEnum.LOGIN_SUCCESS, data)

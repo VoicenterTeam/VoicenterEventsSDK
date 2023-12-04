@@ -2,8 +2,10 @@ import AuthClass from '@/classes/auth/auth.class'
 import sockets from '@/classes/socket-io/versions'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
-import { ServerParameter, EventsSdkOptions, Server } from '@/classes/events-sdk/events-sdk.types'
+import { EventsSdkOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
+import { EventDataMap, EventFunctionsMap, EventFunctionsMap2, MakeSocketEvent } from '@/types/events'
+import { EventsEnum } from 'enum/events.enum'
 
 class EventsSdkClass {
     constructor (public readonly options: EventsSdkOptions) {
@@ -26,6 +28,32 @@ class EventsSdkClass {
 
     private authClass = new AuthClass(this)
     private socketIoClass = new SocketIoClass()
+
+    private listeners: EventFunctionsMap2 = {
+        [EventsEnum.ALL_EXTENSION_STATUS]: [],
+        [EventsEnum.ALL_DIALER_STATUS]: [],
+        [EventsEnum.QUEUE_EVENT]: [],
+        [EventsEnum.EXTENSION_EVENT]: [],
+        [EventsEnum.LOGIN_SUCCESS]: [],
+        [EventsEnum.LOGIN_STATUS]: []
+    }
+
+    public on <T extends EventsEnum> (event: T, callback: EventFunctionsMap[T]) {
+        this.listeners[event].push(callback)
+    }
+
+    public emit <T extends EventsEnum> (event: T, data: EventDataMap[T]) {
+        this.listeners[event].forEach(callback => callback(data))
+    }
+
+    public off <T extends EventsEnum> (event: T, callback: MakeSocketEvent<EventDataMap[T]>) {
+        const filtered = this.listeners[event].filter(item => item !== callback)
+
+        this.listeners = {
+            ...this.listeners,
+            [event]: filtered
+        }
+    }
 
     public connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false) {
         let serverToConnect: Server | undefined

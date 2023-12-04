@@ -51,5 +51,9 @@ type MakeSocketEvent <T> = (data: T) => void
 export type EventTypeData <T extends EventsEnum> = EventDataMap[T]
 
 export type EventFunctionsMap = {
-    [K in keyof EventDataMap]: MakeSocketEvent<EventDataMap[K]>
+    [K in EventsEnum]: MakeSocketEvent<EventDataMap[K]>
+}
+
+export type EventFunctionsMap2 = {
+    [K in EventsEnum]: Array<(data: EventDataMap[K]) => void>
 }
