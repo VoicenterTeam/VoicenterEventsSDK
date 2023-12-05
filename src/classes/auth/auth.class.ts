@@ -58,7 +58,7 @@ class AuthClass {
 
     private onLoginResponse (loginSessionData: LoginSessionData) {
         if (loginSessionData.Client) {
-            this.eventsSdkClass.getSocketIoFunction(loginSessionData.Client)
+            this.eventsSdkClass.socketIoClass.getSocketIoFunction(loginSessionData.Client)
         }
         if (loginSessionData.Url) {
             this.eventsSdkClass.server = {

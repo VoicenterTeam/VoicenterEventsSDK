@@ -1,5 +1,4 @@
 import AuthClass from '@/classes/auth/auth.class'
-import sockets from '@/classes/socket-io/versions'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
@@ -27,7 +26,7 @@ class EventsSdkClass {
     public socket: SocketTyped | undefined
 
     private authClass = new AuthClass(this)
-    private socketIoClass = new SocketIoClass(this)
+    public socketIoClass = new SocketIoClass(this)
 
     private listeners: EventFunctionsMap2 = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
@@ -85,7 +84,7 @@ class EventsSdkClass {
         }
     }
 
-    private findCurrentServer () {
+    private findCurrentServer (): Server {
         if (this.servers.length) {
             this.server = this.servers[0]
         }
@@ -111,7 +110,7 @@ class EventsSdkClass {
         return this.server
     }
 
-    private findMaxPriorityServer () {
+    private findMaxPriorityServer (): Server {
         // this.log(INFO, 'Fallback -> Trying to find previous server');
 
         const maxPriorityServer = this.getServerWithHighestPriority(this.servers)
@@ -133,24 +132,6 @@ class EventsSdkClass {
         return this.server
     }
 
-    public async init () {
-        if (this.socket) {
-            // this.emit(eventTypes.CLOSE);
-        }
-
-        await this.authClass.login(this.options)
-
-        this.getServers()
-
-        return true
-    }
-
-    private getServers () {
-        if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
-            this.servers = this.argumentOptions.servers
-        }
-    }
-
     public getServerWithHighestPriority (servers: Server[]): Server {
         let chosenServer: Server | undefined
 
@@ -167,14 +148,22 @@ class EventsSdkClass {
         return chosenServer ? chosenServer : this.server
     }
 
-    public getSocketIoFunction (Client: string) {
-        const parsedArray = Client.split('v=')
+    public async init () {
+        if (this.socket) {
+            // this.emit(eventTypes.CLOSE);
+        }
 
-        const version = 'v'
-            .concat(parsedArray[parsedArray.length - 1])
-            .replaceAll('.', '_')
+        await this.authClass.login(this.options)
 
-        this.socketIoClass.ioFunction = sockets.getSocketVersion(version)
+        this.getServers()
+
+        return true
+    }
+
+    private getServers () {
+        if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
+            this.servers = this.argumentOptions.servers
+        }
     }
 }
 
