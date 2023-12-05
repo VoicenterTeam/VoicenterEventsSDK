@@ -2,7 +2,7 @@ import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
-import { Server } from '@/classes/events-sdk/events-sdk.types'
+import { Environment, Server } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
 
 export class SocketIoClass {
@@ -32,7 +32,7 @@ export class SocketIoClass {
 
             // this.log(INFO, 'Connecting to..', url);
 
-            // this.closeAllConnections()
+            this.closeAllConnections()
 
             const options: Partial<ManagerOptions & SocketOptions> = {
                 reconnection: false,
@@ -71,5 +71,27 @@ export class SocketIoClass {
                 .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
         }
+    }
+
+    public closeAllConnections () {
+        this.allConnections.forEach(connection => {
+            connection.close()
+            connection.disconnect()
+        })
+
+        this.allConnections = []
+
+        if (this.io) {
+            this.io.close()
+            this.io.disconnect()
+            this.io = undefined
+        }
+
+        if (this.eventsSdkClass.options.environment === Environment.BROWSER && window) {
+            window.sessionStorage.clear()
+        }
+        // if (options.environment === Environment.CHROME_EXTENSION && chrome) {
+        //     chrome.storage.session.clear()
+        // }
     }
 }
