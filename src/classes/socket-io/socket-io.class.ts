@@ -1,8 +1,8 @@
+import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { Server } from '@/classes/events-sdk/events-sdk.types'
-import { ManagerOptions, SocketOptions } from 'socket.io-client'
 import { EventsEnum } from '@/enum/events.enum'
 
 export class SocketIoClass {
@@ -12,6 +12,7 @@ export class SocketIoClass {
 
     public io: SocketTyped | undefined
     public ioFunction: TypedSocketIo | undefined
+    private allConnections: Socket[] = []
 
     public getSocketIoFunction (Client: string) {
         const parsedArray = Client.split('v=')
@@ -50,6 +51,8 @@ export class SocketIoClass {
 
             if (this.ioFunction) {
                 this.io = this.ioFunction(url, options)
+
+                this.allConnections.push(this.io)
             }
 
             // allConnections.push(this.socket);
