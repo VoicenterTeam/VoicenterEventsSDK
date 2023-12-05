@@ -93,6 +93,7 @@ async function login() {
 
             loggedId.value = true
             loading.value = false
+            alert('Login success')
         }
     )
 

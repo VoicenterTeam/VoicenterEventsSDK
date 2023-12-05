@@ -5,7 +5,7 @@ import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
 import { EventDataMap, EventFunctionsMap, EventFunctionsMap2, MakeSocketEvent } from '@/types/events'
-import { EventsEnum } from 'enum/events.enum'
+import { EventsEnum } from '@/enum/events.enum'
 
 class EventsSdkClass {
     constructor (public readonly options: EventsSdkOptions) {
@@ -27,7 +27,7 @@ class EventsSdkClass {
     public socket: SocketTyped | undefined
 
     private authClass = new AuthClass(this)
-    private socketIoClass = new SocketIoClass()
+    private socketIoClass = new SocketIoClass(this)
 
     private listeners: EventFunctionsMap2 = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
@@ -76,6 +76,8 @@ class EventsSdkClass {
 
         if (this.authClass.token && this.options.protocol && this.server) {
             this.socketIoClass.initSocketConnection(this.authClass.token, this.options.protocol, this.server)
+
+            this.socketIoClass.initSocketEvents()
         }
 
         if (skipLogin) {
