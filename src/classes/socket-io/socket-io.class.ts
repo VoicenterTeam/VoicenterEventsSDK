@@ -4,6 +4,7 @@ import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { Environment, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
+import { KeepAliveResponseData } from '@/types/events'
 
 export class SocketIoClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -15,6 +16,7 @@ export class SocketIoClass {
     private allConnections: Socket[] = []
     private lastEventTimestamp = new Date().getTime()
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
+    private connected = false
 
     public getSocketIoFunction (Client: string) {
         const parsedArray = Client.split('v=')
@@ -72,7 +74,7 @@ export class SocketIoClass {
                 .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.LOGIN_STATUS, data))
                 .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
-                .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.eventsSdkClass.emit(EventsEnum.KEEP_ALIVE_RESPONSE, data))
+                .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
         }
     }
 
@@ -127,5 +129,21 @@ export class SocketIoClass {
         // if (options.environment === Environment.CHROME_EXTENSION && chrome) {
         //     chrome.storage.session.clear()
         // }
+    }
+
+    private onKeepAliveResponse (data: KeepAliveResponseData) {
+        if (data.errorCode && this.eventsSdkClass.authClass.token) {
+            this.initSocketConnection(this.eventsSdkClass.authClass.token, this.eventsSdkClass.options.protocol, this.eventsSdkClass.server)
+
+            return
+        }
+
+        if (this.connected) {
+            this.lastEventTimestamp = new Date().getTime()
+        } else {
+            if (this.eventsSdkClass.authClass.token) {
+                this.initSocketConnection(this.eventsSdkClass.authClass.token, this.eventsSdkClass.options.protocol, this.eventsSdkClass.server)
+            }
+        }
     }
 }
