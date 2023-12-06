@@ -2,7 +2,7 @@ import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
-import { Environment, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { Environment, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
 import { KeepAliveResponseData } from '@/types/events'
 
@@ -28,7 +28,13 @@ export class SocketIoClass {
         this.ioFunction = sockets.getSocketVersion(version)
     }
 
-    public initSocketConnection (token: string, protocol: string, server: Server) {
+    public initSocketConnection () {
+        const token = this.eventsSdkClass.authClass.token
+
+        const protocol = this.eventsSdkClass.options.protocol
+
+        const server = this.eventsSdkClass.server
+
         try {
             const domain = server.Domain
 
@@ -78,7 +84,7 @@ export class SocketIoClass {
         }
     }
 
-    public initKeepAlive (token: string, protocol: string, server: Server) {
+    public initKeepAlive () {
         if (this.keepAliveInterval) {
             clearInterval(this.keepAliveInterval)
         }
@@ -95,13 +101,13 @@ export class SocketIoClass {
             }
 
             if (!this.io) {
-                this.initSocketConnection(token, protocol, server)
+                this.initSocketConnection()
 
                 return
             }
 
             if (this.io) {
-                this.io.emit(EventsEnum.KEEP_ALIVE, 'nyc06xfnAkAuRBul9Xe1TcAmrHm3m6BWkrj0ZasyBFkp89iae7Df3S4udqurnx2E0LTYbBsZxpcgzrjsorgFWQSWSW2xK4rWfg5k')
+                this.io.emit(EventsEnum.KEEP_ALIVE)
 
                 return
             }
@@ -132,8 +138,8 @@ export class SocketIoClass {
     }
 
     private onKeepAliveResponse (data: KeepAliveResponseData) {
-        if (data.errorCode && this.eventsSdkClass.authClass.token) {
-            this.initSocketConnection(this.eventsSdkClass.authClass.token, this.eventsSdkClass.options.protocol, this.eventsSdkClass.server)
+        if (data.errorCode) {
+            this.initSocketConnection()
 
             return
         }
@@ -141,9 +147,7 @@ export class SocketIoClass {
         if (this.connected) {
             this.lastEventTimestamp = new Date().getTime()
         } else {
-            if (this.eventsSdkClass.authClass.token) {
-                this.initSocketConnection(this.eventsSdkClass.authClass.token, this.eventsSdkClass.options.protocol, this.eventsSdkClass.server)
-            }
+            this.initSocketConnection()
         }
     }
 }

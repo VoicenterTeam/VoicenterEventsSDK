@@ -75,13 +75,11 @@ class EventsSdkClass {
             this.server = this.findCurrentServer()
         }
 
-        if (this.authClass.token && this.options.protocol && this.server) {
-            this.socketIoClass.initSocketConnection(this.authClass.token, this.options.protocol, this.server)
+        this.socketIoClass.initSocketConnection()
 
-            this.socketIoClass.initSocketEvents()
+        this.socketIoClass.initSocketEvents()
 
-            this.socketIoClass.initKeepAlive(this.authClass.token, this.options.protocol, this.server)
-        }
+        this.socketIoClass.initKeepAlive()
 
         if (skipLogin) {
             return
