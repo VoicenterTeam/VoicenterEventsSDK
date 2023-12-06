@@ -12,7 +12,7 @@ export interface EventsSdkOptions {
     reconnectionDelayMax?: number,
     maxReconnectAttempts?: number,
     timeout?: number,
-    keepAliveTimeout?: number,
+    keepAliveTimeout: number,
     idleInterval?: number,
     protocol: string,
     transports?: string[],

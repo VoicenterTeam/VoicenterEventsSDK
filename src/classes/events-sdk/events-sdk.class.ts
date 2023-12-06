@@ -25,7 +25,7 @@ class EventsSdkClass {
     public server: Server
     public socket: SocketTyped | undefined
 
-    private authClass = new AuthClass(this)
+    public authClass = new AuthClass(this)
     public socketIoClass = new SocketIoClass(this)
 
     private listeners: EventFunctionsMap2 = {
@@ -34,7 +34,9 @@ class EventsSdkClass {
         [EventsEnum.QUEUE_EVENT]: [],
         [EventsEnum.EXTENSION_EVENT]: [],
         [EventsEnum.LOGIN_SUCCESS]: [],
-        [EventsEnum.LOGIN_STATUS]: []
+        [EventsEnum.LOGIN_STATUS]: [],
+        [EventsEnum.KEEP_ALIVE]: [],
+        [EventsEnum.KEEP_ALIVE_RESPONSE]: []
     }
 
     public on <T extends EventsEnum> (event: T, callback: EventFunctionsMap[T]) {
@@ -77,6 +79,8 @@ class EventsSdkClass {
             this.socketIoClass.initSocketConnection(this.authClass.token, this.options.protocol, this.server)
 
             this.socketIoClass.initSocketEvents()
+
+            this.socketIoClass.initKeepAlive(this.authClass.token, this.options.protocol, this.server)
         }
 
         if (skipLogin) {

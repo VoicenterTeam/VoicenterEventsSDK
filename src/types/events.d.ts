@@ -37,6 +37,10 @@ interface LoginStatusData extends BaseEvent {
     loginStatus: LoginSuccess
 }
 
+interface KeepAliveResponseData extends BaseEvent {
+    isOk: boolean
+}
+
 export interface EventDataMap {
     [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusData
     [EventsEnum.ALL_DIALER_STATUS]: AllDialersStatusData
@@ -44,6 +48,8 @@ export interface EventDataMap {
     [EventsEnum.EXTENSION_EVENT]: ExtensionEventData
     [EventsEnum.LOGIN_SUCCESS]: LoginSuccessData
     [EventsEnum.LOGIN_STATUS]: LoginStatusData
+    [EventsEnum.KEEP_ALIVE]: any
+    [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseData
 }
 
 type MakeSocketEvent <T> = (data: T) => void

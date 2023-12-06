@@ -2,7 +2,7 @@ import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
-import { Environment, Server } from '@/classes/events-sdk/events-sdk.types'
+import { Environment, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
 
 export class SocketIoClass {
@@ -13,6 +13,8 @@ export class SocketIoClass {
     public io: SocketTyped | undefined
     public ioFunction: TypedSocketIo | undefined
     private allConnections: Socket[] = []
+    private lastEventTimestamp = new Date().getTime()
+    private keepAliveInterval: ReturnType<typeof setInterval> | undefined
 
     public getSocketIoFunction (Client: string) {
         const parsedArray = Client.split('v=')
@@ -70,7 +72,39 @@ export class SocketIoClass {
                 .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.LOGIN_STATUS, data))
                 .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
+                .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.eventsSdkClass.emit(EventsEnum.KEEP_ALIVE_RESPONSE, data))
         }
+    }
+
+    public initKeepAlive (token: string, protocol: string, server: Server) {
+        if (this.keepAliveInterval) {
+            clearInterval(this.keepAliveInterval)
+        }
+
+        this.keepAliveInterval = setInterval(async () => {
+            const now = new Date().getTime()
+
+            const delta = this.eventsSdkClass.options.keepAliveTimeout
+
+            if (now > this.lastEventTimestamp + delta) {
+                this.eventsSdkClass.connect(ServerParameter.NEXT, true)
+
+                return
+            }
+
+            if (!this.io) {
+                this.initSocketConnection(token, protocol, server)
+
+                return
+            }
+
+            if (this.io) {
+                this.io.emit(EventsEnum.KEEP_ALIVE, 'nyc06xfnAkAuRBul9Xe1TcAmrHm3m6BWkrj0ZasyBFkp89iae7Df3S4udqurnx2E0LTYbBsZxpcgzrjsorgFWQSWSW2xK4rWfg5k')
+
+                return
+            }
+
+        }, this.eventsSdkClass.options.keepAliveTimeout)
     }
 
     public closeAllConnections () {

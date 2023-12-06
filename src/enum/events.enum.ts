@@ -4,5 +4,7 @@ export enum EventsEnum {
     QUEUE_EVENT = 'QueueEvent',
     EXTENSION_EVENT = 'ExtensionEvent',
     LOGIN_SUCCESS = 'loginSuccess',
-    LOGIN_STATUS = 'loginStatus'
+    LOGIN_STATUS = 'loginStatus',
+    KEEP_ALIVE = 'keepalive',
+    KEEP_ALIVE_RESPONSE = 'keepaliveResponse'
 }
