@@ -14,7 +14,7 @@ export class SocketIoClass {
     public io: SocketTyped | undefined
     public ioFunction: TypedSocketIo | undefined
     private allConnections: Socket[] = []
-    private lastEventTimestamp = new Date().getTime()
+    public lastEventTimestamp = new Date().getTime()
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
     private connected = false
 

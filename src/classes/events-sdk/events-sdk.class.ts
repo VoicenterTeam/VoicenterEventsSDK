@@ -43,6 +43,8 @@ class EventsSdkClass {
     }
 
     public emit <T extends ListenerEvents> (event: T, data: EventDataMap[T]) {
+        this.socketIoClass.lastEventTimestamp = new Date().getTime()
+
         this.listeners[event].forEach(callback => callback(data))
     }
 
