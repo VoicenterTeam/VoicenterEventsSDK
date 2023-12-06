@@ -48,18 +48,19 @@ export interface EventDataMap {
     [EventsEnum.EXTENSION_EVENT]: ExtensionEventData
     [EventsEnum.LOGIN_SUCCESS]: LoginSuccessData
     [EventsEnum.LOGIN_STATUS]: LoginStatusData
-    [EventsEnum.KEEP_ALIVE]: any
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseData
 }
 
 type MakeSocketEvent <T> = (data: T) => void
 
+type ListenerEvents = keyof EventDataMap // specifies events which events sdk and client listen to...
+
 export type EventTypeData <T extends EventsEnum> = EventDataMap[T]
 
 export type EventFunctionsMap = {
-    [K in EventsEnum]: MakeSocketEvent<EventDataMap[K]>
+    [K in ListenerEvents]: MakeSocketEvent<EventDataMap[K]>
 }
 
 export type EventFunctionsMap2 = {
-    [K in EventsEnum]: Array<(data: EventDataMap[K]) => void>
+    [K in ListenerEvents]: Array<(data: EventDataMap[K]) => void>
 }

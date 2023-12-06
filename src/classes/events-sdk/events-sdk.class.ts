@@ -3,7 +3,7 @@ import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
-import { EventDataMap, EventFunctionsMap, EventFunctionsMap2, MakeSocketEvent } from '@/types/events'
+import { EventDataMap, EventFunctionsMap, EventFunctionsMap2, ListenerEvents, MakeSocketEvent } from '@/types/events'
 import { EventsEnum } from '@/enum/events.enum'
 
 class EventsSdkClass {
@@ -35,19 +35,18 @@ class EventsSdkClass {
         [EventsEnum.EXTENSION_EVENT]: [],
         [EventsEnum.LOGIN_SUCCESS]: [],
         [EventsEnum.LOGIN_STATUS]: [],
-        [EventsEnum.KEEP_ALIVE]: [],
         [EventsEnum.KEEP_ALIVE_RESPONSE]: []
     }
 
-    public on <T extends EventsEnum> (event: T, callback: EventFunctionsMap[T]) {
+    public on <T extends ListenerEvents> (event: T, callback: EventFunctionsMap[T]) {
         this.listeners[event].push(callback)
     }
 
-    public emit <T extends EventsEnum> (event: T, data: EventDataMap[T]) {
+    public emit <T extends ListenerEvents> (event: T, data: EventDataMap[T]) {
         this.listeners[event].forEach(callback => callback(data))
     }
 
-    public off <T extends EventsEnum> (event: T, callback: MakeSocketEvent<EventDataMap[T]>) {
+    public off <T extends ListenerEvents> (event: T, callback: MakeSocketEvent<EventDataMap[T]>) {
         const filtered = this.listeners[event].filter(item => item !== callback)
 
         this.listeners = {
