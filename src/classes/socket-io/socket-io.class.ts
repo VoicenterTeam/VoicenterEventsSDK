@@ -81,6 +81,7 @@ export class SocketIoClass {
                 .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
+                .on(EventsEnum.CONNECT, () => this.onConnect())
         }
     }
 
@@ -92,9 +93,9 @@ export class SocketIoClass {
         this.keepAliveInterval = setInterval(async () => {
             const now = new Date().getTime()
 
-            const delta = this.eventsSdkClass.options.keepAliveTimeout
+            const delta = this.eventsSdkClass.options.keepAliveTimeout * 2
 
-            if (now > this.lastEventTimestamp + delta) {
+            if (now > (this.lastEventTimestamp + delta)) {
                 this.eventsSdkClass.connect(ServerParameter.NEXT, true)
 
                 return
@@ -149,5 +150,9 @@ export class SocketIoClass {
         } else {
             this.initSocketConnection()
         }
+    }
+
+    private onConnect () {
+        this.connected = true
     }
 }

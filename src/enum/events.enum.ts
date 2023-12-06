@@ -1,10 +1,11 @@
 export enum EventsEnum {
-    ALL_EXTENSION_STATUS = 'AllExtensionsStatus',
     ALL_DIALER_STATUS = 'AllDialersStatus',
-    QUEUE_EVENT = 'QueueEvent',
+    ALL_EXTENSION_STATUS = 'AllExtensionsStatus',
+    CONNECT = 'connect',
     EXTENSION_EVENT = 'ExtensionEvent',
-    LOGIN_SUCCESS = 'loginSuccess',
-    LOGIN_STATUS = 'loginStatus',
     KEEP_ALIVE = 'keepalive',
-    KEEP_ALIVE_RESPONSE = 'keepaliveResponse'
+    KEEP_ALIVE_RESPONSE = 'keepaliveResponse',
+    LOGIN_STATUS = 'loginStatus',
+    LOGIN_SUCCESS = 'loginSuccess',
+    QUEUE_EVENT = 'QueueEvent',
 }
