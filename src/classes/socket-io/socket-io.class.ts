@@ -95,7 +95,7 @@ export class SocketIoClass {
 
             const delta = this.eventsSdkClass.options.keepAliveTimeout * 2
 
-            if (now > (this.lastEventTimestamp + delta)) {
+            if (now > this.lastEventTimestamp + delta) {
                 this.eventsSdkClass.connect(ServerParameter.NEXT, true)
 
                 return
@@ -107,7 +107,7 @@ export class SocketIoClass {
                 return
             }
 
-            if (this.io) {
+            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout) {
                 this.io.emit(EventsEnum.KEEP_ALIVE)
 
                 return
