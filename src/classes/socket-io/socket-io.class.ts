@@ -82,6 +82,7 @@ export class SocketIoClass {
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
                 .on(EventsEnum.CONNECT, () => this.onConnect())
+                .on(EventsEnum.DISCONNECT, () => console.log('disconnect...'))
         }
     }
 
