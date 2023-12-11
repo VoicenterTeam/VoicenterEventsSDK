@@ -81,12 +81,7 @@ export class SocketIoClass {
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
                 .on(EventsEnum.CONNECT, () => this.onConnect())
-                .on(EventsEnum.DISCONNECT, () => {
-                    this.closeAllConnections()
-                    this.keepReconnectInterval = setInterval(() => {
-                        this.eventsSdkClass.connect()
-                    }, 5000)
-                })
+                .on(EventsEnum.DISCONNECT, () => this.onDisconnect())
         }
     }
 
@@ -167,5 +162,15 @@ export class SocketIoClass {
         }
 
         this.connected = true
+    }
+
+    private onDisconnect () {
+        console.log('disconnected')
+
+        this.connected = false
+
+        this.keepReconnectInterval = setInterval(() => {
+            this.eventsSdkClass.connect()
+        }, 15000)
     }
 }
