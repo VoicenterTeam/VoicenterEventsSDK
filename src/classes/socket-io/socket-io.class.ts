@@ -14,7 +14,7 @@ export class SocketIoClass {
     public io: SocketTyped | undefined
     public ioFunction: TypedSocketIo | undefined
     private allConnections: Socket[] = []
-    private lastEventTimestamp = new Date().getTime()
+    public lastEventTimestamp = new Date().getTime()
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
     private connected = false
 
@@ -82,6 +82,7 @@ export class SocketIoClass {
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
                 .on(EventsEnum.CONNECT, () => this.onConnect())
+                .on(EventsEnum.DISCONNECT, () => console.log('disconnect...'))
         }
     }
 
@@ -95,7 +96,7 @@ export class SocketIoClass {
 
             const delta = this.eventsSdkClass.options.keepAliveTimeout * 2
 
-            if (now > (this.lastEventTimestamp + delta)) {
+            if (now > this.lastEventTimestamp + delta) {
                 this.eventsSdkClass.connect(ServerParameter.NEXT, true)
 
                 return
@@ -107,7 +108,7 @@ export class SocketIoClass {
                 return
             }
 
-            if (this.io) {
+            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout) {
                 this.io.emit(EventsEnum.KEEP_ALIVE)
 
                 return
