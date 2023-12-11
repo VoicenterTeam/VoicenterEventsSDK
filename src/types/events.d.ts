@@ -1,4 +1,5 @@
 import { EventsEnum } from '@/enum/events.enum'
+import { ExtensionEventData } from '@/types/extension-event'
 
 interface BaseEvent {
     // The code of an error, if 0 - no error
@@ -23,10 +24,6 @@ interface AllDialersStatusData extends BaseEvent {
 
 interface QueueEventData extends BaseEvent {
     queue: Array<number>
-}
-
-interface ExtensionEventData extends BaseEvent {
-    extension: number
 }
 
 interface LoginSuccessData extends BaseEvent {

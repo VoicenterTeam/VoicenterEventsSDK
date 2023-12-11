@@ -1070,10 +1070,10 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.2.0.tgz"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@voicenter-team/eslint-config-ts@^1.0.21":
-  version "1.0.21"
-  resolved "https://registry.npmjs.org/@voicenter-team/eslint-config-ts/-/eslint-config-ts-1.0.21.tgz"
-  integrity sha512-yAPUv9cTr8PvCyGbIPEQIlDoB2Ak/tt1dwjf44pIbREcjZyZOQ46lnhCcHeeosghFQxEpJ1DEAo7qBJtRSw05Q==
+"@voicenter-team/eslint-config-ts@^1.0.22":
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/eslint-config-ts/-/eslint-config-ts-1.0.22.tgz#92105fa1e678eec658bb417ef12f433f0523bfd8"
+  integrity sha512-PvfA4XC/GMxaI7Ku/A7KfCzn6B281o9PdQ+xFzvhH/MM3z9V1pWTWlsLNcYcAgRSXjWZu2KxNIy0lH5dHwfWYA==
 
 "@volar/language-core@1.10.10", "@volar/language-core@~1.10.5":
   version "1.10.10"
