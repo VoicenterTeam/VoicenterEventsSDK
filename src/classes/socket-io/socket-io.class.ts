@@ -16,6 +16,7 @@ export class SocketIoClass {
     private allConnections: Socket[] = []
     public lastEventTimestamp = new Date().getTime()
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
+    private keepReconnectInterval: ReturnType<typeof setInterval> | undefined
     private connected = false
 
     public getSocketIoFunction (Client: string) {
@@ -42,8 +43,6 @@ export class SocketIoClass {
 
             // this.log(INFO, 'Connecting to..', url);
 
-            this.closeAllConnections()
-
             const options: Partial<ManagerOptions & SocketOptions> = {
                 reconnection: false,
                 upgrade: false,
@@ -64,8 +63,6 @@ export class SocketIoClass {
 
                 this.allConnections.push(this.io)
             }
-
-            // allConnections.push(this.socket);
         } catch (e) {
             // this.log(ERROR, e);
         }
@@ -82,7 +79,7 @@ export class SocketIoClass {
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
                 .on(EventsEnum.CONNECT, () => this.onConnect())
-                .on(EventsEnum.DISCONNECT, () => console.log('disconnect...'))
+                .on(EventsEnum.DISCONNECT, () => this.onDisconnect())
         }
     }
 
@@ -97,7 +94,7 @@ export class SocketIoClass {
             const delta = this.eventsSdkClass.options.keepAliveTimeout * 2
 
             if (now > this.lastEventTimestamp + delta) {
-                this.eventsSdkClass.connect(ServerParameter.NEXT, true)
+                this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
 
                 return
             }
@@ -109,7 +106,7 @@ export class SocketIoClass {
             }
 
             if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout) {
-                this.io.emit(EventsEnum.KEEP_ALIVE)
+                this.io.emit(EventsEnum.KEEP_ALIVE, 'token')
 
                 return
             }
@@ -127,7 +124,9 @@ export class SocketIoClass {
 
         if (this.io) {
             this.io.close()
+
             this.io.disconnect()
+
             this.io = undefined
         }
 
@@ -154,6 +153,25 @@ export class SocketIoClass {
     }
 
     private onConnect () {
+        console.log('connected')
+
+        if (this.keepReconnectInterval) {
+            clearInterval(this.keepReconnectInterval)
+        }
+
         this.connected = true
+    }
+
+    private onDisconnect () {
+        console.log('disconnected')
+
+        this.connected = false
+
+        this.closeAllConnections()
+
+        this.keepReconnectInterval = setInterval(() => {
+            console.log('attempt to connect...')
+            this.eventsSdkClass.connect()
+        }, 15000)
     }
 }

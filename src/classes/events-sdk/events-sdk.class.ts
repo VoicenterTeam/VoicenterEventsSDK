@@ -1,7 +1,8 @@
 import AuthClass from '@/classes/auth/auth.class'
+import { debounce } from 'lodash'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
-import { EventsSdkOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
 import { EventDataMap, EventFunctionsMap, EventFunctionsMap2, ListenerEvents, MakeSocketEvent } from '@/types/events'
 import { EventsEnum } from '@/enum/events.enum'
@@ -27,6 +28,19 @@ class EventsSdkClass {
 
     public authClass = new AuthClass(this)
     public socketIoClass = new SocketIoClass(this)
+
+    public reconnectOptions: ReconnectOptions = {
+        retryCount: 1,
+        maxReconnectAttempts: this.options.maxReconnectAttempts,
+        reconnectionDelay: this.options.reconnectionDelay, // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
+        minReconnectionDelay: this.options.reconnectionDelay, // 10 seconds
+        maxReconnectionDelay: 60000 * 5 // 5 minutes
+    }
+
+    public retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
+        leading: true,
+        trailing: false
+    })
 
     private listeners: EventFunctionsMap2 = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
