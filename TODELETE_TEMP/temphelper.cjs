@@ -29,6 +29,14 @@ function getUniquePropertyValues (array, propertyPath) {
     )
 }
 
-const extensionUniqueReasons = getUniquePropertyValues(ExtensionEvent, 'cause')
+function allPresent (array, propertyPath) {
+    return array.every(item => {
+        const value = get(item, propertyPath)
 
-console.log(extensionUniqueReasons)
+        return value !== undefined && value !== null
+    })
+}
+
+console.log(getUniquePropertyValues(ExtensionEvent, 'dialStatus'));
+
+// console.log(allPresent(ExtensionEvent, 'dialStatus'))
