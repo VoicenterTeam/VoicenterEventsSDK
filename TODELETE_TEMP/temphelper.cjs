@@ -37,6 +37,6 @@ function allPresent (array, propertyPath) {
     })
 }
 
-console.log(getUniquePropertyValues(ExtensionEvent, 'dialStatus'));
+console.log(getUniquePropertyValues(ExtensionEvent, 'dialStatus'))
 
 // console.log(allPresent(ExtensionEvent, 'dialStatus'))
