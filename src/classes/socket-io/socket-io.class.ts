@@ -43,8 +43,6 @@ export class SocketIoClass {
 
             // this.log(INFO, 'Connecting to..', url);
 
-            this.closeAllConnections()
-
             const options: Partial<ManagerOptions & SocketOptions> = {
                 reconnection: false,
                 upgrade: false,
@@ -169,7 +167,10 @@ export class SocketIoClass {
 
         this.connected = false
 
+        this.closeAllConnections()
+
         this.keepReconnectInterval = setInterval(() => {
+            console.log('attempt to connect...')
             this.eventsSdkClass.connect()
         }, 15000)
     }
