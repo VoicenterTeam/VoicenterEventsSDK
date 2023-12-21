@@ -1,4 +1,10 @@
-import { EventNameEnum, ExtensionEventReasonEnum } from 'enum/events.enum'
+import {
+    CallStatusEnum,
+    DirectionEnum,
+    DoNotCallMeStatusCodeEnum,
+    EventNameEnum,
+    ExtensionEventReasonEnum
+} from 'enum/events.enum'
 
 export interface ExtensionEvent {
     data: ExtensionEventData
@@ -29,7 +35,7 @@ interface ExtensionEventData {
     lastAnsweredCallEventEpoch: number,
     lastHangupCallEpoch: number,
     representativeUpdated: number,
-    peerStatus: null,
+    peerStatus: unknown,
     currentCall?: ExtensionEventDataCall,
 
 }
@@ -42,13 +48,7 @@ interface ExtensionEventDataCall {
     callername: string,
     callerphone: string,
     callstatus: CallStatusEnum,
-    customdata: {
-        DoNotCallMeStatus: '200',
-        DoNotCallMeStatusCode: 'RESPONSE_FROM_API_VALID',
-        DoNotCallMeTokenName: '514039718_63566392',
-        DoNotCallMetransactionId: '70f18891-bc7c-4888-8104-1b9b370a7fab',
-        IsDoNotCallMe: '1'
-    },
+    customdata: CustomData,
     direction: DirectionEnum,
     ivrid: string,
     recording: Recording,
@@ -61,16 +61,12 @@ interface ExtensionEventDataCall {
     queueID?: number
 }
 
-enum CallStatusEnum {
-    RINGING = 'Ringing',
-    TALKING = 'Talking',
-    DIALING = 'Dialing',
-    HOLD = 'Hold',
-}
-
-enum DirectionEnum {
-    INCOMING = 'Incoming',
-    OUTGOING = 'Outgoing',
+interface CustomData {
+    DoNotCallMeStatus?: string,
+    DoNotCallMeStatusCode?: DoNotCallMeStatusCodeEnum,
+    DoNotCallMeTokenName?: string,
+    DoNotCallMetransactionId?: string,
+    IsDoNotCallMe?: string
 }
 
 interface Recording {

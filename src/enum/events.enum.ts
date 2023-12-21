@@ -54,3 +54,20 @@ export enum ExtensionHangupCauseEnum {
     UNKNOWN = 'Unknown',
     NO_USER_RESPONDING = 'No user responding',
 }
+
+export enum CallStatusEnum {
+    RINGING = 'Ringing',
+    TALKING = 'Talking',
+    DIALING = 'Dialing',
+    HOLD = 'Hold',
+}
+
+export enum DoNotCallMeStatusCodeEnum {
+    RESPONSE_FROM_API_VALID = 'RESPONSE_FROM_API_VALID',
+    RESPONSE_FROM_API_INVALID = 'RESPONSE_FROM_API_INVALID'
+}
+
+export enum DirectionEnum {
+    INCOMING = 'Incoming',
+    OUTGOING = 'Outgoing',
+}
