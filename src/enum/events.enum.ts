@@ -70,4 +70,6 @@ export enum DoNotCallMeStatusCodeEnum {
 export enum DirectionEnum {
     INCOMING = 'Incoming',
     OUTGOING = 'Outgoing',
+    SPY = 'Spy',
+    CLICK2CALL = 'Click2call'
 }
