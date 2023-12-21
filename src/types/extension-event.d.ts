@@ -21,7 +21,7 @@ interface ExtensionEventData {
     extenUser: string,
     accountID: number,
     topAccountID: number,
-    summery: { representative: 'Orel Dane' },
+    summery: Summery,
     onlineUserID: number,
     representative: number,
     representativeStatus: number,
@@ -30,36 +30,7 @@ interface ExtensionEventData {
     lastHangupCallEpoch: number,
     representativeUpdated: number,
     peerStatus: null,
-    currentCall?: {
-        callStarted: 1701350654,
-        calldurationinterval: 1701350654,
-        callAnswered: 1701350664,
-        answered: 1,
-        callername: '0587267726',
-        callerphone: '0587267726',
-        callstatus: 'Talking',
-        customdata: {
-            DoNotCallMeStatus: '200',
-            DoNotCallMeStatusCode: 'RESPONSE_FROM_API_VALID',
-            DoNotCallMeTokenName: '514039718_63566392',
-            DoNotCallMetransactionId: '70f18891-bc7c-4888-8104-1b9b370a7fab',
-            IsDoNotCallMe: '1'
-        },
-        direction: 'Outgoing',
-        ivrid: '202311301324110239cd648fdd2be89e',
-        recording: {
-            Filename: '202311301324110239cd648fdd2be89e-vc984-E6tUCfnq-972587267726.mp3',
-            Options: '',
-            ApproximateURL: '',
-            IsMuted: 0
-        },
-        did: '',
-        ip: '185.138.169.72',
-        blcServerID: 0,
-        isOpensips: false,
-        channel: 'SIP/E6tUCfnq-0000202c',
-        channel2: 'SIP/ProviderProxy05-0000202f'
-    }
+    currentCall?: ExtensionEventDataCall,
 
 }
 
@@ -70,12 +41,18 @@ interface ExtensionEventDataCall {
     answered: number,
     callername: string,
     callerphone: string,
-    callstatus: 'Dialing',
-    customdata: unknown,
-    direction: 'Outgoing',
+    callstatus: CallStatusEnum,
+    customdata: {
+        DoNotCallMeStatus: '200',
+        DoNotCallMeStatusCode: 'RESPONSE_FROM_API_VALID',
+        DoNotCallMeTokenName: '514039718_63566392',
+        DoNotCallMetransactionId: '70f18891-bc7c-4888-8104-1b9b370a7fab',
+        IsDoNotCallMe: '1'
+    },
+    direction: DirectionEnum,
     ivrid: string,
     recording: Recording,
-    did: '',
+    did: string,
     ip: string,
     blcServerID: number,
     isOpensips: boolean,
@@ -84,9 +61,25 @@ interface ExtensionEventDataCall {
     queueID?: number
 }
 
+enum CallStatusEnum {
+    RINGING = 'Ringing',
+    TALKING = 'Talking',
+    DIALING = 'Dialing',
+    HOLD = 'Hold',
+}
+
+enum DirectionEnum {
+    INCOMING = 'Incoming',
+    OUTGOING = 'Outgoing',
+}
+
 interface Recording {
     Filename: string,
     Options: string,
     ApproximateURL: string,
     IsMuted: number
+}
+
+interface Summery {
+    representative: string
 }
