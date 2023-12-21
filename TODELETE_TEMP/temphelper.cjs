@@ -37,6 +37,31 @@ function allPresent (array, propertyPath) {
     })
 }
 
-console.log(getUniquePropertyValues(ExtensionEvent, 'dialStatus'))
+function getObjectWithMostProperties (array) {
+    return array.reduce((curr, prev) => {
+        return Object.keys(curr).length > Object.keys(prev).length ? curr : prev
+    })
+}
+
+function getPropertiesWhichExistInAllObjects (array) {
+    if (array.length === 0) {
+        return []
+    }
+
+    const firstObjectKeys = Object.keys(array[0])
+
+    return array.reduce((commonKeys, currentObject) => {
+        const currentObjectKeys = Object.keys(currentObject)
+
+        const intersection = commonKeys.filter(key => currentObjectKeys.includes(key))
+
+        return intersection
+    }, firstObjectKeys)
+}
+
+// console.log(getUniquePropertyValues(ExtensionEvent, 'reason'))
 
 // console.log(allPresent(ExtensionEvent, 'dialStatus'))
+
+const array = ExtensionEvent.map(obj => obj.data.calls).flat().map(call => call.recording)
+console.log(array.filter(a => a.IsMuted))
