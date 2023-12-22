@@ -25539,5 +25539,90 @@
     "servertimeoffset": 120,
     "errorCode": 0,
     "errorDesc": "OK"
+  },
+  "loginStatus": {
+    "queues": [
+      {
+        "QueueID": 14519,
+        "QueueName": "תקלות משביתות",
+        "UserID": 58488,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      },
+      {
+        "QueueID": 14520,
+        "QueueName": "תמיכה ותקלות",
+        "UserID": 58488,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      },
+      {
+        "QueueID": 14521,
+        "QueueName": "שינויים בנתב",
+        "UserID": 58488,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      },
+      {
+        "QueueID": 16058,
+        "QueueName": "שינויים בנתב - אנגלית",
+        "UserID": 58488,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      },
+      {
+        "QueueID": 16059,
+        "QueueName": "תמיכה ותקלות - אנגלית",
+        "UserID": 58488,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      },
+      {
+        "QueueID": 16607,
+        "QueueName": "CPANEL+IP",
+        "UserID": 58488,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      },
+      {
+        "QueueID": 14716,
+        "QueueName": "מעגל ערב לילה ושישי",
+        "UserID": 58488,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      },
+      {
+        "QueueID": 10054,
+        "QueueName": "Q BLC",
+        "UserID": 23186,
+        "DistributorID": 640,
+        "IsDistributedQueue": false,
+        "Calls": []
+      }
+    ],
+    "servertime": 1703265713,
+    "servertimeoffset": 120,
+    "errorCode": 0,
+    "errorDesc": "OK"
+  },
+  "loginSuccess": {
+    "servertime": 1703265713,
+    "servertimeoffset": 120,
+    "errorCode": 0,
+    "errorDesc": "OK"
+  },
+  "keepaliveResponse": {
+    "isOK": true,
+    "servertime": 1703265952,
+    "servertimeoffset": 120,
+    "errorCode": 0,
+    "errorDesc": "OK"
   }
 }
