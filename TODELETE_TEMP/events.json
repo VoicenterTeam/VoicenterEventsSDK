@@ -24831,5 +24831,713 @@
     "servertimeoffset": 120,
     "errorCode": 0,
     "errorDesc": "OK"
+  },
+  "AllExtensionsStatus": {
+    "extensions": [
+      {
+        "calls": [],
+        "userID": 134047,
+        "userName": "Omar Mahagna",
+        "number": 99407,
+        "extenUser": "VKxmYzyo",
+        "accountID": 9417,
+        "topAccountID": 9417,
+        "summery": {
+          "representative": "Omar Mahagna"
+        },
+        "onlineUserID": 134047,
+        "representative": 134047,
+        "representativeStatus": 1,
+        "lastCallEventEpoch": 1703248920,
+        "lastAnsweredCallEventEpoch": 1703248920,
+        "lastHangupCallEpoch": 1703248920,
+        "representativeUpdated": 1703249041000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 146921,
+        "userName": "אוראל בן שושן",
+        "number": 112622,
+        "extenUser": "aeUPLUr5",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "אוראל בן שושן"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703181229,
+        "lastAnsweredCallEventEpoch": 1703181229,
+        "lastHangupCallEpoch": 1703181229,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 152588,
+        "userName": "Shay Belayne",
+        "number": 118576,
+        "extenUser": "GZGFDfvb",
+        "accountID": 8389,
+        "topAccountID": 8389,
+        "summery": {
+          "representative": "Shay Belayne"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1701962332,
+        "lastAnsweredCallEventEpoch": 1701962332,
+        "lastHangupCallEpoch": 1701962332,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 156868,
+        "userName": "Konstantin Test Gmail",
+        "number": 122995,
+        "extenUser": "onIaLDAw",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Konstantin Test Gmail"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1702596749,
+        "lastAnsweredCallEventEpoch": 1702596749,
+        "lastHangupCallEpoch": 1702596749,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 158609,
+        "userName": "Dor Shariker",
+        "number": 124828,
+        "extenUser": "beFHka3B",
+        "accountID": 8389,
+        "topAccountID": 8389,
+        "summery": {
+          "representative": "Dor Shariker"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1702831013,
+        "lastAnsweredCallEventEpoch": 1702831013,
+        "lastHangupCallEpoch": 1702831013,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 158610,
+        "userName": "Liran Reuven",
+        "number": 124829,
+        "extenUser": "nOsaerUd",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Liran Reuven"
+        },
+        "onlineUserID": 158610,
+        "representative": 158610,
+        "representativeStatus": 1,
+        "lastCallEventEpoch": 1703248243,
+        "lastAnsweredCallEventEpoch": 1703247159,
+        "lastHangupCallEpoch": 1703248243,
+        "representativeUpdated": 1703251232000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 159111,
+        "userName": "Orel Dane",
+        "number": 125377,
+        "extenUser": "E6tUCfnq",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Orel Dane"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703178509,
+        "lastAnsweredCallEventEpoch": 1703178509,
+        "lastHangupCallEpoch": 1703178509,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 161419,
+        "userName": "Shalev Osher",
+        "number": 127837,
+        "extenUser": "oCbFHVAi",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Shalev Osher"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703176382,
+        "lastAnsweredCallEventEpoch": 1703176382,
+        "lastHangupCallEpoch": 1703176382,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 163553,
+        "userName": "Sahar Mashraki Test",
+        "number": 130003,
+        "extenUser": "F8ZvUUZH",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Sahar Mashraki Test"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1691567194,
+        "lastAnsweredCallEventEpoch": 1691567194,
+        "lastHangupCallEpoch": 1691567194,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 164961,
+        "userName": "noam maman",
+        "number": 131469,
+        "extenUser": "wnpExlfu",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "noam maman"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703177269,
+        "lastAnsweredCallEventEpoch": 1703177269,
+        "lastHangupCallEpoch": 1703177269,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 23186,
+        "userName": "work station 3 line 2",
+        "number": 601,
+        "extenUser": "BNMp4eA2",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "work station 3 line 2"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703206931,
+        "lastAnsweredCallEventEpoch": 1703206931,
+        "lastHangupCallEpoch": 1703206931,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 23186,
+        "userName": "test one blc",
+        "number": 931,
+        "extenUser": "pahTfUzW",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "test one blc"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703206931,
+        "lastAnsweredCallEventEpoch": 1703206931,
+        "lastHangupCallEpoch": 1703206931,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 23186,
+        "userName": "Snir Open Server",
+        "number": 1469,
+        "extenUser": "tK6I0EJ1",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Snir Open Server"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703206931,
+        "lastAnsweredCallEventEpoch": 1703206931,
+        "lastHangupCallEpoch": 1703206931,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 21653,
+        "userName": "BackUp OpenS",
+        "number": 1470,
+        "extenUser": "oJmvSDpf",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "BackUp OpenS"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703206931,
+        "lastAnsweredCallEventEpoch": 1703206931,
+        "lastHangupCallEpoch": 1703206931,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 85810,
+        "userName": "שלוחה סלולרית - 0532353604",
+        "number": 53682,
+        "extenUser": "F4o4T1ys",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "שלוחה סלולרית - 0532353604"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1617298293,
+        "lastAnsweredCallEventEpoch": 1617298293,
+        "lastHangupCallEpoch": 1617298293,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 114033,
+        "userName": "האזנות תמיכה 1",
+        "number": 79540,
+        "extenUser": "E0QG0yEW",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "האזנות תמיכה 1"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1672161173,
+        "lastAnsweredCallEventEpoch": 1672161173,
+        "lastHangupCallEpoch": 1672161173,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 120215,
+        "userName": "nisan gutman",
+        "number": 85650,
+        "extenUser": "exbbxCKt",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "nisan gutman"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1701688901,
+        "lastAnsweredCallEventEpoch": 1701688901,
+        "lastHangupCallEpoch": 1701688901,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 143366,
+        "userName": "Yan R",
+        "number": 108957,
+        "extenUser": "QOTRZd56",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Yan R"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1674989556,
+        "lastAnsweredCallEventEpoch": 1674989556,
+        "lastHangupCallEpoch": 1674989556,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 144172,
+        "userName": "Eyal Turgeman",
+        "number": 109776,
+        "extenUser": "e3U6GIQp",
+        "accountID": 9417,
+        "topAccountID": 9417,
+        "summery": {
+          "representative": "Eyal Turgeman"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703172983,
+        "lastAnsweredCallEventEpoch": 1703172983,
+        "lastHangupCallEpoch": 1703172983,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 147824,
+        "userName": "כפיר סלולר - 0534362055",
+        "number": 113642,
+        "extenUser": "J2mNEk6G",
+        "accountID": 8481,
+        "topAccountID": 8481,
+        "summery": {
+          "representative": "כפיר סלולר - 0534362055"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703170874,
+        "lastAnsweredCallEventEpoch": 1703170874,
+        "lastHangupCallEpoch": 1703170874,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 118555,
+        "userName": "Admin User - קשרי לקוחות - 0546968769",
+        "number": 115052,
+        "extenUser": "F2dVMKBC",
+        "accountID": 8481,
+        "topAccountID": 8481,
+        "summery": {
+          "representative": "Admin User - קשרי לקוחות - 0546968769"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703206931,
+        "lastAnsweredCallEventEpoch": 1703206931,
+        "lastHangupCallEpoch": 1703206931,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 149798,
+        "userName": "Jesus Christ",
+        "number": 115712,
+        "extenUser": "F5FaFRMV",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Jesus Christ"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1652644551,
+        "lastAnsweredCallEventEpoch": 1652644551,
+        "lastHangupCallEpoch": 1652644551,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 149864,
+        "userName": "This is Test",
+        "number": 115780,
+        "extenUser": "vt82GWX8",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "This is Test"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703206931,
+        "lastAnsweredCallEventEpoch": 1703206931,
+        "lastHangupCallEpoch": 1703206931,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 158455,
+        "userName": "שירה גיבוי",
+        "number": 124681,
+        "extenUser": "M7fxoiS8",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "שירה גיבוי"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1682808258,
+        "lastAnsweredCallEventEpoch": 1682808258,
+        "lastHangupCallEpoch": 1682808258,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 159764,
+        "userName": "shaked ben shaaya",
+        "number": 126097,
+        "extenUser": "F3kVuVnf",
+        "accountID": 9417,
+        "topAccountID": 9417,
+        "summery": {
+          "representative": "shaked ben shaaya"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1698739165,
+        "lastAnsweredCallEventEpoch": 1698739165,
+        "lastHangupCallEpoch": 1698739165,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 159765,
+        "userName": "amos cohen",
+        "number": 126098,
+        "extenUser": "F6UDGXCK",
+        "accountID": 8389,
+        "topAccountID": 8389,
+        "summery": {
+          "representative": "amos cohen"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1701759698,
+        "lastAnsweredCallEventEpoch": 1701759698,
+        "lastHangupCallEpoch": 1701759698,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 159937,
+        "userName": "nisan2",
+        "number": 126292,
+        "extenUser": "o3a0bG78",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "nisan2"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1699486125,
+        "lastAnsweredCallEventEpoch": 1699486125,
+        "lastHangupCallEpoch": 1699486125,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 162981,
+        "userName": "Amit Hazi",
+        "number": 129501,
+        "extenUser": "NYk8I3z8",
+        "accountID": 9417,
+        "topAccountID": 9417,
+        "summery": {
+          "representative": "Amit Hazi"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703248683,
+        "lastAnsweredCallEventEpoch": 1703248683,
+        "lastHangupCallEpoch": 1703248683,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 162982,
+        "userName": "Eduard Gurvitz",
+        "number": 129502,
+        "extenUser": "F6sX4NIc",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Eduard Gurvitz"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1696496757,
+        "lastAnsweredCallEventEpoch": 1696496757,
+        "lastHangupCallEpoch": 1696496757,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 163496,
+        "userName": "Lev Levinson",
+        "number": 129941,
+        "extenUser": "sRo0rBad",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Lev Levinson"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1697471916,
+        "lastAnsweredCallEventEpoch": 1697471916,
+        "lastHangupCallEpoch": 1697471916,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 163497,
+        "userName": "nir alhazov",
+        "number": 129942,
+        "extenUser": "F46vCETI",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "nir alhazov"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1696550208,
+        "lastAnsweredCallEventEpoch": 1696550208,
+        "lastHangupCallEpoch": 1696550208,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 164959,
+        "userName": "liran sorokin",
+        "number": 131467,
+        "extenUser": "stVeYBOG",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "liran sorokin"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1697452081,
+        "lastAnsweredCallEventEpoch": 1697452081,
+        "lastHangupCallEpoch": 1697452081,
+        "representativeUpdated": 1703253442000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 168607,
+        "userName": "Shalev Osher App",
+        "number": 135362,
+        "extenUser": "GXJVJbZG",
+        "accountID": 640,
+        "topAccountID": 640,
+        "summery": {
+          "representative": "Shalev Osher App"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1701848536,
+        "lastAnsweredCallEventEpoch": 1701848536,
+        "lastHangupCallEpoch": 1701848536,
+        "representativeUpdated": 1703253443000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 168789,
+        "userName": "Lidor koresh",
+        "number": 135559,
+        "extenUser": "VvMOdPt5",
+        "accountID": 8389,
+        "topAccountID": 8389,
+        "summery": {
+          "representative": "Lidor koresh"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703059715,
+        "lastAnsweredCallEventEpoch": 1703059715,
+        "lastHangupCallEpoch": 1703059715,
+        "representativeUpdated": 1703253443000,
+        "peerStatus": null
+      },
+      {
+        "calls": [],
+        "userID": 159328,
+        "userName": "Sahar Mashraki",
+        "number": 125613,
+        "extenUser": "DvZPPn6R",
+        "accountID": 9417,
+        "topAccountID": 9417,
+        "summery": {
+          "representative": "Sahar Mashraki"
+        },
+        "onlineUserID": 0,
+        "representative": 0,
+        "representativeStatus": 2,
+        "lastCallEventEpoch": 1703169980,
+        "lastAnsweredCallEventEpoch": 1703169980,
+        "lastHangupCallEpoch": 1703169980,
+        "representativeUpdated": 1703253443000,
+        "peerStatus": null
+      }
+    ],
+    "servertime": 1703260999,
+    "servertimeoffset": 120,
+    "errorCode": 0,
+    "errorDesc": "OK"
   }
 }

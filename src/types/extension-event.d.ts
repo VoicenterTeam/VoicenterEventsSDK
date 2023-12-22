@@ -7,7 +7,7 @@ import {
 } from 'enum/events.enum'
 
 export interface ExtensionEvent {
-    data: ExtensionEventData
+    data: Extension
     eventName: EventNameEnum.EXTENSION
     reason: ExtensionEventReasonEnum
     servertime: number
@@ -19,8 +19,8 @@ export interface ExtensionEvent {
     cause?: string
 }
 
-interface ExtensionEventData {
-    calls: ExtensionEventDataCall[],
+export interface Extension {
+    calls: Call[],
     userID: number,
     userName: string,
     number: number,
@@ -36,11 +36,11 @@ interface ExtensionEventData {
     lastHangupCallEpoch: number,
     representativeUpdated: number,
     peerStatus: unknown,
-    currentCall?: ExtensionEventDataCall,
+    currentCall?: Call,
 
 }
 
-interface ExtensionEventDataCall {
+export interface Call {
     callStarted: number,
     calldurationinterval: number,
     callAnswered: number,
