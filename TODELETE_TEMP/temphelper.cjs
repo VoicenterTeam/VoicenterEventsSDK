@@ -1,4 +1,4 @@
-const { ExtensionEvent } = require('./events.json')
+const { ExtensionEvent, QueueEvent } = require('./events.json')
 
 function get (obj, path) {
     const pathArray = path.split('.')
@@ -53,9 +53,7 @@ function getPropertiesWhichExistInAllObjects (array) {
     return array.reduce((commonKeys, currentObject) => {
         const currentObjectKeys = Object.keys(currentObject)
 
-        const intersection = commonKeys.filter(key => currentObjectKeys.includes(key))
-
-        return intersection
+        return commonKeys.filter(key => currentObjectKeys.includes(key))
     }, firstObjectKeys)
 }
 
@@ -63,5 +61,4 @@ function getPropertiesWhichExistInAllObjects (array) {
 
 // console.log(allPresent(ExtensionEvent, 'dialStatus'))
 
-const array = ExtensionEvent.map(obj => obj.data.calls).flat().map(call => call.recording)
-console.log(array.filter(a => a.IsMuted))
+console.log(getUniquePropertyValues(QueueEvent, 'reason'))

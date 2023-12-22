@@ -38,6 +38,13 @@ export enum ExtensionEventReasonEnum {
     USER_STATUS_UPDATE = 'userStatusUpdate',
 }
 
+export enum QueueEventReasonEnum {
+    ANSWER = 'ANSWER',
+    ABANDONED = 'ABANDONED',
+    EXIT = 'EXIT',
+    JOIN = 'JOIN'
+}
+
 /**
  * All the eventNames that can be received from the server. Exists only in EXTENSION_EVENT and QueueEvent
  */
