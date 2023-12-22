@@ -24638,5 +24638,198 @@
       "servertimeoffset": 120,
       "telephonyservertime": 1701350664
     }
-  ]
+  ],
+  "AllUsersStatus": {
+    "users": [
+      {
+        "userID": 21653,
+        "userName": "Sensors C2C PRTG Voicenter",
+        "accountID": 640
+      },
+      {
+        "userID": 23186,
+        "userName": "Belowcall תפריט",
+        "accountID": 640
+      },
+      {
+        "userID": 58488,
+        "userName": "Admin User Support VC",
+        "accountID": 640
+      },
+      {
+        "userID": 75956,
+        "userName": "שלוחת סלולרי תמיכה ",
+        "accountID": 640
+      },
+      {
+        "userID": 85810,
+        "userName": "שלוחה סלולרית",
+        "accountID": 640
+      },
+      {
+        "userID": 113032,
+        "userName": "אוראל סלולרי",
+        "accountID": 640
+      },
+      {
+        "userID": 114033,
+        "userName": "האזנות תמיכה",
+        "accountID": 640
+      },
+      {
+        "userID": 116653,
+        "userName": "Admin User",
+        "accountID": 8389
+      },
+      {
+        "userID": 118555,
+        "userName": "Admin User - קשרי לקוחות",
+        "accountID": 8481
+      },
+      {
+        "userID": 120215,
+        "userName": "nisan gusman",
+        "accountID": 640
+      },
+      {
+        "userID": 134047,
+        "userName": "Omar Mahagna",
+        "accountID": 9417
+      },
+      {
+        "userID": 143366,
+        "userName": "Yan R",
+        "accountID": 640
+      },
+      {
+        "userID": 144172,
+        "userName": "Eyal Turgeman",
+        "accountID": 9417
+      },
+      {
+        "userID": 146921,
+        "userName": "אוראל בן שושן",
+        "accountID": 640
+      },
+      {
+        "userID": 147824,
+        "userName": "קשרי לקוחות",
+        "accountID": 8481
+      },
+      {
+        "userID": 152588,
+        "userName": "Shay Belayneh",
+        "accountID": 8389
+      },
+      {
+        "userID": 156868,
+        "userName": "Konstantin Test Gmail",
+        "accountID": 640
+      },
+      {
+        "userID": 158455,
+        "userName": "שירה גיבוי",
+        "accountID": 640
+      },
+      {
+        "userID": 158609,
+        "userName": "Dor Shariker",
+        "accountID": 8389
+      },
+      {
+        "userID": 158610,
+        "userName": "Liran Reuven",
+        "accountID": 640
+      },
+      {
+        "userID": 159111,
+        "userName": "Orel Dane",
+        "accountID": 640
+      },
+      {
+        "userID": 159328,
+        "userName": "Sahar Mashraki",
+        "accountID": 9417
+      },
+      {
+        "userID": 159458,
+        "userName": "Admin User - NOC Tier2",
+        "accountID": 11473
+      },
+      {
+        "userID": 159764,
+        "userName": "shaked ben shaaya",
+        "accountID": 9417
+      },
+      {
+        "userID": 159765,
+        "userName": "amos cohen",
+        "accountID": 8389
+      },
+      {
+        "userID": 159937,
+        "userName": "nisan2 gusman2",
+        "accountID": 640
+      },
+      {
+        "userID": 161419,
+        "userName": "Shalev Osher",
+        "accountID": 640
+      },
+      {
+        "userID": 162060,
+        "userName": "Admin User - Eyal test",
+        "accountID": 11673
+      },
+      {
+        "userID": 162981,
+        "userName": "Amit Hazi",
+        "accountID": 9417
+      },
+      {
+        "userID": 162982,
+        "userName": "Eduard Gurvitz",
+        "accountID": 640
+      },
+      {
+        "userID": 163496,
+        "userName": "Lev Levinson",
+        "accountID": 640
+      },
+      {
+        "userID": 163497,
+        "userName": "nir alhazov",
+        "accountID": 640
+      },
+      {
+        "userID": 163553,
+        "userName": "Sahar Mashraki Test",
+        "accountID": 640
+      },
+      {
+        "userID": 164959,
+        "userName": "Liran Sorokin",
+        "accountID": 640
+      },
+      {
+        "userID": 164961,
+        "userName": "Noam Maman",
+        "accountID": 640
+      },
+      {
+        "userID": 168607,
+        "userName": "Shalev Osher App",
+        "accountID": 640
+      },
+      {
+        "userID": 168789,
+        "userName": "Lidor koresh",
+        "accountID": 8389
+      }
+    ],
+    "servertime": 1703260999,
+    "servertimeoffset": 120,
+    "errorCode": 0,
+    "errorDesc": "OK"
+  }
 }
