@@ -45,6 +45,11 @@ export enum QueueEventReasonEnum {
     JOIN = 'JOIN'
 }
 
+export enum DialerType {
+    AUTOMATIC = 'Automatic',
+    IVR = 'IVR'
+}
+
 /**
  * All the eventNames that can be received from the server. Exists only in EXTENSION_EVENT and QueueEvent
  */
