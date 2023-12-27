@@ -41,8 +41,10 @@ export interface Queue {
     QueueID: number,
     QueueName: string,
     Calls: QueueCall[],
+    UserId?: number,
     DistributorID?: number,
-    IsDistributedQueue?: boolean
+    IsDistributedQueue?: boolean,
+    AnsweredAgent?: string,
 }
 
 interface ExtensionCall {
