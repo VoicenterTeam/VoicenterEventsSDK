@@ -66,4 +66,4 @@ const inAll = getPropertiesWhichExistInAllObjects(array)
 const most = Object.keys(getObjectWithMostProperties(array))
 const notInAll = most.filter(key => !inAll.includes(key))
 
-console.log(getObjectWithMostProperties(array))
+console.log(notInAll)

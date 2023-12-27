@@ -54,18 +54,28 @@ interface ExtensionCall {
     answered: number,
     callername: string,
     callerphone: string,
+    outgoingcallername?: string,
+    outgoingcallerphone?: string,
     callstatus: CallStatusEnum,
     customdata: CustomData,
     direction: DirectionEnum,
     ivrid: string,
     recording: Recording,
     did: string,
+    relatedIvrUniqueIDs?: string[],
+    callType?: '',
+    originalCallerID?: string,
+    originalCallerName?: string,
+    actualDialedNumber?: number
     ip: string,
     blcServerID: number,
     isOpensips: boolean,
     channel: string,
     channel2: string,
-    queueID?: number
+    queueID?: number,
+    isSpyed?: boolean,
+    blcServerId?: number,
+    isInternal: boolean
 }
 
 interface QueueCall {
