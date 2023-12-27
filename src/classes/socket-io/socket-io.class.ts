@@ -106,7 +106,7 @@ export class SocketIoClass {
             }
 
             if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout) {
-                this.io.emit(EventsEnum.KEEP_ALIVE, 'token')
+                this.io.emit(EventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
 
                 return
             }
