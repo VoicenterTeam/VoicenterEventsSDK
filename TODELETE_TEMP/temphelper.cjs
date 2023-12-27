@@ -1,4 +1,4 @@
-const { QueueEvent, loginStatus, AllExtensionsStatus } = require('./events.json')
+const { ExtensionEvent, loginStatus, AllExtensionsStatus } = require('./events.json')
 
 function get (obj, path) {
     const pathArray = path.split('.')
@@ -61,9 +61,9 @@ function getPropertiesWhichExistInAllObjects (array) {
 
 // console.log(allPresent(ExtensionEvent, 'dialStatus'))
 
-const array = QueueEvent.map(event => event.data.Calls).flat()
+const array = ExtensionEvent.filter(event => event.data.currentCall).map(event => event.data.currentCall)
 const inAll = getPropertiesWhichExistInAllObjects(array)
 const most = Object.keys(getObjectWithMostProperties(array))
 const notInAll = most.filter(key => !inAll.includes(key))
 
-console.log(inAll)
+console.log(getObjectWithMostProperties(array))

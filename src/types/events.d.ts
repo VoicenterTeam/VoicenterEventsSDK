@@ -1,4 +1,10 @@
-import { EventNameEnum, EventsEnum, ExtensionEventReasonEnum, QueueEventReasonEnum } from '@/enum/events.enum'
+import {
+    EventNameEnum,
+    EventsEnum,
+    ExtensionEventReasonEnum,
+    ExtensionHangupCauseEnum,
+    QueueEventReasonEnum
+} from '@/enum/events.enum'
 import { Queue, Extension, Dialer, User } from '@/types/events.common'
 
 interface BaseEvent {
@@ -46,7 +52,7 @@ export interface ExtensionEventData extends BaseEvent {
     callerID?: string
     ivruniqueid?: string
     dialStatus?: string
-    cause?: string
+    cause?: ExtensionHangupCauseEnum
 }
 
 export interface KeepAliveResponseData extends BaseEvent {

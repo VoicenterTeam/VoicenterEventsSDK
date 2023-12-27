@@ -66,6 +66,7 @@ export enum ExtensionHangupCauseEnum {
     UNALLOCATED_NUMBER = 'Unallocated (unassigned) number',
     UNKNOWN = 'Unknown',
     NO_USER_RESPONDING = 'No user responding',
+    USER_ALERTING = 'User alerting, no answer',
 }
 
 export enum CallStatusEnum {
