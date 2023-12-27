@@ -1,40 +1,55 @@
-import { EventsEnum } from '@/enum/events.enum'
-import { ExtensionEventData } from '@/types/extension-event'
+import { EventNameEnum, EventsEnum, ExtensionEventReasonEnum, QueueEventReasonEnum } from '@/enum/events.enum'
+import { Queue, Extension, Dialer, User } from '@/types/events.common'
 
 interface BaseEvent {
     // The code of an error, if 0 - no error
-    errorCode: number
+    errorCode?: number
     // “Ok” - Connection was establishing successfully.
-    errorDesc: string
+    errorDesc?: string
     // The Interval the of socket.io protocol
     servertime: number
     // The offset of the server time from the client time
     servertimeoffset: number
 }
 
-type LoginSuccess = BaseEvent
+type LoginSuccessData = BaseEvent
 
-interface AllExtensionStatusData extends BaseEvent {
-    extensions: Array<number>
+export interface LoginStatusData extends BaseEvent {
+    queues: Queue[]
 }
 
-interface AllDialersStatusData extends BaseEvent {
-    dialers: Array<number>
+export interface AllExtensionStatusData extends BaseEvent {
+    extensions: Extension[]
 }
 
-interface QueueEventData extends BaseEvent {
-    queue: Array<number>
+export interface AllDialersStatusData extends BaseEvent {
+    dialers: Dialer[]
 }
 
-interface LoginSuccessData extends BaseEvent {
-    loginSuccess: LoginSuccess
+export interface AllUsersStatus extends BaseEvent {
+    users: User[]
 }
 
-interface LoginStatusData extends BaseEvent {
-    loginStatus: LoginSuccess
+export interface QueueEventData extends BaseEvent {
+    eventName: EventNameEnum.QUEUE,
+    reason: QueueEventReasonEnum,
+    telephonyservertime: number,
+    ivruniqueid: string,
+    data: Queue
 }
 
-interface KeepAliveResponseData extends BaseEvent {
+export interface ExtensionEventData extends BaseEvent {
+    data: Extension
+    eventName: EventNameEnum.EXTENSION
+    reason: ExtensionEventReasonEnum
+    telephonyservertime?: number
+    callerID?: string
+    ivruniqueid?: string
+    dialStatus?: string
+    cause?: string
+}
+
+export interface KeepAliveResponseData extends BaseEvent {
     isOk: boolean
 }
 

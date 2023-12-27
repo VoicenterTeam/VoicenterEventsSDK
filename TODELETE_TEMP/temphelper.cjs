@@ -1,4 +1,4 @@
-const { ExtensionEvent, QueueEvent } = require('./events.json')
+const { QueueEvent } = require('./events.json')
 
 function get (obj, path) {
     const pathArray = path.split('.')
