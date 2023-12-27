@@ -26,7 +26,7 @@ export interface AllDialersStatusData extends BaseEvent {
     dialers: Dialer[]
 }
 
-export interface AllUsersStatus extends BaseEvent {
+export interface AllUsersStatusData extends BaseEvent {
     users: User[]
 }
 
@@ -56,6 +56,7 @@ export interface KeepAliveResponseData extends BaseEvent {
 export interface EventDataMap {
     [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusData
     [EventsEnum.ALL_DIALER_STATUS]: AllDialersStatusData
+    [EventsEnum.ALL_USERS_STATUS]: AllUsersStatusData
     [EventsEnum.QUEUE_EVENT]: QueueEventData
     [EventsEnum.EXTENSION_EVENT]: ExtensionEventData
     [EventsEnum.LOGIN_SUCCESS]: LoginSuccessData

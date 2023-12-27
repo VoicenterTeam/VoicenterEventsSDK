@@ -48,6 +48,45 @@ async function login() {
 
     await sdk.init()
 
+  sdk.on(
+      EventsEnum.ALL_DIALER_STATUS,
+      (data) => {
+        console.log(EventsEnum.ALL_DIALER_STATUS, data)
+
+        if (!events[EventsEnum.ALL_DIALER_STATUS]) {
+          events[EventsEnum.ALL_DIALER_STATUS] = []
+        }
+
+        events[EventsEnum.ALL_DIALER_STATUS]?.push(data)
+      }
+  )
+
+  sdk.on(
+      EventsEnum.ALL_EXTENSION_STATUS,
+      (data) => {
+        console.log(EventsEnum.ALL_EXTENSION_STATUS, data)
+
+        if (!events[EventsEnum.ALL_EXTENSION_STATUS]) {
+          events[EventsEnum.ALL_EXTENSION_STATUS] = []
+        }
+
+        events[EventsEnum.ALL_EXTENSION_STATUS]?.push(data)
+      }
+  )
+
+  sdk.on(
+      EventsEnum.ALL_USERS_STATUS,
+      (data) => {
+        console.log(EventsEnum.ALL_USERS_STATUS, data)
+
+        if (!events[EventsEnum.ALL_USERS_STATUS]) {
+          events[EventsEnum.ALL_USERS_STATUS] = []
+        }
+
+        events[EventsEnum.ALL_USERS_STATUS]?.push(data)
+      }
+  )
+
     sdk.on(
         EventsEnum.QUEUE_EVENT,
         (data) => {
@@ -73,29 +112,31 @@ async function login() {
             events[EventsEnum.EXTENSION_EVENT]?.push(data)
         }
     )
-    sdk.on(
-        EventsEnum.ALL_DIALER_STATUS,
-        (data) => {
-            console.log(EventsEnum.ALL_DIALER_STATUS, data)
-
-            if (!events[EventsEnum.ALL_DIALER_STATUS]) {
-                events[EventsEnum.ALL_DIALER_STATUS] = []
-            }
-
-            events[EventsEnum.ALL_DIALER_STATUS]?.push(data)
-        }
-    )
 
     sdk.on(
         EventsEnum.LOGIN_SUCCESS,
         (data) => {
-            console.log(EventsEnum.LOGIN_SUCCESS, data)
-
+          console.log(EventsEnum.LOGIN_SUCCESS, data)
+          if (!events[EventsEnum.LOGIN_SUCCESS]) {
+            events[EventsEnum.LOGIN_SUCCESS] = []
+          }
             loggedId.value = true
             loading.value = false
+          events[EventsEnum.LOGIN_SUCCESS]?.push(data)
             alert('Login success')
         }
     )
+
+  sdk.on(
+      EventsEnum.LOGIN_STATUS,
+      (data) => {
+        console.log(EventsEnum.LOGIN_STATUS, data)
+        if (!events[EventsEnum.LOGIN_STATUS]) {
+          events[EventsEnum.LOGIN_STATUS] = []
+        }
+        events[EventsEnum.LOGIN_STATUS]?.push(data)
+      }
+  )
 
     setTimeout(
         () => {

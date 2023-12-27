@@ -4,6 +4,7 @@
 export enum EventsEnum {
     ALL_DIALER_STATUS = 'AllDialersStatus',
     ALL_EXTENSION_STATUS = 'AllExtensionsStatus',
+    ALL_USERS_STATUS = 'AllUsersStatus',
     CONNECT = 'connect',
     DISCONNECT = 'disconnect',
     EXTENSION_EVENT = 'ExtensionEvent',

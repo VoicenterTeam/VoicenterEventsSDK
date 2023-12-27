@@ -45,6 +45,7 @@ class EventsSdkClass {
     private listeners: EventFunctionsMap2 = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
         [EventsEnum.ALL_DIALER_STATUS]: [],
+        [EventsEnum.ALL_USERS_STATUS]: [],
         [EventsEnum.QUEUE_EVENT]: [],
         [EventsEnum.EXTENSION_EVENT]: [],
         [EventsEnum.LOGIN_SUCCESS]: [],
