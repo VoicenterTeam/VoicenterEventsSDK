@@ -7,20 +7,23 @@ export interface QueueEvent {
     servertimeoffset: number,
     telephonyservertime: number,
     ivruniqueid: string,
-    data: QueueEventData
+    data: Queue
 }
 
-interface QueueEventData {
+export interface Queue {
     QueueID: number,
     QueueName: string,
-    Calls: QueueEventDataCall[]
+    Calls: Call[],
+    DistributorID?: number,
+    IsDistributedQueue?: boolean
 }
 
-interface QueueEventDataCall {
+export interface Call {
     CallerID: string,
     CallerName: string,
     IvrUniqueID: string,
     JoinTimeStamp: number,
     calldurationinterval: number,
-    ivrid: string
+    ivrid: string,
+    isDistributedQueue?: boolean
 }
