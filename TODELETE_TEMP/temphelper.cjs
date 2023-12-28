@@ -61,9 +61,11 @@ function getPropertiesWhichExistInAllObjects (array) {
 
 // console.log(allPresent(ExtensionEvent, 'dialStatus'))
 
-const array = ExtensionEvent.filter(event => event.data.currentCall).map(event => event.data.currentCall)
-const inAll = getPropertiesWhichExistInAllObjects(array)
-const most = Object.keys(getObjectWithMostProperties(array))
+const ExtensionEventCurrentCalls = ExtensionEvent.filter(event => event.data.currentCall).map(event => event.data.currentCall)
+const ExtensionEventCalls = ExtensionEvent.map(event => event.data.calls).flat()
+const AllExtensionsStatusCalls = AllExtensionsStatus[0].extensions.map(event => event.calls).flat()
+const inAll = getPropertiesWhichExistInAllObjects(ExtensionEventCurrentCalls)
+const most = Object.keys(getObjectWithMostProperties(ExtensionEventCurrentCalls))
 const notInAll = most.filter(key => !inAll.includes(key))
 
 console.log(notInAll)

@@ -5,11 +5,11 @@
         </p>
 
         <template v-else>
-            <div v-if="loggedId">
+            <div>
                 <pre><code style="color: black">{{ JSON.stringify(events, null, 4) }}</code></pre>
             </div>
 
-            <div v-else>
+            <div>
                 <form @submit.prevent="login">
                     <input type="text" v-model="token" placeholder="token" />
 

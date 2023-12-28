@@ -76,6 +76,11 @@ export enum CallStatusEnum {
     HOLD = 'Hold',
 }
 
+export enum CallTypeEnum {
+    INCOMING = 'Incoming',
+    OUTGOING = 'Outgoing'
+}
+
 export enum DoNotCallMeStatusCodeEnum {
     RESPONSE_FROM_API_VALID = 'RESPONSE_FROM_API_VALID',
     RESPONSE_FROM_API_INVALID = 'RESPONSE_FROM_API_INVALID'

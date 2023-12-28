@@ -1,4 +1,4 @@
-import { CallStatusEnum, DialerType, DirectionEnum, DoNotCallMeStatusCodeEnum } from 'enum/events.enum'
+import { CallStatusEnum, CallTypeEnum, DialerType, DirectionEnum, DoNotCallMeStatusCodeEnum } from 'enum/events.enum'
 
 export interface Dialer {
     campaignID: number,
@@ -63,11 +63,9 @@ interface ExtensionCall {
     recording: Recording,
     did: string,
     relatedIvrUniqueIDs?: string[],
-    callType?: '',
-    originalCallerID?: string,
-    originalCallerName?: string,
-    actualDialedNumber?: number
+    callType?: CallTypeEnum,
     ip: string,
+    isInternal: boolean
     blcServerID: number,
     isOpensips: boolean,
     channel: string,
@@ -75,7 +73,9 @@ interface ExtensionCall {
     queueID?: number,
     isSpyed?: boolean,
     blcServerId?: number,
-    isInternal: boolean
+    originalCallerID?: string,
+    originalCallerName?: string,
+    actualDialedNumber?: number
 }
 
 interface QueueCall {
