@@ -67,6 +67,7 @@ export enum ExtensionHangupCauseEnum {
     UNKNOWN = 'Unknown',
     NO_USER_RESPONDING = 'No user responding',
     USER_ALERTING = 'User alerting, no answer',
+    ANSWERED_ELSEWHERE =  'Answered elsewhere'
 }
 
 export enum CallStatusEnum {

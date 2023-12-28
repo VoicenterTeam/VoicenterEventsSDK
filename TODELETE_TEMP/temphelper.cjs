@@ -1,4 +1,4 @@
-const { ExtensionEvent, loginStatus, AllExtensionsStatus } = require('./events.json')
+const { ExtensionEvent, loginStatus, AllExtensionsStatus, QueueEvent } = require('./events.json')
 
 function get (obj, path) {
     const pathArray = path.split('.')
@@ -61,11 +61,41 @@ function getPropertiesWhichExistInAllObjects (array) {
 
 // console.log(allPresent(ExtensionEvent, 'dialStatus'))
 
-const ExtensionEventCurrentCalls = ExtensionEvent.filter(event => event.data.currentCall).map(event => event.data.currentCall)
-const ExtensionEventCalls = ExtensionEvent.map(event => event.data.calls).flat()
-const AllExtensionsStatusCalls = AllExtensionsStatus[0].extensions.map(event => event.calls).flat()
-const inAll = getPropertiesWhichExistInAllObjects(ExtensionEventCurrentCalls)
-const most = Object.keys(getObjectWithMostProperties(ExtensionEventCurrentCalls))
-const notInAll = most.filter(key => !inAll.includes(key))
+const extensionCalls = [
+    ...(ExtensionEvent.map(event => event.data.calls).flat() || []),
+    ...(ExtensionEvent.filter(event => event.data.currentCall).map(event => event.data.currentCall) || [])
+];
 
-console.log(notInAll)
+
+const extensionEventExpectedCallsParameters = Object
+    .keys(
+        getObjectWithMostProperties(extensionCalls)
+    )
+    .filter(
+        key => ['c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID'].includes(key)
+    )
+
+const extensionEventDataExpectedCParameters = Object
+    .keys(
+        getObjectWithMostProperties(ExtensionEvent.map(event => event.data))
+    )
+    .filter(
+        key => ['c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID'].includes(key)
+    )
+
+const extensionEventExpectedCParameters = Object
+    .keys(
+        getObjectWithMostProperties(ExtensionEvent)
+    )
+    .filter(
+        key => ['c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID'].includes(key)
+    )
+
+const extensionDirectionValues = getUniquePropertyValues(extensionCalls, 'direction').filter(value => ['Spy', 'Click2call'].includes(value))
+
+console.log('Extension callstatus values (expect to get "Spying")', getUniquePropertyValues(extensionCalls, 'callstatus'))
+console.log('Extension cause values (expect to get "Answered elsewhere")', getUniquePropertyValues(ExtensionEvent, 'cause'))
+console.log('Extension event calls expected parameters (expect to get c2cdirection, callerID, Ivruniqueid or campaignID)', extensionEventExpectedCallsParameters)
+console.log('Extension event data expected parameters (expect to get c2cdirection, callerID, Ivruniqueid or campaignID)', extensionEventDataExpectedCParameters)
+console.log('Extension event expected parameters (expect to get c2cdirection, callerID, Ivruniqueid or campaignID)', extensionEventExpectedCParameters)
+console.log('Extension direction values (expect to get "Spy" and "Click2call")', extensionDirectionValues)
