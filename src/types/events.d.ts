@@ -70,16 +70,21 @@ export interface EventDataMap {
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseData
 }
 
-type MakeSocketEvent <T> = (data: T) => void
-
 type ListenerEvents = keyof EventDataMap // specifies events which events sdk and client listen to...
+
+type WrappedSocketEventData <T extends EventsEnum> = {
+    name: T
+    data: EventDataMap[T]
+}
 
 export type EventTypeData <T extends EventsEnum> = EventDataMap[T]
 
-export type EventFunctionsMap = {
-    [K in ListenerEvents]: MakeSocketEvent<EventDataMap[K]>
+export type SocketsEvents = {
+    [K in ListenerEvents]: (data: EventDataMap[K]) => void
 }
 
-export type EventFunctionsMap2 = {
-    [K in ListenerEvents]: Array<(data: EventDataMap[K]) => void>
+export type EventListenerCallback <T extends ListenerEvents> = (data: WrappedSocketEventData<T>) => void
+
+export type EventListenersMap = {
+    [K in ListenerEvents]: Array<EventListenerCallback<K>>
 }

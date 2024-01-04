@@ -4,7 +4,7 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
 
-class AuthClass {
+class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
     }

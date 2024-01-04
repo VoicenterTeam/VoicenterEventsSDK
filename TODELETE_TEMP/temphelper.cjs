@@ -64,7 +64,7 @@ function getPropertiesWhichExistInAllObjects (array) {
 const extensionCalls = [
     ...(ExtensionEvent.map(event => event.data.calls).flat() || []),
     ...(ExtensionEvent.filter(event => event.data.currentCall).map(event => event.data.currentCall) || [])
-];
+]
 
 
 const extensionEventExpectedCallsParameters = Object
@@ -72,7 +72,7 @@ const extensionEventExpectedCallsParameters = Object
         getObjectWithMostProperties(extensionCalls)
     )
     .filter(
-        key => ['c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID'].includes(key)
+        key => [ 'c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID' ].includes(key)
     )
 
 const extensionEventDataExpectedCParameters = Object
@@ -80,7 +80,7 @@ const extensionEventDataExpectedCParameters = Object
         getObjectWithMostProperties(ExtensionEvent.map(event => event.data))
     )
     .filter(
-        key => ['c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID'].includes(key)
+        key => [ 'c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID' ].includes(key)
     )
 
 const extensionEventExpectedCParameters = Object
@@ -88,10 +88,10 @@ const extensionEventExpectedCParameters = Object
         getObjectWithMostProperties(ExtensionEvent)
     )
     .filter(
-        key => ['c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID'].includes(key)
+        key => [ 'c2cdirection', 'callerID', 'Ivruniqueid', 'campaignID' ].includes(key)
     )
 
-const extensionDirectionValues = getUniquePropertyValues(extensionCalls, 'direction').filter(value => ['Spy', 'Click2call'].includes(value))
+const extensionDirectionValues = getUniquePropertyValues(extensionCalls, 'direction').filter(value => [ 'Spy', 'Click2call' ].includes(value))
 
 console.log('Extension callstatus values (expect to get "Spying")', getUniquePropertyValues(extensionCalls, 'callstatus'))
 console.log('Extension cause values (expect to get "Answered elsewhere")', getUniquePropertyValues(ExtensionEvent, 'cause'))

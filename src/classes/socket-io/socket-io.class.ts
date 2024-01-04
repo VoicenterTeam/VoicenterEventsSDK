@@ -6,7 +6,7 @@ import { Environment, ServerParameter } from '@/classes/events-sdk/events-sdk.ty
 import { EventsEnum } from '@/enum/events.enum'
 import { KeepAliveResponseData } from '@/types/events'
 
-export class SocketIoClass {
+export class SocketIoClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
     }
