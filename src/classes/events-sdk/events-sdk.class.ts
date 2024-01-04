@@ -5,6 +5,7 @@ import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
 import {
+    AllEventData,
     EventListenerCallback,
     EventListenersMap,
     EventTypeData,
@@ -60,9 +61,33 @@ class EventsSdkClass{
         [EventsEnum.LOGIN_STATUS]: [],
         [EventsEnum.KEEP_ALIVE_RESPONSE]: []
     }
+    private allListeners: Array<(data: AllEventData) => void> = []
 
-    public on <T extends ListenerEvents> (event: T, callback: EventListenerCallback<T>) {
-        this.listeners[event].push(callback)
+    public on<T extends ListenerEvents> (event: T, callback: EventListenerCallback<T>): void
+    public on (event: '*', callback: (data: AllEventData) => void): void
+    public on (event: unknown, callback: unknown) {
+        if (event === '*') {
+            this.allListeners.push(callback as (data: AllEventData) => void)
+        } else {
+            // Handle specific event type with strong typing
+            this.listeners[event as ListenerEvents].push(callback as EventListenerCallback<ListenerEvents>)
+        }
+    }
+
+    public off<T extends ListenerEvents> (event: T, callback: EventListenerCallback<T>): void
+    public off (event: '*', callback: (data: AllEventData) => void): void
+    public off (event: unknown, callback: unknown) {
+        if (event === '*') {
+            this.allListeners = this.allListeners.filter(item => item !== callback)
+        } else {
+            const data = this.listeners[event as ListenerEvents] as Array<EventListenerCallback<ListenerEvents>>
+            const filtered = data.filter(item => item !== callback)
+
+            this.listeners = {
+                ...this.listeners,
+                [event as ListenerEvents]: filtered
+            }
+        }
     }
 
     public emit <T extends ListenerEvents> (event: T, data: EventTypeData<T>) {
@@ -72,15 +97,13 @@ class EventsSdkClass{
             name: event,
             data
         }))
-    }
 
-    public off <T extends ListenerEvents> (event: T, callback: EventListenerCallback<T>) {
-        const filtered = this.listeners[event].filter(item => item !== callback)
-
-        this.listeners = {
-            ...this.listeners,
-            [event]: filtered
+        const allEventData: AllEventData = {
+            name: event,
+            data: data as any
         }
+
+        this.allListeners.forEach((callback) => callback(allEventData))
     }
 
     public connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false) {

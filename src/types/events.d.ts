@@ -88,3 +88,8 @@ export type EventListenerCallback <T extends ListenerEvents> = (data: WrappedSoc
 export type EventListenersMap = {
     [K in ListenerEvents]: Array<EventListenerCallback<K>>
 }
+
+type EventDataTypes = {
+    [K in ListenerEvents]: WrappedSocketEventData<K>
+}
+export type AllEventData = EventDataTypes[ListenerEvents]

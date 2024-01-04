@@ -141,6 +141,38 @@ async function login() {
         }
     )
 
+    sdk.on(
+        '*',
+        (data) => {
+            switch (data.name) {
+                case EventsEnum.ALL_DIALER_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.ALL_DIALER_STATUS}`, data)
+                    break
+                case EventsEnum.ALL_EXTENSION_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.ALL_EXTENSION_STATUS}`, data)
+                    break
+                case EventsEnum.ALL_USERS_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.ALL_USERS_STATUS}`, data)
+                    break
+                case EventsEnum.QUEUE_EVENT:
+                    console.log(`FROM ALL ${EventsEnum.QUEUE_EVENT}`, data)
+                    break
+                case EventsEnum.EXTENSION_EVENT:
+                    console.log(`FROM ALL ${EventsEnum.EXTENSION_EVENT}`, data)
+                    break
+                case EventsEnum.LOGIN_SUCCESS:
+                    console.log(`FROM ALL ${EventsEnum.LOGIN_SUCCESS}`, data)
+                    break
+                case EventsEnum.LOGIN_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.LOGIN_STATUS}`, data)
+                    break
+                default:
+                    console.log('Unknown event', data)
+
+            }
+        }
+    )
+
     setTimeout(
         () => {
             if (!loggedId.value) {
