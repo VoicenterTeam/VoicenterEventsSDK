@@ -1,22 +1,21 @@
-import mysql from '@voicenter-team/mysql-dynamic-cluster'
 import fs from 'fs'
+import mysql from '@voicenter-team/mysql-dynamic-cluster'
 
 const connection = mysql.createPoolCluster({
     clusterName: 'demo',
-    // Configuration for each pool. At least 2 pools are recommended
     hosts: [
         {
-            host: '',
-            port: 0,
+            host: '192.168.187.22',
+            port: 3306,
             name: 'lab22',
         }
     ],
     // Configuration for all pools
     defaultPoolSettings: {
-        user: '',
-        password: '',
-        database: '',
-        docsDatabase: '',
+        user: 'api',
+        password: 'SecretAPI35t478p3!!!',
+        database: 'voicenter_core',
+        docsDatabase: 'monitor_events_api_doc',
         charset: 'utf8mb4',
         port: 3313,
         // validators: [],
