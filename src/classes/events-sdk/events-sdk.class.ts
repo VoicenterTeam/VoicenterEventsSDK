@@ -4,11 +4,17 @@ import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
-import { EventDataMap, EventFunctionsMap, EventFunctionsMap2, ListenerEvents, MakeSocketEvent } from '@/types/events'
+import {
+    GenericEventWrapper,
+    EventSpecificCallback,
+    EventCallbackListenersMap,
+    EventTypeData,
+    EventTypeNames,
+} from '@/types/events'
 import { EventsEnum } from '@/enum/events.enum'
 
-class EventsSdkClass {
-    constructor (public readonly options: EventsSdkOptions) {
+class EventsSdkClass{
+    constructor (options: EventsSdkOptions) {
         this.options = {
             ...eventsSdkDefaultOptions,
             ...options
@@ -22,6 +28,9 @@ class EventsSdkClass {
     }
 
     private argumentOptions: EventsSdkOptions
+    public readonly options: EventsSdkOptions = {
+        ...eventsSdkDefaultOptions
+    }
     public servers: Server[] = []
     public server: Server
     public socket: SocketTyped | undefined
@@ -42,7 +51,7 @@ class EventsSdkClass {
         trailing: false
     })
 
-    private listeners: EventFunctionsMap2 = {
+    private listeners: EventCallbackListenersMap = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
         [EventsEnum.ALL_DIALER_STATUS]: [],
         [EventsEnum.ALL_USERS_STATUS]: [],
@@ -52,24 +61,49 @@ class EventsSdkClass {
         [EventsEnum.LOGIN_STATUS]: [],
         [EventsEnum.KEEP_ALIVE_RESPONSE]: []
     }
+    private allListeners: Array<(data: GenericEventWrapper) => void> = []
 
-    public on <T extends ListenerEvents> (event: T, callback: EventFunctionsMap[T]) {
-        this.listeners[event].push(callback)
+    public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
+    public on (event: '*', callback: (data: GenericEventWrapper) => void): void
+    public on (event: unknown, callback: unknown) {
+        if (event === '*') {
+            this.allListeners.push(callback as (data: GenericEventWrapper) => void)
+        } else {
+            // Handle specific event type with strong typing
+            this.listeners[event as EventTypeNames].push(callback as EventSpecificCallback<EventTypeNames>)
+        }
     }
 
-    public emit <T extends ListenerEvents> (event: T, data: EventDataMap[T]) {
+    public off<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
+    public off (event: '*', callback: (data: GenericEventWrapper) => void): void
+    public off (event: unknown, callback: unknown) {
+        if (event === '*') {
+            this.allListeners = this.allListeners.filter(item => item !== callback)
+        } else {
+            const data = this.listeners[event as EventTypeNames] as Array<EventSpecificCallback<EventTypeNames>>
+            const filtered = data.filter(item => item !== callback)
+
+            this.listeners = {
+                ...this.listeners,
+                [event as EventTypeNames]: filtered
+            }
+        }
+    }
+
+    public emit <T extends EventTypeNames> (event: T, data: EventTypeData<T>) {
         this.socketIoClass.lastEventTimestamp = new Date().getTime()
 
-        this.listeners[event].forEach(callback => callback(data))
-    }
+        this.listeners[event].forEach(callback => callback({
+            name: event,
+            data
+        }))
 
-    public off <T extends ListenerEvents> (event: T, callback: MakeSocketEvent<EventDataMap[T]>) {
-        const filtered = this.listeners[event].filter(item => item !== callback)
-
-        this.listeners = {
-            ...this.listeners,
-            [event]: filtered
+        const allEventData: GenericEventWrapper = {
+            name: event,
+            data: data as any
         }
+
+        this.allListeners.forEach((callback) => callback(allEventData))
     }
 
     public connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false) {

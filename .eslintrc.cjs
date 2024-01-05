@@ -8,5 +8,8 @@ module.exports = {
     ],
     env: {
         browser: true
+    },
+    rules: {
+        'no-dupe-class-members': 'off'
     }
 }

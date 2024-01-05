@@ -11,7 +11,7 @@
 
             <div>
                 <form @submit.prevent="login">
-                    <input type="text" v-model="token" placeholder="token" />
+                    <input type="text" v-model="token" placeholder="token"/>
 
                     <button type="submit">Login</button>
                 </form>
@@ -48,48 +48,48 @@ async function login() {
 
     await sdk.init()
 
-  sdk.on(
-      EventsEnum.ALL_DIALER_STATUS,
-      (data) => {
-        console.log(EventsEnum.ALL_DIALER_STATUS, data)
+    sdk.on(
+        EventsEnum.ALL_DIALER_STATUS,
+        ({ data }) => {
+            console.log(EventsEnum.ALL_DIALER_STATUS, data)
 
-        if (!events[EventsEnum.ALL_DIALER_STATUS]) {
-          events[EventsEnum.ALL_DIALER_STATUS] = []
+            if (!events[EventsEnum.ALL_DIALER_STATUS]) {
+                events[EventsEnum.ALL_DIALER_STATUS] = []
+            }
+
+            events[EventsEnum.ALL_DIALER_STATUS]?.push(data)
         }
+    )
 
-        events[EventsEnum.ALL_DIALER_STATUS]?.push(data)
-      }
-  )
+    sdk.on(
+        EventsEnum.ALL_EXTENSION_STATUS,
+        ({ data }) => {
+            console.log(EventsEnum.ALL_EXTENSION_STATUS, data)
 
-  sdk.on(
-      EventsEnum.ALL_EXTENSION_STATUS,
-      (data) => {
-        console.log(EventsEnum.ALL_EXTENSION_STATUS, data)
+            if (!events[EventsEnum.ALL_EXTENSION_STATUS]) {
+                events[EventsEnum.ALL_EXTENSION_STATUS] = []
+            }
 
-        if (!events[EventsEnum.ALL_EXTENSION_STATUS]) {
-          events[EventsEnum.ALL_EXTENSION_STATUS] = []
+            events[EventsEnum.ALL_EXTENSION_STATUS]?.push(data)
         }
+    )
 
-        events[EventsEnum.ALL_EXTENSION_STATUS]?.push(data)
-      }
-  )
+    sdk.on(
+        EventsEnum.ALL_USERS_STATUS,
+        ({ data }) => {
+            console.log(EventsEnum.ALL_USERS_STATUS, data)
 
-  sdk.on(
-      EventsEnum.ALL_USERS_STATUS,
-      (data) => {
-        console.log(EventsEnum.ALL_USERS_STATUS, data)
+            if (!events[EventsEnum.ALL_USERS_STATUS]) {
+                events[EventsEnum.ALL_USERS_STATUS] = []
+            }
 
-        if (!events[EventsEnum.ALL_USERS_STATUS]) {
-          events[EventsEnum.ALL_USERS_STATUS] = []
+            events[EventsEnum.ALL_USERS_STATUS]?.push(data)
         }
-
-        events[EventsEnum.ALL_USERS_STATUS]?.push(data)
-      }
-  )
+    )
 
     sdk.on(
         EventsEnum.QUEUE_EVENT,
-        (data) => {
+        ({ data }) => {
             console.log(EventsEnum.QUEUE_EVENT, data)
 
             if (!events[EventsEnum.QUEUE_EVENT]) {
@@ -102,7 +102,7 @@ async function login() {
 
     sdk.on(
         EventsEnum.EXTENSION_EVENT,
-        (data) => {
+        ({ data }) => {
             console.log(EventsEnum.EXTENSION_EVENT, data)
 
             if (!events[EventsEnum.EXTENSION_EVENT]) {
@@ -115,28 +115,63 @@ async function login() {
 
     sdk.on(
         EventsEnum.LOGIN_SUCCESS,
-        (data) => {
-          console.log(EventsEnum.LOGIN_SUCCESS, data)
-          if (!events[EventsEnum.LOGIN_SUCCESS]) {
-            events[EventsEnum.LOGIN_SUCCESS] = []
-          }
+        ({ data }) => {
+            console.log(EventsEnum.LOGIN_SUCCESS, data)
+            if (!events[EventsEnum.LOGIN_SUCCESS]) {
+                events[EventsEnum.LOGIN_SUCCESS] = []
+            }
+
             loggedId.value = true
             loading.value = false
-          events[EventsEnum.LOGIN_SUCCESS]?.push(data)
+
+            events[EventsEnum.LOGIN_SUCCESS]?.push(data)
             alert('Login success')
         }
     )
 
-  sdk.on(
-      EventsEnum.LOGIN_STATUS,
-      (data) => {
-        console.log(EventsEnum.LOGIN_STATUS, data)
-        if (!events[EventsEnum.LOGIN_STATUS]) {
-          events[EventsEnum.LOGIN_STATUS] = []
+    sdk.on(
+        EventsEnum.LOGIN_STATUS,
+        ({ data }) => {
+            console.log(EventsEnum.LOGIN_STATUS, data)
+            if (!events[EventsEnum.LOGIN_STATUS]) {
+                events[EventsEnum.LOGIN_STATUS] = []
+            }
+
+            events[EventsEnum.LOGIN_STATUS]?.push(data)
         }
-        events[EventsEnum.LOGIN_STATUS]?.push(data)
-      }
-  )
+    )
+
+    sdk.on(
+        '*',
+        (data) => {
+            switch (data.name) {
+                case EventsEnum.ALL_DIALER_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.ALL_DIALER_STATUS}`, data)
+                    break
+                case EventsEnum.ALL_EXTENSION_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.ALL_EXTENSION_STATUS}`, data)
+                    break
+                case EventsEnum.ALL_USERS_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.ALL_USERS_STATUS}`, data)
+                    break
+                case EventsEnum.QUEUE_EVENT:
+                    console.log(`FROM ALL ${EventsEnum.QUEUE_EVENT}`, data)
+                    break
+                case EventsEnum.EXTENSION_EVENT:
+                    console.log(`FROM ALL ${EventsEnum.EXTENSION_EVENT}`, data)
+                    break
+                case EventsEnum.LOGIN_SUCCESS:
+                    console.log(`FROM ALL ${EventsEnum.LOGIN_SUCCESS}`, data)
+                    break
+                case EventsEnum.LOGIN_STATUS:
+                    console.log(`FROM ALL ${EventsEnum.LOGIN_STATUS}`, data)
+                    break
+                default:
+                    console.log('Unknown event', data)
+
+            }
+        }
+    )
 
     setTimeout(
         () => {
