@@ -51,7 +51,6 @@ async function login() {
     sdk.on(
         EventsEnum.ALL_DIALER_STATUS,
         ({ data }) => {
-            console.log(EventsEnum.ALL_DIALER_STATUS, data)
 
             if (!events[EventsEnum.ALL_DIALER_STATUS]) {
                 events[EventsEnum.ALL_DIALER_STATUS] = []
@@ -64,7 +63,6 @@ async function login() {
     sdk.on(
         EventsEnum.ALL_EXTENSION_STATUS,
         ({ data }) => {
-            console.log(EventsEnum.ALL_EXTENSION_STATUS, data)
 
             if (!events[EventsEnum.ALL_EXTENSION_STATUS]) {
                 events[EventsEnum.ALL_EXTENSION_STATUS] = []
@@ -77,7 +75,6 @@ async function login() {
     sdk.on(
         EventsEnum.ALL_USERS_STATUS,
         ({ data }) => {
-            console.log(EventsEnum.ALL_USERS_STATUS, data)
 
             if (!events[EventsEnum.ALL_USERS_STATUS]) {
                 events[EventsEnum.ALL_USERS_STATUS] = []
@@ -90,7 +87,6 @@ async function login() {
     sdk.on(
         EventsEnum.QUEUE_EVENT,
         ({ data }) => {
-            console.log(EventsEnum.QUEUE_EVENT, data)
 
             if (!events[EventsEnum.QUEUE_EVENT]) {
                 events[EventsEnum.QUEUE_EVENT] = []
@@ -103,7 +99,6 @@ async function login() {
     sdk.on(
         EventsEnum.EXTENSION_EVENT,
         ({ data }) => {
-            console.log(EventsEnum.EXTENSION_EVENT, data)
 
             if (!events[EventsEnum.EXTENSION_EVENT]) {
                 events[EventsEnum.EXTENSION_EVENT] = []
@@ -116,7 +111,6 @@ async function login() {
     sdk.on(
         EventsEnum.LOGIN_SUCCESS,
         ({ data }) => {
-            console.log(EventsEnum.LOGIN_SUCCESS, data)
             if (!events[EventsEnum.LOGIN_SUCCESS]) {
                 events[EventsEnum.LOGIN_SUCCESS] = []
             }
@@ -132,7 +126,6 @@ async function login() {
     sdk.on(
         EventsEnum.LOGIN_STATUS,
         ({ data }) => {
-            console.log(EventsEnum.LOGIN_STATUS, data)
             if (!events[EventsEnum.LOGIN_STATUS]) {
                 events[EventsEnum.LOGIN_STATUS] = []
             }

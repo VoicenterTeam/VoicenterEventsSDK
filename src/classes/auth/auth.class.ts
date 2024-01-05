@@ -79,12 +79,10 @@ class AuthClass{
             this.token = loginSessionData.Token
             this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
         }
-        if (loginSessionData.TokenExpiry) {
-            // this.options.tokenExpiry = loginSessionData.TokenExpiry
-        }
-        if (loginSessionData.RefreshToken) {
-            // this.options.refreshToken = loginSessionData.RefreshToken
-            // this.handleTokenExpiry()
+        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === 'user') {
+            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
+            this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
+            this.handleTokenExpiry()
         }
     }
 
@@ -98,6 +96,36 @@ class AuthClass{
         if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
             window.sessionStorage.setItem(key, JSON.stringify(externalLoginResponse))
         }
+    }
+
+    public handleTokenExpiry () {
+        let date: Date
+
+        if (this.eventsSdkClass.options.tokenExpiry) {
+            date = new Date(this.eventsSdkClass.options.tokenExpiry)
+        } else {
+            return
+        }
+
+        const timeout = date.getTime() - new Date().getTime() - 5000 // 5 seconds before expire
+
+        const maxAllowedTimeout = Math.min(timeout, 0x7FFFFFFF)
+
+        setTimeout(
+            async () => {
+                if (this.eventsSdkClass.options.refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
+                    let Socket = null
+                    const res = await this.refreshToken(this.eventsSdkClass.options.refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
+
+                    if (res.Data) {
+                        Socket = res.Data.Socket
+                        return this.onLoginResponse(Socket)
+                    }
+
+                    throw new Error('Error on refreshToken')
+                }
+            },
+            maxAllowedTimeout)
     }
 
     private getExternalLoginUrl (baseUrl: string, loginType: string) {
@@ -137,6 +165,18 @@ class AuthClass{
             throw new Error(data.error)
         }
         return data.Data.Socket
+    }
+
+    private async refreshToken (refreshTokenUrl: string, oldRefreshToken: string) {
+        const res = await fetch(refreshTokenUrl, {
+            method: 'GET',
+
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${oldRefreshToken}`
+            }
+        })
+        return res.json()
     }
 }
 
