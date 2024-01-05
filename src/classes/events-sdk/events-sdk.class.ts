@@ -5,11 +5,11 @@ import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
 import {
-    AllEventData,
-    EventListenerCallback,
-    EventListenersMap,
+    GenericEventWrapper,
+    EventSpecificCallback,
+    EventCallbackListenersMap,
     EventTypeData,
-    ListenerEvents,
+    EventTypeNames,
 } from '@/types/events'
 import { EventsEnum } from '@/enum/events.enum'
 
@@ -51,7 +51,7 @@ class EventsSdkClass{
         trailing: false
     })
 
-    private listeners: EventListenersMap = {
+    private listeners: EventCallbackListenersMap = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
         [EventsEnum.ALL_DIALER_STATUS]: [],
         [EventsEnum.ALL_USERS_STATUS]: [],
@@ -61,36 +61,36 @@ class EventsSdkClass{
         [EventsEnum.LOGIN_STATUS]: [],
         [EventsEnum.KEEP_ALIVE_RESPONSE]: []
     }
-    private allListeners: Array<(data: AllEventData) => void> = []
+    private allListeners: Array<(data: GenericEventWrapper) => void> = []
 
-    public on<T extends ListenerEvents> (event: T, callback: EventListenerCallback<T>): void
-    public on (event: '*', callback: (data: AllEventData) => void): void
+    public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
+    public on (event: '*', callback: (data: GenericEventWrapper) => void): void
     public on (event: unknown, callback: unknown) {
         if (event === '*') {
-            this.allListeners.push(callback as (data: AllEventData) => void)
+            this.allListeners.push(callback as (data: GenericEventWrapper) => void)
         } else {
             // Handle specific event type with strong typing
-            this.listeners[event as ListenerEvents].push(callback as EventListenerCallback<ListenerEvents>)
+            this.listeners[event as EventTypeNames].push(callback as EventSpecificCallback<EventTypeNames>)
         }
     }
 
-    public off<T extends ListenerEvents> (event: T, callback: EventListenerCallback<T>): void
-    public off (event: '*', callback: (data: AllEventData) => void): void
+    public off<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
+    public off (event: '*', callback: (data: GenericEventWrapper) => void): void
     public off (event: unknown, callback: unknown) {
         if (event === '*') {
             this.allListeners = this.allListeners.filter(item => item !== callback)
         } else {
-            const data = this.listeners[event as ListenerEvents] as Array<EventListenerCallback<ListenerEvents>>
+            const data = this.listeners[event as EventTypeNames] as Array<EventSpecificCallback<EventTypeNames>>
             const filtered = data.filter(item => item !== callback)
 
             this.listeners = {
                 ...this.listeners,
-                [event as ListenerEvents]: filtered
+                [event as EventTypeNames]: filtered
             }
         }
     }
 
-    public emit <T extends ListenerEvents> (event: T, data: EventTypeData<T>) {
+    public emit <T extends EventTypeNames> (event: T, data: EventTypeData<T>) {
         this.socketIoClass.lastEventTimestamp = new Date().getTime()
 
         this.listeners[event].forEach(callback => callback({
@@ -98,7 +98,7 @@ class EventsSdkClass{
             data
         }))
 
-        const allEventData: AllEventData = {
+        const allEventData: GenericEventWrapper = {
             name: event,
             data: data as any
         }

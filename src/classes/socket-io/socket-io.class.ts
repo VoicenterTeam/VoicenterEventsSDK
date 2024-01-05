@@ -4,7 +4,7 @@ import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { Environment, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
-import { KeepAliveResponseData } from '@/types/events'
+import { KeepAliveResponseEvent } from '@/types/events'
 
 export class SocketIoClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -138,7 +138,7 @@ export class SocketIoClass{
         // }
     }
 
-    private onKeepAliveResponse (data: KeepAliveResponseData) {
+    private onKeepAliveResponse (data: KeepAliveResponseEvent) {
         if (data.errorCode) {
             this.initSocketConnection()
 
