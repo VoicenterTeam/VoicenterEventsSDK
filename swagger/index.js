@@ -1,6 +1,7 @@
 import fs from 'fs'
 import fastify from 'fastify'
-import fastifySwagger from '@fastify/swagger'
+import fastifySwagger from 'fastify-swagger'
+import openapiGlue from 'fastify-openapi-glue'
 
 const app = fastify()
 
@@ -15,16 +16,37 @@ const start = async () => {
         const swagger = JSON.parse(fs.readFileSync('./generated/Swagger.json').toString())
 
         const swaggerOptions = {
-            swagger
+            routePrefix: '/documentation',
+            exposeRoute: true,
+            swagger: {
+                ...swagger,
+                schemes: [ 'https', 'http' ],
+                securityDefinitions: {
+                    JWT: {
+                        type: 'apiKey',
+                        name: 'Authorization',
+                        in: 'header'
+                    }
+                },
+                security: [ { JWT: [] } ]
+            },
+            uiConfig: {
+                docExpansion: 'full',
+                deepLinking: false
+            }
         }
 
-        console.log(swaggerOptions)
+        const openapiGlueOptions = {
+            specification: './generated/Swagger.json',
+            service: {},
+        }
 
         app.register(fastifySwagger, swaggerOptions)
 
+        app.register(openapiGlue, openapiGlueOptions)
+
         await app.listen({
-            host: 'localhost',
-            port: 3000 
+            port: 3000
         })
 
         console.log('Server is running on port: 3000')
