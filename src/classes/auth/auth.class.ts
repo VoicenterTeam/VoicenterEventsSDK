@@ -89,7 +89,7 @@ class AuthClass{
     private async userLoginFunction (payload: LoginSessionPayload, key: string) {
         const externalLoginUrl = this.getExternalLoginUrl(this.eventsSdkClass.options.loginUrl, this.eventsSdkClass.options.loginType)
 
-        const externalLoginResponse = await this.externalLogin(externalLoginUrl, payload)
+        const externalLoginResponse = await this.externalLogin(externalLoginUrl, payload, this.eventsSdkClass.options.loginType)
 
         this.onLoginResponse(externalLoginResponse)
 
@@ -138,21 +138,18 @@ class AuthClass{
         return baseUrl
     }
 
-    private async externalLogin (url: string, { email, password, token, username }: LoginSessionPayload) {
+    private async externalLogin (url: string, { password, token, email }: LoginSessionPayload, loginType: string) {
         let body: string
-        if (token) {
+
+        if (loginType === 'token') {
             body = JSON.stringify({ token })
-        } else if (username) {
-            body = JSON.stringify({
-                username,
-                password
-            })
         } else {
             body = JSON.stringify({
                 email,
                 pin: password
             })
         }
+
         const res = await fetch(url, {
             method: 'POST',
             headers: {
@@ -160,7 +157,9 @@ class AuthClass{
             },
             body,
         })
+
         const data = await res.json()
+
         if (data.error) {
             throw new Error(data.error)
         }
