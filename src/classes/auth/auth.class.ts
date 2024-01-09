@@ -29,7 +29,7 @@ class AuthClass{
 
         this.updateLastLoginTimestamp()
 
-        const isLoggedIn = this.checkLoginStatus(options, key)
+        const isLoggedIn = await this.checkLoginStatus(options, key)
 
         if (!isLoggedIn) {
             await this.userLoginFunction(payload, key)
@@ -40,19 +40,30 @@ class AuthClass{
         this.lastLoginTimestamp = new Date().getTime()
     }
 
-    private checkLoginStatus (options: EventsSdkOptions, key: string): boolean {
+    private async checkLoginStatus (options: EventsSdkOptions, key: string): Promise<boolean> {
         let loginSessionData: LoginSessionData
         if (options.environment === Environment.BROWSER && window) {
             const loginSessionKey = window.sessionStorage.getItem(key)
+
             if (loginSessionKey) {
                 loginSessionData = JSON.parse(loginSessionKey)
+
                 this.onLoginResponse(loginSessionData)
+
                 return true
             }
         }
-        // if (options.environment === Environment.CHROME_EXTENSION && chrome) {
-        //     console.log('extension', key)
-        // }
+        if (options.environment === Environment.CHROME_EXTENSION && chrome) {
+            const loginSessionKey = await chrome.storage.session.get(key)
+
+            if (loginSessionKey[key]) {
+                loginSessionData = JSON.parse(loginSessionKey[key])
+
+                this.onLoginResponse(loginSessionData)
+
+                return true
+            }
+        }
         return false
     }
 
@@ -95,6 +106,9 @@ class AuthClass{
 
         if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
             window.sessionStorage.setItem(key, JSON.stringify(externalLoginResponse))
+        }
+        if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
+            await chrome.storage.session.set({ [key]: JSON.stringify(externalLoginResponse) })
         }
     }
 

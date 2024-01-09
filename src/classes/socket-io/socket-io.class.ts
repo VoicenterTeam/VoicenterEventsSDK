@@ -133,9 +133,9 @@ export class SocketIoClass{
         if (this.eventsSdkClass.options.environment === Environment.BROWSER && window) {
             window.sessionStorage.clear()
         }
-        // if (options.environment === Environment.CHROME_EXTENSION && chrome) {
-        //     chrome.storage.session.clear()
-        // }
+        if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION && chrome) {
+            chrome.storage.session.clear()
+        }
     }
 
     private onKeepAliveResponse (data: KeepAliveResponseEvent) {
