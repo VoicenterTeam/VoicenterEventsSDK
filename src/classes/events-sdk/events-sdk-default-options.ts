@@ -11,7 +11,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
     refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
     // servers: defaultServers, // commented temporary
     token: '',
-    loginType: 'user',
+    loginType: 'token',
     forceNew: true,
     reconnectionDelay: 10000,
     reconnectionDelayMax: 10000,

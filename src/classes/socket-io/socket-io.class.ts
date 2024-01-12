@@ -1,4 +1,4 @@
-import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
+import { ManagerOptions, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
@@ -13,7 +13,6 @@ export class SocketIoClass{
 
     public io: SocketTyped | undefined
     public ioFunction: TypedSocketIo | undefined
-    private allConnections: Socket[] = []
     public lastEventTimestamp = new Date().getTime()
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
     private keepReconnectInterval: ReturnType<typeof setInterval> | undefined
@@ -47,6 +46,7 @@ export class SocketIoClass{
                 reconnection: false,
                 upgrade: false,
                 transports: [ 'websocket' ],
+                forceNew: true,
                 query: {
                     token
                 }
@@ -60,8 +60,6 @@ export class SocketIoClass{
 
             if (this.ioFunction) {
                 this.io = this.ioFunction(url, options)
-
-                this.allConnections.push(this.io)
             }
         } catch (e) {
             // this.log(ERROR, e);
@@ -91,21 +89,19 @@ export class SocketIoClass{
         this.keepAliveInterval = setInterval(async () => {
             const now = new Date().getTime()
 
-            const delta = this.eventsSdkClass.options.keepAliveTimeout * 2
+            // if (now > this.lastEventTimestamp + delta) {
+            //     this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
+            //
+            //     return
+            // }
+            //
+            // if (!this.io) {
+            //     this.initSocketConnection()
+            //
+            //     return
+            // }
 
-            if (now > this.lastEventTimestamp + delta) {
-                this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
-
-                return
-            }
-
-            if (!this.io) {
-                this.initSocketConnection()
-
-                return
-            }
-
-            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout) {
+            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io) {
                 this.io.emit(EventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
 
                 return
@@ -115,13 +111,6 @@ export class SocketIoClass{
     }
 
     public closeAllConnections () {
-        this.allConnections.forEach(connection => {
-            connection.close()
-            connection.disconnect()
-        })
-
-        this.allConnections = []
-
         if (this.io) {
             this.io.close()
 
@@ -171,7 +160,7 @@ export class SocketIoClass{
 
         this.keepReconnectInterval = setInterval(() => {
             console.log('attempt to connect...')
-            this.eventsSdkClass.connect()
+            this.eventsSdkClass.connect(ServerParameter.NEXT, true)
         }, 15000)
     }
 }
