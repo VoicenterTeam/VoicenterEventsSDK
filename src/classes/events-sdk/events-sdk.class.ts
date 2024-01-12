@@ -153,7 +153,7 @@ class EventsSdkClass{
 
         const nextServerPriority = currentServerPriority + 1
 
-        const nextServer = this.servers.find(server => server.Priority === nextServerPriority) || this.findMaxPriorityServer()
+        const nextServer = this.servers.find(server => server.Priority === nextServerPriority) || this.findMinPriorityServer()
 
         this.server = { ...nextServer }
 
@@ -177,6 +177,20 @@ class EventsSdkClass{
             this.server = maxPriorityServer
 
             // this.log(INFO, 'Fallback -> Trying to find previous server');
+
+            return this.server
+        }
+
+        return this.server
+    }
+
+    private findMinPriorityServer (): Server {
+        const minPriority = Math.min(...this.servers.map(server => server.Priority))
+
+        const server = this.servers.find(server => server.Priority === minPriority)
+
+        if (server) {
+            this.server = server
 
             return this.server
         }
