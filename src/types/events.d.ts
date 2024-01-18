@@ -88,6 +88,10 @@ export interface KeepAliveResponseEvent extends CommonEventProperties {
     isOk: boolean
 }
 
+export interface OnlineStatusEvent {
+    isSocketConnected: boolean
+}
+
 /**
  * Mapping of event names to their respective data structures.
  */
@@ -100,6 +104,7 @@ export interface EventDataMap {
     [EventsEnum.LOGIN_SUCCESS]: LoginSuccessEvent
     [EventsEnum.LOGIN_STATUS]: LoginStatusEvent
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseEvent
+    [EventsEnum.ONLINE_STATUS_EVENT]: OnlineStatusEvent
 }
 
 /**

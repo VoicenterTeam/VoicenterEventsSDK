@@ -119,7 +119,6 @@ async function login() {
             loading.value = false
 
             events[EventsEnum.LOGIN_SUCCESS]?.push(data)
-            alert('Login success')
         }
     )
 
@@ -158,6 +157,9 @@ async function login() {
                     break
                 case EventsEnum.LOGIN_STATUS:
                     console.log(`FROM ALL ${EventsEnum.LOGIN_STATUS}`, data)
+                    break
+                case EventsEnum.ONLINE_STATUS_EVENT:
+                    console.log(`FROM ALL ${EventsEnum.ONLINE_STATUS_EVENT}`, data)
                     break
                 default:
                     console.log('Unknown event', data)

@@ -59,7 +59,8 @@ class EventsSdkClass{
         [EventsEnum.EXTENSION_EVENT]: [],
         [EventsEnum.LOGIN_SUCCESS]: [],
         [EventsEnum.LOGIN_STATUS]: [],
-        [EventsEnum.KEEP_ALIVE_RESPONSE]: []
+        [EventsEnum.KEEP_ALIVE_RESPONSE]: [],
+        [EventsEnum.ONLINE_STATUS_EVENT]: []
     }
     private allListeners: Array<(data: GenericEventWrapper) => void> = []
 

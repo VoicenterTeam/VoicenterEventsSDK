@@ -142,21 +142,21 @@ export class SocketIoClass{
     }
 
     private onConnect () {
-        console.log('connected')
-
         if (this.keepReconnectInterval) {
             clearInterval(this.keepReconnectInterval)
         }
 
         this.connected = true
+
+        this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: true })
     }
 
     private onDisconnect () {
-        console.log('disconnected')
-
         this.connected = false
 
         this.closeAllConnections()
+
+        this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
 
         this.keepReconnectInterval = setInterval(() => {
             console.log('attempt to connect...')
