@@ -1,5 +1,5 @@
 {
-  "name": "voicenter-events-sdk",
+  "name": "@voicenter-team/events-sdk",
   "version": "0.0.1",
   "description": "",
   "main": "dist/voicenter-events-sdk.cjs.js",
