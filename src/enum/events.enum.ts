@@ -19,7 +19,8 @@ export enum EventsEnum {
     // In case of wrong username or password or token, you will receive a 401 (“Unauthorized”) or 500 (“Unexpected token”) http error.
     LOGIN_SUCCESS = 'loginSuccess',
     QUEUE_EVENT = 'QueueEvent',
-    ONLINE_STATUS_EVENT = 'onlineStatusEvent'
+    ONLINE_STATUS_EVENT = 'onlineStatusEvent',
+    DIALER_EVENT = 'DialerEvent',
 }
 
 /**
@@ -58,6 +59,7 @@ export enum DialerType {
 export enum EventNameEnum {
     EXTENSION = 'extension',
     QUEUE = 'queue',
+    DIALER = 'dialer',
 }
 
 export enum ExtensionHangupCauseEnum {

@@ -82,6 +82,20 @@ export interface ExtensionEvent extends CommonEventProperties {
 }
 
 /**
+ * Data structure for dialer event.
+ */
+export interface DialerEvent extends CommonEventProperties {
+    data: Dialer
+    eventName: EventNameEnum.DIALER
+    //reason: ExtensionEventReasonEnum // TODO: do research for dialer 'reason' prop
+    telephonyServerTime?: number
+    callerID?: string
+    ivrUniqueId?: string
+    dialStatus?: string
+    //cause?: ExtensionHangupCauseEnum // TODO: do research for dialer 'cause' prop
+}
+
+/**
  * Data structure for keep alive response event.
  */
 export interface KeepAliveResponseEvent extends CommonEventProperties {
@@ -101,6 +115,7 @@ export interface EventDataMap {
     [EventsEnum.ALL_USERS_STATUS]: AllUsersStatusEvent
     [EventsEnum.QUEUE_EVENT]: QueueEvent
     [EventsEnum.EXTENSION_EVENT]: ExtensionEvent
+    [EventsEnum.DIALER_EVENT]: DialerEvent
     [EventsEnum.LOGIN_SUCCESS]: LoginSuccessEvent
     [EventsEnum.LOGIN_STATUS]: LoginStatusEvent
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseEvent

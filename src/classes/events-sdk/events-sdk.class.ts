@@ -57,6 +57,7 @@ class EventsSdkClass{
         [EventsEnum.ALL_USERS_STATUS]: [],
         [EventsEnum.QUEUE_EVENT]: [],
         [EventsEnum.EXTENSION_EVENT]: [],
+        [EventsEnum.DIALER_EVENT]: [],
         [EventsEnum.LOGIN_SUCCESS]: [],
         [EventsEnum.LOGIN_STATUS]: [],
         [EventsEnum.KEEP_ALIVE_RESPONSE]: [],
