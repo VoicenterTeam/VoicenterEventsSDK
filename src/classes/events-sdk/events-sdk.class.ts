@@ -127,15 +127,27 @@ class EventsSdkClass{
             this.server = this.findCurrentServer()
         }
 
+        this.socketIoClass.doReconnect = true
+
         this.socketIoClass.initSocketConnection()
 
         this.socketIoClass.initSocketEvents()
 
         this.socketIoClass.initKeepAlive()
 
+        // TODO: check if it is needed here
         if (skipLogin) {
             return
         }
+    }
+
+    public disconnect () {
+        this.socketIoClass.doReconnect = false
+        this.socketIoClass.closeAllConnections()
+    }
+
+    public clearKeepAliveInterval () {
+        this.socketIoClass.clearKeepAliveInterval()
     }
 
     private findCurrentServer (): Server {
