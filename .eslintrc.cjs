@@ -7,7 +7,8 @@ module.exports = {
         'plugin:jest/recommended'
     ],
     env: {
-        browser: true
+        browser: true,
+        webextensions: true,
     },
     rules: {
         'no-dupe-class-members': 'off'
