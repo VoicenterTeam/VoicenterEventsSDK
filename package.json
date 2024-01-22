@@ -1,6 +1,6 @@
 {
   "name": "@voicenter-team/events-sdk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "dist/voicenter-events-sdk.cjs.js",
   "jsdelivr": "dist/voicenter-events-sdk.umd.js",
