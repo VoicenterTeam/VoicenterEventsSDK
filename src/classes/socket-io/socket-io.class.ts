@@ -14,6 +14,7 @@ export class SocketIoClass{
     public io: SocketTyped | undefined
     public ioFunction: TypedSocketIo | undefined
     public lastEventTimestamp = new Date().getTime()
+    public doReconnect = true
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
     private keepReconnectInterval: ReturnType<typeof setInterval> | undefined
     private connected = false
@@ -82,10 +83,14 @@ export class SocketIoClass{
         }
     }
 
-    public initKeepAlive () {
+    public clearKeepAliveInterval () {
         if (this.keepAliveInterval) {
             clearInterval(this.keepAliveInterval)
         }
+    }
+
+    public initKeepAlive () {
+        this.clearKeepAliveInterval()
 
         this.keepAliveInterval = setInterval(async () => {
             const now = new Date().getTime()
@@ -158,6 +163,10 @@ export class SocketIoClass{
         this.closeAllConnections()
 
         this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
+
+        if (!this.doReconnect) {
+            return
+        }
 
         this.keepReconnectInterval = setInterval(() => {
             console.log('attempt to connect...')
