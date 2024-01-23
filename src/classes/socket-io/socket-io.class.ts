@@ -120,7 +120,7 @@ export class SocketIoClass{
         if (this.io) {
             this.io.close()
 
-            this.io.disconnect()
+            this.io?.disconnect()
 
             this.io = undefined
         }
