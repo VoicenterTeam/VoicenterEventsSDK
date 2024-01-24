@@ -1,3 +1,5 @@
+import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from 'enum/auth.enum'
+
 export interface EventsSdkOptions {
     url?: string,
     environment?: string,
@@ -8,7 +10,7 @@ export interface EventsSdkOptions {
     servers?: string,
     token: string,
     tokenExpiry?: Date,
-    loginType: string,
+    loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
     forceNew?: boolean,
     reconnectionDelay: number,
     reconnectionDelayMax?: number,
@@ -32,7 +34,8 @@ export interface EventsSdkOptions {
     loggerConnectOptions?: LoggerConnectOptions,
     email: string,
     password: string,
-    username: string
+    username: string,
+    newStack: boolean
 }
 
 export enum Environment {

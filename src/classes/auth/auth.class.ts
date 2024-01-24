@@ -3,6 +3,7 @@ import md5 from 'js-md5'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
+import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from 'enum/auth.enum'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -142,17 +143,25 @@ class AuthClass{
             maxAllowedTimeout)
     }
 
-    private getExternalLoginUrl (baseUrl: string, loginType: string) {
+    private getExternalLoginUrl (
+        baseUrl: string,
+        loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
+        newStack = false
+    ) {
         if (loginType === 'user') {
             return `${baseUrl}/User`
         }
         if (loginType === 'token') {
             return `${baseUrl}/Token`
         }
-        return baseUrl
     }
 
-    private async externalLogin (url: string, { password, token, email }: LoginSessionPayload, loginType: string) {
+    private async externalLogin (
+        url: string,
+        { password, token, email }: LoginSessionPayload,
+        loginType: string,
+        newStack = false
+    ) {
         let body: string
 
         if (loginType === 'token') {
