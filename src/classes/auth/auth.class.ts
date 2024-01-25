@@ -4,9 +4,11 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
     ExternalLoginResponse,
-    ExternalLoginResponseDataNewStack, ExternalLoginResponseDataOldStack,
+    ExternalLoginResponseDataNewStack,
+    ExternalLoginResponseDataOldStack,
     LoginSessionData,
-    LoginSessionPayload, Settings
+    LoginSessionPayload,
+    Settings
 } from '@/types/auth'
 import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from '@/enum/auth.enum'
 import { getSettingsUrl, newLoginUrl, oldLoginUrl } from '@/classes/auth/auth.urls'
@@ -74,7 +76,7 @@ class AuthClass{
         return false
     }
 
-    private onLoginResponse (loginSessionData: LoginSessionData) {
+    private onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
         if (loginSessionData.Client) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(loginSessionData.Client)
         }

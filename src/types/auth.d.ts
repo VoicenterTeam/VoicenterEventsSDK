@@ -1,3 +1,5 @@
+import { Server } from '@/classes/events-sdk/events-sdk.types'
+
 export interface LoginSessionPayload {
     token: string,
     email: string,
@@ -5,7 +7,7 @@ export interface LoginSessionPayload {
     password: string
 }
 
-export interface LoginSessionData {
+export interface Socket {
     Client: string,
     PersonId: number,
     RefreshToken: string,
@@ -24,7 +26,7 @@ export interface ExternalLoginResponse<T> {
 }
 
 export interface ExternalLoginResponseDataOldStack {
-    Socket: LoginSessionData,
+    Socket: Socket,
 }
 
 export interface ExternalLoginResponseDataNewStack {
@@ -38,13 +40,7 @@ export interface Settings {
     PersonID: number,
     PersonType: number,
     ExtensionMonitorID: number,
-    MonitorList: {
-        URLID: string,
-        Priority: number,
-        Version: string,
-        Domain: string,
-        MonitorServerData: {
-            joghn: string
-        }
-    }[]
+    MonitorList: Server[]
 }
+
+export interface LoginSessionData extends Settings, Socket, ExternalLoginResponseDataNewStack {}
