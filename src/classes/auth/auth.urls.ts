@@ -1,8 +1,10 @@
-const odlLoginUrl = 'https://loginapi.voicenter.co.il/monitorAPI/Login'
+const oldLoginUrl = 'https://loginapi.voicenter.co.il/monitorAPI/Login'
 const newLoginUrl = 'http://loginapidev.voicenter.co.il/Auth/Login/Voicenter/Monitor'
+const getSettingsUrl = 'http://loginapidev.voicenter.co.il/Application/GetSettings'
 
 
 export {
-    odlLoginUrl,
-    newLoginUrl
+    oldLoginUrl,
+    newLoginUrl,
+    getSettingsUrl
 }

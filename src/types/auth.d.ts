@@ -16,3 +16,35 @@ export interface LoginSessionData {
     Url: string,
     Version: string
 }
+
+export interface ExternalLoginResponse<T> {
+    StatusCode: number,
+    Status: string,
+    Data: T
+}
+
+export interface ExternalLoginResponseDataOldStack {
+    Socket: LoginSessionData,
+}
+
+export interface ExternalLoginResponseDataNewStack {
+    AccessToken: string,
+    RefreshToken: string
+}
+
+export interface Settings {
+    IdentityCode: string,
+    IdentityCodeExpiry: Date,
+    PersonID: number,
+    PersonType: number,
+    ExtensionMonitorID: number,
+    MonitorList: {
+        URLID: string,
+        Priority: number,
+        Version: string,
+        Domain: string,
+        MonitorServerData: {
+            joghn: string
+        }
+    }[]
+}

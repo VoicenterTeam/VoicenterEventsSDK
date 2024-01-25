@@ -8,7 +8,6 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         Domain: 'monitor5.voicenter.co.il',
         Priority: 0,
     },
-    loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
     refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
     // servers: defaultServers, // commented temporary
     token: '',
@@ -48,7 +47,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         debug: false
     },
     username: 'username',
-    password: '53070875445',
-    email: 'FreshTest@Voicenter.com',
+    password: '78253050510',
+    email: 'test2@status.com',
     newStack: false,
 }

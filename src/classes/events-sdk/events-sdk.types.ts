@@ -2,9 +2,8 @@ import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from 'enum/auth.enum'
 
 export interface EventsSdkOptions {
     url?: string,
-    environment?: string,
+    environment: Environment,
     fallbackServer: Server,
-    loginUrl: string,
     refreshTokenUrl?: string,
     refreshToken?: string,
     servers?: string,

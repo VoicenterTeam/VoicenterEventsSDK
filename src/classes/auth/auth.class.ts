@@ -2,8 +2,14 @@ import md5 from 'js-md5'
 
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import { LoginSessionData, LoginSessionPayload } from '@/types/auth'
-import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from 'enum/auth.enum'
+import {
+    ExternalLoginResponse,
+    ExternalLoginResponseDataNewStack, ExternalLoginResponseDataOldStack,
+    LoginSessionData,
+    LoginSessionPayload, Settings
+} from '@/types/auth'
+import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from '@/enum/auth.enum'
+import { getSettingsUrl, newLoginUrl, oldLoginUrl } from '@/classes/auth/auth.urls'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -30,10 +36,10 @@ class AuthClass{
 
         this.updateLastLoginTimestamp()
 
-        const isLoggedIn = await this.checkLoginStatus(options, key)
+        const isLoggedIn = await this.checkLoginStatus(options.environment, key)
 
         if (!isLoggedIn) {
-            await this.userLoginFunction(payload, key)
+            await this.userLoginFunction(payload, key, options.loginType, options.newStack)
         }
     }
 
@@ -41,9 +47,9 @@ class AuthClass{
         this.lastLoginTimestamp = new Date().getTime()
     }
 
-    private async checkLoginStatus (options: EventsSdkOptions, key: string): Promise<boolean> {
+    private async checkLoginStatus (environment: Environment, key: string): Promise<boolean> {
         let loginSessionData: LoginSessionData
-        if (options.environment === Environment.BROWSER && window) {
+        if (environment === Environment.BROWSER && window) {
             const loginSessionKey = window.sessionStorage.getItem(key)
 
             if (loginSessionKey) {
@@ -54,7 +60,7 @@ class AuthClass{
                 return true
             }
         }
-        if (options.environment === Environment.CHROME_EXTENSION && chrome) {
+        if (environment === Environment.CHROME_EXTENSION && chrome) {
             const loginSessionKey = await chrome.storage.session.get(key)
 
             if (loginSessionKey[key]) {
@@ -98,18 +104,50 @@ class AuthClass{
         }
     }
 
-    private async userLoginFunction (payload: LoginSessionPayload, key: string) {
-        const externalLoginUrl = this.getExternalLoginUrl(this.eventsSdkClass.options.loginUrl, this.eventsSdkClass.options.loginType)
+    private async userLoginFunction (
+        payload: LoginSessionPayload,
+        key: string,
+        loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
+        newStack: boolean
+    ) {
+        const externalLoginUrl = this.getExternalLoginUrl(
+            loginType,
+            newStack
+        )
 
-        const externalLoginResponse = await this.externalLogin(externalLoginUrl, payload, this.eventsSdkClass.options.loginType)
-
-        this.onLoginResponse(externalLoginResponse)
-
-        if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
-            window.sessionStorage.setItem(key, JSON.stringify(externalLoginResponse))
+        if (!externalLoginUrl) {
+            throw new Error('External login url not found. Check provided options')
         }
-        if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
-            await chrome.storage.session.set({ [key]: JSON.stringify(externalLoginResponse) })
+
+        if (newStack) {
+            const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataNewStack>(
+                externalLoginUrl,
+                payload,
+                loginType,
+                newStack
+            )
+
+            console.log('new stack logic...', externalLoginResponse)
+
+            const settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
+
+            console.log('settings', settings)
+        } else {
+            const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataOldStack>(
+                externalLoginUrl,
+                payload,
+                loginType,
+                newStack
+            )
+
+            this.onLoginResponse(externalLoginResponse.Data.Socket)
+
+            if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
+                window.sessionStorage.setItem(key, JSON.stringify(externalLoginResponse.Data.Socket))
+            }
+            if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
+                await chrome.storage.session.set({ [key]: JSON.stringify(externalLoginResponse.Data.Socket) })
+            }
         }
     }
 
@@ -144,33 +182,53 @@ class AuthClass{
     }
 
     private getExternalLoginUrl (
-        baseUrl: string,
         loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
-        newStack = false
+        newStack: boolean
     ) {
-        if (loginType === 'user') {
-            return `${baseUrl}/User`
-        }
-        if (loginType === 'token') {
-            return `${baseUrl}/Token`
+        if (newStack) {
+            return newLoginUrl
+        } else {
+            if (loginType === LoginTypeOldStackEnum.TOKEN) {
+                return `${oldLoginUrl}/Token`
+            }
+            if (loginType === LoginTypeOldStackEnum.USER) {
+                return `${oldLoginUrl}/User`
+            }
         }
     }
 
-    private async externalLogin (
+    private async externalLogin<T> (
         url: string,
         { password, token, email }: LoginSessionPayload,
-        loginType: string,
-        newStack = false
-    ) {
+        loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
+        newStack: boolean
+    ): Promise<ExternalLoginResponse<T>> {
         let body: string
 
-        if (loginType === 'token') {
-            body = JSON.stringify({ token })
+        if (newStack) {
+            if (loginType === LoginTypeNewStackEnum.TOKEN) {
+                body = JSON.stringify({
+                    type: Number(LoginTypeNewStackEnum.TOKEN),
+                    token
+                })
+            } else {
+                body = JSON.stringify({
+                    type: Number(LoginTypeNewStackEnum.USER),
+                    username: email,
+                    password,
+                })
+            }
         } else {
-            body = JSON.stringify({
-                email,
-                pin: password
-            })
+            if (loginType === LoginTypeOldStackEnum.TOKEN) {
+                body = JSON.stringify({
+                    token
+                })
+            } else {
+                body = JSON.stringify({
+                    email,
+                    pin: password
+                })
+            }
         }
 
         const res = await fetch(url, {
@@ -186,7 +244,17 @@ class AuthClass{
         if (data.error) {
             throw new Error(data.error)
         }
-        return data.Data.Socket
+        return data
+    }
+
+    private async getSettings (token: string): Promise<Settings> {
+        const res = await fetch(getSettingsUrl, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return res.json()
     }
 
     private async refreshToken (refreshTokenUrl: string, oldRefreshToken: string) {
