@@ -94,14 +94,32 @@ class AuthClass{
                 }
             })
         }
+        if (loginSessionData.MonitorList) {
+            this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
+        }
+        if (!loginSessionData.Url) {
+            this.eventsSdkClass.server = this.eventsSdkClass.servers[0]
+        }
+        if (!loginSessionData.Client) {
+            this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
+        }
         if (loginSessionData.Token) {
             // this.options.token = loginSessionData.Token
             this.token = loginSessionData.Token
             this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
         }
+        if (loginSessionData.IdentityCode) {
+            this.token = loginSessionData.IdentityCode
+            this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
+        }
         if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === 'user') {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
+            this.handleTokenExpiry()
+        }
+        if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginTypeNewStackEnum.USER) {
+            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
+            this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
             this.handleTokenExpiry()
         }
     }
@@ -129,11 +147,27 @@ class AuthClass{
                 newStack
             )
 
-            console.log('new stack logic...', externalLoginResponse)
-
             const settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
 
-            console.log('settings', settings)
+            this.onLoginResponse({
+                ...externalLoginResponse.Data,
+                ...settings 
+            })
+
+            if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
+                window.sessionStorage.setItem(key, JSON.stringify({
+                    ...externalLoginResponse.Data,
+                    ...settings
+                }))
+            }
+            if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
+                await chrome.storage.session.set({
+                    [key]: JSON.stringify({
+                        ...externalLoginResponse.Data,
+                        ...settings
+                    }) 
+                })
+            }
         } else {
             const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataOldStack>(
                 externalLoginUrl,
