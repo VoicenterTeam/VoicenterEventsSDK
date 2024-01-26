@@ -47,7 +47,7 @@ export interface Queue {
     AnsweredAgent?: string,
 }
 
-interface ExtensionCall {
+export interface ExtensionCall {
     callStarted: number,
     calldurationinterval: number,
     callAnswered: number,
