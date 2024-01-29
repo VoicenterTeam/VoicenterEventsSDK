@@ -3,8 +3,8 @@ import md5 from 'js-md5'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
+    ExternalLoginRequestBody,
     ExternalLoginResponse,
-    ExternalLoginResponseDataNewStack,
     LoginSessionData,
     LoginSessionPayload,
     Settings
@@ -25,7 +25,6 @@ class AuthClass{
         const payload: LoginSessionPayload = {
             token: options.token,
             email: options.email,
-            username: options.username,
             password: options.password
         }
 
@@ -128,7 +127,7 @@ class AuthClass{
         key: string,
         loginType: LoginType,
     ) {
-        const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataNewStack>(
+        const externalLoginResponse = await this.externalLogin(
             newLoginUrl,
             payload,
             loginType,
@@ -187,24 +186,24 @@ class AuthClass{
             maxAllowedTimeout)
     }
 
-    private async externalLogin<T> (
+    private async externalLogin (
         url: string,
         { password, token, email }: LoginSessionPayload,
         loginType: LoginType,
-    ): Promise<ExternalLoginResponse<T>> {
-        let body: string
+    ): Promise<ExternalLoginResponse> {
+        let body: ExternalLoginRequestBody
 
         if (loginType === LoginType.TOKEN) {
-            body = JSON.stringify({
-                type: Number(LoginType.TOKEN),
+            body = {
+                identityType: LoginType.TOKEN,
                 token
-            })
+            }
         } else {
-            body = JSON.stringify({
-                type: Number(LoginType.USER),
+            body = {
+                identityType: LoginType.USER,
                 username: email,
                 password,
-            })
+            }
         }
 
         const res = await fetch(url, {
@@ -212,7 +211,7 @@ class AuthClass{
             headers: {
                 'Content-Type': 'application/json'
             },
-            body,
+            body: JSON.stringify(body),
         })
 
         const data = await res.json()

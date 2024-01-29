@@ -1,10 +1,28 @@
 import { Server } from '@/classes/events-sdk/events-sdk.types'
+import { LoginType } from '@/enum/auth.enum'
 
 export interface LoginSessionPayload {
     token: string,
     email: string,
-    username: string,
     password: string
+}
+
+export interface ExternalLoginRequestBody {
+    identityType: LoginType,
+    username?: string,
+    password?: string,
+    token?: string
+}
+
+interface ExternalLoginResponseData {
+    AccessToken: string,
+    RefreshToken: string
+}
+
+export interface ExternalLoginResponse {
+    StatusCode: number,
+    Status: string,
+    Data: ExternalLoginResponseData
 }
 
 export interface Socket {
@@ -17,21 +35,6 @@ export interface Socket {
     URLList: string[],
     Url: string,
     Version: string
-}
-
-export interface ExternalLoginResponse<T> {
-    StatusCode: number,
-    Status: string,
-    Data: T
-}
-
-export interface ExternalLoginResponseDataOldStack {
-    Socket: Socket,
-}
-
-export interface ExternalLoginResponseDataNewStack {
-    AccessToken: string,
-    RefreshToken: string
 }
 
 export interface Settings {
