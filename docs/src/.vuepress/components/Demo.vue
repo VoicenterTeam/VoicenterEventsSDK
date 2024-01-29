@@ -46,7 +46,6 @@ async function login() {
         ...eventsSdkDefaultOptions,
         token: token.value,
         loginType: LoginTypeNewStackEnum.USER,
-        newStack: true
     })
 
     await sdk.init()

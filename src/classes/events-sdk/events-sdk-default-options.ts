@@ -49,5 +49,4 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
     username: 'username',
     password: '78253050510',
     email: 'test2@status.com',
-    newStack: false,
 }

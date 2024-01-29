@@ -5,13 +5,12 @@ import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events
 import {
     ExternalLoginResponse,
     ExternalLoginResponseDataNewStack,
-    ExternalLoginResponseDataOldStack,
     LoginSessionData,
     LoginSessionPayload,
     Settings
 } from '@/types/auth'
 import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from '@/enum/auth.enum'
-import { getSettingsUrl, newLoginUrl, oldLoginUrl } from '@/classes/auth/auth.urls'
+import { getSettingsUrl, newLoginUrl } from '@/classes/auth/auth.urls'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -41,7 +40,7 @@ class AuthClass{
         const isLoggedIn = await this.checkLoginStatus(options.environment, key)
 
         if (!isLoggedIn) {
-            await this.userLoginFunction(payload, key, options.loginType, options.newStack)
+            await this.userLoginFunction(payload, key, options.loginType)
         }
     }
 
@@ -128,62 +127,33 @@ class AuthClass{
         payload: LoginSessionPayload,
         key: string,
         loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
-        newStack: boolean
     ) {
-        const externalLoginUrl = this.getExternalLoginUrl(
+        const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataNewStack>(
+            newLoginUrl,
+            payload,
             loginType,
-            newStack
         )
 
-        if (!externalLoginUrl) {
-            throw new Error('External login url not found. Check provided options')
-        }
+        const settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
 
-        if (newStack) {
-            const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataNewStack>(
-                externalLoginUrl,
-                payload,
-                loginType,
-                newStack
-            )
+        this.onLoginResponse({
+            ...externalLoginResponse.Data,
+            ...settings
+        })
 
-            const settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
-
-            this.onLoginResponse({
+        if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
+            window.sessionStorage.setItem(key, JSON.stringify({
                 ...externalLoginResponse.Data,
-                ...settings 
-            })
-
-            if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
-                window.sessionStorage.setItem(key, JSON.stringify({
+                ...settings
+            }))
+        }
+        if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
+            await chrome.storage.session.set({
+                [key]: JSON.stringify({
                     ...externalLoginResponse.Data,
                     ...settings
-                }))
-            }
-            if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
-                await chrome.storage.session.set({
-                    [key]: JSON.stringify({
-                        ...externalLoginResponse.Data,
-                        ...settings
-                    }) 
                 })
-            }
-        } else {
-            const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataOldStack>(
-                externalLoginUrl,
-                payload,
-                loginType,
-                newStack
-            )
-
-            this.onLoginResponse(externalLoginResponse.Data.Socket)
-
-            if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
-                window.sessionStorage.setItem(key, JSON.stringify(externalLoginResponse.Data.Socket))
-            }
-            if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
-                await chrome.storage.session.set({ [key]: JSON.stringify(externalLoginResponse.Data.Socket) })
-            }
+            })
         }
     }
 
@@ -217,54 +187,24 @@ class AuthClass{
             maxAllowedTimeout)
     }
 
-    private getExternalLoginUrl (
-        loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
-        newStack: boolean
-    ) {
-        if (newStack) {
-            return newLoginUrl
-        } else {
-            if (loginType === LoginTypeOldStackEnum.TOKEN) {
-                return `${oldLoginUrl}/Token`
-            }
-            if (loginType === LoginTypeOldStackEnum.USER) {
-                return `${oldLoginUrl}/User`
-            }
-        }
-    }
-
     private async externalLogin<T> (
         url: string,
         { password, token, email }: LoginSessionPayload,
         loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
-        newStack: boolean
     ): Promise<ExternalLoginResponse<T>> {
         let body: string
 
-        if (newStack) {
-            if (loginType === LoginTypeNewStackEnum.TOKEN) {
-                body = JSON.stringify({
-                    type: Number(LoginTypeNewStackEnum.TOKEN),
-                    token
-                })
-            } else {
-                body = JSON.stringify({
-                    type: Number(LoginTypeNewStackEnum.USER),
-                    username: email,
-                    password,
-                })
-            }
+        if (loginType === LoginTypeNewStackEnum.TOKEN) {
+            body = JSON.stringify({
+                type: Number(LoginTypeNewStackEnum.TOKEN),
+                token
+            })
         } else {
-            if (loginType === LoginTypeOldStackEnum.TOKEN) {
-                body = JSON.stringify({
-                    token
-                })
-            } else {
-                body = JSON.stringify({
-                    email,
-                    pin: password
-                })
-            }
+            body = JSON.stringify({
+                type: Number(LoginTypeNewStackEnum.USER),
+                username: email,
+                password,
+            })
         }
 
         const res = await fetch(url, {

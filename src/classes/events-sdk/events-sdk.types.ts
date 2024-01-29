@@ -34,7 +34,6 @@ export interface EventsSdkOptions {
     email: string,
     password: string,
     username: string,
-    newStack: boolean
 }
 
 export enum Environment {
