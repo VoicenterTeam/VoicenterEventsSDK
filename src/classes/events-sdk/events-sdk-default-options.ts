@@ -1,5 +1,5 @@
 import { Environment, EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
-import { LoginTypeOldStackEnum } from '@/enum/auth.enum'
+import { LoginType } from '@/enum/auth.enum'
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
     url: 'https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls',
@@ -11,7 +11,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
     refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
     // servers: defaultServers, // commented temporary
     token: '',
-    loginType: LoginTypeOldStackEnum.TOKEN,
+    loginType: LoginType.TOKEN,
     forceNew: true,
     reconnectionDelay: 10000,
     reconnectionDelayMax: 10000,

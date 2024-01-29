@@ -9,7 +9,7 @@ import {
     LoginSessionPayload,
     Settings
 } from '@/types/auth'
-import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from '@/enum/auth.enum'
+import { LoginType } from '@/enum/auth.enum'
 import { getSettingsUrl, newLoginUrl } from '@/classes/auth/auth.urls'
 
 class AuthClass{
@@ -111,12 +111,12 @@ class AuthClass{
             this.token = loginSessionData.IdentityCode
             this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
         }
-        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === 'user') {
+        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
             this.handleTokenExpiry()
         }
-        if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginTypeNewStackEnum.USER) {
+        if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
             this.handleTokenExpiry()
@@ -126,7 +126,7 @@ class AuthClass{
     private async userLoginFunction (
         payload: LoginSessionPayload,
         key: string,
-        loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
+        loginType: LoginType,
     ) {
         const externalLoginResponse = await this.externalLogin<ExternalLoginResponseDataNewStack>(
             newLoginUrl,
@@ -190,18 +190,18 @@ class AuthClass{
     private async externalLogin<T> (
         url: string,
         { password, token, email }: LoginSessionPayload,
-        loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
+        loginType: LoginType,
     ): Promise<ExternalLoginResponse<T>> {
         let body: string
 
-        if (loginType === LoginTypeNewStackEnum.TOKEN) {
+        if (loginType === LoginType.TOKEN) {
             body = JSON.stringify({
-                type: Number(LoginTypeNewStackEnum.TOKEN),
+                type: Number(LoginType.TOKEN),
                 token
             })
         } else {
             body = JSON.stringify({
-                type: Number(LoginTypeNewStackEnum.USER),
+                type: Number(LoginType.USER),
                 username: email,
                 password,
             })

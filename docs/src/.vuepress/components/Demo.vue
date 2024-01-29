@@ -26,7 +26,7 @@ import EventsSdkClass from '@/index'
 import {eventsSdkDefaultOptions} from '@/classes/events-sdk/events-sdk-default-options'
 import {EventsEnum} from '@/enum/events.enum'
 import {EventTypeData} from '@/types/events'
-import {LoginTypeNewStackEnum, LoginTypeOldStackEnum} from "@/enum/auth.enum";
+import {LoginType} from "@/enum/auth.enum";
 
 /* Data */
 const token = ref('QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e')
@@ -45,7 +45,7 @@ async function login() {
     const sdk = new EventsSdkClass({
         ...eventsSdkDefaultOptions,
         token: token.value,
-        loginType: LoginTypeNewStackEnum.USER,
+        loginType: LoginType.USER,
     })
 
     await sdk.init()

@@ -1,4 +1,4 @@
-import { LoginTypeNewStackEnum, LoginTypeOldStackEnum } from 'enum/auth.enum'
+import { LoginType } from 'enum/auth.enum'
 
 export interface EventsSdkOptions {
     url?: string,
@@ -9,7 +9,7 @@ export interface EventsSdkOptions {
     servers?: string,
     token: string,
     tokenExpiry?: Date,
-    loginType: LoginTypeNewStackEnum | LoginTypeOldStackEnum,
+    loginType: LoginType,
     forceNew?: boolean,
     reconnectionDelay: number,
     reconnectionDelayMax?: number,
