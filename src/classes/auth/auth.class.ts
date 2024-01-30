@@ -138,6 +138,8 @@ class AuthClass{
         setTimeout(
             async () => {
                 if (refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
+                    this.eventsSdkClass.disconnect()
+
                     const refreshTokenResponse = await this.refreshToken(refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
 
                     const settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
