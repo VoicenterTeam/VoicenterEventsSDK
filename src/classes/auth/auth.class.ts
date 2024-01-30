@@ -74,7 +74,7 @@ class AuthClass{
         return false
     }
 
-    private onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
+    private onLoginResponse (loginSessionData: LoginSessionData) {
         if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
             this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
             this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
@@ -145,15 +145,14 @@ class AuthClass{
         setTimeout(
             async () => {
                 if (refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
-                    let Socket = null
-                    const res = await this.refreshToken(refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
+                    const refreshTokenResponse = await this.refreshToken(refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
 
-                    if (res.Data) {
-                        Socket = res.Data.Socket
-                        return this.onLoginResponse(Socket)
-                    }
+                    const settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
 
-                    throw new Error('Error on refreshToken')
+                    this.onLoginResponse({
+                        ...refreshTokenResponse.Data,
+                        ...settings
+                    })
                 }
             },
             maxAllowedTimeout)
@@ -205,7 +204,7 @@ class AuthClass{
         return res.json()
     }
 
-    private async refreshToken (refreshTokenUrl: string, oldRefreshToken: string) {
+    private async refreshToken (refreshTokenUrl: string, oldRefreshToken: string): Promise<ExternalLoginResponse> {
         const res = await fetch(refreshTokenUrl, {
             method: 'GET',
 

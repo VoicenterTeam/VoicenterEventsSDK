@@ -46,4 +46,4 @@ export interface Settings {
     MonitorList: Server[]
 }
 
-export interface LoginSessionData extends Settings, Socket, ExternalLoginResponseDataNewStack {}
+export interface LoginSessionData extends Settings, ExternalLoginResponseData {}
