@@ -15,11 +15,15 @@ import { getSettingsUrl, newLoginUrl, refreshTokenUrl } from '@/classes/auth/aut
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
+
+        this.storageKey = ''
     }
     
     private delay = 1000
     public lastLoginTimestamp: number | undefined
     public token: string | undefined
+
+    private storageKey: string
 
     public async login (options: EventsSdkOptions) {
         const payload: LoginSessionPayload = {
@@ -28,7 +32,7 @@ class AuthClass{
             password: options.password
         }
 
-        const key = md5(JSON.stringify(payload))
+        this.storageKey = md5(JSON.stringify(payload))
 
         if (this.lastLoginTimestamp && this.lastLoginTimestamp + this.delay > new Date().getTime()) {
             return
@@ -36,10 +40,10 @@ class AuthClass{
 
         this.updateLastLoginTimestamp()
 
-        const isLoggedIn = await this.checkLoginStatus(options.environment, key)
+        const isLoggedIn = await this.checkLoginStatus(options.environment, this.storageKey)
 
         if (!isLoggedIn) {
-            await this.userLoginFunction(payload, key, options.loginType)
+            await this.userLoginFunction(payload, this.storageKey, options.loginType)
         }
     }
 
@@ -108,25 +112,14 @@ class AuthClass{
 
         const settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
 
-        this.onLoginResponse({
+        const loginSessionData: LoginSessionData = {
             ...externalLoginResponse.Data,
             ...settings
-        })
+        }
 
-        if (this.eventsSdkClass.options.environment === Environment.BROWSER) {
-            window.sessionStorage.setItem(key, JSON.stringify({
-                ...externalLoginResponse.Data,
-                ...settings
-            }))
-        }
-        if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION) {
-            await chrome.storage.session.set({
-                [key]: JSON.stringify({
-                    ...externalLoginResponse.Data,
-                    ...settings
-                })
-            })
-        }
+        this.onLoginResponse(loginSessionData)
+
+        await this.updateStorageKey(loginSessionData, this.eventsSdkClass.options.environment, key)
     }
 
     public handleTokenExpiry () {
@@ -149,13 +142,28 @@ class AuthClass{
 
                     const settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
 
-                    this.onLoginResponse({
+                    const loginSessionData: LoginSessionData = {
                         ...refreshTokenResponse.Data,
                         ...settings
-                    })
+                    }
+
+                    this.onLoginResponse(loginSessionData)
+
+                    await this.updateStorageKey(loginSessionData, this.eventsSdkClass.options.environment, this.storageKey)
                 }
             },
             maxAllowedTimeout)
+    }
+
+    private async updateStorageKey (storageData: LoginSessionData, environment: Environment, key: string) {
+        if (environment === Environment.BROWSER) {
+            window.sessionStorage.setItem(key, JSON.stringify(storageData))
+        }
+        if (environment === Environment.CHROME_EXTENSION) {
+            await chrome.storage.session.set({
+                [key]: JSON.stringify(storageData)
+            })
+        }
     }
 
     private async externalLogin (
