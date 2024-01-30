@@ -1,7 +1,6 @@
 import { LoginType } from 'enum/auth.enum'
 
 export interface EventsSdkOptions {
-    url?: string,
     environment: Environment,
     fallbackServer: Server,
     refreshTokenUrl?: string,

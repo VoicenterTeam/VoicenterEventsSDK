@@ -10,7 +10,7 @@ import {
     Settings
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
-import { getSettingsUrl, newLoginUrl } from '@/classes/auth/auth.urls'
+import { getSettingsUrl, newLoginUrl, refreshTokenUrl } from '@/classes/auth/auth.urls'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -144,9 +144,9 @@ class AuthClass{
 
         setTimeout(
             async () => {
-                if (this.eventsSdkClass.options.refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
+                if (refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
                     let Socket = null
-                    const res = await this.refreshToken(this.eventsSdkClass.options.refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
+                    const res = await this.refreshToken(refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
 
                     if (res.Data) {
                         Socket = res.Data.Socket

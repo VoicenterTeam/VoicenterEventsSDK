@@ -2,7 +2,6 @@ import { Environment, EventsSdkOptions } from '@/classes/events-sdk/events-sdk.t
 import { LoginType } from '@/enum/auth.enum'
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
-    url: 'https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls',
     environment: Environment.BROWSER,
     fallbackServer: {
         Domain: 'monitor5.voicenter.co.il',
@@ -10,8 +9,6 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         Version: '1.3.7',
         URLID: 1
     },
-    refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
-    // servers: defaultServers, // commented temporary
     token: '',
     loginType: LoginType.TOKEN,
     forceNew: true,
