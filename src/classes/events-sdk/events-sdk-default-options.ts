@@ -7,6 +7,8 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
     fallbackServer: {
         Domain: 'monitor5.voicenter.co.il',
         Priority: 0,
+        Version: '1.3.7',
+        URLID: 1
     },
     refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
     // servers: defaultServers, // commented temporary

@@ -44,8 +44,8 @@ export enum Environment {
 export interface Server {
     Priority: number,
     Domain: string,
-    URLID?: number,
-    Version?: string,
+    URLID: number,
+    Version: string,
 }
 
 export interface LoggerConfig {

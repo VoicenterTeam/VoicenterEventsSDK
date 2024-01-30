@@ -75,45 +75,18 @@ class AuthClass{
     }
 
     private onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
-        if (loginSessionData.Client) {
-            this.eventsSdkClass.socketIoClass.getSocketIoFunction(loginSessionData.Client)
-        }
-        if (loginSessionData.Url) {
-            this.eventsSdkClass.server = {
-                Priority: 0,
-                Domain: loginSessionData.Url.replace('https://', '')
-            }
-        }
-        if (loginSessionData.URLList) {
-            this.eventsSdkClass.servers = loginSessionData.URLList.map((url, index) => {
-                return {
-                    Priority: index,
-                    Domain: url.replace('https://', '')
-                }
-            })
-        }
-        if (loginSessionData.MonitorList) {
+        if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
             this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
+            this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
+                (prev.Priority > current.Priority) ? prev : current
+            )
         }
-        if (!loginSessionData.Url) {
-            this.eventsSdkClass.server = this.eventsSdkClass.servers[0]
-        }
-        if (!loginSessionData.Client) {
+        if (this.eventsSdkClass.server) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
-        }
-        if (loginSessionData.Token) {
-            // this.options.token = loginSessionData.Token
-            this.token = loginSessionData.Token
-            this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
         }
         if (loginSessionData.IdentityCode) {
             this.token = loginSessionData.IdentityCode
             this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
-        }
-        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
-            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
-            this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
-            this.handleTokenExpiry()
         }
         if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken

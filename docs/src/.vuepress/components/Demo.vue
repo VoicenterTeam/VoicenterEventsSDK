@@ -45,7 +45,7 @@ async function login() {
     const sdk = new EventsSdkClass({
         ...eventsSdkDefaultOptions,
         token: token.value,
-        loginType: LoginType.USER,
+        loginType: LoginType.TOKEN,
     })
 
     await sdk.init()
