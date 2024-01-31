@@ -11,6 +11,7 @@ import {
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
 import { getSettingsUrl, newLoginUrl, refreshTokenUrl } from '@/classes/auth/auth.urls'
+import { StorageClass } from '@/classes/storage/storage.class'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -52,53 +53,15 @@ class AuthClass{
     }
 
     private async checkLoginStatus (key: string): Promise<boolean> {
-        let loginSessionData: LoginSessionData
+        const loginSessionData = await StorageClass.getSessionStorageDataByKey(key)
 
-        if (window) {
-            const loginSessionKey = window.sessionStorage.getItem(key)
+        if (loginSessionData) {
+            this.onLoginResponse(loginSessionData)
 
-            if (loginSessionKey) {
-                loginSessionData = JSON.parse(loginSessionKey)
-
-                this.onLoginResponse(loginSessionData)
-
-                return true
-            }
+            return true
         }
 
-        if (chrome.storage) {
-            const loginSessionKey = await chrome.storage.session.get(key)
-
-            if (loginSessionKey[key]) {
-                loginSessionData = JSON.parse(loginSessionKey[key])
-
-                this.onLoginResponse(loginSessionData)
-
-                return true
-            }
-        }
         return false
-    }
-
-    private onLoginResponse (loginSessionData: LoginSessionData) {
-        if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
-            this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
-            this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
-                (prev.Priority > current.Priority) ? prev : current
-            )
-        }
-        if (this.eventsSdkClass.server) {
-            this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
-        }
-        if (loginSessionData.IdentityCode) {
-            this.token = loginSessionData.IdentityCode
-            this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
-        }
-        if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
-            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
-            this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
-            this.handleTokenExpiry()
-        }
     }
 
     private async userLoginFunction (
@@ -121,7 +84,28 @@ class AuthClass{
 
         this.onLoginResponse(loginSessionData)
 
-        await this.updateStorageKey(loginSessionData, key)
+        await StorageClass.updateSessionStorageKey(key, loginSessionData)
+    }
+
+    private onLoginResponse (loginSessionData: LoginSessionData) {
+        if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
+            this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
+            this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
+                (prev.Priority > current.Priority) ? prev : current
+            )
+        }
+        if (this.eventsSdkClass.server) {
+            this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
+        }
+        if (loginSessionData.IdentityCode) {
+            this.token = loginSessionData.IdentityCode
+            this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
+        }
+        if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
+            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
+            this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
+            this.handleTokenExpiry()
+        }
     }
 
     public handleTokenExpiry () {
@@ -153,22 +137,10 @@ class AuthClass{
 
                     this.onLoginResponse(loginSessionData)
 
-                    await this.updateStorageKey(loginSessionData, this.storageKey)
+                    await StorageClass.updateSessionStorageKey(this.storageKey, loginSessionData)
                 }
             },
             maxAllowedTimeout)
-    }
-
-    private async updateStorageKey (storageData: LoginSessionData, key: string) {
-        if (window) {
-            window.sessionStorage.setItem(key, JSON.stringify(storageData))
-        }
-
-        if (chrome.storage) {
-            await chrome.storage.session.set({
-                [key]: JSON.stringify(storageData)
-            })
-        }
     }
 
     private async externalLogin (
