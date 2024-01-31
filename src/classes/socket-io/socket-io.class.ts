@@ -2,7 +2,7 @@ import { ManagerOptions, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
-import { Environment, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
 import { KeepAliveResponseEvent } from '@/types/events'
 
@@ -125,10 +125,11 @@ export class SocketIoClass{
             this.io = undefined
         }
 
-        if (this.eventsSdkClass.options.environment === Environment.BROWSER && window) {
+        if (window) {
             window.sessionStorage.clear()
         }
-        if (this.eventsSdkClass.options.environment === Environment.CHROME_EXTENSION && chrome) {
+
+        if (chrome) {
             chrome.storage.session.clear()
         }
     }

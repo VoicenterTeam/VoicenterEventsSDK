@@ -1,7 +1,6 @@
 import { LoginType } from 'enum/auth.enum'
 
 export interface EventsSdkOptions {
-    environment: Environment,
     fallbackServer: Server,
     refreshTokenUrl?: string,
     refreshToken?: string,
@@ -19,10 +18,6 @@ export interface EventsSdkOptions {
     protocol: string,
     transports?: string[],
     upgrade?: boolean,
-    store?: string,
-    extensionsModuleName?: string,
-    queuesModuleName?: string,
-    dialersModuleName?: string,
     serverFetchStrategy?: string,
     serverType?: number,
     useLogger?: boolean,
@@ -33,11 +28,6 @@ export interface EventsSdkOptions {
     email: string,
     password: string,
     username: string,
-}
-
-export enum Environment {
-    BROWSER = 'browser',
-    CHROME_EXTENSION = 'chrome-extension'
 }
 
 export interface Server {

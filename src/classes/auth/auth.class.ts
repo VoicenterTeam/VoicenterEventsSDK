@@ -1,7 +1,7 @@
-import md5 from 'js-md5'
+import { md5 } from 'js-md5'
 
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import { Environment, EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
     ExternalLoginRequestBody,
     ExternalLoginResponse,
@@ -18,7 +18,7 @@ class AuthClass{
 
         this.storageKey = ''
     }
-    
+
     private delay = 1000
     public lastLoginTimestamp: number | undefined
     public token: string | undefined
@@ -40,7 +40,7 @@ class AuthClass{
 
         this.updateLastLoginTimestamp()
 
-        const isLoggedIn = await this.checkLoginStatus(options.environment, this.storageKey)
+        const isLoggedIn = await this.checkLoginStatus(this.storageKey)
 
         if (!isLoggedIn) {
             await this.userLoginFunction(payload, this.storageKey, options.loginType)
@@ -51,9 +51,10 @@ class AuthClass{
         this.lastLoginTimestamp = new Date().getTime()
     }
 
-    private async checkLoginStatus (environment: Environment, key: string): Promise<boolean> {
+    private async checkLoginStatus (key: string): Promise<boolean> {
         let loginSessionData: LoginSessionData
-        if (environment === Environment.BROWSER && window) {
+
+        if (window) {
             const loginSessionKey = window.sessionStorage.getItem(key)
 
             if (loginSessionKey) {
@@ -64,7 +65,8 @@ class AuthClass{
                 return true
             }
         }
-        if (environment === Environment.CHROME_EXTENSION && chrome) {
+
+        if (chrome) {
             const loginSessionKey = await chrome.storage.session.get(key)
 
             if (loginSessionKey[key]) {
@@ -119,7 +121,7 @@ class AuthClass{
 
         this.onLoginResponse(loginSessionData)
 
-        await this.updateStorageKey(loginSessionData, this.eventsSdkClass.options.environment, key)
+        await this.updateStorageKey(loginSessionData, key)
     }
 
     public handleTokenExpiry () {
@@ -151,17 +153,18 @@ class AuthClass{
 
                     this.onLoginResponse(loginSessionData)
 
-                    await this.updateStorageKey(loginSessionData, this.eventsSdkClass.options.environment, this.storageKey)
+                    await this.updateStorageKey(loginSessionData, this.storageKey)
                 }
             },
             maxAllowedTimeout)
     }
 
-    private async updateStorageKey (storageData: LoginSessionData, environment: Environment, key: string) {
-        if (environment === Environment.BROWSER) {
+    private async updateStorageKey (storageData: LoginSessionData, key: string) {
+        if (window) {
             window.sessionStorage.setItem(key, JSON.stringify(storageData))
         }
-        if (environment === Environment.CHROME_EXTENSION) {
+
+        if (chrome) {
             await chrome.storage.session.set({
                 [key]: JSON.stringify(storageData)
             })

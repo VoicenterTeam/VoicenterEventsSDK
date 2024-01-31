@@ -1,8 +1,7 @@
-import { Environment, EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
+import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
 import { LoginType } from '@/enum/auth.enum'
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
-    environment: Environment.BROWSER,
     fallbackServer: {
         Domain: 'monitor5.voicenter.co.il',
         Priority: 0,
@@ -21,10 +20,6 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
     protocol: 'https',
     transports: [ 'websocket' ],
     upgrade: false,
-    store: '',
-    extensionsModuleName: 'sdkExtensions',
-    queuesModuleName: 'sdkQueues',
-    dialersModuleName: 'sdkDialers',
     serverFetchStrategy: 'static',
     serverType: 0,
     useLogger: false,
