@@ -1,4 +1,4 @@
-import { md5 } from 'js-md5'
+import md5 from 'js-md5'
 
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
@@ -66,7 +66,7 @@ class AuthClass{
             }
         }
 
-        if (chrome) {
+        if (chrome.storage) {
             const loginSessionKey = await chrome.storage.session.get(key)
 
             if (loginSessionKey[key]) {
@@ -164,7 +164,7 @@ class AuthClass{
             window.sessionStorage.setItem(key, JSON.stringify(storageData))
         }
 
-        if (chrome) {
+        if (chrome.storage) {
             await chrome.storage.session.set({
                 [key]: JSON.stringify(storageData)
             })
