@@ -138,7 +138,7 @@ class AuthClass{
         setTimeout(
             async () => {
                 if (refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
-                    this.eventsSdkClass.disconnect()
+                    this.eventsSdkClass.socketIoClass.closeAllConnections()
 
                     const refreshTokenResponse = await this.refreshToken(refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
 
