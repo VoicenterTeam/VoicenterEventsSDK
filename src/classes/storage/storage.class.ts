@@ -2,7 +2,7 @@ import { LoginSessionData } from '@/types/auth'
 
 export class StorageClass{
     public static async getSessionStorageDataByKey (key: string): Promise<LoginSessionData | undefined> {
-        if (chrome.storage) {
+        if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined') {
             const loginSessionKey = await chrome.storage.session.get(key)
 
             if (loginSessionKey[key]) {
@@ -10,7 +10,7 @@ export class StorageClass{
             }
         }
 
-        if (window) {
+        if (typeof window !== 'undefined') {
             const loginSessionKey = window.sessionStorage.getItem(key)
 
             if (loginSessionKey) {
@@ -20,23 +20,23 @@ export class StorageClass{
     }
 
     public static async updateSessionStorageKey (key: string, storageData: LoginSessionData) {
-        if (chrome.storage) {
+        if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined') {
             await chrome.storage.session.set({
                 [key]: JSON.stringify(storageData)
             })
         }
 
-        if (window) {
+        if (typeof window !== 'undefined') {
             window.sessionStorage.setItem(key, JSON.stringify(storageData))
         }
     }
 
     public static clearSessionStorage () {
-        if (chrome.storage) {
+        if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined') {
             chrome.storage.session.clear()
         }
 
-        if (window) {
+        if (typeof window !== 'undefined') {
             window.sessionStorage.clear()
         }
     }
