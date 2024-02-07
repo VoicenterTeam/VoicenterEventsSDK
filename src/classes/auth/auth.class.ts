@@ -96,6 +96,7 @@ class AuthClass{
         }
         if (this.eventsSdkClass.server) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
+            this.eventsSdkClass.loggerClass.init(this.eventsSdkClass.options.loggerServer, this.eventsSdkClass.options.loggerConnectOptions)
         }
         if (loginSessionData.IdentityCode) {
             this.token = loginSessionData.IdentityCode

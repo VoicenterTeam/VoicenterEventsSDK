@@ -22,7 +22,7 @@ export interface EventsSdkOptions {
     serverType?: number,
     useLogger?: boolean,
     loggerSocketConnection?: string,
-    loggerServer?: string,
+    loggerServer: string,
     loggerConfig?: LoggerConfig,
     loggerConnectOptions?: LoggerConnectOptions,
     email: string,
