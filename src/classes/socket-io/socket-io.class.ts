@@ -5,6 +5,7 @@ import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
 import { KeepAliveResponseEvent } from '@/types/events'
+import { StorageClass } from '@/classes/storage/storage.class'
 
 export class SocketIoClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -125,13 +126,7 @@ export class SocketIoClass{
             this.io = undefined
         }
 
-        if (window) {
-            window.sessionStorage.clear()
-        }
-
-        if (chrome) {
-            chrome.storage.session.clear()
-        }
+        StorageClass.clearSessionStorage()
     }
 
     private onKeepAliveResponse (data: KeepAliveResponseEvent) {
