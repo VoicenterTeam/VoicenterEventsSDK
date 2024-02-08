@@ -1,5 +1,5 @@
+import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import { Socket } from 'socket.io-client'
 
 export class LoggerClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -8,9 +8,20 @@ export class LoggerClass{
 
     public io: Socket | undefined
 
-    public init (url: string, options: any) {
-        if (this.eventsSdkClass.socketIoClass.ioFunction) {
-            console.log(url, options)
+    public init () {
+        if (!this.eventsSdkClass.options.useLogger) {
+            return
+        }
+
+        if (this.eventsSdkClass.options.loggerSocketConnection) {
+            this.io = this.eventsSdkClass.options.loggerSocketConnection
+        } else {
+            if (this.eventsSdkClass.socketIoClass.ioFunction) {
+                this.io = this.eventsSdkClass.socketIoClass.ioFunction(
+                    this.eventsSdkClass.options.loggerServer,
+                    this.eventsSdkClass.options.loggerConnectOptions as Partial<ManagerOptions & SocketOptions>
+                )
+            }
         }
     }
 }

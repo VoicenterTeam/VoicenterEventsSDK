@@ -1,4 +1,5 @@
 import { LoginType } from 'enum/auth.enum'
+import {Socket} from "socket.io-client";
 
 export interface EventsSdkOptions {
     fallbackServer: Server,
@@ -21,7 +22,7 @@ export interface EventsSdkOptions {
     serverFetchStrategy?: string,
     serverType?: number,
     useLogger?: boolean,
-    loggerSocketConnection?: string,
+    loggerSocketConnection?: Socket,
     loggerServer: string,
     loggerConfig?: LoggerConfig,
     loggerConnectOptions?: LoggerConnectOptions,
