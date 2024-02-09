@@ -4,8 +4,8 @@ import {
     AsyncStorageLoggerConfig
 } from '@voicenter-team/socketio-storage-logger/build/interfaces/AsyncStorageLoggerConfig'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import { LoggerTypeEnum } from 'enum/logger.enum'
-import { EventsEnum } from 'enum/events.enum'
+import { LoggerTypeEnum } from '@/enum/logger.enum'
+import { EventsEnum } from '@/enum/events.enum'
 
 export class LoggerClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -33,8 +33,8 @@ export class LoggerClass{
 
         if (this.io) {
             this.storageLogger = new AsyncStorageLogger({
-                socketConnection: this.io,
                 ...this.eventsSdkClass.options.loggerConfig as AsyncStorageLoggerConfig,
+                socketConnection: this.io
             })
         }
     }
