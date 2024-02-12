@@ -28,10 +28,7 @@
       ],
       "@/*": [
         "./src/*"
-      ],
-      "enum/*": [
-        "./src/enum/*"
-      ],
+      ]
     },
     "useDefineForClassFields": true,
     "strict": true,

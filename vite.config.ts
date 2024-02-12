@@ -31,14 +31,12 @@ export default ({ mode }: ConfigEnv) => {
         },
         plugins: [
             dts({
-                rollupTypes: true,
-                copyDtsFiles: true
+                copyDtsFiles: true,
             })
         ],
         resolve: {
             alias: {
                 '@': resolve(__dirname, './src'),
-                enum: resolve(__dirname, './src/enum'),
                 voicenterEventsSDK: resolve(__dirname, './src'),
             }
         }

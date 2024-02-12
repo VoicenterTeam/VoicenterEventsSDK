@@ -1,4 +1,4 @@
-import { LoginType } from 'enum/auth.enum'
+import { LoginType } from '@/enum/auth.enum'
 
 export interface EventsSdkOptions {
     isNewStack?: boolean,
