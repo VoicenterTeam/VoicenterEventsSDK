@@ -1,4 +1,4 @@
-import { CallStatusEnum, CallTypeEnum, DialerType, DirectionEnum, DoNotCallMeStatusCodeEnum } from 'enum/events.enum'
+import { CallStatusEnum, CallTypeEnum, DialerType, DirectionEnum, DoNotCallMeStatusCodeEnum } from '@/enum/events.enum'
 
 export interface Dialer {
     campaignID: number,
