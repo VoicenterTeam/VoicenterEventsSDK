@@ -94,6 +94,12 @@ class AuthClass{
                 (prev.Priority > current.Priority) ? prev : current
             )
         }
+        if (!this.eventsSdkClass.options.isNewStack && this.eventsSdkClass.options.servers) {
+            this.eventsSdkClass.servers = [ ...this.eventsSdkClass.options.servers ]
+            this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
+                (prev.Priority > current.Priority) ? prev : current
+            )
+        }
         if (this.eventsSdkClass.server) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
         }
