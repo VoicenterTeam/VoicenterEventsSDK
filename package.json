@@ -1,6 +1,6 @@
 {
   "name": "@voicenter-team/events-sdk",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "main": "dist/voicenter-events-sdk.cjs.js",
   "jsdelivr": "dist/voicenter-events-sdk.umd.js",
@@ -21,6 +21,9 @@
     "npm": ">= 9.6.7",
     "yarn": ">= 1.22.4"
   },
+  "files": [
+    "dist"
+  ],
   "precommit": "ts-check, lint",
   "keywords": [],
   "author": "",

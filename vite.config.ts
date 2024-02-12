@@ -10,6 +10,11 @@ export default ({ mode }: ConfigEnv) => {
 
     return defineConfig({
         build: {
+            rollupOptions: {
+                output: {
+                    exports: 'named'
+                }
+            },
             outDir: 'dist',
             sourcemap: true,
             commonjsOptions: {
