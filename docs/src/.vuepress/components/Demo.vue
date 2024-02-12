@@ -29,7 +29,7 @@ import {EventTypeData} from '@/types/events'
 import {LoginType} from "@/enum/auth.enum";
 
 /* Data */
-const token = ref('QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e')
+const token = ref('lJVBSEk084tzLaFpIWTReBw54trHD2Jlt8hThhX6OAxJ5IjyCC740znrXXgIzj1QtM67n2NOEGNn4SjrPJxuvkxbFb4tWHjS3cyh')
 const loading = ref(false)
 const loggedId = ref(false)
 const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
@@ -44,7 +44,6 @@ async function login() {
 
     const sdk = new EventsSdkClass({
         ...eventsSdkDefaultOptions,
-        token: token.value,
         loginType: LoginType.USER,
     })
 

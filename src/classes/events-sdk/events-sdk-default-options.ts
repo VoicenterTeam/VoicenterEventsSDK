@@ -14,6 +14,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         Version: '1.3.7',
         Domain: 'monitor2.comms24x7.com' 
     } ],
+    loginUrl: 'https://loginapi.comms24x7.com/monitorAPI/Login',
     fallbackServer: {
         Domain: 'monitor5.voicenter.co.il',
         Priority: 0,
@@ -53,6 +54,6 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         debug: false
     },
     username: 'username',
-    password: '78253050510',
-    email: 'test2@status.com',
+    password: '92455783085',
+    email: 'sasha.za@starkey.co.il',
 }
