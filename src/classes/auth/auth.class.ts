@@ -11,7 +11,7 @@ import {
     Settings
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
-import { getSettingsUrl, refreshTokenUrl } from '@/classes/auth/auth.urls'
+import { getSettingsUrl } from '@/classes/auth/auth.urls'
 import { StorageClass } from '@/classes/storage/storage.class'
 
 class AuthClass{
@@ -101,11 +101,9 @@ class AuthClass{
             }
         }
 
-        if (externalLoginResponse) {
-            this.onLoginResponse(loginSessionData)
+        this.onLoginResponse(loginSessionData)
 
-            await StorageClass.updateSessionStorageKey(key, loginSessionData)
-        }
+        await StorageClass.updateSessionStorageKey(key, loginSessionData)
     }
 
     private onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
@@ -137,6 +135,11 @@ class AuthClass{
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
             this.handleTokenExpiry()
         }
+        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry) {
+            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
+            this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
+            this.handleTokenExpiry()
+        }
     }
 
     public handleTokenExpiry () {
@@ -154,16 +157,34 @@ class AuthClass{
 
         setTimeout(
             async () => {
-                if (refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
+                if (this.eventsSdkClass.options.refreshToken) {
                     this.eventsSdkClass.socketIoClass.closeAllConnections()
 
-                    const refreshTokenResponse = await this.refreshToken(refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
+                    let settings
 
-                    const settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
+                    let loginSessionData: Partial<LoginSessionData>
 
-                    const loginSessionData: LoginSessionData = {
-                        ...refreshTokenResponse.Data,
-                        ...settings
+                    if (this.eventsSdkClass.options.isNewStack) {
+                        const refreshTokenResponse = await this.refreshToken<ExternalLoginNewStackResponseData>(
+                            this.eventsSdkClass.options.refreshTokenUrl,
+                            this.eventsSdkClass.options.refreshToken
+                        )
+
+                        settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
+
+                        loginSessionData = {
+                            ...refreshTokenResponse.Data,
+                            ...settings
+                        }
+                    } else {
+                        const refreshTokenResponse = await this.refreshToken<ExternalLoginOldStackResponseData>(
+                            this.eventsSdkClass.options.refreshTokenUrl,
+                            this.eventsSdkClass.options.refreshToken
+                        )
+
+                        loginSessionData = {
+                            ...refreshTokenResponse.Data.Socket,
+                        }
                     }
 
                     this.onLoginResponse(loginSessionData)

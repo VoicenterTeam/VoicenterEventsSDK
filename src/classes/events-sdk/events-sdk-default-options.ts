@@ -15,6 +15,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         Domain: 'monitor2.comms24x7.com' 
     } ],
     loginUrl: 'https://loginapi.comms24x7.com/monitorAPI/Login',
+    refreshTokenUrl: 'https://loginapi.comms24x7.com/monitorAPI/RefreshIdentityToken',
     fallbackServer: {
         Domain: 'monitor5.voicenter.co.il',
         Priority: 0,
