@@ -3,14 +3,15 @@ import md5 from 'js-md5'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
-    ExternalLoginRequestBody,
+    ExternalLoginNewStackResponseData,
+    ExternalLoginOldStackResponseData,
     ExternalLoginResponse,
     LoginSessionData,
     LoginSessionPayload,
     Settings
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
-import { getSettingsUrl, newLoginUrl, refreshTokenUrl } from '@/classes/auth/auth.urls'
+import { getSettingsUrl } from '@/classes/auth/auth.urls'
 import { StorageClass } from '@/classes/storage/storage.class'
 
 class AuthClass{
@@ -69,17 +70,35 @@ class AuthClass{
         key: string,
         loginType: LoginType,
     ) {
-        const externalLoginResponse = await this.externalLogin(
-            newLoginUrl,
-            payload,
-            loginType,
-        )
+        let externalLoginResponse
 
-        const settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
+        let settings
 
-        const loginSessionData: LoginSessionData = {
-            ...externalLoginResponse.Data,
-            ...settings
+        let loginSessionData: Partial<LoginSessionData>
+
+        if (this.eventsSdkClass.options.isNewStack) {
+            externalLoginResponse = await this.externalLogin<ExternalLoginNewStackResponseData>(
+                this.eventsSdkClass.options.loginUrl,
+                payload,
+                loginType,
+            )
+
+            settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
+
+            loginSessionData = {
+                ...externalLoginResponse.Data,
+                ...settings
+            }
+        } else {
+            externalLoginResponse = await this.externalLogin<ExternalLoginOldStackResponseData>(
+                this.eventsSdkClass.options.loginUrl,
+                payload,
+                loginType,
+            )
+
+            loginSessionData = {
+                ...externalLoginResponse.Data.Socket,
+            }
         }
 
         this.onLoginResponse(loginSessionData)
@@ -87,9 +106,15 @@ class AuthClass{
         await StorageClass.updateSessionStorageKey(key, loginSessionData)
     }
 
-    private onLoginResponse (loginSessionData: LoginSessionData) {
+    private onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
         if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
             this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
+            this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
+                (prev.Priority > current.Priority) ? prev : current
+            )
+        }
+        if (!this.eventsSdkClass.options.isNewStack && this.eventsSdkClass.options.servers) {
+            this.eventsSdkClass.servers = [ ...this.eventsSdkClass.options.servers ]
             this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
                 (prev.Priority > current.Priority) ? prev : current
             )
@@ -101,9 +126,18 @@ class AuthClass{
             this.token = loginSessionData.IdentityCode
             this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
         }
+        if (loginSessionData.Token) {
+            this.token = loginSessionData.Token
+            this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
+        }
         if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
+            this.handleTokenExpiry()
+        }
+        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry) {
+            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
+            this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
             this.handleTokenExpiry()
         }
     }
@@ -123,16 +157,34 @@ class AuthClass{
 
         setTimeout(
             async () => {
-                if (refreshTokenUrl && this.eventsSdkClass.options.refreshToken) {
+                if (this.eventsSdkClass.options.refreshToken) {
                     this.eventsSdkClass.socketIoClass.closeAllConnections()
 
-                    const refreshTokenResponse = await this.refreshToken(refreshTokenUrl, this.eventsSdkClass.options.refreshToken)
+                    let settings
 
-                    const settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
+                    let loginSessionData: Partial<LoginSessionData>
 
-                    const loginSessionData: LoginSessionData = {
-                        ...refreshTokenResponse.Data,
-                        ...settings
+                    if (this.eventsSdkClass.options.isNewStack) {
+                        const refreshTokenResponse = await this.refreshToken<ExternalLoginNewStackResponseData>(
+                            this.eventsSdkClass.options.refreshTokenUrl,
+                            this.eventsSdkClass.options.refreshToken
+                        )
+
+                        settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
+
+                        loginSessionData = {
+                            ...refreshTokenResponse.Data,
+                            ...settings
+                        }
+                    } else {
+                        const refreshTokenResponse = await this.refreshToken<ExternalLoginOldStackResponseData>(
+                            this.eventsSdkClass.options.refreshTokenUrl,
+                            this.eventsSdkClass.options.refreshToken
+                        )
+
+                        loginSessionData = {
+                            ...refreshTokenResponse.Data.Socket,
+                        }
                     }
 
                     this.onLoginResponse(loginSessionData)
@@ -143,23 +195,38 @@ class AuthClass{
             maxAllowedTimeout)
     }
 
-    private async externalLogin (
+    private async externalLogin<T> (
         url: string,
         { password, token, email }: LoginSessionPayload,
         loginType: LoginType,
-    ): Promise<ExternalLoginResponse> {
-        let body: ExternalLoginRequestBody
+    ): Promise<ExternalLoginResponse<T>> {
+        let body: string
 
-        if (loginType === LoginType.TOKEN) {
-            body = {
-                identityType: LoginType.TOKEN,
-                token
+        if (this.eventsSdkClass.options.isNewStack) {
+            if (loginType === LoginType.TOKEN) {
+                body = JSON.stringify({
+                    identityType: LoginType.TOKEN,
+                    token
+                })
+            } else {
+                body = JSON.stringify({
+                    identityType: LoginType.USER,
+                    username: email,
+                    password,
+                })
             }
         } else {
-            body = {
-                identityType: LoginType.USER,
-                username: email,
-                password,
+            if (token) {
+                body = JSON.stringify({ token })
+
+                url = `${url}/Token`
+            } else {
+                body = JSON.stringify({
+                    email,
+                    pin: password
+                })
+
+                url = `${url}/User`
             }
         }
 
@@ -168,7 +235,7 @@ class AuthClass{
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(body),
+            body,
         })
 
         const data = await res.json()
@@ -189,7 +256,7 @@ class AuthClass{
         return res.json()
     }
 
-    private async refreshToken (refreshTokenUrl: string, oldRefreshToken: string): Promise<ExternalLoginResponse> {
+    private async refreshToken<T> (refreshTokenUrl: string, oldRefreshToken: string): Promise<ExternalLoginResponse<T>> {
         const res = await fetch(refreshTokenUrl, {
             method: 'GET',
 

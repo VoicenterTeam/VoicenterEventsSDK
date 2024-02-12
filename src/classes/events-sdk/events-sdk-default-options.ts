@@ -2,6 +2,20 @@ import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
 import { LoginType } from '@/enum/auth.enum'
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
+    isNewStack: false,
+    servers: [ {
+        URLID: 1,
+        Priority: 5,
+        Version: '1.3.7',
+        Domain: 'monitor1.comms24x7.com' 
+    },{
+        URLID: 2,
+        Priority: 4,
+        Version: '1.3.7',
+        Domain: 'monitor2.comms24x7.com' 
+    } ],
+    loginUrl: 'https://loginapi.comms24x7.com/monitorAPI/Login',
+    refreshTokenUrl: 'https://loginapi.comms24x7.com/monitorAPI/RefreshIdentityToken',
     fallbackServer: {
         Domain: 'monitor5.voicenter.co.il',
         Priority: 0,
@@ -41,6 +55,6 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         debug: false
     },
     username: 'username',
-    password: '78253050510',
-    email: 'test2@status.com',
+    password: '92455783085',
+    email: 'sasha.za@starkey.co.il',
 }
