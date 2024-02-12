@@ -128,6 +128,10 @@ class AuthClass{
             this.token = loginSessionData.IdentityCode
             this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
         }
+        if (loginSessionData.Token) {
+            this.token = loginSessionData.Token
+            this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
+        }
         if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
