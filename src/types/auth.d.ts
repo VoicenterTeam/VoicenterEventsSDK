@@ -14,15 +14,19 @@ export interface ExternalLoginRequestBody {
     token?: string
 }
 
-interface ExternalLoginResponseData {
+export interface ExternalLoginResponse<T> {
+    StatusCode: number,
+    Status: string,
+    Data: T
+}
+
+interface ExternalLoginNewStackResponseData {
     AccessToken: string,
     RefreshToken: string
 }
 
-export interface ExternalLoginResponse {
-    StatusCode: number,
-    Status: string,
-    Data: ExternalLoginResponseData
+interface ExternalLoginOldStackResponseData {
+    Socket: Socket,
 }
 
 export interface Socket {
@@ -46,4 +50,4 @@ export interface Settings {
     MonitorList: Server[]
 }
 
-export interface LoginSessionData extends Settings, ExternalLoginResponseData {}
+export interface LoginSessionData extends Settings, ExternalLoginNewStackResponseData, Socket {}

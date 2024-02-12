@@ -1,10 +1,12 @@
 import { LoginType } from 'enum/auth.enum'
 
 export interface EventsSdkOptions {
+    isNewStack?: boolean,
+    servers: Server[],
+    loginUrl: string,
     fallbackServer: Server,
-    refreshTokenUrl?: string,
+    refreshTokenUrl: string,
     refreshToken?: string,
-    servers?: string,
     token: string,
     tokenExpiry?: Date,
     loginType: LoginType,

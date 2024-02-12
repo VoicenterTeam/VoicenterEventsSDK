@@ -19,7 +19,7 @@ export class StorageClass{
         }
     }
 
-    public static async updateSessionStorageKey (key: string, storageData: LoginSessionData) {
+    public static async updateSessionStorageKey (key: string, storageData: Partial<LoginSessionData>) {
         if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined') {
             await chrome.storage.session.set({
                 [key]: JSON.stringify(storageData)
