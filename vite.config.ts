@@ -32,6 +32,7 @@ export default ({ mode }: ConfigEnv) => {
         plugins: [
             dts({
                 copyDtsFiles: true,
+                rollupTypes: true,
             })
         ],
         resolve: {

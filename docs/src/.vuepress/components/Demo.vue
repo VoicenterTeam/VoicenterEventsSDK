@@ -43,7 +43,17 @@ async function login() {
     loading.value = true
 
     const sdk = new EventsSdkClass({
-        ...eventsSdkDefaultOptions,
+        "token": "lJVBSEk084tzLaFpIWTReBw54trHD2Jlt8hThhX6OAxJ5IjyCC740znrXXgIzj1QtM67n2NOEGNn4SjrPJxuvkxbFb4tWHjS3cyh",
+        "serverFetchStrategy": "remote",
+        "url": "https://monitor2.comms24x7.com/monitorAPI/getMonitorUrls",
+        "loginUrl": "https://loginapi.comms24x7.com/monitorAPI/Login",
+        "refreshTokenUrl": "https://loginapi.comms24x7.com/monitorAPI/RefreshIdentityToken",
+        "servers": [{
+            "URLID": 1,
+            "Priority": 5,
+            "Version": "1.3.7",
+            "Domain": "monitor1.comms24x7.com"
+        }, {"URLID": 2, "Priority": 4, "Version": "1.3.7", "Domain": "monitor2.comms24x7.com"}]
     })
 
     await sdk.init()
