@@ -1,5 +1,4 @@
 import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
-import { LoginType } from '@/enum/auth.enum'
 
 export const eventsSdkDefaultOptions: EventsSdkOptions = {
     isNewStack: false,
@@ -22,8 +21,8 @@ export const eventsSdkDefaultOptions: EventsSdkOptions = {
         Version: '1.3.7',
         URLID: 1
     },
-    token: '',
-    loginType: LoginType.TOKEN,
+    token: 'lJVBSEk084tzLaFpIWTReBw54trHD2Jlt8hThhX6OAxJ5IjyCC740znrXXgIzj1QtM67n2NOEGNn4SjrPJxuvkxbFb4tWHjS3cyh',
+    loginType: 'token',
     forceNew: true,
     reconnectionDelay: 10000,
     reconnectionDelayMax: 10000,

@@ -135,7 +135,7 @@ class AuthClass{
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
             this.handleTokenExpiry()
         }
-        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry) {
+        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === LoginType.USER.toLowerCase()) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
             this.handleTokenExpiry()
@@ -216,7 +216,7 @@ class AuthClass{
                 })
             }
         } else {
-            if (token) {
+            if (this.eventsSdkClass.options.loginType === LoginType.TOKEN.toLowerCase()) {
                 body = JSON.stringify({ token })
 
                 url = `${url}/Token`
