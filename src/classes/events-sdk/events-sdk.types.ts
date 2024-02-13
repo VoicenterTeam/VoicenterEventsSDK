@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io-client'
+import { AsyncStorageLoggerConfig } from '@voicenter-team/socketio-storage-logger/build/interfaces/AsyncStorageLoggerConfig'
 import { LoginType } from '@/enum/auth.enum'
 
 export interface EventsSdkOptions {
@@ -24,9 +26,9 @@ export interface EventsSdkOptions {
     serverFetchStrategy?: string,
     serverType?: number,
     useLogger?: boolean,
-    loggerSocketConnection?: string,
-    loggerServer?: string,
-    loggerConfig?: LoggerConfig,
+    loggerSocketConnection?: Socket,
+    loggerServer: string,
+    loggerConfig: Partial<AsyncStorageLoggerConfig>,
     loggerConnectOptions?: LoggerConnectOptions,
     email: string,
     password: string,

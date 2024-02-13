@@ -12,6 +12,7 @@ import {
     EventTypeNames,
 } from '@/types/events'
 import { EventsEnum } from '@/enum/events.enum'
+import { LoggerClass } from '@/classes/logger/logger.class'
 
 class EventsSdkClass{
     constructor (options: EventsSdkOptions) {
@@ -37,6 +38,7 @@ class EventsSdkClass{
 
     public authClass = new AuthClass(this)
     public socketIoClass = new SocketIoClass(this)
+    public loggerClass = new LoggerClass(this)
 
     public reconnectOptions: ReconnectOptions = {
         retryCount: 1,
