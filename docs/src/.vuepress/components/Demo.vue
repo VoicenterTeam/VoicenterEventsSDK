@@ -23,13 +23,12 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import EventsSdkClass from '@/index'
-import {eventsSdkDefaultOptions} from '@/classes/events-sdk/events-sdk-default-options'
 import {EventsEnum} from '@/enum/events.enum'
 import {EventTypeData} from '@/types/events'
 import {LoginType} from "@/enum/auth.enum";
 
 /* Data */
-const token = ref('lJVBSEk084tzLaFpIWTReBw54trHD2Jlt8hThhX6OAxJ5IjyCC740znrXXgIzj1QtM67n2NOEGNn4SjrPJxuvkxbFb4tWHjS3cyh')
+const token = ref('')
 const loading = ref(false)
 const loggedId = ref(false)
 const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
@@ -43,17 +42,12 @@ async function login() {
     loading.value = true
 
     const sdk = new EventsSdkClass({
-        "token": "lJVBSEk084tzLaFpIWTReBw54trHD2Jlt8hThhX6OAxJ5IjyCC740znrXXgIzj1QtM67n2NOEGNn4SjrPJxuvkxbFb4tWHjS3cyh",
-        "serverFetchStrategy": "remote",
-        "url": "https://monitor2.comms24x7.com/monitorAPI/getMonitorUrls",
-        "loginUrl": "https://loginapi.comms24x7.com/monitorAPI/Login",
-        "refreshTokenUrl": "https://loginapi.comms24x7.com/monitorAPI/RefreshIdentityToken",
-        "servers": [{
-            "URLID": 1,
-            "Priority": 5,
-            "Version": "1.3.7",
-            "Domain": "monitor1.comms24x7.com"
-        }, {"URLID": 2, "Priority": 4, "Version": "1.3.7", "Domain": "monitor2.comms24x7.com"}]
+      loginUrl: "https://loginapidev.voicenter.co.il/Auth/Login/Voicenter/Monitor",
+      refreshTokenUrl: "https://loginapidev.voicenter.co.il/Auth/RefreshToken",
+      loginType: LoginType.TOKEN, // <=== "User" or "Token"
+      token: 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e',
+      getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
+      isNewStack: true,
     })
 
     await sdk.init()

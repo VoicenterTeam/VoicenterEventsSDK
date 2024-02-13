@@ -4,6 +4,7 @@ export interface EventsSdkOptions {
     isNewStack?: boolean,
     servers: Server[],
     loginUrl: string,
+    getSettingsUrl?: string
     fallbackServer: Server,
     refreshTokenUrl: string,
     refreshToken?: string,

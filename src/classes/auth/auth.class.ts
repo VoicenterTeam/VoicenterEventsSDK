@@ -11,7 +11,6 @@ import {
     Settings
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
-import { getSettingsUrl } from '@/classes/auth/auth.urls'
 import { StorageClass } from '@/classes/storage/storage.class'
 
 class AuthClass{
@@ -135,7 +134,7 @@ class AuthClass{
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
             this.handleTokenExpiry()
         }
-        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === LoginType.USER.toLowerCase()) {
+        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
             this.handleTokenExpiry()
@@ -216,17 +215,17 @@ class AuthClass{
                 })
             }
         } else {
-            if (this.eventsSdkClass.options.loginType === LoginType.TOKEN.toLowerCase()) {
+            if (this.eventsSdkClass.options.loginType === LoginType.TOKEN) {
                 body = JSON.stringify({ token })
 
-                url = `${url}/Token`
+                url = `${url}/${LoginType.TOKEN}`
             } else {
                 body = JSON.stringify({
                     email,
                     pin: password
                 })
 
-                url = `${url}/User`
+                url = `${url}/${LoginType.USER}`
             }
         }
 
@@ -247,13 +246,17 @@ class AuthClass{
     }
 
     private async getSettings (token: string): Promise<Settings> {
-        const res = await fetch(getSettingsUrl, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        if (this.eventsSdkClass.options.getSettingsUrl) {
+            const res = await fetch(this.eventsSdkClass.options.getSettingsUrl, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
 
-        return res.json()
+            return res.json()
+        } else {
+            throw new Error('getSettingsUrl config parameter not provided')
+        }
     }
 
     private async refreshToken<T> (refreshTokenUrl: string, oldRefreshToken: string): Promise<ExternalLoginResponse<T>> {
