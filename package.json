@@ -1,12 +1,12 @@
 {
   "name": "@voicenter-team/events-sdk",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "main": "dist/voicenter-events-sdk.cjs.js",
   "jsdelivr": "dist/voicenter-events-sdk.umd.js",
   "module": "dist/voicenter-events-sdk.es.js",
   "unpkg": "dist/voicenter-events-sdk.umd.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/voicenter-events-sdk.d.ts",
   "type": "module",
   "scripts": {
     "build": "vite build",
