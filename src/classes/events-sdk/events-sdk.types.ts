@@ -53,7 +53,9 @@ export interface LoggerConnectOptions {
     reconnection?: boolean,
     reconnectionDelay?: number,
     reconnectionAttempts?: number,
-    perMessageDeflate?: boolean,
+    perMessageDeflate?: {
+        threshold: number
+    },
     upgrade?: boolean,
     transports?: string[],
     debug?: boolean

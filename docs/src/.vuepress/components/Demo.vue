@@ -179,7 +179,7 @@ async function login() {
                 alert('Login failed')
             }
         },
-        5000
+        15000
     )
 }
 </script>

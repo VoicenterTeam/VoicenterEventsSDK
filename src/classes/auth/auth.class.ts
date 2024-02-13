@@ -1,4 +1,4 @@
-import md5 from 'js-md5'
+import md5 from 'md5'
 
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
@@ -33,7 +33,7 @@ class AuthClass{
             password: options.password
         }
 
-        this.storageKey = md5(JSON.stringify(payload))
+        this.storageKey = md5(JSON.stringify(options))
 
         if (this.lastLoginTimestamp && this.lastLoginTimestamp + this.delay > new Date().getTime()) {
             return
@@ -53,7 +53,7 @@ class AuthClass{
     }
 
     private async checkLoginStatus (key: string): Promise<boolean> {
-        const loginSessionData = await StorageClass.getSessionStorageDataByKey(key)
+        const loginSessionData = await StorageClass.getSessionStorageDataByKey<LoginSessionData>(key)
 
         if (loginSessionData) {
             this.onLoginResponse(loginSessionData)

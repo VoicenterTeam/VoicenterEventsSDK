@@ -1,12 +1,16 @@
-import { LoginSessionData } from '@/types/auth'
-
 export class StorageClass{
-    public static async getSessionStorageDataByKey (key: string): Promise<LoginSessionData | undefined> {
+    public static getSessionStorageDataByKey <T extends object> (key: string, doParse?: true): Promise<T | undefined>
+    public static getSessionStorageDataByKey (key: string, doParse?: false): Promise<string | undefined>
+    public static async getSessionStorageDataByKey (key: string, doParse = true) {
         if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined') {
             const loginSessionKey = await chrome.storage.session.get(key)
 
             if (loginSessionKey[key]) {
-                return JSON.parse(loginSessionKey[key])
+                if (doParse) {
+                    return JSON.parse(loginSessionKey[key])
+                } else {
+                    return loginSessionKey[key]
+                }
             }
         }
 
@@ -14,12 +18,16 @@ export class StorageClass{
             const loginSessionKey = window.sessionStorage.getItem(key)
 
             if (loginSessionKey) {
-                return JSON.parse(loginSessionKey)
+                if (doParse) {
+                    return JSON.parse(loginSessionKey)
+                } else {
+                    return loginSessionKey
+                }
             }
         }
     }
 
-    public static async updateSessionStorageKey (key: string, storageData: Partial<LoginSessionData>) {
+    public static async updateSessionStorageKey <T> (key: string, storageData: Partial<T>) {
         if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined') {
             await chrome.storage.session.set({
                 [key]: JSON.stringify(storageData)

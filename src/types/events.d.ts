@@ -1,10 +1,4 @@
-import {
-    EventNameEnum,
-    EventsEnum,
-    ExtensionEventReasonEnum,
-    ExtensionHangupCauseEnum,
-    QueueEventReasonEnum
-} from '@/enum/events.enum'
+import { EventNameEnum, EventsEnum, ExtensionEventReasonEnum, ExtensionHangupCauseEnum, QueueEventReasonEnum } from '@/enum/events.enum'
 import { Queue, Extension, Dialer, User } from '@/types/events.common'
 
 /**

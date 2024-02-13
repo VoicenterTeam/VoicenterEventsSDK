@@ -6,6 +6,7 @@ import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
 import { KeepAliveResponseEvent } from '@/types/events'
 import { StorageClass } from '@/classes/storage/storage.class'
+// import { LoggerTypeEnum } from '@/enum/logger.enum'
 
 export class SocketIoClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -42,7 +43,12 @@ export class SocketIoClass{
 
             const url = `${protocol}://${domain}`
 
-            // this.log(INFO, 'Connecting to..', url);
+            // this.eventsSdkClass.loggerClass.log(
+            //     LoggerTypeEnum.INFO,
+            //     EventsEnum.CONNECT,
+            //     'Connecting to..',
+            //     url
+            // )
 
             const options: Partial<ManagerOptions & SocketOptions> = {
                 reconnection: false,
