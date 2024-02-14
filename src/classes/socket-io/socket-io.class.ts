@@ -50,6 +50,14 @@ export class SocketIoClass{
             //     url
             // )
 
+            this.eventsSdkClass.emit(
+                EventsEnum.ONLINE_STATUS_EVENT,
+                {
+                    isSocketConnected: false,
+                    attemptToConnect: url
+                }
+            )
+
             const options: Partial<ManagerOptions & SocketOptions> = {
                 reconnection: false,
                 upgrade: false,
@@ -87,6 +95,10 @@ export class SocketIoClass{
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
                 .on(EventsEnum.CONNECT, () => this.onConnect())
                 .on(EventsEnum.DISCONNECT, () => this.onDisconnect())
+                .on(EventsEnum.CONNECT_ERROR_EVENT, () => {
+                    this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
+                    this.eventsSdkClass.connect(ServerParameter.NEXT)
+                })
         }
     }
 

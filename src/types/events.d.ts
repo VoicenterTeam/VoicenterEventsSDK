@@ -98,6 +98,7 @@ export interface KeepAliveResponseEvent extends CommonEventProperties {
 
 export interface OnlineStatusEvent {
     isSocketConnected: boolean
+    attemptToConnect?: string
 }
 
 /**

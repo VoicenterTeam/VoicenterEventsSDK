@@ -1,6 +1,25 @@
 <template>
     <div>
-        <p v-if="loading">
+        <Transition name="fade">
+            <div v-if="isOnline && showSuccessNotification" class="message message--success" key="success">
+                Connection established!
+            </div>
+        </Transition>
+
+        <Transition name="fade">
+            <p v-if="!isOnline" class="message message--error" key="error">
+                No connection
+                <div class="message-container">
+                    <Transition name="attempt-to-connect" mode="out-in">
+                        <span v-if="attemptToConnect" :key="attemptToConnect" class="message">
+                            Trying to connect to {{ attemptToConnect }}
+                        </span>
+                    </Transition>
+                </div>
+            </p>
+        </Transition>
+
+        <p v-if="loading && isOnline">
             Loading...
         </p>
 
@@ -28,6 +47,9 @@ import {EventTypeData} from '@/types/events'
 import {LoginType} from "@/enum/auth.enum";
 
 /* Data */
+const showSuccessNotification = ref(false)
+const isOnline = ref(true)
+const attemptToConnect = ref<string | undefined>(undefined)
 const token = ref('')
 const loading = ref(false)
 const loggedId = ref(false)
@@ -138,6 +160,22 @@ async function login() {
     )
 
     sdk.on(
+        EventsEnum.ONLINE_STATUS_EVENT,
+        ({ data }) => {
+            isOnline.value = data.isSocketConnected
+            attemptToConnect.value = data.attemptToConnect
+
+            if (data.isSocketConnected) {
+                showSuccessNotification.value = true
+
+                setTimeout(() => {
+                    showSuccessNotification.value = false
+                }, 3000)
+            }
+        }
+    )
+
+    sdk.on(
         '*',
         (data) => {
             switch (data.name) {
@@ -183,3 +221,75 @@ async function login() {
     )
 }
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+
+.message-container {
+    position: relative;
+    min-height: 50px; /* Adjust based on your content's typical size */
+}
+
+/* Enhanced transition handling for attempt-to-connect */
+.attempt-to-connect-enter-active, .attempt-to-connect-leave-active {
+    transition: opacity 0.5s, transform 0.5s;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.attempt-to-connect-enter {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.attempt-to-connect-leave-active {
+    opacity: 1;
+}
+
+.attempt-to-connect-leave-to {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.attempt-to-connect-enter-to, .attempt-to-connect-leave {
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+}
+</style>
+
+<style lang="scss" scoped>
+.message {
+    border-radius: 24px;
+    font-size: 24px;
+    text-align: center;
+    padding: 8px 0;
+
+    &--error {
+        background-color: #a31c1c;
+        color: white;
+
+        span {
+            font-size: 16px;
+            margin-top: 16px;
+            display: block;
+        }
+    }
+
+    &--success {
+        background-color: #1ca31c;
+        color: white;
+    }
+}
+</style>

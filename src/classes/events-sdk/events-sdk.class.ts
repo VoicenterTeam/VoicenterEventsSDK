@@ -110,7 +110,7 @@ class EventsSdkClass{
         this.allListeners.forEach((callback) => callback(allEventData))
     }
 
-    public connect (server: ServerParameter = ServerParameter.DEFAULT, skipLogin = false) {
+    public connect (server: ServerParameter = ServerParameter.DEFAULT) {
         let serverToConnect: Server | undefined
 
         if (server === ServerParameter.DEFAULT) {
@@ -136,11 +136,6 @@ class EventsSdkClass{
         this.socketIoClass.initSocketEvents()
 
         this.socketIoClass.initKeepAlive()
-
-        // TODO: check if it is needed here
-        if (skipLogin) {
-            return
-        }
     }
 
     public disconnect () {

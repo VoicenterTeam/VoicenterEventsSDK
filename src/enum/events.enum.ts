@@ -7,6 +7,7 @@ export enum EventsEnum {
     ALL_USERS_STATUS = 'AllUsersStatus',
     CONNECT = 'connect',
     DISCONNECT = 'disconnect',
+    CONNECT_ERROR_EVENT = 'connect_error',
     EXTENSION_EVENT = 'ExtensionEvent',
     KEEP_ALIVE = 'keepalive',
     KEEP_ALIVE_RESPONSE = 'keepaliveResponse',
