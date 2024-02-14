@@ -44,6 +44,8 @@ class AuthClass{
         const isLoggedIn = await this.checkLoginStatus(this.storageKey)
 
         if (!isLoggedIn) {
+            StorageClass.clearSessionStorage()
+
             await this.userLoginFunction(payload, this.storageKey, options.loginType)
         }
     }
