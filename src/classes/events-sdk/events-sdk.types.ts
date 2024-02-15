@@ -70,7 +70,6 @@ export interface ReconnectOptions {
 }
 
 export enum ServerParameter {
-    DEFAULT = 'default',
-    NEXT = 'next',
-    PREVIOUS = 'previous'
+    MAIN = 'main',
+    NEXT = 'next'
 }
