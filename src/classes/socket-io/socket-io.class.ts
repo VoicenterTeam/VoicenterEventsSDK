@@ -97,7 +97,9 @@ export class SocketIoClass{
                 .on(EventsEnum.DISCONNECT, () => this.onDisconnect())
                 .on(EventsEnum.CONNECT_ERROR_EVENT, () => {
                     this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
-                    this.eventsSdkClass.connect(ServerParameter.NEXT)
+                    setTimeout(() => {
+                        this.eventsSdkClass.connect(ServerParameter.NEXT)
+                    },10000)
                 })
         }
     }
@@ -182,9 +184,7 @@ export class SocketIoClass{
             return
         }
 
-        this.keepReconnectInterval = setInterval(() => {
-            console.log('attempt to connect...')
-            this.eventsSdkClass.connect(ServerParameter.NEXT)
-        }, 15000)
+        console.log('attempt to connect...')
+        this.eventsSdkClass.connect(ServerParameter.NEXT)
     }
 }
