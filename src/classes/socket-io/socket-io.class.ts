@@ -184,7 +184,7 @@ export class SocketIoClass{
 
         this.keepReconnectInterval = setInterval(() => {
             console.log('attempt to connect...')
-            this.eventsSdkClass.connect(ServerParameter.NEXT, true)
+            this.eventsSdkClass.connect(ServerParameter.NEXT)
         }, 15000)
     }
 }
