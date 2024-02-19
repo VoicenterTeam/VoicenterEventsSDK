@@ -33,11 +33,13 @@ class EventsSdkClass{
         ...eventsSdkDefaultOptions
     }
     public servers: Server[] = []
+    public URLList: string[] = []
     public server: Server
+    public URL: string | undefined
     public socket: SocketTyped | undefined
     private mainServer: Server | undefined
 
-    private alreadyAttemptedOtherServers: number[] = []
+    private alreadyAttemptedOtherServers: Array<number | string> = []
 
     public authClass = new AuthClass(this)
     public socketIoClass = new SocketIoClass(this)
@@ -201,40 +203,76 @@ class EventsSdkClass{
     }
 
     private findMainServer () {
-        this.mainServer = this.servers.reduce((prev, cur) => {
-            return cur.Priority > prev.Priority ? cur : prev
-        })
+        if (this.servers.length) {
+            this.mainServer = this.servers.reduce((prev, cur) => {
+                return cur.Priority > prev.Priority ? cur : prev
+            })
 
-        this.server = this.mainServer
+            this.server = this.mainServer
+        } else {
+            if (this.URLList.length) {
+                this.URL = this.URLList[0]
+            }
+        }
     }
 
     private findNextServer () {
-        if (this.server.Priority === this.mainServer!.Priority) {
-            let filteredServers = this.servers.filter(
-                server =>
-                    server.Priority !== this.mainServer!.Priority &&
-                    this.alreadyAttemptedOtherServers.indexOf(server.Priority) + 1 === 0
-            )
-
-            if (!filteredServers.length) {
-                this.alreadyAttemptedOtherServers = []
-
-                filteredServers = this.servers.filter(
+        if (this.servers.length) {
+            if (this.server.Priority === this.mainServer!.Priority) {
+                let filteredServers = this.servers.filter(
                     server =>
                         server.Priority !== this.mainServer!.Priority &&
                         this.alreadyAttemptedOtherServers.indexOf(server.Priority) + 1 === 0
                 )
-            }
 
-            if (filteredServers.length) {
-                this.server = filteredServers.reduce((prev, cur) => {
-                    return cur.Priority > prev.Priority ? cur : prev
-                })
+                if (!filteredServers.length) {
+                    this.alreadyAttemptedOtherServers = []
 
-                this.alreadyAttemptedOtherServers.push(this.server.Priority)
+                    filteredServers = this.servers.filter(
+                        server =>
+                            server.Priority !== this.mainServer!.Priority &&
+                            this.alreadyAttemptedOtherServers.indexOf(server.Priority) + 1 === 0
+                    )
+                }
+
+                if (filteredServers.length) {
+                    this.server = filteredServers.reduce((prev, cur) => {
+                        return cur.Priority > prev.Priority ? cur : prev
+                    })
+
+                    this.alreadyAttemptedOtherServers.push(this.server.Priority)
+                }
+            } else {
+                this.server = this.mainServer!
             }
         } else {
-            this.server = this.mainServer!
+            if (this.URLList.length) {
+                if (this.URL === this.URLList[0]) {
+                    let filteredServers = this.URLList.filter(
+                        url =>
+                            url !== this.URLList[0] &&
+                            this.alreadyAttemptedOtherServers.indexOf(url) + 1 === 0
+                    )
+
+                    if (!filteredServers.length) {
+                        this.alreadyAttemptedOtherServers = []
+
+                        filteredServers = this.URLList.filter(
+                            url =>
+                                url !== this.URLList[0] &&
+                                this.alreadyAttemptedOtherServers.indexOf(url) + 1 === 0
+                        )
+                    }
+
+                    if (filteredServers.length) {
+                        this.URL = filteredServers[0]
+
+                        this.alreadyAttemptedOtherServers.push(this.URL)
+                    }
+                } else {
+                    this.URL = this.URLList[0]
+                }
+            }
         }
     }
 

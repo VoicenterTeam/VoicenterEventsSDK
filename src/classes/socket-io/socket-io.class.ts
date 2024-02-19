@@ -39,9 +39,9 @@ export class SocketIoClass{
         const server = this.eventsSdkClass.server
 
         try {
-            const domain = server.Domain
+            const domain = server ? server.Domain : this.eventsSdkClass.URL
 
-            const url = `${protocol}://${domain}`
+            const url = server ? `${protocol}://${domain}` : this.eventsSdkClass.URL
 
             // this.eventsSdkClass.loggerClass.log(
             //     LoggerTypeEnum.INFO,
@@ -74,8 +74,10 @@ export class SocketIoClass{
                 }
             }
 
-            if (this.ioFunction) {
+            if (this.ioFunction && url) {
                 this.io = this.ioFunction(url, options)
+            } else {
+                throw new Error('Socket server url no defined')
             }
         } catch (e) {
             // this.log(ERROR, e);

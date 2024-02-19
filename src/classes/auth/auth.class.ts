@@ -120,9 +120,15 @@ class AuthClass{
                 (prev.Priority > current.Priority) ? prev : current
             )
         }
+        if (!this.eventsSdkClass.options.isNewStack && !this.eventsSdkClass.servers.length && loginSessionData.URLList) {
+            this.eventsSdkClass.URLList = loginSessionData.URLList
+        }
         if (this.eventsSdkClass.server) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
             this.eventsSdkClass.loggerClass.init()
+        }
+        if (!this.eventsSdkClass.server && this.eventsSdkClass.URLList.length) {
+            this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${loginSessionData.Client}`)
         }
         if (loginSessionData.IdentityCode) {
             this.token = loginSessionData.IdentityCode

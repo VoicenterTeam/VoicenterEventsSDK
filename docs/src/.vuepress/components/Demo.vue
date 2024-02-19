@@ -64,12 +64,24 @@ async function login() {
     loading.value = true
 
     const sdk = new EventsSdkClass({
-      loginUrl: "https://loginapidev.voicenter.co.il/Auth/Login/Voicenter/Monitor",
-      refreshTokenUrl: "https://loginapidev.voicenter.co.il/Auth/RefreshToken",
+      loginUrl: "https://loginapi.voicenter.co.il/monitorAPI/Login",
+      refreshTokenUrl: "https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken",
       loginType: LoginType.TOKEN, // <=== "User" or "Token"
       token: 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e',
-      getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
-      isNewStack: true,
+      servers: [
+        {
+          URLID: 1,
+          Priority: 1,
+          Version: "1.3.7",
+          Domain: "monitor5.voicenter.co.il"
+        },
+        {
+          URLID: 2,
+          Priority: 2,
+          Version: "1.3.7",
+          Domain: "monitor6.voicenter.co.il"
+        }
+      ],
     })
 
     await sdk.init()
