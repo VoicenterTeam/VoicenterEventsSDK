@@ -4,7 +4,7 @@ import { LoginType } from '@/enum/auth.enum'
 
 export interface EventsSdkOptions {
     isNewStack?: boolean,
-    servers: Server[],
+    servers?: Server[],
     loginUrl: string,
     getSettingsUrl?: string
     fallbackServer: Server,

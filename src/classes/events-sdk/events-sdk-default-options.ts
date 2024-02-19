@@ -26,7 +26,7 @@ export const eventsSdkDefaultOptions: Partial<EventsSdkOptions> = {
         reconnection: true,
         reconnectionDelay: 5000,
         reconnectionAttempts: 10,
-        perMessageDeflate: false,
+        perMessageDeflate: undefined,
         upgrade: false,
         transports: [ 'websocket' ],
         debug: false

@@ -15,23 +15,8 @@ import { EventsEnum } from '@/enum/events.enum'
 import { LoggerClass } from '@/classes/logger/logger.class'
 
 class EventsSdkClass{
-    constructor (options: EventsSdkOptions) {
-        this.options = {
-            ...eventsSdkDefaultOptions,
-            ...options
-        }
-
-        this.server = this.options.fallbackServer
-
-        this.argumentOptions = {
-            ...options
-        }
-    }
-
     private argumentOptions: EventsSdkOptions
-    public readonly options: EventsSdkOptions = {
-        ...eventsSdkDefaultOptions
-    }
+    public readonly options: EventsSdkOptions
     public servers: Server[] = []
     public URLList: string[] = []
     public server: Server
@@ -45,18 +30,9 @@ class EventsSdkClass{
     public socketIoClass = new SocketIoClass(this)
     public loggerClass = new LoggerClass(this)
 
-    public reconnectOptions: ReconnectOptions = {
-        retryCount: 1,
-        maxReconnectAttempts: this.options.maxReconnectAttempts,
-        reconnectionDelay: this.options.reconnectionDelay, // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
-        minReconnectionDelay: this.options.reconnectionDelay, // 10 seconds
-        maxReconnectionDelay: 60000 * 5 // 5 minutes
-    }
+    public reconnectOptions: ReconnectOptions
 
-    public retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
-        leading: true,
-        trailing: false
-    })
+    public retryConnection
 
     private listeners: EventCallbackListenersMap = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
@@ -71,6 +47,32 @@ class EventsSdkClass{
         [EventsEnum.ONLINE_STATUS_EVENT]: []
     }
     private allListeners: Array<(data: GenericEventWrapper) => void> = []
+
+    constructor (options: EventsSdkOptions) {
+        this.options = {
+            ...eventsSdkDefaultOptions,
+            ...options
+        }
+
+        this.reconnectOptions = {
+            retryCount: 1,
+            maxReconnectAttempts: this.options.maxReconnectAttempts,
+            reconnectionDelay: this.options.reconnectionDelay, // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
+            minReconnectionDelay: this.options.reconnectionDelay, // 10 seconds
+            maxReconnectionDelay: 60000 * 5 // 5 minutes
+        }
+
+        this.server = this.options.fallbackServer
+
+        this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
+            leading: true,
+            trailing: false
+        })
+
+        this.argumentOptions = {
+            ...options
+        }
+    }
 
     public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
     public on (event: '*', callback: (data: GenericEventWrapper) => void): void
@@ -154,54 +156,6 @@ class EventsSdkClass{
         this.socketIoClass.clearKeepAliveInterval()
     }
 
-    private findCurrentServer (): Server {
-        if (this.servers.length) {
-            this.server = this.servers[0]
-        }
-        if (!this.server) {
-            this.server = this.options.fallbackServer
-        }
-        return this.server
-    }
-
-    private findNextAvailableServer (): Server {
-        // this.log(INFO, 'Failover -> Trying to find another server');
-
-        const currentServerPriority = this.server.Priority
-
-        const nextServerPriority = currentServerPriority + 1
-
-        const nextServer = this.servers.find(server => server.Priority === nextServerPriority) || this.findMinPriorityServer()
-
-        this.server = { ...nextServer }
-
-        // this.log(INFO, 'Failover -> Found new server. Connecting to it...', this.server);
-
-        return this.server
-    }
-
-    private findMaxPriorityServer (): Server {
-        // this.log(INFO, 'Fallback -> Trying to find previous server');
-
-        const maxPriorityServer = this.getServerWithHighestPriority(this.servers)
-
-        if (!this.server) {
-            this.server = maxPriorityServer
-
-            return this.server
-        }
-
-        if (this.server && maxPriorityServer.Domain !== this.server.Domain) {
-            this.server = maxPriorityServer
-
-            // this.log(INFO, 'Fallback -> Trying to find previous server');
-
-            return this.server
-        }
-
-        return this.server
-    }
-
     private findMainServer () {
         if (this.servers.length) {
             this.mainServer = this.servers.reduce((prev, cur) => {
@@ -274,20 +228,6 @@ class EventsSdkClass{
                 }
             }
         }
-    }
-
-    private findMinPriorityServer (): Server {
-        const minPriority = Math.min(...this.servers.map(server => server.Priority))
-
-        const server = this.servers.find(server => server.Priority === minPriority)
-
-        if (server) {
-            this.server = server
-
-            return this.server
-        }
-
-        return this.server
     }
 
     public getServerWithHighestPriority (servers: Server[]): Server {
