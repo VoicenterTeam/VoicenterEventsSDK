@@ -101,7 +101,7 @@ export class SocketIoClass{
                     this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
                     setTimeout(() => {
                         this.eventsSdkClass.connect(ServerParameter.NEXT)
-                    },10000)
+                    },this.eventsSdkClass.options.reconnectionDelay)
                 })
         }
     }
