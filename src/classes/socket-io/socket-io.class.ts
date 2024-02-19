@@ -65,7 +65,8 @@ export class SocketIoClass{
                 forceNew: true,
                 query: {
                     token
-                }
+                },
+                timeout: this.eventsSdkClass.options.timeout
             }
 
             if (token) {
