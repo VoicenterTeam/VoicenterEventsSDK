@@ -59,6 +59,8 @@ class AuthClass{
         const loginSessionData = await StorageClass.getSessionStorageDataByKey<LoginSessionData>(key)
 
         if (loginSessionData) {
+            this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, 'got data from session', loginSessionData)
+
             this.onLoginResponse(loginSessionData)
 
             return true

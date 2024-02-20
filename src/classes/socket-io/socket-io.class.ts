@@ -80,8 +80,8 @@ export class SocketIoClass{
             } else {
                 throw new Error('Socket server url no defined')
             }
-        } catch (e) {
-            // this.log(ERROR, e);
+        } catch (error) {
+            this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.ERROR, 'init socket connection error', error)
         }
     }
 
@@ -129,6 +129,8 @@ export class SocketIoClass{
             if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io) {
                 this.io.emit(EventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
 
+                this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, `EMIT -> ${EventsEnum.KEEP_ALIVE}`, this.eventsSdkClass.authClass.token)
+
                 return
             }
 
@@ -148,6 +150,8 @@ export class SocketIoClass{
     }
 
     private onKeepAliveResponse (data: KeepAliveResponseEvent) {
+        this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, EventsEnum.KEEP_ALIVE_RESPONSE)
+
         if (data.errorCode) {
             this.initSocketConnection()
 
