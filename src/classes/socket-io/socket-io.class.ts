@@ -46,7 +46,6 @@ export class SocketIoClass{
 
             this.eventsSdkClass.loggerClass.log(
                 LoggerTypeEnum.INFO,
-                EventsEnum.CONNECT,
                 'Connecting to..',
                 url
             )
@@ -172,8 +171,7 @@ export class SocketIoClass{
         this.eventsSdkClass.loggerClass.log(
             LoggerTypeEnum.INFO,
             EventsEnum.CONNECT,
-            'Connected to..',
-            this.eventsSdkClass.server ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL
+            this.eventsSdkClass.reconnectOptions
         )
 
         this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: true })
