@@ -152,6 +152,10 @@ class AuthClass{
     }
 
     public handleTokenExpiry () {
+        if (this.eventsSdkClass.options.refreshTokenUrl) {
+            throw new Error('refreshTokenUrl not provided')
+        }
+
         let date: Date
 
         if (this.eventsSdkClass.options.tokenExpiry) {
@@ -209,6 +213,10 @@ class AuthClass{
         { password, token, email }: LoginSessionPayload,
         loginType: LoginType,
     ): Promise<ExternalLoginResponse<T>> {
+        if (!url) {
+            throw new Error('loginUrl not provided')
+        }
+
         let body: string
 
         if (this.eventsSdkClass.options.isNewStack) {
@@ -279,21 +287,21 @@ class AuthClass{
 
     private async getSettings (token: string): Promise<Settings> {
         try {
-            if (this.eventsSdkClass.options.getSettingsUrl) {
-                const res = await fetch(this.eventsSdkClass.options.getSettingsUrl, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-
-                if (!res.ok && res.status === 401) {
-                    throw new Error('Unauthorized. Access token not provided or not valid')
-                }
-
-                return res.json()
-            } else {
+            if (!this.eventsSdkClass.options.getSettingsUrl) {
                 throw new Error('getSettingsUrl not provided')
             }
+
+            const res = await fetch(this.eventsSdkClass.options.getSettingsUrl, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            if (!res.ok && res.status === 401) {
+                throw new Error('Unauthorized. Access token not provided or not valid')
+            }
+
+            return res.json()
         } catch (error) {
             this.eventsSdkClass.loggerClass.log(
                 LoggerTypeEnum.ERROR,
