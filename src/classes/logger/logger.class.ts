@@ -52,7 +52,7 @@ export class LoggerClass{
         }
     }
 
-    public log (type: LoggerTypeEnum, event: EventsEnum, ...data: unknown[]) {
+    public log (type: LoggerTypeEnum, event: EventsEnum | string, ...data: unknown[]) {
         const result = [ event, ...data ]
         if (this.storageLogger) {
             if (type === LoggerTypeEnum.INFO) {

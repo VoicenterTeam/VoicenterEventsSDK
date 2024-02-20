@@ -12,6 +12,7 @@ import {
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
 import { StorageClass } from '@/classes/storage/storage.class'
+import { LoggerTypeEnum } from '@/enum/logger.enum'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -238,46 +239,92 @@ class AuthClass{
             }
         }
 
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body,
-        })
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body,
+            })
 
-        const data = await res.json()
+            if (!res.ok && res.status === 400) {
+                throw new Error('Bad body request. Login type or isNewStack values not correct or not provided')
+            }
 
-        if (data.error) {
-            throw new Error(data.error)
+            if (!res.ok && res.status === 401) {
+                throw new Error('Unauthorized. Invalid token provided')
+            }
+
+            if (!res.ok && res.status === 403) {
+                throw new Error('Forbidden. Identity token not provided or not valid')
+            }
+
+            const data = await res.json()
+
+            if (data.error) {
+                throw new Error(data.error)
+            }
+            return data
+        } catch (error) {
+            this.eventsSdkClass.loggerClass.log(
+                LoggerTypeEnum.ERROR,
+                `External login ${url}`,
+                error
+            )
+
+            throw error
         }
-        return data
     }
 
     private async getSettings (token: string): Promise<Settings> {
-        if (this.eventsSdkClass.options.getSettingsUrl) {
-            const res = await fetch(this.eventsSdkClass.options.getSettingsUrl, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+        try {
+            if (this.eventsSdkClass.options.getSettingsUrl) {
+                const res = await fetch(this.eventsSdkClass.options.getSettingsUrl, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
 
-            return res.json()
-        } else {
-            throw new Error('getSettingsUrl config parameter not provided')
+                if (!res.ok && res.status === 401) {
+                    throw new Error('Unauthorized. Access token not provided or not valid')
+                }
+
+                return res.json()
+            } else {
+                throw new Error('getSettingsUrl not provided')
+            }
+        } catch (error) {
+            this.eventsSdkClass.loggerClass.log(
+                LoggerTypeEnum.ERROR,
+                `Get settings ${this.eventsSdkClass.options.getSettingsUrl}`,
+                error
+            )
+
+            throw error
         }
     }
 
     private async refreshToken<T> (refreshTokenUrl: string, oldRefreshToken: string): Promise<ExternalLoginResponse<T>> {
-        const res = await fetch(refreshTokenUrl, {
-            method: 'GET',
+        try {
+            const res = await fetch(refreshTokenUrl, {
+                method: 'GET',
 
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${oldRefreshToken}`
-            }
-        })
-        return res.json()
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${oldRefreshToken}`
+                }
+            })
+            return res.json()
+        } catch (error) {
+            this.eventsSdkClass.loggerClass.log(
+                LoggerTypeEnum.ERROR,
+                `Refresh token ${refreshTokenUrl}`,
+                error
+            )
+
+            throw error
+        }
     }
 }
 
