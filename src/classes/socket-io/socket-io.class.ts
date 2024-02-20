@@ -1,4 +1,4 @@
-import { ManagerOptions, SocketOptions } from 'socket.io-client'
+import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
@@ -6,6 +6,7 @@ import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { EventsEnum } from '@/enum/events.enum'
 import { KeepAliveResponseEvent } from '@/types/events'
 import { StorageClass } from '@/classes/storage/storage.class'
+import { LoggerTypeEnum } from '@/enum/logger.enum'
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
 export class SocketIoClass{
@@ -43,12 +44,12 @@ export class SocketIoClass{
 
             const url = server ? `${protocol}://${domain}` : this.eventsSdkClass.URL
 
-            // this.eventsSdkClass.loggerClass.log(
-            //     LoggerTypeEnum.INFO,
-            //     EventsEnum.CONNECT,
-            //     'Connecting to..',
-            //     url
-            // )
+            this.eventsSdkClass.loggerClass.log(
+                LoggerTypeEnum.INFO,
+                EventsEnum.CONNECT,
+                'Connecting to..',
+                url
+            )
 
             this.eventsSdkClass.emit(
                 EventsEnum.ONLINE_STATUS_EVENT,
@@ -97,13 +98,8 @@ export class SocketIoClass{
                 .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
                 .on(EventsEnum.CONNECT, () => this.onConnect())
-                .on(EventsEnum.DISCONNECT, () => this.onDisconnect())
-                .on(EventsEnum.CONNECT_ERROR_EVENT, () => {
-                    this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
-                    setTimeout(() => {
-                        this.eventsSdkClass.connect(ServerParameter.NEXT)
-                    },this.eventsSdkClass.options.reconnectionDelay)
-                })
+                .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
+                .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
         }
     }
 
@@ -173,11 +169,24 @@ export class SocketIoClass{
 
         this.connected = true
 
+        this.eventsSdkClass.loggerClass.log(
+            LoggerTypeEnum.INFO,
+            EventsEnum.CONNECT,
+            'Connected to..',
+            this.eventsSdkClass.server ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL
+        )
+
         this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: true })
     }
 
-    private onDisconnect () {
+    private onDisconnect (reason: Socket.DisconnectReason) {
         this.connected = false
+
+        this.eventsSdkClass.loggerClass.log(
+            LoggerTypeEnum.INFO,
+            EventsEnum.DISCONNECT,
+            reason
+        )
 
         this.closeAllConnections()
 
@@ -189,5 +198,19 @@ export class SocketIoClass{
 
         console.log('attempt to connect...')
         this.eventsSdkClass.connect(ServerParameter.NEXT)
+    }
+
+    private onConnectError (data: Error) {
+        this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
+
+        this.eventsSdkClass.loggerClass.log(
+            LoggerTypeEnum.ERROR,
+            EventsEnum.CONNECT_ERROR_EVENT,
+            data
+        )
+
+        setTimeout(() => {
+            this.eventsSdkClass.connect(ServerParameter.NEXT)
+        },this.eventsSdkClass.options.reconnectionDelay)
     }
 }
