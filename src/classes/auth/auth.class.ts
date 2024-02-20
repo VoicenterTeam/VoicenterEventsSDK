@@ -109,12 +109,6 @@ class AuthClass{
     }
 
     private onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
-        if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
-            this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
-            this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
-                (prev.Priority > current.Priority) ? prev : current
-            )
-        }
         if (!this.eventsSdkClass.options.isNewStack && this.eventsSdkClass.options.servers) {
             this.eventsSdkClass.servers = [ ...this.eventsSdkClass.options.servers ]
             this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
@@ -123,6 +117,12 @@ class AuthClass{
         }
         if (this.eventsSdkClass.options.isNewStack && this.eventsSdkClass.options.servers) {
             this.eventsSdkClass.servers = [ ...this.eventsSdkClass.options.servers ]
+            this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
+                (prev.Priority > current.Priority) ? prev : current
+            )
+        }
+        if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
+            this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
             this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
                 (prev.Priority > current.Priority) ? prev : current
             )
