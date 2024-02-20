@@ -69,6 +69,8 @@ async function login() {
       getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
       loginType: LoginType.TOKEN, // <=== "User" or "Token"
       token: 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e',
+      password: '78253050510',
+      email: 'test2@status.com',
       isNewStack: true
     })
 

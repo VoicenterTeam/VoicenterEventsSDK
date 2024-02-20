@@ -124,6 +124,12 @@ class AuthClass{
         if (!this.eventsSdkClass.options.isNewStack && !this.eventsSdkClass.servers.length && loginSessionData.URLList) {
             this.eventsSdkClass.URLList = loginSessionData.URLList
         }
+        if (!this.eventsSdkClass.options.isNewStack && !this.eventsSdkClass.URLList.length && !this.eventsSdkClass.servers.length) {
+            throw new Error('Socket servers not defined')
+        }
+        if (this.eventsSdkClass.options.isNewStack && !this.eventsSdkClass.servers.length) {
+            throw new Error('Socket servers not defined')
+        }
         if (this.eventsSdkClass.server) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
             this.eventsSdkClass.loggerClass.init()
@@ -152,7 +158,7 @@ class AuthClass{
     }
 
     public handleTokenExpiry () {
-        if (this.eventsSdkClass.options.refreshTokenUrl) {
+        if (!this.eventsSdkClass.options.refreshTokenUrl) {
             throw new Error('refreshTokenUrl not provided')
         }
 
