@@ -50,7 +50,7 @@ export class SocketIoClass{
                 url
             )
 
-            this.eventsSdkClass.emit(
+            this.eventsSdkClass.eventEmitterClass.emit(
                 EventsEnum.ONLINE_STATUS_EVENT,
                 {
                     isSocketConnected: false,
@@ -88,13 +88,13 @@ export class SocketIoClass{
     public initSocketEvents () {
         if (this.io) {
             this.io
-                .on(EventsEnum.LOGIN_SUCCESS, (data) => this.eventsSdkClass.emit(EventsEnum.LOGIN_SUCCESS, data))
-                .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.emit(EventsEnum.QUEUE_EVENT, data))
-                .on(EventsEnum.EXTENSION_EVENT, (data) => this.eventsSdkClass.emit(EventsEnum.EXTENSION_EVENT, data))
-                .on(EventsEnum.DIALER_EVENT, (data) => this.eventsSdkClass.emit(EventsEnum.DIALER_EVENT, data))
-                .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.LOGIN_STATUS, data))
-                .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
-                .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
+                .on(EventsEnum.LOGIN_SUCCESS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data))
+                .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data))
+                .on(EventsEnum.EXTENSION_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, data))
+                .on(EventsEnum.DIALER_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data))
+                .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data))
+                .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
+                .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
                 .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
                 .on(EventsEnum.CONNECT, () => this.onConnect())
                 .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
@@ -127,7 +127,7 @@ export class SocketIoClass{
             // }
 
             if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io) {
-                this.io.emit(EventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
+                this.eventsSdkClass.emit(EventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
 
                 this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, `EMIT -> ${EventsEnum.KEEP_ALIVE}`, this.eventsSdkClass.authClass.token)
 
@@ -178,7 +178,7 @@ export class SocketIoClass{
             this.eventsSdkClass.reconnectOptions
         )
 
-        this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: true })
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: true })
     }
 
     private onDisconnect (reason: Socket.DisconnectReason) {
@@ -192,7 +192,7 @@ export class SocketIoClass{
 
         this.closeAllConnections()
 
-        this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
 
         if (!this.doReconnect) {
             return
@@ -203,7 +203,7 @@ export class SocketIoClass{
     }
 
     private onConnectError (data: Error) {
-        this.eventsSdkClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
 
         this.eventsSdkClass.loggerClass.log(
             LoggerTypeEnum.ERROR,

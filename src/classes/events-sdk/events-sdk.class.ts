@@ -5,14 +5,13 @@ import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import { SocketTyped } from '@/types/socket'
 import {
-    EventCallbackListenersMap,
     EventSpecificCallback,
-    EventTypeData,
     EventTypeNames,
     GenericEventWrapper,
 } from '@/types/events'
 import { EventsEnum } from '@/enum/events.enum'
 import { LoggerClass } from '@/classes/logger/logger.class'
+import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 
 class EventsSdkClass{
     private argumentOptions: EventsSdkOptions
@@ -29,24 +28,11 @@ class EventsSdkClass{
     public authClass = new AuthClass(this)
     public socketIoClass = new SocketIoClass(this)
     public loggerClass = new LoggerClass(this)
+    public eventEmitterClass = new EventEmitterClass(this)
 
     public reconnectOptions: ReconnectOptions
 
     public retryConnection
-
-    private listeners: EventCallbackListenersMap = {
-        [EventsEnum.ALL_EXTENSION_STATUS]: [],
-        [EventsEnum.ALL_DIALER_STATUS]: [],
-        [EventsEnum.ALL_USERS_STATUS]: [],
-        [EventsEnum.QUEUE_EVENT]: [],
-        [EventsEnum.EXTENSION_EVENT]: [],
-        [EventsEnum.DIALER_EVENT]: [],
-        [EventsEnum.LOGIN_SUCCESS]: [],
-        [EventsEnum.LOGIN_STATUS]: [],
-        [EventsEnum.KEEP_ALIVE_RESPONSE]: [],
-        [EventsEnum.ONLINE_STATUS_EVENT]: []
-    }
-    private allListeners: Array<(data: GenericEventWrapper) => void> = []
 
     constructor (options: EventsSdkOptions) {
         this.options = {
@@ -75,46 +61,14 @@ class EventsSdkClass{
     }
 
     public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
-    public on (event: '*', callback: (data: GenericEventWrapper) => void): void
-    public on (event: unknown, callback: unknown) {
-        if (event === '*') {
-            this.allListeners.push(callback as (data: GenericEventWrapper) => void)
-        } else {
-            // Handle specific event type with strong typing
-            this.listeners[event as EventTypeNames].push(callback as EventSpecificCallback<EventTypeNames>)
-        }
+    public on (event: '*', callback: (data: GenericEventWrapper) => void): void {
+        this.eventEmitterClass.on(event, callback)
     }
 
-    public off<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
-    public off (event: '*', callback: (data: GenericEventWrapper) => void): void
-    public off (event: unknown, callback: unknown) {
-        if (event === '*') {
-            this.allListeners = this.allListeners.filter(item => item !== callback)
-        } else {
-            const data = this.listeners[event as EventTypeNames] as Array<EventSpecificCallback<EventTypeNames>>
-            const filtered = data.filter(item => item !== callback)
-
-            this.listeners = {
-                ...this.listeners,
-                [event as EventTypeNames]: filtered
-            }
+    public emit (event: EventsEnum, data: unknown) {
+        if (this.socketIoClass.io) {
+            this.socketIoClass.io.emit(event, data)
         }
-    }
-
-    public emit <T extends EventTypeNames> (event: T, data: EventTypeData<T>) {
-        this.socketIoClass.lastEventTimestamp = new Date().getTime()
-
-        this.listeners[event].forEach(callback => callback({
-            name: event,
-            data
-        }))
-
-        const allEventData: GenericEventWrapper = {
-            name: event,
-            data: data as any
-        }
-
-        this.allListeners.forEach((callback) => callback(allEventData))
     }
 
     public connect (serverParameter: ServerParameter) {
@@ -228,22 +182,6 @@ class EventsSdkClass{
                 }
             }
         }
-    }
-
-    public getServerWithHighestPriority (servers: Server[]): Server {
-        let chosenServer: Server | undefined
-
-        let maxPriority = Number.MAX_SAFE_INTEGER
-
-        chosenServer = servers.find(server => {
-            if (server.Priority < maxPriority) {
-                maxPriority = server.Priority
-
-                chosenServer = server
-            }
-        })
-
-        return chosenServer ? chosenServer : this.server
     }
 
     public async init () {
