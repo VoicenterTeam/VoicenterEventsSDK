@@ -34,7 +34,10 @@ class AuthClass{
             password: options.password
         }
 
-        this.storageKey = md5(JSON.stringify(options))
+        this.storageKey = md5(JSON.stringify({
+            ...options,
+            loggerSocketConnection: null 
+        }))
 
         if (this.lastLoginTimestamp && this.lastLoginTimestamp + this.delay > new Date().getTime()) {
             return
