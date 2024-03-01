@@ -1,12 +1,8 @@
 import { Socket } from 'socket.io-client'
-import { AsyncStorageLogger } from '@voicenter-team/socketio-storage-logger/build/AsyncStorageLogger'
-// import {
-//     AsyncStorageLoggerConfig
-// } from '@voicenter-team/socketio-storage-logger/build/interfaces/AsyncStorageLoggerConfig'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
 import { EventsEnum } from '@/enum/events.enum'
-// import { StorageClass } from '@/classes/storage/storage.class'
+import StorageLogger from '@voicenter-team/socketio-storage-logger'
 
 export class LoggerClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -14,7 +10,7 @@ export class LoggerClass{
     }
 
     public io: Socket | undefined
-    private storageLogger: AsyncStorageLogger | undefined
+    private storageLogger: StorageLogger | undefined
 
     public init () {
         if (!this.eventsSdkClass.options.useLogger) {
@@ -33,22 +29,16 @@ export class LoggerClass{
         }
 
         if (this.io) {
-            // this.storageLogger = new AsyncStorageLogger({
-            //     ...this.eventsSdkClass.options.loggerConfig as AsyncStorageLoggerConfig,
-            //     socketConnection: this.io,
-            //     getItem: async (key: string) => {
-            //         const result = await StorageClass.getSessionStorageDataByKey(key, false)
-            //
-            //         if (result === undefined) {
-            //             return null
-            //         }
-            //
-            //         return result
-            //     },
-            //     setItem (key: string, value: string) {
-            //         return StorageClass.updateSessionStorageKey(key, value)
-            //     }
-            // })
+            this.storageLogger = new StorageLogger({
+                socket: this.io,
+                loggerOptions: this.eventsSdkClass.options.loggerConfig
+            })
+        } else {
+            this.storageLogger = new StorageLogger({
+                url: this.eventsSdkClass.options.loggerServer,
+                socketOptions: this.eventsSdkClass.options.loggerConnectOptions,
+                loggerOptions: this.eventsSdkClass.options.loggerConfig
+            })
         }
     }
 

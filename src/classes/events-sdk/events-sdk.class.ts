@@ -99,6 +99,8 @@ class EventsSdkClass{
         this.socketIoClass.initSocketEvents()
 
         this.socketIoClass.initKeepAlive()
+
+        this.loggerClass.init()
     }
 
     public disconnect () {

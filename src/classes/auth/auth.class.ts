@@ -143,7 +143,6 @@ class AuthClass{
         }
         if (this.eventsSdkClass.server) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
-            this.eventsSdkClass.loggerClass.init()
         }
         if (!this.eventsSdkClass.server && this.eventsSdkClass.URLList.length) {
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${loginSessionData.Client}`)

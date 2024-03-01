@@ -1202,10 +1202,10 @@
   resolved "https://registry.yarnpkg.com/@voicenter-team/eslint-config-ts/-/eslint-config-ts-1.0.22.tgz#92105fa1e678eec658bb417ef12f433f0523bfd8"
   integrity sha512-PvfA4XC/GMxaI7Ku/A7KfCzn6B281o9PdQ+xFzvhH/MM3z9V1pWTWlsLNcYcAgRSXjWZu2KxNIy0lH5dHwfWYA==
 
-"@voicenter-team/socketio-storage-logger@^1.0.1":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-1.0.4.tgz#8c9a15b9dde2b877e94e486dfadd869f9228ace8"
-  integrity sha512-G/S2jLguB832udjy4mOVlwtxKJtwig/BfBPkg0817pYHmds70lJCBqQZQtQHbwdOaysahd2xlihnN+pjzjRp7g==
+"@voicenter-team/socketio-storage-logger@1.9.7":
+  version "1.9.7"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-1.9.7.tgz#333945f210915680439fe127fd6606589f9d49ad"
+  integrity sha512-iyAQhh41Y5S4fQWrRSjzoLWV/weubmDp5xKwDiBeeSr7qAGRX5+XMtR9e+vbeuULyzP7d1DE9OiiBpTKIJwDuA==
   dependencies:
     socket.io-client "^2.3.0"
 
