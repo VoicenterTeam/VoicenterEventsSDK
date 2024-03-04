@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import EventsSdkClass from '@/index'
-import {EventsEnum} from '@/enum/events.enum'
+import {EventsEnum} from '@voicenter-team/real-time-events-types'
 import {EventTypeData} from '@/types/events'
 import {LoginType} from "@/enum/auth.enum";
 
