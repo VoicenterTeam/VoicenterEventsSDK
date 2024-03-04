@@ -1202,10 +1202,10 @@
   resolved "https://registry.yarnpkg.com/@voicenter-team/eslint-config-ts/-/eslint-config-ts-1.0.22.tgz#92105fa1e678eec658bb417ef12f433f0523bfd8"
   integrity sha512-PvfA4XC/GMxaI7Ku/A7KfCzn6B281o9PdQ+xFzvhH/MM3z9V1pWTWlsLNcYcAgRSXjWZu2KxNIy0lH5dHwfWYA==
 
-"@voicenter-team/real-time-events-types@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/real-time-events-types/-/real-time-events-types-0.0.1.tgz#1d9590b941cd075834fd26da84e1002dc286fc96"
-  integrity sha512-k1wvjKYRAACyH/cU1jTomo33rs0xaUShDmr8CBkc+RAV3UCuZSPJiVe5LvEI8S0lXmlDbzGDtWxijsxm1Y1D5A==
+"@voicenter-team/real-time-events-types@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/real-time-events-types/-/real-time-events-types-0.0.2.tgz#807344463bb734a93497d835b8f388157a1e16ac"
+  integrity sha512-ddKbifaAOlhCKRWaQt7P34sXvKu2YThEsi/TEuRKPoTHe1TqI7sKZWOgeaCO7oBuBRHRLNzuLe0H60RYLpak/g==
 
 "@voicenter-team/socketio-storage-logger@1.9.7":
   version "1.9.7"
