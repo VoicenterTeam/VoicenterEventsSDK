@@ -1,4 +1,5 @@
-import { EventNameEnum, EventsEnum, ExtensionEventReasonEnum, ExtensionHangupCauseEnum, QueueEventReasonEnum } from '@/enum/events.enum'
+import { EventsEnum } from '@voicenter-team/real-time-events-types'
+import { EventNameEnum, ExtensionEventReasonEnum, ExtensionHangupCauseEnum, QueueEventReasonEnum } from '@/enum/events.enum'
 import { Queue, Extension, Dialer, User } from '@/types/events.common'
 
 /**

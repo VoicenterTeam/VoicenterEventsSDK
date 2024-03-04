@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
-import { EventsEnum } from '@/enum/events.enum'
+import { EventsEnum } from '@voicenter-team/real-time-events-types'
 import StorageLogger from '@voicenter-team/socketio-storage-logger'
 
 export class LoggerClass{

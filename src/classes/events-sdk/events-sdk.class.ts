@@ -9,7 +9,7 @@ import {
     EventTypeNames,
     GenericEventWrapper,
 } from '@/types/events'
-import { EventsEnum } from '@/enum/events.enum'
+import { EventsEnum } from '@voicenter-team/real-time-events-types'
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 

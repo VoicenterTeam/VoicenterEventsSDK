@@ -1,30 +1,4 @@
 /**
- * All events that can be received from the server.
- */
-export enum EventsEnum {
-    ALL_DIALER_STATUS = 'AllDialersStatus',
-    ALL_EXTENSION_STATUS = 'AllExtensionsStatus',
-    ALL_USERS_STATUS = 'AllUsersStatus',
-    CONNECT = 'connect',
-    DISCONNECT = 'disconnect',
-    CONNECT_ERROR_EVENT = 'connect_error',
-    EXTENSION_EVENT = 'ExtensionEvent',
-    KEEP_ALIVE = 'keepalive',
-    KEEP_ALIVE_RESPONSE = 'keepaliveResponse',
-    // This type of event will be sent only in case of a successful connection.
-    // The event describes the list of monitored queues on this active connection.
-    // The list of monitored queues will only be sent if the login connection was made with account credentials or account token.
-    // If the login connection type is by user credentials, only the user’s extension assigned queues will return.
-    LOGIN_STATUS = 'loginStatus',
-    // This type of event will be sent in the initial login connection request in case of a successful connection only.
-    // In case of wrong username or password or token, you will receive a 401 (“Unauthorized”) or 500 (“Unexpected token”) http error.
-    LOGIN_SUCCESS = 'loginSuccess',
-    QUEUE_EVENT = 'QueueEvent',
-    ONLINE_STATUS_EVENT = 'onlineStatusEvent',
-    DIALER_EVENT = 'DialerEvent',
-}
-
-/**
  * All the reasons for the extension event, e.g. a new call is ringing or dialing from an extension.
  */
 export enum ExtensionEventReasonEnum {

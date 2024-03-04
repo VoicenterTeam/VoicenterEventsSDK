@@ -5,7 +5,7 @@ import {
     EventTypeNames,
     GenericEventWrapper
 } from '@/types/events'
-import { EventsEnum } from '@/enum/events.enum'
+import { EventsEnum } from '@voicenter-team/real-time-events-types'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 
 export class EventEmitterClass{
