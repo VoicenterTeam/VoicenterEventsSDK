@@ -8,23 +8,8 @@ import {
     QueueEvent,
     ExtensionEvent,
     KeepAliveResponseEvent,
-    Dialer
+    DialerEvent
 } from '@voicenter-team/real-time-events-types'
-import { EventNameEnum } from '@/enum/events.enum'
-
-/**
- * Data structure for dialer event.
- */
-export interface DialerEvent {
-    data: Dialer
-    eventName: EventNameEnum.DIALER
-    //reason: ExtensionEventReasonEnum // TODO: do research for dialer 'reason' prop
-    telephonyServerTime?: number
-    callerID?: string
-    ivrUniqueId?: string
-    dialStatus?: string
-    //cause?: ExtensionHangupCauseEnum // TODO: do research for dialer 'cause' prop
-}
 
 export interface OnlineStatusEvent {
     isSocketConnected: boolean
