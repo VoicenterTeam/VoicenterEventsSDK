@@ -8,7 +8,8 @@ import {
     QueueEvent,
     ExtensionEvent,
     KeepAliveResponseEvent,
-    DialerEvent
+    DialerEvent,
+    ExtensionsUpdated
 } from '@voicenter-team/real-time-events-types'
 
 export interface OnlineStatusEvent {
@@ -30,7 +31,7 @@ export interface EventDataMap {
     [EventsEnum.LOGIN_STATUS]: LoginStatusEvent
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseEvent
     [EventsEnum.ONLINE_STATUS_EVENT]: OnlineStatusEvent
-    [EventsEnum.EXTENSIONS_UPDATED]: string
+    [EventsEnum.EXTENSIONS_UPDATED]: ExtensionsUpdated
 }
 
 /**
