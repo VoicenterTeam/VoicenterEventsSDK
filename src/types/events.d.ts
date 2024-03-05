@@ -30,6 +30,7 @@ export interface EventDataMap {
     [EventsEnum.LOGIN_STATUS]: LoginStatusEvent
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseEvent
     [EventsEnum.ONLINE_STATUS_EVENT]: OnlineStatusEvent
+    [EventsEnum.EXTENSIONS_UPDATED]: string
 }
 
 /**

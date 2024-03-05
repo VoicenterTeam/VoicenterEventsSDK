@@ -3,8 +3,7 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import { EventsEnum } from '@voicenter-team/real-time-events-types'
-import { KeepAliveResponseEvent } from '@/types/events'
+import { EventsEnum, KeepAliveResponseEvent } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
@@ -99,6 +98,9 @@ export class SocketIoClass{
                 .on(EventsEnum.CONNECT, () => this.onConnect())
                 .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
                 .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
+                .on(EventsEnum.EXTENSIONS_UPDATED, (data) => {
+                    this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSIONS_UPDATED, data)
+                })
         }
     }
 
