@@ -1,101 +1,15 @@
-import { EventsEnum } from '@voicenter-team/real-time-events-types'
-import { EventNameEnum, ExtensionEventReasonEnum, ExtensionHangupCauseEnum, QueueEventReasonEnum } from '@/enum/events.enum'
-import { Queue, Extension, Dialer, User } from '@/types/events.common'
-
-/**
- * Base structure for all event types, containing common properties.
- */
-interface CommonEventProperties {
-    // Error code, 0 indicates no error
-    errorCode?: number
-    // Description of the error, "Ok" indicates successful connection
-    errorDesc?: string
-    // Server time at the moment of the event
-    serverTime: number
-    // Difference in time between server and client
-    serverTimeOffset: number
-}
-
-// Inherits properties from CommonEventProperties
-type LoginSuccessEvent = CommonEventProperties
-
-/**
- * Data structure for login status event.
- */
-export interface LoginStatusEvent extends CommonEventProperties {
-    // Array of Queue objects
-    queues: Queue[]
-}
-
-/**
- * Data structure for all extension status event.
- */
-export interface AllExtensionStatusEvent extends CommonEventProperties {
-    // Array of Extension objects
-    extensions: Extension[]
-}
-
-/**
- * Data structure for all dialers status event.
- */
-export interface AllDialersStatusEvent extends CommonEventProperties {
-    // Array of Dialer objects
-    dialers: Dialer[]
-}
-
-/**
- * Data structure for all users status event.
- */
-export interface AllUsersStatusEvent extends CommonEventProperties {
-    // Array of User objects
-    users: User[]
-}
-
-/**
- * Data structure for queue event.
- */
-export interface QueueEvent extends CommonEventProperties {
-    eventName: EventNameEnum.QUEUE,
-    reason: QueueEventReasonEnum,
-    telephonyServerTime: number,
-    ivrUniqueId: string,
-    data: Queue
-}
-
-/**
- * Data structure for extension event.
- */
-export interface ExtensionEvent extends CommonEventProperties {
-    data: Extension
-    eventName: EventNameEnum.EXTENSION
-    reason: ExtensionEventReasonEnum
-    telephonyServerTime?: number
-    callerID?: string
-    ivrUniqueId?: string
-    dialStatus?: string
-    cause?: ExtensionHangupCauseEnum
-}
-
-/**
- * Data structure for dialer event.
- */
-export interface DialerEvent extends CommonEventProperties {
-    data: Dialer
-    eventName: EventNameEnum.DIALER
-    //reason: ExtensionEventReasonEnum // TODO: do research for dialer 'reason' prop
-    telephonyServerTime?: number
-    callerID?: string
-    ivrUniqueId?: string
-    dialStatus?: string
-    //cause?: ExtensionHangupCauseEnum // TODO: do research for dialer 'cause' prop
-}
-
-/**
- * Data structure for keep alive response event.
- */
-export interface KeepAliveResponseEvent extends CommonEventProperties {
-    isOk: boolean
-}
+import {
+    EventsEnum,
+    LoginSuccessEvent,
+    LoginStatusEvent,
+    AllExtensionStatusEvent,
+    AllDialersStatusEvent,
+    AllUsersStatusEvent,
+    QueueEvent,
+    ExtensionEvent,
+    KeepAliveResponseEvent,
+    DialerEvent
+} from '@voicenter-team/real-time-events-types'
 
 export interface OnlineStatusEvent {
     isSocketConnected: boolean
@@ -116,6 +30,7 @@ export interface EventDataMap {
     [EventsEnum.LOGIN_STATUS]: LoginStatusEvent
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseEvent
     [EventsEnum.ONLINE_STATUS_EVENT]: OnlineStatusEvent
+    [EventsEnum.EXTENSIONS_UPDATED]: string
 }
 
 /**

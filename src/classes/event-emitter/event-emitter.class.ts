@@ -19,7 +19,8 @@ export class EventEmitterClass{
         [EventsEnum.LOGIN_SUCCESS]: [],
         [EventsEnum.LOGIN_STATUS]: [],
         [EventsEnum.KEEP_ALIVE_RESPONSE]: [],
-        [EventsEnum.ONLINE_STATUS_EVENT]: []
+        [EventsEnum.ONLINE_STATUS_EVENT]: [],
+        [EventsEnum.EXTENSIONS_UPDATED]: []
     }
     private allListeners: Array<(data: GenericEventWrapper) => void> = []
 

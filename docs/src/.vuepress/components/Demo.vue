@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import EventsSdkClass from '@/index'
-import {EventsEnum} from '@/enum/events.enum'
+import {EventsEnum} from '@voicenter-team/real-time-events-types'
 import {EventTypeData} from '@/types/events'
 import {LoginType} from "@/enum/auth.enum";
 
@@ -54,7 +54,7 @@ const token = ref('')
 const loading = ref(false)
 const loggedId = ref(false)
 const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
-
+let eventsdk
 /* Methods */
 async function login() {
     if (!token.value) {
@@ -75,6 +75,8 @@ async function login() {
     })
 
     await sdk.init()
+
+  eventsdk = sdk
 
     sdk.on(
         EventsEnum.ALL_DIALER_STATUS,
@@ -202,6 +204,9 @@ async function login() {
                 case EventsEnum.LOGIN_STATUS:
                     console.log(`FROM ALL ${EventsEnum.LOGIN_STATUS}`, data)
                     break
+                case EventsEnum.EXTENSIONS_UPDATED:
+                    console.log(`FROM ALL ${EventsEnum.EXTENSIONS_UPDATED}`, data)
+                    break
                 case EventsEnum.ONLINE_STATUS_EVENT:
                     console.log(`FROM ALL ${EventsEnum.ONLINE_STATUS_EVENT}`, data)
                     break
@@ -214,6 +219,7 @@ async function login() {
 
     setTimeout(
         () => {
+          eventsdk.emit('updateMonitoredExtensions', {extensionsString: '104082, 105703, 113921, 128288'})
             if (!loggedId.value) {
                 loading.value = false
                 alert('Login failed')
