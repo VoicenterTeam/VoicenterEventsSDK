@@ -54,7 +54,7 @@ export interface AllUsersStatusEvent extends CommonEventProperties {
 /**
  * Data structure for queue event.
  */
-export interface QueueEvent extends CommonEventProperties {
+export interface QueueEvent {
     eventName: EventNameEnum.QUEUE,
     reason: QueueEventReasonEnum,
     telephonyServerTime: number,
@@ -65,7 +65,7 @@ export interface QueueEvent extends CommonEventProperties {
 /**
  * Data structure for extension event.
  */
-export interface ExtensionEvent extends CommonEventProperties {
+export interface ExtensionEvent {
     data: Extension
     eventName: EventNameEnum.EXTENSION
     reason: ExtensionEventReasonEnum
@@ -79,7 +79,7 @@ export interface ExtensionEvent extends CommonEventProperties {
 /**
  * Data structure for dialer event.
  */
-export interface DialerEvent extends CommonEventProperties {
+export interface DialerEvent {
     data: Dialer
     eventName: EventNameEnum.DIALER
     //reason: ExtensionEventReasonEnum // TODO: do research for dialer 'reason' prop
