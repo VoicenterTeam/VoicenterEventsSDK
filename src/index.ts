@@ -8,6 +8,6 @@ export type * from './types/public-api'
 export type * from './types/socket'
 export type * from './classes/events-sdk/events-sdk.types'
 
-export type * from '@voicenter-team/real-time-events-types'
+export * from '@voicenter-team/real-time-events-types'
 
 export default EventsSdkClass
