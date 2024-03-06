@@ -9,13 +9,9 @@ import {
     ExtensionEvent,
     KeepAliveResponseEvent,
     DialerEvent,
-    ExtensionsUpdated
+    ExtensionsUpdated,
+    OnlineStatusEvent
 } from '@voicenter-team/real-time-events-types'
-
-export interface OnlineStatusEvent {
-    isSocketConnected: boolean
-    attemptToConnect?: string
-}
 
 /**
  * Mapping of event names to their respective data structures.
