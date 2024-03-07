@@ -33,6 +33,9 @@ export default ({ mode }: ConfigEnv) => {
             dts({
                 copyDtsFiles: true,
                 rollupTypes: true,
+                bundledPackages: [
+                    '@voicenter-team/real-time-events-types'
+                ]
             })
         ],
         resolve: {
