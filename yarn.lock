@@ -1207,12 +1207,13 @@
   resolved "https://registry.yarnpkg.com/@voicenter-team/real-time-events-types/-/real-time-events-types-0.0.9.tgz#b21a97365c2eb4be1cec274bf193197d2720e10b"
   integrity sha512-nz+CAiKv4HRm81fX/ktAvy5kdwd88iYCP372eX9QgZjHyvNoq3ZHzzgPVyLaf6SiyYvHqCLZIYPqaW/esLTwkw==
 
-"@voicenter-team/socketio-storage-logger@1.9.7":
-  version "1.9.7"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-1.9.7.tgz#333945f210915680439fe127fd6606589f9d49ad"
-  integrity sha512-iyAQhh41Y5S4fQWrRSjzoLWV/weubmDp5xKwDiBeeSr7qAGRX5+XMtR9e+vbeuULyzP7d1DE9OiiBpTKIJwDuA==
+"@voicenter-team/socketio-storage-logger@1.9.10":
+  version "1.9.10"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-1.9.10.tgz#ae25b79836b9562a4922d6c67bec7495d726a7c3"
+  integrity sha512-Ckle2HpOYetFA5j2+eMDQjGU73CyA2eRMuSIb3UTip3sm6rVDSzwTMqXxufm/T5US3b74C2Lo2pyHl93kmjTCg==
   dependencies:
     socket.io-client "^2.3.0"
+    uuid "^9.0.1"
 
 "@volar/language-core@1.11.1", "@volar/language-core@~1.11.1":
   version "1.11.1"
@@ -3869,6 +3870,11 @@ util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+uuid@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 v8-to-istanbul@^9.0.1:
   version "9.2.0"
