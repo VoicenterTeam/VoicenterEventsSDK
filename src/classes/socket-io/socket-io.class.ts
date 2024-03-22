@@ -3,9 +3,10 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import { EventsEnum, KeepAliveResponseEvent } from '@voicenter-team/real-time-events-types'
+import { EventsEnum, KeepAliveResponseEvent, ExtensionEvent } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
+import { ExtensionEventExtended } from '@/types/extended'
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
 export class SocketIoClass{
@@ -89,7 +90,11 @@ export class SocketIoClass{
             this.io
                 .on(EventsEnum.LOGIN_SUCCESS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data))
                 .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data))
-                .on(EventsEnum.EXTENSION_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, data))
+                .on(EventsEnum.EXTENSION_EVENT, (data) => {
+                    data = data.data.currentCall ? this.configureExtensionUTC(data) : data
+
+                    this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, data)
+                })
                 .on(EventsEnum.DIALER_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data))
                 .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data))
                 .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
@@ -216,5 +221,31 @@ export class SocketIoClass{
         setTimeout(() => {
             this.eventsSdkClass.connect(ServerParameter.NEXT)
         },this.eventsSdkClass.options.reconnectionDelay)
+    }
+
+    private configureExtensionUTC (extensionEvent: ExtensionEvent): ExtensionEventExtended {
+        const { servertime, servertimeoffset, data: { currentCall } } = extensionEvent
+
+        if (!currentCall) {
+            return extensionEvent
+        }
+
+        const serverTimeUTC = (servertime - (servertimeoffset * 60)) * 1000
+
+        const diffServerAndClient = Date.now() - serverTimeUTC
+
+        return {
+            ...extensionEvent,
+            data: {
+                ...extensionEvent.data,
+                currentCall: {
+                    ...currentCall,
+                    callStartedUTC: (currentCall.callStarted - (servertimeoffset * 60)) * 1000,
+                    callStartedUTCClient: (currentCall.callStarted - (servertimeoffset * 60)) * 1000 + diffServerAndClient,
+                    callAnsweredUTC: (currentCall.callAnswered - (servertimeoffset * 60)) * 1000,
+                    callAnsweredUTCClient: (currentCall.callAnswered - (servertimeoffset * 60)) * 1000 + diffServerAndClient
+                }
+            }
+        }
     }
 }

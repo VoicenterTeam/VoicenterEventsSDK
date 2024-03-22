@@ -68,7 +68,7 @@ async function login() {
       refreshTokenUrl: "https://loginapidev.voicenter.co.il/Auth/RefreshToken",
       getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
       loginType: LoginType.TOKEN, // <=== "User" or "Token"
-      token: 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e',
+      token: 'vtL7RsLx6woRykc0SbXIsJyJ3DWTFpk8h25B8qSYSHYVSoUhklvTR6gS6PQ3Ya4z9TwgAOA9Zht7qoIbU0SR2F9glvV86cted3KF',
       password: '78253050510',
       email: 'test2@status.com',
       isNewStack: true
@@ -219,7 +219,7 @@ async function login() {
 
     setTimeout(
         () => {
-          eventsdk.emit('updateMonitoredExtensions', {extensionsString: '104082, 105703, 113921, 128288'})
+          eventsdk.emit('updateMonitoredExtensions', {extensionsString: "1470,601,931,1469,53682,79540,115052,85650,99407,109776,112622,113642,115712,115780,124681,124828,124829,125377,125613,126098,126292,127837,129501,129502,129941,129942,130003,131467,131469,135362,135559,135901,136195,137282,139625,139626"})
             if (!loggedId.value) {
                 loading.value = false
                 alert('Login failed')
