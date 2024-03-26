@@ -100,7 +100,7 @@ export class SocketIoClass{
                 .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data))
                 .on(EventsEnum.EXTENSION_EVENT, (data) => {
                     if (data.data.currentCall) {
-                        data.data.currentCall = this.configureUTCForObject(data.data.currentCall, [ 'callAnswered' ], data.servertime, data.servertimeoffset)
+                        data.data.currentCall = this.configureUTCForObject(data.data.currentCall, [ 'callAnswered', 'callStarted' ], data.servertime, data.servertimeoffset)
                     }
 
                     this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, data)
