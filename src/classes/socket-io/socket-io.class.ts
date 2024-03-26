@@ -11,7 +11,9 @@ import {
 } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
-import { ExtensionEventExtended } from '@/types/extended'
+
+type NumericKeys<T> = { [P in keyof T]: T[P] extends number ? P : never }[keyof T];
+type WithUTCProperties <T extends object, K extends NumericKeys<T>> = T & { [P in K as `${string & P}_UTC` | `${string & P}_UTC_CLIENT`]: number }
 
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
@@ -97,7 +99,9 @@ export class SocketIoClass{
                 .on(EventsEnum.LOGIN_SUCCESS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data))
                 .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data))
                 .on(EventsEnum.EXTENSION_EVENT, (data) => {
-                    data = data.data.currentCall ? this.configureExtensionAdditionalProperties(data) : data
+                    if (data.data.currentCall) {
+                        data.data.currentCall = this.configureUTCForObject(data.data.currentCall, [ 'callAnswered' ], data.servertime, data.servertimeoffset)
+                    }
 
                     this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, data)
                 })
@@ -229,38 +233,28 @@ export class SocketIoClass{
         },this.eventsSdkClass.options.reconnectionDelay)
     }
 
-    private configureExtensionAdditionalProperties (extensionEvent: ExtensionEvent): ExtensionEventExtended {
-        let { data: { currentCall } } = extensionEvent
-
-        if (!currentCall) {
-            return extensionEvent
+    private configureUTCForObject<T extends object, K extends NumericKeys<T>> (
+        data: T,
+        properties: K[],
+        servertime: number,
+        servertimeoffset: number
+    ): WithUTCProperties<T, K> {
+        // Runtime check for unique properties
+        if (new Set(properties).size !== properties.length) {
+            throw new Error('Duplicate keys are not allowed in properties array')
         }
-
-        const { servertime, servertimeoffset } = extensionEvent
 
         const serverTimeUTC = (servertime - (servertimeoffset * 60)) * 1000
 
         const diffServerAndClient = Date.now() - serverTimeUTC
 
-        currentCall = {
-            ...currentCall,
-            callStartedUTC: (currentCall.callStarted - (servertimeoffset * 60)) * 1000,
-            callStartedUTCClient: (currentCall.callStarted - (servertimeoffset * 60)) * 1000 + diffServerAndClient,
-            callAnsweredUTC: (currentCall.callAnswered - (servertimeoffset * 60)) * 1000,
-            callAnsweredUTCClient: (currentCall.callAnswered - (servertimeoffset * 60)) * 1000 + diffServerAndClient
+        const result = { ...data } as T & WithUTCProperties<T, K>
 
-        }
+        properties.forEach((property) => {
+            (result as any)[`${String(property)}UTC`] = (data[String(property)] - (servertimeoffset * 60)) * 1000;
+            (result as any)[`${String(property)}UTCClient`] = (data[String(property)] - (servertimeoffset * 60)) * 1000 + diffServerAndClient
+        })
 
-        if (extensionEvent.reason === ExtensionEventReasonEnum.HANGUP && currentCall.callAnsweredUTCClient) {
-            currentCall.duration = Date.now() - currentCall.callAnsweredUTCClient
-        }
-
-        return {
-            ...extensionEvent,
-            data: {
-                ...extensionEvent.data,
-                currentCall
-            }
-        }
+        return result
     }
 }
