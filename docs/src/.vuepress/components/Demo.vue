@@ -68,7 +68,7 @@ async function login() {
       refreshTokenUrl: "https://loginapidev.voicenter.co.il/Auth/RefreshToken",
       getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
       loginType: LoginType.TOKEN, // <=== "User" or "Token"
-      token: 'vtL7RsLx6woRykc0SbXIsJyJ3DWTFpk8h25B8qSYSHYVSoUhklvTR6gS6PQ3Ya4z9TwgAOA9Zht7qoIbU0SR2F9glvV86cted3KF',
+      token: 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e',
       password: '78253050510',
       email: 'test2@status.com',
       isNewStack: true
