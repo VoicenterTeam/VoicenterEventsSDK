@@ -13,8 +13,11 @@ import {
     OnlineStatusEvent
 } from '@voicenter-team/real-time-events-types'
 
+import { ExtensionEventExtended } from '@/types/extended'
+
 /**
  * Mapping of event names to their respective data structures.
+ * The data structures that socket io will send us
  */
 export interface EventDataMap {
     [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusEvent
@@ -31,19 +34,31 @@ export interface EventDataMap {
 }
 
 /**
+ * Mapping of event names to their respective data structures.
+ * The data structures that we will send to the end user, here we can modify the type of events data
+ */
+export interface EventDataMapExtended extends EventDataMap {
+    [EventsEnum.EXTENSION_EVENT]: ExtensionEventExtended
+}
+
+/**
  * Represents the set of all possible event type names as keys from the EventDataMap.
  * This type is used to define event listeners and handlers.
  */
 type EventTypeNames = keyof EventDataMap
 
-// Generic structure for wrapped socket event data
+/**
+ * The structure of received socket events.
+ */
 type WrappedSocketEvent<T extends EventsEnum> = {
     name: T
-    data: EventDataMap[T]
+    data: EventDataMapExtended[T]
 }
 
-// Generic type for event type data
-export type EventTypeData<T extends EventsEnum> = EventDataMap[T]
+/**
+ * The structure of event data for a specific event type.
+ */
+export type EventTypeData<T extends EventsEnum> = EventDataMapExtended[T]
 
 /**
  * Defines a registry of callback functions for each event type.

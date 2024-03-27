@@ -28,8 +28,6 @@ export class EventEmitterClass{
         this.eventsSdkClass = eventsSdkClass
     }
 
-    public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
-    public on (event: '*', callback: (data: GenericEventWrapper) => void): void
     public on (event: unknown, callback: unknown) {
         if (event === '*') {
             this.allListeners.push(callback as (data: GenericEventWrapper) => void)

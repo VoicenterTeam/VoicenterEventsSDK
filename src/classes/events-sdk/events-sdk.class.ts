@@ -61,7 +61,9 @@ class EventsSdkClass{
     }
 
     public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
-    public on (event: '*', callback: (data: GenericEventWrapper) => void): void {
+    public on (event: '*', callback: (data: GenericEventWrapper) => void): void
+
+    public on (event: unknown, callback: unknown): void {
         this.eventEmitterClass.on(event, callback)
     }
 
