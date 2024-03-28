@@ -6,10 +6,10 @@ import {
 } from '@voicenter-team/real-time-events-types'
 
 interface CurrentCallUTCExtended extends ExtensionCall {
-    callStartedUTC?: number,
-    callStartedUTCClient?: number,
-    callAnsweredUTC?: number,
-    callAnsweredUTCClient?: number
+    callStarted_UTC: number
+    callStarted_UTC_CLIENT: number
+    callAnswered_UTC: number
+    callAnswered_UTC_CLIENT: number
 }
 
 interface CurrentCallEnded extends CurrentCallUTCExtended {

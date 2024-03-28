@@ -1,8 +1,10 @@
 import { defineUserConfig, defaultTheme } from 'vuepress'
-import { description } from '../../package'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 import { getDirname, path } from '@vuepress/utils'
-import { typedocPlugin } from 'vuepress-plugin-typedoc/next';
+
+import { description } from '../../package.json'
+// import { typedocPlugin } from 'vuepress-plugin-typedoc/next'
+
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -20,7 +22,6 @@ export default defineUserConfig({
 
     theme: defaultTheme({
         repo: '',
-        editLinks: false,
         logo: '/images/logo.png',
         docsDir: '',
         editLinkText: '',
@@ -54,6 +55,7 @@ export default defineUserConfig({
     ],
 
     alias: {
+        'voicenterEventsSDK': path.resolve(__dirname, '../', '../', '../', 'src'),
         '@': path.resolve(__dirname, '../', '../', '../', 'src'),
         'root': path.resolve(__dirname, '../', '../', '../'),
     }

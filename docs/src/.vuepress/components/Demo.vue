@@ -24,15 +24,15 @@
         </p>
 
         <template v-else>
-            <div>
-                <pre><code style="color: black">{{ JSON.stringify(events, null, 4) }}</code></pre>
-            </div>
+            <json-viewer :value="events" />
 
             <div>
                 <form @submit.prevent="login">
                     <input type="text" v-model="token" placeholder="token"/>
 
-                    <button type="submit">Login</button>
+                    <button type="submit">
+                        {{ loggedId ? 'Reconnect' : 'Login' }}
+                    </button>
                 </form>
             </div>
         </template>
@@ -41,10 +41,11 @@
 
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
-import EventsSdkClass from '@/index'
+import JsonViewer from 'vue-json-viewer'
 import {EventsEnum} from '@voicenter-team/real-time-events-types'
-import {EventTypeData} from '@/types/events'
-import {LoginType} from "@/enum/auth.enum";
+import EventsSdkClass from 'voicenterEventsSDK/index'
+import {EventTypeData} from 'voicenterEventsSDK/types/events'
+import {LoginType} from "voicenterEventsSDK/enum/auth.enum";
 
 /* Data */
 const showSuccessNotification = ref(false)
@@ -54,21 +55,29 @@ const token = ref('')
 const loading = ref(false)
 const loggedId = ref(false)
 const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
-let eventsdk
+let eventsdk: EventsSdkClass | undefined
+
 /* Methods */
 async function login() {
+    let tokenValue = token.value
+
     if (!token.value) {
-        return alert('Token is required')
+        tokenValue = 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e'
     }
 
     loading.value = true
+
+    if (eventsdk) {
+        eventsdk.disconnect()
+        eventsdk = undefined
+    }
 
     const sdk = new EventsSdkClass({
       loginUrl: "https://loginapidev.voicenter.co.il/Auth/Login/Voicenter/Monitor",
       refreshTokenUrl: "https://loginapidev.voicenter.co.il/Auth/RefreshToken",
       getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
       loginType: LoginType.TOKEN, // <=== "User" or "Token"
-      token: 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e',
+      token: tokenValue,
       password: '78253050510',
       email: 'test2@status.com',
       isNewStack: true
@@ -76,17 +85,19 @@ async function login() {
 
     await sdk.init()
 
-  eventsdk = sdk
+    eventsdk = sdk
 
     sdk.on(
         EventsEnum.ALL_DIALER_STATUS,
         ({ data }) => {
-
             if (!events[EventsEnum.ALL_DIALER_STATUS]) {
                 events[EventsEnum.ALL_DIALER_STATUS] = []
             }
 
-            events[EventsEnum.ALL_DIALER_STATUS]?.push(data)
+            events[EventsEnum.ALL_DIALER_STATUS] = [
+                ...events[EventsEnum.ALL_DIALER_STATUS],
+                data
+            ]
         }
     )
 
@@ -98,7 +109,10 @@ async function login() {
                 events[EventsEnum.ALL_EXTENSION_STATUS] = []
             }
 
-            events[EventsEnum.ALL_EXTENSION_STATUS]?.push(data)
+            events[EventsEnum.ALL_EXTENSION_STATUS] = [
+                ...events[EventsEnum.ALL_EXTENSION_STATUS],
+                data
+            ]
         }
     )
 
@@ -110,7 +124,10 @@ async function login() {
                 events[EventsEnum.ALL_USERS_STATUS] = []
             }
 
-            events[EventsEnum.ALL_USERS_STATUS]?.push(data)
+            events[EventsEnum.ALL_USERS_STATUS] = [
+                ...events[EventsEnum.ALL_USERS_STATUS],
+                data
+            ]
         }
     )
 
@@ -122,7 +139,10 @@ async function login() {
                 events[EventsEnum.QUEUE_EVENT] = []
             }
 
-            events[EventsEnum.QUEUE_EVENT]?.push(data)
+            events[EventsEnum.QUEUE_EVENT] = [
+                ...events[EventsEnum.QUEUE_EVENT],
+                data
+            ]
         }
     )
 
@@ -134,7 +154,10 @@ async function login() {
                 events[EventsEnum.EXTENSION_EVENT] = []
             }
 
-            events[EventsEnum.EXTENSION_EVENT]?.push(data)
+            events[EventsEnum.EXTENSION_EVENT] = [
+                ...events[EventsEnum.EXTENSION_EVENT],
+                data
+            ]
         }
     )
 
@@ -148,7 +171,10 @@ async function login() {
             loggedId.value = true
             loading.value = false
 
-            events[EventsEnum.LOGIN_SUCCESS]?.push(data)
+            events[EventsEnum.LOGIN_SUCCESS] = [
+                ...events[EventsEnum.LOGIN_SUCCESS],
+                data
+            ]
         }
     )
 
@@ -159,7 +185,10 @@ async function login() {
                 events[EventsEnum.LOGIN_STATUS] = []
             }
 
-            events[EventsEnum.LOGIN_STATUS]?.push(data)
+            events[EventsEnum.LOGIN_STATUS] = [
+                ...events[EventsEnum.LOGIN_STATUS],
+                data
+            ]
         }
     )
 
@@ -215,17 +244,6 @@ async function login() {
 
             }
         }
-    )
-
-    setTimeout(
-        () => {
-          eventsdk.emit('updateMonitoredExtensions', {extensionsString: "1470,601,931,1469,53682,79540,115052,85650,99407,109776,112622,113642,115712,115780,124681,124828,124829,125377,125613,126098,126292,127837,129501,129502,129941,129942,130003,131467,131469,135362,135559,135901,136195,137282,139625,139626"})
-            if (!loggedId.value) {
-                loading.value = false
-                alert('Login failed')
-            }
-        },
-        15000
     )
 }
 </script>

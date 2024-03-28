@@ -3,17 +3,10 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import {
-    EventsEnum,
-    ExtensionEvent,
-    ExtensionEventReasonEnum,
-    KeepAliveResponseEvent
-} from '@voicenter-team/real-time-events-types'
+import { EventsEnum, KeepAliveResponseEvent } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
-
-type NumericKeys<T> = { [P in keyof T]: T[P] extends number ? P : never }[keyof T];
-type WithUTCProperties <T extends object, K extends NumericKeys<T>> = T & { [P in K as `${string & P}_UTC` | `${string & P}_UTC_CLIENT`]: number }
+import EventsHandler from '@/classes/socket-io/events-handler'
 
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
@@ -94,29 +87,31 @@ export class SocketIoClass{
     }
 
     public initSocketEvents () {
-        if (this.io) {
-            this.io
-                .on(EventsEnum.LOGIN_SUCCESS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data))
-                .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data))
-                .on(EventsEnum.EXTENSION_EVENT, (data) => {
-                    if (data.data.currentCall) {
-                        data.data.currentCall = this.configureUTCForObject(data.data.currentCall, [ 'callAnswered', 'callStarted' ], data.servertime, data.servertimeoffset)
-                    }
-
-                    this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, data)
-                })
-                .on(EventsEnum.DIALER_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data))
-                .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data))
-                .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
-                .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
-                .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
-                .on(EventsEnum.CONNECT, () => this.onConnect())
-                .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
-                .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
-                .on(EventsEnum.EXTENSIONS_UPDATED, (data) => {
-                    this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSIONS_UPDATED, data)
-                })
+        if (!this.io) {
+            return
         }
+
+        this.io
+            .on(EventsEnum.LOGIN_SUCCESS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data))
+            .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data))
+            .on(EventsEnum.EXTENSION_EVENT, (data) => {
+                const dataExtended = EventsHandler.mapExtensionEvent(data)
+
+                if (dataExtended) {
+                    this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, dataExtended)
+                }
+            })
+            .on(EventsEnum.DIALER_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data))
+            .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data))
+            .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
+            .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
+            .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
+            .on(EventsEnum.CONNECT, () => this.onConnect())
+            .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
+            .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
+            .on(EventsEnum.EXTENSIONS_UPDATED, (data) => {
+                this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSIONS_UPDATED, data)
+            })
     }
 
     public clearKeepAliveInterval () {
@@ -228,33 +223,11 @@ export class SocketIoClass{
             data
         )
 
-        setTimeout(() => {
-            this.eventsSdkClass.connect(ServerParameter.NEXT)
-        },this.eventsSdkClass.options.reconnectionDelay)
-    }
-
-    private configureUTCForObject<T extends object, K extends NumericKeys<T>> (
-        data: T,
-        properties: K[],
-        servertime: number,
-        servertimeoffset: number
-    ): WithUTCProperties<T, K> {
-        // Runtime check for unique properties
-        if (new Set(properties).size !== properties.length) {
-            throw new Error('Duplicate keys are not allowed in properties array')
-        }
-
-        const serverTimeUTC = (servertime - (servertimeoffset * 60)) * 1000
-
-        const diffServerAndClient = Date.now() - serverTimeUTC
-
-        const result = { ...data } as T & WithUTCProperties<T, K>
-
-        properties.forEach((property) => {
-            (result as any)[`${String(property)}UTC`] = (data[String(property)] - (servertimeoffset * 60)) * 1000;
-            (result as any)[`${String(property)}UTCClient`] = (data[String(property)] - (servertimeoffset * 60)) * 1000 + diffServerAndClient
-        })
-
-        return result
+        setTimeout(
+            () => {
+                this.eventsSdkClass.connect(ServerParameter.NEXT)
+            },
+            this.eventsSdkClass.options.reconnectionDelay
+        )
     }
 }

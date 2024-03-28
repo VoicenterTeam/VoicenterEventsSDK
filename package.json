@@ -37,7 +37,7 @@
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
     "@voicenter-team/eslint-config-ts": "^1.0.22",
-    "@voicenter-team/real-time-events-types": "^0.0.14",
+    "@voicenter-team/real-time-events-types": "^0.0.15",
     "dotenv": "16.4.1",
     "eslint": "8.56.0",
     "eslint-plugin-jest": "27.6.3",

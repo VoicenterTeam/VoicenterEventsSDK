@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "esnext",
+    "paths": {
+      "voicenterEventsSDK/*": [
+        "../src/*"
+      ]
+    }
+  },
+  "include": [
+    "../vite.config.ts"
+  ]
+}
