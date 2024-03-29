@@ -3,7 +3,15 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import { EventsEnum, KeepAliveResponseEvent } from '@voicenter-team/real-time-events-types'
+import {
+    AllDialersStatusEvent,
+    AllExtensionStatusEvent,
+    DialerEvent,
+    EventsEnum,
+    ExtensionEvent, ExtensionsUpdated,
+    KeepAliveResponseEvent, LoginStatusEvent,
+    LoginSuccessEvent, QueueEvent
+} from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
 import EventsHandler from '@/classes/socket-io/events-handler'
@@ -86,34 +94,6 @@ export class SocketIoClass{
         }
     }
 
-    public initSocketEvents () {
-        if (!this.io) {
-            return
-        }
-
-        this.io
-            .on(EventsEnum.LOGIN_SUCCESS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data))
-            .on(EventsEnum.QUEUE_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data))
-            .on(EventsEnum.EXTENSION_EVENT, (data) => {
-                const dataExtended = EventsHandler.mapExtensionEvent(data)
-
-                if (dataExtended) {
-                    this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, dataExtended)
-                }
-            })
-            .on(EventsEnum.DIALER_EVENT, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data))
-            .on(EventsEnum.LOGIN_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data))
-            .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data))
-            .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data))
-            .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
-            .on(EventsEnum.CONNECT, () => this.onConnect())
-            .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
-            .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
-            .on(EventsEnum.EXTENSIONS_UPDATED, (data) => {
-                this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSIONS_UPDATED, data)
-            })
-    }
-
     public clearKeepAliveInterval () {
         if (this.keepAliveInterval) {
             clearInterval(this.keepAliveInterval)
@@ -161,6 +141,58 @@ export class SocketIoClass{
         StorageClass.clearSessionStorage()
     }
 
+    public initSocketEvents () {
+        if (!this.io) {
+            return
+        }
+
+        this.io
+            .on(EventsEnum.LOGIN_SUCCESS, (data) => this.onLoginSuccessEvent(data))
+            .on(EventsEnum.QUEUE_EVENT, (data) => this.onQueueEvent(data))
+            .on(EventsEnum.EXTENSION_EVENT, (data) => this.onExtensionEvent(data))
+            .on(EventsEnum.DIALER_EVENT, (data) => this.onDialerEvent(data))
+            .on(EventsEnum.LOGIN_STATUS, (data) => this.onLoginStatusEvent(data))
+            .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.onAllExtensionStatus(data))
+            .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.onAllDialerStatus(data))
+            .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
+            .on(EventsEnum.EXTENSIONS_UPDATED, (data) => this.onExtensionsUpdatedEvent(data))
+            .on(EventsEnum.CONNECT, () => this.onConnect())
+            .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
+            .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
+    }
+
+    private onLoginSuccessEvent (data: LoginSuccessEvent) {
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data)
+    }
+
+    private onQueueEvent (data: QueueEvent) {
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data)
+    }
+
+    private onExtensionEvent (data: ExtensionEvent) {
+        const dataExtended = EventsHandler.mapExtensionEvent(data)
+
+        if (dataExtended) {
+            this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSION_EVENT, dataExtended)
+        }
+    }
+
+    private onDialerEvent (data: DialerEvent) {
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data)
+    }
+
+    private onLoginStatusEvent (data: LoginStatusEvent) {
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data)
+    }
+
+    private onAllExtensionStatus (data: AllExtensionStatusEvent) {
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data)
+    }
+
+    private onAllDialerStatus (data: AllDialersStatusEvent) {
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data)
+    }
+
     private onKeepAliveResponse (data: KeepAliveResponseEvent) {
         this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, EventsEnum.KEEP_ALIVE_RESPONSE)
 
@@ -175,6 +207,10 @@ export class SocketIoClass{
         } else {
             this.initSocketConnection()
         }
+    }
+
+    private onExtensionsUpdatedEvent (data: ExtensionsUpdated) {
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSIONS_UPDATED, data)
     }
 
     private onConnect () {
