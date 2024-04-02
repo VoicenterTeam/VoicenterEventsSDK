@@ -3,7 +3,7 @@ import { debounce } from 'lodash'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import { SocketTyped } from '@/types/socket'
+import { ServerEmitEventTypeData, ServerListenerEventsEnum, SocketTyped } from '@/types/socket'
 import {
     EventSpecificCallback,
     EventTypeNames,
@@ -67,7 +67,7 @@ class EventsSdkClass{
         this.eventEmitterClass.on(event, callback)
     }
 
-    public emit (event: EventsEnum, data: unknown) {
+    public emit <T extends ServerListenerEventsEnum> (event: T, data: Parameters<ServerEmitEventTypeData<T>>) {
         if (this.socketIoClass.io) {
             this.socketIoClass.io.emit(event, data)
         }

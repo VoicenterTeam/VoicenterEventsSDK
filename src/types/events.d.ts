@@ -13,7 +13,7 @@ import {
     OnlineStatusEvent
 } from '@voicenter-team/real-time-events-types'
 
-import { ExtensionEventExtended } from '@/types/extended'
+import { AllExtensionStatusEventExtended, ExtensionEventExtended } from '@/types/extended'
 
 /**
  * Mapping of event names to their respective data structures.
@@ -39,6 +39,7 @@ export interface EventDataMap {
  */
 export interface EventDataMapExtended extends EventDataMap {
     [EventsEnum.EXTENSION_EVENT]: ExtensionEventExtended
+    [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusEventExtended
 }
 
 /**
@@ -54,6 +55,8 @@ type WrappedSocketEvent<T extends EventsEnum> = {
     name: T
     data: EventDataMapExtended[T]
 }
+
+export type EventData = EventDataMapExtended[EventsEnum]
 
 /**
  * The structure of event data for a specific event type.

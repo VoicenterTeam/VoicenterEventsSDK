@@ -186,7 +186,9 @@ export class SocketIoClass{
     }
 
     private onAllExtensionStatus (data: AllExtensionStatusEvent) {
-        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, data)
+        const dataExtended = EventsHandler.mapAllExtensionStatus(data)
+
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, dataExtended)
     }
 
     private onAllDialerStatus (data: AllDialersStatusEvent) {

@@ -59,7 +59,27 @@ export default class EventsHandler{
         return dataExtended
     }
 
+    public static mapAllExtensionStatus (data: EventDataMap[EventsEnum.ALL_EXTENSION_STATUS]): EventDataMapExtended[EventsEnum.ALL_EXTENSION_STATUS] {
+        return {
+            ...data,
+            extensions: data.extensions.map((extension) => {
+                return {
+                    ...extension,
+                    currentCall: extension.currentCall
+                        ? this.configureUTCForObject(
+                            extension.currentCall,
+                            [ 'callAnswered', 'callStarted' ],
+                            data.servertime,
+                            data.servertimeoffset
+                        )
+                        : undefined
+                }
+            })
+        }
+    }
+
     private static assignProperty <T extends object, K extends string> (obj: T, key: K, value: number) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (obj as any)[key] = value
     }
 

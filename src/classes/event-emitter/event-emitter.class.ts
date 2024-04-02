@@ -1,9 +1,10 @@
 import {
     EventCallbackListenersMap,
+    EventData,
     EventSpecificCallback,
     EventTypeData,
     EventTypeNames,
-    GenericEventWrapper
+    GenericEventWrapper,
 } from '@/types/events'
 import { EventsEnum } from '@voicenter-team/real-time-events-types'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
@@ -63,7 +64,7 @@ export class EventEmitterClass{
 
         const allEventData: GenericEventWrapper = {
             name: event,
-            data: data as any
+            data: data as EventData
         }
 
         this.allListeners.forEach((callback) => callback(allEventData))
