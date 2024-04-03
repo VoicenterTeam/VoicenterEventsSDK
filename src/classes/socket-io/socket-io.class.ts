@@ -8,13 +8,17 @@ import {
     AllExtensionStatusEvent,
     DialerEvent,
     EventsEnum,
-    ExtensionEvent, ExtensionsUpdated,
-    KeepAliveResponseEvent, LoginStatusEvent,
-    LoginSuccessEvent, QueueEvent
+    ExtensionEvent,
+    ExtensionsUpdated,
+    KeepAliveResponseEvent,
+    LoginStatusEvent,
+    LoginSuccessEvent,
+    QueueEvent
 } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
 import EventsHandler from '@/classes/socket-io/events-handler'
+import { ServerListenerEventsEnum } from '@/enum/socket.enum'
 
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
@@ -118,8 +122,8 @@ export class SocketIoClass{
             //     return
             // }
 
-            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io) {
-                this.eventsSdkClass.emit(EventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
+            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io && this.eventsSdkClass.authClass.token) {
+                this.eventsSdkClass.emit(ServerListenerEventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
 
                 this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, `EMIT -> ${EventsEnum.KEEP_ALIVE}`, this.eventsSdkClass.authClass.token)
 

@@ -1,9 +1,6 @@
 import { Socket } from 'socket.io-client'
 import { EventCallbackRegistry } from '@/types/events'
-
-export enum ServerListenerEventsEnum {
-    UPDATE_MONITORED_EXTENSIONS = 'updateMonitoredExtensions'
-}
+import { ServerListenerEventsEnum } from '@/enum/socket.enum'
 
 export interface UpdateMonitoredExtensionsPayload {
     extensionsString: string
@@ -15,6 +12,7 @@ export interface UpdateMonitoredExtensionsPayload {
  */
 export interface ServerEmitEventDataMap {
     [ServerListenerEventsEnum.UPDATE_MONITORED_EXTENSIONS]: UpdateMonitoredExtensionsPayload
+    [ServerListenerEventsEnum.KEEP_ALIVE]: string
 }
 
 /**
@@ -23,9 +21,9 @@ export interface ServerEmitEventDataMap {
  */
 export type ServerEmitEventTypeNames = keyof ServerEmitEventDataMap
 
-/**
- * The structure of event data for a specific event type that we can send to the server.
- */
-export type ServerEmitEventTypeData<T extends ServerListenerEventsEnum> = ServerEmitEventDataMap[T]
+export type ServerEmitEventCallbackRegistry = {
+    [K in ServerEmitEventTypeNames]: (data: ServerEmitEventDataMap[K]) => void
+}
 
-export type SocketTyped = Socket<EventCallbackRegistry, ServerEmitEventDataMap>
+export type SocketTyped = Socket<EventCallbackRegistry, ServerEmitEventCallbackRegistry>
+

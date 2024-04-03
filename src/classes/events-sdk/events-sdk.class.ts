@@ -3,13 +3,16 @@ import { debounce } from 'lodash'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import { ServerEmitEventTypeData, ServerListenerEventsEnum, SocketTyped } from '@/types/socket'
+import {
+    ServerEmitEventCallbackRegistry,
+    ServerEmitEventTypeNames,
+    SocketTyped
+} from '@/types/socket'
 import {
     EventSpecificCallback,
     EventTypeNames,
     GenericEventWrapper,
 } from '@/types/events'
-import { EventsEnum } from '@voicenter-team/real-time-events-types'
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 
@@ -67,9 +70,9 @@ class EventsSdkClass{
         this.eventEmitterClass.on(event, callback)
     }
 
-    public emit <T extends ServerListenerEventsEnum> (event: T, data: Parameters<ServerEmitEventTypeData<T>>) {
+    public emit <T extends ServerEmitEventTypeNames> (event: T, ...args: Parameters<ServerEmitEventCallbackRegistry[T]>) {
         if (this.socketIoClass.io) {
-            this.socketIoClass.io.emit(event, data)
+            this.socketIoClass.io.emit(event, ...args)
         }
     }
 
