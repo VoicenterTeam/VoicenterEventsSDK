@@ -3,22 +3,22 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import {
-    AllDialersStatusEvent,
-    AllExtensionStatusEvent,
-    DialerEvent,
-    EventsEnum,
-    ExtensionEvent,
-    ExtensionsUpdated,
-    KeepAliveResponseEvent,
-    LoginStatusEvent,
-    LoginSuccessEvent,
-    QueueEvent
-} from '@voicenter-team/real-time-events-types'
+import { EventsEnum } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
 import EventsHandler from '@/classes/socket-io/events-handler'
 import { ServerListenerEventsEnum } from '@/enum/socket.enum'
+import {
+    OriginalAllDialersStatusEvent,
+    OriginalAllExtensionStatusEvent,
+    OriginalDialerEvent,
+    OriginalExtensionEvent,
+    OriginalExtensionsUpdated,
+    OriginalKeepAliveResponseEvent,
+    OriginalLoginStatusEvent,
+    OriginalLoginSuccessEvent,
+    OriginalQueueEvent
+} from '@/types/realtime-events'
 
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
@@ -165,15 +165,15 @@ export class SocketIoClass{
             .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
     }
 
-    private onLoginSuccessEvent (data: LoginSuccessEvent) {
+    private onLoginSuccessEvent (data: OriginalLoginSuccessEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data)
     }
 
-    private onQueueEvent (data: QueueEvent) {
+    private onQueueEvent (data: OriginalQueueEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data)
     }
 
-    private onExtensionEvent (data: ExtensionEvent) {
+    private onExtensionEvent (data: OriginalExtensionEvent) {
         const dataExtended = EventsHandler.mapExtensionEvent(data)
 
         if (dataExtended) {
@@ -181,25 +181,25 @@ export class SocketIoClass{
         }
     }
 
-    private onDialerEvent (data: DialerEvent) {
+    private onDialerEvent (data: OriginalDialerEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data)
     }
 
-    private onLoginStatusEvent (data: LoginStatusEvent) {
+    private onLoginStatusEvent (data: OriginalLoginStatusEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data)
     }
 
-    private onAllExtensionStatus (data: AllExtensionStatusEvent) {
+    private onAllExtensionStatus (data: OriginalAllExtensionStatusEvent) {
         const dataExtended = EventsHandler.mapAllExtensionStatus(data)
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, dataExtended)
     }
 
-    private onAllDialerStatus (data: AllDialersStatusEvent) {
+    private onAllDialerStatus (data: OriginalAllDialersStatusEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data)
     }
 
-    private onKeepAliveResponse (data: KeepAliveResponseEvent) {
+    private onKeepAliveResponse (data: OriginalKeepAliveResponseEvent) {
         this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, EventsEnum.KEEP_ALIVE_RESPONSE)
 
         if (data.errorCode) {
@@ -215,7 +215,7 @@ export class SocketIoClass{
         }
     }
 
-    private onExtensionsUpdatedEvent (data: ExtensionsUpdated) {
+    private onExtensionsUpdatedEvent (data: OriginalExtensionsUpdated) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSIONS_UPDATED, data)
     }
 

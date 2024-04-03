@@ -1,36 +1,38 @@
 import {
     EventsEnum,
-    LoginSuccessEvent,
-    LoginStatusEvent,
-    AllExtensionStatusEvent,
-    AllDialersStatusEvent,
-    AllUsersStatusEvent,
-    QueueEvent,
-    ExtensionEvent,
-    KeepAliveResponseEvent,
-    DialerEvent,
-    ExtensionsUpdated,
-    OnlineStatusEvent
 } from '@voicenter-team/real-time-events-types'
 
 import { AllExtensionStatusEventExtended, ExtensionEventExtended } from '@/types/extended'
+import {
+    OriginalAllDialersStatusEvent,
+    OriginalAllExtensionStatusEvent,
+    OriginalAllUsersStatusEvent,
+    OriginalDialerEvent,
+    OriginalExtensionEvent,
+    OriginalExtensionsUpdated,
+    OriginalKeepAliveResponseEvent,
+    OriginalLoginStatusEvent,
+    OriginalLoginSuccessEvent,
+    OriginalOnlineStatusEvent,
+    OriginalQueueEvent
+} from '@/types/realtime-events'
 
 /**
  * Mapping of event names to their respective data structures.
  * The data structures that socket io will send us
  */
 export interface EventDataMap {
-    [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusEvent
-    [EventsEnum.ALL_DIALER_STATUS]: AllDialersStatusEvent
-    [EventsEnum.ALL_USERS_STATUS]: AllUsersStatusEvent
-    [EventsEnum.QUEUE_EVENT]: QueueEvent
-    [EventsEnum.EXTENSION_EVENT]: ExtensionEvent
-    [EventsEnum.DIALER_EVENT]: DialerEvent
-    [EventsEnum.LOGIN_SUCCESS]: LoginSuccessEvent
-    [EventsEnum.LOGIN_STATUS]: LoginStatusEvent
-    [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseEvent
-    [EventsEnum.ONLINE_STATUS_EVENT]: OnlineStatusEvent
-    [EventsEnum.EXTENSIONS_UPDATED]: ExtensionsUpdated
+    [EventsEnum.ALL_EXTENSION_STATUS]: OriginalAllExtensionStatusEvent
+    [EventsEnum.ALL_DIALER_STATUS]: OriginalAllDialersStatusEvent
+    [EventsEnum.ALL_USERS_STATUS]: OriginalAllUsersStatusEvent
+    [EventsEnum.QUEUE_EVENT]: OriginalQueueEvent
+    [EventsEnum.EXTENSION_EVENT]: OriginalExtensionEvent
+    [EventsEnum.DIALER_EVENT]: OriginalDialerEvent
+    [EventsEnum.LOGIN_SUCCESS]: OriginalLoginSuccessEvent
+    [EventsEnum.LOGIN_STATUS]: OriginalLoginStatusEvent
+    [EventsEnum.KEEP_ALIVE_RESPONSE]: OriginalKeepAliveResponseEvent
+    [EventsEnum.ONLINE_STATUS_EVENT]: OriginalOnlineStatusEvent
+    [EventsEnum.EXTENSIONS_UPDATED]: OriginalExtensionsUpdated
 }
 
 /**
