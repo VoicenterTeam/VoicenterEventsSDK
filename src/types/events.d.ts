@@ -1,6 +1,4 @@
-import {
-    EventsEnum,
-} from '@voicenter-team/real-time-events-types'
+import { EventsEnum } from '@voicenter-team/real-time-events-types'
 
 import { AllExtensionStatusEventExtended, ExtensionEventExtended } from '@/types/extended'
 import {

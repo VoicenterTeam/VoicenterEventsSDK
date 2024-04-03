@@ -11,3 +11,5 @@ export type OriginalKeepAliveResponseEvent = RealtimeEvents.KeepAliveResponseEve
 export type OriginalDialerEvent = RealtimeEvents.DialerEvent
 export type OriginalExtensionsUpdated = RealtimeEvents.ExtensionsUpdated
 export type OriginalOnlineStatusEvent = RealtimeEvents.OnlineStatusEvent
+export type OriginalExtension = RealtimeEvents.Extension
+export type OriginalExtensionCall = RealtimeEvents.ExtensionCall
