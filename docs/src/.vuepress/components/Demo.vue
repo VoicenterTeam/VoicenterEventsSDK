@@ -7,17 +7,16 @@
         </Transition>
 
         <Transition name="fade">
-            <p v-if="!isOnline" class="message message--error" key="error">
+            <p v-if="!isOnline && !attemptToConnect" class="message message--error" key="error">
                 No connection
-                <div class="message-container">
-                    <Transition name="attempt-to-connect" mode="out-in">
-                        <span v-if="attemptToConnect" :key="attemptToConnect" class="message">
-                            Trying to connect to {{ attemptToConnect }}
-                        </span>
-                    </Transition>
-                </div>
             </p>
         </Transition>
+
+      <Transition name="attempt-to-connect">
+                <p v-if="attemptToConnect && !isOnline"  class="message message--warning" key="warning">
+                            Trying to connect to {{ attemptToConnect }}
+                </p>
+      </Transition>
 
         <p v-if="loading && isOnline">
             Loading...
@@ -49,7 +48,7 @@ import {LoginType} from "voicenterEventsSDK/enum/auth.enum";
 
 /* Data */
 const showSuccessNotification = ref(false)
-const isOnline = ref(true)
+const isOnline = ref(false)
 const attemptToConnect = ref<string | undefined>(undefined)
 const token = ref('')
 const loading = ref(false)
@@ -83,7 +82,7 @@ async function login() {
       isNewStack: true
     })
 
-    await sdk.init()
+    sdk.init()
 
     eventsdk = sdk
 
@@ -316,6 +315,11 @@ async function login() {
     &--success {
         background-color: #1ca31c;
         color: white;
+    }
+
+    &--warning {
+      background-color: #f8f83d;
+      color: black;
     }
 }
 </style>
