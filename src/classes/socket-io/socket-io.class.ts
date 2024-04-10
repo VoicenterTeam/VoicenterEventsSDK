@@ -67,7 +67,8 @@ export class SocketIoClass{
                 EventsEnum.ONLINE_STATUS_EVENT,
                 {
                     isSocketConnected: false,
-                    attemptToConnect: url
+                    attemptToConnect: url,
+                    doReconnect: this.doReconnect
                 }
             )
 
@@ -232,7 +233,10 @@ export class SocketIoClass{
             this.eventsSdkClass.reconnectOptions
         )
 
-        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: true })
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
+            isSocketConnected: true,
+            doReconnect: this.doReconnect 
+        })
     }
 
     private onDisconnect (reason: Socket.DisconnectReason) {
@@ -246,7 +250,10 @@ export class SocketIoClass{
 
         this.closeAllConnections()
 
-        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
+            isSocketConnected: false,
+            doReconnect: this.doReconnect
+        })
 
         if (!this.doReconnect) {
             return
@@ -257,7 +264,10 @@ export class SocketIoClass{
     }
 
     private onConnectError (data: Error) {
-        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, { isSocketConnected: false })
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
+            isSocketConnected: false,
+            doReconnect: this.doReconnect 
+        })
 
         this.eventsSdkClass.loggerClass.log(
             LoggerTypeEnum.ERROR,

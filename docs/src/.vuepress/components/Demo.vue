@@ -7,14 +7,14 @@
         </Transition>
 
         <Transition name="fade">
-            <p v-if="!isOnline && !attemptToConnect" class="message message--error" key="error">
+            <p v-if="!isOnline && !doReconnect" class="message message--error" key="error">
                 No connection
             </p>
         </Transition>
 
       <Transition name="attempt-to-connect">
-                <p v-if="attemptToConnect && !isOnline"  class="message message--warning" key="warning">
-                            Trying to connect to {{ attemptToConnect }}
+                <p v-if="doReconnect && !isOnline"  class="message message--warning" key="warning">
+                            Trying to connect...
                 </p>
       </Transition>
 
@@ -49,6 +49,7 @@ import {LoginType} from "voicenterEventsSDK/enum/auth.enum";
 /* Data */
 const showSuccessNotification = ref(false)
 const isOnline = ref(false)
+const doReconnect = ref(false)
 const attemptToConnect = ref<string | undefined>(undefined)
 const token = ref('')
 const loading = ref(false)
@@ -196,6 +197,7 @@ async function login() {
         ({ data }) => {
             isOnline.value = data.isSocketConnected
             attemptToConnect.value = data.attemptToConnect
+            doReconnect.value = data.doReconnect
 
             if (data.isSocketConnected) {
                 showSuccessNotification.value = true
