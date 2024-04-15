@@ -1,4 +1,15 @@
-import { EventsEnum } from '@voicenter-team/real-time-events-types'
+import {
+    EventsEnum,
+    CustomData,
+    Dialer,
+    Error,
+    Queue,
+    QueueCall,
+    Recording,
+    Response,
+    Summery,
+    User
+} from '@voicenter-team/real-time-events-types'
 import { EventTypeData } from '@/types/events'
 
 /**
@@ -7,6 +18,7 @@ import { EventTypeData } from '@/types/events'
  * We need that for the IDE to show the correct type of the event data, based on if the event is extended or not.
  * NOT FOR USAGE IN THE EVENTS SDK CODEBASE, JUST FOR USAGE IN THE APPLICATION CODEBASE.
  */
+export { ExtensionSDK, ExtensionCallSDK } from '@/types/extended'
 
 export type LoginSuccessEventSDK = EventTypeData<EventsEnum.LOGIN_SUCCESS>
 export type LoginStatusEventSDK = EventTypeData<EventsEnum.LOGIN_STATUS>
@@ -19,4 +31,13 @@ export type KeepAliveResponseEventSDK = EventTypeData<EventsEnum.KEEP_ALIVE_RESP
 export type DialerEventSDK = EventTypeData<EventsEnum.DIALER_EVENT>
 export type ExtensionsUpdatedSDK = EventTypeData<EventsEnum.EXTENSIONS_UPDATED>
 export type OnlineStatusEventSDK = EventTypeData<EventsEnum.ONLINE_STATUS_EVENT>
-export { ExtensionSDK, ExtensionCallSDK } from '@/types/extended'
+
+export type CustomDataSDK = CustomData
+export type DialerSDK = Dialer
+export type ErrorSDK = Error
+export type QueueSDK = Queue
+export type QueueCallSDK = QueueCall
+export type RecordingSDK = Recording
+export type ResponseSDK = Response
+export type SummerySDK = Summery
+export type UserSDK = User

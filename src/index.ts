@@ -8,7 +8,7 @@ export type * from './types/public-api'
 export type * from './types/socket'
 export type * from './types/events-export'
 export type * from './classes/events-sdk/events-sdk.types'
-export { EventsEnum } from '@voicenter-team/real-time-events-types'
+
 export * from './enum/socket.enum'
 
 export default EventsSdkClass
