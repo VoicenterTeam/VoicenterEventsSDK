@@ -3,22 +3,22 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
-import { EventsEnum } from '@voicenter-team/real-time-events-types'
+import {
+    EventsEnum,
+    AllDialersStatusEvent,
+    AllExtensionStatusEvent,
+    DialerEvent,
+    ExtensionEvent,
+    ExtensionsUpdated,
+    KeepAliveResponseEvent,
+    LoginStatusEvent,
+    LoginSuccessEvent,
+    QueueEvent
+} from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { LoggerTypeEnum } from '@/enum/logger.enum'
 import EventsHandler from '@/classes/socket-io/events-handler'
 import { ServerListenerEventsEnum } from '@/enum/socket.enum'
-import {
-    OriginalAllDialersStatusEvent,
-    OriginalAllExtensionStatusEvent,
-    OriginalDialerEvent,
-    OriginalExtensionEvent,
-    OriginalExtensionsUpdated,
-    OriginalKeepAliveResponseEvent,
-    OriginalLoginStatusEvent,
-    OriginalLoginSuccessEvent,
-    OriginalQueueEvent
-} from '@/types/realtime-events'
 
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
@@ -166,15 +166,15 @@ export class SocketIoClass{
             .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
     }
 
-    private onLoginSuccessEvent (data: OriginalLoginSuccessEvent) {
+    private onLoginSuccessEvent (data: LoginSuccessEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_SUCCESS, data)
     }
 
-    private onQueueEvent (data: OriginalQueueEvent) {
+    private onQueueEvent (data: QueueEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data)
     }
 
-    private onExtensionEvent (data: OriginalExtensionEvent) {
+    private onExtensionEvent (data: ExtensionEvent) {
         const dataExtended = EventsHandler.mapExtensionEvent(data)
 
         if (dataExtended) {
@@ -182,25 +182,25 @@ export class SocketIoClass{
         }
     }
 
-    private onDialerEvent (data: OriginalDialerEvent) {
+    private onDialerEvent (data: DialerEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.DIALER_EVENT, data)
     }
 
-    private onLoginStatusEvent (data: OriginalLoginStatusEvent) {
+    private onLoginStatusEvent (data: LoginStatusEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data)
     }
 
-    private onAllExtensionStatus (data: OriginalAllExtensionStatusEvent) {
+    private onAllExtensionStatus (data: AllExtensionStatusEvent) {
         const dataExtended = EventsHandler.mapAllExtensionStatus(data)
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, dataExtended)
     }
 
-    private onAllDialerStatus (data: OriginalAllDialersStatusEvent) {
+    private onAllDialerStatus (data: AllDialersStatusEvent) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data)
     }
 
-    private onKeepAliveResponse (data: OriginalKeepAliveResponseEvent) {
+    private onKeepAliveResponse (data: KeepAliveResponseEvent) {
         this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, EventsEnum.KEEP_ALIVE_RESPONSE)
 
         if (data.errorCode) {
@@ -216,7 +216,7 @@ export class SocketIoClass{
         }
     }
 
-    private onExtensionsUpdatedEvent (data: OriginalExtensionsUpdated) {
+    private onExtensionsUpdatedEvent (data: ExtensionsUpdated) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.EXTENSIONS_UPDATED, data)
     }
 
@@ -235,7 +235,7 @@ export class SocketIoClass{
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             isSocketConnected: true,
-            doReconnect: this.doReconnect 
+            doReconnect: this.doReconnect
         })
     }
 
@@ -266,7 +266,7 @@ export class SocketIoClass{
     private onConnectError (data: Error) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             isSocketConnected: false,
-            doReconnect: this.doReconnect 
+            doReconnect: this.doReconnect
         })
 
         this.eventsSdkClass.loggerClass.log(

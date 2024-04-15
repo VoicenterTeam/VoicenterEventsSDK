@@ -8,14 +8,15 @@ import { EventTypeData } from '@/types/events'
  * NOT FOR USAGE IN THE EVENTS SDK CODEBASE, JUST FOR USAGE IN THE APPLICATION CODEBASE.
  */
 
-export type LoginSuccessEvent = EventTypeData<EventsEnum.LOGIN_SUCCESS>
-export type LoginStatusEvent = EventTypeData<EventsEnum.LOGIN_STATUS>
-export type AllExtensionStatusEvent = EventTypeData<EventsEnum.ALL_EXTENSION_STATUS>
-export type AllDialersStatusEvent = EventTypeData<EventsEnum.ALL_DIALER_STATUS>
-export type AllUsersStatusEvent = EventTypeData<EventsEnum.ALL_USERS_STATUS>
-export type QueueEvent = EventTypeData<EventsEnum.QUEUE_EVENT>
-export type ExtensionEvent = EventTypeData<EventsEnum.EXTENSION_EVENT>
-export type KeepAliveResponseEvent = EventTypeData<EventsEnum.KEEP_ALIVE_RESPONSE>
-export type DialerEvent = EventTypeData<EventsEnum.DIALER_EVENT>
-export type ExtensionsUpdated = EventTypeData<EventsEnum.EXTENSIONS_UPDATED>
-export type OnlineStatusEvent = EventTypeData<EventsEnum.ONLINE_STATUS_EVENT>
+export type LoginSuccessEventSDK = EventTypeData<EventsEnum.LOGIN_SUCCESS>
+export type LoginStatusEventSDK = EventTypeData<EventsEnum.LOGIN_STATUS>
+export type AllExtensionStatusEventSDK = EventTypeData<EventsEnum.ALL_EXTENSION_STATUS>
+export type AllDialersStatusEventSDK = EventTypeData<EventsEnum.ALL_DIALER_STATUS>
+export type AllUsersStatusEventSDK = EventTypeData<EventsEnum.ALL_USERS_STATUS>
+export type QueueEventSDK = EventTypeData<EventsEnum.QUEUE_EVENT>
+export type ExtensionEventSDK = EventTypeData<EventsEnum.EXTENSION_EVENT>
+export type KeepAliveResponseEventSDK = EventTypeData<EventsEnum.KEEP_ALIVE_RESPONSE>
+export type DialerEventSDK = EventTypeData<EventsEnum.DIALER_EVENT>
+export type ExtensionsUpdatedSDK = EventTypeData<EventsEnum.EXTENSIONS_UPDATED>
+export type OnlineStatusEventSDK = EventTypeData<EventsEnum.ONLINE_STATUS_EVENT>
+export { ExtensionSDK, ExtensionCallSDK } from '@/types/extended'

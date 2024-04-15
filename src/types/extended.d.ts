@@ -17,7 +17,7 @@ interface CurrentCallEnded extends CurrentCallUTCExtended {
     duration: number
 }
 
-export type ExtensionCall = CurrentCallUTCExtended | CurrentCallEnded
+export type ExtensionCallSDK = CurrentCallUTCExtended | CurrentCallEnded
 
 interface ExtensionUTCExtended extends OriginalExtension {
     currentCall?: CurrentCallUTCExtended
@@ -37,10 +37,10 @@ export interface ExtensionEventEnded extends Omit<OriginalExtensionEvent, 'reaso
     data: ExtensionEnded
 }
 
-export type Extension = ExtensionUTCExtended | ExtensionEnded
+export type ExtensionSDK = ExtensionUTCExtended | ExtensionEnded
 
 export interface AllExtensionStatusEventExtended extends Omit<OriginalAllExtensionStatusEvent, 'extensions'> {
-    extensions: Array<Extension>
+    extensions: Array<ExtensionSDK>
 }
 
 export type ExtensionEventExtended = ExtensionEventUTCExtended | ExtensionEventEnded
