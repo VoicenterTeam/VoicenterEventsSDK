@@ -1,12 +1,12 @@
-import { ExtensionEventReasonEnum } from '@voicenter-team/real-time-events-types'
 import {
-    OriginalAllExtensionStatusEvent,
-    OriginalExtensionEvent,
-    OriginalExtension,
-    OriginalExtensionCall
-} from '@/types/realtime-events'
+    ExtensionEventReasonEnum,
+    AllExtensionStatusEvent,
+    ExtensionEvent,
+    Extension,
+    ExtensionCall
+} from '@voicenter-team/real-time-events-types'
 
-interface CurrentCallUTCExtended extends OriginalExtensionCall {
+interface CurrentCallUTCExtended extends ExtensionCall {
     callStarted_UTC: number
     callStarted_UTC_CLIENT: number
     callAnswered_UTC: number
@@ -19,27 +19,27 @@ interface CurrentCallEnded extends CurrentCallUTCExtended {
 
 export type ExtensionCallSDK = CurrentCallUTCExtended | CurrentCallEnded
 
-interface ExtensionUTCExtended extends OriginalExtension {
+interface ExtensionUTCExtended extends Extension {
     currentCall?: CurrentCallUTCExtended
 }
 
-interface ExtensionEnded extends OriginalExtension {
+interface ExtensionEnded extends Extension {
     currentCall?: CurrentCallEnded
 }
 
-export interface ExtensionEventUTCExtended extends Omit<OriginalExtensionEvent, 'reason' | 'data'> {
+export interface ExtensionEventUTCExtended extends Omit<ExtensionEvent, 'reason' | 'data'> {
     reason: Exclude<ExtensionEventReasonEnum, ExtensionEventReasonEnum.HANGUP>
     data: ExtensionUTCExtended
 }
 
-export interface ExtensionEventEnded extends Omit<OriginalExtensionEvent, 'reason' | 'data'> {
+export interface ExtensionEventEnded extends Omit<ExtensionEvent, 'reason' | 'data'> {
     reason: ExtensionEventReasonEnum.HANGUP
     data: ExtensionEnded
 }
 
 export type ExtensionSDK = ExtensionUTCExtended | ExtensionEnded
 
-export interface AllExtensionStatusEventExtended extends Omit<OriginalAllExtensionStatusEvent, 'extensions'> {
+export interface AllExtensionStatusEventExtended extends Omit<AllExtensionStatusEvent, 'extensions'> {
     extensions: Array<ExtensionSDK>
 }
 
