@@ -1,6 +1,7 @@
 import { EventsEnum, ExtensionEventReasonEnum } from '@voicenter-team/real-time-events-types'
 import { EventDataMap, EventDataMapExtended } from '@/types/events'
-import { CurrentCallUTCExtended, ExtensionEventExtended } from '@/types/extended'
+import { CurrentCallUTCExtended, ExtensionCallSDK, ExtensionEventExtended } from '@/types/extended'
+import type { ExtensionCall } from '@voicenter-team/real-time-events-types/dist/models/ExtensionCall'
 
 type NumericKeys<T> = {
     [P in keyof T]: T[P] extends number
@@ -23,12 +24,7 @@ export default class EventsHandler{
         let currentCallExtended: undefined | CurrentCallUTCExtended
 
         if (data.data.currentCall) {
-            currentCallExtended = this.configureUTCForObject(
-                data.data.currentCall,
-                [ 'callAnswered', 'callStarted' ],
-                data.servertime,
-                data.servertimeoffset
-            )
+            currentCallExtended = this.mapExtensionCall(data, data.data.currentCall)
         }
 
         if (reason === ExtensionEventReasonEnum.HANGUP) {
@@ -42,7 +38,15 @@ export default class EventsHandler{
                             ...currentCallExtended,
                             duration: Date.now() - (currentCallExtended?.callAnswered_UTC_CLIENT ?? 0)
                         }
-                        : undefined
+                        : undefined,
+                    calls: data.data.calls?.map((call) => {
+                        const callExtended = this.mapExtensionCall(data, call)
+
+                        return {
+                            ...callExtended,
+                            duration: Date.now() - (callExtended.callAnswered_UTC_CLIENT ?? 0)
+                        }
+                    })
                 }
             }
         } else {
@@ -50,7 +54,8 @@ export default class EventsHandler{
                 ...data,
                 data: {
                     ...data.data,
-                    currentCall: currentCallExtended
+                    currentCall: currentCallExtended,
+                    calls: data.data.calls?.map((call) => this.mapExtensionCall(data, call))
                 },
                 reason
             }
@@ -66,16 +71,21 @@ export default class EventsHandler{
                 return {
                     ...extension,
                     currentCall: extension.currentCall
-                        ? this.configureUTCForObject(
-                            extension.currentCall,
-                            [ 'callAnswered', 'callStarted' ],
-                            data.servertime,
-                            data.servertimeoffset
-                        )
-                        : undefined
+                        ? this.mapExtensionCall(data, extension.currentCall)
+                        : undefined,
+                    calls: extension.calls?.map((call) => this.mapExtensionCall(data, call))
                 }
             })
         }
+    }
+
+    public static mapExtensionCall (data: EventDataMap[EventsEnum.ALL_EXTENSION_STATUS] | EventDataMap[EventsEnum.EXTENSION_EVENT], call: ExtensionCall): ExtensionCallSDK {
+        return this.configureUTCForObject(
+            call,
+            [ 'callAnswered', 'callStarted' ],
+            data.servertime,
+            data.servertimeoffset
+        )
     }
 
     private static assignProperty <T extends object, K extends string> (obj: T, key: K, value: number) {

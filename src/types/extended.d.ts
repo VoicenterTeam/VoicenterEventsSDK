@@ -21,10 +21,12 @@ export type ExtensionCallSDK = CurrentCallUTCExtended | CurrentCallEnded
 
 interface ExtensionUTCExtended extends Extension {
     currentCall?: CurrentCallUTCExtended
+    calls?: Array<CurrentCallUTCExtended>
 }
 
 interface ExtensionEnded extends Extension {
     currentCall?: CurrentCallEnded
+    calls?: Array<CurrentCallUTCExtended>
 }
 
 export interface ExtensionEventUTCExtended extends Omit<ExtensionEvent, 'reason' | 'data'> {
