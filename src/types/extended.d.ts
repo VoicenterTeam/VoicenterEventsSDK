@@ -26,6 +26,8 @@ interface ExtensionUTCExtended extends Extension {
     lastCallEventEpoch_UTC_CLIENT: number
     lastHangupCallEpoch_UTC: number
     lastHangupCallEpoch_UTC_CLIENT: number
+    representativeUpdated_UTC: number
+    representativeUpdated_UTC_CLIENT: number
 }
 
 interface ExtensionCallsUTCExtended extends ExtensionUTCExtended {
