@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io-client'
 import { LoginType } from '@/enum/auth.enum'
-import { LoggerOptions } from '@voicenter-team/socketio-storage-logger'
+import StorageLogger, { LoggerOptions } from '@voicenter-team/socketio-storage-logger'
 
 export interface EventsSdkOptions {
     isNewStack?: boolean,
@@ -33,6 +33,7 @@ export interface EventsSdkOptions {
     email: string,
     password: string,
     username: string,
+    storageLoggerInstance: StorageLogger | undefined
 }
 
 export interface Server {

@@ -16,7 +16,6 @@ import {
     QueueEvent
 } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
-import { LoggerTypeEnum } from '@/enum/logger.enum'
 import EventsHandler from '@/classes/socket-io/events-handler'
 import { ServerListenerEventsEnum } from '@/enum/socket.enum'
 
@@ -57,12 +56,6 @@ export class SocketIoClass{
 
             const url = server ? `${protocol}://${domain}` : this.eventsSdkClass.URL
 
-            this.eventsSdkClass.loggerClass.log(
-                LoggerTypeEnum.INFO,
-                'Connecting to..',
-                url
-            )
-
             this.eventsSdkClass.eventEmitterClass.emit(
                 EventsEnum.ONLINE_STATUS_EVENT,
                 {
@@ -95,7 +88,6 @@ export class SocketIoClass{
                 throw new Error('Socket server url no defined')
             }
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.ERROR, 'init socket connection error', error)
         }
     }
 
@@ -125,8 +117,6 @@ export class SocketIoClass{
 
             if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io && this.eventsSdkClass.authClass.token) {
                 this.eventsSdkClass.emit(ServerListenerEventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
-
-                this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, `EMIT -> ${EventsEnum.KEEP_ALIVE}`, this.eventsSdkClass.authClass.token)
 
                 return
             }
@@ -201,8 +191,6 @@ export class SocketIoClass{
     }
 
     private onKeepAliveResponse (data: KeepAliveResponseEvent) {
-        this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, EventsEnum.KEEP_ALIVE_RESPONSE)
-
         if (data.errorCode) {
             this.initSocketConnection()
 
@@ -227,12 +215,6 @@ export class SocketIoClass{
 
         this.connected = true
 
-        this.eventsSdkClass.loggerClass.log(
-            LoggerTypeEnum.INFO,
-            EventsEnum.CONNECT,
-            this.eventsSdkClass.reconnectOptions
-        )
-
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             isSocketConnected: true,
             doReconnect: this.doReconnect
@@ -241,12 +223,6 @@ export class SocketIoClass{
 
     private onDisconnect (reason: Socket.DisconnectReason) {
         this.connected = false
-
-        this.eventsSdkClass.loggerClass.log(
-            LoggerTypeEnum.INFO,
-            EventsEnum.DISCONNECT,
-            reason
-        )
 
         this.closeAllConnections()
 
@@ -259,7 +235,6 @@ export class SocketIoClass{
             return
         }
 
-        console.log('attempt to connect...')
         this.eventsSdkClass.connect(ServerParameter.NEXT)
     }
 
@@ -268,12 +243,6 @@ export class SocketIoClass{
             isSocketConnected: false,
             doReconnect: this.doReconnect
         })
-
-        this.eventsSdkClass.loggerClass.log(
-            LoggerTypeEnum.ERROR,
-            EventsEnum.CONNECT_ERROR_EVENT,
-            data
-        )
 
         setTimeout(
             () => {

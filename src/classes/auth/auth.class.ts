@@ -12,7 +12,6 @@ import {
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
 import { StorageClass } from '@/classes/storage/storage.class'
-import { LoggerTypeEnum } from '@/enum/logger.enum'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -62,8 +61,6 @@ class AuthClass{
         const loginSessionData = await StorageClass.getSessionStorageDataByKey<LoginSessionData>(key)
 
         if (loginSessionData) {
-            this.eventsSdkClass.loggerClass.log(LoggerTypeEnum.INFO, 'got data from session', loginSessionData)
-
             this.onLoginResponse(loginSessionData)
 
             return true
@@ -291,12 +288,6 @@ class AuthClass{
             }
             return data
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log(
-                LoggerTypeEnum.ERROR,
-                `External login ${url}`,
-                error
-            )
-
             throw error
         }
     }
@@ -319,12 +310,6 @@ class AuthClass{
 
             return res.json()
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log(
-                LoggerTypeEnum.ERROR,
-                `Get settings ${this.eventsSdkClass.options.getSettingsUrl}`,
-                error
-            )
-
             throw error
         }
     }
@@ -341,12 +326,6 @@ class AuthClass{
             })
             return res.json()
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log(
-                LoggerTypeEnum.ERROR,
-                `Refresh token ${refreshTokenUrl}`,
-                error
-            )
-
             throw error
         }
     }

@@ -19,7 +19,7 @@ export const eventsSdkDefaultOptions: Partial<EventsSdkOptions> = {
     loggerConfig: {
         logToConsole: true,
         overloadGlobalConsole: false,
-        namespace: 'events-sdk',
+        system: 'events-sdk',
         socketEmitInterval: 10000,
     },
     loggerConnectOptions: {
