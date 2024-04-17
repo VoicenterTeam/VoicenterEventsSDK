@@ -20,26 +20,35 @@ interface CurrentCallEnded extends CurrentCallUTCExtended {
 export type ExtensionCallSDK = CurrentCallUTCExtended | CurrentCallEnded
 
 interface ExtensionUTCExtended extends Extension {
+    lastAnsweredCallEventEpoch_UTC: number
+    lastAnsweredCallEventEpoch_UTC_CLIENT: number
+    lastCallEventEpoch_UTC: number
+    lastCallEventEpoch_UTC_CLIENT: number
+    lastHangupCallEpoch_UTC: number
+    lastHangupCallEpoch_UTC_CLIENT: number
+}
+
+interface ExtensionCallsUTCExtended extends ExtensionUTCExtended {
     currentCall?: CurrentCallUTCExtended
     calls?: Array<CurrentCallUTCExtended>
 }
 
-interface ExtensionEnded extends Extension {
+interface ExtensionCallsEnded extends ExtensionUTCExtended {
     currentCall?: CurrentCallEnded
     calls?: Array<CurrentCallUTCExtended>
 }
 
 export interface ExtensionEventUTCExtended extends Omit<ExtensionEvent, 'reason' | 'data'> {
     reason: Exclude<ExtensionEventReasonEnum, ExtensionEventReasonEnum.HANGUP>
-    data: ExtensionUTCExtended
+    data: ExtensionCallsUTCExtended
 }
 
 export interface ExtensionEventEnded extends Omit<ExtensionEvent, 'reason' | 'data'> {
     reason: ExtensionEventReasonEnum.HANGUP
-    data: ExtensionEnded
+    data: ExtensionCallsEnded
 }
 
-export type ExtensionSDK = ExtensionUTCExtended | ExtensionEnded
+export type ExtensionSDK = ExtensionCallsUTCExtended | ExtensionCallsEnded
 
 export interface AllExtensionStatusEventExtended extends Omit<AllExtensionStatusEvent, 'extensions'> {
     extensions: Array<ExtensionSDK>

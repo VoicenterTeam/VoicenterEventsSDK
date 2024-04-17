@@ -1,6 +1,6 @@
 import { EventsEnum, ExtensionEventReasonEnum } from '@voicenter-team/real-time-events-types'
 import { EventDataMap, EventDataMapExtended } from '@/types/events'
-import { CurrentCallUTCExtended, ExtensionCallSDK, ExtensionEventExtended } from '@/types/extended'
+import { CurrentCallUTCExtended, ExtensionCallSDK, ExtensionEventExtended, ExtensionUTCExtended } from '@/types/extended'
 import type { ExtensionCall } from '@voicenter-team/real-time-events-types/dist/models/ExtensionCall'
 
 type NumericKeys<T> = {
@@ -27,12 +27,23 @@ export default class EventsHandler{
             currentCallExtended = this.mapExtensionCall(data, data.data.currentCall)
         }
 
+        const extensionExtended: ExtensionUTCExtended = this.configureUTCForObject(
+            data.data,
+            [
+                'lastAnsweredCallEventEpoch',
+                'lastCallEventEpoch',
+                'lastHangupCallEpoch'
+            ],
+            data.servertime,
+            data.servertimeoffset
+        )
+
         if (reason === ExtensionEventReasonEnum.HANGUP) {
             dataExtended = {
                 ...data,
                 reason,
                 data: {
-                    ...data.data,
+                    ...extensionExtended,
                     currentCall: currentCallExtended ?
                         {
                             ...currentCallExtended,
@@ -53,7 +64,7 @@ export default class EventsHandler{
             dataExtended = {
                 ...data,
                 data: {
-                    ...data.data,
+                    ...extensionExtended,
                     currentCall: currentCallExtended,
                     calls: data.data.calls?.map((call) => this.mapExtensionCall(data, call))
                 },
@@ -68,8 +79,19 @@ export default class EventsHandler{
         return {
             ...data,
             extensions: data.extensions.map((extension) => {
+                const extensionExtended: ExtensionUTCExtended = this.configureUTCForObject(
+                    extension,
+                    [
+                        'lastAnsweredCallEventEpoch',
+                        'lastCallEventEpoch',
+                        'lastHangupCallEpoch'
+                    ],
+                    data.servertime,
+                    data.servertimeoffset
+                )
+
                 return {
-                    ...extension,
+                    ...extensionExtended,
                     currentCall: extension.currentCall
                         ? this.mapExtensionCall(data, extension.currentCall)
                         : undefined,
