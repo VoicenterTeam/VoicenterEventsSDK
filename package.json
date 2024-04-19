@@ -52,7 +52,7 @@
     "vite-plugin-dts": "3.7.2"
   },
   "dependencies": {
-    "@voicenter-team/socketio-storage-logger": "1.9.14",
+    "@voicenter-team/socketio-storage-logger": "1.9.16",
     "lodash": "^4.17.21",
     "md5": "^2.3.0"
   }

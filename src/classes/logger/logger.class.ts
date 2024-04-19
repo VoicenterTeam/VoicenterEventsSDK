@@ -1,7 +1,6 @@
 import { Socket } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import { LoggerTypeEnum } from '@/enum/logger.enum'
-import StorageLogger, { LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
+import StorageLogger, { LevelEnum, LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
 
 export class LoggerClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -44,15 +43,15 @@ export class LoggerClass{
 
     public log (data: LoggerDataPartial) {
         if (this.storageLogger) {
-            if (data.Level === LoggerTypeEnum.INFO) {
+            if (data.Level === LevelEnum.INFO) {
                 this.storageLogger.log(data)
-            } else if (data.Level === LoggerTypeEnum.ERROR) {
+            } else if (data.Level === LevelEnum.ERROR) {
                 this.storageLogger.error(data)
             }
         } else {
-            if (data.Level === LoggerTypeEnum.INFO) {
+            if (data.Level === LevelEnum.INFO) {
                 console.log(data)
-            } else if (data.Level === LoggerTypeEnum.ERROR) {
+            } else if (data.Level === LevelEnum.ERROR) {
                 console.error(data)
             }
         }
