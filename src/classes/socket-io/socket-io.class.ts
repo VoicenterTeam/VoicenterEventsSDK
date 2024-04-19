@@ -161,7 +161,7 @@ export class SocketIoClass{
     }
 
     private onQueueEvent (data: QueueEvent) {
-        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, data)
+        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.QUEUE_EVENT, EventsHandler.mapQueueEvent(data))
     }
 
     private onExtensionEvent (data: ExtensionEvent) {

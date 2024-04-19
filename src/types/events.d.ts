@@ -13,7 +13,8 @@ import {
     ExtensionsUpdated
 } from '@voicenter-team/real-time-events-types'
 
-import { AllExtensionStatusEventExtended, ExtensionEventExtended } from '@/types/extended'
+import { AllExtensionStatusEventExtended, ExtensionEventExtended } from '@/types/sdk-extension-extended'
+import { QueueEventUTCExtended } from '@/types/sdk-queue-extended'
 
 /**
  * Mapping of event names to their respective data structures.
@@ -40,6 +41,7 @@ export interface EventDataMap {
 export interface EventDataMapExtended extends EventDataMap {
     [EventsEnum.EXTENSION_EVENT]: ExtensionEventExtended
     [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusEventExtended
+    [EventsEnum.QUEUE_EVENT]: QueueEventUTCExtended
 }
 
 /**

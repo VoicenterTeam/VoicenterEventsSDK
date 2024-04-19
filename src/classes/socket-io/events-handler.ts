@@ -1,6 +1,6 @@
 import { EventsEnum, Extension, ExtensionEventReasonEnum } from '@voicenter-team/real-time-events-types'
 import { EventDataMap, EventDataMapExtended } from '@/types/events'
-import { CurrentCallUTCExtended, ExtensionCallSDK, ExtensionEventExtended, ExtensionUTCExtended } from '@/types/extended'
+import { CurrentCallUTCExtended, ExtensionCallSDK, ExtensionEventExtended, ExtensionUTCExtended } from '@/types/sdk-extension-extended'
 import type { ExtensionCall } from '@voicenter-team/real-time-events-types/dist/models/ExtensionCall'
 
 type NumericKeys<T> = {
@@ -123,6 +123,28 @@ export default class EventsHandler{
             data.servertime,
             data.servertimeoffset
         )
+    }
+
+    public static mapQueueEvent (data: EventDataMap[EventsEnum.QUEUE_EVENT]): EventDataMapExtended[EventsEnum.QUEUE_EVENT] {
+        return {
+            ...data,
+            data: {
+                ...data.data,
+                Calls: data.data.Calls?.map(call => {
+                    return this.configureUTCForObject(
+                        call,
+                        [
+                            {
+                                key: 'JoinTimeStamp',
+                                format: 'sec'
+                            }
+                        ],
+                        data.servertime,
+                        data.servertimeoffset
+                    )
+                })
+            }
+        }
     }
 
     private static assignProperty <T extends object, K extends string> (obj: T, key: K, value: number) {
