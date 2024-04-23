@@ -16,7 +16,7 @@ import {
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 
-class EventsSdkClass{
+class EventsSdkClass {
     private argumentOptions: EventsSdkOptions
     public readonly options: EventsSdkOptions
     public servers: Server[] = []

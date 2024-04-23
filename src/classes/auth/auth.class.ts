@@ -13,7 +13,7 @@ import {
 import { LoginType } from '@/enum/auth.enum'
 import { StorageClass } from '@/classes/storage/storage.class'
 
-class AuthClass{
+class AuthClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
 
