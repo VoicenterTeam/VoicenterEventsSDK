@@ -1,4 +1,4 @@
-export class StorageClass {
+export class StorageClass{
     public static getSessionStorageDataByKey <T extends object> (key: string, doParse?: true): Promise<T | undefined>
     public static getSessionStorageDataByKey (key: string, doParse?: false): Promise<string | undefined>
     public static async getSessionStorageDataByKey (key: string, doParse = true) {

@@ -17,7 +17,7 @@ type WithUTCProperties<T extends object, K extends NumericKeys<T>> = T & {
     [P in K as PropertyWithUTC<P & string>]: number
 }
 
-export default class EventsHandler {
+export default class EventsHandler{
     public static mapExtensionEvent (data: EventDataMap[EventsEnum.EXTENSION_EVENT]): EventDataMapExtended[EventsEnum.EXTENSION_EVENT] {
         const reason = data.reason
         let dataExtended: undefined | ExtensionEventExtended

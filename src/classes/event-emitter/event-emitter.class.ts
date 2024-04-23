@@ -9,7 +9,7 @@ import {
 import { EventsEnum } from '@voicenter-team/real-time-events-types'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 
-export class EventEmitterClass {
+export class EventEmitterClass{
     private listeners: EventCallbackListenersMap = {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
         [EventsEnum.ALL_DIALER_STATUS]: [],
