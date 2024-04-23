@@ -18,7 +18,6 @@ import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
 class EventsSdkClass{
-    private argumentOptions: EventsSdkOptions
     public readonly options: EventsSdkOptions
     public servers: Server[] = []
     public URLList: string[] = []
@@ -58,10 +57,6 @@ class EventsSdkClass{
             leading: true,
             trailing: false
         })
-
-        this.argumentOptions = {
-            ...options
-        }
     }
 
     public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
@@ -203,8 +198,8 @@ class EventsSdkClass{
     }
 
     private getServers () {
-        if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
-            this.servers = this.argumentOptions.servers
+        if (this.options.serverFetchStrategy === 'static' && this.options.servers && Array.isArray(this.options.servers) && this.options.servers.length > 1) {
+            this.servers = this.options.servers
         }
     }
 
