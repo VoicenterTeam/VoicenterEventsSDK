@@ -12,6 +12,7 @@ import {
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
 import { StorageClass } from '@/classes/storage/storage.class'
+import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
 class AuthClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -288,6 +289,19 @@ class AuthClass{
             }
             return data
         } catch (error) {
+            this.eventsSdkClass.loggerClass.log({
+                Message: `External login request error with the login type ${LoginType} ${loginType === LoginType.TOKEN ? { token } : {
+                    email,
+                    pin: password 
+                }}`,
+                ActionName: ActionNameEnum.WSCONNECT,
+                isShowClient: false,
+                Status: 'External login error',
+                StatusCode: 400,
+                Level: LevelEnum.ERROR,
+                LogType: LogTypeEnum.ERROR
+            })
+            
             throw error
         }
     }
@@ -310,6 +324,16 @@ class AuthClass{
 
             return res.json()
         } catch (error) {
+            this.eventsSdkClass.loggerClass.log({
+                Message: `Get settings error with token ${token}, error: ${error}`,
+                ActionName: ActionNameEnum.WSCONNECT,
+                isShowClient: false,
+                Status: 'Get settings error',
+                StatusCode: 400,
+                Level: LevelEnum.ERROR,
+                LogType: LogTypeEnum.ERROR
+            })
+
             throw error
         }
     }
@@ -326,6 +350,16 @@ class AuthClass{
             })
             return res.json()
         } catch (error) {
+            this.eventsSdkClass.loggerClass.log({
+                Message: `Refresh token error with old refresh token ${oldRefreshToken}, url: ${refreshTokenUrl}, error: ${error}`,
+                ActionName: ActionNameEnum.WSCONNECT,
+                isShowClient: false,
+                Status: 'Get settings error',
+                StatusCode: 400,
+                Level: LevelEnum.ERROR,
+                LogType: LogTypeEnum.ERROR
+            })
+
             throw error
         }
     }

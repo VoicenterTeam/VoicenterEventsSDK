@@ -15,6 +15,7 @@ import {
 } from '@/types/events'
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
+import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
 class EventsSdkClass{
     private argumentOptions: EventsSdkOptions
@@ -199,6 +200,17 @@ class EventsSdkClass{
         await this.authClass.login(this.options)
 
         this.getServers()
+
+        this.loggerClass.log({
+            Message: `Sdk initialized with this options ${this.options}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Sdk initialized',
+            StatusCode: 200,
+            Level: LevelEnum.INFO,
+            LogType: LogTypeEnum.INFO
+        })
+
 
         return true
     }
