@@ -18,6 +18,7 @@ import {
 import { StorageClass } from '@/classes/storage/storage.class'
 import EventsHandler from '@/classes/socket-io/events-handler'
 import { ServerListenerEventsEnum } from '@/enum/socket.enum'
+import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
@@ -84,6 +85,16 @@ export class SocketIoClass {
 
             if (this.ioFunction && url) {
                 this.io = this.ioFunction(url, options)
+
+                this.eventsSdkClass.loggerClass.log({
+                    Message: `${this.eventsSdkClass.options.loggerConfig.system} tries to connect to WS server ${url}`,
+                    ActionName: ActionNameEnum.WSCONNECT,
+                    isShowClient: false,
+                    Status: 'Switching Protocols',
+                    StatusCode: 101,
+                    Level: LevelEnum.INFO,
+                    LogType: LogTypeEnum.INFO
+                })
             } else {
                 throw new Error('Socket server url no defined')
             }
@@ -117,6 +128,14 @@ export class SocketIoClass {
 
             if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io && this.eventsSdkClass.authClass.token) {
                 this.eventsSdkClass.emit(ServerListenerEventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
+
+                this.eventsSdkClass.loggerClass.log({
+                    Message: `Keep alive event emitted with this token: ${this.eventsSdkClass.authClass.token}`,
+                    ActionName: ActionNameEnum.WSCONNECT,
+                    isShowClient: false,
+                    Level: LevelEnum.INFO,
+                    LogType: LogTypeEnum.INFO
+                })
 
                 return
             }
