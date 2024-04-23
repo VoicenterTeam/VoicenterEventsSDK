@@ -1,6 +1,12 @@
 import { Socket } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import StorageLogger, { LevelEnum, LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
+import StorageLogger, {
+    ActionNameEnum,
+    LevelEnum,
+    LoggerDataPartial,
+    LogTypeEnum
+} from '@voicenter-team/socketio-storage-logger'
+import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
 
 export class LoggerClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -55,5 +61,24 @@ export class LoggerClass{
                 console.error(data)
             }
         }
+    }
+
+    public sdkInitializedLog (options: EventsSdkOptions) {
+        const replacedOptions = {
+            ...options,
+            token: 'CENSORED',
+            password: 'CENSORED'
+        }
+
+        this.log({
+            Message: 'Sdk initialized with provided options',
+            Body: JSON.stringify(replacedOptions),
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Sdk initialized',
+            StatusCode: 200,
+            Level: LevelEnum.INFO,
+            LogType: LogTypeEnum.INFO
+        })
     }
 }
