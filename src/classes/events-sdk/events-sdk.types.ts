@@ -7,7 +7,6 @@ export interface EventsSdkOptions {
     servers?: Server[],
     loginUrl: string,
     getSettingsUrl?: string
-    fallbackServer: Server,
     refreshTokenUrl: string,
     refreshToken?: string,
     token: string,

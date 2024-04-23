@@ -21,7 +21,7 @@ class EventsSdkClass{
     public readonly options: EventsSdkOptions
     public servers: Server[] = []
     public URLList: string[] = []
-    public server: Server
+    public server: Server | undefined
     public URL: string | undefined
     public socket: SocketTyped | undefined
     private mainServer: Server | undefined
@@ -50,8 +50,6 @@ class EventsSdkClass{
             minReconnectionDelay: this.options.reconnectionDelay, // 10 seconds
             maxReconnectionDelay: 60000 * 5 // 5 minutes
         }
-
-        this.server = this.options.fallbackServer
 
         this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
             leading: true,
@@ -128,7 +126,7 @@ class EventsSdkClass{
     }
 
     private findNextServer () {
-        if (this.servers.length) {
+        if (this.servers.length && this.server) {
             if (this.server.Priority === this.mainServer!.Priority) {
                 let filteredServers = this.servers.filter(
                     server =>

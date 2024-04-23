@@ -259,7 +259,7 @@ export class SocketIoClass{
         })
 
         this.eventsSdkClass.loggerClass.log({
-            Message: `Sdk connected to the socket server ${this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL}`,
+            Message: `Sdk connected to the socket server ${this.eventsSdkClass.server && this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL}`,
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
             Status: 'Connection established',
@@ -280,7 +280,7 @@ export class SocketIoClass{
         })
 
         this.eventsSdkClass.loggerClass.log({
-            Message: `Sdk disconnected from the socket server ${this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL} (${reason})`,
+            Message: `Sdk disconnected from the socket server ${this.eventsSdkClass.server && this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL} (${reason})`,
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
             Status: 'Connection closed',
