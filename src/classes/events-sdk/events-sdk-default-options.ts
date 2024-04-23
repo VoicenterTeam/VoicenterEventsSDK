@@ -15,7 +15,7 @@ export const eventsSdkDefaultOptions: Partial<EventsSdkOptions> = {
     serverFetchStrategy: 'static',
     serverType: 0,
     useLogger: true,
-    loggerServer: 'http://socketlog.voicenter.co',
+    loggerServer: 'https://socketlog.voicenter.co',
     loggerConfig: {
         logToConsole: true,
         overloadGlobalConsole: false,
