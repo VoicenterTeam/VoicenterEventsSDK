@@ -99,13 +99,13 @@ class EventsSdkClass{
 
         this.socketIoClass.doReconnect = true
 
+        this.loggerClass.init()
+
         this.socketIoClass.initSocketConnection()
 
         this.socketIoClass.initSocketEvents()
 
         this.socketIoClass.initKeepAlive()
-
-        this.loggerClass.init()
     }
 
     public disconnect () {
