@@ -61,14 +61,6 @@ export interface LoggerConnectOptions {
     debug?: boolean
 }
 
-export interface ReconnectOptions {
-    retryCount: number,
-    maxReconnectAttempts: number,
-    reconnectionDelay: number,
-    minReconnectionDelay: number,
-    maxReconnectionDelay: number
-}
-
 export enum ServerParameter {
     MAIN = 'main',
     NEXT = 'next'

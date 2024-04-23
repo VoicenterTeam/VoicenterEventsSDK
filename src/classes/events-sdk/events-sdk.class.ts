@@ -1,8 +1,8 @@
+import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 import AuthClass from '@/classes/auth/auth.class'
-import { debounce } from 'lodash'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
-import { EventsSdkOptions, ReconnectOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { EventsSdkOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
     ServerEmitEventCallbackRegistry,
     ServerEmitEventTypeNames,
@@ -15,7 +15,6 @@ import {
 } from '@/types/events'
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
-import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
 class EventsSdkClass{
     public readonly options: EventsSdkOptions
@@ -33,28 +32,11 @@ class EventsSdkClass{
     public loggerClass = new LoggerClass(this)
     public eventEmitterClass = new EventEmitterClass(this)
 
-    public reconnectOptions: ReconnectOptions
-
-    public retryConnection
-
     constructor (options: EventsSdkOptions) {
         this.options = {
             ...eventsSdkDefaultOptions,
             ...options
         }
-
-        this.reconnectOptions = {
-            retryCount: 1,
-            maxReconnectAttempts: this.options.maxReconnectAttempts,
-            reconnectionDelay: this.options.reconnectionDelay, // 10 seconds. After each re-connection attempt this number will increase (minReconnectionDelay * attempts) => 10, 20, 30, 40 seconds ... up to 5min
-            minReconnectionDelay: this.options.reconnectionDelay, // 10 seconds
-            maxReconnectionDelay: 60000 * 5 // 5 minutes
-        }
-
-        this.retryConnection = debounce(this.connect.bind(this), this.reconnectOptions.reconnectionDelay, {
-            leading: true,
-            trailing: false
-        })
     }
 
     public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
@@ -71,18 +53,6 @@ class EventsSdkClass{
     }
 
     public connect (serverParameter: ServerParameter) {
-        // if (server === ServerParameter.DEFAULT) {
-        //     serverToConnect = this.findCurrentServer()
-        // }
-        //
-        // if (server === ServerParameter.NEXT) {
-        //     serverToConnect = this.findNextAvailableServer()
-        // }
-        //
-        // if (server === ServerParameter.PREVIOUS) {
-        //     serverToConnect = this.findMaxPriorityServer()
-        // }
-
         if (serverParameter === ServerParameter.MAIN) {
             this.findMainServer()
         }
