@@ -22,7 +22,7 @@ import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio
 
 // import { LoggerTypeEnum } from '@/enum/logger.enum'
 
-export class SocketIoClass{
+export class SocketIoClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
     }

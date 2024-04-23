@@ -17,7 +17,7 @@ import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
-class EventsSdkClass{
+class EventsSdkClass {
     private argumentOptions: EventsSdkOptions
     public readonly options: EventsSdkOptions
     public servers: Server[] = []

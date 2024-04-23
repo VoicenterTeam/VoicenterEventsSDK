@@ -2,7 +2,7 @@ import { Socket } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import StorageLogger, { LevelEnum, LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
 
-export class LoggerClass{
+export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
     }
