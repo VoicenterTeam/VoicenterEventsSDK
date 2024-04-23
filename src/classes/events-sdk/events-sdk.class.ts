@@ -17,7 +17,7 @@ import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
-class EventsSdkClass {
+class EventsSdkClass{
     private argumentOptions: EventsSdkOptions
     public readonly options: EventsSdkOptions
     public servers: Server[] = []
@@ -193,24 +193,11 @@ class EventsSdkClass {
     }
 
     public async init () {
-        if (this.socket) {
-            // this.emit(eventTypes.CLOSE);
-        }
-
         await this.authClass.login(this.options)
 
         this.getServers()
 
-        this.loggerClass.log({
-            Message: `Sdk initialized with this options ${this.options}`,
-            ActionName: ActionNameEnum.WSCONNECT,
-            isShowClient: false,
-            Status: 'Sdk initialized',
-            StatusCode: 200,
-            Level: LevelEnum.INFO,
-            LogType: LogTypeEnum.INFO
-        })
-
+        this.sdkInitializaedLog()
 
         return true
     }
@@ -219,6 +206,25 @@ class EventsSdkClass {
         if (this.options.serverFetchStrategy === 'static' && this.argumentOptions.servers && Array.isArray(this.argumentOptions.servers) && this.argumentOptions.servers.length > 1) {
             this.servers = this.argumentOptions.servers
         }
+    }
+
+    private sdkInitializaedLog () {
+        const replacedOptions = {
+            ...this.options,
+            token: 'CENSORED',
+            password: 'CENSORED'
+        }
+
+        this.loggerClass.log({
+            Message: 'Sdk initialized with provided options',
+            Body: JSON.stringify(replacedOptions),
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Sdk initialized',
+            StatusCode: 200,
+            Level: LevelEnum.INFO,
+            LogType: LogTypeEnum.INFO
+        })
     }
 }
 
