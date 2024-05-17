@@ -36,7 +36,7 @@ class AuthClass{
 
         this.storageKey = md5(JSON.stringify({
             ...options,
-            loggerSocketConnection: null 
+            loggerSocketConnection: null
         }))
 
         if (this.lastLoginTimestamp && this.lastLoginTimestamp + this.delay > new Date().getTime()) {
@@ -143,7 +143,7 @@ class AuthClass{
             this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${this.eventsSdkClass.server.Version}`)
         }
         if (!this.eventsSdkClass.server && this.eventsSdkClass.URLList.length) {
-            this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${loginSessionData.Client}`)
+            this.eventsSdkClass.socketIoClass.getSocketIoFunction(`v=${loginSessionData.Version}`)
         }
         if (loginSessionData.IdentityCode) {
             this.token = loginSessionData.IdentityCode
@@ -158,7 +158,7 @@ class AuthClass{
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
             this.handleTokenExpiry()
         }
-        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
+        if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.normalizeLoginType(this.eventsSdkClass.options.loginType) === LoginType.USER) {
             this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
             this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
             this.handleTokenExpiry()
@@ -301,7 +301,7 @@ class AuthClass{
                 Level: LevelEnum.ERROR,
                 LogType: LogTypeEnum.ERROR
             })
-            
+
             throw error
         }
     }
@@ -362,6 +362,10 @@ class AuthClass{
 
             throw error
         }
+    }
+
+    private normalizeLoginType (loginType: string): string {
+        return loginType.charAt(0).toUpperCase() + loginType.slice(1).toLowerCase()
     }
 }
 

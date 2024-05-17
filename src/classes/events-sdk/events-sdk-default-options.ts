@@ -1,6 +1,8 @@
 import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
 
 export const eventsSdkDefaultOptions: Partial<EventsSdkOptions> = {
+    loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
+    refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
     isNewStack: false,
     forceNew: true,
     reconnectionDelay: 10000,

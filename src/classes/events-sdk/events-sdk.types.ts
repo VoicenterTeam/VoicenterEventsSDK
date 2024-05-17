@@ -5,7 +5,7 @@ import StorageLogger, { LoggerOptions } from '@voicenter-team/socketio-storage-l
 export interface EventsSdkOptions {
     isNewStack?: boolean,
     servers?: Server[],
-    loginUrl: string,
+    loginUrl?: string,
     getSettingsUrl?: string
     refreshTokenUrl: string,
     refreshToken?: string,
