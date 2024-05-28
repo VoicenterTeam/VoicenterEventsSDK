@@ -14,7 +14,7 @@ export class StorageClass {
             }
         }
 
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined' && typeof window.sessionStorage.getItem === 'function') {
             const loginSessionKey = window.sessionStorage.getItem(key)
 
             if (loginSessionKey) {
