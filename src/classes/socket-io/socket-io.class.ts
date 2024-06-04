@@ -4,10 +4,11 @@ import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
-    EventsEnum,
     AllDialersStatusEvent,
     AllExtensionStatusEvent,
+    ConnectionStatusEnum,
     DialerEvent,
+    EventsEnum,
     ExtensionEvent,
     ExtensionsUpdated,
     KeepAliveResponseEvent,
@@ -60,9 +61,8 @@ export class SocketIoClass{
             this.eventsSdkClass.eventEmitterClass.emit(
                 EventsEnum.ONLINE_STATUS_EVENT,
                 {
-                    isSocketConnected: false,
                     attemptToConnect: url,
-                    doReconnect: this.doReconnect
+                    connectionStatus: ConnectionStatusEnum.TRYING_TO_CONNECT
                 }
             )
 
@@ -254,8 +254,7 @@ export class SocketIoClass{
         this.connected = true
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
-            isSocketConnected: true,
-            doReconnect: this.doReconnect
+            connectionStatus: ConnectionStatusEnum.CONNECTED
         })
 
         this.eventsSdkClass.loggerClass.log({
@@ -275,8 +274,7 @@ export class SocketIoClass{
         this.closeAllConnections()
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
-            isSocketConnected: false,
-            doReconnect: this.doReconnect
+            connectionStatus: this.doReconnect ? ConnectionStatusEnum.TRYING_TO_CONNECT : ConnectionStatusEnum.DISCONNECTED
         })
 
         this.eventsSdkClass.loggerClass.log({
@@ -298,8 +296,7 @@ export class SocketIoClass{
 
     private onConnectError (data: Error) {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
-            isSocketConnected: false,
-            doReconnect: this.doReconnect
+            connectionStatus: this.doReconnect ? ConnectionStatusEnum.TRYING_TO_CONNECT : ConnectionStatusEnum.DISCONNECTED
         })
 
         this.eventsSdkClass.loggerClass.log({

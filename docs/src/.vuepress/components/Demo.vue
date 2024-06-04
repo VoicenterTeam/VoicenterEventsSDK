@@ -1,19 +1,19 @@
 <template>
     <div>
         <Transition name="fade">
-            <div v-if="isOnline && showSuccessNotification" class="message message--success" key="success">
+            <div v-if="isOnline === 'connected'" class="message message--success" key="success">
                 Connection established!
             </div>
         </Transition>
 
         <Transition name="fade">
-            <p v-if="!isOnline && !doReconnect" class="message message--error" key="error">
+            <p v-if="isOnline === 'disconnected'" class="message message--error" key="error">
                 No connection
             </p>
         </Transition>
 
       <Transition name="attempt-to-connect">
-                <p v-if="doReconnect && !isOnline"  class="message message--warning" key="warning">
+                <p v-if="isOnline === 'tryingToConnect'"  class="message message--warning" key="warning">
                             Trying to connect...
                 </p>
       </Transition>
@@ -48,7 +48,7 @@ import {LoginType} from "voicenterEventsSDK/enum/auth.enum";
 
 /* Data */
 const showSuccessNotification = ref(false)
-const isOnline = ref(false)
+const isOnline = ref('disconnected')
 const doReconnect = ref(false)
 const attemptToConnect = ref<string | undefined>(undefined)
 const token = ref('')
@@ -82,8 +82,6 @@ async function login() {
       email: 'test2@status.com',
       isNewStack: true
     })
-
-    sdk.init()
 
     eventsdk = sdk
 
@@ -195,9 +193,8 @@ async function login() {
     sdk.on(
         EventsEnum.ONLINE_STATUS_EVENT,
         ({ data }) => {
-            isOnline.value = data.isSocketConnected
-            attemptToConnect.value = data.attemptToConnect
-            doReconnect.value = data.doReconnect
+          console.log('============>', data.connectionStatus)
+            isOnline.value = data.connectionStatus
 
             if (data.isSocketConnected) {
                 showSuccessNotification.value = true
@@ -246,6 +243,8 @@ async function login() {
             }
         }
     )
+
+  await sdk.init()
 }
 </script>
 

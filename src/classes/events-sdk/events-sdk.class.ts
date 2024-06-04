@@ -155,7 +155,11 @@ class EventsSdkClass{
     }
 
     public async init () {
-        await this.authClass.login(this.options)
+        const loginSessionData = await this.authClass.login(this.options)
+
+        if (loginSessionData) {
+            this.authClass.onLoginResponse(loginSessionData)
+        }
 
         this.loggerClass.sdkInitializedLog(this.options)
 

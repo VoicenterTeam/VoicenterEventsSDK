@@ -45,29 +45,29 @@ class AuthClass{
 
         this.updateLastLoginTimestamp()
 
-        const isLoggedIn = await this.checkLoginStatus(this.storageKey)
+        const loginSessionData = await this.checkLoginStatus(this.storageKey)
 
-        if (!isLoggedIn) {
+        if (!loginSessionData) {
             StorageClass.clearSessionStorage()
 
-            await this.userLoginFunction(payload, this.storageKey, options.loginType)
+            return await this.userLoginFunction(payload, this.storageKey, options.loginType)
         }
+
+        return loginSessionData
     }
 
     public updateLastLoginTimestamp () {
         this.lastLoginTimestamp = new Date().getTime()
     }
 
-    private async checkLoginStatus (key: string): Promise<boolean> {
+    private async checkLoginStatus (key: string): Promise<LoginSessionData | undefined> {
         const loginSessionData = await StorageClass.getSessionStorageDataByKey<LoginSessionData>(key)
 
-        if (loginSessionData) {
-            this.onLoginResponse(loginSessionData)
-
-            return true
+        if (!loginSessionData) {
+            return
         }
 
-        return false
+        return loginSessionData
     }
 
     private async userLoginFunction (
@@ -106,12 +106,12 @@ class AuthClass{
             }
         }
 
-        this.onLoginResponse(loginSessionData)
-
         await StorageClass.updateSessionStorageKey(key, loginSessionData)
+
+        return loginSessionData
     }
 
-    private onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
+    public onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
         if (!this.eventsSdkClass.options.isNewStack && this.eventsSdkClass.options.servers) {
             this.eventsSdkClass.servers = [ ...this.eventsSdkClass.options.servers ]
             this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
