@@ -1,4 +1,4 @@
-export class StorageClass{
+export class StorageClass {
     public static getSessionStorageDataByKey <T extends object> (key: string, doParse?: true): Promise<T | undefined>
     public static getSessionStorageDataByKey (key: string, doParse?: false): Promise<string | undefined>
     public static async getSessionStorageDataByKey (key: string, doParse = true) {
@@ -14,7 +14,7 @@ export class StorageClass{
             }
         }
 
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined' && typeof window.sessionStorage.getItem === 'function') {
             const loginSessionKey = window.sessionStorage.getItem(key)
 
             if (loginSessionKey) {
@@ -34,7 +34,7 @@ export class StorageClass{
             })
         }
 
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined' && typeof window.sessionStorage.setItem === 'function') {
             window.sessionStorage.setItem(key, JSON.stringify(storageData))
         }
     }
@@ -44,7 +44,7 @@ export class StorageClass{
             chrome.storage.session.clear()
         }
 
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined' && typeof window.sessionStorage.clear === 'function') {
             window.sessionStorage.clear()
         }
     }

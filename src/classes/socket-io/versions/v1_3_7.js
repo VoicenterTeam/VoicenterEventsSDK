@@ -1,5 +1,10 @@
 /* eslint-disable */
 export default function () {
+    // Fix for react-native
+    if (typeof window.navigator === 'undefined' || typeof window.navigator.userAgent === 'undefined') {
+        window.navigator.userAgent = 'react-native'
+    }
+
     var t;
     return function e(t, n, r) {
         function o(s, a) {
