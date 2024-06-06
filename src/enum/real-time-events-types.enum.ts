@@ -8,5 +8,5 @@ export {
     ExtensionEventReasonEnum,
     ExtensionHangupCauseEnum,
     QueueEventReasonEnum,
-    ConnectionStatusEnum
+    ConnectionStatusEnum,
 } from '@voicenter-team/real-time-events-types'

@@ -11,5 +11,6 @@ export type * from './classes/events-sdk/events-sdk.types'
 
 export * from './enum/socket.enum'
 export * from './enum/real-time-events-types.enum'
+export * from './enum/auth.enum'
 
 export default EventsSdkClass
