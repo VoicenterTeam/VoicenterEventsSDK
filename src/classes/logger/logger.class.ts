@@ -8,7 +8,7 @@ import StorageLogger, {
 } from '@voicenter-team/socketio-storage-logger'
 import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
 
-export class LoggerClass{
+export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
     }
@@ -70,9 +70,27 @@ export class LoggerClass{
             password: 'CENSORED'
         }
 
+        const getCircularReplacer = () => {
+            const seen = new WeakSet()
+            return (key: any, value: any) => {
+                // Custom handling for specific circular references
+                if (key === 'socket' || key === 'io' || key === 'nsps') {
+                    return undefined
+                }
+
+                if (typeof value === 'object' && value !== null) {
+                    if (seen.has(value)) {
+                        return
+                    }
+                    seen.add(value)
+                }
+                return value
+            }
+        }
+
         this.log({
             Message: 'Sdk initialized with provided options',
-            Body: JSON.stringify(replacedOptions),
+            Body: JSON.stringify(replacedOptions, getCircularReplacer()),
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
             Status: 'Sdk initialized',
