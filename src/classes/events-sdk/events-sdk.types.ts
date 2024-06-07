@@ -45,7 +45,7 @@ export interface Server {
 export interface LoggerConfig {
     logToConsole?: boolean,
     overloadGlobalConsole?: boolean,
-    namespace?: string,
+    system: string,
     socketEmitInterval?: number
 }
 
