@@ -2,9 +2,9 @@ import { Server } from '@/classes/events-sdk/events-sdk.types'
 import { LoginType } from '@/enum/auth.enum'
 
 export interface LoginSessionPayload {
-    token: string,
-    email: string,
-    password: string
+    token?: string,
+    email?: string,
+    password?: string
 }
 
 export interface ExternalLoginRequestBody {

@@ -1,21 +1,21 @@
-import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
+import { EventsSdkOptionsMain } from '@/classes/events-sdk/events-sdk.types'
 
-export const eventsSdkDefaultOptions: Partial<EventsSdkOptions> = {
+export const eventsSdkDefaultOptions: EventsSdkOptionsMain = {
+    isNewStack: false,
     loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
     refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
-    isNewStack: false,
     forceNew: true,
     reconnectionDelay: 10000,
-    reconnectionDelayMax: 10000,
-    maxReconnectAttempts: 5,
+    // reconnectionDelayMax: 10000,
+    // maxReconnectAttempts: 5,
     timeout: 10000,
     keepAliveTimeout: 60000,
-    idleInterval: 60000 * 5,
+    // idleInterval: 60000 * 5,
     protocol: 'https',
-    transports: [ 'websocket' ],
-    upgrade: false,
-    serverFetchStrategy: 'static',
-    serverType: 0,
+    // transports: [ 'websocket' ],
+    // upgrade: false,
+    // serverFetchStrategy: 'static',
+    // serverType: 0,
     useLogger: true,
     loggerServer: 'https://socketlog.voicenter.co',
     loggerConfig: {

@@ -1,7 +1,13 @@
 import AuthClass from '@/classes/auth/auth.class'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
-import { EventsSdkOptions, Server, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import {
+    EventsSdkOptionsBase,
+    EventsSdkOptionsClient,
+    EventsSdkOptionsMain,
+    Server,
+    ServerParameter
+} from '@/classes/events-sdk/events-sdk.types'
 import {
     ServerEmitEventCallbackRegistry,
     ServerEmitEventTypeNames,
@@ -15,8 +21,8 @@ import {
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 
-class EventsSdkClass{
-    public readonly options: EventsSdkOptions
+class EventsSdkClass {
+    public readonly options: EventsSdkOptionsMain & EventsSdkOptionsBase
     public servers: Server[] = []
     public URLList: string[] = []
     public server: Server | undefined
@@ -31,7 +37,7 @@ class EventsSdkClass{
     public loggerClass = new LoggerClass(this)
     public eventEmitterClass = new EventEmitterClass(this)
 
-    constructor (options: EventsSdkOptions) {
+    constructor (options: EventsSdkOptionsClient) {
         this.options = {
             ...eventsSdkDefaultOptions,
             ...options
@@ -155,13 +161,13 @@ class EventsSdkClass{
     }
 
     public async init () {
-        const loginSessionData = await this.authClass.login(this.options)
+        const loginSessionData = await this.authClass.login()
 
         if (loginSessionData) {
             this.authClass.onLoginResponse(loginSessionData)
         }
 
-        this.loggerClass.sdkInitializedLog(this.options)
+        this.loggerClass.sdkInitializedLog()
 
         return true
     }

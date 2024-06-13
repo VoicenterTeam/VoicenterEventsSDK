@@ -6,7 +6,6 @@ import StorageLogger, {
     LoggerDataPartial,
     LogTypeEnum
 } from '@voicenter-team/socketio-storage-logger'
-import { EventsSdkOptions } from '@/classes/events-sdk/events-sdk.types'
 
 export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -63,16 +62,16 @@ export class LoggerClass {
         }
     }
 
-    public sdkInitializedLog (options: EventsSdkOptions) {
+    public sdkInitializedLog () {
         const replacedOptions = {
-            ...options,
+            ...this.eventsSdkClass.options,
             token: 'CENSORED',
             password: 'CENSORED'
         }
 
         const getCircularReplacer = () => {
             const seen = new WeakSet()
-            return (key: any, value: any) => {
+            return (key: string, value: object) => {
                 // Custom handling for specific circular references
                 if (key === 'socket' || key === 'io' || key === 'nsps') {
                     return undefined

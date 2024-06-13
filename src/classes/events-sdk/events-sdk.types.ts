@@ -2,37 +2,77 @@ import { Socket } from 'socket.io-client'
 import { LoginType } from '@/enum/auth.enum'
 import StorageLogger, { LoggerOptions } from '@voicenter-team/socketio-storage-logger'
 
-export interface EventsSdkOptions {
-    isNewStack?: boolean,
-    servers?: Server[],
-    loginUrl?: string,
-    getSettingsUrl?: string
-    refreshTokenUrl: string,
-    refreshToken?: string,
-    token: string,
-    tokenExpiry?: Date,
+export interface EventsSdkOptionsBase {
     loginType: LoginType,
+    isNewStack?: boolean,
     forceNew?: boolean,
-    reconnectionDelay: number,
-    reconnectionDelayMax?: number,
-    maxReconnectAttempts: number,
+    servers?: Server[],
+    reconnectionDelay?: number,
     timeout?: number,
-    keepAliveTimeout: number,
-    idleInterval?: number,
-    protocol: string,
-    transports?: string[],
-    upgrade?: boolean,
-    serverFetchStrategy?: string,
-    serverType?: number,
+    keepAliveTimeout?: number,
+    protocol?: string,
     useLogger?: boolean,
     loggerSocketConnection?: Socket,
-    loggerServer: string,
-    loggerConfig: LoggerOptions,
+    loggerServer?: string,
+    loggerConfig?: LoggerOptions,
     loggerConnectOptions?: LoggerConnectOptions,
+    storageLoggerInstance?: StorageLogger
+    // transports?: string[],
+    // upgrade?: boolean,
+    // serverFetchStrategy?: string,
+    // serverType?: number,
+    // idleInterval?: number,
+    // reconnectionDelayMax?: number,
+    // maxReconnectAttempts: number,
+}
+
+type EventsSdkOptionsUserLogin = EventsSdkOptionsBase & {
+    loginType: LoginType.USER,
     email: string,
     password: string,
-    username: string,
-    storageLoggerInstance: StorageLogger | undefined
+}
+
+type EventsSdkOptionsTokenLogin = EventsSdkOptionsBase & {
+    loginType: LoginType.TOKEN,
+    token: string,
+}
+
+type EventsSdkOptionsOldStack = EventsSdkOptionsBase & {
+    isNewStack?: false,
+    loginUrl?: string,
+    refreshTokenUrl?: string,
+}
+
+type EventsSdkOptionsNewStack = EventsSdkOptionsBase & {
+    isNewStack: true,
+    loginUrl?: string,
+    refreshTokenUrl?: string,
+    getSettingsUrl: string,
+}
+
+export type EventsSdkOptionsClient = EventsSdkOptionsUserLogin | EventsSdkOptionsTokenLogin | EventsSdkOptionsOldStack | EventsSdkOptionsNewStack
+
+export type EventsSdkOptionsMain = Required<Pick<
+    EventsSdkOptionsOldStack | EventsSdkOptionsNewStack,
+    'isNewStack' |
+    'loginUrl' |
+    'refreshTokenUrl' |
+    'forceNew' |
+    'protocol' |
+    'timeout' |
+    'loggerConfig' |
+    'keepAliveTimeout' |
+    'reconnectionDelay' |
+    'loggerServer' |
+    'useLogger'
+    >> & {
+    getSettingsUrl?: string,
+    token?: string,
+    email?: string,
+    password?: string,
+    storageLoggerInstance?: StorageLogger,
+    loggerConnectOptions?: LoggerConnectOptions,
+    loggerSocketConnection?: Socket,
 }
 
 export interface Server {

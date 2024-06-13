@@ -1,7 +1,7 @@
 import md5 from 'md5'
 
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import { EventsSdkOptions, ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
     ExternalLoginNewStackResponseData,
     ExternalLoginOldStackResponseData,
@@ -14,7 +14,7 @@ import { LoginType } from '@/enum/auth.enum'
 import { StorageClass } from '@/classes/storage/storage.class'
 import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
-class AuthClass{
+class AuthClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
 
@@ -24,18 +24,20 @@ class AuthClass{
     private delay = 1000
     public lastLoginTimestamp: number | undefined
     public token: string | undefined
+    private refreshToken: string | undefined
+    private tokenExpiry: Date | undefined
 
     private storageKey: string
 
-    public async login (options: EventsSdkOptions) {
+    public async login () {
         const payload: LoginSessionPayload = {
-            token: options.token,
-            email: options.email,
-            password: options.password
+            token: this.eventsSdkClass.options.token && this.eventsSdkClass.options.token,
+            email: this.eventsSdkClass.options.email && this.eventsSdkClass.options.email,
+            password: this.eventsSdkClass.options.password && this.eventsSdkClass.options.password
         }
 
         this.storageKey = md5(JSON.stringify({
-            ...options,
+            ...this.eventsSdkClass.options,
             loggerSocketConnection: null
         }))
 
@@ -50,7 +52,7 @@ class AuthClass{
         if (!loginSessionData) {
             StorageClass.clearSessionStorage()
 
-            return await this.userLoginFunction(payload, this.storageKey, options.loginType)
+            return await this.userLoginFunction(payload, this.storageKey, this.eventsSdkClass.options.loginType)
         }
 
         return loginSessionData
@@ -154,13 +156,13 @@ class AuthClass{
             this.eventsSdkClass.connect(ServerParameter.MAIN)
         }
         if (loginSessionData.RefreshToken && loginSessionData.IdentityCodeExpiry && this.eventsSdkClass.options.loginType === LoginType.USER) {
-            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
-            this.eventsSdkClass.options.tokenExpiry = loginSessionData.IdentityCodeExpiry
+            this.refreshToken = loginSessionData.RefreshToken
+            this.tokenExpiry = loginSessionData.IdentityCodeExpiry
             this.handleTokenExpiry()
         }
         if (loginSessionData.RefreshToken && loginSessionData.TokenExpiry && this.normalizeLoginType(this.eventsSdkClass.options.loginType) === LoginType.USER) {
-            this.eventsSdkClass.options.refreshToken = loginSessionData.RefreshToken
-            this.eventsSdkClass.options.tokenExpiry = loginSessionData.TokenExpiry
+            this.refreshToken = loginSessionData.RefreshToken
+            this.tokenExpiry = loginSessionData.TokenExpiry
             this.handleTokenExpiry()
         }
     }
@@ -172,8 +174,8 @@ class AuthClass{
 
         let date: Date
 
-        if (this.eventsSdkClass.options.tokenExpiry) {
-            date = new Date(this.eventsSdkClass.options.tokenExpiry)
+        if (this.tokenExpiry) {
+            date = new Date(this.tokenExpiry)
         } else {
             return
         }
@@ -184,7 +186,7 @@ class AuthClass{
 
         setTimeout(
             async () => {
-                if (this.eventsSdkClass.options.refreshToken) {
+                if (this.refreshToken) {
                     this.eventsSdkClass.socketIoClass.closeAllConnections()
 
                     let settings
@@ -192,9 +194,9 @@ class AuthClass{
                     let loginSessionData: Partial<LoginSessionData>
 
                     if (this.eventsSdkClass.options.isNewStack) {
-                        const refreshTokenResponse = await this.refreshToken<ExternalLoginNewStackResponseData>(
+                        const refreshTokenResponse = await this.externalRefreshToken<ExternalLoginNewStackResponseData>(
                             this.eventsSdkClass.options.refreshTokenUrl,
-                            this.eventsSdkClass.options.refreshToken
+                            this.refreshToken
                         )
 
                         settings = await this.getSettings(refreshTokenResponse.Data.AccessToken)
@@ -204,9 +206,9 @@ class AuthClass{
                             ...settings
                         }
                     } else {
-                        const refreshTokenResponse = await this.refreshToken<ExternalLoginOldStackResponseData>(
+                        const refreshTokenResponse = await this.externalRefreshToken<ExternalLoginOldStackResponseData>(
                             this.eventsSdkClass.options.refreshTokenUrl,
-                            this.eventsSdkClass.options.refreshToken
+                            this.refreshToken
                         )
 
                         loginSessionData = {
@@ -338,7 +340,7 @@ class AuthClass{
         }
     }
 
-    private async refreshToken<T> (refreshTokenUrl: string, oldRefreshToken: string): Promise<ExternalLoginResponse<T>> {
+    private async externalRefreshToken<T> (refreshTokenUrl: string, oldRefreshToken: string): Promise<ExternalLoginResponse<T>> {
         try {
             const res = await fetch(refreshTokenUrl, {
                 method: 'GET',
