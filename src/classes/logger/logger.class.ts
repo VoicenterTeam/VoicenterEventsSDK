@@ -69,27 +69,9 @@ export class LoggerClass {
             password: 'CENSORED'
         }
 
-        const getCircularReplacer = () => {
-            const seen = new WeakSet()
-            return (key: string, value: object) => {
-                // Custom handling for specific circular references
-                if (key === 'socket' || key === 'io' || key === 'nsps') {
-                    return undefined
-                }
-
-                if (typeof value === 'object' && value !== null) {
-                    if (seen.has(value)) {
-                        return
-                    }
-                    seen.add(value)
-                }
-                return value
-            }
-        }
-
         this.log({
             Message: 'Sdk initialized with provided options',
-            Body: JSON.stringify(replacedOptions, getCircularReplacer()),
+            Body: JSON.stringify(replacedOptions, this.eventsSdkClass.getCircularReplacer()),
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
             Status: 'Sdk initialized',

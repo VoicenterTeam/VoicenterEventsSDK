@@ -39,7 +39,7 @@ class AuthClass {
         this.storageKey = md5(JSON.stringify({
             ...this.eventsSdkClass.options,
             loggerSocketConnection: null
-        }))
+        }, this.eventsSdkClass.getCircularReplacer()))
 
         if (this.lastLoginTimestamp && this.lastLoginTimestamp + this.delay > new Date().getTime()) {
             return
