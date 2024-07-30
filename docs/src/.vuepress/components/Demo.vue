@@ -27,7 +27,49 @@
 
             <div>
                 <form @submit.prevent="login">
-                    <input type="text" v-model="token" placeholder="token"/>
+                    <fieldset>
+                        <legend>Select a login type:</legend>
+
+                        <div>
+                            <input
+                                v-model="formModel.loginType"
+                                :value="LoginType.TOKEN"
+                                type="radio"
+                                id="token"
+                                name="token"
+                            />
+                            <label for="token">Token</label>
+                        </div>
+
+                        <div>
+                            <input
+                                v-model="formModel.loginType"
+                                :value="LoginType.USER"
+                                type="radio"
+                                id="user"
+                                name="user"
+                            />
+                            <label for="user">User</label>
+                        </div>
+                    </fieldset>
+
+                    <template v-if="formModel.loginType === LoginType.TOKEN">
+                        <label>
+                            Token
+                            <input type="text" v-model="formModel.token" placeholder="token"/>
+                        </label>
+                    </template>
+
+                    <template v-else>
+                        <label>
+                            Email
+                            <input type="text" v-model="formModel.email" placeholder="email"/>
+                        </label>
+                        <label>
+                            Password
+                            <input type="password" v-model="formModel.password" placeholder="password"/>
+                        </label>
+                    </template>
 
                     <button type="submit">
                         {{ loggedId ? 'Reconnect' : 'Login' }}
@@ -46,24 +88,52 @@ import EventsSdkClass from 'voicenterEventsSDK/index'
 import {EventTypeData} from 'voicenterEventsSDK/types/events'
 import {LoginType} from "voicenterEventsSDK/enum/auth.enum";
 
+/* Types */
+type FormModel = {
+    loginType: LoginType
+    token?: string
+    email?: string
+    password?: string
+}
+
 /* Data */
 const showSuccessNotification = ref(false)
 const isOnline = ref('disconnected')
 const doReconnect = ref(false)
 const attemptToConnect = ref<string | undefined>(undefined)
-const token = ref('')
 const loading = ref(false)
 const loggedId = ref(false)
 const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
 let eventsdk: EventsSdkClass | undefined
 
+const formModel = ref<FormModel>({
+    loginType: LoginType.TOKEN,
+    token: '',
+    email: '',
+    password: ''
+})
+
 /* Methods */
 async function login() {
-    let tokenValue = token.value
-
-    if (!token.value) {
-        tokenValue = 'QMSVU9dwNYC9Le9VCBqx24AB9TYyWj9Xn5aCPV0GFHIWoShQqfPtnAPmnw24xpJIUSsDDtlac2OPpjx0t3MSkxH3AhiQGHCeGZ8e'
+    const sdkOptions = {
+        loginUrl: "https://loginapidev.voicenter.co.il/Auth/Login/Voicenter/Monitor",
+        refreshTokenUrl: "https://loginapidev.voicenter.co.il/Auth/RefreshToken",
+        getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
+        isNewStack: true
     }
+
+    if (formModel.value.loginType === LoginType.TOKEN && formModel.value.token) {
+        sdkOptions['loginType'] = LoginType.TOKEN
+        sdkOptions['token'] = formModel.value.token
+    } else if (formModel.value.loginType === LoginType.USER && formModel.value.email && formModel.value.password) {
+        sdkOptions['loginType'] = LoginType.USER
+        sdkOptions['email'] = formModel.value.email
+        sdkOptions['password'] = formModel.value.password
+    } else {
+        return alert('Please fill in the required fields')
+    }
+
+    Object.keys(events).forEach(key => delete events[key])
 
     loading.value = true
 
@@ -72,16 +142,7 @@ async function login() {
         eventsdk = undefined
     }
 
-    const sdk = new EventsSdkClass({
-      loginUrl: "https://loginapidev.voicenter.co.il/Auth/Login/Voicenter/Monitor",
-      refreshTokenUrl: "https://loginapidev.voicenter.co.il/Auth/RefreshToken",
-      getSettingsUrl: "https://loginapidev.voicenter.co.il/Application/GetSettings",
-      loginType: LoginType.TOKEN, // <=== "User" or "Token"
-      token: tokenValue,
-      password: '78253050510',
-      email: 'test2@status.com',
-      isNewStack: true
-    })
+    const sdk = new EventsSdkClass(sdkOptions)
 
     eventsdk = sdk
 
