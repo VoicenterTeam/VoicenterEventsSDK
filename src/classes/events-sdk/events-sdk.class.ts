@@ -189,6 +189,10 @@ class EventsSdkClass {
             return value
         }
     }
+
+    public getCurrentMonitorServer (): Server | undefined {
+        return this.server
+    }
 }
 
 export default EventsSdkClass
