@@ -6,6 +6,7 @@ import { description } from '../../package.json'
 // import { typedocPlugin } from 'vuepress-plugin-typedoc/next'
 
 import * as dotenv from 'dotenv'
+import { typedocPlugin } from 'vuepress-plugin-typedoc/next'
 dotenv.config()
 
 const __dirname = getDirname(import.meta.url)
@@ -48,10 +49,10 @@ export default defineUserConfig({
         registerComponentsPlugin({
             componentsDir: path.resolve(__dirname, './components')
         }),
-        // typedocPlugin({
-        //     entryPoints: ['../src/types/public-api.d.ts'],
-        //     tsconfig: '../tsconfig.json'
-        // })
+        typedocPlugin({
+            entryPoints: ['../src/types/public-api.d.ts'],
+            tsconfig: '../tsconfig.json'
+        })
     ],
 
     alias: {
