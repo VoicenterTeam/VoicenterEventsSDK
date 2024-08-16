@@ -50,7 +50,7 @@ export default defineUserConfig({
             componentsDir: path.resolve(__dirname, './components')
         }),
         typedocPlugin({
-            entryPoints: ['../src/types/public-api.d.ts'],
+            entryPoints: ['../dist/voicenter-events-sdk.d.ts'],
             tsconfig: '../tsconfig.json'
         })
     ],
