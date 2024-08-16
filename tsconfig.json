@@ -3,6 +3,7 @@
     "src/**/*",
     "src/**/*.d.ts",
     "docs/**/*",
+    "dist/**/*",
   ],
   "exclude": ["public/**/*", "node_modules"],
   "compilerOptions": {
