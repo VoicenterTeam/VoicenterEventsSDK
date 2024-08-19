@@ -38,7 +38,7 @@ export default class EventsHandler {
                     currentCall: currentCallExtended ?
                         {
                             ...currentCallExtended,
-                            duration: Date.now() - (currentCallExtended?.callAnswered_UTC_CLIENT ?? 0)
+                            duration: currentCallExtended.callAnswered_UTC_CLIENT ? Date.now() - currentCallExtended.callAnswered_UTC_CLIENT : 0
                         }
                         : undefined,
                     calls: data.data.calls?.map((call) => {
@@ -46,7 +46,7 @@ export default class EventsHandler {
 
                         return {
                             ...callExtended,
-                            duration: Date.now() - (callExtended.callAnswered_UTC_CLIENT ?? 0)
+                            duration: callExtended.callAnswered_UTC_CLIENT ? Date.now() - callExtended.callAnswered_UTC_CLIENT : 0
                         }
                     })
                 }
