@@ -1,6 +1,8 @@
 {
   "include": [
     "dist/**/*",
+    "src/**/*",
+    "src/**/*.d.ts"
   ],
   "exclude": ["public/**/*", "node_modules"],
   "compilerOptions": {
