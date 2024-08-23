@@ -20,12 +20,12 @@ export interface ExternalLoginResponse<T> {
     Data: T
 }
 
-interface ExternalLoginNewStackResponseData {
+export interface ExternalLoginNewStackResponseData {
     AccessToken: string,
     RefreshToken: string
 }
 
-interface ExternalLoginOldStackResponseData {
+export interface ExternalLoginOldStackResponseData {
     Socket: Socket,
 }
 

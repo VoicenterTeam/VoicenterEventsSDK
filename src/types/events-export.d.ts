@@ -1,5 +1,7 @@
 import {
-    EventsEnum,
+    EventsEnum
+} from '@voicenter-team/real-time-events-types'
+import type {
     CustomData,
     Dialer,
     Error,
@@ -8,7 +10,7 @@ import {
     Summery,
     User
 } from '@voicenter-team/real-time-events-types'
-import { EventTypeData } from '@/types/events'
+import type { EventTypeData } from '@/types/events'
 
 /**
  * Event types declared for being used in the application.

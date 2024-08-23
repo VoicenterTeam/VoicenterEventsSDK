@@ -1,15 +1,4 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "module": "esnext",
-    "paths": {
-      "voicenterEventsSDK/*": [
-        "../src/*"
-      ]
-    }
-  },
-  "include": [
-    "../vite.config.ts"
-  ]
+  // https://v3.nuxtjs.org/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json"
 }

@@ -3,8 +3,10 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import StorageLogger, {
     ActionNameEnum,
     LevelEnum,
-    LoggerDataPartial,
     LogTypeEnum
+} from '@voicenter-team/socketio-storage-logger'
+import type {
+    LoggerDataPartial
 } from '@voicenter-team/socketio-storage-logger'
 
 export class LoggerClass {

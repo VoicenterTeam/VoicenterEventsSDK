@@ -1,4 +1,4 @@
-import { EventsSdkOptionsMain } from '@/classes/events-sdk/events-sdk.types'
+import type { EventsSdkOptionsMain } from '@/classes/events-sdk/events-sdk.types'
 
 export const eventsSdkDefaultOptions: EventsSdkOptionsMain = {
     isNewStack: false,

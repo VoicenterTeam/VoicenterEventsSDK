@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client'
-import { SocketTyped } from '@/types/socket'
+import type { SocketTyped } from '@/types/socket'
 
 const importModules: Record<string, { default?: unknown }> = import.meta.glob(
     './v*.js',
@@ -10,7 +10,7 @@ const SOCKET_NAME_REGEX = /v\d+_\d+_\d+/
 
 export type TypedSocketIo = (...args: Parameters<typeof io>) => SocketTyped
 
-type SocketIoFn = () => TypedSocketIo
+export type SocketIoFn = () => TypedSocketIo
 
 function isSocketIoFn (socket: unknown): socket is SocketIoFn {
     return typeof socket === 'function'

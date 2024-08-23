@@ -1,25 +1,22 @@
 import {
-    ExtensionEventReasonEnum,
-    AllExtensionStatusEvent,
-    ExtensionEvent,
-    Extension,
-    ExtensionCall
+    ExtensionEventReasonEnum
 } from '@voicenter-team/real-time-events-types'
+import type { ExtensionCall, Extension, ExtensionEvent, AllExtensionStatusEvent } from '@voicenter-team/real-time-events-types'
 
-interface CurrentCallUTCExtended extends ExtensionCall {
+export interface CurrentCallUTCExtended extends ExtensionCall {
     callStarted_UTC: number
     callStarted_UTC_CLIENT: number
     callAnswered_UTC: number
     callAnswered_UTC_CLIENT: number
 }
 
-interface CurrentCallEnded extends CurrentCallUTCExtended {
+export interface CurrentCallEnded extends CurrentCallUTCExtended {
     duration: number
 }
 
 export type ExtensionCallSDK = CurrentCallUTCExtended | CurrentCallEnded
 
-interface ExtensionUTCExtended extends Extension {
+export interface ExtensionUTCExtended extends Extension {
     lastAnsweredCallEventEpoch_UTC: number
     lastAnsweredCallEventEpoch_UTC_CLIENT: number
     lastCallEventEpoch_UTC: number
@@ -30,12 +27,12 @@ interface ExtensionUTCExtended extends Extension {
     representativeUpdated_UTC_CLIENT: number
 }
 
-interface ExtensionCallsUTCExtended extends ExtensionUTCExtended {
+export interface ExtensionCallsUTCExtended extends ExtensionUTCExtended {
     currentCall?: CurrentCallUTCExtended
     calls?: Array<CurrentCallUTCExtended>
 }
 
-interface ExtensionCallsEnded extends ExtensionUTCExtended {
+export interface ExtensionCallsEnded extends ExtensionUTCExtended {
     currentCall?: CurrentCallEnded
     calls?: Array<CurrentCallUTCExtended>
 }

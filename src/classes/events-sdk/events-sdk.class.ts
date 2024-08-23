@@ -3,17 +3,19 @@ import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import {
     EventsSdkOptionsBase,
-    EventsSdkOptionsClient,
-    EventsSdkOptionsMain,
     Server,
     ServerParameter
 } from '@/classes/events-sdk/events-sdk.types'
-import {
+import type {
+    EventsSdkOptionsClient,
+    EventsSdkOptionsMain
+} from '@/classes/events-sdk/events-sdk.types'
+import type {
     ServerEmitEventCallbackRegistry,
     ServerEmitEventTypeNames,
     SocketTyped
 } from '@/types/socket'
-import {
+import type {
     EventSpecificCallback,
     EventTypeNames,
     GenericEventWrapper,

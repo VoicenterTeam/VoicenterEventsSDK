@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client'
-import { EventCallbackRegistry } from '@/types/events'
+import type { EventCallbackRegistry } from '@/types/events'
 import { ServerListenerEventsEnum } from '@/enum/socket.enum'
 
 export interface UpdateMonitoredExtensionsPayload {

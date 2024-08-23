@@ -4,11 +4,13 @@ import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
 import {
+    ConnectionStatusEnum,
+    EventsEnum
+} from '@voicenter-team/real-time-events-types'
+import type {
     AllDialersStatusEvent,
     AllExtensionStatusEvent,
-    ConnectionStatusEnum,
     DialerEvent,
-    EventsEnum,
     ExtensionEvent,
     ExtensionsUpdated,
     KeepAliveResponseEvent,

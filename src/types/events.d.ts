@@ -1,5 +1,7 @@
 import {
-    EventsEnum,
+    EventsEnum
+} from '@voicenter-team/real-time-events-types'
+import type {
     ExtensionEvent,
     AllDialersStatusEvent,
     AllExtensionStatusEvent,
@@ -13,7 +15,8 @@ import {
     ExtensionsUpdated
 } from '@voicenter-team/real-time-events-types'
 
-import { AllExtensionStatusEventExtended, ExtensionEventExtended } from '@/types/sdk-extension-extended'
+import { AllExtensionStatusEventExtended } from '@/types/sdk-extension-extended'
+import type { ExtensionEventExtended } from '@/types/sdk-extension-extended'
 import { QueueEventUTCExtended } from '@/types/sdk-queue-extended'
 
 /**
@@ -48,12 +51,12 @@ export interface EventDataMapExtended extends EventDataMap {
  * Represents the set of all possible event type names as keys from the EventDataMap.
  * This type is used to define event listeners and handlers.
  */
-type EventTypeNames = keyof EventDataMap
+export type EventTypeNames = keyof EventDataMap
 
 /**
  * The structure of received socket events.
  */
-type WrappedSocketEvent<T extends EventsEnum> = {
+export type WrappedSocketEvent<T extends EventsEnum> = {
     name: T
     data: EventDataMapExtended[T]
 }
