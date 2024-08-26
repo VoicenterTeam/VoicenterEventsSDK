@@ -9,9 +9,10 @@
   "types": "dist/voicenter-events-sdk.d.ts",
   "type": "module",
   "scripts": {
+    "postinstall": "cd docs && npm install",
     "build": "vite build",
     "dev": "cd docs && npm i && npm run dev",
-    "build:documentation": "npm run build && cd docs && NPM_TOKEN=$NPM_TOKEN npm install && npm run build",
+    "build:documentation": "npm run build && cd docs && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-check": "tsc --noEmit",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts --fix --ignore-path .gitignore"
