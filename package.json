@@ -9,10 +9,10 @@
   "types": "dist/voicenter-events-sdk.d.ts",
   "type": "module",
   "scripts": {
-    "install-docs-dep": "cd docs && echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> .npmrc && npm install && sed -i '' '/_authToken/d' .npmrc",
+    "install-docs-dep": "cd docs && echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> .npmrc && npm install && cd ../",
     "build": "vite build",
     "dev": "cd docs && npm i && npm run dev",
-    "build:documentation": "npm run build && npm run install-docs-dep && npm run build",
+    "build:documentation": "npm run build && npm run install-docs-dep && cd docs && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-check": "tsc --noEmit",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts --fix --ignore-path .gitignore"
