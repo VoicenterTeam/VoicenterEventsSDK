@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     extends: [
         // [ '../../nuxt-ui/nuxt-ui-new', { install: true } ]
-        [ 'github:VoicenterTeam/documentation-template', { install: true } ]
+        [ 'github:voicenter-team/documentation-template', { install: true } ]
     ],
 
     // modules: ["@nuxt/content"]

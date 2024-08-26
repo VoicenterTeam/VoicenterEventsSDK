@@ -13,7 +13,7 @@
   "dependencies": {
     "@nuxt/content": "^2.13.1",
     "nuxt": "^3.12.4",
-    "VoicenterTeam/documentation-template": "https://github.com/VoicenterTeam/documentation-template.git",
+    "voicenter-team/documentation-template": "https://github.com/VoicenterTeam/documentation-template.git",
     "vue-json-viewer": "^3.0.4"
   },
   "devDependencies": {
