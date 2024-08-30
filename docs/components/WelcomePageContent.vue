@@ -37,7 +37,7 @@ const navigationLinks = [
         label: 'API',
         info: 'We highly recommend you take a look at the Nuxt documentation to level up.',
         icon: 'i-solar:server-minimalistic-broken',
-        link: '/api'
+        link: '/api-docs'
     },
     {
         label: 'Example',
