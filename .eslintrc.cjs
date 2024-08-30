@@ -2,7 +2,7 @@
 module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
-    ignorePatterns: [ 'dist', 'node_modules' ],
+    ignorePatterns: [ 'dist', 'node_modules', 'docs' ],
     extends: [
         '@voicenter-team/ts',
         'plugin:jest/recommended'
