@@ -50,7 +50,7 @@ export class LoggerClass{
 
     stop () {
         if (!this.storageLogger) {
-            throw new Error('Storage Logger doesn\'t exists!')
+            return
         }
 
         this.storageLogger.stop()
