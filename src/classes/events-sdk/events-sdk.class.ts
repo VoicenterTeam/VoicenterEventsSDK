@@ -23,7 +23,7 @@ import type {
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 
-class EventsSdkClass {
+class EventsSdkClass{
     public readonly options: EventsSdkOptionsMain & EventsSdkOptionsBase
     public servers: Server[] = []
     public URLList: string[] = []
@@ -82,6 +82,7 @@ class EventsSdkClass {
         this.socketIoClass.doReconnect = false
 
         this.socketIoClass.closeAllConnections()
+        this.loggerClass.stop()
     }
 
     public clearKeepAliveInterval () {
