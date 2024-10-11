@@ -1211,10 +1211,10 @@
   resolved "https://registry.yarnpkg.com/@voicenter-team/real-time-events-types/-/real-time-events-types-0.0.19.tgz#b047bc4fd5bd31b178fcb70d6ed6307e5391bdee"
   integrity sha512-r2G13IIqiVHk9EWA/QWMrwgyK3nk3pfhZM/mr4IM504ZI9WFO7IyT4Or0rZ1P0J9K4Q4pVEjEVlQlw1hTFBWMA==
 
-"@voicenter-team/socketio-storage-logger@^1.9.18":
-  version "1.9.18"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-1.9.18.tgz#4d00698622a91a5c4afc78129ed4346a26c35130"
-  integrity sha512-+Q9ZlZbRlXh2vkA0oBstpPvGoxa08i/U02pKiGcHY5zu6Aw7Qn489XjEbNQ7M5RKz1rc8zuZECw34m0NjWC51Q==
+"@voicenter-team/socketio-storage-logger@^1.9.19":
+  version "1.9.19"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-1.9.19.tgz#b41609c356f0c9de68a3c891dcc94bc0b698ee35"
+  integrity sha512-EN41gEP0dRnbdRYTuL4Ncjwrd9YdbMcEFTNgZBgJiGcW7zWQ/We6zXU5piFT+DEk3QXfsoihN2oXmKO26ND8LQ==
   dependencies:
     socket.io-client "4.7.4"
     uuid "^9.0.1"
