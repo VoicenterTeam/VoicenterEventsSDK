@@ -9,7 +9,7 @@ import type {
     LoggerDataPartial
 } from '@voicenter-team/socketio-storage-logger'
 
-export class LoggerClass {
+export class LoggerClass{
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
     }
@@ -46,6 +46,14 @@ export class LoggerClass {
                 loggerOptions: this.eventsSdkClass.options.loggerConfig
             })
         }
+    }
+
+    stop () {
+        if (!this.storageLogger) {
+            throw new Error('Storage Logger doesn\'t exists!')
+        }
+
+        this.storageLogger.stop()
     }
 
     public log (data: LoggerDataPartial) {
