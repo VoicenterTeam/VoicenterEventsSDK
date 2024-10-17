@@ -9,7 +9,7 @@ import type {
     LoggerDataPartial
 } from '@voicenter-team/socketio-storage-logger'
 
-export class LoggerClass{
+export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
     }

@@ -23,7 +23,7 @@ import type {
 import { LoggerClass } from '@/classes/logger/logger.class'
 import { EventEmitterClass } from '@/classes/event-emitter/event-emitter.class'
 
-class EventsSdkClass{
+class EventsSdkClass {
     public readonly options: EventsSdkOptionsMain & EventsSdkOptionsBase
     public servers: Server[] = []
     public URLList: string[] = []
