@@ -22,7 +22,7 @@
     "bili": "^4.8.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "vue": "^2.6.10",
     "vue-cli-plugin-p11n": "^0.3.0",
     "vue-json-tree-view": "^2.1.4",
