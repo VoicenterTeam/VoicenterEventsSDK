@@ -89,7 +89,7 @@ export class SocketIoClass {
                 this.io = this.ioFunction(url, options)
 
                 this.eventsSdkClass.loggerClass.log({
-                    Message: `${this.eventsSdkClass.options.loggerConfig.system} tries to connect to WS server ${domain}`,
+                    Message: `${this.eventsSdkClass.options.loggerConfig.system} is trying to connect to WS server ${domain}`,
                     ActionName: ActionNameEnum.WSCONNECT,
                     isShowClient: false,
                     Status: 'Switching Protocols',
@@ -302,7 +302,7 @@ export class SocketIoClass {
         })
 
         this.eventsSdkClass.loggerClass.log({
-            Message: `Sdk tries to connect to the socket server ${this.eventsSdkClass.URL} but error (${data})`,
+            Message: `Sdk attempt to connect to the socket server ${this.eventsSdkClass.URL} failed (${data})`,
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
             Status: 'Connection attempt error',

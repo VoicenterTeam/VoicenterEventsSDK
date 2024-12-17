@@ -69,7 +69,11 @@ class EventsSdkClass {
 
         this.socketIoClass.doReconnect = true
 
-        this.loggerClass.init()
+        try {
+            this.loggerClass.init()
+        } catch (e) {
+            console.error(e)
+        }
 
         this.socketIoClass.initSocketConnection()
 

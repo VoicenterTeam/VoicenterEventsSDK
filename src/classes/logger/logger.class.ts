@@ -57,17 +57,19 @@ export class LoggerClass {
     }
 
     public log (data: LoggerDataPartial) {
-        if (this.storageLogger) {
-            if (data.Level === LevelEnum.INFO) {
-                this.storageLogger.log(data)
-            } else if (data.Level === LevelEnum.ERROR) {
-                this.storageLogger.error(data)
-            }
-        } else {
-            if (data.Level === LevelEnum.INFO) {
-                console.log(data)
-            } else if (data.Level === LevelEnum.ERROR) {
-                console.error(data)
+        if (this.eventsSdkClass.options.useLogger) {
+            if (this.storageLogger) {
+                if (data.Level === LevelEnum.INFO) {
+                    this.storageLogger.log(data)
+                } else if (data.Level === LevelEnum.ERROR) {
+                    this.storageLogger.error(data)
+                }
+            } else {
+                if (data.Level === LevelEnum.INFO) {
+                    console.log(data)
+                } else if (data.Level === LevelEnum.ERROR) {
+                    console.error(data)
+                }
             }
         }
     }
