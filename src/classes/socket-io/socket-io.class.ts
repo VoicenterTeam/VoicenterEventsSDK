@@ -1,4 +1,5 @@
 import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
+import io from 'socket.io-client-1-3-7'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
@@ -45,7 +46,7 @@ export class SocketIoClass {
             .concat(parsedArray[parsedArray.length - 1])
             .replaceAll('.', '_')
 
-        this.ioFunction = sockets.getSocketVersion(version)
+        this.ioFunction = io
     }
 
     public initSocketConnection () {
