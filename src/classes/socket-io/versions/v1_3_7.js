@@ -1,9 +1,22 @@
 /* eslint-disable */
+import ws from 'ws'
+
 export default function () {
     // Fix for react-native
     if (typeof window !== 'undefined') {
         if (typeof window.navigator === 'undefined' || typeof window.navigator.userAgent === 'undefined') {
             window.navigator.userAgent = 'react-native'
+        }
+    }
+
+    // Fix for node.js usage
+    if (typeof self === 'undefined' && typeof global === 'object') {
+        global.self = global
+
+        global.WebSocket = ws
+
+        if (typeof self.navigator === 'undefined') {
+            self.navigator = { userAgent: 'node' }
         }
     }
 

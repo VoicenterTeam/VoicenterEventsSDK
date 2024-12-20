@@ -11,7 +11,7 @@ export default ({ mode }: ConfigEnv) => {
     return defineConfig({
         build: {
             rollupOptions: {
-                external: [ 'socket.io-client', 'socket.io-client-1-3-7' ],
+                external: [ 'ws' ],
                 output: {
                     exports: 'named'
                 }
