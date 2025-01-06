@@ -263,6 +263,8 @@ class AuthClass {
             }
         }
 
+        let statusCode
+
         try {
             const res = await fetch(url, {
                 method: 'POST',
@@ -273,14 +275,20 @@ class AuthClass {
             })
 
             if (!res.ok && res.status === 400) {
+                statusCode = 400
+
                 throw new Error('Bad body request. Login type or isNewStack values not correct or not provided')
             }
 
             if (!res.ok && res.status === 401) {
+                statusCode = 401
+
                 throw new Error('Unauthorized. Invalid token provided')
             }
 
             if (!res.ok && res.status === 403) {
+                statusCode = 403
+
                 throw new Error('Forbidden. Identity token not provided or not valid')
             }
 
@@ -292,14 +300,11 @@ class AuthClass {
             return data
         } catch (error) {
             this.eventsSdkClass.loggerClass.log({
-                Message: `External login request error with the login type ${LoginType} ${loginType === LoginType.TOKEN ? { token } : {
-                    email,
-                    pin: password 
-                }}`,
+                Message: `External login request error with the login type ${loginType} ${loginType === LoginType.TOKEN ? token : email}`,
                 ActionName: ActionNameEnum.WSCONNECT,
                 isShowClient: false,
                 Status: 'External login error',
-                StatusCode: 400,
+                StatusCode: statusCode ? statusCode : 400,
                 Level: LevelEnum.ERROR,
                 LogType: LogTypeEnum.ERROR
             })
