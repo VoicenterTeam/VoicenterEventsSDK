@@ -28,6 +28,18 @@ import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio
 export class SocketIoClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
+
+        window.addEventListener('offline', () => {
+            this.closeAllConnections()
+        })
+
+        window.addEventListener('online', () => {
+            if (this.keepReconnectTimeout) {
+                clearTimeout(this.keepReconnectTimeout)
+            }
+
+            this.eventsSdkClass.connect(ServerParameter.NEXT)
+        })
     }
 
     public io: SocketTyped | undefined
@@ -36,7 +48,9 @@ export class SocketIoClass {
     public doReconnect = true
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
     private keepReconnectInterval: ReturnType<typeof setInterval> | undefined
+    private keepReconnectTimeout: number | undefined
     private connected = false
+    private reconnectionTime = 20
 
     public getSocketIoFunction (Client: string) {
         const parsedArray = Client.split('v=')
@@ -293,7 +307,18 @@ export class SocketIoClass {
             return
         }
 
-        this.eventsSdkClass.connect(ServerParameter.NEXT)
+        this.keepReconnectTimeout = setTimeout(
+            () => {
+                this.reconnectionTime = this.reconnectionTime + 20
+
+                if (this.reconnectionTime > 120) {
+                    this.reconnectionTime = 20
+                }
+
+                this.eventsSdkClass.connect(ServerParameter.NEXT)
+            },
+            this.reconnectionTime * 1000
+        )
     }
 
     private onConnectError (data: Error) {
@@ -311,11 +336,17 @@ export class SocketIoClass {
             LogType: LogTypeEnum.ERROR
         })
 
-        setTimeout(
+        this.keepReconnectTimeout = setTimeout(
             () => {
+                this.reconnectionTime = this.reconnectionTime + 20
+
+                if (this.reconnectionTime > 60) {
+                    this.reconnectionTime = 20
+                }
+
                 this.eventsSdkClass.connect(ServerParameter.NEXT)
             },
-            this.eventsSdkClass.options.reconnectionDelay
+            this.reconnectionTime * 1000
         )
     }
 }
