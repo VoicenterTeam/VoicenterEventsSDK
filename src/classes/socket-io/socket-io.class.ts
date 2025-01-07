@@ -29,7 +29,7 @@ export class SocketIoClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
 
-        if (window) {
+        if (typeof window !== 'undefined') {
             window.addEventListener('offline', () => {
                 this.closeAllConnections()
             })
@@ -43,7 +43,7 @@ export class SocketIoClass {
             })
         }
 
-        if (self) {
+        if (typeof self !== 'undefined' && typeof window === 'undefined') {
             self.addEventListener('offline', () => {
                 this.closeAllConnections()
             })
