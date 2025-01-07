@@ -29,17 +29,33 @@ export class SocketIoClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
         this.eventsSdkClass = eventsSdkClass
 
-        window.addEventListener('offline', () => {
-            this.closeAllConnections()
-        })
+        if (window) {
+            window.addEventListener('offline', () => {
+                this.closeAllConnections()
+            })
 
-        window.addEventListener('online', () => {
-            if (this.keepReconnectTimeout) {
-                clearTimeout(this.keepReconnectTimeout)
-            }
+            window.addEventListener('online', () => {
+                if (this.keepReconnectTimeout) {
+                    clearTimeout(this.keepReconnectTimeout)
+                }
 
-            this.eventsSdkClass.connect(ServerParameter.NEXT)
-        })
+                this.eventsSdkClass.connect(ServerParameter.NEXT)
+            })
+        }
+
+        if (self) {
+            self.addEventListener('offline', () => {
+                this.closeAllConnections()
+            })
+
+            self.addEventListener('online', () => {
+                if (this.keepReconnectTimeout) {
+                    clearTimeout(this.keepReconnectTimeout)
+                }
+
+                this.eventsSdkClass.connect(ServerParameter.NEXT)
+            })
+        }
     }
 
     public io: SocketTyped | undefined
