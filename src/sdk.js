@@ -190,7 +190,7 @@ class EventsSDK {
   }
 
   async _onLoginResponse(data) {
-    if (data.Client && !window.io) {
+    if (data.Client) {
       await loadExternalScript('https://loginapi.voicenter.co.il/monitorAPI/GetSocketClient?v=2.4.0')
     }
     if (data.URL) {
@@ -299,7 +299,7 @@ class EventsSDK {
         token: this.token
       }
     }
-    this.socket = window.io(url, options)
+    this.socket = window.vc_io(url, options)
 
 
 
@@ -409,7 +409,7 @@ class EventsSDK {
   }
 
   _onEvent(packet) {
-    if (!packet.data) { 
+    if (!packet.data) {
       return;
     }
     let evt = this._parsePacket(packet);
