@@ -43,7 +43,7 @@ export class SocketIoClass {
             })
         }
 
-        if (typeof self !== 'undefined' && typeof window === 'undefined') {
+        if (typeof self !== 'undefined' && typeof window === 'undefined' && typeof global === 'undefined') {
             self.addEventListener('offline', () => {
                 this.closeAllConnections()
             })
