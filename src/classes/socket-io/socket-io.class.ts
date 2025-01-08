@@ -258,7 +258,7 @@ export class SocketIoClass {
         }
 
         this.eventsSdkClass.loggerClass.log({
-            Message: `Keep alive response: ${data}`,
+            Message: `Keep alive response: ${JSON.stringify(data)}`,
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
             Status: 'Successful',
