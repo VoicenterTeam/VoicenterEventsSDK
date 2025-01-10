@@ -35,11 +35,13 @@ export class SocketIoClass {
             })
 
             window.addEventListener('online', () => {
-                if (this.keepReconnectTimeout) {
-                    clearTimeout(this.keepReconnectTimeout)
-                }
+                setTimeout(() => {
+                    if (this.keepReconnectTimeout) {
+                        clearTimeout(this.keepReconnectTimeout)
+                    }
 
-                this.eventsSdkClass.connect(ServerParameter.NEXT)
+                    this.eventsSdkClass.connect(ServerParameter.NEXT)
+                }, 5000)
             })
         }
 
@@ -49,11 +51,13 @@ export class SocketIoClass {
             })
 
             self.addEventListener('online', () => {
-                if (this.keepReconnectTimeout) {
-                    clearTimeout(this.keepReconnectTimeout)
-                }
+                setTimeout(() => {
+                    if (this.keepReconnectTimeout) {
+                        clearTimeout(this.keepReconnectTimeout)
+                    }
 
-                this.eventsSdkClass.connect(ServerParameter.NEXT)
+                    this.eventsSdkClass.connect(ServerParameter.NEXT)
+                }, 5000)
             })
         }
     }
