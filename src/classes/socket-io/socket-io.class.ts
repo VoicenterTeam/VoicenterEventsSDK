@@ -197,6 +197,8 @@ export class SocketIoClass {
             this.io = undefined
         }
 
+        this.eventsSdkClass.loggerClass.stop()
+
         StorageClass.clearSessionStorage()
     }
 
@@ -288,6 +290,8 @@ export class SocketIoClass {
         }
 
         this.connected = true
+
+        this.eventsSdkClass.loggerClass.start()
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             connectionStatus: ConnectionStatusEnum.CONNECTED

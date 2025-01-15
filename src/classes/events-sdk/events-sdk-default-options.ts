@@ -25,7 +25,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptionsMain = {
         socketEmitInterval: 10000,
     },
     loggerConnectOptions: {
-        reconnection: true,
+        reconnection: false,
         reconnectionDelay: 5000,
         reconnectionAttempts: 10,
         perMessageDeflate: undefined,

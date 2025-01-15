@@ -48,6 +48,14 @@ export class LoggerClass {
         }
     }
 
+    start () {
+        if (!this.storageLogger) {
+            return
+        }
+
+        this.storageLogger.start()
+    }
+
     stop () {
         if (!this.storageLogger) {
             return
