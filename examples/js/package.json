@@ -1,0 +1,16 @@
+{
+  "name": "voicenter-events-sdk-node-example",
+  "version": "0.0.1",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@voicenter-team/events-sdk": "0.0.77"
+  }
+}
