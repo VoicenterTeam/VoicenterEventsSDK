@@ -12,7 +12,6 @@ import {
 } from '@/types/auth'
 import { LoginType } from '@/enum/auth.enum'
 import { StorageClass } from '@/classes/storage/storage.class'
-import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 
 class AuthClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -299,15 +298,7 @@ class AuthClass {
             }
             return data
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log({
-                Message: `External login request error with the login type ${loginType} ${loginType === LoginType.TOKEN ? token : email}`,
-                ActionName: ActionNameEnum.WSCONNECT,
-                isShowClient: false,
-                Status: 'External login error',
-                StatusCode: statusCode ? statusCode : 400,
-                Level: LevelEnum.ERROR,
-                LogType: LogTypeEnum.ERROR
-            })
+            this.eventsSdkClass.loggerClass.loginError(loginType, statusCode, token, email)
 
             throw error
         }
@@ -331,15 +322,7 @@ class AuthClass {
 
             return res.json()
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log({
-                Message: `Get settings error with token ${token}, error: ${error}`,
-                ActionName: ActionNameEnum.WSCONNECT,
-                isShowClient: false,
-                Status: 'Get settings error',
-                StatusCode: 400,
-                Level: LevelEnum.ERROR,
-                LogType: LogTypeEnum.ERROR
-            })
+            this.eventsSdkClass.loggerClass.getSettingsError(token, error as Error)
 
             throw error
         }
@@ -357,15 +340,7 @@ class AuthClass {
             })
             return res.json()
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log({
-                Message: `Refresh token error with old refresh token ${oldRefreshToken}, url: ${refreshTokenUrl}, error: ${error}`,
-                ActionName: ActionNameEnum.WSCONNECT,
-                isShowClient: false,
-                Status: 'Get settings error',
-                StatusCode: 400,
-                Level: LevelEnum.ERROR,
-                LogType: LogTypeEnum.ERROR
-            })
+            this.eventsSdkClass.loggerClass.refreshTokenError(oldRefreshToken, refreshTokenUrl, error as Error)
 
             throw error
         }

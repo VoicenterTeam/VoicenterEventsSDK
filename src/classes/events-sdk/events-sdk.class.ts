@@ -86,11 +86,8 @@ class EventsSdkClass {
         this.socketIoClass.doReconnect = false
 
         this.socketIoClass.closeAllConnections()
-        this.loggerClass.stop()
-    }
 
-    public clearKeepAliveInterval () {
-        this.socketIoClass.clearKeepAliveInterval()
+        this.loggerClass.stop()
     }
 
     private findMainServer () {

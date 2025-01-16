@@ -21,9 +21,6 @@ import type {
 import { StorageClass } from '@/classes/storage/storage.class'
 import EventsHandler from '@/classes/socket-io/events-handler'
 import { ServerListenerEventsEnum } from '@/enum/socket.enum'
-import { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
-
-// import { LoggerTypeEnum } from '@/enum/logger.enum'
 
 export class SocketIoClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -94,14 +91,6 @@ export class SocketIoClass {
 
             const url = server ? `${protocol}://${domain}` : this.eventsSdkClass.URL
 
-            this.eventsSdkClass.eventEmitterClass.emit(
-                EventsEnum.ONLINE_STATUS_EVENT,
-                {
-                    attemptToConnect: url,
-                    connectionStatus: ConnectionStatusEnum.TRYING_TO_CONNECT
-                }
-            )
-
             const options: Partial<ManagerOptions & SocketOptions> = {
                 reconnection: false,
                 upgrade: false,
@@ -113,74 +102,38 @@ export class SocketIoClass {
                 timeout: this.eventsSdkClass.options.timeout
             }
 
-            if (token) {
-                options.query = {
-                    token
-                }
-            }
-
             if (this.ioFunction && url) {
                 this.io = this.ioFunction(url, options)
 
-                this.eventsSdkClass.loggerClass.log({
-                    Message: `${this.eventsSdkClass.options.loggerConfig.system} is trying to connect to WS server ${domain}`,
-                    ActionName: ActionNameEnum.WSCONNECT,
-                    isShowClient: false,
-                    Status: 'Switching Protocols',
-                    StatusCode: 101,
-                    Level: LevelEnum.INFO,
-                    LogType: LogTypeEnum.INFO
-                })
+                this.eventsSdkClass.eventEmitterClass.emit(
+                    EventsEnum.ONLINE_STATUS_EVENT,
+                    {
+                        attemptToConnect: url,
+                        connectionStatus: ConnectionStatusEnum.TRYING_TO_CONNECT
+                    }
+                )
+
+                this.eventsSdkClass.loggerClass.sdkAttemptToConnect(domain)
             } else {
                 throw new Error('Socket server url no defined')
             }
         } catch (error) {
-            this.eventsSdkClass.loggerClass.log({
-                Message: `${error}`,
-                ActionName: ActionNameEnum.WSCONNECT,
-                isShowClient: false,
-                Status: 'Connection error',
-                StatusCode: 500,
-                Level: LevelEnum.ERROR,
-                LogType: LogTypeEnum.ERROR
-            })
-        }
-    }
-
-    public clearKeepAliveInterval () {
-        if (this.keepAliveInterval) {
-            clearInterval(this.keepAliveInterval)
+            this.eventsSdkClass.loggerClass.sdkAttemptToConnectError(error as Error)
         }
     }
 
     public initKeepAlive () {
-        this.clearKeepAliveInterval()
+        if (this.keepAliveInterval) {
+            clearInterval(this.keepAliveInterval)
+        }
 
         this.keepAliveInterval = setInterval(async () => {
             const now = new Date().getTime()
 
-            // if (now > this.lastEventTimestamp + delta) {
-            //     this.eventsSdkClass.connect(ServerParameter.DEFAULT, true)
-            //
-            //     return
-            // }
-            //
-            // if (!this.io) {
-            //     this.initSocketConnection()
-            //
-            //     return
-            // }
-
             if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io && this.eventsSdkClass.authClass.token) {
                 this.eventsSdkClass.emit(ServerListenerEventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
 
-                this.eventsSdkClass.loggerClass.log({
-                    Message: `Keep alive event emitted with this token: ${this.eventsSdkClass.authClass.token}`,
-                    ActionName: ActionNameEnum.WSCONNECT,
-                    isShowClient: false,
-                    Level: LevelEnum.INFO,
-                    LogType: LogTypeEnum.INFO
-                })
+                this.eventsSdkClass.loggerClass.keepAliveEmit()
 
                 return
             }
@@ -257,21 +210,13 @@ export class SocketIoClass {
     }
 
     private onKeepAliveResponse (data: KeepAliveResponseEvent) {
+        this.eventsSdkClass.loggerClass.keepAliveResponse(data)
+
         if (data.errorCode) {
             this.initSocketConnection()
 
             return
         }
-
-        this.eventsSdkClass.loggerClass.log({
-            Message: `Keep alive response: ${JSON.stringify(data)}`,
-            ActionName: ActionNameEnum.WSCONNECT,
-            isShowClient: false,
-            Status: 'Successful',
-            StatusCode: 200,
-            Level: LevelEnum.INFO,
-            LogType: LogTypeEnum.INFO
-        })
 
         if (this.connected) {
             this.lastEventTimestamp = new Date().getTime()
@@ -285,11 +230,11 @@ export class SocketIoClass {
     }
 
     private onConnect () {
+        this.connected = true
+
         if (this.keepReconnectInterval) {
             clearInterval(this.keepReconnectInterval)
         }
-
-        this.connected = true
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             connectionStatus: ConnectionStatusEnum.CONNECTED
@@ -303,25 +248,17 @@ export class SocketIoClass {
     private onDisconnect (reason: Socket.DisconnectReason) {
         this.connected = false
 
+        if (!this.doReconnect) {
+            return
+        }
+
         this.closeAllConnections()
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             connectionStatus: this.doReconnect ? ConnectionStatusEnum.TRYING_TO_CONNECT : ConnectionStatusEnum.DISCONNECTED
         })
 
-        this.eventsSdkClass.loggerClass.log({
-            Message: `Sdk disconnected from the socket server ${this.eventsSdkClass.server && this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL} (${reason})`,
-            ActionName: ActionNameEnum.WSCONNECT,
-            isShowClient: false,
-            Status: 'Connection closed',
-            StatusCode: 200,
-            Level: LevelEnum.INFO,
-            LogType: LogTypeEnum.INFO
-        })
-
-        if (!this.doReconnect) {
-            return
-        }
+        this.eventsSdkClass.loggerClass.sdkDisconnect([ reason ])
 
         this.keepReconnectTimeout = setTimeout(
             () => {
@@ -342,15 +279,7 @@ export class SocketIoClass {
             connectionStatus: this.doReconnect ? ConnectionStatusEnum.TRYING_TO_CONNECT : ConnectionStatusEnum.DISCONNECTED
         })
 
-        this.eventsSdkClass.loggerClass.log({
-            Message: `Sdk attempt to connect to the socket server ${this.eventsSdkClass.URL} failed (${data})`,
-            ActionName: ActionNameEnum.WSCONNECT,
-            isShowClient: false,
-            Status: 'Connection attempt error',
-            StatusCode: 500,
-            Level: LevelEnum.ERROR,
-            LogType: LogTypeEnum.ERROR
-        })
+        this.eventsSdkClass.loggerClass.sdkAttemptToConnectError(data)
 
         this.keepReconnectTimeout = setTimeout(
             () => {

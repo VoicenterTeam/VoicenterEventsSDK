@@ -8,6 +8,8 @@ import StorageLogger, {
 import type {
     LoggerDataPartial
 } from '@voicenter-team/socketio-storage-logger'
+import { LoginType } from '@/enum/auth.enum'
+import type { KeepAliveResponseEvent } from '@voicenter-team/real-time-events-types'
 
 export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -91,10 +93,104 @@ export class LoggerClass {
 
         this.log({
             Message: `Sdk connected to the socket server ${this.eventsSdkClass.server && this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL}`,
-            Body: replacedOptions,
+            Body: JSON.stringify(replacedOptions, this.eventsSdkClass.getCircularReplacer()),
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
             Status: 'Connection established',
+            StatusCode: 200,
+            Level: LevelEnum.INFO,
+            LogType: LogTypeEnum.INFO
+        })
+    }
+
+    public sdkDisconnect (reasons: string[]) {
+        this.log({
+            Message: `Sdk disconnected from the socket server ${this.eventsSdkClass.server && this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL} (${reasons})`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Connection closed',
+            StatusCode: 200,
+            Level: LevelEnum.INFO,
+            LogType: LogTypeEnum.INFO
+        })
+    }
+
+    public sdkAttemptToConnect (domain?: string) {
+        this.log({
+            Message: `${this.eventsSdkClass.options.loggerConfig.system} is trying to connect to WS server ${domain}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Switching Protocols',
+            StatusCode: 101,
+            Level: LevelEnum.INFO,
+            LogType: LogTypeEnum.INFO
+        })
+    }
+
+    public sdkAttemptToConnectError (error: Error) {
+        this.log({
+            Message: `${error}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Connection error',
+            StatusCode: 500,
+            Level: LevelEnum.ERROR,
+            LogType: LogTypeEnum.ERROR
+        })
+    }
+
+    public loginError (loginType: LoginType, statusCode?: number, token?: string, email?: string,) {
+        this.log({
+            Message: `External login request error with the login type ${loginType} ${loginType === LoginType.TOKEN ? token : email}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'External login error',
+            StatusCode: statusCode ? statusCode : 400,
+            Level: LevelEnum.ERROR,
+            LogType: LogTypeEnum.ERROR
+        })
+    }
+
+    public getSettingsError (token: string, error: Error) {
+        this.log({
+            Message: `Get settings error with token ${token}, error: ${error}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Get settings error',
+            StatusCode: 400,
+            Level: LevelEnum.ERROR,
+            LogType: LogTypeEnum.ERROR
+        })
+    }
+
+    public refreshTokenError (oldRefreshToken: string, refreshTokenUrl: string, error: Error) {
+        this.log({
+            Message: `Refresh token error with old refresh token ${oldRefreshToken}, url: ${refreshTokenUrl}, error: ${error}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Get settings error',
+            StatusCode: 400,
+            Level: LevelEnum.ERROR,
+            LogType: LogTypeEnum.ERROR
+        })
+    }
+
+    public keepAliveEmit () {
+        this.log({
+            Message: `Keep alive event emitted with this token: ${this.eventsSdkClass.authClass.token}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Level: LevelEnum.INFO,
+            LogType: LogTypeEnum.INFO
+        })
+    }
+
+    public keepAliveResponse (data: KeepAliveResponseEvent) {
+        this.log({
+            Message: `Keep alive response: ${JSON.stringify(data)}`,
+            ActionName: ActionNameEnum.WSCONNECT,
+            isShowClient: false,
+            Status: 'Successful',
             StatusCode: 200,
             Level: LevelEnum.INFO,
             LogType: LogTypeEnum.INFO
