@@ -166,8 +166,8 @@ export class SocketIoClass {
             .on(EventsEnum.EXTENSION_EVENT, (data) => this.onExtensionEvent(data))
             .on(EventsEnum.DIALER_EVENT, (data) => this.onDialerEvent(data))
             .on(EventsEnum.LOGIN_STATUS, (data) => this.onLoginStatusEvent(data))
-            .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.onAllExtensionStatus(data))
-            .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.onAllDialerStatus(data))
+            .on(EventsEnum.ALL_EXTENSION_STATUS, (data) => this.onAllExtensionStatus(data, EventsEnum.ALL_EXTENSION_STATUS))
+            .on(EventsEnum.ALL_DIALER_STATUS, (data) => this.onAllDialerStatus(data, EventsEnum.ALL_DIALER_STATUS))
             .on(EventsEnum.KEEP_ALIVE_RESPONSE, (data) => this.onKeepAliveResponse(data))
             .on(EventsEnum.EXTENSIONS_UPDATED, (data) => this.onExtensionsUpdatedEvent(data))
             .on(EventsEnum.CONNECT, () => this.onConnect())
@@ -199,15 +199,17 @@ export class SocketIoClass {
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.LOGIN_STATUS, data)
     }
 
-    private onAllExtensionStatus (data: AllExtensionStatusEvent) {
+    private onAllExtensionStatus (data: AllExtensionStatusEvent, eventName: EventsEnum.ALL_EXTENSION_STATUS) {
         const dataExtended = EventsHandler.mapAllExtensionStatus(data)
 
-        this.eventsSdkClass.loggerClass.bootstrapLog(EventsEnum.ALL_EXTENSION_STATUS, data)
+        this.eventsSdkClass.loggerClass.bootstrapLog(eventName, data)
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, dataExtended)
     }
 
-    private onAllDialerStatus (data: AllDialersStatusEvent) {
+    private onAllDialerStatus (data: AllDialersStatusEvent, eventName: EventsEnum.ALL_DIALER_STATUS) {
+        this.eventsSdkClass.loggerClass.bootstrapLog(eventName, data)
+
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_DIALER_STATUS, data)
     }
 

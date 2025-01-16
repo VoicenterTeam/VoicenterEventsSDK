@@ -4,9 +4,11 @@ import type { LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
 import StorageLogger, { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 import { LoginType } from '@/enum/auth.enum'
 import type {
+    EventsEnum,
     KeepAliveResponseEvent
 } from '@voicenter-team/real-time-events-types'
 import { DebugOption } from '@/enum/events-sdk.enum'
+import { BootstrapLogData } from '@/classes/logger/logger.types'
 
 export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -194,9 +196,9 @@ export class LoggerClass {
         })
     }
 
-    public bootstrapLog (
-        eventName: any,
-        data: any
+    public bootstrapLog<T extends EventsEnum.ALL_EXTENSION_STATUS | EventsEnum.ALL_DIALER_STATUS> (
+        eventName: T,
+        data: BootstrapLogData[T]
     ) {
         if (
             this.eventsSdkClass.options.debugOptions &&
@@ -204,7 +206,7 @@ export class LoggerClass {
         ) {
             this.log({
                 Message: `Event name: ${eventName}`,
-                Body: data,
+                Body: JSON.stringify(data),
                 ActionName: ActionNameEnum.WSCONNECT,
                 isShowClient: false,
                 Status: 'Successful',
