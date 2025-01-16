@@ -75,7 +75,7 @@ export type EventsSdkOptionsMain = Required<Pick<
     storageLoggerInstance?: StorageLogger,
     loggerConnectOptions?: LoggerConnectOptions,
     loggerSocketConnection?: Socket,
-    debugOptions?: DebugOption,
+    debugOption?: DebugOption,
 }
 
 export interface Server {
