@@ -2,7 +2,7 @@ import { ManagerOptions, Socket, SocketOptions } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import sockets, { TypedSocketIo } from '@/classes/socket-io/versions'
 import { SocketTyped } from '@/types/socket'
-import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { ServerParameter } from '@/enum/events-sdk.enum'
 import {
     ConnectionStatusEnum,
     EventsEnum
@@ -201,6 +201,8 @@ export class SocketIoClass {
 
     private onAllExtensionStatus (data: AllExtensionStatusEvent) {
         const dataExtended = EventsHandler.mapAllExtensionStatus(data)
+
+        this.eventsSdkClass.loggerClass.bootstrapLog(EventsEnum.ALL_EXTENSION_STATUS, data)
 
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ALL_EXTENSION_STATUS, dataExtended)
     }

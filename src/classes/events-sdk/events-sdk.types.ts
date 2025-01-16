@@ -1,6 +1,8 @@
 import { Socket } from 'socket.io-client'
-import { LoginType } from '@/enum/auth.enum'
 import StorageLogger, { LoggerOptions } from '@voicenter-team/socketio-storage-logger'
+
+import { LoginType } from '@/enum/auth.enum'
+import { DebugOption } from '@/enum/events-sdk.enum'
 
 export interface EventsSdkOptionsBase {
     loginType: LoginType,
@@ -73,6 +75,7 @@ export type EventsSdkOptionsMain = Required<Pick<
     storageLoggerInstance?: StorageLogger,
     loggerConnectOptions?: LoggerConnectOptions,
     loggerSocketConnection?: Socket,
+    debugOptions?: DebugOption,
 }
 
 export interface Server {
@@ -99,9 +102,4 @@ export interface LoggerConnectOptions {
     upgrade?: boolean,
     transports?: string[],
     debug?: boolean
-}
-
-export enum ServerParameter {
-    MAIN = 'main',
-    NEXT = 'next'
 }

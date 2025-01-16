@@ -3,9 +3,9 @@ import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import {
     EventsSdkOptionsBase,
-    Server,
-    ServerParameter
+    Server
 } from '@/classes/events-sdk/events-sdk.types'
+import { ServerParameter } from '@/enum/events-sdk.enum'
 import type {
     EventsSdkOptionsClient,
     EventsSdkOptionsMain

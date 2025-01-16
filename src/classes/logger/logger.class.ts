@@ -1,15 +1,12 @@
 import { Socket } from 'socket.io-client'
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import StorageLogger, {
-    ActionNameEnum,
-    LevelEnum,
-    LogTypeEnum
-} from '@voicenter-team/socketio-storage-logger'
-import type {
-    LoggerDataPartial
-} from '@voicenter-team/socketio-storage-logger'
+import type { LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
+import StorageLogger, { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 import { LoginType } from '@/enum/auth.enum'
-import type { KeepAliveResponseEvent } from '@voicenter-team/real-time-events-types'
+import type {
+    KeepAliveResponseEvent
+} from '@voicenter-team/real-time-events-types'
+import { DebugOption } from '@/enum/events-sdk.enum'
 
 export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -195,5 +192,25 @@ export class LoggerClass {
             Level: LevelEnum.INFO,
             LogType: LogTypeEnum.INFO
         })
+    }
+
+    public bootstrapLog (
+        eventName: any,
+        data: any
+    ) {
+        if (
+            this.eventsSdkClass.options.debugOptions &&
+            (this.eventsSdkClass.options.debugOptions === DebugOption.BOOTSTRAP || this.eventsSdkClass.options.debugOptions === DebugOption.FULL)
+        ) {
+            this.log({
+                Message: `Event name: ${eventName}`,
+                Body: data,
+                ActionName: ActionNameEnum.WSCONNECT,
+                isShowClient: false,
+                Status: 'Successful',
+                Level: LevelEnum.INFO,
+                LogType: LogTypeEnum.INFO
+            })
+        }
     }
 }

@@ -1,7 +1,7 @@
 import md5 from 'md5'
 
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
-import { ServerParameter } from '@/classes/events-sdk/events-sdk.types'
+import { ServerParameter } from '@/enum/events-sdk.enum'
 import {
     ExternalLoginNewStackResponseData,
     ExternalLoginOldStackResponseData,
