@@ -48,12 +48,12 @@ export class LoggerClass {
         }
     }
 
-    start () {
+    async start () {
         if (!this.storageLogger) {
             return
         }
 
-        this.storageLogger.start()
+        await this.storageLogger.start()
     }
 
     stop () {
@@ -82,7 +82,7 @@ export class LoggerClass {
         }
     }
 
-    public sdkInitializedLog () {
+    public sdkConnectionSuccess () {
         const replacedOptions = {
             ...this.eventsSdkClass.options,
             token: 'CENSORED',
@@ -90,11 +90,11 @@ export class LoggerClass {
         }
 
         this.log({
-            Message: 'Sdk initialized with provided options',
-            Body: JSON.stringify(replacedOptions, this.eventsSdkClass.getCircularReplacer()),
+            Message: `Sdk connected to the socket server ${this.eventsSdkClass.server && this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL}`,
+            Body: replacedOptions,
             ActionName: ActionNameEnum.WSCONNECT,
             isShowClient: false,
-            Status: 'Sdk initialized',
+            Status: 'Connection established',
             StatusCode: 200,
             Level: LevelEnum.INFO,
             LogType: LogTypeEnum.INFO

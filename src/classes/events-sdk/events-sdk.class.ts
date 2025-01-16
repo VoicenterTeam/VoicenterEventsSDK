@@ -174,8 +174,6 @@ class EventsSdkClass {
             this.authClass.onLoginResponse(loginSessionData)
         }
 
-        this.loggerClass.sdkInitializedLog()
-
         return true
     }
 

@@ -291,20 +291,12 @@ export class SocketIoClass {
 
         this.connected = true
 
-        this.eventsSdkClass.loggerClass.start()
-
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             connectionStatus: ConnectionStatusEnum.CONNECTED
         })
 
-        this.eventsSdkClass.loggerClass.log({
-            Message: `Sdk connected to the socket server ${this.eventsSdkClass.server && this.eventsSdkClass.server.Domain ? this.eventsSdkClass.server.Domain : this.eventsSdkClass.URL}`,
-            ActionName: ActionNameEnum.WSCONNECT,
-            isShowClient: false,
-            Status: 'Connection established',
-            StatusCode: 200,
-            Level: LevelEnum.INFO,
-            LogType: LogTypeEnum.INFO
+        this.eventsSdkClass.loggerClass.start().then(() => {
+            this.eventsSdkClass.loggerClass.sdkConnectionSuccess()
         })
     }
 
