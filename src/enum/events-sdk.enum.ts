@@ -1,9 +1,9 @@
 export enum DebugOption {
-    BOOTSTRAP = 'BOOTSTRAP',
-    DEBUG_EXTENSIONS = 'DEBUG_EXTENSIONS',
-    DEBUG_QUEUE = 'DEBUG_QUEUE',
-    DEBUG_DIALER = 'DEBUG_DIALER',
-    FULL = 'FULL',
+    BOOTSTRAP = 'bootstrap',
+    DEBUG_EXTENSIONS = 'debugExtensions',
+    DEBUG_QUEUE = 'debugQueue',
+    DEBUG_DIALER = 'debugDialer',
+    FULL = 'full',
 }
 
 export enum ServerParameter {

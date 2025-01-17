@@ -3,12 +3,9 @@ import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 import type { LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
 import StorageLogger, { ActionNameEnum, LevelEnum, LogTypeEnum } from '@voicenter-team/socketio-storage-logger'
 import { LoginType } from '@/enum/auth.enum'
-import type {
-    EventsEnum,
-    KeepAliveResponseEvent
-} from '@voicenter-team/real-time-events-types'
+import { EventsEnum, KeepAliveResponseEvent } from '@voicenter-team/real-time-events-types'
 import { DebugOption } from '@/enum/events-sdk.enum'
-import { BootstrapLogData } from '@/classes/logger/logger.types'
+import { EventDataMap, EventTypeNames } from '@/types/events'
 
 export class LoggerClass {
     constructor (private readonly eventsSdkClass: EventsSdkClass) {
@@ -196,12 +193,22 @@ export class LoggerClass {
         })
     }
 
-    public bootstrapLog<T extends EventsEnum.ALL_EXTENSION_STATUS | EventsEnum.ALL_DIALER_STATUS> (
+    public eventLog<T extends EventTypeNames> (
         eventName: T,
-        data: BootstrapLogData[T]
+        data: EventDataMap[T]
     ) {
+        const eventLogMap: Record<DebugOption, EventsEnum[]> = {
+            [DebugOption.FULL]: [],
+            [DebugOption.BOOTSTRAP]: [ EventsEnum.LOGIN_STATUS, EventsEnum.LOGIN_SUCCESS, EventsEnum.ALL_EXTENSION_STATUS, EventsEnum.ALL_DIALER_STATUS ],
+            [DebugOption.DEBUG_EXTENSIONS]: [ EventsEnum.ALL_EXTENSION_STATUS, EventsEnum.QUEUE_EVENT ],
+            [DebugOption.DEBUG_DIALER]: [ EventsEnum.ALL_DIALER_STATUS, EventsEnum.DIALER_EVENT ],
+            [DebugOption.DEBUG_QUEUE]: [ EventsEnum.QUEUE_EVENT ]
+        }
+
         if (
-            this.eventsSdkClass.options.debugOption
+            this.eventsSdkClass.options.debugOption &&
+            eventLogMap[this.eventsSdkClass.options.debugOption].includes(eventName) ||
+            this.eventsSdkClass.options.debugOption === DebugOption.FULL
         ) {
             this.log({
                 Message: `Event name: ${eventName}`,
