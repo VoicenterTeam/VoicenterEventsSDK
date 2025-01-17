@@ -201,8 +201,7 @@ export class LoggerClass {
         data: BootstrapLogData[T]
     ) {
         if (
-            this.eventsSdkClass.options.debugOption &&
-            (this.eventsSdkClass.options.debugOption === DebugOption.BOOTSTRAP || this.eventsSdkClass.options.debugOption === DebugOption.FULL)
+            this.eventsSdkClass.options.debugOption
         ) {
             this.log({
                 Message: `Event name: ${eventName}`,
