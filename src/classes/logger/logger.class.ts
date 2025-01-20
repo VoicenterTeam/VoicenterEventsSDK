@@ -200,7 +200,7 @@ export class LoggerClass {
         const eventLogMap: Record<DebugOption, EventsEnum[]> = {
             [DebugOption.FULL]: [],
             [DebugOption.BOOTSTRAP]: [ EventsEnum.LOGIN_STATUS, EventsEnum.LOGIN_SUCCESS, EventsEnum.ALL_EXTENSION_STATUS, EventsEnum.ALL_DIALER_STATUS ],
-            [DebugOption.DEBUG_EXTENSIONS]: [ EventsEnum.ALL_EXTENSION_STATUS, EventsEnum.QUEUE_EVENT ],
+            [DebugOption.DEBUG_EXTENSIONS]: [ EventsEnum.ALL_EXTENSION_STATUS, EventsEnum.EXTENSION_EVENT, EventsEnum.EXTENSIONS_UPDATED ],
             [DebugOption.DEBUG_DIALER]: [ EventsEnum.ALL_DIALER_STATUS, EventsEnum.DIALER_EVENT ],
             [DebugOption.DEBUG_QUEUE]: [ EventsEnum.QUEUE_EVENT ]
         }

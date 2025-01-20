@@ -202,6 +202,8 @@ export class SocketIoClass {
     }
 
     private onLoginStatusEvent (data: LoginStatusEvent, eventName: EventsEnum.LOGIN_STATUS) {
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+
         this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
     }
 
@@ -236,6 +238,8 @@ export class SocketIoClass {
     }
 
     private onExtensionsUpdatedEvent (data: ExtensionsUpdated, eventName: EventsEnum.EXTENSIONS_UPDATED) {
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+
         this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
     }
 
