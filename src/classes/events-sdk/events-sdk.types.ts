@@ -18,7 +18,8 @@ export interface EventsSdkOptionsBase {
     loggerServer?: string,
     loggerConfig?: LoggerOptions,
     loggerConnectOptions?: LoggerConnectOptions,
-    storageLoggerInstance?: StorageLogger
+    storageLoggerInstance?: StorageLogger,
+    debugOption?: DebugOption,
     // transports?: string[],
     // upgrade?: boolean,
     // serverFetchStrategy?: string,
@@ -72,10 +73,10 @@ export type EventsSdkOptionsMain = Required<Pick<
     token?: string,
     email?: string,
     password?: string,
+    debugOption?: DebugOption,
     storageLoggerInstance?: StorageLogger,
     loggerConnectOptions?: LoggerConnectOptions,
-    loggerSocketConnection?: Socket,
-    debugOption?: DebugOption,
+    loggerSocketConnection?: Socket
 }
 
 export interface Server {

@@ -14,7 +14,7 @@ export const eventsSdkDefaultOptions: EventsSdkOptionsMain = {
     loggerConfig: {
         logToConsole: true,
         overloadGlobalConsole: false,
-        system: 'events-sdk',
+        system: 'events-sdk', // ws-connection (should be like a subSystem)
         socketEmitInterval: 10000,
     },
     loggerConnectOptions: {
