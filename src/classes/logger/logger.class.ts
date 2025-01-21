@@ -205,20 +205,21 @@ export class LoggerClass {
             [DebugOption.DEBUG_QUEUE]: [ EventsEnum.QUEUE_EVENT ]
         }
 
-        if (
-            this.eventsSdkClass.options.debugOption &&
-            eventLogMap[this.eventsSdkClass.options.debugOption].includes(eventName) ||
-            this.eventsSdkClass.options.debugOption === DebugOption.FULL
-        ) {
-            this.log({
-                Message: `Event name: ${eventName}`,
-                Body: JSON.stringify(data),
-                ActionName: ActionNameEnum.WSCONNECT,
-                isShowClient: false,
-                Status: 'Successful',
-                Level: LevelEnum.INFO,
-                LogType: LogTypeEnum.INFO
-            })
+        if (this.eventsSdkClass.options.debugOption) {
+            if (
+                eventLogMap[this.eventsSdkClass.options.debugOption].includes(eventName) ||
+                this.eventsSdkClass.options.debugOption === DebugOption.FULL
+            ) {
+                this.log({
+                    Message: `Event name: ${eventName}`,
+                    Body: data,
+                    ActionName: ActionNameEnum.WSCONNECT,
+                    isShowClient: false,
+                    Status: 'Successful',
+                    Level: LevelEnum.INFO,
+                    LogType: LogTypeEnum.INFO
+                })
+            }
         }
     }
 }
