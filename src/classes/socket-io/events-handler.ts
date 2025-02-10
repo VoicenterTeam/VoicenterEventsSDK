@@ -153,13 +153,31 @@ export default class EventsHandler {
     }
 
     /**
-     * Configures UTC for the object
+     * Configures UTC timestamps for an object by converting server-time properties to both UTC and client-local UTC timestamps
      *
-     * @param data - object to configure UTC for
-     * @param properties - properties of the object to configure UTC for
-     * @param servertime - server time in seconds
-     * @param servertimeoffset - server time offset in minutes
+     * For each specified property, creates two new timestamp properties:
+     * - property_UTC: Server timestamp converted to UTC milliseconds
+     * - property_UTC_CLIENT: Server timestamp converted to client-local UTC milliseconds
+     *
+     * @example
+     * // Input object
+     * const data = {
+     *   callStarted: 1634567890 // Unix timestamp in seconds
+     * }
+     *
+     * // After configureUTCForObject:
+     * {
+     *   callStarted: 1634567890,
+     *   callStarted_UTC: 1634567890000, // Converted to UTC ms
+     *   callStarted_UTC_CLIENT: 1634571490000 // Converted to client-local UTC ms
+     * }
+     *
+     * @param data - Source object containing server timestamp properties
+     * @param properties - Array of property configs specifying which properties to convert and their format
+     * @param servertime - Current server time in seconds
+     * @param servertimeoffset - Server timezone offset in minutes
      * @private
+     * @returns Original object extended with new _UTC and _UTC_CLIENT properties for each configured timestamp
      */
     private static configureUTCForObject<T extends object, K extends NumericKeys<T>> (
         data: T,
