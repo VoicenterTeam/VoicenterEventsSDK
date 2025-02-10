@@ -90,6 +90,10 @@ class EventsSdkClass {
         this.loggerClass.stop()
     }
 
+    public clearKeepAliveInterval () {
+        this.socketIoClass.clearKeepAliveInterval()
+    }
+
     private findMainServer () {
         if (this.servers.length) {
             this.mainServer = this.servers.reduce((prev, cur) => {

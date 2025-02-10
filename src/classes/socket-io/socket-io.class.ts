@@ -120,6 +120,12 @@ export class SocketIoClass {
         }
     }
 
+    public clearKeepAliveInterval () {
+        if (this.keepAliveInterval) {
+            clearInterval(this.keepAliveInterval)
+        }
+    }
+
     public initKeepAlive () {
         if (this.keepAliveInterval) {
             clearInterval(this.keepAliveInterval)
