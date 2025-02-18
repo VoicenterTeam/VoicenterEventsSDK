@@ -18,6 +18,7 @@ import type {
 import { AllExtensionStatusEventExtended } from '@/types/sdk-extension-extended'
 import type { ExtensionEventExtended } from '@/types/sdk-extension-extended'
 import { QueueEventUTCExtended } from '@/types/sdk-queue-extended'
+import { LoginStatusEventUTCExtended } from '@/types/sdk-login-status-extended'
 
 /**
  * Mapping of event names to their respective data structures.
@@ -45,6 +46,7 @@ export interface EventDataMapExtended extends EventDataMap {
     [EventsEnum.EXTENSION_EVENT]: ExtensionEventExtended
     [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusEventExtended
     [EventsEnum.QUEUE_EVENT]: QueueEventUTCExtended
+    [EventsEnum.LOGIN_STATUS]: LoginStatusEventUTCExtended
 }
 
 /**

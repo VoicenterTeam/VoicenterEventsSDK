@@ -63,7 +63,7 @@ export class SocketIoClass {
     public doReconnect = true
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
     private keepReconnectInterval: ReturnType<typeof setInterval> | undefined
-    private keepReconnectTimeout: number | undefined
+    private keepReconnectTimeout: ReturnType<typeof setTimeout> | undefined
     private connected = false
     private reconnectionTime = 20
 
@@ -210,7 +210,7 @@ export class SocketIoClass {
     private onLoginStatusEvent (data: LoginStatusEvent, eventName: EventsEnum.LOGIN_STATUS) {
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
 
-        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, EventsHandler.mapLoginStatusEvent(data))
     }
 
     private onAllExtensionStatus (data: AllExtensionStatusEvent, eventName: EventsEnum.ALL_EXTENSION_STATUS) {

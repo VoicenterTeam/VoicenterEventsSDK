@@ -7,6 +7,8 @@ import type {
 export interface QueueCallSDK extends QueueCall {
     JoinTimeStamp_UTC: number
     JoinTimeStamp_UTC_CLIENT: number
+    VHJoinTimeStamp_UTC: number
+    VHJoinTimeStamp_UTC_CLIENT: number
 }
 
 export interface QueueSDK extends Omit<Queue, 'Calls'> {

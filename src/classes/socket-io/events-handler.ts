@@ -1,7 +1,8 @@
-import { EventsEnum, Extension, ExtensionEventReasonEnum } from '@voicenter-team/real-time-events-types'
+import { EventsEnum, Extension, ExtensionEventReasonEnum, type QueueCall } from '@voicenter-team/real-time-events-types'
 import { EventDataMap, EventDataMapExtended } from '@/types/events'
 import { CurrentCallUTCExtended, ExtensionCallSDK, ExtensionEventExtended, ExtensionUTCExtended } from '@/types/sdk-extension-extended'
 import type { ExtensionCall } from '@voicenter-team/real-time-events-types/dist/models/ExtensionCall'
+import { QueueCallSDK } from '@/types/sdk-queue-extended'
 
 type NumericKeys<T> = {
     [P in keyof T]: T[P] extends number
@@ -125,24 +126,42 @@ export default class EventsHandler {
         )
     }
 
+    public static mapQueueCall (data: EventDataMap[EventsEnum.QUEUE_EVENT] | EventDataMap[EventsEnum.LOGIN_STATUS], call: QueueCall): QueueCallSDK {
+        return this.configureUTCForObject(
+            call,
+            [
+                {
+                    key: 'JoinTimeStamp',
+                    format: 'sec'
+                },
+                {
+                    key: 'VHJoinTimeStamp', // TODO: should add the VHJoinTimeStamp in TS definitions
+                    format: 'sec'
+                }
+            ],
+            data.servertime, // TODO: currently the TS error because in LoginStatusEvent type the key is "serverTime" but actual is "servertime", remove comment after fixed
+            data.servertimeoffset // TODO: currently the TS error because in LoginStatusEvent type the key is "serverTimeOffset" but actual is "servertimeoffset", remove comment after fixed
+        )
+    }
+
+    public static mapLoginStatusEvent (data: EventDataMap[EventsEnum.LOGIN_STATUS]): EventDataMapExtended[EventsEnum.LOGIN_STATUS] {
+        return {
+            ...data,
+            queues: data.queues.map(queue => {
+                return {
+                    ...queue,
+                    Calls: queue.Calls.map(call => this.mapQueueCall(data, call))
+                }
+            })
+        }
+    }
+
     public static mapQueueEvent (data: EventDataMap[EventsEnum.QUEUE_EVENT]): EventDataMapExtended[EventsEnum.QUEUE_EVENT] {
         return {
             ...data,
             data: {
                 ...data.data,
-                Calls: data.data.Calls?.map(call => {
-                    return this.configureUTCForObject(
-                        call,
-                        [
-                            {
-                                key: 'JoinTimeStamp',
-                                format: 'sec'
-                            }
-                        ],
-                        data.servertime,
-                        data.servertimeoffset
-                    )
-                })
+                Calls: data.data.Calls.map(call => this.mapQueueCall(data, call))
             }
         }
     }
