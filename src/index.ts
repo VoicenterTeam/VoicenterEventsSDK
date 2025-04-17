@@ -1,6 +1,7 @@
 import EventsSdkClass from '@/classes/events-sdk/events-sdk.class'
 
 // Export all types and enums
+export type * from '@voicenter-team/real-time-events-types'
 export type * from './types/auth'
 export type * from './types/events'
 export type * from './types/listeners'
