@@ -216,7 +216,7 @@ export class LoggerClass {
                     ActionName: ActionNameEnum.WSCONNECT,
                     isShowClient: false,
                     Status: 'Successful',
-                    Level: LevelEnum.INFO,
+                    Level: LevelEnum.DEBUG,
                     LogType: LogTypeEnum.INFO
                 })
             }
