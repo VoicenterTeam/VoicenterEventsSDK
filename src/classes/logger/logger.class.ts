@@ -65,10 +65,18 @@ export class LoggerClass {
     public log (data: LoggerDataPartial) {
         if (this.eventsSdkClass.options.useLogger) {
             if (this.storageLogger) {
-                if (data.Level === LevelEnum.INFO) {
-                    this.storageLogger.log(data)
-                } else if (data.Level === LevelEnum.ERROR) {
-                    this.storageLogger.error(data)
+                switch (data.Level) {
+                    case LevelEnum.INFO:
+                        this.storageLogger.log(data)
+                        break
+                    case LevelEnum.DEBUG:
+                        this.storageLogger.debug(data)
+                        break
+                    case LevelEnum.WARNING:
+                        this.storageLogger.warn(data)
+                        break
+                    case LevelEnum.ERROR:
+                        this.storageLogger.error(data)
                 }
             } else {
                 if (data.Level === LevelEnum.INFO) {
