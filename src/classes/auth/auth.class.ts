@@ -125,7 +125,7 @@ class AuthClass {
                 (prev.Priority > current.Priority) ? prev : current
             )
         }
-        if (loginSessionData.MonitorList && loginSessionData.MonitorList.length) {
+        if (loginSessionData.MonitorList && loginSessionData.MonitorList.length && !this.eventsSdkClass.options.servers) {
             this.eventsSdkClass.servers = [ ...loginSessionData.MonitorList ]
             this.eventsSdkClass.server = this.eventsSdkClass.servers.reduce((prev, current) =>
                 (prev.Priority > current.Priority) ? prev : current
