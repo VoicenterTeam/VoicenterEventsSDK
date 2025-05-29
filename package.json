@@ -1,6 +1,6 @@
 {
   "name": "@voicenter-team/events-sdk",
-  "version": "0.0.99",
+  "version": "0.0.100",
   "description": "",
   "main": "dist/voicenter-events-sdk.es.js",
   "jsdelivr": "dist/voicenter-events-sdk.umd.js",
@@ -53,9 +53,12 @@
     "vite-plugin-dts": "3.7.2"
   },
   "dependencies": {
-    "@voicenter-team/socketio-storage-logger": "^1.9.33",
+    "@voicenter-team/socketio-storage-logger": "^1.9.41",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "ws": "^8.18.0"
+  },
+  "peerDependencies": {
+    "@voicenter-team/socketio-storage-logger": "^1.9.41"
   }
 }

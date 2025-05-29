@@ -11,7 +11,7 @@ export default ({ mode }: ConfigEnv) => {
     return defineConfig({
         build: {
             rollupOptions: {
-                external: [ 'ws' ],
+                external: [ 'ws', '@voicenter-team/socketio-storage-logger' ],
                 output: {
                     exports: 'named'
                 }
