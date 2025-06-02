@@ -54,12 +54,12 @@ export class LoggerClass {
         await this.storageLogger.start()
     }
 
-    stop () {
+    async stop () {
         if (!this.storageLogger) {
             return
         }
 
-        this.storageLogger.stop()
+        await this.storageLogger.stop()
     }
 
     public log (data: LoggerDataPartial) {

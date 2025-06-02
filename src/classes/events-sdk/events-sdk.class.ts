@@ -82,12 +82,12 @@ class EventsSdkClass {
         this.socketIoClass.initKeepAlive()
     }
 
-    public disconnect () {
+    public async disconnect () {
         this.socketIoClass.doReconnect = false
 
         this.socketIoClass.closeAllConnections()
 
-        this.loggerClass.stop()
+        await this.loggerClass.stop()
     }
 
     public clearKeepAliveInterval () {
