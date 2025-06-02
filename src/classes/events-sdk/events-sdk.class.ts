@@ -70,7 +70,8 @@ class EventsSdkClass {
         this.socketIoClass.doReconnect = true
 
         try {
-            this.loggerClass.start()
+            // TODO this is wrong, in chrome extension usage it is ok as on logout we call disconnect and then creating new instance so this method is called again, but that approach is wrong, events sdk should be able to be stopped and started again, and in that case not the 'init' should be called but 'start' of the logger itself, but in that case the logic should be handled better
+            this.loggerClass.init()
         } catch (e) {
             console.error(e)
         }
