@@ -35,7 +35,7 @@ class EventsSdkClass {
     private alreadyAttemptedOtherServers: Array<number | string> = []
 
     public authClass = new AuthClass(this)
-    public socketIoClass = new SocketIoClass(this)
+    public socketIoClass: SocketIoClass
     public loggerClass = new LoggerClass(this)
     public eventEmitterClass = new EventEmitterClass(this)
 
@@ -44,6 +44,8 @@ class EventsSdkClass {
             ...eventsSdkDefaultOptions,
             ...options
         }
+
+        this.socketIoClass = new SocketIoClass(this)
     }
 
     public on<T extends EventTypeNames> (event: T, callback: EventSpecificCallback<T>): void
