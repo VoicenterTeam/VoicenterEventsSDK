@@ -167,6 +167,7 @@ async function login () {
         refreshTokenUrl: 'https://loginapidev.voicenter.co.il/Auth/RefreshToken',
         getSettingsUrl: 'https://loginapidev.voicenter.co.il/Application/GetSettings',
         isNewStack: true,
+        reconnectionDelay: 1,
         token: '',
         email: '',
         password: ''

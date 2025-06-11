@@ -5,7 +5,8 @@ export const eventsSdkDefaultOptions: EventsSdkOptionsMain = {
     loginUrl: 'https://loginapi.voicenter.co.il/monitorAPI/Login',
     refreshTokenUrl: 'https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken',
     forceNew: true,
-    reconnectionDelay: 10000,
+    /** Initial reconnection delay in seconds will be used as a base, and on each unsuccessfully attempt delay is exponentially increased */
+    reconnectionDelay: 5,
     timeout: 10000,
     keepAliveTimeout: 60000,
     protocol: 'https',
