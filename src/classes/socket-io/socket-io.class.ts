@@ -22,60 +22,19 @@ import { ServerListenerEventsEnum } from '@/enum/socket.enum'
 import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default-options'
 
 /**
+ * Connection states to prevent multiple simultaneous connections
+ */
+enum ConnectionState {
+    DISCONNECTED = 'disconnected',
+    CONNECTING = 'connecting',
+    CONNECTED = 'connected'
+}
+
+/**
  * SocketIoClass handles WebSocket connections and real-time event management.
- * Manages connection lifecycle, reconnection logic, keep-alive mechanisms,
- * and event routing between the socket and the events SDK.
+ * Prevents duplicate connections and events with robust state management.
  */
 export class SocketIoClass {
-    /**
-     * Creates an instance of SocketIoClass and sets up network event listeners.
-     * Automatically handles offline/online network state changes for both
-     * browser and web worker environments.
-     *
-     * @param eventsSdkClass - The events SDK instance for managing connections and events
-     */
-    constructor (private readonly eventsSdkClass: EventsSdkClass) {
-        this.eventsSdkClass = eventsSdkClass
-
-        this.reconnectionTime = eventsSdkClass.options.reconnectionDelay
-
-        // Browser environment - listen for network state changes
-        if (typeof window !== 'undefined') {
-            window.addEventListener('offline', () => {
-                this.closeAllConnections()
-            })
-
-            window.addEventListener('online', () => {
-                // Wait half a second before attempting reconnection to ensure network stability
-                setTimeout(() => {
-                    if (this.keepReconnectTimeout) {
-                        clearTimeout(this.keepReconnectTimeout)
-                    }
-
-                    this.eventsSdkClass.connect(ServerParameter.NEXT)
-                }, 500)
-            })
-        }
-
-        // Web Worker environment - listen for network state changes
-        if (typeof self !== 'undefined' && typeof window === 'undefined' && typeof global === 'undefined') {
-            self.addEventListener('offline', () => {
-                this.closeAllConnections()
-            })
-
-            self.addEventListener('online', () => {
-                // Wait half a second before attempting reconnection to ensure network stability
-                setTimeout(() => {
-                    if (this.keepReconnectTimeout) {
-                        clearTimeout(this.keepReconnectTimeout)
-                    }
-
-                    this.eventsSdkClass.connect(ServerParameter.NEXT)
-                }, 500)
-            })
-        }
-    }
-
     /** The active Socket.IO connection instance */
     public io: SocketTyped | undefined
 
@@ -88,34 +47,83 @@ export class SocketIoClass {
     /** Flag indicating whether automatic reconnection should be attempted */
     public doReconnect = true
 
-    /** Interval handle for the keep-alive mechanism */
+    /** Current connection state */
+    private connectionState = ConnectionState.DISCONNECTED
+
+    /** Keep-alive interval handle */
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
 
-    /** Interval handle for reconnection attempts */
-    private keepReconnectInterval: ReturnType<typeof setInterval> | undefined
+    /** Reconnection timeout handle */
+    private reconnectTimeout: ReturnType<typeof setTimeout> | undefined
 
-    /** Timeout handle for delayed reconnection attempts */
-    private keepReconnectTimeout: ReturnType<typeof setTimeout> | undefined
+    /** Network reconnect timeout handle (debounced) */
+    private networkReconnectTimeout: ReturnType<typeof setTimeout> | undefined
 
-    /** Flag indicating current connection status */
-    private connected = false
-
-    /** Current reconnection delay in seconds, increases with failed attempts */
+    /** Current reconnection delay in seconds */
     private reconnectionTime = eventsSdkDefaultOptions.reconnectionDelay
 
-    /** Maximum reconnection delay in seconds, prevents indefinite delays */
-    private maxReconnectionDelay = 120
+    /** Maximum reconnection delay in seconds */
+    private readonly maxReconnectionDelay = 120
+
+    /** Network event cleanup functions */
+    private networkCleanup: Array<() => void> = []
+
+    /**
+     * Creates an instance of SocketIoClass and sets up network event listeners.
+     */
+    constructor (private readonly eventsSdkClass: EventsSdkClass) {
+        this.reconnectionTime = eventsSdkClass.options.reconnectionDelay
+        this.setupNetworkListeners()
+    }
+
+    /**
+     * Sets up network event listeners
+     */
+    private setupNetworkListeners (): void {
+        const handleOffline = () => this.closeAllConnections()
+        const handleOnline = () => this.handleNetworkOnline()
+
+        // Browser environment
+        if (typeof window !== 'undefined') {
+            window.addEventListener('offline', handleOffline)
+            window.addEventListener('online', handleOnline)
+            this.networkCleanup.push(
+                () => window.removeEventListener('offline', handleOffline),
+                () => window.removeEventListener('online', handleOnline)
+            )
+        }
+
+        // Web Worker environment
+        if (typeof self !== 'undefined' && typeof window === 'undefined' && typeof global === 'undefined') {
+            self.addEventListener('offline', handleOffline)
+            self.addEventListener('online', handleOnline)
+            this.networkCleanup.push(
+                () => self.removeEventListener('offline', handleOffline),
+                () => self.removeEventListener('online', handleOnline)
+            )
+        }
+    }
+
+    /**
+     * Handles network online with debouncing to prevent rapid reconnects
+     */
+    private handleNetworkOnline (): void {
+        if (this.networkReconnectTimeout) {
+            clearTimeout(this.networkReconnectTimeout)
+        }
+
+        this.networkReconnectTimeout = setTimeout(() => {
+            if (this.connectionState === ConnectionState.DISCONNECTED && this.doReconnect) {
+                this.eventsSdkClass.connect(ServerParameter.NEXT)
+            }
+        }, 500)
+    }
 
     /**
      * Determines and sets the appropriate Socket.IO function based on client version.
-     * Parses the version string and maps it to the corresponding socket implementation.
-     *
-     * @param Client - Version string containing the client version (e.g., "client-v1.2.3")
      */
-    public getSocketIoFunction (Client: string) {
-        // Extract version from client string (e.g., "client-v1.2.3" -> "v1_2_3")
+    public getSocketIoFunction (Client: string): void {
         const parsedArray = Client.split('v=')
-
         const version = 'v'
             .concat(parsedArray[parsedArray.length - 1])
             .replaceAll('.', '_')
@@ -124,36 +132,36 @@ export class SocketIoClass {
     }
 
     /**
-     * Initializes a new Socket.IO connection with authentication and configuration.
-     * Sets up connection options including transport method, timeout, and authentication token.
+     * Initializes a new Socket.IO connection. Prevents multiple simultaneous connections.
      */
-    public initSocketConnection () {
+    public initSocketConnection (): void {
+        if (this.connectionState !== ConnectionState.DISCONNECTED) {
+            return
+        }
+
+        this.connectionState = ConnectionState.CONNECTING
+
         const token = this.eventsSdkClass.authClass.token
         const protocol = this.eventsSdkClass.options.protocol
         const server = this.eventsSdkClass.server
 
         try {
-            // Determine connection URL based on server configuration
             const domain = server ? server.Domain : this.eventsSdkClass.URL
             const url = server ? `${protocol}://${domain}` : this.eventsSdkClass.URL
 
-            // Configure Socket.IO connection options
             const options: Partial<ManagerOptions & SocketOptions> = {
-                reconnection: false,        // Manual reconnection handling
-                upgrade: false,            // Prevent transport upgrades
-                transports: [ 'websocket' ], // Force WebSocket transport
-                forceNew: true,            // Always create new connection
-                query: {
-                    token                  // Include auth token in connection
-                },
+                reconnection: false,
+                upgrade: false,
+                transports: [ 'websocket' ],
+                forceNew: true,
+                query: { token },
                 timeout: this.eventsSdkClass.options.timeout
             }
 
             if (this.ioFunction && url) {
-                // Create new socket connection
                 this.io = this.ioFunction(url, options)
+                this.initSocketEvents()
 
-                // Emit connection attempt status
                 this.eventsSdkClass.eventEmitterClass.emit(
                     EventsEnum.ONLINE_STATUS_EVENT,
                     {
@@ -164,77 +172,95 @@ export class SocketIoClass {
 
                 this.eventsSdkClass.loggerClass.sdkAttemptToConnect(domain)
             } else {
-                throw new Error('Socket server url no defined')
+                throw new Error('Socket server url not defined')
             }
         } catch (error) {
+            this.connectionState = ConnectionState.DISCONNECTED
             this.eventsSdkClass.loggerClass.sdkAttemptToConnectError(error as Error)
         }
     }
 
     /**
-     * Clears the keep-alive interval to stop periodic ping messages.
-     * Used when disconnecting or cleaning up resources.
+     * Clears the keep-alive interval
      */
-    public clearKeepAliveInterval () {
+    public clearKeepAliveInterval (): void {
         if (this.keepAliveInterval) {
             clearInterval(this.keepAliveInterval)
+            this.keepAliveInterval = undefined
         }
     }
 
     /**
-     * Initializes the keep-alive mechanism to maintain connection health.
-     * Sends periodic ping messages when no events have been received
-     * within the configured timeout period.
+     * Initializes the keep-alive mechanism
      */
-    public initKeepAlive () {
-        // Clear any existing keep-alive interval
-        if (this.keepAliveInterval) {
-            clearInterval(this.keepAliveInterval)
-        }
+    public initKeepAlive (): void {
+        this.clearKeepAliveInterval()
 
         this.keepAliveInterval = setInterval(async () => {
             const now = new Date().getTime()
 
-            // Check if we haven't received events within the timeout period
-            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout && this.io && this.eventsSdkClass.authClass.token) {
-                // Send keep-alive ping to server
+            if (now > this.lastEventTimestamp + this.eventsSdkClass.options.keepAliveTimeout &&
+                this.io &&
+                this.connectionState === ConnectionState.CONNECTED &&
+                this.eventsSdkClass.authClass.token) {
+
                 this.eventsSdkClass.emit(ServerListenerEventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
-
                 this.eventsSdkClass.loggerClass.keepAliveEmit()
-
-                return
             }
-
         }, this.eventsSdkClass.options.keepAliveTimeout)
     }
 
     /**
-     * Closes all active connections and cleans up resources.
-     * Terminates socket connection, stops logging, and clears session storage.
+     * Closes all active connections and cleans up resources properly
      */
-    public closeAllConnections () {
-        if (this.io) {
-            // Gracefully close socket connection
-            this.io.close()
-            this.io?.disconnect()
-            this.io = undefined
+    public async closeAllConnections (): Promise<void> {
+        // Clear all timers first
+        this.clearKeepAliveInterval()
+
+        if (this.reconnectTimeout) {
+            clearTimeout(this.reconnectTimeout)
+            this.reconnectTimeout = undefined
         }
 
-        // Stop logging and clear session data
+        if (this.networkReconnectTimeout) {
+            clearTimeout(this.networkReconnectTimeout)
+            this.networkReconnectTimeout = undefined
+        }
+
+        if (this.io) {
+            const socket = this.io
+            this.io = undefined // Prevent new operations
+
+            // Proper async cleanup
+            try {
+                await Promise.race([
+                    new Promise<void>((resolve) => {
+                        socket.on('disconnect', () => resolve())
+                        socket.removeAllListeners() // Remove all listeners before closing
+                        socket.close()
+                        socket.disconnect()
+                    }),
+                    new Promise<void>((resolve) => setTimeout(resolve, 1000))
+                ])
+            } catch (error) {
+                // Silent cleanup errors
+            }
+        }
+
+        this.connectionState = ConnectionState.DISCONNECTED
         this.eventsSdkClass.loggerClass.stop()
         StorageClass.clearSessionStorage()
     }
 
     /**
-     * Sets up event listeners for all Socket.IO events.
-     * Maps socket events to corresponding handler methods for processing.
+     * Sets up event listeners for all Socket.IO events
      */
-    public initSocketEvents () {
-        if (!this.io) {
-            return
-        }
+    public initSocketEvents (): void {
+        if (!this.io) return
 
-        // Register all event handlers with the socket
+        // Remove any existing listeners first to prevent duplicates
+        this.io.removeAllListeners()
+
         this.io
             .on(EventsEnum.LOGIN_SUCCESS, (data) => this.onLoginSuccessEvent(data, EventsEnum.LOGIN_SUCCESS))
             .on(EventsEnum.QUEUE_EVENT, (data) => this.onQueueEvent(data, EventsEnum.QUEUE_EVENT))
@@ -251,39 +277,27 @@ export class SocketIoClass {
     }
 
     /**
-     * Handles successful login events from the server.
-     * Logs the event and forwards it to the event emitter.
-     *
-     * @param data - Login success event data
-     * @param eventName - The event name for logging purposes
+     * Updates timestamp on every event to prevent unnecessary keep-alives
      */
-    private onLoginSuccessEvent (data: LoginSuccessEvent, eventName: EventsEnum.LOGIN_SUCCESS) {
+    private updateEventTimestamp (): void {
+        this.lastEventTimestamp = new Date().getTime()
+    }
+
+    // Event handlers - all update timestamp first
+    private onLoginSuccessEvent (data: LoginSuccessEvent, eventName: EventsEnum.LOGIN_SUCCESS): void {
+        this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
         this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
     }
 
-    /**
-     * Handles queue events from the server.
-     * Maps the event data and forwards it to the event emitter.
-     *
-     * @param data - Queue event data
-     * @param eventName - The event name for logging purposes
-     */
-    private onQueueEvent (data: QueueEvent, eventName: EventsEnum.QUEUE_EVENT) {
+    private onQueueEvent (data: QueueEvent, eventName: EventsEnum.QUEUE_EVENT): void {
+        this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
-        // Transform queue event data before emitting
         this.eventsSdkClass.eventEmitterClass.emit(eventName, EventsHandler.mapQueueEvent(data))
     }
 
-    /**
-     * Handles extension events from the server.
-     * Maps and validates event data before forwarding to the event emitter.
-     *
-     * @param data - Extension event data
-     * @param eventName - The event name for logging purposes
-     */
-    private onExtensionEvent (data: ExtensionEvent, eventName: EventsEnum.EXTENSION_EVENT) {
-        // Transform and validate extension event data
+    private onExtensionEvent (data: ExtensionEvent, eventName: EventsEnum.EXTENSION_EVENT): void {
+        this.updateEventTimestamp()
         const dataExtended = EventsHandler.mapExtensionEvent(data)
 
         if (dataExtended) {
@@ -292,194 +306,149 @@ export class SocketIoClass {
         }
     }
 
-    /**
-     * Handles dialer events from the server.
-     * Logs the event and forwards it to the event emitter.
-     *
-     * @param data - Dialer event data
-     * @param eventName - The event name for logging purposes
-     */
-    private onDialerEvent (data: DialerEvent, eventName: EventsEnum.DIALER_EVENT) {
+    private onDialerEvent (data: DialerEvent, eventName: EventsEnum.DIALER_EVENT): void {
+        this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
         this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
     }
 
-    /**
-     * Handles login status events from the server.
-     * Maps the event data and forwards it to the event emitter.
-     *
-     * @param data - Login status event data
-     * @param eventName - The event name for logging purposes
-     */
-    private onLoginStatusEvent (data: LoginStatusEvent, eventName: EventsEnum.LOGIN_STATUS) {
+    private onLoginStatusEvent (data: LoginStatusEvent, eventName: EventsEnum.LOGIN_STATUS): void {
+        this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
-        // Transform login status data before emitting
         this.eventsSdkClass.eventEmitterClass.emit(eventName, EventsHandler.mapLoginStatusEvent(data))
     }
 
-    /**
-     * Handles all extension status events from the server.
-     * Maps the event data and forwards it to the event emitter.
-     *
-     * @param data - All extension status event data
-     * @param eventName - The event name for logging purposes
-     */
-    private onAllExtensionStatus (data: AllExtensionStatusEvent, eventName: EventsEnum.ALL_EXTENSION_STATUS) {
-        // Transform extension status data
+    private onAllExtensionStatus (data: AllExtensionStatusEvent, eventName: EventsEnum.ALL_EXTENSION_STATUS): void {
+        this.updateEventTimestamp()
         const dataExtended = EventsHandler.mapAllExtensionStatus(data)
-
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
         this.eventsSdkClass.eventEmitterClass.emit(eventName, dataExtended)
     }
 
-    /**
-     * Handles all dialer status events from the server.
-     * Logs the event and forwards it to the event emitter.
-     *
-     * @param data - All dialer status event data
-     * @param eventName - The event name for logging purposes
-     */
-    private onAllDialerStatus (data: AllDialersStatusEvent, eventName: EventsEnum.ALL_DIALER_STATUS) {
+    private onAllDialerStatus (data: AllDialersStatusEvent, eventName: EventsEnum.ALL_DIALER_STATUS): void {
+        this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
         this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
     }
 
     /**
-     * Handles keep-alive response events from the server.
-     * Manages connection health and triggers reconnection if needed.
-     *
-     * @param data - Keep-alive response event data
+     * Handles keep-alive response - fixed to prevent multiple connections
      */
-    private onKeepAliveResponse (data: KeepAliveResponseEvent) {
+    private onKeepAliveResponse (data: KeepAliveResponseEvent): void {
+        this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.keepAliveResponse(data)
 
-        // If server responds with error, attempt reconnection
         if (data.errorCode) {
-            this.initSocketConnection()
+            // Close and schedule reconnect instead of immediate reconnect
+            this.closeAllConnections().then(() => {
+                if (this.doReconnect && this.connectionState === ConnectionState.DISCONNECTED) {
+                    this.scheduleReconnect()
+                }
+            })
             return
         }
 
-        if (this.connected) {
-            // Update last event timestamp to reset keep-alive timer
-            this.lastEventTimestamp = new Date().getTime()
-        } else {
-            // Not connected but received response, try to reconnect
-            this.initSocketConnection()
-        }
+        // Keep-alive successful - just update timestamp, don't create new connections
+        // The connection is already established if we're receiving keep-alive responses
     }
 
-    /**
-     * Handles extension update events from the server.
-     * Logs the event and forwards it to the event emitter.
-     *
-     * @param data - Extensions updated event data
-     * @param eventName - The event name for logging purposes
-     */
-    private onExtensionsUpdatedEvent (data: ExtensionsUpdated, eventName: EventsEnum.EXTENSIONS_UPDATED) {
+    private onExtensionsUpdatedEvent (data: ExtensionsUpdated, eventName: EventsEnum.EXTENSIONS_UPDATED): void {
+        this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
         this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
     }
 
     /**
-     * Handles successful socket connection events.
-     * Updates connection state, clears reconnection timers, and starts logging.
+     * Handles successful connection
      */
-    private onConnect () {
-        this.connected = true
-        // Reset on success!
-        this.reconnectionTime = this.eventsSdkClass.options.reconnectionDelay
+    private onConnect (): void {
+        this.connectionState = ConnectionState.CONNECTED
+        this.reconnectionTime = this.eventsSdkClass.options.reconnectionDelay // Reset delay
 
-        // Clear any pending reconnection attempts
-        if (this.keepReconnectInterval) {
-            clearInterval(this.keepReconnectInterval)
+        // Clear reconnection timeout
+        if (this.reconnectTimeout) {
+            clearTimeout(this.reconnectTimeout)
+            this.reconnectTimeout = undefined
         }
 
-        // Emit connected status to listeners
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
             connectionStatus: ConnectionStatusEnum.CONNECTED
         })
 
-        // Start logging service and log successful connection
         this.eventsSdkClass.loggerClass.start().then(() => {
             this.eventsSdkClass.loggerClass.sdkConnectionSuccess()
         })
     }
 
     /**
-     * Handles socket disconnection events.
-     * Manages reconnection logic with exponential backoff strategy.
-     *
-     * @param reason - The reason for disconnection
+     * Schedules reconnection with exponential backoff
      */
-    private onDisconnect (reason: Socket.DisconnectReason) {
-        this.connected = false
-
-        // Exit early if reconnection is disabled
-        if (!this.doReconnect) {
-            return
+    private scheduleReconnect (): void {
+        if (!this.doReconnect || this.reconnectTimeout) {
+            return // Already scheduled or disabled
         }
 
-        // Clean up current connection
-        this.closeAllConnections()
-
-        // Emit connection status based on reconnection flag
         this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
-            connectionStatus: this.doReconnect ? ConnectionStatusEnum.TRYING_TO_CONNECT : ConnectionStatusEnum.DISCONNECTED
+            connectionStatus: ConnectionStatusEnum.TRYING_TO_CONNECT
         })
 
-        this.eventsSdkClass.loggerClass.sdkDisconnect([ reason ])
+        this.reconnectTimeout = setTimeout(() => {
+            this.reconnectTimeout = undefined
 
-        // Schedule reconnection with exponential backoff
-        this.keepReconnectTimeout = setTimeout(
-            () => {
-                // Increase reconnection delay (exponential backoff)
-                this.reconnectionTime = Math.min(
-                    this.reconnectionTime * 2,
-                    this.maxReconnectionDelay
-                )
+            // Exponential backoff
+            this.reconnectionTime = Math.min(
+                this.reconnectionTime * 2,
+                this.maxReconnectionDelay
+            )
 
-                // Reset delay if it exceeds maximum threshold
-                if (this.reconnectionTime > this.maxReconnectionDelay) {
-                    this.reconnectionTime = this.eventsSdkClass.options.reconnectionDelay
-                }
+            if (this.reconnectionTime > this.maxReconnectionDelay) {
+                this.reconnectionTime = this.eventsSdkClass.options.reconnectionDelay
+            }
 
-                this.eventsSdkClass.connect(ServerParameter.NEXT)
-            },
-            this.reconnectionTime * 1000
-        )
+            this.eventsSdkClass.connect(ServerParameter.NEXT)
+        }, this.reconnectionTime * 1000)
     }
 
     /**
-     * Handles socket connection error events.
-     * Manages reconnection attempts with exponential backoff strategy.
-     *
-     * @param data - Error information from the connection attempt
+     * Handles disconnection
      */
-    private onConnectError (data: Error) {
-        // Emit connection status based on reconnection flag
-        this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
-            connectionStatus: this.doReconnect ? ConnectionStatusEnum.TRYING_TO_CONNECT : ConnectionStatusEnum.DISCONNECTED
-        })
+    private onDisconnect (reason: Socket.DisconnectReason): void {
+        this.connectionState = ConnectionState.DISCONNECTED
+        this.eventsSdkClass.loggerClass.sdkDisconnect([ reason ])
 
+        if (!this.doReconnect) {
+            this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
+                connectionStatus: ConnectionStatusEnum.DISCONNECTED
+            })
+            return
+        }
+
+        this.closeAllConnections()
+        this.scheduleReconnect()
+    }
+
+    /**
+     * Handles connection errors
+     */
+    private onConnectError (data: Error): void {
+        this.connectionState = ConnectionState.DISCONNECTED
         this.eventsSdkClass.loggerClass.sdkAttemptToConnectError(data)
 
-        // Schedule reconnection with exponential backoff
-        this.keepReconnectTimeout = setTimeout(
-            () => {
-                // Increase reconnection delay (exponential backoff)
-                this.reconnectionTime = Math.min(
-                    this.reconnectionTime * 2,
-                    this.maxReconnectionDelay
-                )
+        if (this.doReconnect) {
+            this.scheduleReconnect()
+        } else {
+            this.eventsSdkClass.eventEmitterClass.emit(EventsEnum.ONLINE_STATUS_EVENT, {
+                connectionStatus: ConnectionStatusEnum.DISCONNECTED
+            })
+        }
+    }
 
-                // Reset delay if it exceeds maximum threshold (lower than disconnect)
-                if (this.reconnectionTime > this.maxReconnectionDelay) {
-                    this.reconnectionTime = this.eventsSdkClass.options.reconnectionDelay
-                }
-
-                this.eventsSdkClass.connect(ServerParameter.NEXT)
-            },
-            this.reconnectionTime * 1000
-        )
+    /**
+     * Cleanup when shutting down
+     */
+    public async destroy (): Promise<void> {
+        this.doReconnect = false
+        this.networkCleanup.forEach(cleanup => cleanup())
+        await this.closeAllConnections()
     }
 }
