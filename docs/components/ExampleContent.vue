@@ -37,6 +37,72 @@
             Loading...
         </p>
         <template v-else>
+            <!-- Test Controls Section -->
+            <div class="p-5 border-b border-gray-200 dark:border-gray-700" v-if="loggedId">
+                <h3 class="text-lg font-semibold mb-4">Duplicate Event Testing</h3>
+                
+                <!-- Event Statistics -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- Status Events (Expected Multiple) -->
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                        <h4 class="text-sm font-semibold mb-2 text-blue-800 dark:text-blue-200">Status Events (Expected Multiple)</h4>
+                        <div class="space-y-2">
+                            <div v-for="eventType in STATUS_EVENTS" :key="eventType" 
+                                 v-if="eventStats[eventType]"
+                                 class="flex justify-between text-xs">
+                                <span class="text-gray-600 dark:text-gray-400">{{ eventType.replace('_', ' ') }}</span>
+                                <div class="flex gap-2">
+                                    <span class="text-blue-600">{{ eventStats[eventType].total }}</span>
+                                    <span v-if="eventStats[eventType].duplicates > 0" 
+                                          class="text-red-500 font-bold">⚠️{{ eventStats[eventType].duplicates }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transactional Events (Duplicates Are Bad) -->
+                    <div class="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
+                        <h4 class="text-sm font-semibold mb-2 text-orange-800 dark:text-orange-200">Transactional Events (Duplicates Bad)</h4>
+                        <div class="space-y-2">
+                            <div v-for="eventType in TRANSACTIONAL_EVENTS" :key="eventType" 
+                                 v-if="eventStats[eventType]"
+                                 class="flex justify-between text-xs">
+                                <span class="text-gray-600 dark:text-gray-400">{{ eventType.replace('_', ' ') }}</span>
+                                <div class="flex gap-2">
+                                    <span :class="eventStats[eventType].duplicates > 0 ? 'text-red-500 font-bold' : 'text-green-600'">{{ eventStats[eventType].total }}</span>
+                                    <span v-if="eventStats[eventType].duplicates > 0" 
+                                          class="text-red-500 font-bold">🚨{{ eventStats[eventType].duplicates }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connection Status -->
+                <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <div class="text-sm font-medium mb-2">Connection Status: {{ isOnline }}</div>
+                    <div class="text-xs text-gray-600 dark:text-gray-400">
+                        Last Event: {{ lastEventTime || 'None' }}
+                    </div>
+                </div>
+
+                <!-- Test Controls -->
+                <div class="flex flex-wrap gap-2">
+                    <UButton @click="manualDisconnect" color="red" variant="outline" size="sm">
+                        Force Disconnect
+                    </UButton>
+                    <UButton @click="manualReconnect" color="blue" variant="outline" size="sm">
+                        Manual Reconnect
+                    </UButton>
+                    <UButton @click="clearEventLogs" color="gray" variant="outline" size="sm">
+                        Clear Logs
+                    </UButton>
+                    <UButton @click="resetCounters" color="orange" variant="outline" size="sm">
+                        Reset Counters
+                    </UButton>
+                </div>
+            </div>
+
             <div class="p-5">
                 <json-viewer
                     :value="events"
@@ -150,7 +216,26 @@ const showSuccessNotification = ref(false)
 const isOnline = ref('disconnected')
 const loading = ref(false)
 const loggedId = ref(false)
-const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K>> }>({})
+const events = reactive<{ [K in EventsEnum]?: Array<EventTypeData<K> & { timestamp: string, isDuplicate?: boolean }> }>({})
+const eventStats = reactive<{ [K in EventsEnum]?: { total: number, duplicates: number, lastReceived: number } }>({})
+const recentEvents = reactive<{ [key: string]: { timestamp: number, content: string } }>({})
+const lastEventTime = ref<string>('')
+
+// Event categorization
+const STATUS_EVENTS = [
+    EventsEnum.ALL_EXTENSION_STATUS,
+    EventsEnum.ALL_DIALER_STATUS,
+    EventsEnum.ALL_USERS_STATUS,
+    EventsEnum.LOGIN_STATUS,
+    EventsEnum.ONLINE_STATUS_EVENT
+] as const
+
+const TRANSACTIONAL_EVENTS = [
+    EventsEnum.EXTENSION_EVENT,
+    EventsEnum.QUEUE_EVENT,
+    EventsEnum.LOGIN_SUCCESS,
+    EventsEnum.EXTENSIONS_UPDATED
+] as const
 let eventsdk: EventsSdkClass | undefined
 
 const formModel = ref<FormModel>({
@@ -159,6 +244,94 @@ const formModel = ref<FormModel>({
     email: '',
     password: ''
 })
+
+/* Helper Functions */
+function detectDuplicate(eventType: EventsEnum, data: any): boolean {
+    const now = Date.now()
+    const contentHash = JSON.stringify(data)
+    const eventKey = `${eventType}-${contentHash}`
+    
+    // Check if we received identical event within last 2 seconds
+    if (recentEvents[eventKey] && (now - recentEvents[eventKey].timestamp) < 2000) {
+        return true
+    }
+    
+    // Store this event
+    recentEvents[eventKey] = { timestamp: now, content: contentHash }
+    
+    // Clean up old entries (older than 5 seconds)
+    Object.keys(recentEvents).forEach(key => {
+        if (now - recentEvents[key].timestamp > 5000) {
+            delete recentEvents[key]
+        }
+    })
+    
+    return false
+}
+
+function updateEventStats(eventType: EventsEnum, isDuplicate: boolean) {
+    if (!eventStats[eventType]) {
+        eventStats[eventType] = { total: 0, duplicates: 0, lastReceived: 0 }
+    }
+    
+    eventStats[eventType].total++
+    eventStats[eventType].lastReceived = Date.now()
+    
+    if (isDuplicate) {
+        eventStats[eventType].duplicates++
+    }
+    
+    lastEventTime.value = new Date().toLocaleTimeString()
+}
+
+function addEventWithTimestamp<K extends EventsEnum>(eventType: K, data: EventTypeData<K>) {
+    const timestamp = new Date().toISOString()
+    const isDuplicate = detectDuplicate(eventType, data)
+    
+    if (!events[eventType]) {
+        events[eventType] = []
+    }
+    
+    events[eventType] = [
+        ...events[eventType],
+        { ...data, timestamp, isDuplicate } as EventTypeData<K> & { timestamp: string, isDuplicate?: boolean }
+    ]
+    
+    updateEventStats(eventType, isDuplicate)
+    
+    // Log duplicates to console
+    if (isDuplicate) {
+        console.warn(`🚨 DUPLICATE EVENT DETECTED: ${eventType}`, data)
+    }
+}
+
+/* Test Functions */
+async function manualDisconnect() {
+    if (eventsdk) {
+        await eventsdk.disconnect()
+        console.log('🔌 Manual disconnect completed')
+    }
+}
+
+function manualReconnect() {
+    if (eventsdk) {
+        eventsdk.socketIoClass.doReconnect = true
+        eventsdk.connect(0) // ServerParameter.MAIN
+        console.log('🔄 Manual reconnect triggered')
+    }
+}
+
+function clearEventLogs() {
+    Object.keys(events).forEach((key) => delete events[key as keyof typeof events])
+    console.log('🧹 Event logs cleared')
+}
+
+function resetCounters() {
+    Object.keys(eventStats).forEach((key) => delete eventStats[key as keyof typeof eventStats])
+    Object.keys(recentEvents).forEach((key) => delete recentEvents[key])
+    lastEventTime.value = ''
+    console.log('🔄 Event counters reset')
+}
 
 /* Methods */
 async function login () {
@@ -184,7 +357,8 @@ async function login () {
         return alert('Please fill in the required fields')
     }
 
-    Object.keys(events).forEach((key) => delete events[key as keyof typeof events])
+    clearEventLogs()
+    resetCounters()
 
     loading.value = true
 
@@ -200,105 +374,58 @@ async function login () {
     sdk.on(
         EventsEnum.ALL_DIALER_STATUS,
         ({ data }) => {
-            if (!events[EventsEnum.ALL_DIALER_STATUS]) {
-                events[EventsEnum.ALL_DIALER_STATUS] = []
-            }
-
-            events[EventsEnum.ALL_DIALER_STATUS] = [
-                ...events[EventsEnum.ALL_DIALER_STATUS],
-                data
-            ]
+            addEventWithTimestamp(EventsEnum.ALL_DIALER_STATUS, { data })
         }
     )
 
     sdk.on(
         EventsEnum.ALL_EXTENSION_STATUS,
         ({ data }) => {
-
-            if (!events[EventsEnum.ALL_EXTENSION_STATUS]) {
-                events[EventsEnum.ALL_EXTENSION_STATUS] = []
-            }
-
-            events[EventsEnum.ALL_EXTENSION_STATUS] = [
-                ...events[EventsEnum.ALL_EXTENSION_STATUS],
-                data
-            ]
+            addEventWithTimestamp(EventsEnum.ALL_EXTENSION_STATUS, { data })
         }
     )
 
     sdk.on(
         EventsEnum.ALL_USERS_STATUS,
         ({ data }) => {
-
-            if (!events[EventsEnum.ALL_USERS_STATUS]) {
-                events[EventsEnum.ALL_USERS_STATUS] = []
-            }
-
-            events[EventsEnum.ALL_USERS_STATUS] = [
-                ...events[EventsEnum.ALL_USERS_STATUS],
-                data
-            ]
+            addEventWithTimestamp(EventsEnum.ALL_USERS_STATUS, { data })
         }
     )
 
     sdk.on(
         EventsEnum.QUEUE_EVENT,
         ({ data }) => {
-
-            if (!events[EventsEnum.QUEUE_EVENT]) {
-                events[EventsEnum.QUEUE_EVENT] = []
-            }
-
-            events[EventsEnum.QUEUE_EVENT] = [
-                ...events[EventsEnum.QUEUE_EVENT],
-                data
-            ]
+            addEventWithTimestamp(EventsEnum.QUEUE_EVENT, { data })
         }
     )
 
     sdk.on(
         EventsEnum.EXTENSION_EVENT,
         ({ data }) => {
-
-            if (!events[EventsEnum.EXTENSION_EVENT]) {
-                events[EventsEnum.EXTENSION_EVENT] = []
-            }
-
-            events[EventsEnum.EXTENSION_EVENT] = [
-                ...events[EventsEnum.EXTENSION_EVENT],
-                data
-            ]
+            addEventWithTimestamp(EventsEnum.EXTENSION_EVENT, { data })
         }
     )
 
     sdk.on(
         EventsEnum.LOGIN_SUCCESS,
         ({ data }) => {
-            if (!events[EventsEnum.LOGIN_SUCCESS]) {
-                events[EventsEnum.LOGIN_SUCCESS] = []
-            }
-
             loggedId.value = true
             loading.value = false
-
-            events[EventsEnum.LOGIN_SUCCESS] = [
-                ...events[EventsEnum.LOGIN_SUCCESS],
-                data
-            ]
+            addEventWithTimestamp(EventsEnum.LOGIN_SUCCESS, { data })
         }
     )
 
     sdk.on(
         EventsEnum.LOGIN_STATUS,
         ({ data }) => {
-            if (!events[EventsEnum.LOGIN_STATUS]) {
-                events[EventsEnum.LOGIN_STATUS] = []
-            }
+            addEventWithTimestamp(EventsEnum.LOGIN_STATUS, { data })
+        }
+    )
 
-            events[EventsEnum.LOGIN_STATUS] = [
-                ...events[EventsEnum.LOGIN_STATUS],
-                data
-            ]
+    sdk.on(
+        EventsEnum.EXTENSIONS_UPDATED,
+        ({ data }) => {
+            addEventWithTimestamp(EventsEnum.EXTENSIONS_UPDATED, { data })
         }
     )
 
@@ -307,6 +434,7 @@ async function login () {
         ({ data }) => {
             console.log('============>', data.connectionStatus)
             isOnline.value = data.connectionStatus
+            addEventWithTimestamp(EventsEnum.ONLINE_STATUS_EVENT, { data })
 
             if (data?.isSocketConnected) {
                 showSuccessNotification.value = true

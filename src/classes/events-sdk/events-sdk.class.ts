@@ -80,15 +80,13 @@ class EventsSdkClass {
 
         this.socketIoClass.initSocketConnection()
 
-        this.socketIoClass.initSocketEvents()
-
         this.socketIoClass.initKeepAlive()
     }
 
     public async disconnect () {
         this.socketIoClass.doReconnect = false
 
-        this.socketIoClass.closeAllConnections()
+        await this.socketIoClass.closeAllConnections()
 
         await this.loggerClass.stop()
     }
