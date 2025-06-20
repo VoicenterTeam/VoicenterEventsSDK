@@ -220,7 +220,10 @@ export class LoggerClass {
             ) {
                 this.log({
                     Message: `Event name: ${eventName}`,
-                    Body: data,
+                    Body: {
+                        ...this.getStaticData(),
+                        ...data
+                    },
                     ActionName: ActionNameEnum.WSCONNECT,
                     isShowClient: false,
                     Status: 'Successful',
@@ -228,6 +231,12 @@ export class LoggerClass {
                     LogType: LogTypeEnum.INFO
                 })
             }
+        }
+    }
+
+    private getStaticData () {
+        return  {
+            SocketId: this.eventsSdkClass.socketIoClass && this.eventsSdkClass.socketIoClass.io ? this.eventsSdkClass.socketIoClass.io.id : ''
         }
     }
 }
