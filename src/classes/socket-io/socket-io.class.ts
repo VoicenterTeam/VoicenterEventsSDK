@@ -83,18 +83,18 @@ export class SocketIoClass {
         const handleOffline = () => this.closeAllConnections()
         const handleOnline = () => this.handleNetworkOnline()
 
-        // Browser environment
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && 'addEventListener' in window && typeof window.addEventListener === 'function') {
+            // Browser environment
+
             window.addEventListener('offline', handleOffline)
             window.addEventListener('online', handleOnline)
             this.networkCleanup.push(
                 () => window.removeEventListener('offline', handleOffline),
                 () => window.removeEventListener('online', handleOnline)
             )
-        }
+        } else if (typeof self !== 'undefined' && 'addEventListener' in self && typeof self.addEventListener === 'function') {
+            // Web Worker environment
 
-        // Web Worker environment
-        if (typeof self !== 'undefined' && typeof window === 'undefined' && typeof global === 'undefined') {
             self.addEventListener('offline', handleOffline)
             self.addEventListener('online', handleOnline)
             this.networkCleanup.push(
@@ -102,6 +102,11 @@ export class SocketIoClass {
                 () => self.removeEventListener('online', handleOnline)
             )
         }
+        // React Native or other environments - graceful fallback
+        // Network monitoring not available, SDK will still function but with slower reconnection
+        // When network goes down: disconnect → scheduleReconnect works normally
+        // When network comes back up: no immediate detection, must wait for next scheduled retry (up to 120s delay)
+        // For better UX in React Native, consider implementing @react-native-community/netinfo
     }
 
     /**
