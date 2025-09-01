@@ -6,13 +6,20 @@ export interface UpdateMonitoredExtensionsPayload {
     extensionsString: string
 }
 
+export interface SubscriptionVoicebotCallUpdatesPayload {
+    voicebotID: number,
+    IvrUniqueID: string
+}
+
 /**
  * Mapping of event names to their respective data structures.
  * The data structures that we can send to the server
  */
 export interface ServerEmitEventDataMap {
     [ServerListenerEventsEnum.UPDATE_MONITORED_EXTENSIONS]: UpdateMonitoredExtensionsPayload
-    [ServerListenerEventsEnum.KEEP_ALIVE]: string
+    [ServerListenerEventsEnum.KEEP_ALIVE]: string,
+    [ServerListenerEventsEnum.SUBSCRIBE_VOICEBOT_CALL_UPDATES]: SubscriptionVoicebotCallUpdatesPayload,
+    [ServerListenerEventsEnum.UNSUBSCRIBE_VOICEBOT_CALL_UPDATES]: SubscriptionVoicebotCallUpdatesPayload
 }
 
 /**
