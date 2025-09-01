@@ -1,5 +1,11 @@
 import {
-    EventsEnum
+    AllVoicebotsStatus,
+    EventsEnum,
+    InitialVoicebotCallHistory,
+    SubscribedToVoicebotCall,
+    SubscribeToVoicebotCallFailed,
+    UnsubscribedFromVoicebotCall,
+    VoicebotEvent
 } from '@voicenter-team/real-time-events-types'
 import type {
     ExtensionEvent,
@@ -28,6 +34,7 @@ export interface EventDataMap {
     [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusEvent
     [EventsEnum.ALL_DIALER_STATUS]: AllDialersStatusEvent
     [EventsEnum.ALL_USERS_STATUS]: AllUsersStatusEvent
+    [EventsEnum.ALL_VOICEBOTS_STATUS]: AllVoicebotsStatus
     [EventsEnum.QUEUE_EVENT]: QueueEvent
     [EventsEnum.EXTENSION_EVENT]: ExtensionEvent
     [EventsEnum.DIALER_EVENT]: DialerEvent
@@ -36,6 +43,11 @@ export interface EventDataMap {
     [EventsEnum.KEEP_ALIVE_RESPONSE]: KeepAliveResponseEvent
     [EventsEnum.ONLINE_STATUS_EVENT]: OnlineStatusEvent
     [EventsEnum.EXTENSIONS_UPDATED]: ExtensionsUpdated
+    [EventsEnum.VOICEBOT_SUBSCRIBED_TO_CALL]: SubscribedToVoicebotCall
+    [EventsEnum.VOICEBOT_SUBSCRIBE_TO_CALL_FAILED]: SubscribeToVoicebotCallFailed
+    [EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY]: InitialVoicebotCallHistory
+    [EventsEnum.VOICEBOT_UNSUBSCRIBED_FROM_CALL]: UnsubscribedFromVoicebotCall
+    [EventsEnum.VOICEBOT_EVENT]: VoicebotEvent
 }
 
 /**

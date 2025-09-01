@@ -14,6 +14,7 @@ export class EventEmitterClass {
         [EventsEnum.ALL_EXTENSION_STATUS]: [],
         [EventsEnum.ALL_DIALER_STATUS]: [],
         [EventsEnum.ALL_USERS_STATUS]: [],
+        [EventsEnum.ALL_VOICEBOTS_STATUS]: [],
         [EventsEnum.QUEUE_EVENT]: [],
         [EventsEnum.EXTENSION_EVENT]: [],
         [EventsEnum.DIALER_EVENT]: [],
@@ -21,7 +22,12 @@ export class EventEmitterClass {
         [EventsEnum.LOGIN_STATUS]: [],
         [EventsEnum.KEEP_ALIVE_RESPONSE]: [],
         [EventsEnum.ONLINE_STATUS_EVENT]: [],
-        [EventsEnum.EXTENSIONS_UPDATED]: []
+        [EventsEnum.EXTENSIONS_UPDATED]: [],
+        [EventsEnum.VOICEBOT_SUBSCRIBED_TO_CALL]: [],
+        [EventsEnum.VOICEBOT_SUBSCRIBE_TO_CALL_FAILED]: [],
+        [EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY]: [],
+        [EventsEnum.VOICEBOT_UNSUBSCRIBED_FROM_CALL]: [],
+        [EventsEnum.VOICEBOT_EVENT]: [],
     }
     private allListeners: Array<(data: GenericEventWrapper) => void> = []
 
