@@ -5,16 +5,16 @@ import { SocketTyped } from '@/types/socket'
 import { ServerParameter } from '@/enum/events-sdk.enum'
 import {
     AllDialersStatusEvent,
-    AllExtensionStatusEvent,
+    AllExtensionStatusEvent, AllVoicebotsStatus,
     ConnectionStatusEnum,
     DialerEvent,
     EventsEnum,
     ExtensionEvent,
-    ExtensionsUpdated,
+    ExtensionsUpdated, InitialVoicebotCallHistory,
     KeepAliveResponseEvent,
     LoginStatusEvent,
     LoginSuccessEvent,
-    QueueEvent
+    QueueEvent, SubscribedToVoicebotCall, SubscribeToVoicebotCallFailed, UnsubscribedFromVoicebotCall, VoicebotEvent
 } from '@voicenter-team/real-time-events-types'
 import { StorageClass } from '@/classes/storage/storage.class'
 import EventsHandler from '@/classes/socket-io/events-handler'
@@ -279,6 +279,12 @@ export class SocketIoClass {
             .on(EventsEnum.CONNECT, () => this.onConnect())
             .on(EventsEnum.DISCONNECT, (data) => this.onDisconnect(data))
             .on(EventsEnum.CONNECT_ERROR_EVENT, (data) => this.onConnectError(data))
+            .on(EventsEnum.ALL_VOICEBOTS_STATUS, (data) => this.onAllVoicebotsStatus(data, EventsEnum.ALL_VOICEBOTS_STATUS))
+            .on(EventsEnum.VOICEBOT_EVENT, (data) => this.onVoicebotEvent(data, EventsEnum.VOICEBOT_EVENT))
+            .on(EventsEnum.VOICEBOT_SUBSCRIBED_TO_CALL, (data) => this.onVoicebotSubscribedToCall(data, EventsEnum.VOICEBOT_SUBSCRIBED_TO_CALL))
+            .on(EventsEnum.VOICEBOT_SUBSCRIBE_TO_CALL_FAILED, (data) => this.onVoicebotSubscribeToCallFailed(data, EventsEnum.VOICEBOT_SUBSCRIBE_TO_CALL_FAILED))
+            .on(EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY, (data) => this.onVoicebotInitialCallHistory(data, EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY))
+            .on(EventsEnum.VOICEBOT_UNSUBSCRIBED_FROM_CALL, (data) => this.onVoicebotUnsubscribedFromCall(data, EventsEnum.VOICEBOT_UNSUBSCRIBED_FROM_CALL))
     }
 
     /**
@@ -312,6 +318,42 @@ export class SocketIoClass {
     }
 
     private onDialerEvent (data: DialerEvent, eventName: EventsEnum.DIALER_EVENT): void {
+        this.updateEventTimestamp()
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+    }
+
+    private onVoicebotEvent (data: VoicebotEvent, eventName: EventsEnum.VOICEBOT_EVENT): void {
+        this.updateEventTimestamp()
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+    }
+
+    private onAllVoicebotsStatus (data: AllVoicebotsStatus, eventName: EventsEnum.ALL_VOICEBOTS_STATUS): void {
+        this.updateEventTimestamp()
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+    }
+
+    private onVoicebotSubscribedToCall (data: SubscribedToVoicebotCall, eventName: EventsEnum.VOICEBOT_SUBSCRIBED_TO_CALL): void {
+        this.updateEventTimestamp()
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+    }
+
+    private onVoicebotSubscribeToCallFailed (data: SubscribeToVoicebotCallFailed, eventName: EventsEnum.VOICEBOT_SUBSCRIBE_TO_CALL_FAILED): void {
+        this.updateEventTimestamp()
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+    }
+
+    private onVoicebotInitialCallHistory (data: InitialVoicebotCallHistory, eventName: EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY): void {
+        this.updateEventTimestamp()
+        this.eventsSdkClass.loggerClass.eventLog(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+    }
+
+    private onVoicebotUnsubscribedFromCall (data: UnsubscribedFromVoicebotCall, eventName: EventsEnum.VOICEBOT_UNSUBSCRIBED_FROM_CALL): void {
         this.updateEventTimestamp()
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
         this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
