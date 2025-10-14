@@ -40,20 +40,20 @@
             <!-- Test Controls Section -->
             <div class="p-5 border-b border-gray-200 dark:border-gray-700" v-if="loggedId">
                 <h3 class="text-lg font-semibold mb-4">Duplicate Event Testing</h3>
-                
+
                 <!-- Event Statistics -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <!-- Status Events (Expected Multiple) -->
                     <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                         <h4 class="text-sm font-semibold mb-2 text-blue-800 dark:text-blue-200">Status Events (Expected Multiple)</h4>
                         <div class="space-y-2">
-                            <div v-for="eventType in STATUS_EVENTS" :key="eventType" 
+                            <div v-for="eventType in STATUS_EVENTS" :key="eventType"
                                  v-if="eventStats[eventType]"
                                  class="flex justify-between text-xs">
                                 <span class="text-gray-600 dark:text-gray-400">{{ eventType.replace('_', ' ') }}</span>
                                 <div class="flex gap-2">
                                     <span class="text-blue-600">{{ eventStats[eventType].total }}</span>
-                                    <span v-if="eventStats[eventType].duplicates > 0" 
+                                    <span v-if="eventStats[eventType].duplicates > 0"
                                           class="text-red-500 font-bold">⚠️{{ eventStats[eventType].duplicates }}</span>
                                 </div>
                             </div>
@@ -64,13 +64,13 @@
                     <div class="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
                         <h4 class="text-sm font-semibold mb-2 text-orange-800 dark:text-orange-200">Transactional Events (Duplicates Bad)</h4>
                         <div class="space-y-2">
-                            <div v-for="eventType in TRANSACTIONAL_EVENTS" :key="eventType" 
+                            <div v-for="eventType in TRANSACTIONAL_EVENTS" :key="eventType"
                                  v-if="eventStats[eventType]"
                                  class="flex justify-between text-xs">
                                 <span class="text-gray-600 dark:text-gray-400">{{ eventType.replace('_', ' ') }}</span>
                                 <div class="flex gap-2">
                                     <span :class="eventStats[eventType].duplicates > 0 ? 'text-red-500 font-bold' : 'text-green-600'">{{ eventStats[eventType].total }}</span>
-                                    <span v-if="eventStats[eventType].duplicates > 0" 
+                                    <span v-if="eventStats[eventType].duplicates > 0"
                                           class="text-red-500 font-bold">🚨{{ eventStats[eventType].duplicates }}</span>
                                 </div>
                             </div>
@@ -227,14 +227,16 @@ const STATUS_EVENTS = [
     EventsEnum.ALL_DIALER_STATUS,
     EventsEnum.ALL_USERS_STATUS,
     EventsEnum.LOGIN_STATUS,
-    EventsEnum.ONLINE_STATUS_EVENT
+    EventsEnum.ONLINE_STATUS_EVENT,
+    EventsEnum.ALL_VOICEBOTS_STATUS
 ] as const
 
 const TRANSACTIONAL_EVENTS = [
     EventsEnum.EXTENSION_EVENT,
     EventsEnum.QUEUE_EVENT,
     EventsEnum.LOGIN_SUCCESS,
-    EventsEnum.EXTENSIONS_UPDATED
+    EventsEnum.EXTENSIONS_UPDATED,
+    EventsEnum.VOICEBOT_EVENT
 ] as const
 let eventsdk: EventsSdkClass | undefined
 
@@ -250,22 +252,22 @@ function detectDuplicate(eventType: EventsEnum, data: any): boolean {
     const now = Date.now()
     const contentHash = JSON.stringify(data)
     const eventKey = `${eventType}-${contentHash}`
-    
+
     // Check if we received identical event within last 2 seconds
     if (recentEvents[eventKey] && (now - recentEvents[eventKey].timestamp) < 2000) {
         return true
     }
-    
+
     // Store this event
     recentEvents[eventKey] = { timestamp: now, content: contentHash }
-    
+
     // Clean up old entries (older than 5 seconds)
     Object.keys(recentEvents).forEach(key => {
         if (now - recentEvents[key].timestamp > 5000) {
             delete recentEvents[key]
         }
     })
-    
+
     return false
 }
 
@@ -273,32 +275,32 @@ function updateEventStats(eventType: EventsEnum, isDuplicate: boolean) {
     if (!eventStats[eventType]) {
         eventStats[eventType] = { total: 0, duplicates: 0, lastReceived: 0 }
     }
-    
+
     eventStats[eventType].total++
     eventStats[eventType].lastReceived = Date.now()
-    
+
     if (isDuplicate) {
         eventStats[eventType].duplicates++
     }
-    
+
     lastEventTime.value = new Date().toLocaleTimeString()
 }
 
 function addEventWithTimestamp<K extends EventsEnum>(eventType: K, data: EventTypeData<K>) {
     const timestamp = new Date().toISOString()
     const isDuplicate = detectDuplicate(eventType, data)
-    
+
     if (!events[eventType]) {
         events[eventType] = []
     }
-    
+
     events[eventType] = [
         ...events[eventType],
         { ...data, timestamp, isDuplicate } as EventTypeData<K> & { timestamp: string, isDuplicate?: boolean }
     ]
-    
+
     updateEventStats(eventType, isDuplicate)
-    
+
     // Log duplicates to console
     if (isDuplicate) {
         console.warn(`🚨 DUPLICATE EVENT DETECTED: ${eventType}`, data)

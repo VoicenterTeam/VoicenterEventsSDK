@@ -1,8 +1,12 @@
 import {
     ExtensionEventReasonEnum
 } from '@voicenter-team/real-time-events-types'
-import type { ExtensionCall, Extension, ExtensionEvent, AllExtensionStatusEvent } from '@voicenter-team/real-time-events-types'
+import type { ExtensionCall, Extension, ExtensionEvent, AllExtensionStatusEvent, VoicebotEventDataCall } from '@voicenter-team/real-time-events-types'
 
+export interface VoicebotCallUTCExtended extends VoicebotEventDataCall {
+    callStarted_UTC: number
+    callStarted_UTC_CLIENT: number
+}
 export interface CurrentCallUTCExtended extends ExtensionCall {
     callStarted_UTC: number
     callStarted_UTC_CLIENT: number

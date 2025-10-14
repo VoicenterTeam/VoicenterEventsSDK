@@ -1,6 +1,12 @@
-import { EventsEnum, Extension, ExtensionEventReasonEnum, type QueueCall } from '@voicenter-team/real-time-events-types'
+import { EventsEnum, Extension, ExtensionEventReasonEnum, type QueueCall, VoicebotEventDataCall, VoicebotEventDataCallEventsData } from '@voicenter-team/real-time-events-types'
 import { EventDataMap, EventDataMapExtended } from '@/types/events'
-import { CurrentCallUTCExtended, ExtensionCallSDK, ExtensionEventExtended, ExtensionUTCExtended } from '@/types/sdk-extension-extended'
+import {
+    CurrentCallUTCExtended,
+    ExtensionCallSDK,
+    ExtensionEventExtended,
+    ExtensionUTCExtended,
+    VoicebotCallUTCExtended
+} from '@/types/sdk-extension-extended'
 import type { ExtensionCall } from '@voicenter-team/real-time-events-types/dist/models/ExtensionCall'
 import { QueueCallSDK } from '@/types/sdk-queue-extended'
 
@@ -80,6 +86,76 @@ export default class EventsHandler {
                 }
             })
         }
+    }
+    public static mapAllVoicebotStatus (data: EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS]): EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS] {
+        return {
+            ...data,
+            voicebots: data.voicebots.map(bot => ({
+                ...bot,
+                Calls: bot.Calls.map(call => ({
+                    ...this.mapVoicebotCall(data, call),
+                    eventsData: call?.eventsData?.map(eventData =>
+                        this.mapVoicebotEventsData(data, eventData)
+                    ),
+                })),
+            })),
+        }
+    }
+
+    public static mapVoicebotEvent (data: EventDataMap[EventsEnum.VOICEBOT_EVENT]) {
+        return {
+            ...data,
+            data: {
+                ...data.data,
+                Call: {
+                    ...this.mapVoicebotCall(data, data.data.Call),
+                    eventsData: data.data.Call?.eventsData?.map(eventData => this.mapVoicebotEventsData(data, eventData))
+                }
+            }
+
+        }
+    }
+
+    public static mapVoicebotInitialCallHistory (data: EventDataMap[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY]) {
+        return {
+            ...data,
+            history: data.history.map(call => {
+                const callExtended =  this.mapVoicebotCall(data, call)
+                return {
+                    ...callExtended,
+                    eventsData: this.mapVoicebotEventsData(data, call)
+                }
+            })
+
+        }
+    }
+    public static mapVoicebotCall (data: EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS] | EventDataMap[EventsEnum.VOICEBOT_EVENT] | EventDataMap[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY], call: VoicebotEventDataCall): VoicebotCallUTCExtended {
+        return this.configureUTCForObject(
+            call,
+            [
+                {
+                    key: 'callStarted',
+                    format: 'sec'
+                }
+
+            ],
+            data.servertime,
+            data.servertimeoffset
+        )
+    }
+
+    public static mapVoicebotEventsData (data: EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS] | EventDataMap[EventsEnum.VOICEBOT_EVENT] | EventDataMap[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY], eventData: VoicebotEventDataCallEventsData) {
+        return this.configureUTCForObject(
+            eventData,
+            [
+                {
+                    key: 'Timestamp',
+                    format: 'sec'
+                }
+            ],
+            data.servertime,
+            data.servertimeoffset
+        )
     }
 
     public static mapExtensionData (data: EventDataMap[EventsEnum.ALL_EXTENSION_STATUS] | EventDataMap[EventsEnum.EXTENSION_EVENT], extension: Extension): ExtensionUTCExtended {

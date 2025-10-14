@@ -325,14 +325,16 @@ export class SocketIoClass {
 
     private onVoicebotEvent (data: VoicebotEvent, eventName: EventsEnum.VOICEBOT_EVENT): void {
         this.updateEventTimestamp()
+        const dataExtended = EventsHandler.mapVoicebotEvent(data)
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
-        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, dataExtended)
     }
 
     private onAllVoicebotsStatus (data: AllVoicebotsStatus, eventName: EventsEnum.ALL_VOICEBOTS_STATUS): void {
         this.updateEventTimestamp()
+        const dataExtended = EventsHandler.mapAllVoicebotStatus(data)
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
-        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, dataExtended)
     }
 
     private onVoicebotSubscribedToCall (data: SubscribedToVoicebotCall, eventName: EventsEnum.VOICEBOT_SUBSCRIBED_TO_CALL): void {
@@ -349,8 +351,9 @@ export class SocketIoClass {
 
     private onVoicebotInitialCallHistory (data: InitialVoicebotCallHistory, eventName: EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY): void {
         this.updateEventTimestamp()
+        const dataExtended = EventsHandler.mapVoicebotInitialCallHistory(data)
         this.eventsSdkClass.loggerClass.eventLog(eventName, data)
-        this.eventsSdkClass.eventEmitterClass.emit(eventName, data)
+        this.eventsSdkClass.eventEmitterClass.emit(eventName, dataExtended)
     }
 
     private onVoicebotUnsubscribedFromCall (data: UnsubscribedFromVoicebotCall, eventName: EventsEnum.VOICEBOT_UNSUBSCRIBED_FROM_CALL): void {
