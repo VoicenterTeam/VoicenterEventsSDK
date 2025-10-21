@@ -83,17 +83,27 @@ class AuthClass {
         let loginSessionData: Partial<LoginSessionData>
 
         if (this.eventsSdkClass.options.isNewStack) {
-            externalLoginResponse = await this.externalLogin<ExternalLoginNewStackResponseData>(
-                this.eventsSdkClass.options.loginUrl,
-                payload,
-                loginType,
-            )
+            if (this.eventsSdkClass.options.loginType === LoginType.TOKEN || this.eventsSdkClass.options.loginType === LoginType.USER) {
+                externalLoginResponse = await this.externalLogin<ExternalLoginNewStackResponseData>(
+                    this.eventsSdkClass.options.loginUrl,
+                    payload,
+                    loginType,
+                )
 
-            settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
+                settings = await this.getSettings(externalLoginResponse.Data.AccessToken)
 
-            loginSessionData = {
-                ...externalLoginResponse.Data,
-                ...settings
+                loginSessionData = {
+                    ...externalLoginResponse.Data,
+                    ...settings
+                }
+            }
+
+            if (this.eventsSdkClass.options.loginType === LoginType.JWT) {
+                settings = await this.getSettings(payload.token)
+
+                loginSessionData = {
+                    ...settings
+                }
             }
         } else {
             externalLoginResponse = await this.externalLogin<ExternalLoginOldStackResponseData>(
@@ -107,9 +117,9 @@ class AuthClass {
             }
         }
 
-        await StorageClass.updateSessionStorageKey(key, loginSessionData)
+        await StorageClass.updateSessionStorageKey(key, loginSessionData!)
 
-        return loginSessionData
+        return loginSessionData!
     }
 
     public onLoginResponse (loginSessionData: Partial<LoginSessionData>) {
@@ -304,10 +314,14 @@ class AuthClass {
         }
     }
 
-    private async getSettings (token: string): Promise<Settings> {
+    private async getSettings (token: string | undefined): Promise<Settings> {
         try {
             if (!this.eventsSdkClass.options.getSettingsUrl) {
                 throw new Error('getSettingsUrl not provided')
+            }
+
+            if (!token) {
+                throw new Error('token property not provided or not defined')
             }
 
             const res = await fetch(this.eventsSdkClass.options.getSettingsUrl, {
@@ -322,7 +336,7 @@ class AuthClass {
 
             return res.json()
         } catch (error) {
-            this.eventsSdkClass.loggerClass.getSettingsError(token, error as Error)
+            this.eventsSdkClass.loggerClass.getSettingsError(token ? token : 'NOT DEFINED', error as Error)
 
             throw error
         }
