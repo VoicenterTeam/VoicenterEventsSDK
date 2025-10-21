@@ -123,7 +123,7 @@ export default class EventsHandler {
                 const callExtended =  this.mapVoicebotCall(data, call)
                 return {
                     ...callExtended,
-                    eventsData: this.mapVoicebotEventsData(data, call)
+                    eventsData: callExtended.eventsData?.map(eventData => this.mapVoicebotEventsData(data, eventData))
                 }
             })
 
