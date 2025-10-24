@@ -5,10 +5,10 @@ import {
     ExtensionCallSDK,
     ExtensionEventExtended,
     ExtensionUTCExtended,
-    VoicebotCallUTCExtended
 } from '@/types/sdk-extension-extended'
 import type { ExtensionCall } from '@voicenter-team/real-time-events-types/dist/models/ExtensionCall'
 import { QueueCallSDK } from '@/types/sdk-queue-extended'
+import { VoicebotCallUTCExtended } from '@/types/sdk-voicebots-extended'
 
 type NumericKeys<T> = {
     [P in keyof T]: T[P] extends number
@@ -87,7 +87,7 @@ export default class EventsHandler {
             })
         }
     }
-    public static mapAllVoicebotStatus (data: EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS]): EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS] {
+    public static mapAllVoicebotStatus (data: EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS]): EventDataMapExtended[EventsEnum.ALL_VOICEBOTS_STATUS] {
         return {
             ...data,
             voicebots: data.voicebots.map(bot => ({
@@ -102,7 +102,7 @@ export default class EventsHandler {
         }
     }
 
-    public static mapVoicebotEvent (data: EventDataMap[EventsEnum.VOICEBOT_EVENT]) {
+    public static mapVoicebotEvent (data: EventDataMap[EventsEnum.VOICEBOT_EVENT]): EventDataMapExtended[EventsEnum.VOICEBOT_EVENT] {
         return {
             ...data,
             data: {
@@ -116,7 +116,7 @@ export default class EventsHandler {
         }
     }
 
-    public static mapVoicebotInitialCallHistory (data: EventDataMap[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY]) {
+    public static mapVoicebotInitialCallHistory (data: EventDataMap[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY]): EventDataMapExtended[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY] {
         return {
             ...data,
             history: data.history.map(call => {
@@ -129,7 +129,7 @@ export default class EventsHandler {
 
         }
     }
-    public static mapVoicebotCall (data: EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS] | EventDataMap[EventsEnum.VOICEBOT_EVENT] | EventDataMap[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY], call: VoicebotEventDataCall): VoicebotCallUTCExtended {
+    public static mapVoicebotCall (data: EventDataMap[EventsEnum.ALL_VOICEBOTS_STATUS] | EventDataMap[EventsEnum.VOICEBOT_EVENT] | EventDataMap[EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY], call: VoicebotEventDataCall) {
         return this.configureUTCForObject(
             call,
             [

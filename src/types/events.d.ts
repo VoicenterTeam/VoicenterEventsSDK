@@ -25,6 +25,11 @@ import { AllExtensionStatusEventExtended } from '@/types/sdk-extension-extended'
 import type { ExtensionEventExtended } from '@/types/sdk-extension-extended'
 import { QueueEventUTCExtended } from '@/types/sdk-queue-extended'
 import { LoginStatusEventUTCExtended } from '@/types/sdk-login-status-extended'
+import {
+    AllVoicebotStatusExtended,
+    InitialVoicebotCallHistoryExtended,
+    VoicebotEventExtended
+} from '@/types/sdk-voicebots-extended'
 
 /**
  * Mapping of event names to their respective data structures.
@@ -59,6 +64,9 @@ export interface EventDataMapExtended extends EventDataMap {
     [EventsEnum.ALL_EXTENSION_STATUS]: AllExtensionStatusEventExtended
     [EventsEnum.QUEUE_EVENT]: QueueEventUTCExtended
     [EventsEnum.LOGIN_STATUS]: LoginStatusEventUTCExtended
+    [EventsEnum.ALL_VOICEBOTS_STATUS]: AllVoicebotStatusExtended
+    [EventsEnum.VOICEBOT_EVENT]: VoicebotEventExtended
+    [EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY]: InitialVoicebotCallHistoryExtended
 }
 
 /**
