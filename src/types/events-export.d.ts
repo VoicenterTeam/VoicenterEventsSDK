@@ -20,16 +20,28 @@ import type { EventTypeData } from '@/types/events'
  */
 export { ExtensionSDK, ExtensionCallSDK } from '@/types/sdk-extension-extended'
 export { QueueSDK, QueueCallSDK } from '@/types/sdk-queue-extended'
+export {
+    InitialVoicebotCallHistoryExtended,
+    VoicebotCallUTCExtended,
+    VoicebotEventDataExtended,
+    VoicebotEventDataCallEventsDataExtended,
+    VoicebotExtended,
+    AllVoicebotStatusExtended,
+    VoicebotEventExtended
+} from '@/types/sdk-voicebots-extended'
 
 export type LoginSuccessEventSDK = EventTypeData<EventsEnum.LOGIN_SUCCESS>
 export type LoginStatusEventSDK = EventTypeData<EventsEnum.LOGIN_STATUS>
 export type AllExtensionStatusEventSDK = EventTypeData<EventsEnum.ALL_EXTENSION_STATUS>
 export type AllDialersStatusEventSDK = EventTypeData<EventsEnum.ALL_DIALER_STATUS>
 export type AllUsersStatusEventSDK = EventTypeData<EventsEnum.ALL_USERS_STATUS>
+export type AllVoiceBotsStatusEventSDK = EventTypeData<EventsEnum.ALL_VOICEBOTS_STATUS>
 export type QueueEventSDK = EventTypeData<EventsEnum.QUEUE_EVENT>
 export type ExtensionEventSDK = EventTypeData<EventsEnum.EXTENSION_EVENT>
 export type KeepAliveResponseEventSDK = EventTypeData<EventsEnum.KEEP_ALIVE_RESPONSE>
 export type DialerEventSDK = EventTypeData<EventsEnum.DIALER_EVENT>
+export type VoiceBotEventSDK = EventTypeData<EventsEnum.VOICEBOT_EVENT>
+export type VoiceBotInitialCallHistoryEventSDK = EventTypeData<EventsEnum.VOICEBOT_INITIAL_CALL_HISTORY>
 export type ExtensionsUpdatedSDK = EventTypeData<EventsEnum.EXTENSIONS_UPDATED>
 export type OnlineStatusEventSDK = EventTypeData<EventsEnum.ONLINE_STATUS_EVENT>
 
