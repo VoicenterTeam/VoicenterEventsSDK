@@ -195,6 +195,10 @@ export default class EventsHandler {
                 {
                     key: 'callStarted',
                     format: 'sec'
+                },
+                {
+                    key: 'holdStarted', // TODO: should add the holdStarted in TS definitions
+                    format: 'sec'
                 }
             ],
             data.servertime,
