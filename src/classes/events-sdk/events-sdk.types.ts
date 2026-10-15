@@ -3,6 +3,7 @@ import StorageLogger, { LoggerOptions } from '@voicenter-team/socketio-storage-l
 
 import { LoginType } from '@/enum/auth.enum'
 import { DebugOption } from '@/enum/events-sdk.enum'
+import type { Settings } from '@/types/auth'
 
 export interface EventsSdkOptionsBase {
     loginType: LoginType,
@@ -40,6 +41,13 @@ type EventsSdkOptionsTokenLogin = EventsSdkOptionsBase & {
     token: string,
 }
 
+type EventsSdkOptionsSettingsLogin = EventsSdkOptionsBase & {
+    loginType: LoginType.SETTINGS,
+    isNewStack: true,
+    /** Reads the settings the SDK connects with (the monitor list and the identity code). Called on every login, in place of a request of the SDK's own */
+    getSettings: () => Promise<Settings>,
+}
+
 type EventsSdkOptionsOldStack = EventsSdkOptionsBase & {
     isNewStack?: false,
     loginUrl?: string,
@@ -53,7 +61,7 @@ type EventsSdkOptionsNewStack = EventsSdkOptionsBase & {
     getSettingsUrl: string,
 }
 
-export type EventsSdkOptionsClient = EventsSdkOptionsUserLogin | EventsSdkOptionsTokenLogin | EventsSdkOptionsOldStack | EventsSdkOptionsNewStack
+export type EventsSdkOptionsClient = EventsSdkOptionsUserLogin | EventsSdkOptionsTokenLogin | EventsSdkOptionsSettingsLogin | EventsSdkOptionsOldStack | EventsSdkOptionsNewStack
 
 export type EventsSdkOptionsMain = Required<Pick<
     EventsSdkOptionsOldStack | EventsSdkOptionsNewStack,
@@ -70,6 +78,7 @@ export type EventsSdkOptionsMain = Required<Pick<
     'useLogger'
     >> & {
     getSettingsUrl?: string,
+    getSettings?: () => Promise<Settings>,
     token?: string,
     email?: string,
     password?: string,

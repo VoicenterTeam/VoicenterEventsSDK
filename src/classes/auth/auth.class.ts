@@ -46,6 +46,11 @@ class AuthClass {
 
         this.updateLastLoginTimestamp()
 
+        // The options of this login type name no user, so a kept copy of the settings could belong to another login of the same tab: they are read anew every time and never stored
+        if (this.eventsSdkClass.options.loginType === LoginType.SETTINGS) {
+            return await this.getHostSettings()
+        }
+
         const loginSessionData = await this.checkLoginStatus(this.storageKey)
 
         if (!loginSessionData) {
@@ -309,6 +314,20 @@ class AuthClass {
             return data
         } catch (error) {
             this.eventsSdkClass.loggerClass.loginError(loginType, statusCode, token, email)
+
+            throw error
+        }
+    }
+
+    private async getHostSettings (): Promise<Settings> {
+        try {
+            if (!this.eventsSdkClass.options.getSettings) {
+                throw new Error('getSettings not provided')
+            }
+
+            return await this.eventsSdkClass.options.getSettings()
+        } catch (error) {
+            this.eventsSdkClass.loggerClass.getSettingsError('provided by host', error as Error)
 
             throw error
         }

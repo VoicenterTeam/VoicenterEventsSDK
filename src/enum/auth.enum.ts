@@ -1,5 +1,6 @@
 export enum LoginType {
     USER = 'User',
     TOKEN = 'Token',
-    JWT = 'Jwt'
+    JWT = 'Jwt',
+    SETTINGS = 'Settings'
 }

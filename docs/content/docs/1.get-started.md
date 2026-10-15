@@ -216,7 +216,7 @@ const sdk = new EventsSDK({
 
 
 ## Required params
-As a required params of an options is loginType property (token/user/account) and authorization data:
+As a required params of an options is loginType property (token/user/account/settings) and authorization data:
 - `User loginType example:`
   ```js [file.js]
     const sdk = new EventsSDK({
@@ -241,6 +241,14 @@ As a required params of an options is loginType property (token/user/account) an
        password: 'password',
     });
   ```  
+- `Settings loginType example` (the host reads the settings itself, for example through its own API, and the SDK connects with them):
+  ```js [file.js]
+    const sdk = new EventsSDK({
+       loginType: 'Settings',
+       isNewStack: true,
+       getSettings: () => readSettingsFromMyApi(),
+    });
+  ```
 ## Initing an instance
 ```js [file.js]
 sdk.init().then(function () {
