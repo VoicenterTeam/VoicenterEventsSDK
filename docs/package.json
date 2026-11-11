@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "@nuxt/content": "^2.13.1",
-    "nuxt": "^3.12.4",
+    "nuxt": "~3.16.2",
     "voicenter-team-documentation-template": "https://github.com/VoicenterTeam/documentation-template.git",
     "vue-json-viewer": "^3.0.4"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
+    "@nuxt/devtools": "^3.4.1",
     "@nuxt/eslint-config": "^0.5.0",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "@typescript-eslint/parser": "^7.12.0",
@@ -28,10 +28,10 @@
     "eslint-plugin-vue": "^9.26.0",
     "sass": "1.77.6",
     "typescript": "5.3.3",
-    "vite-plugin-static-copy": "^1.0.6",
     "vue-tsc": "^2.0.26",
-    "typedoc": "^0.26.6",
-    "typedoc-plugin-markdown": "^4.2.5"
+    "typedoc": "~0.26.8",
+    "typedoc-plugin-markdown": "~4.2.9",
+    "@nuxt/schema": "~3.16.2"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

@@ -1,307 +1,268 @@
----
-title: Voicenter Events SDK
-description: Voicenter Events SDK aims to manage API and socket communication with Voicenter APIs and backends.
-  You can use the SDK to send and receive real-time data from and to voicenter servers.
-navigation:
-  title: Getting Started
----
-
 # Voicenter Events SDK
+![Image of Voicenter SDK](https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/images/external/SDK_red.png)<br/>
+Voicenter Events SDK manages the login and the real-time socket connection to Voicenter's monitor servers.
+Use it to receive live extension, queue, dialer and voicebot events, and to send requests back to the server.
 
-![Image of Voicenter SDK](/img/sdk.png)
+## Table of contents
 
-The events sdk is a small sdk that handles real time communication with our servers.
-The SDK has automatic server failover and fallback integrated as well as different utilities such as debug mode to easily visualize what's happening in the console.
-The SDK uses websockets to manage real time bi-directional communication with our servers and it's meant to simplify developer work.
+1. [Installation](#installation)
+2. [Quick start](#quick-start)
+3. [Login types](#login-types)
+4. [Options](#options)
+5. [Methods](#methods)
+6. [Events you can subscribe to](#events-you-can-subscribe-to)
+7. [Events you can send](#events-you-can-send)
+8. [Connection and reconnection](#connection-and-reconnection)
+9. [Timestamps](#timestamps)
+10. [TypeScript](#typescript)
+11. [HTML example](#html-example)
 
-## Getting Started
+## Installation
 
-The Events SDK should be used to communicate with Voicenter servers in order to receive real-time data via sockets. Underneath, the events SDK uses socket.io to send and receive events.
-
-
-### Table of contents
-
-1. [Instalation](#instalation)
-2. [Usage](#usage)
-3. [Public methods](#use-the-public-methods-to-send-and-receive-events)
-4. [Pass vuex store](#pass-vuex-store)
-5. [Other Methods](#other-methods)
-    1. [Set token](#set-token)
-    2. [Resync](#resync)
-    3. [Set monitor url](#set-monitor-url)
-    4. [Login with user](#login-with-user)
-    5. [Login with account](#login-with-account)
-    6. [Login with code](#login-with-code)
-    7. [Disconnect](#disconnect)
-6. [Initializing new instance](#initializing-new-instance)
-7. [Required params](#required-params)
-8. [Initing an instance](#initing-an-instance)
-9. [Events you can subscribe to](#events-you-can-subscribe-to)
-10. [HTML Example](#html-example)
-
-## Instalation
-1. Direct Download / CDN:
-
-   Include voicenter-events-sdk after Vue and it will install itself automatically:
-    ```html [index.html]
-    <script src="https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/events-sdk/voicenter-events-sdk.umd.js"></script>
-    ```
-2. NPM:
-    ```sh [Terminal]
-    $ npm install voicenter-events-sdk
-    ```    
-3. Yarn:
-    ```sh [Terminal]
-    $ yarn add voicenter-events-sdk
-    ```    
-   You don't need to do this when using global script tags.
-
-
-## Usage
-You can initialize and use it to send and receive events to and from our servers.
-- Initialize the constructor with a monitorCode
-```js [file.js]
-    import EventsSDK from 'voicenter-events-sdk'
-    let sdk = new EventsSDK({
-        token: this.monitorCode,
-        // other options here
-    });
+```sh
+npm install @voicenter-team/events-sdk @voicenter-team/socketio-storage-logger
+```
+or
+```sh
+yarn add @voicenter-team/events-sdk @voicenter-team/socketio-storage-logger
 ```
 
-- Alternatively when loaded directly via CDN
-```js [file.js]
-    let sdk = new window.VoicenterEventsSDK({
-        token: this.monitorCode,
-        // other options here
-    });
-```
-- Call the init method to initialize the server connections
-```js [file.js]
-   sdk.init().then(() => {}) //sdk is initialized after promise is fulfilled
-```
+`@voicenter-team/socketio-storage-logger` is a peer dependency and must be installed alongside the SDK.
 
-This step is important as we have an algorithm that retrieves multiple servers and has a failover mechanism behind it. Skipping this step, will throw error(s) in the subsequent steps.
+## Quick start
 
-## Use the public methods to send and receive events
-- Subscribe to all events
 ```js [file.js]
-   sdk.on('*', data => {
-      // handle data here. Data format -> {name: 'event name', data: {}}
-   });
-```
-- Subscribe to specific events
-```js [file.js]
-   sdk.on('ExtensionEvent', data => {
-      // handle ExtensionEvent here
-   });
-```
-- Emit events
-```js [file.js]
-   sdk.emit('event name', { key: 'value' });
+import EventsSdk, { LoginType, EventsEnum } from '@voicenter-team/events-sdk'
+
+const sdk = new EventsSdk({
+    loginType: LoginType.TOKEN,
+    token: 'your-monitor-token'
+})
+
+// Subscribe before or after init - listeners are kept on the instance
+sdk.on(EventsEnum.EXTENSION_EVENT, ({ name, data }) => {
+    console.log(name, data.reason, data.data)
+})
+
+// Logs in, picks a monitor server and opens the socket connection
+await sdk.init()
 ```
 
-## Pass vuex store
-Passing a vuex store will automatically register a vuex module and save extensions in it. This is useful if you use vuex and don't want to handle all the extension events yourself but rather use the sdk vuex module. [Open Vue Devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd?hl=en) and see the `sdkExtensions` vuex module and its state/getters.
+`init()` must be called once per instance. It logs in, chooses the monitor server with the highest priority and connects to it. If it can't log in, or no monitor servers are available, the promise rejects.
 
-#### Options
-The SDK constructor accepts multiple options when initializing which can be used to configure/tweak the SDK behaviour.
+## Login types
 
-| Option | Type | Default | Description |
-|-----------|---------------|---------------|---------------|
-| token | String | Null | Monitor code token to use for login |
-| user | String | Can be used to login with "user" or "account" login type |  |
-| password | String | Used for login with "user" or "account" login type. Must be used together with user property |  |
-| code | String | Code to be used for login with "code" type. Should be used with "organizationCode" code |  |
-| organizationCode | String | Organization code to be used for login with "code" type. Should be used with "organizationCode" code |  |
-| debug | Boolean | false | When set to true, it will print debug information to console |
-| reconnectionDelay | Number | 10000 | First reconnection delay in milliseconds. Defaults to 10 seconds and increases with each retry (retryCount * reconnectionDelay) |
-| timeout | Number | 10000 | Login timeout. Will throw an error if no event is sent back based on the emitted login event |
-| protocol | String | https | Protocol to use when connecting via sockets with the server |
-| keepAliveTimeout | Number | 60000 | Timeout after which a keep alive event is sent |
-| idleInterval | Number | 60000 * 5 | Interval after which resync event is sent |
-| transports | Array | ['websocket'] | Available transports. It's desired to leave this setting as it is. |
-| upgrade | Boolean | false | Available transports. It's desired to leave this setting as it is. |
-| serverType | Number | Null | Optional parameter to be passed to API call that retrieves available servers. Can be 1 or 2. 2 should be used for chrome extension. |
-| url | string | https://monitorapi.voicenter.co.il/monitorAPI/getMonitorUrls | Url from which to get monitor urls. |
-| servers | Array | contains 5 default servers | Contains a list of real-time servers with priorities and versions. Please check src/config.js file to see the exact format. |
-| serverFetchStrategy | string | Determines the strategy how monitor servers are initiated. Can be remote (server urls are retrieved from a remote url) or static where server urls are specified directly through config. In case remote call fails, it will fallback to the default list of servers or the ones passed through config. | |
-| store | object | Vuex store to use in order to register an extensions module. This should simplify the end usage of the SDK | |
-| extensionsModuleName | string | Vuex store extension module name. Defaults to `sdkExtensions` | |
-| queuesModuleName | string | Vuex store queue module name. Defaults to `sdkQueues` | |
+The `loginType` option is required. Use the `LoginType` enum:
 
-Servers array format
+| `LoginType` | Value | Required options | Notes |
+|---|---|---|---|
+| `LoginType.TOKEN` | `'Token'` | `token` | Monitor code / token login |
+| `LoginType.USER` | `'User'` | `email`, `password` | The SDK refreshes the token automatically before it expires |
+| `LoginType.JWT` | `'Jwt'` | `token`, `isNewStack: true`, `getSettingsUrl` | `token` is an access token used directly to fetch the settings |
+| `LoginType.SETTINGS` | `'Settings'` | `getSettings`, `isNewStack: true` | Your app supplies the settings itself |
+
+### Old stack and new stack
+
+The SDK works with two Voicenter backends, selected with `isNewStack`:
+
+- **Old stack** (`isNewStack: false`, the default): the SDK posts to `loginUrl` (`/Token` or `/User`), and the response contains the socket servers.
+- **New stack** (`isNewStack: true`): the SDK logs in at `loginUrl`, then loads the settings (monitor servers and identity code) from `getSettingsUrl`. You must pass `getSettingsUrl`, and usually `loginUrl` and `refreshTokenUrl` for your environment, since the defaults point to the old stack.
+
+### Token
 ```js [file.js]
-   const servers = [{
-      'URLID': 59,
-      'Priority': 5,
-      'Version': 2,
-      'Domain': 'monitor1.voicenter.co'
-    }]
-```
-
-## Other Methods
-##### `Set token`
-Sets new token to be used. This also triggers a disconnect and reconnect with new token.
-```js [file.js]
-  sdk.setToken('some new token here')
-```
-
-##### `Resync`
-Emits resync event to resync data.
-```js [file.js]
-  sdk.resync()
-```
-
-##### `Set monitor url`
-Sets new monitor url. This will trigger an http call to get the socket servers based on the monitor url. Please not that providing an invalid url, will try to revert to the old values. In case that fails, you will have to init the SDK again.
-```js [file.js]
-  sdk.setMonitorUrl(newMonitorUrl)
-```
-
-##### `Login with user`
-Log in based on user credentials.
-```js [file.js]
-    async function initSdk() {
-        let sdk = new EventsSDK({
-            user: 'my user',
-            password: 'my password',
-            // other options here
-        });
-        await sdk.init()
-        await sdk.login('user')
-    }
-```
-
-##### `Login with account`
-Log in based on user account credentials.
-```js [file.js]
-    async function initSdk() {
-        let sdk = new EventsSDK({
-            user: 'my user',
-            password: 'my password',
-            // other options here
-        });
-        await sdk.init()
-        await sdk.login('account')
-    }
-```
-
-##### `Login with code`
-Log in based on code and organization code.
-```js [file.js]
-    async function initSdk() {
-        let sdk = new EventsSDK({
-            code: 'my code',
-            organizationCode: 'my organization code',
-            // other options here
-        });
-        await sdk.init()
-        await sdk.login('code')
-    }
-```
-
-##### `Disconnect`
-Forcefully disconnects from the socket. This should be handled by the sdk most of the times.
-```js [file.js]
-    sdk.disconnect()
-```
-
-
-## Initializing new instance
-```js [file.js]
-const sdk = new EventsSDK({
-   ...options
-});
-```
-
-
-## Required params
-As a required params of an options is loginType property (token/user/account/settings) and authorization data:
-- `User loginType example:`
-  ```js [file.js]
-    const sdk = new EventsSDK({
-       loginType: 'user',
-       email: email@email.com',
-       password: 'password',
-    });
-  ```
-- `Token loginType example:`
-  ```js [file.js]
-    const sdk = new EventsSDK({
-       loginType: 'token',
-       useLoginApi: true,
-       token: 'token',
-    });
-  ```
-- `Account loginType example:`
-  ```js [file.js]
-   const sdk = new EventsSDK({
-       loginType: 'account',
-       username: 'username',
-       password: 'password',
-    });
-  ```  
-- `Settings loginType example` (the host reads the settings itself, for example through its own API, and the SDK connects with them):
-  ```js [file.js]
-    const sdk = new EventsSDK({
-       loginType: 'Settings',
-       isNewStack: true,
-       getSettings: () => readSettingsFromMyApi(),
-    });
-  ```
-## Initing an instance
-```js [file.js]
-sdk.init().then(function () {
-   //...
+const sdk = new EventsSdk({
+    loginType: LoginType.TOKEN,
+    token: 'your-monitor-token'
 })
 ```
-After the instance is init the events subscription can be implemented
-- `Subscription:`
-  ```js [file.js]
-   sdk.on('<EVENT_NAME>', function (response) {
-       // response
-    })
-  ```  
-- `Or subscribe to all events:`
-  ```js [file.js]
-   sdk.on('*', function (response) {
-       // response
-    })
-  ```  
+
+### User
+```js [file.js]
+const sdk = new EventsSdk({
+    loginType: LoginType.USER,
+    email: 'user@example.com',
+    password: 'password'
+})
+```
+
+### JWT (new stack)
+```js [file.js]
+const sdk = new EventsSdk({
+    loginType: LoginType.JWT,
+    isNewStack: true,
+    token: accessToken,
+    getSettingsUrl: 'https://<settings-api>/...'
+})
+```
+
+### Settings (new stack)
+Your app reads the settings itself, for example through its own API, and the SDK connects with them. `getSettings` is called on every login instead of a request of the SDK's own, and the settings it returns are never stored in session storage.
+
+```js [file.js]
+const sdk = new EventsSdk({
+    loginType: LoginType.SETTINGS,
+    isNewStack: true,
+    getSettings: () => readSettingsFromMyApi() // must resolve to { IdentityCode, MonitorList, ... }
+})
+```
+
+The returned object has the `Settings` shape: `IdentityCode`, `IdentityCodeExpiry`, `PersonID`, `PersonType`, `ExtensionMonitorID` and `MonitorList` (an array of servers, see [`servers`](#options)).
+
+### Session caching
+For every login type except `Settings`, the login result is cached in `sessionStorage` (or `chrome.storage.session` inside a Chrome extension), keyed by a hash of the options. A new instance with the same options in the same tab reuses it instead of logging in again.
+
+## Options
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `loginType` | `LoginType` | — | **Required.** See [Login types](#login-types) |
+| `token` | `string` | — | Token for `Token` and `Jwt` login |
+| `email` | `string` | — | Email for `User` login |
+| `password` | `string` | — | Password for `User` login |
+| `getSettings` | `() => Promise<Settings>` | — | Settings provider for `Settings` login |
+| `isNewStack` | `boolean` | `false` | Use the new-stack login flow |
+| `loginUrl` | `string` | `https://loginapi.voicenter.co.il/monitorAPI/Login` | Login endpoint |
+| `refreshTokenUrl` | `string` | `https://loginapi.voicenter.co.il/monitorAPI/RefreshIdentityToken` | Token refresh endpoint (used for `User` login) |
+| `getSettingsUrl` | `string` | — | Settings endpoint. Required for the new stack, except with `Settings` login |
+| `servers` | `Server[]` | — | Use these monitor servers instead of the ones returned by the login. Format: `{ URLID, Priority, Version, Domain }` |
+| `protocol` | `string` | `'https'` | Protocol used to connect to the monitor server |
+| `timeout` | `number` | `10000` | Socket connection timeout, in ms |
+| `keepAliveTimeout` | `number` | `60000` | If no event arrives within this time (ms), a `keepalive` is sent |
+| `reconnectionDelay` | `number` | `5` | First reconnection delay, **in seconds**. It doubles on each failed attempt, up to 120 seconds |
+| `forceNew` | `boolean` | `true` | Create a new socket.io manager for each connection |
+| `useLogger` | `boolean` | `true` | Send SDK logs to Voicenter's log server |
+| `loggerServer` | `string` | `https://socketlog.voicenter.co` | Log server URL |
+| `loggerConfig` | `LoggerOptions` | `{ logToConsole: true, overloadGlobalConsole: false, system: 'events-sdk', socketEmitInterval: 10000 }` | Options for `@voicenter-team/socketio-storage-logger` |
+| `loggerConnectOptions` | `LoggerConnectOptions` | `{ reconnection: false, transports: ['websocket'], ... }` | Socket options for the log server connection |
+| `loggerSocketConnection` | `Socket` | — | Reuse an existing socket.io connection for logging |
+| `storageLoggerInstance` | `StorageLogger` | — | Reuse an existing logger instance |
+| `debugOption` | `DebugOption` | — | Also log received events: `'bootstrap'`, `'debugExtensions'`, `'debugQueue'`, `'debugDialer'` or `'full'` |
+
+## Methods
+
+| Method | Description |
+|---|---|
+| `init(): Promise<true>` | Logs in and connects. Call once after creating the instance |
+| `on(event, callback)` | Subscribes to an event, or to all events with `'*'`. The callback receives `{ name, data }` |
+| `emit(event, payload)` | Sends an event to the monitor server. See [Events you can send](#events-you-can-send) |
+| `disconnect(): Promise<void>` | Closes the connection, stops automatic reconnection and stops the logger |
+| `connect(serverParameter)` | Reconnects manually: `ServerParameter.MAIN` (highest-priority server) or `ServerParameter.NEXT` (the next server). `init()` already does this, so you only need it after `disconnect()` |
+| `getCurrentMonitorServer(): Server \| undefined` | The monitor server currently in use |
+| `clearKeepAliveInterval()` | Stops the keep-alive timer |
+
+To remove a listener, use `sdk.eventEmitterClass.off(event, callback)` with the same callback you passed to `on`.
+
+```js [file.js]
+// One event
+sdk.on(EventsEnum.QUEUE_EVENT, ({ data }) => {
+    console.log(data.reason, data.data)
+})
+
+// All events
+sdk.on('*', ({ name, data }) => {
+    console.log(name, data)
+})
+
+// Stop
+await sdk.disconnect()
+```
 
 ## Events you can subscribe to
-- `loginStatus`
-- `login`
-- `loginUser`
-- `loginUser`
-- `loginUserCode`
-- `loginAccount`
-- `loginResponse`
-- `QueueEvent`
-- `QueuesUpdated`
-- `QueuesUpdated`
-- `DialersUpdated`
-- `ExtensionEvent`
-- `ExtensionsUpdated`
-- `AllExtensionsStatus`
-- `connect_error`
-- `connect_timeout`
-- `disconnect`
-- `pong`
-- `reconnect`
-- `reconnect_attempt`
-- `resync`
-- `reconnecting`
-- `reconnect_error`
-- `reconnect_failed`
-- `keepalive`
-- `keepaliveResponse`
-- `closeme`
-- `error`
 
-## HTML Example
+Use the `EventsEnum` names (or their string values):
 
-In case you have the socket-io client library available in window object EventsSDK library will work in front of that. If not - EventsSDK will include script tag with socket client relevant to ones that is used on server.
+| `EventsEnum` | Event name | Description |
+|---|---|---|
+| `LOGIN_SUCCESS` | `loginSuccess` | Socket login succeeded |
+| `LOGIN_STATUS` | `loginStatus` | Login status with the initial snapshot |
+| `ALL_EXTENSION_STATUS` | `AllExtensionsStatus` | Status of all monitored extensions |
+| `EXTENSION_EVENT` | `ExtensionEvent` | A change on one extension (call started, answered, hangup, ...) |
+| `EXTENSIONS_UPDATED` | `ExtensionsUpdated` | The list of monitored extensions changed |
+| `ALL_DIALER_STATUS` | `AllDialersStatus` | Status of all dialers |
+| `DIALER_EVENT` | `DialerEvent` | A change on one dialer |
+| `ALL_USERS_STATUS` | `AllUsersStatus` | Status of all users |
+| `QUEUE_EVENT` | `QueueEvent` | A change on a queue |
+| `ALL_VOICEBOTS_STATUS` | `AllVoicebotsStatus` | Status of all voicebots |
+| `VOICEBOT_EVENT` | `VoicebotEvent` | A change on a voicebot call |
+| `VOICEBOT_SUBSCRIBED_TO_CALL` | `subscribedToCall` | Subscription to a voicebot call succeeded |
+| `VOICEBOT_SUBSCRIBE_TO_CALL_FAILED` | `subscribeToCallFailed` | Subscription to a voicebot call failed |
+| `VOICEBOT_INITIAL_CALL_HISTORY` | `initialCallHistory` | History of a voicebot call, sent after subscribing |
+| `VOICEBOT_UNSUBSCRIBED_FROM_CALL` | `unsubscribedFromCall` | Unsubscribed from a voicebot call |
+| `KEEP_ALIVE_RESPONSE` | `keepaliveResponse` | Server response to a keep-alive |
+| `ONLINE_STATUS_EVENT` | `onlineStatusEvent` | SDK connection status (see below) |
+
+Subscribe only to the names above or `'*'`; other names are not supported.
+
+## Events you can send
+
+| `ServerListenerEventsEnum` | Event name | Payload |
+|---|---|---|
+| `UPDATE_MONITORED_EXTENSIONS` | `updateMonitoredExtensions` | `{ extensionsString: string }` |
+| `SUBSCRIBE_VOICEBOT_CALL_UPDATES` | `subscribeVoicebotCallUpdates` | `{ voicebotID: number, IvrUniqueID: string }` |
+| `UNSUBSCRIBE_VOICEBOT_CALL_UPDATES` | `unsubscribeVoicebotCallUpdates` | `{ voicebotID: number, IvrUniqueID: string }` |
+| `KEEP_ALIVE` | `keepalive` | token (`string`). Sent automatically by the SDK |
+
+```js [file.js]
+import { ServerListenerEventsEnum } from '@voicenter-team/events-sdk'
+
+sdk.emit(ServerListenerEventsEnum.SUBSCRIBE_VOICEBOT_CALL_UPDATES, {
+    voicebotID: 123,
+    IvrUniqueID: 'ivr-unique-id'
+})
+```
+
+## Connection and reconnection
+
+The SDK reconnects by itself, so you normally don't need to manage the connection:
+
+- **Failover:** it connects to the server with the highest `Priority`. If the connection drops or fails, it tries the next server.
+- **Backoff:** reconnection starts after `reconnectionDelay` seconds and doubles on each failed attempt, up to 120 seconds.
+- **Network changes:** in browsers and web workers, going offline closes the connection, and coming back online reconnects right away.
+- **Keep-alive:** if no event arrives within `keepAliveTimeout`, a `keepalive` is sent. An error response triggers a reconnect.
+- **Token refresh:** with `User` login, the token is refreshed 5 seconds before it expires and the connection is reopened.
+
+Follow the state with `onlineStatusEvent`. Its `connectionStatus` is a `ConnectionStatusEnum` value: `'connected'`, `'tryingToConnect'` or `'disconnected'`.
+
+```js [file.js]
+import { EventsEnum, ConnectionStatusEnum } from '@voicenter-team/events-sdk'
+
+sdk.on(EventsEnum.ONLINE_STATUS_EVENT, ({ data }) => {
+    if (data.connectionStatus === ConnectionStatusEnum.CONNECTED) {
+        // connected
+    }
+})
+```
+
+## Timestamps
+
+Server timestamps are in server time. For convenience, the SDK adds two fields next to each timestamp it maps:
+
+- `<field>_UTC`: the timestamp converted to UTC, in ms
+- `<field>_UTC_CLIENT`: the same moment adjusted to the client's clock, in ms. Use it to compute durations with `Date.now()`
+
+For example `callStarted` gets `callStarted_UTC` and `callStarted_UTC_CLIENT`. This applies to extension calls (`ExtensionEvent`, `AllExtensionsStatus`), queue calls (`QueueEvent`, `loginStatus`) and voicebot calls (`AllVoicebotsStatus`, `VoicebotEvent`, `initialCallHistory`).
+
+## TypeScript
+
+The package ships its own types. Besides the enums above, it exports the event payload types, for example:
+
+```ts [file.ts]
+import type {
+    ExtensionEventSDK,
+    QueueEventSDK,
+    AllExtensionStatusEventSDK,
+    VoiceBotEventSDK,
+    EventsSdkOptionsClient,
+    Settings
+} from '@voicenter-team/events-sdk'
+```
+
+`sdk.on(EventsEnum.X, callback)` is typed, so `data` in the callback has the right type for each event. The full list of types is in the API reference of the documentation.
+
+## HTML example
+
+The UMD build exposes the global `VoicenterEventsSDK`, with the SDK class as `default` and the enums as named properties. The storage logger is not bundled; load it first, it exposes the global `StorageLogger`.
+
 ```html [index.html]
 <html>
 <head></head>
@@ -309,38 +270,34 @@ In case you have the socket-io client library available in window object EventsS
 Status: <span id="status-txt">Disconnected</span>
 <br/>
 <br/>
-
 <div id="response-body"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@voicenter-team/socketio-storage-logger/dist/storage-logger.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@voicenter-team/events-sdk/dist/voicenter-events-sdk.umd.js"></script>
+<script>
+    const { default: EventsSdk, LoginType, EventsEnum } = VoicenterEventsSDK
+
+    const sdk = new EventsSdk({
+        loginType: LoginType.USER,
+        email: 'user@example.com',
+        password: 'password'
+    })
+
+    sdk.on(EventsEnum.ONLINE_STATUS_EVENT, function ({ data }) {
+        document.getElementById('status-txt').innerHTML = data.connectionStatus
+    })
+
+    sdk.on(EventsEnum.EXTENSION_EVENT, function ({ data }) {
+        const cur = document.getElementById('response-body')
+        cur.innerHTML = cur.innerHTML + data.reason + '<br />'
+    })
+
+    sdk.on(EventsEnum.ALL_EXTENSION_STATUS, function ({ data }) {
+        console.log(data.extensions)
+    })
+
+    sdk.init()
+</script>
 </body>
 </html>
-
-<!-- Events SDK -->
-<script src="https://voicentercdn-voicenterltd.netdna-ssl.com/cdn/events-sdk/voicenter-events-sdk.umd.js"></script>
-<script>
-   let sdk = new EventsSDK({
-       loginType: 'user',
-       email: 'test@voicenter.com',
-       password: '11602082819',
-   });
-
-   sdk.init().then(function () {
-       // Success login event
-       sdk.on('loginSuccess', function (response) {
-           document.getElementById("status-txt").innerHTML = "Connected";
-       })
-
-       // Extension event
-       sdk.on('ExtensionEvent', function (response) {
-           console.log(response);
-
-           const cur = document.getElementById("response-body");
-           cur.innerHTML = cur.innerHTML + response.data.reason + "<br />";
-       })
-
-       // After logging in, receive all extensions statuses
-       sdk.on('AllExtensionsStatus', function (response) {
-           console.log(response);
-       })
-   });
-</script>
 ```
