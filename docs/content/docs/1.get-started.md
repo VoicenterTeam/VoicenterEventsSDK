@@ -127,15 +127,16 @@ For every login type except `Settings`, the login result is cached in `sessionSt
 | `servers` | `Server[]` | — | Use these monitor servers instead of the ones returned by the login. Format: `{ URLID, Priority, Version, Domain }` |
 | `protocol` | `string` | `'https'` | Protocol used to connect to the monitor server |
 | `timeout` | `number` | `10000` | Socket connection timeout, in ms |
-| `keepAliveTimeout` | `number` | `60000` | If no event arrives within this time (ms), a `keepalive` is sent |
-| `reconnectionDelay` | `number` | `5` | First reconnection delay, **in seconds**. It doubles on each failed attempt, up to 120 seconds |
+| `keepAliveTimeout` | `number` | `60000` | If no event arrives within this time (ms), a `keepalive` is sent. It is also how long the SDK waits for the answer before reconnecting |
+| `reconnectionDelay` | `number` | `5` | First reconnection delay, **in seconds**. It doubles on each failed attempt, up to `reconnectionDelayMax` |
+| `reconnectionDelayMax` | `number` | `30` | Maximum reconnection delay, **in seconds** |
 | `forceNew` | `boolean` | `true` | Create a new socket.io manager for each connection |
 | `useLogger` | `boolean` | `true` | Send SDK logs to Voicenter's log server |
 | `loggerServer` | `string` | `https://socketlog.voicenter.co` | Log server URL |
 | `loggerConfig` | `LoggerOptions` | `{ logToConsole: true, overloadGlobalConsole: false, system: 'events-sdk', socketEmitInterval: 10000 }` | Options for `@voicenter-team/socketio-storage-logger` |
 | `loggerConnectOptions` | `LoggerConnectOptions` | `{ reconnection: false, transports: ['websocket'], ... }` | Socket options for the log server connection |
 | `loggerSocketConnection` | `Socket` | — | Reuse an existing socket.io connection for logging |
-| `storageLoggerInstance` | `StorageLogger` | — | Reuse an existing logger instance |
+| `storageLoggerInstance` | `StorageLogger` | — | Reuse an existing logger instance. The SDK only writes to it and never starts or stops it, so its socket stays under your control |
 | `debugOption` | `DebugOption` | — | Also log received events: `'bootstrap'`, `'debugExtensions'`, `'debugQueue'`, `'debugDialer'` or `'full'` |
 
 ## Methods
@@ -145,8 +146,10 @@ For every login type except `Settings`, the login result is cached in `sessionSt
 | `init(): Promise<true>` | Logs in and connects. Call once after creating the instance |
 | `on(event, callback)` | Subscribes to an event, or to all events with `'*'`. The callback receives `{ name, data }` |
 | `emit(event, payload)` | Sends an event to the monitor server. See [Events you can send](#events-you-can-send) |
-| `disconnect(): Promise<void>` | Closes the connection, stops automatic reconnection and stops the logger |
+| `disconnect(): Promise<void>` | Closes the connection, stops automatic reconnection and stops the logger (not one passed as `storageLoggerInstance`) |
 | `connect(serverParameter)` | Reconnects manually: `ServerParameter.MAIN` (highest-priority server) or `ServerParameter.NEXT` (the next server). `init()` already does this, so you only need it after `disconnect()` |
+| `forceReconnect({ relogin }?): Promise<void>` | Drops the current connection and connects to the main server right away, e.g. when the device wakes from sleep. With `relogin: true` it logs in again first to get a fresh token; if that login fails, it keeps retrying with the current token and rejects |
+| `isConnected(): boolean` | Whether the socket is connected to the monitor server |
 | `getCurrentMonitorServer(): Server \| undefined` | The monitor server currently in use |
 | `clearKeepAliveInterval()` | Stops the keep-alive timer |
 
@@ -216,10 +219,11 @@ sdk.emit(ServerListenerEventsEnum.SUBSCRIBE_VOICEBOT_CALL_UPDATES, {
 The SDK reconnects by itself, so you normally don't need to manage the connection:
 
 - **Failover:** it connects to the server with the highest `Priority`. If the connection drops or fails, it tries the next server.
-- **Backoff:** reconnection starts after `reconnectionDelay` seconds and doubles on each failed attempt, up to 120 seconds.
-- **Network changes:** in browsers and web workers, going offline closes the connection, and coming back online reconnects right away.
-- **Keep-alive:** if no event arrives within `keepAliveTimeout`, a `keepalive` is sent. An error response triggers a reconnect.
+- **Backoff:** reconnection starts after `reconnectionDelay` seconds and doubles on each failed attempt, up to `reconnectionDelayMax` seconds (30 by default).
+- **Network changes:** in browsers and web workers, going offline closes the connection and schedules a retry, and coming back online reconnects right away.
+- **Keep-alive:** if no event arrives within `keepAliveTimeout`, a `keepalive` is sent. An error response triggers a reconnect. Once the server has answered a keep-alive on the current connection, a keep-alive with no answer (and no other event) within `keepAliveTimeout` also triggers a reconnect, which catches connections that died silently, e.g. during OS sleep.
 - **Token refresh:** with `User` login, the token is refreshed 5 seconds before it expires and the connection is reopened.
+- **Manual reconnect:** call `forceReconnect()` when you know the connection may be stale, e.g. when the device wakes up. Pass `{ relogin: true }` to get a fresh token as well.
 
 Follow the state with `onlineStatusEvent`. Its `connectionStatus` is a `ConnectionStatusEnum` value: `'connected'`, `'tryingToConnect'` or `'disconnected'`.
 

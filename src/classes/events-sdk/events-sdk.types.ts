@@ -11,6 +11,7 @@ export interface EventsSdkOptionsBase {
     forceNew?: boolean,
     servers?: Server[],
     reconnectionDelay?: number,
+    reconnectionDelayMax?: number,
     timeout?: number,
     keepAliveTimeout?: number,
     protocol?: string,
@@ -26,7 +27,6 @@ export interface EventsSdkOptionsBase {
     // serverFetchStrategy?: string,
     // serverType?: number,
     // idleInterval?: number,
-    // reconnectionDelayMax?: number,
     // maxReconnectAttempts: number,
 }
 
@@ -74,6 +74,7 @@ export type EventsSdkOptionsMain = Required<Pick<
     'loggerConfig' |
     'keepAliveTimeout' |
     'reconnectionDelay' |
+    'reconnectionDelayMax' |
     'loggerServer' |
     'useLogger'
     >> & {
@@ -86,6 +87,11 @@ export type EventsSdkOptionsMain = Required<Pick<
     storageLoggerInstance?: StorageLogger,
     loggerConnectOptions?: LoggerConnectOptions,
     loggerSocketConnection?: Socket
+}
+
+export interface ForceReconnectOptions {
+    /** Log in again before connecting, to get a fresh socket token */
+    relogin?: boolean
 }
 
 export interface Server {
