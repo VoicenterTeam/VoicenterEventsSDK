@@ -7,6 +7,8 @@ export const eventsSdkDefaultOptions: EventsSdkOptionsMain = {
     forceNew: true,
     /** Initial reconnection delay in seconds will be used as a base, and on each unsuccessfully attempt delay is exponentially increased */
     reconnectionDelay: 5,
+    /** Maximum reconnection delay in seconds */
+    reconnectionDelayMax: 30,
     timeout: 10000,
     keepAliveTimeout: 60000,
     protocol: 'https',

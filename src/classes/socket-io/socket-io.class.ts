@@ -53,6 +53,12 @@ export class SocketIoClass {
     /** Keep-alive interval handle */
     private keepAliveInterval: ReturnType<typeof setInterval> | undefined
 
+    /** Fires when a sent keep-alive got no answer in time */
+    private keepAliveResponseTimeout: ReturnType<typeof setTimeout> | undefined
+
+    /** The server answers keep-alives on this socket, so a missing answer is meaningful */
+    private keepAliveSupported = false
+
     /** Reconnection timeout handle */
     private reconnectTimeout: ReturnType<typeof setTimeout> | undefined
 
@@ -63,7 +69,9 @@ export class SocketIoClass {
     private reconnectionTime = eventsSdkDefaultOptions.reconnectionDelay
 
     /** Maximum reconnection delay in seconds */
-    private readonly maxReconnectionDelay = 120
+    private get maxReconnectionDelay (): number {
+        return this.eventsSdkClass.options.reconnectionDelayMax ?? eventsSdkDefaultOptions.reconnectionDelayMax
+    }
 
     /** Network event cleanup functions */
     private networkCleanup: Array<() => void> = []
@@ -80,7 +88,7 @@ export class SocketIoClass {
      * Sets up network event listeners
      */
     private setupNetworkListeners (): void {
-        const handleOffline = () => this.closeAllConnections()
+        const handleOffline = () => this.handleNetworkOffline()
         const handleOnline = () => this.handleNetworkOnline()
 
         if (typeof window !== 'undefined' && 'addEventListener' in window && typeof window.addEventListener === 'function') {
@@ -105,8 +113,25 @@ export class SocketIoClass {
         // React Native or other environments - graceful fallback
         // Network monitoring not available, SDK will still function but with slower reconnection
         // When network goes down: disconnect → scheduleReconnect works normally
-        // When network comes back up: no immediate detection, must wait for next scheduled retry (up to 120s delay)
+        // When network comes back up: no immediate detection, must wait for next scheduled retry (up to reconnectionDelayMax)
         // For better UX in React Native, consider implementing @react-native-community/netinfo
+    }
+
+    /**
+     * Handles network offline: drops the socket and keeps a retry scheduled in case online never fires
+     */
+    private handleNetworkOffline (): void {
+        if (!this.io && this.connectionState === ConnectionState.DISCONNECTED) {
+            return
+        }
+
+        this.eventsSdkClass.loggerClass.sdkDisconnect([ 'network offline' ])
+
+        this.closeAllConnections()
+
+        if (this.doReconnect) {
+            this.scheduleReconnect()
+        }
     }
 
     /**
@@ -118,10 +143,36 @@ export class SocketIoClass {
         }
 
         this.networkReconnectTimeout = setTimeout(() => {
-            if (this.connectionState === ConnectionState.DISCONNECTED && this.doReconnect) {
-                this.eventsSdkClass.connect(ServerParameter.NEXT)
+            this.networkReconnectTimeout = undefined
+
+            // Also replaces an attempt started while offline; no token means not logged in yet
+            if (this.connectionState !== ConnectionState.CONNECTED && this.doReconnect && this.eventsSdkClass.authClass.token) {
+                this.reconnectNow(ServerParameter.NEXT)
             }
         }, 500)
+    }
+
+    /**
+     * Drops the current socket and connects again right away, with the reconnection delay reset
+     */
+    public reconnectNow (serverParameter: ServerParameter): void {
+        this.closeAllConnections()
+        this.resetReconnectionDelay()
+        this.eventsSdkClass.connect(serverParameter)
+    }
+
+    /**
+     * Resets the reconnection delay to its initial value
+     */
+    public resetReconnectionDelay (): void {
+        this.reconnectionTime = this.eventsSdkClass.options.reconnectionDelay
+    }
+
+    /**
+     * Whether the socket is connected to the monitor server
+     */
+    public isConnected (): boolean {
+        return this.connectionState === ConnectionState.CONNECTED
     }
 
     /**
@@ -144,7 +195,9 @@ export class SocketIoClass {
             return
         }
 
+        this.disposeSocket()
         this.connectionState = ConnectionState.CONNECTING
+        this.keepAliveSupported = false
 
         const token = this.eventsSdkClass.authClass.token
         const protocol = this.eventsSdkClass.options.protocol
@@ -193,6 +246,37 @@ export class SocketIoClass {
             clearInterval(this.keepAliveInterval)
             this.keepAliveInterval = undefined
         }
+
+        this.clearKeepAliveResponseTimeout()
+    }
+
+    private clearKeepAliveResponseTimeout (): void {
+        if (this.keepAliveResponseTimeout) {
+            clearTimeout(this.keepAliveResponseTimeout)
+            this.keepAliveResponseTimeout = undefined
+        }
+    }
+
+    /**
+     * Reconnects if a keep-alive gets no answer: the connection died silently (e.g. after OS sleep)
+     */
+    private watchKeepAliveResponse (): void {
+        if (!this.keepAliveSupported || this.keepAliveResponseTimeout) {
+            return
+        }
+
+        this.keepAliveResponseTimeout = setTimeout(() => {
+            this.keepAliveResponseTimeout = undefined
+
+            if (this.connectionState !== ConnectionState.CONNECTED || !this.doReconnect) {
+                return
+            }
+
+            this.eventsSdkClass.loggerClass.sdkDisconnect([ 'keep alive response timeout' ])
+
+            this.closeAllConnections()
+            this.scheduleReconnect()
+        }, this.eventsSdkClass.options.keepAliveTimeout)
     }
 
     /**
@@ -211,6 +295,7 @@ export class SocketIoClass {
 
                 this.eventsSdkClass.emit(ServerListenerEventsEnum.KEEP_ALIVE, this.eventsSdkClass.authClass.token)
                 this.eventsSdkClass.loggerClass.keepAliveEmit()
+                this.watchKeepAliveResponse()
             }
         }, this.eventsSdkClass.options.keepAliveTimeout)
     }
@@ -232,29 +317,31 @@ export class SocketIoClass {
             this.networkReconnectTimeout = undefined
         }
 
-        if (this.io) {
-            const socket = this.io
-            this.io = undefined // Prevent new operations
-
-            // Proper async cleanup
-            try {
-                await Promise.race([
-                    new Promise<void>((resolve) => {
-                        socket.on('disconnect', () => resolve())
-                        socket.removeAllListeners() // Remove all listeners before closing
-                        socket.close()
-                        socket.disconnect()
-                    }),
-                    new Promise<void>((resolve) => setTimeout(resolve, 1000))
-                ])
-            } catch (error) {
-                // Silent cleanup errors
-            }
-        }
+        // Synchronous on purpose: callers may reconnect right after without awaiting
+        this.disposeSocket()
 
         this.connectionState = ConnectionState.DISCONNECTED
         this.eventsSdkClass.loggerClass.stop()
         StorageClass.clearSessionStorage()
+    }
+
+    /**
+     * Closes the current socket without firing its handlers
+     */
+    private disposeSocket (): void {
+        if (!this.io) {
+            return
+        }
+
+        const socket = this.io
+        this.io = undefined // Prevent new operations
+
+        try {
+            socket.removeAllListeners() // Remove all listeners before closing
+            socket.disconnect()
+        } catch (error) {
+            // Silent cleanup errors
+        }
     }
 
     /**
@@ -292,6 +379,7 @@ export class SocketIoClass {
      */
     private updateEventTimestamp (): void {
         this.lastEventTimestamp = new Date().getTime()
+        this.clearKeepAliveResponseTimeout() // Any event proves the connection is alive
     }
 
     // Event handlers - all update timestamp first
@@ -386,15 +474,13 @@ export class SocketIoClass {
      */
     private onKeepAliveResponse (data: KeepAliveResponseEvent): void {
         this.updateEventTimestamp()
+        this.keepAliveSupported = true
         this.eventsSdkClass.loggerClass.keepAliveResponse(data)
 
         if (data.errorCode) {
             // Close and schedule reconnect instead of immediate reconnect
-            this.closeAllConnections().then(() => {
-                if (this.doReconnect && this.connectionState === ConnectionState.DISCONNECTED) {
-                    this.scheduleReconnect()
-                }
-            })
+            this.closeAllConnections()
+            this.scheduleReconnect()
             return
         }
 
@@ -433,7 +519,7 @@ export class SocketIoClass {
     /**
      * Schedules reconnection with exponential backoff
      */
-    private scheduleReconnect (): void {
+    public scheduleReconnect (): void {
         if (!this.doReconnect || this.reconnectTimeout) {
             return // Already scheduled or disabled
         }
@@ -451,12 +537,8 @@ export class SocketIoClass {
                 this.maxReconnectionDelay
             )
 
-            if (this.reconnectionTime > this.maxReconnectionDelay) {
-                this.reconnectionTime = this.eventsSdkClass.options.reconnectionDelay
-            }
-
             this.eventsSdkClass.connect(ServerParameter.NEXT)
-        }, this.reconnectionTime * 1000)
+        }, Math.min(this.reconnectionTime, this.maxReconnectionDelay) * 1000)
     }
 
     /**
@@ -481,6 +563,7 @@ export class SocketIoClass {
      * Handles connection errors
      */
     private onConnectError (data: Error): void {
+        this.disposeSocket()
         this.connectionState = ConnectionState.DISCONNECTED
         this.eventsSdkClass.loggerClass.sdkAttemptToConnectError(data)
 

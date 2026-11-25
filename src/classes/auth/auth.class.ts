@@ -25,6 +25,7 @@ class AuthClass {
     public token: string | undefined
     private refreshToken: string | undefined
     private tokenExpiry: Date | undefined
+    private tokenExpiryTimeout: ReturnType<typeof setTimeout> | undefined
 
     private storageKey: string
 
@@ -198,7 +199,12 @@ class AuthClass {
 
         const maxAllowedTimeout = Math.min(timeout, 0x7FFFFFFF)
 
-        setTimeout(
+        // A relogin schedules a new refresh, so the old one must not run too
+        if (this.tokenExpiryTimeout) {
+            clearTimeout(this.tokenExpiryTimeout)
+        }
+
+        this.tokenExpiryTimeout = setTimeout(
             async () => {
                 if (this.refreshToken) {
                     this.eventsSdkClass.socketIoClass.closeAllConnections()

@@ -14,6 +14,9 @@ export class LoggerClass {
 
     private storageLogger: StorageLogger | undefined
 
+    /** Host-owned logger (storageLoggerInstance): the SDK never starts or stops it */
+    private isExternal = false
+
     public init () {
         if (!this.eventsSdkClass.options.useLogger) {
             return
@@ -21,8 +24,14 @@ export class LoggerClass {
 
         if (this.eventsSdkClass.options.storageLoggerInstance) {
             this.storageLogger = this.eventsSdkClass.options.storageLoggerInstance
+            this.isExternal = true
 
             return
+        }
+
+        if (this.storageLogger) {
+            this.storageLogger.stop().catch(console.error)
+            this.storageLogger = undefined
         }
 
         let socket: Socket | undefined
@@ -47,7 +56,7 @@ export class LoggerClass {
     }
 
     async start () {
-        if (!this.storageLogger) {
+        if (!this.storageLogger || this.isExternal) {
             return
         }
 
@@ -55,7 +64,7 @@ export class LoggerClass {
     }
 
     async stop () {
-        if (!this.storageLogger) {
+        if (!this.storageLogger || this.isExternal) {
             return
         }
 

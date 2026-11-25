@@ -3,6 +3,7 @@ import { eventsSdkDefaultOptions } from '@/classes/events-sdk/events-sdk-default
 import { SocketIoClass } from '@/classes/socket-io/socket-io.class'
 import {
     EventsSdkOptionsBase,
+    ForceReconnectOptions,
     Server
 } from '@/classes/events-sdk/events-sdk.types'
 import { ServerParameter } from '@/enum/events-sdk.enum'
@@ -89,6 +90,40 @@ class EventsSdkClass {
         await this.socketIoClass.closeAllConnections()
 
         await this.loggerClass.stop()
+    }
+
+    /**
+     * Drops the current connection and connects to the main server right away
+     */
+    public async forceReconnect ({ relogin = false }: ForceReconnectOptions = {}) {
+        this.socketIoClass.doReconnect = true
+
+        this.loggerClass.sdkDisconnect([ `force reconnect${relogin ? ' with relogin' : ''}` ])
+
+        if (!relogin) {
+            this.socketIoClass.reconnectNow(ServerParameter.MAIN)
+
+            return
+        }
+
+        // Also clears the cached login, so init() logs in anew
+        await this.socketIoClass.closeAllConnections()
+
+        this.socketIoClass.resetReconnectionDelay()
+        this.authClass.lastLoginTimestamp = undefined
+
+        try {
+            await this.init()
+        } catch (error) {
+            // Keep retrying with the current token
+            this.socketIoClass.scheduleReconnect()
+
+            throw error
+        }
+    }
+
+    public isConnected () {
+        return this.socketIoClass.isConnected()
     }
 
     public clearKeepAliveInterval () {
